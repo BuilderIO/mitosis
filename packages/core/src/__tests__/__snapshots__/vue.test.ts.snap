@@ -69,39 +69,12 @@ export default {
 `;
 
 exports[`Vue > jsx > Javascript Test > Basic 1`] = `
-"<template>
-  <div class=\\"test div\\">
-    <input
-      :value=\\"DEFAULT_VALUES.name || name\\"
-      @input=\\"name = $event.target.value\\"
-    />
-    Hello! I can run in React, Vue, Solid, or Liquid!
-  </div>
-</template>
+"unknown: Missing semicolon. (1:29)
 
-<script>
-export const DEFAULT_VALUES = {
-  name: \\"Steve\\",
-};
-
-export default {
-  name: \\"my-basic-component\\",
-
-  data: () => ({ name: \\"Steve\\", age: 1, sports: [\\"\\"], DEFAULT_VALUES }),
-
-  methods: {
-    underscore_fn_name() {
-      return \\"bar\\";
-    },
-  },
-};
-</script>
-
-<style scoped>
-.div {
-  padding: 10px;
-}
-</style>"
+> 1 | let _ =  underscore_fn_name() {
+    |                              ^
+  2 |   return 'bar';
+  3 | }"
 `;
 
 exports[`Vue > jsx > Javascript Test > Basic 2`] = `
@@ -483,67 +456,12 @@ export default {
 `;
 
 exports[`Vue > jsx > Javascript Test > Columns 1`] = `
-"<template>
-  <div class=\\"builder-columns div\\">
-    <div
-      class=\\"builder-column div-2\\"
-      v-for=\\"(column, index) in columns\\"
-      :key=\\"index\\"
-    >
-      {{ column.content }} {{ index }}
-    </div>
-  </div>
-</template>
+"unknown: Missing semicolon. (1:21)
 
-<script>
-export default {
-  name: \\"column\\",
-
-  props: [\\"columns\\", \\"space\\"],
-
-  methods: {
-    getColumns() {
-      return this.columns || [];
-    },
-    getGutterSize() {
-      return typeof this.space === \\"number\\" ? this.space || 0 : 20;
-    },
-    getWidth(index) {
-      const columns = this.getColumns();
-      return (columns[index] && columns[index].width) || 100 / columns.length;
-    },
-    getColumnCssWidth(index) {
-      const columns = this.getColumns();
-      const gutterSize = this.getGutterSize();
-      const subtractWidth =
-        (gutterSize * (columns.length - 1)) / columns.length;
-      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
-    },
-  },
-};
-</script>
-
-<style scoped>
-.div {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  line-height: normal;
-}
-@media (max-width: 999px) {
-  .div {
-    flex-direction: row;
-  }
-}
-@media (max-width: 639px) {
-  .div {
-    flex-direction: row-reverse;
-  }
-}
-.div-2 {
-  flex-grow: 1;
-}
-</style>"
+> 1 | let _ =  getColumns() {
+    |                      ^
+  2 |   return this.columns || [];
+  3 | }"
 `;
 
 exports[`Vue > jsx > Javascript Test > ContentSlotHtml 1`] = `
@@ -590,596 +508,42 @@ export default {
 `;
 
 exports[`Vue > jsx > Javascript Test > CustomCode 1`] = `
-"<template>
-  <div
-    ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
-    v-html=\\"code\\"
-  ></div>
-</template>
+"unknown: Missing semicolon. (1:28)
 
-<script>
-export default {
-  name: \\"custom-code\\",
-
-  props: [\\"replaceNodes\\", \\"code\\"],
-
-  data: () => ({ scriptsInserted: [], scriptsRun: [] }),
-
-  mounted() {
-    this.findAndRunScripts();
-  },
-
-  methods: {
-    findAndRunScripts() {
-      // TODO: Move this function to standalone one in '@builder.io/utils'
-      if (this.$refs.elem && typeof window !== \\"undefined\\") {
-        /** @type {HTMLScriptElement[]} */
-        const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
-
-        for (let i = 0; i < scripts.length; i++) {
-          const script = scripts[i];
-
-          if (script.src) {
-            if (this.scriptsInserted.includes(script.src)) {
-              continue;
-            }
-
-            this.scriptsInserted.push(script.src);
-            const newScript = document.createElement(\\"script\\");
-            newScript.async = true;
-            newScript.src = script.src;
-            document.head.appendChild(newScript);
-          } else if (
-            !script.type ||
-            [
-              \\"text/javascript\\",
-              \\"application/javascript\\",
-              \\"application/ecmascript\\",
-            ].includes(script.type)
-          ) {
-            if (this.scriptsRun.includes(script.innerText)) {
-              continue;
-            }
-
-            try {
-              this.scriptsRun.push(script.innerText);
-              new Function(script.innerText)();
-            } catch (error) {
-              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-            }
-          }
-        }
-      }
-    },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
-};
-</script>"
+> 1 | let _ =  findAndRunScripts() {
+    |                             ^
+  2 |   // TODO: Move this function to standalone one in '@builder.io/utils'
+  3 |   if (this.$refs.elem && typeof window !== 'undefined') {
+  4 |     /** @type {HTMLScriptElement[]} */"
 `;
 
 exports[`Vue > jsx > Javascript Test > Embed 1`] = `
-"<template>
-  <div
-    ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
-    v-html=\\"code\\"
-  ></div>
-</template>
+"unknown: Missing semicolon. (1:28)
 
-<script>
-export default {
-  name: \\"custom-code\\",
-
-  props: [\\"replaceNodes\\", \\"code\\"],
-
-  data: () => ({ scriptsInserted: [], scriptsRun: [] }),
-
-  mounted() {
-    this.findAndRunScripts();
-  },
-
-  methods: {
-    findAndRunScripts() {
-      // TODO: Move this function to standalone one in '@builder.io/utils'
-      if (this.$refs.elem && typeof window !== \\"undefined\\") {
-        /** @type {HTMLScriptElement[]} */
-        const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
-
-        for (let i = 0; i < scripts.length; i++) {
-          const script = scripts[i];
-
-          if (script.src) {
-            if (this.scriptsInserted.includes(script.src)) {
-              continue;
-            }
-
-            this.scriptsInserted.push(script.src);
-            const newScript = document.createElement(\\"script\\");
-            newScript.async = true;
-            newScript.src = script.src;
-            document.head.appendChild(newScript);
-          } else if (
-            !script.type ||
-            [
-              \\"text/javascript\\",
-              \\"application/javascript\\",
-              \\"application/ecmascript\\",
-            ].includes(script.type)
-          ) {
-            if (this.scriptsRun.includes(script.innerText)) {
-              continue;
-            }
-
-            try {
-              this.scriptsRun.push(script.innerText);
-              new Function(script.innerText)();
-            } catch (error) {
-              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-            }
-          }
-        }
-      }
-    },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
-};
-</script>"
+> 1 | let _ =  findAndRunScripts() {
+    |                             ^
+  2 |   // TODO: Move this function to standalone one in '@builder.io/utils'
+  3 |   if (this.$refs.elem && typeof window !== 'undefined') {
+  4 |     /** @type {HTMLScriptElement[]} */"
 `;
 
 exports[`Vue > jsx > Javascript Test > Form 1`] = `
-"<template>
-  <form
-    :validate=\\"validate\\"
-    ref=\\"formRef\\"
-    :action=\\"!sendWithJs && action\\"
-    :method=\\"method\\"
-    :name=\\"name\\"
-    @submit=\\"onSubmit($event)\\"
-    v-bind=\\"attributes\\"
-  >
-    <template v-if=\\"builderBlock && builderBlock.children\\">
-      <builder-block-component
-        v-for=\\"(block, index) in builderBlock?.children\\"
-        :block=\\"block\\"
-        :index=\\"index\\"
-        :key=\\"block.id\\"
-      ></builder-block-component>
-    </template>
+"unknown: Missing semicolon. (1:24)
 
-    <template v-if=\\"submissionState === 'error'\\">
-      <builder-blocks
-        dataPath=\\"errorMessage\\"
-        :blocks=\\"errorMessage\\"
-      ></builder-blocks>
-    </template>
-
-    <template v-if=\\"submissionState === 'sending'\\">
-      <builder-blocks
-        dataPath=\\"sendingMessage\\"
-        :blocks=\\"sendingMessage\\"
-      ></builder-blocks>
-    </template>
-
-    <template v-if=\\"submissionState === 'error' && responseData\\">
-      <pre class=\\"builder-form-error-text pre\\">
-        {{ JSON.stringify(responseData, null, 2) }}
-      </pre>
-    </template>
-
-    <template v-if=\\"submissionState === 'success'\\">
-      <builder-blocks
-        dataPath=\\"successMessage\\"
-        :blocks=\\"successMessage\\"
-      ></builder-blocks>
-    </template>
-  </form>
-</template>
-
-<script>
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
-
-export default {
-  name: \\"form-component\\",
-  components: {
-    BuilderBlockComponent: BuilderBlockComponent,
-    BuilderBlocks: BuilderBlocks,
-  },
-  props: [
-    \\"previewState\\",
-    \\"sendWithJs\\",
-    \\"sendSubmissionsTo\\",
-    \\"action\\",
-    \\"customHeaders\\",
-    \\"contentType\\",
-    \\"sendSubmissionsToEmail\\",
-    \\"name\\",
-    \\"method\\",
-    \\"errorMessagePath\\",
-    \\"resetFormOnSubmit\\",
-    \\"successUrl\\",
-    \\"validate\\",
-    \\"attributes\\",
-    \\"builderBlock\\",
-    \\"errorMessage\\",
-    \\"sendingMessage\\",
-    \\"successMessage\\",
-  ],
-
-  data: () => ({
-    formState: \\"unsubmitted\\",
-    responseData: null,
-    formErrorMessage: \\"\\",
-    builder,
-  }),
-
-  computed: {
-    submissionState() {
-      return (Builder.isEditing && this.previewState) || this.formState;
-    },
-  },
-
-  methods: {
-    onSubmit(event) {
-      const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
-
-      if (this.sendSubmissionsTo === \\"zapier\\") {
-        event.preventDefault();
-      } else if (sendWithJs) {
-        if (!(this.action || this.sendSubmissionsTo === \\"email\\")) {
-          event.preventDefault();
-          return;
-        }
-
-        event.preventDefault();
-        const el = event.currentTarget;
-        const headers = this.customHeaders || {};
-        let body;
-        const formData = new FormData(el); // TODO: maybe support null
-
-        const formPairs = Array.from(
-          event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-        )
-          .filter((el) => !!el.name)
-          .map((el) => {
-            let value;
-            const key = el.name;
-
-            if (el instanceof HTMLInputElement) {
-              if (el.type === \\"radio\\") {
-                if (el.checked) {
-                  value = el.name;
-                  return {
-                    key,
-                    value,
-                  };
-                }
-              } else if (el.type === \\"checkbox\\") {
-                value = el.checked;
-              } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-                const num = el.valueAsNumber;
-
-                if (!isNaN(num)) {
-                  value = num;
-                }
-              } else if (el.type === \\"file\\") {
-                // TODO: one vs multiple files
-                value = el.files;
-              } else {
-                value = el.value;
-              }
-            } else {
-              value = el.value;
-            }
-
-            return {
-              key,
-              value,
-            };
-          });
-        let contentType = this.contentType;
-
-        if (this.sendSubmissionsTo === \\"email\\") {
-          contentType = \\"multipart/form-data\\";
-        }
-
-        Array.from(formPairs).forEach(({ value }) => {
-          if (
-            value instanceof File ||
-            (Array.isArray(value) && value[0] instanceof File) ||
-            value instanceof FileList
-          ) {
-            contentType = \\"multipart/form-data\\";
-          }
-        }); // TODO: send as urlEncoded or multipart by default
-        // because of ease of use and reliability in browser API
-        // for encoding the form?
-
-        if (contentType !== \\"application/json\\") {
-          body = formData;
-        } else {
-          // Json
-          const json = {};
-          Array.from(formPairs).forEach(({ value, key }) => {
-            set(json, key, value);
-          });
-          body = JSON.stringify(json);
-        }
-
-        if (contentType && contentType !== \\"multipart/form-data\\") {
-          if (
-            /* Zapier doesn't allow content-type header to be sent from browsers */
-            !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
-          ) {
-            headers[\\"content-type\\"] = contentType;
-          }
-        }
-
-        const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-          detail: {
-            body,
-          },
-        });
-
-        if (this.$refs.formRef) {
-          this.$refs.formRef.dispatchEvent(presubmitEvent);
-
-          if (presubmitEvent.defaultPrevented) {
-            return;
-          }
-        }
-
-        this.formState = \\"sending\\";
-        const formUrl = \`\${
-          builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-        }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-          this.sendSubmissionsToEmail || \\"\\"
-        )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
-        fetch(
-          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
-          /* TODO: throw error if no action URL */
-          {
-            body,
-            headers,
-            method: this.method || \\"post\\",
-          }
-        ).then(
-          async (res) => {
-            let body;
-            const contentType = res.headers.get(\\"content-type\\");
-
-            if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-              body = await res.json();
-            } else {
-              body = await res.text();
-            }
-
-            if (!res.ok && this.errorMessagePath) {
-              /* TODO: allow supplying an error formatter function */
-              let message = get(body, this.errorMessagePath);
-
-              if (message) {
-                if (typeof message !== \\"string\\") {
-                  /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
-                  message = JSON.stringify(message);
-                }
-
-                this.formErrorMessage = message;
-              }
-            }
-
-            this.responseData = body;
-            this.formState = res.ok ? \\"success\\" : \\"error\\";
-
-            if (res.ok) {
-              const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-                detail: {
-                  res,
-                  body,
-                },
-              });
-
-              if (this.$refs.formRef) {
-                this.$refs.formRef.dispatchEvent(submitSuccessEvent);
-
-                if (submitSuccessEvent.defaultPrevented) {
-                  return;
-                }
-                /* TODO: option to turn this on/off? */
-
-                if (this.resetFormOnSubmit !== false) {
-                  this.$refs.formRef.reset();
-                }
-              }
-              /* TODO: client side route event first that can be preventDefaulted */
-
-              if (this.successUrl) {
-                if (this.$refs.formRef) {
-                  const event = new CustomEvent(\\"route\\", {
-                    detail: {
-                      url: this.successUrl,
-                    },
-                  });
-                  this.$refs.formRef.dispatchEvent(event);
-
-                  if (!event.defaultPrevented) {
-                    location.href = this.successUrl;
-                  }
-                } else {
-                  location.href = this.successUrl;
-                }
-              }
-            }
-          },
-          (err) => {
-            const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-              detail: {
-                error: err,
-              },
-            });
-
-            if (this.$refs.formRef) {
-              this.$refs.formRef.dispatchEvent(submitErrorEvent);
-
-              if (submitErrorEvent.defaultPrevented) {
-                return;
-              }
-            }
-
-            this.responseData = err;
-            this.formState = \\"error\\";
-          }
-        );
-      }
-    },
-  },
-};
-</script>
-
-<style scoped>
-.pre {
-  padding: 10px;
-  color: red;
-  text-align: center;
-}
-</style>"
+> 1 | let _ =  onSubmit(event) {
+    |                         ^
+  2 |   const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === 'email';
+  3 |
+  4 |   if (this.sendSubmissionsTo === 'zapier') {"
 `;
 
 exports[`Vue > jsx > Javascript Test > Image 1`] = `
-"<template>
-  <div>
-    <picture ref=\\"pictureRef\\">
-      <template v-if=\\"!useLazyLoading() || load\\">
-        <img
-          :alt=\\"altText\\"
-          :aria-role=\\"altText ? 'presentation' : undefined\\"
-          :class=\\"
-            _classStringToObject(
-              'builder-image' + (_class ? ' ' + _class : '') + ' img'
-            )
-          \\"
-          :src=\\"image\\"
-          @load=\\"setLoaded()\\"
-          :srcset=\\"srcset\\"
-          :sizes=\\"sizes\\"
-        />
-      </template>
+"unknown: Missing semicolon. (1:20)
 
-      <source :srcset=\\"srcset\\" />
-    </picture>
-    <slot />
-  </div>
-</template>
-
-<script>
-export default {
-  name: \\"image\\",
-
-  props: [\\"lazy\\", \\"altText\\", \\"_class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
-
-  data: () => ({ scrollListener: null, imageLoaded: false, load: false }),
-
-  mounted() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.$refs.pictureRef) {
-          const rect = this.$refs.pictureRef.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
-
-          if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
-          }
-        }
-      };
-
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
-    }
-  },
-
-  unmounted() {
-    if (this.scrollListener) {
-      window.removeEventListener(\\"scroll\\", this.scrollListener);
-    }
-  },
-
-  methods: {
-    setLoaded() {
-      this.imageLoaded = true;
-    },
-    useLazyLoading() {
-      // TODO: Add more checks here, like testing for real web browsers
-      return !!this.lazy && isBrowser();
-    },
-    isBrowser: function isBrowser() {
-      return (
-        typeof window !== \\"undefined\\" &&
-        window.navigator.product != \\"ReactNative\\"
-      );
-    },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
-};
-</script>
-
-<style scoped>
-.img {
-  opacity: 1;
-  transition: opacity 0.2s ease-in-out;
-  object-fit: cover;
-  object-position: center;
-}
-</style>"
+> 1 | let _ =  setLoaded() {
+    |                     ^
+  2 |   state.imageLoaded = true;
+  3 | }"
 `;
 
 exports[`Vue > jsx > Javascript Test > Image State 1`] = `
@@ -1414,115 +778,12 @@ export default {
 `;
 
 exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
-"<template>
-  <div :data-user=\\"name\\">
-    <button @click=\\"showReviewPrompt = true\\">Write a review</button>
+"unknown: Missing semicolon. (1:25)
 
-    <template v-if=\\"showReviewPrompt || 'asdf'\\">
-      <input placeholder=\\"Email\\" />
-
-      <input placeholder=\\"Title\\" class=\\"input\\" />
-
-      <textarea
-        placeholder=\\"How was your experience?\\"
-        class=\\"textarea\\"
-      ></textarea>
-
-      <button
-        class=\\"button\\"
-        @click=\\"
-          $event.preventDefault();
-          showReviewPrompt = false;
-        \\"
-      >
-        Submit
-      </button>
-    </template>
-
-    <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
-      <img class=\\"img\\" :src=\\"review.avatar\\" />
-      <div
-        :class=\\"
-          _classStringToObject(showReviewPrompt ? 'bg-primary' : 'bg-secondary')
-        \\"
-      >
-        <div>N: {{ index }}</div>
-        <div>{{ review.author }}</div>
-        <div>{{ review.reviewMessage }}</div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script>
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
-
-export default {
-  name: \\"smile-reviews\\",
-
-  props: [\\"apiKey\\", \\"productId\\"],
-
-  data: () => ({ reviews: [], name: \\"test\\", showReviewPrompt: false }),
-
-  mounted() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
-  },
-
-  methods: {
-    kebabCaseValue() {
-      return kebabCase(\\"testThat\\");
-    },
-    snakeCaseValue() {
-      return snakeCase(\\"testThis\\");
-    },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
-};
-</script>
-
-<style scoped>
-.input {
-  display: block;
-}
-.textarea {
-  display: block;
-}
-.button {
-  display: block;
-}
-.review {
-  margin: 10px;
-  padding: 10px;
-  background: white;
-  display: flex;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.img {
-  height: 30px;
-  width: 30px;
-  margin-right: 10px;
-}
-</style>"
+> 1 | let _ =  kebabCaseValue() {
+    |                          ^
+  2 |   return kebabCase('testThat');
+  3 | }"
 `;
 
 exports[`Vue > jsx > Javascript Test > Submit 1`] = `
@@ -1629,26 +890,12 @@ export default {
 `;
 
 exports[`Vue > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
-"<template>
-  <div>Hello {{ name }}</div>
-</template>
+"unknown: Missing semicolon. (1:23)
 
-<script>
-export default {
-  name: \\"my-component\\",
-
-  data: () => ({ name: \\"steve\\" }),
-
-  methods: {
-    setName(value) {
-      this.name = value;
-    },
-    updateNameWithArrowFn(value) {
-      this.name = value;
-    },
-  },
-};
-</script>"
+> 1 | let _ =  setName(value) {
+    |                        ^
+  2 |   state.name = value;
+  3 | }"
 `;
 
 exports[`Vue > jsx > Javascript Test > basicForwardRef 1`] = `
@@ -2017,30 +1264,13 @@ export default {
 `;
 
 exports[`Vue > jsx > Javascript Test > import types 1`] = `
-"<template>
-  <render-block
-    v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
-  ></render-block>
-</template>
+"unknown: Missing semicolon. (1:44)
 
-<script>
-import RenderBlock from \\"./builder-render-block.raw\\";
-
-export default {
-  name: \\"render-content\\",
-  components: { RenderBlock: RenderBlock },
-  props: [\\"renderContentProps\\"],
-
-  methods: {
-    getRenderContentProps(block, index) {
-      return {
-        block: block,
-        index: index,
-      };
-    },
-  },
-};
-</script>"
+> 1 | let _ =  getRenderContentProps(block, index) {
+    |                                             ^
+  2 |   return {
+  3 |     block: block,
+  4 |     index: index"
 `;
 
 exports[`Vue > jsx > Javascript Test > multipleOnUpdate 1`] = `
@@ -2724,43 +1954,12 @@ export default {
 `;
 
 exports[`Vue > jsx > Typescript Test > Basic 1`] = `
-"<template>
-  <div class=\\"test div\\">
-    <input
-      :value=\\"DEFAULT_VALUES.name || name\\"
-      @input=\\"name = $event.target.value\\"
-    />
-    Hello! I can run in React, Vue, Solid, or Liquid!
-  </div>
-</template>
+"unknown: Missing semicolon. (1:29)
 
-<script lang=\\"ts\\">
-export interface MyBasicComponentProps {
-  id: string;
-}
-
-export const DEFAULT_VALUES = {
-  name: \\"Steve\\",
-};
-
-export default {
-  name: \\"my-basic-component\\",
-
-  data: () => ({ name: \\"Steve\\", age: 1, sports: [\\"\\"], DEFAULT_VALUES }),
-
-  methods: {
-    underscore_fn_name() {
-      return \\"bar\\";
-    },
-  },
-};
-</script>
-
-<style scoped>
-.div {
-  padding: 10px;
-}
-</style>"
+> 1 | let _ =  underscore_fn_name() {
+    |                              ^
+  2 |   return 'bar';
+  3 | }"
 `;
 
 exports[`Vue > jsx > Typescript Test > Basic 2`] = `
@@ -3171,82 +2370,12 @@ export default {
 `;
 
 exports[`Vue > jsx > Typescript Test > Columns 1`] = `
-"<template>
-  <div class=\\"builder-columns div\\">
-    <div
-      class=\\"builder-column div-2\\"
-      v-for=\\"(column, index) in columns\\"
-      :key=\\"index\\"
-    >
-      {{ column.content }} {{ index }}
-    </div>
-  </div>
-</template>
+"unknown: Missing semicolon. (1:21)
 
-<script lang=\\"ts\\">
-type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
-
-  width?: number;
-};
-export interface ColumnProps {
-  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
-
-  space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
-
-  reverseColumnsWhenStacked?: boolean;
-}
-
-export default {
-  name: \\"column\\",
-
-  props: [\\"columns\\", \\"space\\"],
-
-  methods: {
-    getColumns() {
-      return this.columns || [];
-    },
-    getGutterSize() {
-      return typeof this.space === \\"number\\" ? this.space || 0 : 20;
-    },
-    getWidth(index) {
-      const columns = this.getColumns();
-      return (columns[index] && columns[index].width) || 100 / columns.length;
-    },
-    getColumnCssWidth(index) {
-      const columns = this.getColumns();
-      const gutterSize = this.getGutterSize();
-      const subtractWidth =
-        (gutterSize * (columns.length - 1)) / columns.length;
-      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
-    },
-  },
-};
-</script>
-
-<style scoped>
-.div {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  line-height: normal;
-}
-@media (max-width: 999px) {
-  .div {
-    flex-direction: row;
-  }
-}
-@media (max-width: 639px) {
-  .div {
-    flex-direction: row-reverse;
-  }
-}
-.div-2 {
-  flex-grow: 1;
-}
-</style>"
+> 1 | let _ =  getColumns() {
+    |                      ^
+  2 |   return this.columns || [];
+  3 | }"
 `;
 
 exports[`Vue > jsx > Typescript Test > ContentSlotHtml 1`] = `
@@ -3302,649 +2431,42 @@ export default {
 `;
 
 exports[`Vue > jsx > Typescript Test > CustomCode 1`] = `
-"<template>
-  <div
-    ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
-    v-html=\\"code\\"
-  ></div>
-</template>
+"unknown: Missing semicolon. (1:28)
 
-<script lang=\\"ts\\">
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
-
-export default {
-  name: \\"custom-code\\",
-
-  props: [\\"replaceNodes\\", \\"code\\"],
-
-  data: () => ({ scriptsInserted: [], scriptsRun: [] }),
-
-  mounted() {
-    this.findAndRunScripts();
-  },
-
-  methods: {
-    findAndRunScripts() {
-      // TODO: Move this function to standalone one in '@builder.io/utils'
-      if (this.$refs.elem && typeof window !== \\"undefined\\") {
-        /** @type {HTMLScriptElement[]} */
-        const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
-
-        for (let i = 0; i < scripts.length; i++) {
-          const script = scripts[i];
-
-          if (script.src) {
-            if (this.scriptsInserted.includes(script.src)) {
-              continue;
-            }
-
-            this.scriptsInserted.push(script.src);
-            const newScript = document.createElement(\\"script\\");
-            newScript.async = true;
-            newScript.src = script.src;
-            document.head.appendChild(newScript);
-          } else if (
-            !script.type ||
-            [
-              \\"text/javascript\\",
-              \\"application/javascript\\",
-              \\"application/ecmascript\\",
-            ].includes(script.type)
-          ) {
-            if (this.scriptsRun.includes(script.innerText)) {
-              continue;
-            }
-
-            try {
-              this.scriptsRun.push(script.innerText);
-              new Function(script.innerText)();
-            } catch (error) {
-              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-            }
-          }
-        }
-      }
-    },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
-};
-</script>"
+> 1 | let _ =  findAndRunScripts() {
+    |                             ^
+  2 |   // TODO: Move this function to standalone one in '@builder.io/utils'
+  3 |   if (this.$refs.elem && typeof window !== 'undefined') {
+  4 |     /** @type {HTMLScriptElement[]} */"
 `;
 
 exports[`Vue > jsx > Typescript Test > Embed 1`] = `
-"<template>
-  <div
-    ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
-    v-html=\\"code\\"
-  ></div>
-</template>
+"unknown: Missing semicolon. (1:28)
 
-<script lang=\\"ts\\">
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
-
-export default {
-  name: \\"custom-code\\",
-
-  props: [\\"replaceNodes\\", \\"code\\"],
-
-  data: () => ({ scriptsInserted: [], scriptsRun: [] }),
-
-  mounted() {
-    this.findAndRunScripts();
-  },
-
-  methods: {
-    findAndRunScripts() {
-      // TODO: Move this function to standalone one in '@builder.io/utils'
-      if (this.$refs.elem && typeof window !== \\"undefined\\") {
-        /** @type {HTMLScriptElement[]} */
-        const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
-
-        for (let i = 0; i < scripts.length; i++) {
-          const script = scripts[i];
-
-          if (script.src) {
-            if (this.scriptsInserted.includes(script.src)) {
-              continue;
-            }
-
-            this.scriptsInserted.push(script.src);
-            const newScript = document.createElement(\\"script\\");
-            newScript.async = true;
-            newScript.src = script.src;
-            document.head.appendChild(newScript);
-          } else if (
-            !script.type ||
-            [
-              \\"text/javascript\\",
-              \\"application/javascript\\",
-              \\"application/ecmascript\\",
-            ].includes(script.type)
-          ) {
-            if (this.scriptsRun.includes(script.innerText)) {
-              continue;
-            }
-
-            try {
-              this.scriptsRun.push(script.innerText);
-              new Function(script.innerText)();
-            } catch (error) {
-              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-            }
-          }
-        }
-      }
-    },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
-};
-</script>"
+> 1 | let _ =  findAndRunScripts() {
+    |                             ^
+  2 |   // TODO: Move this function to standalone one in '@builder.io/utils'
+  3 |   if (this.$refs.elem && typeof window !== 'undefined') {
+  4 |     /** @type {HTMLScriptElement[]} */"
 `;
 
 exports[`Vue > jsx > Typescript Test > Form 1`] = `
-"<template>
-  <form
-    :validate=\\"validate\\"
-    ref=\\"formRef\\"
-    :action=\\"!sendWithJs && action\\"
-    :method=\\"method\\"
-    :name=\\"name\\"
-    @submit=\\"onSubmit($event)\\"
-    v-bind=\\"attributes\\"
-  >
-    <template v-if=\\"builderBlock && builderBlock.children\\">
-      <builder-block-component
-        v-for=\\"(block, index) in builderBlock?.children\\"
-        :block=\\"block\\"
-        :index=\\"index\\"
-        :key=\\"block.id\\"
-      ></builder-block-component>
-    </template>
+"unknown: Missing semicolon. (1:24)
 
-    <template v-if=\\"submissionState === 'error'\\">
-      <builder-blocks
-        dataPath=\\"errorMessage\\"
-        :blocks=\\"errorMessage\\"
-      ></builder-blocks>
-    </template>
-
-    <template v-if=\\"submissionState === 'sending'\\">
-      <builder-blocks
-        dataPath=\\"sendingMessage\\"
-        :blocks=\\"sendingMessage\\"
-      ></builder-blocks>
-    </template>
-
-    <template v-if=\\"submissionState === 'error' && responseData\\">
-      <pre class=\\"builder-form-error-text pre\\">
-        {{ JSON.stringify(responseData, null, 2) }}
-      </pre>
-    </template>
-
-    <template v-if=\\"submissionState === 'success'\\">
-      <builder-blocks
-        dataPath=\\"successMessage\\"
-        :blocks=\\"successMessage\\"
-      ></builder-blocks>
-    </template>
-  </form>
-</template>
-
-<script lang=\\"ts\\">
-export interface FormProps {
-  attributes?: any;
-  name?: string;
-  action?: string;
-  validate?: boolean;
-  method?: string;
-  builderBlock?: BuilderElement;
-  sendSubmissionsTo?: string;
-  sendSubmissionsToEmail?: string;
-  sendWithJs?: boolean;
-  contentType?: string;
-  customHeaders?: {
-    [key: string]: string;
-  };
-  successUrl?: string;
-  previewState?: FormState;
-  successMessage?: BuilderElement[];
-  errorMessage?: BuilderElement[];
-  sendingMessage?: BuilderElement[];
-  resetFormOnSubmit?: boolean;
-  errorMessagePath?: string;
-}
-export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
-
-export default {
-  name: \\"form-component\\",
-  components: {
-    BuilderBlockComponent: BuilderBlockComponent,
-    BuilderBlocks: BuilderBlocks,
-  },
-  props: [
-    \\"previewState\\",
-    \\"sendWithJs\\",
-    \\"sendSubmissionsTo\\",
-    \\"action\\",
-    \\"customHeaders\\",
-    \\"contentType\\",
-    \\"sendSubmissionsToEmail\\",
-    \\"name\\",
-    \\"method\\",
-    \\"errorMessagePath\\",
-    \\"resetFormOnSubmit\\",
-    \\"successUrl\\",
-    \\"validate\\",
-    \\"attributes\\",
-    \\"builderBlock\\",
-    \\"errorMessage\\",
-    \\"sendingMessage\\",
-    \\"successMessage\\",
-  ],
-
-  data: () => ({
-    formState: \\"unsubmitted\\",
-    responseData: null,
-    formErrorMessage: \\"\\",
-    builder,
-  }),
-
-  computed: {
-    submissionState() {
-      return (Builder.isEditing && this.previewState) || this.formState;
-    },
-  },
-
-  methods: {
-    onSubmit(event) {
-      const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
-
-      if (this.sendSubmissionsTo === \\"zapier\\") {
-        event.preventDefault();
-      } else if (sendWithJs) {
-        if (!(this.action || this.sendSubmissionsTo === \\"email\\")) {
-          event.preventDefault();
-          return;
-        }
-
-        event.preventDefault();
-        const el = event.currentTarget;
-        const headers = this.customHeaders || {};
-        let body;
-        const formData = new FormData(el); // TODO: maybe support null
-
-        const formPairs = Array.from(
-          event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-        )
-          .filter((el) => !!el.name)
-          .map((el) => {
-            let value;
-            const key = el.name;
-
-            if (el instanceof HTMLInputElement) {
-              if (el.type === \\"radio\\") {
-                if (el.checked) {
-                  value = el.name;
-                  return {
-                    key,
-                    value,
-                  };
-                }
-              } else if (el.type === \\"checkbox\\") {
-                value = el.checked;
-              } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-                const num = el.valueAsNumber;
-
-                if (!isNaN(num)) {
-                  value = num;
-                }
-              } else if (el.type === \\"file\\") {
-                // TODO: one vs multiple files
-                value = el.files;
-              } else {
-                value = el.value;
-              }
-            } else {
-              value = el.value;
-            }
-
-            return {
-              key,
-              value,
-            };
-          });
-        let contentType = this.contentType;
-
-        if (this.sendSubmissionsTo === \\"email\\") {
-          contentType = \\"multipart/form-data\\";
-        }
-
-        Array.from(formPairs).forEach(({ value }) => {
-          if (
-            value instanceof File ||
-            (Array.isArray(value) && value[0] instanceof File) ||
-            value instanceof FileList
-          ) {
-            contentType = \\"multipart/form-data\\";
-          }
-        }); // TODO: send as urlEncoded or multipart by default
-        // because of ease of use and reliability in browser API
-        // for encoding the form?
-
-        if (contentType !== \\"application/json\\") {
-          body = formData;
-        } else {
-          // Json
-          const json = {};
-          Array.from(formPairs).forEach(({ value, key }) => {
-            set(json, key, value);
-          });
-          body = JSON.stringify(json);
-        }
-
-        if (contentType && contentType !== \\"multipart/form-data\\") {
-          if (
-            /* Zapier doesn't allow content-type header to be sent from browsers */
-            !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
-          ) {
-            headers[\\"content-type\\"] = contentType;
-          }
-        }
-
-        const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-          detail: {
-            body,
-          },
-        });
-
-        if (this.$refs.formRef) {
-          this.$refs.formRef.dispatchEvent(presubmitEvent);
-
-          if (presubmitEvent.defaultPrevented) {
-            return;
-          }
-        }
-
-        this.formState = \\"sending\\";
-        const formUrl = \`\${
-          builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-        }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-          this.sendSubmissionsToEmail || \\"\\"
-        )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
-        fetch(
-          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
-          /* TODO: throw error if no action URL */
-          {
-            body,
-            headers,
-            method: this.method || \\"post\\",
-          }
-        ).then(
-          async (res) => {
-            let body;
-            const contentType = res.headers.get(\\"content-type\\");
-
-            if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-              body = await res.json();
-            } else {
-              body = await res.text();
-            }
-
-            if (!res.ok && this.errorMessagePath) {
-              /* TODO: allow supplying an error formatter function */
-              let message = get(body, this.errorMessagePath);
-
-              if (message) {
-                if (typeof message !== \\"string\\") {
-                  /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
-                  message = JSON.stringify(message);
-                }
-
-                this.formErrorMessage = message;
-              }
-            }
-
-            this.responseData = body;
-            this.formState = res.ok ? \\"success\\" : \\"error\\";
-
-            if (res.ok) {
-              const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-                detail: {
-                  res,
-                  body,
-                },
-              });
-
-              if (this.$refs.formRef) {
-                this.$refs.formRef.dispatchEvent(submitSuccessEvent);
-
-                if (submitSuccessEvent.defaultPrevented) {
-                  return;
-                }
-                /* TODO: option to turn this on/off? */
-
-                if (this.resetFormOnSubmit !== false) {
-                  this.$refs.formRef.reset();
-                }
-              }
-              /* TODO: client side route event first that can be preventDefaulted */
-
-              if (this.successUrl) {
-                if (this.$refs.formRef) {
-                  const event = new CustomEvent(\\"route\\", {
-                    detail: {
-                      url: this.successUrl,
-                    },
-                  });
-                  this.$refs.formRef.dispatchEvent(event);
-
-                  if (!event.defaultPrevented) {
-                    location.href = this.successUrl;
-                  }
-                } else {
-                  location.href = this.successUrl;
-                }
-              }
-            }
-          },
-          (err) => {
-            const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-              detail: {
-                error: err,
-              },
-            });
-
-            if (this.$refs.formRef) {
-              this.$refs.formRef.dispatchEvent(submitErrorEvent);
-
-              if (submitErrorEvent.defaultPrevented) {
-                return;
-              }
-            }
-
-            this.responseData = err;
-            this.formState = \\"error\\";
-          }
-        );
-      }
-    },
-  },
-};
-</script>
-
-<style scoped>
-.pre {
-  padding: 10px;
-  color: red;
-  text-align: center;
-}
-</style>"
+> 1 | let _ =  onSubmit(event) {
+    |                         ^
+  2 |   const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === 'email';
+  3 |
+  4 |   if (this.sendSubmissionsTo === 'zapier') {"
 `;
 
 exports[`Vue > jsx > Typescript Test > Image 1`] = `
-"<template>
-  <div>
-    <picture ref=\\"pictureRef\\">
-      <template v-if=\\"!useLazyLoading() || load\\">
-        <img
-          :alt=\\"altText\\"
-          :aria-role=\\"altText ? 'presentation' : undefined\\"
-          :class=\\"
-            _classStringToObject(
-              'builder-image' + (_class ? ' ' + _class : '') + ' img'
-            )
-          \\"
-          :src=\\"image\\"
-          @load=\\"setLoaded()\\"
-          :srcset=\\"srcset\\"
-          :sizes=\\"sizes\\"
-        />
-      </template>
+"unknown: Missing semicolon. (1:20)
 
-      <source :srcset=\\"srcset\\" />
-    </picture>
-    <slot />
-  </div>
-</template>
-
-<script lang=\\"ts\\">
-// TODO: AMP Support?
-export interface ImageProps {
-  _class?: string;
-  image: string;
-  sizes?: string;
-  lazy?: boolean;
-  height?: number;
-  width?: number;
-  altText?: string;
-  backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-
-  srcset?: string; // TODO: Implement support for custom aspect ratios
-
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
-
-  children?: any;
-}
-
-export default {
-  name: \\"image\\",
-
-  props: [\\"lazy\\", \\"altText\\", \\"_class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
-
-  data: () => ({ scrollListener: null, imageLoaded: false, load: false }),
-
-  mounted() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.$refs.pictureRef) {
-          const rect = this.$refs.pictureRef.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
-
-          if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
-          }
-        }
-      };
-
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
-    }
-  },
-
-  unmounted() {
-    if (this.scrollListener) {
-      window.removeEventListener(\\"scroll\\", this.scrollListener);
-    }
-  },
-
-  methods: {
-    setLoaded() {
-      this.imageLoaded = true;
-    },
-    useLazyLoading() {
-      // TODO: Add more checks here, like testing for real web browsers
-      return !!this.lazy && isBrowser();
-    },
-    isBrowser: function isBrowser() {
-      return (
-        typeof window !== \\"undefined\\" &&
-        window.navigator.product != \\"ReactNative\\"
-      );
-    },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
-};
-</script>
-
-<style scoped>
-.img {
-  opacity: 1;
-  transition: opacity 0.2s ease-in-out;
-  object-fit: cover;
-  object-position: center;
-}
-</style>"
+> 1 | let _ =  setLoaded() {
+    |                     ^
+  2 |   state.imageLoaded = true;
+  3 | }"
 `;
 
 exports[`Vue > jsx > Typescript Test > Image State 1`] = `
@@ -4242,120 +2764,12 @@ export default {
 `;
 
 exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
-"<template>
-  <div :data-user=\\"name\\">
-    <button @click=\\"showReviewPrompt = true\\">Write a review</button>
+"unknown: Missing semicolon. (1:25)
 
-    <template v-if=\\"showReviewPrompt || 'asdf'\\">
-      <input placeholder=\\"Email\\" />
-
-      <input placeholder=\\"Title\\" class=\\"input\\" />
-
-      <textarea
-        placeholder=\\"How was your experience?\\"
-        class=\\"textarea\\"
-      ></textarea>
-
-      <button
-        class=\\"button\\"
-        @click=\\"
-          $event.preventDefault();
-          showReviewPrompt = false;
-        \\"
-      >
-        Submit
-      </button>
-    </template>
-
-    <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
-      <img class=\\"img\\" :src=\\"review.avatar\\" />
-      <div
-        :class=\\"
-          _classStringToObject(showReviewPrompt ? 'bg-primary' : 'bg-secondary')
-        \\"
-      >
-        <div>N: {{ index }}</div>
-        <div>{{ review.author }}</div>
-        <div>{{ review.reviewMessage }}</div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script lang=\\"ts\\">
-type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
-};
-
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
-
-export default {
-  name: \\"smile-reviews\\",
-
-  props: [\\"apiKey\\", \\"productId\\"],
-
-  data: () => ({ reviews: [], name: \\"test\\", showReviewPrompt: false }),
-
-  mounted() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
-  },
-
-  methods: {
-    kebabCaseValue() {
-      return kebabCase(\\"testThat\\");
-    },
-    snakeCaseValue() {
-      return snakeCase(\\"testThis\\");
-    },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
-};
-</script>
-
-<style scoped>
-.input {
-  display: block;
-}
-.textarea {
-  display: block;
-}
-.button {
-  display: block;
-}
-.review {
-  margin: 10px;
-  padding: 10px;
-  background: white;
-  display: flex;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.img {
-  height: 30px;
-  width: 30px;
-  margin-right: 10px;
-}
-</style>"
+> 1 | let _ =  kebabCaseValue() {
+    |                          ^
+  2 |   return kebabCase('testThat');
+  3 | }"
 `;
 
 exports[`Vue > jsx > Typescript Test > Submit 1`] = `
@@ -4509,26 +2923,12 @@ export default {
 `;
 
 exports[`Vue > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
-"<template>
-  <div>Hello {{ name }}</div>
-</template>
+"unknown: Missing semicolon. (1:23)
 
-<script lang=\\"ts\\">
-export default {
-  name: \\"my-component\\",
-
-  data: () => ({ name: \\"steve\\" }),
-
-  methods: {
-    setName(value) {
-      this.name = value;
-    },
-    updateNameWithArrowFn(value) {
-      this.name = value;
-    },
-  },
-};
-</script>"
+> 1 | let _ =  setName(value) {
+    |                        ^
+  2 |   state.name = value;
+  3 | }"
 `;
 
 exports[`Vue > jsx > Typescript Test > basicForwardRef 1`] = `
@@ -4930,36 +3330,13 @@ export default {
 `;
 
 exports[`Vue > jsx > Typescript Test > import types 1`] = `
-"<template>
-  <render-block
-    v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
-  ></render-block>
-</template>
+"unknown: Missing semicolon. (1:44)
 
-<script lang=\\"ts\\">
-type RenderContentProps = {
-  options?: GetContentOptions;
-  content: BuilderContent;
-  renderContentProps: RenderBlockProps;
-};
-
-import RenderBlock from \\"./builder-render-block.raw\\";
-
-export default {
-  name: \\"render-content\\",
-  components: { RenderBlock: RenderBlock },
-  props: [\\"renderContentProps\\"],
-
-  methods: {
-    getRenderContentProps(block, index) {
-      return {
-        block: block,
-        index: index,
-      };
-    },
-  },
-};
-</script>"
+> 1 | let _ =  getRenderContentProps(block, index) {
+    |                                             ^
+  2 |   return {
+  3 |     block: block,
+  4 |     index: index"
 `;
 
 exports[`Vue > jsx > Typescript Test > multipleOnUpdate 1`] = `

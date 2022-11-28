@@ -3080,23 +3080,21 @@ class Column extends HTMLElement {
 
     this.state = {
       getColumns() {
-        return self.props.columns || [];
+        return props.columns || [];
       },
       getGutterSize() {
-        return typeof self.props.space === \\"number\\"
-          ? self.props.space || 0
-          : 20;
+        return typeof props.space === \\"number\\" ? props.space || 0 : 20;
       },
       getWidth(index) {
-        const columns = self.state.getColumns();
+        const columns = state.getColumns();
         return (columns[index] && columns[index].width) || 100 / columns.length;
       },
       getColumnCssWidth(index) {
-        const columns = self.state.getColumns();
-        const gutterSize = self.state.getGutterSize();
+        const columns = state.getColumns();
+        const gutterSize = state.getGutterSize();
         const subtractWidth =
           (gutterSize * (columns.length - 1)) / columns.length;
-        return \`calc(\${self.state.getWidth(index)}% - \${subtractWidth}px)\`;
+        return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
       },
     };
     if (!this.props) {
@@ -3601,11 +3599,11 @@ class CustomCode extends HTMLElement {
             const script = scripts[i];
 
             if (script.src) {
-              if (self.state.scriptsInserted.includes(script.src)) {
+              if (state.scriptsInserted.includes(script.src)) {
                 continue;
               }
 
-              self.state.scriptsInserted.push(script.src);
+              state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
               newScript.src = script.src;
@@ -3618,12 +3616,12 @@ class CustomCode extends HTMLElement {
                 \\"application/ecmascript\\",
               ].includes(script.type)
             ) {
-              if (self.state.scriptsRun.includes(script.innerText)) {
+              if (state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
 
               try {
-                self.state.scriptsRun.push(script.innerText);
+                state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
               } catch (error) {
                 console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -3769,11 +3767,11 @@ class CustomCode extends HTMLElement {
             const script = scripts[i];
 
             if (script.src) {
-              if (self.state.scriptsInserted.includes(script.src)) {
+              if (state.scriptsInserted.includes(script.src)) {
                 continue;
               }
 
-              self.state.scriptsInserted.push(script.src);
+              state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
               newScript.src = script.src;
@@ -3786,12 +3784,12 @@ class CustomCode extends HTMLElement {
                 \\"application/ecmascript\\",
               ].includes(script.type)
             ) {
-              if (self.state.scriptsRun.includes(script.innerText)) {
+              if (state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
 
               try {
-                self.state.scriptsRun.push(script.innerText);
+                state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
               } catch (error) {
                 console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -3942,12 +3940,12 @@ class Image extends HTMLElement {
       scrollListener: null,
       imageLoaded: false,
       setLoaded() {
-        self.state.imageLoaded = true;
+        state.imageLoaded = true;
         self.update();
       },
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!self.props.lazy && isBrowser();
+        return !!props.lazy && isBrowser();
       },
       isBrowser: function isBrowser() {
         return (
@@ -6555,11 +6553,11 @@ class MyComponent extends HTMLElement {
     this.state = {
       name: \\"steve\\",
       setName(value) {
-        self.state.name = value;
+        state.name = value;
         self.update();
       },
       updateNameWithArrowFn(value) {
-        self.state.name = value;
+        state.name = value;
         self.update();
       },
     };
@@ -14936,23 +14934,21 @@ class Column extends HTMLElement {
 
     this.state = {
       getColumns() {
-        return self.props.columns || [];
+        return props.columns || [];
       },
       getGutterSize() {
-        return typeof self.props.space === \\"number\\"
-          ? self.props.space || 0
-          : 20;
+        return typeof props.space === \\"number\\" ? props.space || 0 : 20;
       },
       getWidth(index) {
-        const columns = self.state.getColumns();
+        const columns = state.getColumns();
         return (columns[index] && columns[index].width) || 100 / columns.length;
       },
       getColumnCssWidth(index) {
-        const columns = self.state.getColumns();
-        const gutterSize = self.state.getGutterSize();
+        const columns = state.getColumns();
+        const gutterSize = state.getGutterSize();
         const subtractWidth =
           (gutterSize * (columns.length - 1)) / columns.length;
-        return \`calc(\${self.state.getWidth(index)}% - \${subtractWidth}px)\`;
+        return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
       },
     };
     if (!this.props) {
@@ -15457,11 +15453,11 @@ class CustomCode extends HTMLElement {
             const script = scripts[i];
 
             if (script.src) {
-              if (self.state.scriptsInserted.includes(script.src)) {
+              if (state.scriptsInserted.includes(script.src)) {
                 continue;
               }
 
-              self.state.scriptsInserted.push(script.src);
+              state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
               newScript.src = script.src;
@@ -15474,12 +15470,12 @@ class CustomCode extends HTMLElement {
                 \\"application/ecmascript\\",
               ].includes(script.type)
             ) {
-              if (self.state.scriptsRun.includes(script.innerText)) {
+              if (state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
 
               try {
-                self.state.scriptsRun.push(script.innerText);
+                state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
               } catch (error) {
                 console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -15625,11 +15621,11 @@ class CustomCode extends HTMLElement {
             const script = scripts[i];
 
             if (script.src) {
-              if (self.state.scriptsInserted.includes(script.src)) {
+              if (state.scriptsInserted.includes(script.src)) {
                 continue;
               }
 
-              self.state.scriptsInserted.push(script.src);
+              state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
               newScript.src = script.src;
@@ -15642,12 +15638,12 @@ class CustomCode extends HTMLElement {
                 \\"application/ecmascript\\",
               ].includes(script.type)
             ) {
-              if (self.state.scriptsRun.includes(script.innerText)) {
+              if (state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
 
               try {
-                self.state.scriptsRun.push(script.innerText);
+                state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
               } catch (error) {
                 console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -15798,12 +15794,12 @@ class Image extends HTMLElement {
       scrollListener: null,
       imageLoaded: false,
       setLoaded() {
-        self.state.imageLoaded = true;
+        state.imageLoaded = true;
         self.update();
       },
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!self.props.lazy && isBrowser();
+        return !!props.lazy && isBrowser();
       },
       isBrowser: function isBrowser() {
         return (
@@ -18411,11 +18407,11 @@ class MyComponent extends HTMLElement {
     this.state = {
       name: \\"steve\\",
       setName(value) {
-        self.state.name = value;
+        state.name = value;
         self.update();
       },
       updateNameWithArrowFn(value) {
-        self.state.name = value;
+        state.name = value;
         self.update();
       },
     };

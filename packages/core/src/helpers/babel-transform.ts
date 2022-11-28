@@ -112,13 +112,16 @@ export const babelTransformExpression = <VisitorContextType = any>(
     return '';
   }
 
-  code = code.trim();
-  const isGetter = code.startsWith('get ');
+  if (code.trim() !== code) {
+    console.log({ code });
+  }
+
+  const isGetter = code.trim().startsWith('get ');
 
   return pipe(
     code,
     (code) => {
-      code = code.replace(/^get /, 'function ');
+      code = isGetter ? code.replace('get', 'function ') : code;
 
       const type = getType(code, initialType);
 
@@ -138,7 +141,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
       }
     },
     (transformed) => {
-      return isGetter ? transformed.trim().replace(/^function /, 'get ') : transformed;
+      return isGetter ? transformed.replace('function ', 'get ') : transformed;
     },
   );
 };

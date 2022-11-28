@@ -431,14 +431,14 @@ exports[`Marko > jsx > Javascript Test > Columns 1`] = `
     return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
   getWidth(index) {
-    const columns = this.getColumns();
+    const columns = state.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
   getColumnCssWidth(index) {
-    const columns = this.getColumns();
-    const gutterSize = this.getGutterSize();
+    const columns = state.getColumns();
+    const gutterSize = state.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 }
 
@@ -512,11 +512,11 @@ exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (this.statescriptsInserted.includes(script.src)) {
+          if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.statescriptsInserted.push(script.src);
+          state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -529,12 +529,12 @@ exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.statescriptsRun.includes(script.innerText)) {
+          if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.statescriptsRun.push(script.innerText);
+            state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -577,11 +577,11 @@ exports[`Marko > jsx > Javascript Test > Embed 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (this.statescriptsInserted.includes(script.src)) {
+          if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.statescriptsInserted.push(script.src);
+          state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -594,12 +594,12 @@ exports[`Marko > jsx > Javascript Test > Embed 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.statescriptsRun.includes(script.innerText)) {
+          if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.statescriptsRun.push(script.innerText);
+            state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -753,7 +753,7 @@ class {
         }
       }
 
-      this.stateformState = \\"sending\\";
+      state.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -789,12 +789,12 @@ class {
                 message = JSON.stringify(message);
               }
 
-              this.stateformErrorMessage = message;
+              state.formErrorMessage = message;
             }
           }
 
-          this.stateresponseData = body;
-          this.stateformState = res.ok ? \\"success\\" : \\"error\\";
+          state.responseData = body;
+          state.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -851,8 +851,8 @@ class {
             }
           }
 
-          this.stateresponseData = err;
-          this.stateformState = \\"error\\";
+          state.responseData = err;
+          state.formState = \\"error\\";
         }
       );
     }
@@ -925,7 +925,7 @@ style {
 exports[`Marko > jsx > Javascript Test > Image 1`] = `
 "class {
   setLoaded() {
-    this.stateimageLoaded = true;
+    state.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -1291,10 +1291,10 @@ exports[`Marko > jsx > Javascript Test > Video 1`] = `
 exports[`Marko > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 "class {
   setName(value) {
-    this.statename = value;
+    state.name = value;
   }
   updateNameWithArrowFn(value) {
-    this.statename = value;
+    state.name = value;
   }
 
   onCreate() {
@@ -2293,14 +2293,14 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
     return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
   getWidth(index) {
-    const columns = this.getColumns();
+    const columns = state.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
   getColumnCssWidth(index) {
-    const columns = this.getColumns();
-    const gutterSize = this.getGutterSize();
+    const columns = state.getColumns();
+    const gutterSize = state.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 }
 
@@ -2374,11 +2374,11 @@ exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (this.statescriptsInserted.includes(script.src)) {
+          if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.statescriptsInserted.push(script.src);
+          state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -2391,12 +2391,12 @@ exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.statescriptsRun.includes(script.innerText)) {
+          if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.statescriptsRun.push(script.innerText);
+            state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -2439,11 +2439,11 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (this.statescriptsInserted.includes(script.src)) {
+          if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.statescriptsInserted.push(script.src);
+          state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -2456,12 +2456,12 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.statescriptsRun.includes(script.innerText)) {
+          if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.statescriptsRun.push(script.innerText);
+            state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -2615,7 +2615,7 @@ class {
         }
       }
 
-      this.stateformState = \\"sending\\";
+      state.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -2651,12 +2651,12 @@ class {
                 message = JSON.stringify(message);
               }
 
-              this.stateformErrorMessage = message;
+              state.formErrorMessage = message;
             }
           }
 
-          this.stateresponseData = body;
-          this.stateformState = res.ok ? \\"success\\" : \\"error\\";
+          state.responseData = body;
+          state.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -2713,8 +2713,8 @@ class {
             }
           }
 
-          this.stateresponseData = err;
-          this.stateformState = \\"error\\";
+          state.responseData = err;
+          state.formState = \\"error\\";
         }
       );
     }
@@ -2787,7 +2787,7 @@ style {
 exports[`Marko > jsx > Typescript Test > Image 1`] = `
 "class {
   setLoaded() {
-    this.stateimageLoaded = true;
+    state.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -3153,10 +3153,10 @@ exports[`Marko > jsx > Typescript Test > Video 1`] = `
 exports[`Marko > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 "class {
   setName(value) {
-    this.statename = value;
+    state.name = value;
   }
   updateNameWithArrowFn(value) {
-    this.statename = value;
+    state.name = value;
   }
 
   onCreate() {

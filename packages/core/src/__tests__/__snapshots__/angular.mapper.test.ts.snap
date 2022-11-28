@@ -772,14 +772,14 @@ export class Column {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
   getWidth(index) {
-    const columns = this.getColumns();
+    const columns = state.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
   getColumnCssWidth(index) {
-    const columns = this.getColumns();
-    const gutterSize = this.getGutterSize();
+    const columns = state.getColumns();
+    const gutterSize = state.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 }
 
@@ -909,11 +909,11 @@ export class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (this.scriptsInserted.includes(script.src)) {
+          if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.scriptsInserted.push(script.src);
+          state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -926,12 +926,12 @@ export class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.scriptsRun.includes(script.innerText)) {
+          if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.scriptsRun.push(script.innerText);
+            state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -995,11 +995,11 @@ export class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (this.scriptsInserted.includes(script.src)) {
+          if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.scriptsInserted.push(script.src);
+          state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -1012,12 +1012,12 @@ export class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.scriptsRun.includes(script.innerText)) {
+          if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.scriptsRun.push(script.innerText);
+            state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -1281,7 +1281,7 @@ export class FormComponent {
         }
       }
 
-      this.formState = \\"sending\\";
+      state.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -1317,12 +1317,12 @@ export class FormComponent {
                 message = JSON.stringify(message);
               }
 
-              this.formErrorMessage = message;
+              state.formErrorMessage = message;
             }
           }
 
-          this.responseData = body;
-          this.formState = res.ok ? \\"success\\" : \\"error\\";
+          state.responseData = body;
+          state.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -1379,8 +1379,8 @@ export class FormComponent {
             }
           }
 
-          this.responseData = err;
-          this.formState = \\"error\\";
+          state.responseData = err;
+          state.formState = \\"error\\";
         }
       );
     }
@@ -1469,7 +1469,7 @@ export class Image {
   scrollListener = null;
   imageLoaded = false;
   setLoaded() {
-    this.imageLoaded = true;
+    state.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -2238,10 +2238,10 @@ import { Component } from \\"@angular/core\\";
 export class MyComponent {
   name = \\"steve\\";
   setName(value) {
-    this.name = value;
+    state.name = value;
   }
   updateNameWithArrowFn(value) {
-    this.name = value;
+    state.name = value;
   }
 }
 
@@ -4681,14 +4681,14 @@ export class Column {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
   getWidth(index) {
-    const columns = this.getColumns();
+    const columns = state.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
   getColumnCssWidth(index) {
-    const columns = this.getColumns();
-    const gutterSize = this.getGutterSize();
+    const columns = state.getColumns();
+    const gutterSize = state.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 }
 
@@ -4818,11 +4818,11 @@ export class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (this.scriptsInserted.includes(script.src)) {
+          if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.scriptsInserted.push(script.src);
+          state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -4835,12 +4835,12 @@ export class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.scriptsRun.includes(script.innerText)) {
+          if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.scriptsRun.push(script.innerText);
+            state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -4904,11 +4904,11 @@ export class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (this.scriptsInserted.includes(script.src)) {
+          if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.scriptsInserted.push(script.src);
+          state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -4921,12 +4921,12 @@ export class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.scriptsRun.includes(script.innerText)) {
+          if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.scriptsRun.push(script.innerText);
+            state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -5190,7 +5190,7 @@ export class FormComponent {
         }
       }
 
-      this.formState = \\"sending\\";
+      state.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -5226,12 +5226,12 @@ export class FormComponent {
                 message = JSON.stringify(message);
               }
 
-              this.formErrorMessage = message;
+              state.formErrorMessage = message;
             }
           }
 
-          this.responseData = body;
-          this.formState = res.ok ? \\"success\\" : \\"error\\";
+          state.responseData = body;
+          state.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -5288,8 +5288,8 @@ export class FormComponent {
             }
           }
 
-          this.responseData = err;
-          this.formState = \\"error\\";
+          state.responseData = err;
+          state.formState = \\"error\\";
         }
       );
     }
@@ -5378,7 +5378,7 @@ export class Image {
   scrollListener = null;
   imageLoaded = false;
   setLoaded() {
-    this.imageLoaded = true;
+    state.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -6147,10 +6147,10 @@ import { Component } from \\"@angular/core\\";
 export class MyComponent {
   name = \\"steve\\";
   setName(value) {
-    this.name = value;
+    state.name = value;
   }
   updateNameWithArrowFn(value) {
-    this.name = value;
+    state.name = value;
   }
 }
 
