@@ -2143,6 +2143,32 @@ export default function MyBasicComponent(props) {
 "
 `;
 
+exports[`React > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+export default function OnUpdate(props) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
+}
+"
+`;
+
 exports[`React > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { useContext, useEffect } from \\"react\\";
@@ -4911,6 +4937,32 @@ export default function MyBasicComponent(props: Person) {
       {props.name}
     </div>
   );
+}
+"
+`;
+
+exports[`React > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+export default function OnUpdate(props: any) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
 }
 "
 `;

@@ -3309,6 +3309,41 @@ export default class MyBasicComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"on-update\\")
+export default class OnUpdate extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  updated() {
+    foo({
+      someOption: bar,
+    });
+  }
+
+  render() {
+    return html\`
+         
+         <div></div>
+
+       \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
@@ -7122,6 +7157,41 @@ export default class MyBasicComponent extends LitElement {
         <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
       \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"on-update\\")
+export default class OnUpdate extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  updated() {
+    foo({
+      someOption: bar,
+    });
+  }
+
+  render() {
+    return html\`
+         
+         <div></div>
+
+       \`;
   }
 }
 "

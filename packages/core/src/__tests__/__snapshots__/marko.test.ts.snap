@@ -1779,6 +1779,26 @@ exports[`Marko > jsx > Javascript Test > propsType 1`] = `
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
+exports[`Marko > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"class {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  onRender() {
+    foo({
+      someOption: bar,
+    });
+  }
+}
+
+<div></div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
@@ -3673,6 +3693,26 @@ exports[`Marko > jsx > Typescript Test > propsType 1`] = `
 "class {}
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"class {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  onRender() {
+    foo({
+      someOption: bar,
+    });
+  }
+}
+
+<div></div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > renderContentExample 1`] = `

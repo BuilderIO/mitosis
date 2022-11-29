@@ -2152,6 +2152,30 @@ const props = defineProps([\\"name\\"]);
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script setup>
+import { onUpdated } from \\"vue\\";
+
+onUpdated(() =>
+  foo({
+    someOption: bar,
+  })
+);
+
+function foo(params) {}
+function bar() {}
+function zoo() {
+  const params = {
+    cb: bar,
+  };
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > renderContentExample 1`] = `
 "<template>
   <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
@@ -4809,6 +4833,30 @@ type Person = {
 };
 
 const props = defineProps<Person>();
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { onUpdated } from \\"vue\\";
+
+onUpdated(() =>
+  foo({
+    someOption: bar,
+  })
+);
+
+function foo(params) {}
+function bar() {}
+function zoo() {
+  const params = {
+    cb: bar,
+  };
+}
 </script>"
 `;
 

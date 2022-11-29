@@ -28,6 +28,7 @@ import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
+import { replaceIdentifiers } from '../helpers/replace-identifiers';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
 import { pipe } from 'fp-ts/lib/function';
 
@@ -254,13 +255,28 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         switch (codeType) {
           case 'hooks':
             return (code) => {
-              return stripStateAndPropsRefs(code, {
-                replaceWith: 'this.',
-                contextVars,
-                outputVars,
-                domRefs: Array.from(domRefs),
-                stateVars,
-              });
+              return pipe(
+                stripStateAndPropsRefs(code, {
+                  replaceWith: 'this.',
+                  contextVars,
+                  outputVars,
+                  domRefs: Array.from(domRefs),
+                  stateVars,
+                }),
+                (code) => {
+                  const allMethodNames = Object.entries(json.state)
+                    .filter(
+                      ([key, value]) => value?.type === 'function' || value?.type === 'method',
+                    )
+                    .map(([key]) => key);
+
+                  return replaceIdentifiers({
+                    code,
+                    from: allMethodNames,
+                    to: (name) => `this.${name}`,
+                  });
+                },
+              );
             };
           case 'bindings':
             return (code) => {
