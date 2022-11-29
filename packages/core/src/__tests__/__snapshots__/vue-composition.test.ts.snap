@@ -1791,7 +1791,7 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -1800,9 +1800,13 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
 
 <script setup>
 const props = withDefaults(defineProps(), {
-  text: \\"default text\\",
   link: \\"https://builder.io/\\",
+  attributes: {},
   openLinkInNewTab: false,
+  text: \\"default text\\",
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 });
 </script>"
 `;
@@ -1821,7 +1825,7 @@ exports[`Vue > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -1830,9 +1834,11 @@ exports[`Vue > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 
 <script setup>
 const props = withDefaults(defineProps(), {
-  text: \\"default text\\",
   link: \\"https://builder.io/\\",
+  attributes: {},
   openLinkInNewTab: false,
+  text: \\"default text\\",
+  onClick: () => {},
 });
 </script>"
 `;
@@ -4371,7 +4377,7 @@ exports[`Vue > jsx > Typescript Test > defaultProps 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -4384,12 +4390,17 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 
 const props = withDefaults(defineProps<ButtonProps>(), {
-  text: \\"default text\\",
   link: \\"https://builder.io/\\",
+  attributes: {},
   openLinkInNewTab: false,
+  text: \\"default text\\",
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 });
 </script>"
 `;
@@ -4408,7 +4419,7 @@ exports[`Vue > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -4421,12 +4432,15 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 
 const props = withDefaults(defineProps<ButtonProps>(), {
-  text: \\"default text\\",
   link: \\"https://builder.io/\\",
+  attributes: {},
   openLinkInNewTab: false,
+  text: \\"default text\\",
+  onClick: () => {},
 });
 </script>"
 `;
@@ -5160,7 +5174,7 @@ exports[`Vue > svelte > Javascript Test > classDirective 1`] = `
 <script setup>
 import { ref } from \\"vue\\";
 
-const props = withDefaults(defineProps(), {});
+const props = withDefaults(defineProps(), { disabled: {} });
 const focus = ref(true);
 
 function _classStringToObject(str) {
@@ -5480,7 +5494,7 @@ exports[`Vue > svelte > Typescript Test > classDirective 1`] = `
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
-const props = withDefaults(defineProps<undefined>(), {});
+const props = withDefaults(defineProps<undefined>(), { disabled: {} });
 const focus = ref(true);
 
 function _classStringToObject(str) {

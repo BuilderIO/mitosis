@@ -1,5 +1,4 @@
 import dedent from 'dedent';
-import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
@@ -396,6 +395,20 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     Object.entries(json.meta.angularConfig || {}).forEach(([key, value]) => {
       componentMetadata[key] = value;
     });
+
+    const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
+      if (!json.defaultProps) return '';
+      const defalutPropsString = Object.keys(json.defaultProps)
+        .map((prop) => {
+          const value = json.defaultProps!.hasOwnProperty(prop)
+            ? json.defaultProps![prop]?.code
+            : '{}';
+          return `${prop}: ${value}`;
+        })
+        .join(',');
+      return `const defaultProps = {${defalutPropsString}};\n`;
+    };
+
     let str = dedent`
     import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
       options?.experimental?.inject ? 'Inject, forwardRef,' : ''
@@ -405,7 +418,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
-    ${!json.defaultProps ? '' : `const defaultProps = ${json5.stringify(json.defaultProps)}\n`}
+    ${getPropsDefinition({ json })}
     ${renderPreComponent({
       component: json,
       target: 'angular',

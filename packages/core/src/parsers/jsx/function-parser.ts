@@ -25,17 +25,8 @@ export function parseDefaultPropsHook(
   expression: babel.types.CallExpression,
 ) {
   const firstArg = expression.arguments[0];
-
   if (types.isObjectExpression(firstArg)) {
-    const objectProperties = firstArg.properties?.filter((i) => types.isObjectProperty(i));
-    objectProperties?.forEach((i: any) => {
-      if (i.key?.name) {
-        component.defaultProps = {
-          ...(component.defaultProps ?? {}),
-          [i.key?.name]: i.value.value,
-        };
-      }
-    });
+    component.defaultProps = parseStateObjectToMitosisState(firstArg, false);
   }
 }
 

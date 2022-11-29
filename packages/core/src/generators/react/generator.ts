@@ -539,6 +539,19 @@ const _componentToReact = (
   const propType = json.propsTypeRef || 'any';
   const propsArgs = `props${options.typescript ? `:${propType}` : ''}`;
 
+  const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
+    if (!json.defaultProps) return '';
+    const defalutPropsString = Object.keys(json.defaultProps)
+      .map((prop) => {
+        const value = json.defaultProps!.hasOwnProperty(prop)
+          ? json.defaultProps![prop]?.code
+          : '{}';
+        return `${prop}: ${value}`;
+      })
+      .join(',');
+    return `${json.name || 'MyComponent'}.defaultProps = {${defalutPropsString}};`;
+  };
+
   let str = dedent`
   ${
     options.preact
@@ -677,11 +690,7 @@ const _componentToReact = (
       );
     }${isForwardRef ? ')' : ''}
 
-    ${
-      !json.defaultProps
-        ? ''
-        : `${json.name || 'MyComponent'}.defaultProps = ${json5.stringify(json.defaultProps)};`
-    }
+    ${getPropsDefinition({ json })}
 
     ${
       !nativeStyles

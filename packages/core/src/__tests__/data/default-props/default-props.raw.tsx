@@ -5,6 +5,7 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 
 export default function Button(props: ButtonProps) {
@@ -12,6 +13,9 @@ export default function Button(props: ButtonProps) {
     text: 'default text',
     link: 'https://builder.io/',
     openLinkInNewTab: false,
+    onClick: () => {
+      console.log('hi');
+    },
   });
 
   return (
@@ -26,7 +30,7 @@ export default function Button(props: ButtonProps) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button {...props.attributes} type="button">
+        <button {...props.attributes} onClick={(event) => props.onClick(event)} type="button">
           {props.text}
         </button>
       </Show>
