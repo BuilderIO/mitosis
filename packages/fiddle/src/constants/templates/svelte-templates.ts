@@ -189,6 +189,12 @@ export const templates: { [key: string]: string } = {
     }
   </style>
   `,
+  slots: dedent`
+  <div>
+    <slot>default</slot>
+    <slot name="test"><div>default</div></slot>
+  </div>
+  `,
   'bind:group': dedent`
   <script>
     let tortilla = 'Plain';

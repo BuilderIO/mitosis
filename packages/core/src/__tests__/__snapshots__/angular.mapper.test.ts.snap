@@ -1839,6 +1839,38 @@ export class SelectComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > SlotDefault 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+@Component({
+  selector: \\"slot-code, SlotCode\\",
+  template: \`
+    <div>
+      <ng-content>
+        <div class=\\"default-slot\\">Default content</div>
+      </ng-content>
+    </div>
+  \`,
+})
+export class SlotCode {}
+
+@NgModule({
+  declarations: [SlotCode],
+  imports: [BrowserModule, SlotModule],
+  exports: [SlotCode],
+  bootstrap: [SomeOtherComponent],
+})
+export class SlotCodeModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > SlotHtml 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -1898,6 +1930,40 @@ export class SlotCode {}
 @NgModule({
   declarations: [SlotCode],
   imports: [BrowserModule, ContentSlotCodeModule],
+  exports: [SlotCode],
+  bootstrap: [SomeOtherComponent],
+})
+export class SlotCodeModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > SlotNamed 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+@Component({
+  selector: \\"slot-code, SlotCode\\",
+  template: \`
+    <div>
+      <ng-content select=\\"[top]\\"></ng-content>
+
+      <ng-content select=\\"[left]\\">Default left</ng-content>
+
+      <ng-content>Default Child</ng-content>
+    </div>
+  \`,
+})
+export class SlotCode {}
+
+@NgModule({
+  declarations: [SlotCode],
+  imports: [BrowserModule, SlotModule],
   exports: [SlotCode],
   bootstrap: [SomeOtherComponent],
 })
@@ -5748,6 +5814,38 @@ export class SelectComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > SlotDefault 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+@Component({
+  selector: \\"slot-code, SlotCode\\",
+  template: \`
+    <div>
+      <ng-content>
+        <div class=\\"default-slot\\">Default content</div>
+      </ng-content>
+    </div>
+  \`,
+})
+export class SlotCode {}
+
+@NgModule({
+  declarations: [SlotCode],
+  imports: [BrowserModule, SlotModule],
+  exports: [SlotCode],
+  bootstrap: [SomeOtherComponent],
+})
+export class SlotCodeModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > SlotHtml 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -5807,6 +5905,40 @@ export class SlotCode {}
 @NgModule({
   declarations: [SlotCode],
   imports: [BrowserModule, ContentSlotCodeModule],
+  exports: [SlotCode],
+  bootstrap: [SomeOtherComponent],
+})
+export class SlotCodeModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > SlotNamed 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+@Component({
+  selector: \\"slot-code, SlotCode\\",
+  template: \`
+    <div>
+      <ng-content select=\\"[top]\\"></ng-content>
+
+      <ng-content select=\\"[left]\\">Default left</ng-content>
+
+      <ng-content>Default Child</ng-content>
+    </div>
+  \`,
+})
+export class SlotCode {}
+
+@NgModule({
+  declarations: [SlotCode],
+  imports: [BrowserModule, SlotModule],
   exports: [SlotCode],
   bootstrap: [SomeOtherComponent],
 })
@@ -8242,6 +8374,33 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > slots 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-content>default</ng-content>
+      <ng-content select=\\"[test]\\"><div>default</div></ng-content>
+    </div>
+  \`,
+})
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule, SlotModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > svelte > Javascript Test > style 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -8753,6 +8912,33 @@ export class MyComponent {
 @NgModule({
   declarations: [MyComponent],
   imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > slots 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-content>default</ng-content>
+      <ng-content select=\\"[test]\\"><div>default</div></ng-content>
+    </div>
+  \`,
+})
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule, SlotModule],
   exports: [MyComponent],
   bootstrap: [SomeOtherComponent],
 })

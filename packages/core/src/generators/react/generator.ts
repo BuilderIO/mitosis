@@ -1,6 +1,6 @@
 import dedent from 'dedent';
 import json5 from 'json5';
-import { camelCase } from 'lodash';
+import { camelCase, upperFirst } from 'lodash';
 import { format } from 'prettier/standalone';
 import { TranspilerGenerator } from '../../types/transpiler';
 import { collectCss } from '../../helpers/styles/collect-css';
@@ -67,10 +67,22 @@ const isRootSpecialNode = (json: MitosisComponent) =>
 const wrapInFragment = (json: MitosisComponent | MitosisNode) => json.children.length !== 1;
 
 const NODE_MAPPERS: {
-  [key: string]: (json: MitosisNode, options: ToReactOptions, parentSlots?: any[]) => string;
+  [key: string]: (
+    json: MitosisNode,
+    options: ToReactOptions,
+    component: MitosisComponent,
+    parentSlots?: any[],
+  ) => string;
 } = {
-  Slot(json, options, parentSlots) {
-    if (!json.bindings.name) {
+  Slot(json, options, component, parentSlots) {
+    const slotName = json.bindings.name?.code || json.properties.name;
+
+    const hasChildren = json.children.length;
+
+    const renderChildren = () =>
+      json.children?.map((item) => blockToReact(item, options, component)).join('\n');
+
+    if (!slotName) {
       // TODO: update MitosisNode for simple code
       const key = Object.keys(json.bindings).find(Boolean);
       if (key && parentSlots) {
@@ -78,21 +90,37 @@ const NODE_MAPPERS: {
         parentSlots.push({ key: propKey, value: json.bindings[key]?.code });
         return '';
       }
+
+      if (hasChildren) {
+        component.defaultProps = {
+          ...(component.defaultProps || {}),
+          children: renderChildren().trim(),
+        };
+      }
       return `{${processBinding('props.children', options)}}`;
     }
-    const slotProp = processBinding(json.bindings.name.code as string, options).replace(
-      'name=',
-      '',
-    );
+
+    let slotProp = processBinding(slotName as string, options).replace('name=', '');
+
+    if (!slotProp.startsWith('props.slot')) {
+      slotProp = `props.slot${upperFirst(camelCase(slotProp))}`;
+    }
+
+    if (hasChildren) {
+      component.defaultProps = {
+        ...(component.defaultProps || {}),
+        [slotProp.replace('props.', '')]: renderChildren(),
+      };
+    }
     return `{${slotProp}}`;
   },
-  Fragment(json, options) {
+  Fragment(json, options, component) {
     const wrap = wrapInFragment(json);
     return `${wrap ? getFragment('open', options) : ''}${json.children
-      .map((item) => blockToReact(item, options))
+      .map((item) => blockToReact(item, options, component))
       .join('\n')}${wrap ? getFragment('close', options) : ''}`;
   },
-  For(_json, options) {
+  For(_json, options, component) {
     const json = _json as ForNode;
     const wrap = wrapInFragment(json);
     const forArguments = getForArguments(json).join(', ');
@@ -102,18 +130,18 @@ const NODE_MAPPERS: {
     )}?.map((${forArguments}) => (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options))
+      .map((item) => blockToReact(item, options, component))
       .join('\n')}${wrap ? closeFrag(options) : ''}
     ))}`;
   },
-  Show(json, options) {
+  Show(json, options, component) {
     const wrap = wrapInFragment(json);
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options))
+      .map((item) => blockToReact(item, options, component))
       .join('\n')}${wrap ? closeFrag(options) : ''}
-    ) : ${!json.meta.else ? 'null' : blockToReact(json.meta.else as any, options)}}`;
+    ) : ${!json.meta.else ? 'null' : blockToReact(json.meta.else as any, options, component)}}`;
   },
 };
 
@@ -146,9 +174,14 @@ const BINDING_MAPPERS: {
   ...ATTTRIBUTE_MAPPERS,
 };
 
-export const blockToReact = (json: MitosisNode, options: ToReactOptions, parentSlots?: any[]) => {
+export const blockToReact = (
+  json: MitosisNode,
+  options: ToReactOptions,
+  component: MitosisComponent,
+  parentSlots?: any[],
+) => {
   if (NODE_MAPPERS[json.name]) {
-    return NODE_MAPPERS[json.name](json, options, parentSlots);
+    return NODE_MAPPERS[json.name](json, options, component, parentSlots);
   }
 
   if (json.properties._text) {
@@ -174,7 +207,7 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions, parentS
     const value = (json.properties[key] || '').replace(/"/g, '&quot;').replace(/\n/g, '\\n');
 
     if (key === 'class') {
-      str += ` className="${value}" `;
+      str = `${str.trim()} className="${value}" `;
     } else if (BINDING_MAPPERS[key]) {
       const mapper = BINDING_MAPPERS[key];
       if (typeof mapper === 'function') {
@@ -242,7 +275,7 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions, parentS
   let childrenNodes = '';
   if (json.children) {
     childrenNodes = json.children
-      .map((item) => blockToReact(item, options, needsToRenderSlots))
+      .map((item) => blockToReact(item, options, component, needsToRenderSlots))
       .join('\n');
   }
   if (needsToRenderSlots.length) {
@@ -250,7 +283,7 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions, parentS
       str += ` ${key}={${value}} `;
     });
   }
-  str += '>';
+  str = str.trim() + '>';
 
   if (json.children) {
     str += childrenNodes;
@@ -632,7 +665,7 @@ const _componentToReact = (
 
       return (
         ${wrap ? openFrag(options) : ''}
-        ${json.children.map((item) => blockToReact(item, options)).join('\n')}
+        ${json.children.map((item) => blockToReact(item, options, json, [])).join('\n')}
         ${
           componentHasStyles && stylesType === 'styled-jsx'
             ? `<style jsx>{\`${css}\`}</style>`

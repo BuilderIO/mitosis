@@ -20,7 +20,7 @@ import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
 import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';
-import { kebabCase, uniq } from 'lodash';
+import { isString, kebabCase, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
@@ -59,10 +59,13 @@ const mappers: {
       .join('\n')}</ng-container>`;
   },
   Slot: (json, options) => {
-    return `<ng-content ${Object.entries(json.bindings)
+    const renderChildren = () =>
+      json.children?.map((item) => blockToAngular(item, options)).join('\n');
+
+    return `<ng-content ${Object.entries({ ...json.bindings, ...json.properties })
       .map(([binding, value]) => {
         if (value && binding === 'name') {
-          const selector = pipe(value.code, stripSlotPrefix, kebabCase);
+          const selector = pipe(isString(value) ? value : value.code, stripSlotPrefix, kebabCase);
           return `select="[${selector}]"`;
         }
       })
@@ -72,7 +75,7 @@ const mappers: {
           return value.code;
         }
       })
-      .join('\n')}</ng-content>`;
+      .join('\n')}${renderChildren()}</ng-content>`;
   },
 };
 
