@@ -37,7 +37,7 @@ const handleErrorOrExpression = <VisitorContextType = any>({
       str.replace(/let _ =\s/, ''),
     );
     if (isMethod) {
-      return result.replace('function', '');
+      return result.replace('function ', '');
     }
     return result;
   } catch (err) {
