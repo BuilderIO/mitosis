@@ -75,5 +75,48 @@ ruleTester.run('no-var-name-same-as-state-property', rule, {
       `,
       errors: ['variables with the same name as a state property will shadow it'],
     },
+    {
+      ...opts,
+      code: `
+      import { useStore } from '@builder.io/mitosis';
+
+      export default function MyComponent(props) {
+        const state = useStore({
+          foo: 'bar',
+      
+          abc() {
+            const foo = 'baz';
+      
+            return foo;
+          }
+        });
+      
+        return <div />;
+      }
+      `,
+      errors: ['variables with the same name as a state property will shadow it'],
+    },
+    {
+      ...opts,
+      code: `
+      import { useStore } from '@builder.io/mitosis';
+
+      export default function MyComponent(props) {
+        const state = useStore({
+          foo: 'bar',
+        });
+      
+      
+        function myFunction() {
+          const foo = 'some value';
+          state.foo = foo;
+        }
+      
+      
+        return <div />;
+      }
+      `,
+      errors: ['variables with the same name as a state property will shadow it'],
+    },
   ],
 });

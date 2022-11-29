@@ -45,6 +45,22 @@ export default function MyComponent(props) {
 }
 ```
 
+```js
+import { useStore } from '@builder.io/mitosis';
+
+export default function MyComponent(props) {
+  const state = useStore({
+    foo: 'bar',
+  });
+
+  function myFunction() {
+    const foo = props.foo;
+  }
+
+  return <div />;
+}
+```
+
 Examples of **correct** code for this rule:
 
 ```js
