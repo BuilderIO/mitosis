@@ -184,7 +184,9 @@ export const blockToAngular = (
       // TODO: proper babel transform to replace. Util for this
 
       if (key.startsWith('on')) {
-        let event = key.replace('on', '').toLowerCase();
+        let event = key.replace('on', '');
+        event = event.charAt(0).toLowerCase() + event.slice(1);
+
         if (event === 'change' && json.name === 'input' /* todo: other tags */) {
           event = 'input';
         }
