@@ -7,13 +7,12 @@ import { JSONOrNode } from '../../types/json';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { HOOKS } from '../../constants/hooks';
-import { parseStateObjectToMitosisState } from './state';
+import { mapStateInObjectExpressions, parseStateObjectToMitosisState } from './state';
 import { Context } from './types';
 import { parseCode, parseCodeJson } from './helpers';
 import { getPropsTypeRef } from './component-types';
 import { jsxElementToJson } from './element-parser';
 import { METADATA_HOOK_NAME } from './hooks';
-
 const { types } = babel;
 
 export function generateUseStyleCode(expression: babel.types.CallExpression) {
@@ -40,6 +39,22 @@ const processHookCode = (
     //  { console.log('hi') } -> console.log('hi')
     .replace(/^{/, '')
     .replace(/}$/, '');
+
+const generateContextRef = (
+  node: babel.types.Node,
+  state: MitosisComponent['state'] = {},
+): string => {
+  const stateProperties = Object.keys(state);
+  if (types.isObjectExpression(node)) {
+    mapStateInObjectExpressions(node, stateProperties);
+  } else if (types.isIdentifier(node)) {
+    if (stateProperties.includes(node.name)) {
+      node.name = `state.${node.name}`;
+    }
+  }
+  return generate(node).code;
+};
+
 /**
  * Parses function declarations within the Mitosis copmonent's body to JSON
  */
@@ -74,10 +89,9 @@ export const componentFunctionToJson = (
                     value,
                   };
                 } else {
-                  const ref = generate(valueNode).code;
                   setContext[keyPath] = {
                     name: keyNode.name,
-                    ref,
+                    ref: generateContextRef(valueNode, state),
                   };
                 }
               }
@@ -85,7 +99,7 @@ export const componentFunctionToJson = (
               if (types.isExpression(valueNode)) {
                 setContext[keyNode.value] = {
                   name: `"${keyNode.value}"`,
-                  ref: generate(valueNode).code,
+                  ref: generateContextRef(valueNode, state),
                 };
               }
             }
