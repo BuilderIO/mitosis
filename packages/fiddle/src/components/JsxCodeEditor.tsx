@@ -1,61 +1,10 @@
-import { Linter as ESLinter } from 'eslint';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
-import { rules, configs as lintConfigs } from '@builder.io/eslint-plugin-mitosis';
-
+import { eslint } from './Fiddle/Linter';
 const JsxRuntimeTypes = require('!!raw-loader!@builder.io/mitosis/jsx-runtime').default;
 const MitosisTypes = require('!!raw-loader!@builder.io/mitosis/types').default;
 
 import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@monaco-editor/react';
-
-const Linter: typeof ESLinter = require('eslint/lib/linter/linter').Linter;
-const linter = new Linter();
-const recommendedRules: Record<string, any> = {};
-
-linter.defineRules(rules as any);
-Object.entries(lintConfigs.recommended.rules).forEach(([key, value]) => {
-  const trimmedKey = key.replace(/^@builder.io\/mitosis\//, '');
-  recommendedRules[trimmedKey] = value;
-});
-
-function eslint(code: string, version: any) {
-  try {
-    const markers = linter
-      .verify(
-        code,
-        {
-          rules: {
-            ...recommendedRules,
-            'no-var-declaration-or-assignment-in-component': 'off',
-          },
-          parserOptions: {
-            sourceType: 'module',
-            ecmaVersion: 2020,
-            ecmaFeatures: {
-              jsx: true,
-            },
-          },
-        },
-        {
-          filename: 'mitosis.lite.tsx',
-        },
-      )
-      .map((err) => ({
-        startLineNumber: err.line,
-        endLineNumber: err.line,
-        startColumn: err.column,
-        endColumn: err.column,
-        message: `${err.message} (${err.ruleId})`,
-        severity: 3,
-        source: 'ESLint',
-      }));
-    return { markers, version };
-  } catch (err) {
-    // These can generally be ignored - invalid syntax and whatnot
-    console.warn('Eslint error', err);
-    return null;
-  }
-}
 
 type EditorRefArgs = Parameters<NonNullable<MonacoEditorProps['onMount']>>;
 type Editor = EditorRefArgs[0];
@@ -82,8 +31,8 @@ export function JsxCodeEditor(props: MonacoEditorProps) {
     });
 
     monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-      noSemanticValidation: true,
-      noSyntaxValidation: true,
+      noSemanticValidation: false,
+      noSyntaxValidation: false,
     });
 
     // add types
@@ -133,7 +82,7 @@ export function JsxCodeEditor(props: MonacoEditorProps) {
       if (!result) {
         return;
       }
-      // monaco.editor.setModelMarkers(model, 'eslint', result.markers);
+      monaco.editor.setModelMarkers(model, 'eslint', result.markers);
     },
     2000,
     [props.value, editor],
@@ -150,7 +99,7 @@ export function JsxCodeEditor(props: MonacoEditorProps) {
         scrollbar: { vertical: 'hidden' },
         ...props.options,
       }}
-      language="javascript"
+      language="typescript"
       path="mitosis.tsx"
       {...props}
       onMount={(editor, monaco) => {
