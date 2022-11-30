@@ -79,8 +79,16 @@ const NODE_MAPPERS: {
 
     const hasChildren = json.children.length;
 
-    const renderChildren = () =>
-      json.children?.map((item) => blockToReact(item, options, component)).join('\n');
+    const renderChildren = () => {
+      const childrenStr = json.children
+        ?.map((item) => blockToReact(item, options, component))
+        .join('\n');
+      if (childrenStr.startsWith(`<`) && childrenStr.endsWith(`>`)) {
+        return childrenStr;
+      } else {
+        return `"${childrenStr}"`;
+      }
+    };
 
     if (!slotName) {
       // TODO: update MitosisNode for simple code

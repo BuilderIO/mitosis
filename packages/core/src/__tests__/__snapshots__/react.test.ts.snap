@@ -1188,16 +1188,14 @@ export default function SelectComponent(props) {
 `;
 
 exports[`React > jsx > Javascript Test > SlotDefault 1`] = `
-"import * as React from \\"react\\";
-
-export default function SlotCode(props) {
-  return <div>{props.children}</div>;
-}
-
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
-"
+"',' expected. (42:63)
+  40 |   }
+  41 |
+> 42 |   SlotCode.defaultProps = {children: \\"        <div className=\\"default-slot\\">Default content</div>      \\"};
+     |                                                               ^
+  43 |
+  44 |
+  45 |"
 `;
 
 exports[`React > jsx > Javascript Test > SlotHtml 1`] = `
@@ -1229,14 +1227,22 @@ export default function SlotCode(props) {
 `;
 
 exports[`React > jsx > Javascript Test > SlotNamed 1`] = `
-"',' expected. (48:46)
-  46 |   }
-  47 |
-> 48 |   SlotCode.defaultProps = {slotLeft: Default left,children: Default Child};
-     |                                              ^
-  49 |
-  50 |
-  51 |"
+"import * as React from \\"react\\";
+
+export default function SlotCode(props) {
+  return (
+    <div>
+      {props.slotTop}
+
+      {props.slotLeft}
+
+      {props.children}
+    </div>
+  );
+}
+
+SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
+"
 `;
 
 exports[`React > jsx > Javascript Test > Stamped.io 1`] = `
@@ -3808,20 +3814,14 @@ export default function SelectComponent(props: FormSelectProps) {
 `;
 
 exports[`React > jsx > Typescript Test > SlotDefault 1`] = `
-"import * as React from \\"react\\";
-
-type Props = {
-  [key: string]: string;
-};
-
-export default function SlotCode(props: Props) {
-  return <div>{props.children}</div>;
-}
-
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
-"
+"',' expected. (44:63)
+  42 |   }
+  43 |
+> 44 |   SlotCode.defaultProps = {children: \\"        <div className=\\"default-slot\\">Default content</div>      \\"};
+     |                                                               ^
+  45 |
+  46 |
+  47 |"
 `;
 
 exports[`React > jsx > Typescript Test > SlotHtml 1`] = `
@@ -3861,14 +3861,26 @@ export default function SlotCode(props: Props) {
 `;
 
 exports[`React > jsx > Typescript Test > SlotNamed 1`] = `
-"',' expected. (50:46)
-  48 |   }
-  49 |
-> 50 |   SlotCode.defaultProps = {slotLeft: Default left,children: Default Child};
-     |                                              ^
-  51 |
-  52 |
-  53 |"
+"import * as React from \\"react\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default function SlotCode(props: Props) {
+  return (
+    <div>
+      {props.slotTop}
+
+      {props.slotLeft}
+
+      {props.children}
+    </div>
+  );
+}
+
+SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
+"
 `;
 
 exports[`React > jsx > Typescript Test > Stamped.io 1`] = `
@@ -5773,14 +5785,22 @@ export default function MyComponent(props) {
 `;
 
 exports[`React > svelte > Javascript Test > slots 1`] = `
-"Expression expected. (39:41)
-  37 |   }
-  38 |
-> 39 |   MyComponent.defaultProps = {children: default,slotTest: <div>default</div>};
-     |                                         ^
-  40 |
-  41 |
-  42 |"
+"import * as React from \\"react\\";
+
+export default function MyComponent(props) {
+  return (
+    <div>
+      {props.children}
+      {props.slotTest}
+    </div>
+  );
+}
+
+MyComponent.defaultProps = {
+  children: \\"default\\",
+  slotTest: <div>default</div>,
+};
+"
 `;
 
 exports[`React > svelte > Javascript Test > style 1`] = `
@@ -6142,14 +6162,22 @@ export default function MyComponent(props: any) {
 `;
 
 exports[`React > svelte > Typescript Test > slots 1`] = `
-"Expression expected. (39:41)
-  37 |   }
-  38 |
-> 39 |   MyComponent.defaultProps = {children: default,slotTest: <div>default</div>};
-     |                                         ^
-  40 |
-  41 |
-  42 |"
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <div>
+      {props.children}
+      {props.slotTest}
+    </div>
+  );
+}
+
+MyComponent.defaultProps = {
+  children: \\"default\\",
+  slotTest: <div>default</div>,
+};
+"
 `;
 
 exports[`React > svelte > Typescript Test > style 1`] = `
