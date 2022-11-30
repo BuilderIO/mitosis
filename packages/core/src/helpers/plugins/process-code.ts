@@ -21,7 +21,7 @@ const preProcessBlockCode = ({
   const propertiesProcessor = codeProcessor('properties');
   for (const key in json.properties) {
     const value = json.properties[key];
-    if (value) {
+    if (key !== '_text' && value) {
       json.properties[key] = propertiesProcessor(value);
     }
   }
