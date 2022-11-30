@@ -79,8 +79,27 @@ const NODE_MAPPERS: {
 
     const hasChildren = json.children.length;
 
-    const renderChildren = () =>
-      json.children?.map((item) => blockToReact(item, options, component)).join('\n');
+    const renderChildren = () => {
+      const childrenStr = json.children
+        ?.map((item) => blockToReact(item, options, component))
+        .join('\n')
+        .trim();
+      /**
+       * Ad-hoc way of figuring out if the children defaultProp is:
+       * - a JSX element, e.g. `<div>foo</div>`
+       * - a JS expression, e.g. `true`, `false`
+       * - a string, e.g. `'Default text'`
+       *
+       * and correctly wrapping it in quotes when appropriate.
+       */
+      if (childrenStr.startsWith(`<`) && childrenStr.endsWith(`>`)) {
+        return childrenStr;
+      } else if (['false', 'true', 'null', 'undefined'].includes(childrenStr)) {
+        return childrenStr;
+      } else {
+        return `"${childrenStr}"`;
+      }
+    };
 
     if (!slotName) {
       // TODO: update MitosisNode for simple code
@@ -94,7 +113,10 @@ const NODE_MAPPERS: {
       if (hasChildren) {
         component.defaultProps = {
           ...(component.defaultProps || {}),
-          children: renderChildren().trim(),
+          children: {
+            code: renderChildren(),
+            type: 'property',
+          },
         };
       }
       return `{${processBinding('props.children', options)}}`;
@@ -109,7 +131,10 @@ const NODE_MAPPERS: {
     if (hasChildren) {
       component.defaultProps = {
         ...(component.defaultProps || {}),
-        [slotProp.replace('props.', '')]: renderChildren(),
+        [slotProp.replace('props.', '')]: {
+          code: renderChildren(),
+          type: 'property',
+        },
       };
     }
     return `{${slotProp}}`;
