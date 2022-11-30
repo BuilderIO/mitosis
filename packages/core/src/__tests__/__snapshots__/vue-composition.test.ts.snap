@@ -1711,12 +1711,28 @@ function _classStringToObject(str) {
 `;
 
 exports[`Vue > jsx > Javascript Test > componentWithContext 1`] = `
-"unknown: Missing semicolon. (1:18)
+"<template>
+  {{ foo.value }}
+</template>
 
-> 1 | let _ =  content() {
-    |                   ^
-  2 |   return props.content;
-  3 | }"
+<script setup>
+import { inject, provide } from \\"vue\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+const props = defineProps([\\"content\\"]);
+
+const foo = inject(Context1);
+
+provide(Context1, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(Context2, { bar: \\"baz\\" });
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > contentState 1`] = `
@@ -4233,12 +4249,31 @@ function _classStringToObject(str) {
 `;
 
 exports[`Vue > jsx > Typescript Test > componentWithContext 1`] = `
-"unknown: Missing semicolon. (1:18)
+"<template>
+  {{ foo.value }}
+</template>
 
-> 1 | let _ =  content() {
-    |                   ^
-  2 |   return props.content;
-  3 | }"
+<script setup lang=\\"ts\\">
+import { inject, provide } from \\"vue\\";
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+const props = defineProps<ComponentWithContextProps>();
+
+const foo = inject(Context1);
+
+provide(Context1, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(Context2, { bar: \\"baz\\" });
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > contentState 1`] = `

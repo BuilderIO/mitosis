@@ -117,10 +117,6 @@ export const babelTransformExpression = <VisitorContextType = any>(
     return '';
   }
 
-  if (code.trim() !== code) {
-    console.log('trim is different', { code });
-  }
-
   const isGetter = code.trim().startsWith('get ');
 
   return pipe(

@@ -501,25 +501,25 @@ exports[`Stencil > jsx > Javascript Test > Columns 1`] = `
 @Component({
   tag: \\"column\\",
   styles: \`
-      .div {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        line-height: normal;
-      }
-      @media (max-width: 999px) {
-        .div {
-          flex-direction: row;
-        }
-      }
-      @media (max-width: 639px) {
-        .div {
-          flex-direction: row-reverse;
-        }
-      }
-      .div-2 {
-        flex-grow: 1;
-      }
+       .div {
+         display: flex;
+         flex-direction: column;
+         align-items: stretch;
+         line-height: normal;
+       }
+       @media (max-width: 999px) {
+         .div {
+           flex-direction: row;
+         }
+       }
+       @media (max-width: 639px) {
+         .div {
+           flex-direction: row-reverse;
+         }
+       }
+       .div-2 {
+         flex-grow: 1;
+       }
 \`,
 })
 export default class Column {
@@ -533,14 +533,14 @@ export default class Column {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
   getWidth(index) {
-    const columns = state.getColumns();
+    const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
   getColumnCssWidth(index) {
-    const columns = state.getColumns();
-    const gutterSize = state.getGutterSize();
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   render() {
@@ -642,11 +642,11 @@ export default class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -659,12 +659,12 @@ export default class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -716,11 +716,11 @@ export default class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -733,12 +733,12 @@ export default class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -779,11 +779,11 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"form-component\\",
   styles: \`
-      .pre {
-        padding: 10px;
-        color: red;
-        text-align: center;
-      }
+       .pre {
+         padding: 10px;
+         color: red;
+         text-align: center;
+       }
 \`,
 })
 export default class FormComponent {
@@ -922,7 +922,7 @@ export default class FormComponent {
         }
       }
 
-      state.formState = \\"sending\\";
+      this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -954,16 +954,16 @@ export default class FormComponent {
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
+            error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
-              state.formErrorMessage = message;
+              this.formErrorMessage = message;
             }
           }
 
-          state.responseData = body;
-          state.formState = res.ok ? \\"success\\" : \\"error\\";
+          this.responseData = body;
+          this.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -1020,8 +1020,8 @@ export default class FormComponent {
             }
           }
 
-          state.responseData = err;
-          state.formState = \\"error\\";
+          this.responseData = err;
+          this.formState = \\"error\\";
         }
       );
     }
@@ -1117,7 +1117,7 @@ export default class Image {
   @State() load = false;
 
   setLoaded() {
-    state.imageLoaded = true;
+    this.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -1433,28 +1433,28 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"smile-reviews\\",
   styles: \`
-      .input {
-        display: block;
-      }
-      .textarea {
-        display: block;
-      }
-      .button {
-        display: block;
-      }
-      .review {
-        margin: 10px;
-        padding: 10px;
-        background: white;
-        display: flex;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      .img {
-        height: 30px;
-        width: 30px;
-        margin-right: 10px;
-      }
+       .input {
+         display: block;
+       }
+       .textarea {
+         display: block;
+       }
+       .button {
+         display: block;
+       }
+       .review {
+         margin: 10px;
+         padding: 10px;
+         background: white;
+         display: flex;
+         border-radius: 5px;
+         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+       }
+       .img {
+         height: 30px;
+         width: 30px;
+         margin-right: 10px;
+       }
 \`,
 })
 export default class SmileReviews {
@@ -1668,10 +1668,10 @@ export default class MyComponent {
   @State() name = \\"steve\\";
 
   setName(value) {
-    state.name = value;
+    this.name = value;
   }
   updateNameWithArrowFn(value) {
-    state.name = value;
+    this.name = value;
   }
 
   render() {
@@ -3164,25 +3164,25 @@ exports[`Stencil > jsx > Typescript Test > Columns 1`] = `
 @Component({
   tag: \\"column\\",
   styles: \`
-      .div {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        line-height: normal;
-      }
-      @media (max-width: 999px) {
-        .div {
-          flex-direction: row;
-        }
-      }
-      @media (max-width: 639px) {
-        .div {
-          flex-direction: row-reverse;
-        }
-      }
-      .div-2 {
-        flex-grow: 1;
-      }
+       .div {
+         display: flex;
+         flex-direction: column;
+         align-items: stretch;
+         line-height: normal;
+       }
+       @media (max-width: 999px) {
+         .div {
+           flex-direction: row;
+         }
+       }
+       @media (max-width: 639px) {
+         .div {
+           flex-direction: row-reverse;
+         }
+       }
+       .div-2 {
+         flex-grow: 1;
+       }
 \`,
 })
 export default class Column {
@@ -3196,14 +3196,14 @@ export default class Column {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
   getWidth(index) {
-    const columns = state.getColumns();
+    const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
   getColumnCssWidth(index) {
-    const columns = state.getColumns();
-    const gutterSize = state.getGutterSize();
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   render() {
@@ -3305,11 +3305,11 @@ export default class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -3322,12 +3322,12 @@ export default class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -3379,11 +3379,11 @@ export default class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -3396,12 +3396,12 @@ export default class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -3442,11 +3442,11 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"form-component\\",
   styles: \`
-      .pre {
-        padding: 10px;
-        color: red;
-        text-align: center;
-      }
+       .pre {
+         padding: 10px;
+         color: red;
+         text-align: center;
+       }
 \`,
 })
 export default class FormComponent {
@@ -3585,7 +3585,7 @@ export default class FormComponent {
         }
       }
 
-      state.formState = \\"sending\\";
+      this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -3617,16 +3617,16 @@ export default class FormComponent {
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
+            error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
-              state.formErrorMessage = message;
+              this.formErrorMessage = message;
             }
           }
 
-          state.responseData = body;
-          state.formState = res.ok ? \\"success\\" : \\"error\\";
+          this.responseData = body;
+          this.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -3683,8 +3683,8 @@ export default class FormComponent {
             }
           }
 
-          state.responseData = err;
-          state.formState = \\"error\\";
+          this.responseData = err;
+          this.formState = \\"error\\";
         }
       );
     }
@@ -3780,7 +3780,7 @@ export default class Image {
   @State() load = false;
 
   setLoaded() {
-    state.imageLoaded = true;
+    this.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -4096,28 +4096,28 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"smile-reviews\\",
   styles: \`
-      .input {
-        display: block;
-      }
-      .textarea {
-        display: block;
-      }
-      .button {
-        display: block;
-      }
-      .review {
-        margin: 10px;
-        padding: 10px;
-        background: white;
-        display: flex;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      .img {
-        height: 30px;
-        width: 30px;
-        margin-right: 10px;
-      }
+       .input {
+         display: block;
+       }
+       .textarea {
+         display: block;
+       }
+       .button {
+         display: block;
+       }
+       .review {
+         margin: 10px;
+         padding: 10px;
+         background: white;
+         display: flex;
+         border-radius: 5px;
+         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+       }
+       .img {
+         height: 30px;
+         width: 30px;
+         margin-right: 10px;
+       }
 \`,
 })
 export default class SmileReviews {
@@ -4331,10 +4331,10 @@ export default class MyComponent {
   @State() name = \\"steve\\";
 
   setName(value) {
-    state.name = value;
+    this.name = value;
   }
   updateNameWithArrowFn(value) {
-    state.name = value;
+    this.name = value;
   }
 
   render() {
