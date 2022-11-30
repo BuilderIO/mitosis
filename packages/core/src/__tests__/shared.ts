@@ -452,6 +452,14 @@ export const runTestsForJsx = () => {
     });
   });
 };
+export const runTestsForSvelteSyntax = () => {
+  Object.keys(SVELTE_SYNTAX_TESTS).forEach((key) => {
+    test(key, async () => {
+      const component = parseSvelte(await SVELTE_SYNTAX_TESTS[key]);
+      expect(component).toMatchSnapshot();
+    });
+  });
+};
 
 export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   target,
