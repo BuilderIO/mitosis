@@ -94,7 +94,10 @@ const NODE_MAPPERS: {
       if (hasChildren) {
         component.defaultProps = {
           ...(component.defaultProps || {}),
-          children: renderChildren().trim(),
+          children: {
+            code: renderChildren().trim(),
+            type: 'property',
+          },
         };
       }
       return `{${processBinding('props.children', options)}}`;
@@ -109,7 +112,10 @@ const NODE_MAPPERS: {
     if (hasChildren) {
       component.defaultProps = {
         ...(component.defaultProps || {}),
-        [slotProp.replace('props.', '')]: renderChildren(),
+        [slotProp.replace('props.', '')]: {
+          code: renderChildren(),
+          type: 'property',
+        },
       };
     }
     return `{${slotProp}}`;
