@@ -106,5 +106,25 @@ ruleTester.run('no-var-name-same-as-prop-name', rule, {
       `,
       errors: ['Variable name should not be same as prop name'],
     },
+    {
+      ...opts,
+      code: `
+      import { useStore } from '@builder.io/mitosis';
+
+      export default function MyComponent(props) {
+        const state = useStore({
+          foo: 'bar',
+        });
+
+
+        function myFunction() {
+          const foo = props.foo;
+        }
+      
+        return <div />;
+      }
+      `,
+      errors: ['Variable name should not be same as prop name'],
+    },
   ],
 });

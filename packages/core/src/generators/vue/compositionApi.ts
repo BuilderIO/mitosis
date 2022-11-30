@@ -6,6 +6,7 @@ import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { getContextValue } from './helpers';
 import { ToVueOptions } from './types';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { processBinding } from './helpers';
 
 const getCompositionPropDefinition = ({
   options,
@@ -20,7 +21,15 @@ const getCompositionPropDefinition = ({
 
   if (component.defaultProps) {
     const generic = options.typescript ? `<${component.propsTypeRef}>` : '';
-    str += `withDefaults(defineProps${generic}(), ${json5.stringify(component.defaultProps)})`;
+    const defalutPropsString = props
+      .map((prop) => {
+        const value = component.defaultProps!.hasOwnProperty(prop)
+          ? component.defaultProps![prop]?.code
+          : '{}';
+        return `${prop}: ${value}`;
+      })
+      .join(',');
+    str += `withDefaults(defineProps${generic}(), {${defalutPropsString}})`;
   } else if (options.typescript && component.propsTypeRef && component.propsTypeRef !== 'any') {
     str += `defineProps<${component.propsTypeRef}>()`;
   } else {
@@ -125,10 +134,13 @@ export function generateCompositionApiScript(
 
     ${
       onUpdateWithDeps
-        ?.map(
-          (hook) =>
-            `watch(() => ${hook.deps}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} })`,
-        )
+        ?.map((hook) => {
+          return `watch(() => ${processBinding({
+            code: hook.deps || '',
+            options,
+            json: component,
+          })}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} }, {immediate: true})`;
+        })
         .join('\n') || ''
     }
     ${methods ?? ''}

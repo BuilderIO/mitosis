@@ -26,7 +26,6 @@ import { babelTransformCode } from '../../helpers/babel-transform';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { hasGetContext, hasSetContext } from '../helpers/context';
 import { isSlotProperty } from '../../helpers/slots';
-import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
@@ -247,7 +246,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           }
 
           if (json.defaultProps && json.defaultProps.hasOwnProperty(name)) {
-            propDeclaration += `=${json5.stringify(json.defaultProps[name])}`;
+            propDeclaration += `=${json.defaultProps[name]?.code}`;
           }
 
           propDeclaration += ';';
@@ -287,7 +286,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           : dataString
       }
       ${json.hooks.onInit?.code ?? ''}
-      
+
       ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} });`}
 
       ${

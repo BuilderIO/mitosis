@@ -2142,6 +2142,40 @@ export default SelectComponent;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > SlotDefault 1`] = `
+"function SlotCode(props) {
+  return (
+    <div>
+      <Slot>
+        <div class=\\"default-slot\\">Default content</div>
+      </Slot>
+    </div>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > SlotDefault 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function SlotCode(props) {
+  return (
+    <>
+      <div>
+        <Slot>
+          <div class=\\"default-slot\\">Default content</div>
+        </Slot>
+      </div>
+    </>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -2205,6 +2239,40 @@ function SlotCode(props) {
     <>
       <div>
         <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      </div>
+    </>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > SlotNamed 1`] = `
+"function SlotCode(props) {
+  return (
+    <div>
+      <Slot name=\\"top\\"></Slot>
+      <Slot name=\\"left\\">Default left</Slot>
+      <Slot>Default Child</Slot>
+    </div>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > SlotNamed 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function SlotCode(props) {
+  return (
+    <>
+      <div>
+        <Slot name=\\"top\\"></Slot>
+        <Slot name=\\"left\\">Default left</Slot>
+        <Slot>Default Child</Slot>
       </div>
     </>
   );
@@ -2740,7 +2808,11 @@ function Button(props) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button type=\\"button\\" {...props.attributes}>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
           {props.text}
         </button>
       </Show>
@@ -2771,7 +2843,11 @@ function Button(props) {
           </a>
         </Show>
         <Show when={!props.link}>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </Show>
@@ -2800,7 +2876,11 @@ function Button(props) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button type=\\"button\\" {...props.attributes}>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
           {props.text}
         </button>
       </Show>
@@ -2831,7 +2911,11 @@ function Button(props) {
           </a>
         </Show>
         <Show when={!props.link}>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </Show>
@@ -3402,6 +3486,54 @@ exports[`Solid > jsx > Javascript Test > propsType 2`] = `
 
 > 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
     |               ^"
+`;
+
+exports[`Solid > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+function OnUpdate(props) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  return <div></div>;
+}
+
+export default OnUpdate;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > referencingFunInsideHook 2`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function OnUpdate(props) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}
+
+export default OnUpdate;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > renderContentExample 1`] = `
@@ -6064,6 +6196,40 @@ export default SelectComponent;
 "
 `;
 
+exports[`Solid > jsx > Typescript Test > SlotDefault 1`] = `
+"function SlotCode(props) {
+  return (
+    <div>
+      <Slot>
+        <div class=\\"default-slot\\">Default content</div>
+      </Slot>
+    </div>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > SlotDefault 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function SlotCode(props) {
+  return (
+    <>
+      <div>
+        <Slot>
+          <div class=\\"default-slot\\">Default content</div>
+        </Slot>
+      </div>
+    </>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
 exports[`Solid > jsx > Typescript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -6127,6 +6293,40 @@ function SlotCode(props) {
     <>
       <div>
         <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      </div>
+    </>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > SlotNamed 1`] = `
+"function SlotCode(props) {
+  return (
+    <div>
+      <Slot name=\\"top\\"></Slot>
+      <Slot name=\\"left\\">Default left</Slot>
+      <Slot>Default Child</Slot>
+    </div>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > SlotNamed 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function SlotCode(props) {
+  return (
+    <>
+      <div>
+        <Slot name=\\"top\\"></Slot>
+        <Slot name=\\"left\\">Default left</Slot>
+        <Slot>Default Child</Slot>
       </div>
     </>
   );
@@ -6662,7 +6862,11 @@ function Button(props) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button type=\\"button\\" {...props.attributes}>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
           {props.text}
         </button>
       </Show>
@@ -6693,7 +6897,11 @@ function Button(props) {
           </a>
         </Show>
         <Show when={!props.link}>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </Show>
@@ -6722,7 +6930,11 @@ function Button(props) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button type=\\"button\\" {...props.attributes}>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
           {props.text}
         </button>
       </Show>
@@ -6753,7 +6965,11 @@ function Button(props) {
           </a>
         </Show>
         <Show when={!props.link}>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </Show>
@@ -7324,6 +7540,54 @@ exports[`Solid > jsx > Typescript Test > propsType 2`] = `
 
 > 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
     |               ^"
+`;
+
+exports[`Solid > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+function OnUpdate(props) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  return <div></div>;
+}
+
+export default OnUpdate;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > referencingFunInsideHook 2`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function OnUpdate(props) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}
+
+export default OnUpdate;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > renderContentExample 1`] = `
@@ -8020,6 +8284,52 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > svelte > Javascript Test > eventHandlers 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Javascript Test > eventHandlers 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <>
+      <div>
+        <button onClick={(a) => log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Solid > svelte > Javascript Test > html 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
@@ -8064,10 +8374,10 @@ function MyComponent(props) {
 
   return (
     <Show
-      fallback={<button onClick={(event) => toggle}>Show</button>}
+      fallback={<button onClick={(event) => toggle(event)}>Show</button>}
       when={show()}
     >
-      <button onClick={(event) => toggle}>Hide</button>
+      <button onClick={(event) => toggle(event)}>Hide</button>
     </Show>
   );
 }
@@ -8091,10 +8401,10 @@ function MyComponent(props) {
   return (
     <>
       <Show
-        fallback={<button onClick={(event) => toggle}>Show</button>}
+        fallback={<button onClick={(event) => toggle(event)}>Show</button>}
         when={show()}
       >
-        <button onClick={(event) => toggle}>Hide</button>
+        <button onClick={(event) => toggle(event)}>Hide</button>
       </Show>
     </>
   );
@@ -8200,6 +8510,128 @@ exports[`Solid > svelte > Javascript Test > reactive 2`] = `
   1 | let _ = 
 > 2 |   Lowercase: 
     |            ^"
+`;
+
+exports[`Solid > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onInput={(event) => setA(event.target.value)}
+        value={a()}
+      />
+      <input
+        type=\\"number\\"
+        onInput={(event) => setB(event.target.value)}
+        value={b()}
+      />
+      Result:
+      {result()}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Javascript Test > reactiveWithFn 2`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => setA(event.target.value)}
+          value={a()}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => setB(event.target.value)}
+          value={b()}
+        />
+        Result:
+        {result()}
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Javascript Test > slots 1`] = `
+"function MyComponent(props) {
+  return (
+    <div>
+      <Slot>default</Slot>
+      <Slot name=\\"Test\\">
+        <div>default</div>
+      </Slot>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Javascript Test > slots 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <div>
+        <Slot>default</Slot>
+        <Slot name=\\"Test\\">
+          <div>default</div>
+        </Slot>
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Javascript Test > style 1`] = `
@@ -8432,6 +8864,52 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > svelte > Typescript Test > eventHandlers 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Typescript Test > eventHandlers 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <>
+      <div>
+        <button onClick={(a) => log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Solid > svelte > Typescript Test > html 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
@@ -8476,10 +8954,10 @@ function MyComponent(props) {
 
   return (
     <Show
-      fallback={<button onClick={(event) => toggle}>Show</button>}
+      fallback={<button onClick={(event) => toggle(event)}>Show</button>}
       when={show()}
     >
-      <button onClick={(event) => toggle}>Hide</button>
+      <button onClick={(event) => toggle(event)}>Hide</button>
     </Show>
   );
 }
@@ -8503,10 +8981,10 @@ function MyComponent(props) {
   return (
     <>
       <Show
-        fallback={<button onClick={(event) => toggle}>Show</button>}
+        fallback={<button onClick={(event) => toggle(event)}>Show</button>}
         when={show()}
       >
-        <button onClick={(event) => toggle}>Hide</button>
+        <button onClick={(event) => toggle(event)}>Hide</button>
       </Show>
     </>
   );
@@ -8612,6 +9090,128 @@ exports[`Solid > svelte > Typescript Test > reactive 2`] = `
   1 | let _ = 
 > 2 |   Lowercase: 
     |            ^"
+`;
+
+exports[`Solid > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onInput={(event) => setA(event.target.value)}
+        value={a()}
+      />
+      <input
+        type=\\"number\\"
+        onInput={(event) => setB(event.target.value)}
+        value={b()}
+      />
+      Result:
+      {result()}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Typescript Test > reactiveWithFn 2`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => setA(event.target.value)}
+          value={a()}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => setB(event.target.value)}
+          value={b()}
+        />
+        Result:
+        {result()}
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Typescript Test > slots 1`] = `
+"function MyComponent(props) {
+  return (
+    <div>
+      <Slot>default</Slot>
+      <Slot name=\\"Test\\">
+        <div>default</div>
+      </Slot>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Typescript Test > slots 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <div>
+        <Slot>default</Slot>
+        <Slot name=\\"Test\\">
+          <div>default</div>
+        </Slot>
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Typescript Test > style 1`] = `

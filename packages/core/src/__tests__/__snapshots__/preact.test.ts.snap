@@ -1214,6 +1214,20 @@ export default function SelectComponent(props) {
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > SlotDefault 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function SlotCode(props) {
+  return <div>{props.children}</div>;
+}
+
+SlotCode.defaultProps = {
+  children: <div className=\\"default-slot\\">Default content</div>,
+};
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > SlotHtml 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -1241,6 +1255,26 @@ export default function SlotCode(props) {
     </div>
   );
 }
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > SlotNamed 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function SlotCode(props) {
+  return (
+    <div>
+      {props.slotTop}
+
+      {props.slotLeft}
+
+      {props.children}
+    </div>
+  );
+}
+
+SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 "
 `;
 
@@ -1747,7 +1781,11 @@ export default function Button(props) {
 
       {!props.link ? (
         <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </Fragment>
@@ -1760,6 +1798,9 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 "
 `;
@@ -1785,7 +1826,11 @@ export default function Button(props) {
 
       {!props.link ? (
         <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </Fragment>
@@ -1798,6 +1843,7 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 "
 `;
@@ -2160,6 +2206,33 @@ export default function MyBasicComponent(props) {
       {props.name}
     </div>
   );
+}
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+
+export default function OnUpdate(props) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
 }
 "
 `;
@@ -3852,6 +3925,24 @@ export default function SelectComponent(props: FormSelectProps) {
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > SlotDefault 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default function SlotCode(props: Props) {
+  return <div>{props.children}</div>;
+}
+
+SlotCode.defaultProps = {
+  children: <div className=\\"default-slot\\">Default content</div>,
+};
+"
+`;
+
 exports[`Preact > jsx > Typescript Test > SlotHtml 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -3887,6 +3978,30 @@ export default function SlotCode(props: Props) {
     </div>
   );
 }
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > SlotNamed 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default function SlotCode(props: Props) {
+  return (
+    <div>
+      {props.slotTop}
+
+      {props.slotLeft}
+
+      {props.children}
+    </div>
+  );
+}
+
+SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 "
 `;
 
@@ -4458,6 +4573,7 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 
 export default function Button(props: ButtonProps) {
@@ -4477,7 +4593,11 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </Fragment>
@@ -4490,6 +4610,9 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 "
 `;
@@ -4503,6 +4626,7 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 
 export default function Button(props: ButtonProps) {
@@ -4522,7 +4646,11 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </Fragment>
@@ -4535,6 +4663,7 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 "
 `;
@@ -4958,6 +5087,33 @@ export default function MyBasicComponent(props: Person) {
       {props.name}
     </div>
   );
+}
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+
+export default function OnUpdate(props: any) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
 }
 "
 `;
@@ -5442,6 +5598,26 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Preact > svelte > Javascript Test > eventHandlers 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Preact > svelte > Javascript Test > html 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5470,9 +5646,9 @@ export default function MyComponent(props) {
   return (
     <Fragment>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </Fragment>
   );
@@ -5545,6 +5721,66 @@ export default function MyComponent(props) {
     </div>
   );
 }
+"
+`;
+
+exports[`Preact > svelte > Javascript Test > reactiveWithFn 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function MyComponent(props) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact > svelte > Javascript Test > slots 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyComponent(props) {
+  return (
+    <div>
+      {props.children}
+      {props.slotTest}
+    </div>
+  );
+}
+
+MyComponent.defaultProps = {
+  children: \\"default\\",
+  slotTest: <div>default</div>,
+};
 "
 `;
 
@@ -5755,6 +5991,26 @@ export default function MyComponent(props: any) {
 "
 `;
 
+exports[`Preact > svelte > Typescript Test > eventHandlers 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyComponent(props: any) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Preact > svelte > Typescript Test > html 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5783,9 +6039,9 @@ export default function MyComponent(props: any) {
   return (
     <Fragment>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </Fragment>
   );
@@ -5858,6 +6114,66 @@ export default function MyComponent(props: any) {
     </div>
   );
 }
+"
+`;
+
+exports[`Preact > svelte > Typescript Test > reactiveWithFn 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact > svelte > Typescript Test > slots 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <div>
+      {props.children}
+      {props.slotTest}
+    </div>
+  );
+}
+
+MyComponent.defaultProps = {
+  children: \\"default\\",
+  slotTest: <div>default</div>,
+};
 "
 `;
 

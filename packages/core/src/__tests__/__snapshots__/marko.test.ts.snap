@@ -449,6 +449,16 @@ class {}
 </select>"
 `;
 
+exports[`Marko > jsx > Javascript Test > SlotDefault 1`] = `
+"class {}
+
+<div>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -468,6 +478,18 @@ class {}
 
 <div>
   <ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode>
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > SlotNamed 1`] = `
+"class {}
+
+<div>
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
 </div>"
 `;
 
@@ -600,7 +622,13 @@ exports[`Marko > jsx > Javascript Test > defaultProps 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -618,7 +646,13 @@ exports[`Marko > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -829,6 +863,26 @@ exports[`Marko > jsx > Javascript Test > propsType 1`] = `
 "class {}
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"class {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  onRender() {
+    foo({
+      someOption: bar,
+    });
+  }
+}
+
+<div></div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > renderContentExample 1`] = `
@@ -1385,6 +1439,16 @@ class {}
 </select>"
 `;
 
+exports[`Marko > jsx > Typescript Test > SlotDefault 1`] = `
+"class {}
+
+<div>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>"
+`;
+
 exports[`Marko > jsx > Typescript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -1404,6 +1468,18 @@ class {}
 
 <div>
   <ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode>
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > SlotNamed 1`] = `
+"class {}
+
+<div>
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
 </div>"
 `;
 
@@ -1536,7 +1612,13 @@ exports[`Marko > jsx > Typescript Test > defaultProps 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -1554,7 +1636,13 @@ exports[`Marko > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -1767,6 +1855,26 @@ exports[`Marko > jsx > Typescript Test > propsType 1`] = `
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
+exports[`Marko > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"class {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  onRender() {
+    foo({
+      someOption: bar,
+    });
+  }
+}
+
+<div></div>"
+`;
+
 exports[`Marko > jsx > Typescript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
@@ -1942,6 +2050,20 @@ exports[`Marko > svelte > Javascript Test > context 1`] = `"unknown: Maximum cal
 
 exports[`Marko > svelte > Javascript Test > each 1`] = `"unknown: Maximum call stack size exceeded"`;
 
+exports[`Marko > svelte > Javascript Test > eventHandlers 1`] = `
+"class {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+<div>
+  <button on-click(a => component.log('hi'))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+</div>"
+`;
+
 exports[`Marko > svelte > Javascript Test > html 1`] = `"unknown: Maximum call stack size exceeded"`;
 
 exports[`Marko > svelte > Javascript Test > ifElse 1`] = `"unknown: Maximum call stack size exceeded"`;
@@ -1965,6 +2087,16 @@ exports[`Marko > svelte > Javascript Test > lifecycleHooks 1`] = `
 `;
 
 exports[`Marko > svelte > Javascript Test > reactive 1`] = `"unknown: Maximum call stack size exceeded"`;
+
+exports[`Marko > svelte > Javascript Test > reactiveWithFn 1`] = `"unknown: Maximum call stack size exceeded"`;
+
+exports[`Marko > svelte > Javascript Test > slots 1`] = `
+"class {}
+
+<div>
+  <slot>default</slot> <slot name=\\"Test\\"><div>default</div></slot>
+</div>"
+`;
 
 exports[`Marko > svelte > Javascript Test > style 1`] = `
 "class {}
@@ -1996,6 +2128,20 @@ exports[`Marko > svelte > Typescript Test > context 1`] = `"unknown: Maximum cal
 
 exports[`Marko > svelte > Typescript Test > each 1`] = `"unknown: Maximum call stack size exceeded"`;
 
+exports[`Marko > svelte > Typescript Test > eventHandlers 1`] = `
+"class {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+<div>
+  <button on-click(a => component.log('hi'))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+</div>"
+`;
+
 exports[`Marko > svelte > Typescript Test > html 1`] = `"unknown: Maximum call stack size exceeded"`;
 
 exports[`Marko > svelte > Typescript Test > ifElse 1`] = `"unknown: Maximum call stack size exceeded"`;
@@ -2019,6 +2165,16 @@ exports[`Marko > svelte > Typescript Test > lifecycleHooks 1`] = `
 `;
 
 exports[`Marko > svelte > Typescript Test > reactive 1`] = `"unknown: Maximum call stack size exceeded"`;
+
+exports[`Marko > svelte > Typescript Test > reactiveWithFn 1`] = `"unknown: Maximum call stack size exceeded"`;
+
+exports[`Marko > svelte > Typescript Test > slots 1`] = `
+"class {}
+
+<div>
+  <slot>default</slot> <slot name=\\"Test\\"><div>default</div></slot>
+</div>"
+`;
 
 exports[`Marko > svelte > Typescript Test > style 1`] = `
 "class {}

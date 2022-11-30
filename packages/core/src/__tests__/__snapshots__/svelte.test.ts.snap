@@ -1,38 +1,143 @@
 // Vitest Snapshot v1
 
 exports[`Svelte > jsx > Javascript Test > AdvancedRef 1`] = `
-"unknown: Missing semicolon. (2:18)
+"<script>
+  export let showInput;
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  let name = \\"PatrickJS\\";
+
+  function onUpdateFn_0() {
+    console.log(\\"Received an update\\");
+  }
+  $: onUpdateFn_0(...[inputRef, inputNoArgRef]);
+</script>
+
+<div>
+  {#if showInput}
+    <input
+      class=\\"input\\"
+      bind:this={inputRef}
+      on:blur={(event) => {
+        onBlur();
+      }}
+      bind:value={name}
+    />
+
+    <label for=\\"cars\\" bind:this={inputNoArgRef}> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  {/if}
+  Hello
+  {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
+</div>
+
+<style>
+  .input {
+    color: red;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Basic 1`] = `
-"unknown: Missing semicolon. (2:12)
+"<script>
+  export const DEFAULT_VALUES = {
+    name: \\"Steve\\",
+  };
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  let name = \\"Steve\\";
+  let age = 1;
+  let sports = [\\"\\"];
+</script>
+
+<div class=\\"test div\\">
+  <input
+    value={DEFAULT_VALUES.name || name}
+    on:change={(myEvent) => {
+      name = myEvent.target.value;
+    }}
+  />
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Basic 2`] = `
-"unknown: Missing semicolon. (1:11)
+"<script>
+  let name = \\"PatrickJS\\";
+  let names = [\\"Steve\\", \\"PatrickJS\\"];
+</script>
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+<div>
+  {#each names as person}
+    {#if person === name}
+      <input
+        value={name}
+        on:change={(event) => {
+          name = event.target.value + \\" and \\" + person;
+        }}
+      />
+
+      Hello
+      {person}
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    {/if}
+  {/each}
+</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Basic Context 1`] = `
-"unknown: Missing semicolon. (2:12)
+"<script>
+  import { getContext, onMount, setContext } from \\"svelte\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |       "
+  import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+  let myService = getContext(MyService.key);
+  setContext(Injector, createInjector());
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
+
+  let name = \\"PatrickJS\\";
+  const hi = myService.method(\\"hi\\");
+  console.log(hi);
+
+  onMount(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  });
+</script>
+
+<div>
+  {myService.method(\\"hello\\") + name}
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  <input on:change={onChange} />
+</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Basic OnMount Update 1`] = `
@@ -51,7 +156,7 @@ exports[`Svelte > jsx > Javascript Test > Basic OnMount Update 1`] = `
   });
 </script>
 
-<div>Hello{name}</div>"
+<div>Hello {name}</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Basic Outputs 1`] = `
@@ -102,17 +207,11 @@ exports[`Svelte > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   <slot />
-  <div _text=\\"\\" />
   {type}
-  <div _text=\\"\\" />
   <MyBooleanAttributeComponent toggle={true} />
-  <div _text=\\"\\" />
   <MyBooleanAttributeComponent toggle={true} />
-  <div _text=\\"\\" />
   <MyBooleanAttributeComponent list={null} />
-  <div _text=\\"\\" />
 </div>"
 `;
 
@@ -126,33 +225,87 @@ exports[`Svelte > jsx > Javascript Test > BasicChildComponent 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   <MyBasicComponent id={dev} />
-  <div _text=\\"\\" />
   <div>
-    <div _text=\\"\\" />
     <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
-    <div _text=\\"\\" />
   </div>
-  <div _text=\\"\\" />
 </div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > BasicFor 1`] = `
-"unknown: Missing semicolon. (1:11)
+"<script>
+  import { onMount } from \\"svelte\\";
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+  let name = \\"PatrickJS\\";
+  let names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  onMount(() => {
+    console.log(\\"onMount code\\");
+  });
+</script>
+
+<div>
+  {#each names as person}
+    <input
+      value={name}
+      on:change={(event) => {
+        name = event.target.value + \\" and \\" + person;
+      }}
+    />
+
+    Hello
+    {person}
+    ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+  {/each}
+</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > BasicRef 1`] = `
-"unknown: Missing semicolon. (2:18)
+"<script>
+  export let showInput;
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  let name = \\"PatrickJS\\";
+</script>
+
+<div>
+  {#if showInput}
+    <input
+      class=\\"input\\"
+      bind:this={inputRef}
+      on:blur={(event) => {
+        onBlur();
+      }}
+      bind:value={name}
+    />
+
+    <label for=\\"cars\\" bind:this={inputNoArgRef}> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  {/if}
+  Hello
+  {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
+</div>
+
+<style>
+  .input {
+    color: red;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > BasicRefAssignment 1`] = `
@@ -165,22 +318,47 @@ exports[`Svelte > jsx > Javascript Test > BasicRefAssignment 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   <button
     on:click={(evt) => {
       handlerClick(evt);
     }}>Click</button
   >
-  <div _text=\\"\\" />
 </div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"unknown: Missing semicolon. (2:11)
+"<script>
+  export function usePrevious<T>(value: T) {
+    // The ref object is a generic container whose current property is mutable ...
+    // ... and can hold any value, similar to an instance property on a class
+    let ref = useRef<T>(null); // Store current value in ref
 
-  1 | let _ = 
-> 2 |         Now: 
-    |            ^"
+    onUpdate(() => {
+      ref = value;
+    }, [value]); // Only re-run if value changes
+    // Return previous value (happens before update in useEffect above)
+
+    return ref;
+  }
+
+  let count = 0;
+
+  function onUpdateFn_0() {
+    prevCount = count;
+  }
+  $: onUpdateFn_0(...[count]);
+</script>
+
+<div>
+  <h1>
+    Now: {count}, before: {prevCount}
+  </h1>
+  <button
+    on:click={(event) => {
+      count += 1;
+    }}>Increment</button
+  >
+</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Button 1`] = `
@@ -192,30 +370,21 @@ exports[`Svelte > jsx > Javascript Test > Button 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   {#if link}
-    <div _text=\\"\\" />
     <a
       {...attributes}
       href={link}
       target={openLinkInNewTab ? \\"_blank\\" : undefined}
-      ><div _text=\\"\\" />
-      {text}
-      <div _text=\\"\\" /></a
     >
-    <div _text=\\"\\" />
+      {text}
+    </a>
   {/if}
-  <div _text=\\"\\" />
+
   {#if !link}
-    <div _text=\\"\\" />
-    <button type=\\"button\\" {...attributes}
-      ><div _text=\\"\\" />
+    <button type=\\"button\\" {...attributes}>
       {text}
-      <div _text=\\"\\" /></button
-    >
-    <div _text=\\"\\" />
+    </button>
   {/if}
-  <div _text=\\"\\" />
 </div>"
 `;
 
@@ -246,17 +415,12 @@ exports[`Svelte > jsx > Javascript Test > Columns 1`] = `
 </script>
 
 <div class=\\"builder - columns div\\">
-  <div _text=\\"\\" />
   {#each columns as column, index}
     <div class=\\"builder - column div-2\\">
-      <div _text=\\"\\" />
       {column.content}
-      <div _text=\\"\\" />
       {index}
-      <div _text=\\"\\" />
     </div>
   {/each}
-  <div _text=\\"\\" />
 </div>
 
 <style>
@@ -678,43 +842,29 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
   }}
   {...attributes}
 >
-  <div _text=\\"\\" />
   {#if builderBlock && builderBlock.children}
-    <div _text=\\"\\" />
-
     {#each builderBlock?.children as block, index (block.id)}
       <BuilderBlockComponent {block} {index} />
     {/each}
+  {/if}
 
-    <div _text=\\"\\" />
-  {/if}
-  <div _text=\\"\\" />
   {#if submissionState() === \\"error\\"}
-    <div _text=\\"\\" />
     <BuilderBlocks dataPath=\\"errorMessage\\" blocks={errorMessage} />
-    <div _text=\\"\\" />
   {/if}
-  <div _text=\\"\\" />
+
   {#if submissionState() === \\"sending\\"}
-    <div _text=\\"\\" />
     <BuilderBlocks dataPath=\\"sendingMessage\\" blocks={sendingMessage} />
-    <div _text=\\"\\" />
   {/if}
-  <div _text=\\"\\" />
+
   {#if submissionState() === \\"error\\" && responseData}
-    <div _text=\\"\\" />
-    <pre class=\\"builder - form - error - text pre\\"><div
-        _text=\\"\\"
-      />{JSON.stringify(responseData, null, 2)}<div _text=\\"\\" /></pre>
-    <div _text=\\"\\" />
+    <pre class=\\"builder - form - error - text pre\\">
+        {JSON.stringify(responseData, null, 2)}
+      </pre>
   {/if}
-  <div _text=\\"\\" />
+
   {#if submissionState() === \\"success\\"}
-    <div _text=\\"\\" />
     <BuilderBlocks dataPath=\\"successMessage\\" blocks={successMessage} />
-    <div _text=\\"\\" />
   {/if}
-  <div _text=\\"\\" />
 </form>
 
 <style>
@@ -791,11 +941,8 @@ exports[`Svelte > jsx > Javascript Test > Image 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
-  <picture bind:this={pictureRef}
-    ><div _text=\\"\\" />
+  <picture bind:this={pictureRef}>
     {#if !useLazyLoading() || load}
-      <div _text=\\"\\" />
       <img
         alt={altText}
         aria-role={altText ? \\"presentation\\" : undefined}
@@ -807,15 +954,10 @@ exports[`Svelte > jsx > Javascript Test > Image 1`] = `
         {srcset}
         {sizes}
       />
-      <div _text=\\"\\" />
     {/if}
-    <div _text=\\"\\" />
     <source {srcset} />
-    <div _text=\\"\\" /></picture
-  >
-  <div _text=\\"\\" />
+  </picture>
   <slot />
-  <div _text=\\"\\" />
 </div>
 
 <style>
@@ -928,9 +1070,7 @@ exports[`Svelte > jsx > Javascript Test > Section 1`] = `
     : undefined}
   {...attributes}
 >
-  <div _text=\\"\\" />
   <slot />
-  <div _text=\\"\\" />
 </section>"
 `;
 
@@ -953,8 +1093,6 @@ exports[`Svelte > jsx > Javascript Test > Section 2`] = `
 </script>
 
 {#if max}
-  <div _text=\\"\\" />
-
   {#each items as item}
     <section
       use:mitosis_styling={{
@@ -962,13 +1100,9 @@ exports[`Svelte > jsx > Javascript Test > Section 2`] = `
       }}
       {...attributes}
     >
-      <div _text=\\"\\" />
       <slot />
-      <div _text=\\"\\" />
     </section>
   {/each}
-
-  <div _text=\\"\\" />
 {/if}"
 `;
 
@@ -989,23 +1123,20 @@ exports[`Svelte > jsx > Javascript Test > Select 1`] = `
   key={Builder.isEditing && defaultValue ? defaultValue : \\"default-key\\"}
   {defaultValue}
   {name}
-  ><div _text=\\"\\" />
+>
   {#each options as option, index}
-    <option value={option.value} data-index={index}
-      ><div _text=\\"\\" />
+    <option value={option.value} data-index={index}>
       {option.name || option.value}
-      <div _text=\\"\\" /></option
-    >
+    </option>
   {/each}
-  <div _text=\\"\\" /></select
->"
+</select>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
-"unknown: Missing semicolon. (1:13)
+"unknown: Missing semicolon. (1:11)
 
-> 1 | let _ = Write a review
-    |              ^"
+> 1 | let _ = How was your experience?
+    |            ^"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Submit 1`] = `
@@ -1014,11 +1145,9 @@ exports[`Svelte > jsx > Javascript Test > Submit 1`] = `
   export let text;
 </script>
 
-<button type=\\"submit\\" {...attributes}
-  ><div _text=\\"\\" />
+<button type=\\"submit\\" {...attributes}>
   {text}
-  <div _text=\\"\\" /></button
->"
+</button>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Text 1`] = `
@@ -1111,7 +1240,7 @@ exports[`Svelte > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
   let name = \\"steve\\";
 </script>
 
-<div>Hello{name}</div>"
+<div>Hello {name}</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > basicForwardRef 1`] = `
@@ -1124,9 +1253,7 @@ exports[`Svelte > jsx > Javascript Test > basicForwardRef 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
-  <div _text=\\"\\" />
 </div>
 
 <style>
@@ -1146,9 +1273,7 @@ exports[`Svelte > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
-  <div _text=\\"\\" />
 </div>
 
 <style>
@@ -1181,7 +1306,7 @@ exports[`Svelte > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
   $: onUpdateFn_0(...[name]);
 </script>
 
-<div>Hello{name}</div>"
+<div>Hello! {name}</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > class + ClassName + css 1`] = `
@@ -1192,21 +1317,23 @@ exports[`Svelte > jsx > Javascript Test > class + ClassName + css 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > class + css 1`] = `
-"unknown: Missing semicolon. (2:12)
+"<div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > className + css 1`] = `
-"unknown: Missing semicolon. (2:12)
+"<div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > className 1`] = `
@@ -1238,16 +1365,25 @@ exports[`Svelte > jsx > Javascript Test > componentWithContext 1`] = `
   });
 </script>
 
-<div _text=\\"\\" />
-{foo.value}
-<div _text=\\"\\" />"
+{foo.value}"
 `;
 
 exports[`Svelte > jsx > Javascript Test > contentState 1`] = `
-"unknown: Missing semicolon. (1:15)
+"<script>
+  import { setContext } from \\"svelte\\";
 
-> 1 | let _ = setting context
-    |                ^"
+  import BuilderContext from \\"@dummy/context.svelte\\";
+
+  export let content;
+  export let customComponents;
+
+  setContext(BuilderContext.key, {
+    content: content,
+    registeredComponents: customComponents,
+  });
+</script>
+
+<div>setting context</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > defaultProps 1`] = `
@@ -1256,33 +1392,33 @@ exports[`Svelte > jsx > Javascript Test > defaultProps 1`] = `
   export let attributes;
   export let openLinkInNewTab = false;
   export let text = \\"default text\\";
+  export let onClick = () => {
+    console.log(\\"hi\\");
+  };
 </script>
 
 <div>
-  <div _text=\\"\\" />
   {#if link}
-    <div _text=\\"\\" />
     <a
       {...attributes}
       href={link}
       target={openLinkInNewTab ? \\"_blank\\" : undefined}
-      ><div _text=\\"\\" />
-      {text}
-      <div _text=\\"\\" /></a
     >
-    <div _text=\\"\\" />
+      {text}
+    </a>
   {/if}
-  <div _text=\\"\\" />
+
   {#if !link}
-    <div _text=\\"\\" />
-    <button type=\\"button\\" {...attributes}
-      ><div _text=\\"\\" />
-      {text}
-      <div _text=\\"\\" /></button
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
     >
-    <div _text=\\"\\" />
+      {text}
+    </button>
   {/if}
-  <div _text=\\"\\" />
 </div>"
 `;
 
@@ -1292,33 +1428,31 @@ exports[`Svelte > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
   export let attributes;
   export let openLinkInNewTab = false;
   export let text = \\"default text\\";
+  export let onClick = () => {};
 </script>
 
 <div>
-  <div _text=\\"\\" />
   {#if link}
-    <div _text=\\"\\" />
     <a
       {...attributes}
       href={link}
       target={openLinkInNewTab ? \\"_blank\\" : undefined}
-      ><div _text=\\"\\" />
-      {text}
-      <div _text=\\"\\" /></a
     >
-    <div _text=\\"\\" />
+      {text}
+    </a>
   {/if}
-  <div _text=\\"\\" />
+
   {#if !link}
-    <div _text=\\"\\" />
-    <button type=\\"button\\" {...attributes}
-      ><div _text=\\"\\" />
-      {text}
-      <div _text=\\"\\" /></button
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
     >
-    <div _text=\\"\\" />
+      {text}
+    </button>
   {/if}
-  <div _text=\\"\\" />
 </div>"
 `;
 
@@ -1331,7 +1465,7 @@ exports[`Svelte > jsx > Javascript Test > defaultValsWithTypes 1`] = `
   export let name;
 </script>
 
-<div>Hello{name || DEFAULT_VALUES.name}</div>"
+<div>Hello {name || DEFAULT_VALUES.name}</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > expressionState 1`] = `
@@ -1407,19 +1541,42 @@ exports[`Svelte > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
 exports[`Svelte > jsx > Javascript Test > multipleSpreads 1`] = `"unknown: Maximum call stack size exceeded"`;
 
 exports[`Svelte > jsx > Javascript Test > nestedShow 1`] = `
-"unknown: Unexpected token (1:8)
+"<script>
+  export let conditionA;
+  export let conditionB;
+</script>
 
-> 1 | let _ = else-condition-A
-    |         ^"
+{#if conditionA}
+  {#if !conditionB}
+    <div>if condition A and condition B</div>
+  {:else}
+    <div>else-condition-B</div>
+  {/if}
+{:else}
+  <div>else-condition-A</div>
+{/if}"
 `;
 
 exports[`Svelte > jsx > Javascript Test > nestedStyles 1`] = `
-"unknown: Missing semicolon. (2:11)
+"<div class=\\"div\\">Hello world</div>
 
-  1 | let _ = 
-> 2 |       Hello world
-    |            ^
-  3 |     "
+<style>
+  .div {
+    display: flex;
+    foo: var(--bar);
+  }
+  @media (max-width: env(--mobile)) {
+    .div {
+      display: block;
+    }
+  }
+  .div:hover {
+    display: flex;
+  }
+  .div .nested-selector {
+    display: grid;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > onInit & onMount 1`] = `
@@ -1437,10 +1594,19 @@ exports[`Svelte > jsx > Javascript Test > onInit & onMount 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > onInit 1`] = `
-"unknown: Missing semicolon. (1:15)
+"<script>
+  export const defaultValues = {
+    name: \\"PatrickJS\\",
+  };
 
-> 1 | let _ = Default name defined by parent 
-    |                ^"
+  export let name;
+
+  let name = \\"\\";
+  name = defaultValues.name || name;
+  console.log(\\"set defaults with props\\");
+</script>
+
+<div>Default name defined by parent {name}</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > onMount 1`] = `
@@ -1500,33 +1666,65 @@ exports[`Svelte > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > preserveTyping 1`] = `
-"unknown: Missing semicolon. (1:14)
+"<script>
+  export let name;
+</script>
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+<div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > propsDestructure 1`] = `
-"unknown: Missing semicolon. (2:12)
+"<script>
+  export let type;
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+  let name = \\"Decadef20\\";
+</script>
+
+<div>
+  <slot />
+  {type}
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > propsInterface 1`] = `
-"unknown: Missing semicolon. (1:14)
+"<script>
+  export let name;
+</script>
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+<div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > propsType 1`] = `
-"unknown: Missing semicolon. (1:14)
+"<script>
+  export let name;
+</script>
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+<div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"<script>
+  import { afterUpdate } from \\"svelte\\";
+
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  afterUpdate(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+</script>
+
+<div />"
 `;
 
 exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
@@ -1570,9 +1768,7 @@ exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
     trackClick(content.id);
   }}
 >
-  <div _text=\\"\\" />
   <RenderBlocks blocks={content.blocks} />
-  <div _text=\\"\\" />
 </div>
 
 <style>
@@ -1591,32 +1787,21 @@ exports[`Svelte > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
   export let text;
 </script>
 
-<div _text=\\"\\" />
-
 {#if link}
-  <div _text=\\"\\" />
   <a
     {...attributes}
     href={link}
     target={openLinkInNewTab ? \\"_blank\\" : undefined}
-    ><div _text=\\"\\" />
-    {text}
-    <div _text=\\"\\" /></a
   >
-  <div _text=\\"\\" />
+    {text}
+  </a>
 {/if}
-<div _text=\\"\\" />
 
 {#if !link}
-  <div _text=\\"\\" />
-  <button type=\\"button\\" {...attributes}
-    ><div _text=\\"\\" />
+  <button type=\\"button\\" {...attributes}>
     {text}
-    <div _text=\\"\\" /></button
-  >
-  <div _text=\\"\\" />
-{/if}
-<div _text=\\"\\" />"
+  </button>
+{/if}"
 `;
 
 exports[`Svelte > jsx > Javascript Test > rootShow 1`] = `
@@ -1625,9 +1810,7 @@ exports[`Svelte > jsx > Javascript Test > rootShow 1`] = `
 </script>
 
 {#if foo === \\"bar\\"}
-  <div _text=\\"\\" />
   <div>Bar</div>
-  <div _text=\\"\\" />
 {:else}
   <div>Foo</div>
 {/if}"
@@ -1646,29 +1829,30 @@ exports[`Svelte > jsx > Javascript Test > self-referencing component with childr
 </script>
 
 <div>
-  <div _text=\\"\\" />
   {name}
-  <div _text=\\"\\" />
   <slot />
-  <div _text=\\"\\" />
+
   {#if name === \\"Batman\\"}
-    <div _text=\\"\\" />
-    <svelte:self name=\\"Bruce\\"
-      ><div _text=\\"\\" />
+    <svelte:self name=\\"Bruce\\">
       <div>Wayne</div>
-      <div _text=\\"\\" /></svelte:self
-    >
-    <div _text=\\"\\" />
+    </svelte:self>
   {/if}
-  <div _text=\\"\\" />
 </div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > showWithFor 1`] = `
-"unknown: Unexpected token (1:8)
+"<script>
+  export let conditionA;
+  export let items;
+</script>
 
-> 1 | let _ = else-condition-A
-    |         ^"
+{#if conditionA}
+  {#each items as item, idx (idx)}
+    <div>{item}</div>
+  {/each}
+{:else}
+  <div>else-condition-A</div>
+{/if}"
 `;
 
 exports[`Svelte > jsx > Javascript Test > spreadAttrs 1`] = `"<input {...attrs} />"`;
@@ -1713,7 +1897,7 @@ exports[`Svelte > jsx > Javascript Test > use-style 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > use-style-and-css 1`] = `
-"<button type=\\"button\\" class=\\"button\\">Button</button>
+"<button type=\\"button\\" class=\\"button\\"> Button </button>
 
 <style>
   .button {
@@ -1741,39 +1925,164 @@ exports[`Svelte > jsx > Javascript Test > use-style-outside-component 1`] = `
 </style>"
 `;
 
-exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
-"unknown: Missing semicolon. (2:18)
+exports[`Svelte > jsx > Remove Internal mitosis package 1`] = `
+"<script>
+  let name = \\"PatrickJS\\";
+</script>
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+<div>Hello {name}! I can run in React, Qwik, Vue, Solid, or Liquid!</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface Props {
+    showInput: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let showInput: Props[\\"showInput\\"];
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  let name = \\"PatrickJS\\";
+
+  function onUpdateFn_0() {
+    console.log(\\"Received an update\\");
+  }
+  $: onUpdateFn_0(...[inputRef, inputNoArgRef]);
+</script>
+
+<div>
+  {#if showInput}
+    <input
+      class=\\"input\\"
+      bind:this={inputRef}
+      on:blur={(event) => {
+        onBlur();
+      }}
+      bind:value={name}
+    />
+
+    <label for=\\"cars\\" bind:this={inputNoArgRef}> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  {/if}
+  Hello
+  {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
+</div>
+
+<style>
+  .input {
+    color: red;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Basic 1`] = `
-"unknown: Missing semicolon. (2:12)
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface MyBasicComponentProps {
+    id: string;
+  }
+</script>
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+<script lang=\\"ts\\">
+  export const DEFAULT_VALUES = {
+    name: \\"Steve\\",
+  };
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  let name = \\"Steve\\";
+  let age = 1;
+  let sports = [\\"\\"];
+</script>
+
+<div class=\\"test div\\">
+  <input
+    value={DEFAULT_VALUES.name || name}
+    on:change={(myEvent) => {
+      name = myEvent.target.value;
+    }}
+  />
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Basic 2`] = `
-"unknown: Missing semicolon. (1:11)
+"<script lang=\\"ts\\">
+  let name = \\"PatrickJS\\";
+  let names = [\\"Steve\\", \\"PatrickJS\\"];
+</script>
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+<div>
+  {#each names as person}
+    {#if person === name}
+      <input
+        value={name}
+        on:change={(event) => {
+          name = event.target.value + \\" and \\" + person;
+        }}
+      />
+
+      Hello
+      {person}
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    {/if}
+  {/each}
+</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Basic Context 1`] = `
-"unknown: Missing semicolon. (2:12)
+"<script lang=\\"ts\\">
+  import { getContext, onMount, setContext } from \\"svelte\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |       "
+  import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+  let myService = getContext(MyService.key);
+  setContext(Injector, createInjector());
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
+
+  let name = \\"PatrickJS\\";
+  const hi = myService.method(\\"hi\\");
+  console.log(hi);
+
+  onMount(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  });
+</script>
+
+<div>
+  {myService.method(\\"hello\\") + name}
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  <input on:change={onChange} />
+</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Basic OnMount Update 1`] = `
@@ -1799,7 +2108,7 @@ exports[`Svelte > jsx > Typescript Test > Basic OnMount Update 1`] = `
   });
 </script>
 
-<div>Hello{name}</div>"
+<div>Hello {name}</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Basic Outputs 1`] = `
@@ -1862,17 +2171,11 @@ exports[`Svelte > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   <slot />
-  <div _text=\\"\\" />
   {type}
-  <div _text=\\"\\" />
   <MyBooleanAttributeComponent toggle={true} />
-  <div _text=\\"\\" />
   <MyBooleanAttributeComponent toggle={true} />
-  <div _text=\\"\\" />
   <MyBooleanAttributeComponent list={null} />
-  <div _text=\\"\\" />
 </div>"
 `;
 
@@ -1886,33 +2189,93 @@ exports[`Svelte > jsx > Typescript Test > BasicChildComponent 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   <MyBasicComponent id={dev} />
-  <div _text=\\"\\" />
   <div>
-    <div _text=\\"\\" />
     <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
-    <div _text=\\"\\" />
   </div>
-  <div _text=\\"\\" />
 </div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicFor 1`] = `
-"unknown: Missing semicolon. (1:11)
+"<script lang=\\"ts\\">
+  import { onMount } from \\"svelte\\";
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+  let name = \\"PatrickJS\\";
+  let names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  onMount(() => {
+    console.log(\\"onMount code\\");
+  });
+</script>
+
+<div>
+  {#each names as person}
+    <input
+      value={name}
+      on:change={(event) => {
+        name = event.target.value + \\" and \\" + person;
+      }}
+    />
+
+    Hello
+    {person}
+    ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+  {/each}
+</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicRef 1`] = `
-"unknown: Missing semicolon. (2:18)
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface Props {
+    showInput: boolean;
+  }
+</script>
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+<script lang=\\"ts\\">
+  export let showInput: Props[\\"showInput\\"];
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  let name = \\"PatrickJS\\";
+</script>
+
+<div>
+  {#if showInput}
+    <input
+      class=\\"input\\"
+      bind:this={inputRef}
+      on:blur={(event) => {
+        onBlur();
+      }}
+      bind:value={name}
+    />
+
+    <label for=\\"cars\\" bind:this={inputNoArgRef}> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  {/if}
+  Hello
+  {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
+</div>
+
+<style>
+  .input {
+    color: red;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicRefAssignment 1`] = `
@@ -1931,22 +2294,53 @@ exports[`Svelte > jsx > Typescript Test > BasicRefAssignment 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   <button
     on:click={(evt) => {
       handlerClick(evt);
     }}>Click</button
   >
-  <div _text=\\"\\" />
 </div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"unknown: Missing semicolon. (2:11)
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface Props {
+    showInput: boolean;
+  }
+</script>
 
-  1 | let _ = 
-> 2 |         Now: 
-    |            ^"
+<script lang=\\"ts\\">
+  export function usePrevious<T>(value: T) {
+    // The ref object is a generic container whose current property is mutable ...
+    // ... and can hold any value, similar to an instance property on a class
+    let ref = useRef<T>(null); // Store current value in ref
+
+    onUpdate(() => {
+      ref = value;
+    }, [value]); // Only re-run if value changes
+    // Return previous value (happens before update in useEffect above)
+
+    return ref;
+  }
+
+  let count = 0;
+
+  function onUpdateFn_0() {
+    prevCount = count;
+  }
+  $: onUpdateFn_0(...[count]);
+</script>
+
+<div>
+  <h1>
+    Now: {count}, before: {prevCount}
+  </h1>
+  <button
+    on:click={(event) => {
+      count += 1;
+    }}>Increment</button
+  >
+</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Button 1`] = `
@@ -1967,30 +2361,21 @@ exports[`Svelte > jsx > Typescript Test > Button 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   {#if link}
-    <div _text=\\"\\" />
     <a
       {...attributes}
       href={link}
       target={openLinkInNewTab ? \\"_blank\\" : undefined}
-      ><div _text=\\"\\" />
-      {text}
-      <div _text=\\"\\" /></a
     >
-    <div _text=\\"\\" />
+      {text}
+    </a>
   {/if}
-  <div _text=\\"\\" />
+
   {#if !link}
-    <div _text=\\"\\" />
-    <button type=\\"button\\" {...attributes}
-      ><div _text=\\"\\" />
+    <button type=\\"button\\" {...attributes}>
       {text}
-      <div _text=\\"\\" /></button
-    >
-    <div _text=\\"\\" />
+    </button>
   {/if}
-  <div _text=\\"\\" />
 </div>"
 `;
 
@@ -2039,17 +2424,12 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
 </script>
 
 <div class=\\"builder - columns div\\">
-  <div _text=\\"\\" />
   {#each columns as column, index}
     <div class=\\"builder - column div-2\\">
-      <div _text=\\"\\" />
       {column.content}
-      <div _text=\\"\\" />
       {index}
-      <div _text=\\"\\" />
     </div>
   {/each}
-  <div _text=\\"\\" />
 </div>
 
 <style>
@@ -2512,43 +2892,29 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
   }}
   {...attributes}
 >
-  <div _text=\\"\\" />
   {#if builderBlock && builderBlock.children}
-    <div _text=\\"\\" />
-
     {#each builderBlock?.children as block, index (block.id)}
       <BuilderBlockComponent {block} {index} />
     {/each}
+  {/if}
 
-    <div _text=\\"\\" />
-  {/if}
-  <div _text=\\"\\" />
   {#if submissionState() === \\"error\\"}
-    <div _text=\\"\\" />
     <BuilderBlocks dataPath=\\"errorMessage\\" blocks={errorMessage} />
-    <div _text=\\"\\" />
   {/if}
-  <div _text=\\"\\" />
+
   {#if submissionState() === \\"sending\\"}
-    <div _text=\\"\\" />
     <BuilderBlocks dataPath=\\"sendingMessage\\" blocks={sendingMessage} />
-    <div _text=\\"\\" />
   {/if}
-  <div _text=\\"\\" />
+
   {#if submissionState() === \\"error\\" && responseData}
-    <div _text=\\"\\" />
-    <pre class=\\"builder - form - error - text pre\\"><div
-        _text=\\"\\"
-      />{JSON.stringify(responseData, null, 2)}<div _text=\\"\\" /></pre>
-    <div _text=\\"\\" />
+    <pre class=\\"builder - form - error - text pre\\">
+        {JSON.stringify(responseData, null, 2)}
+      </pre>
   {/if}
-  <div _text=\\"\\" />
+
   {#if submissionState() === \\"success\\"}
-    <div _text=\\"\\" />
     <BuilderBlocks dataPath=\\"successMessage\\" blocks={successMessage} />
-    <div _text=\\"\\" />
   {/if}
-  <div _text=\\"\\" />
 </form>
 
 <style>
@@ -2646,11 +3012,8 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
-  <picture bind:this={pictureRef}
-    ><div _text=\\"\\" />
+  <picture bind:this={pictureRef}>
     {#if !useLazyLoading() || load}
-      <div _text=\\"\\" />
       <img
         alt={altText}
         aria-role={altText ? \\"presentation\\" : undefined}
@@ -2662,15 +3025,10 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
         {srcset}
         {sizes}
       />
-      <div _text=\\"\\" />
     {/if}
-    <div _text=\\"\\" />
     <source {srcset} />
-    <div _text=\\"\\" /></picture
-  >
-  <div _text=\\"\\" />
+  </picture>
   <slot />
-  <div _text=\\"\\" />
 </div>
 
 <style>
@@ -2829,9 +3187,7 @@ exports[`Svelte > jsx > Typescript Test > Section 1`] = `
     : undefined}
   {...attributes}
 >
-  <div _text=\\"\\" />
   <slot />
-  <div _text=\\"\\" />
 </section>"
 `;
 
@@ -2862,8 +3218,6 @@ exports[`Svelte > jsx > Typescript Test > Section 2`] = `
 </script>
 
 {#if max}
-  <div _text=\\"\\" />
-
   {#each items as item}
     <section
       use:mitosis_styling={{
@@ -2871,13 +3225,9 @@ exports[`Svelte > jsx > Typescript Test > Section 2`] = `
       }}
       {...attributes}
     >
-      <div _text=\\"\\" />
       <slot />
-      <div _text=\\"\\" />
     </section>
   {/each}
-
-  <div _text=\\"\\" />
 {/if}"
 `;
 
@@ -2911,23 +3261,20 @@ exports[`Svelte > jsx > Typescript Test > Select 1`] = `
   key={Builder.isEditing && defaultValue ? defaultValue : \\"default-key\\"}
   {defaultValue}
   {name}
-  ><div _text=\\"\\" />
+>
   {#each options as option, index}
-    <option value={option.value} data-index={index}
-      ><div _text=\\"\\" />
+    <option value={option.value} data-index={index}>
       {option.name || option.value}
-      <div _text=\\"\\" /></option
-    >
+    </option>
   {/each}
-  <div _text=\\"\\" /></select
->"
+</select>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
-"unknown: Missing semicolon. (1:13)
+"unknown: Missing semicolon. (1:11)
 
-> 1 | let _ = Write a review
-    |              ^"
+> 1 | let _ = How was your experience?
+    |            ^"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Submit 1`] = `
@@ -2943,11 +3290,9 @@ exports[`Svelte > jsx > Typescript Test > Submit 1`] = `
   export let text: ButtonProps[\\"text\\"];
 </script>
 
-<button type=\\"submit\\" {...attributes}
-  ><div _text=\\"\\" />
+<button type=\\"submit\\" {...attributes}>
   {text}
-  <div _text=\\"\\" /></button
->"
+</button>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Text 1`] = `
@@ -3088,7 +3433,7 @@ exports[`Svelte > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
   let name = \\"steve\\";
 </script>
 
-<div>Hello{name}</div>"
+<div>Hello {name}</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
@@ -3108,9 +3453,7 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
-  <div _text=\\"\\" />
 </div>
 
 <style>
@@ -3137,9 +3480,7 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 </script>
 
 <div>
-  <div _text=\\"\\" />
   <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
-  <div _text=\\"\\" />
 </div>
 
 <style>
@@ -3172,7 +3513,7 @@ exports[`Svelte > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
   $: onUpdateFn_0(...[name]);
 </script>
 
-<div>Hello{name}</div>"
+<div>Hello! {name}</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > class + ClassName + css 1`] = `
@@ -3183,21 +3524,29 @@ exports[`Svelte > jsx > Typescript Test > class + ClassName + css 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > class + css 1`] = `
-"unknown: Missing semicolon. (2:12)
+"<script lang=\\"ts\\">
+</script>
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+<div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
+
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > className + css 1`] = `
-"unknown: Missing semicolon. (2:12)
+"<script lang=\\"ts\\">
+</script>
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+<div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
+
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > className 1`] = `
@@ -3235,16 +3584,25 @@ exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
   });
 </script>
 
-<div _text=\\"\\" />
-{foo.value}
-<div _text=\\"\\" />"
+{foo.value}"
 `;
 
 exports[`Svelte > jsx > Typescript Test > contentState 1`] = `
-"unknown: Missing semicolon. (1:15)
+"<script lang=\\"ts\\">
+  import { setContext } from \\"svelte\\";
 
-> 1 | let _ = setting context
-    |                ^"
+  import BuilderContext from \\"@dummy/context.svelte\\";
+
+  export let content;
+  export let customComponents;
+
+  setContext(BuilderContext.key, {
+    content: content,
+    registeredComponents: customComponents,
+  });
+</script>
+
+<div>setting context</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
@@ -3254,6 +3612,7 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
     text?: string;
     link?: string;
     openLinkInNewTab?: boolean;
+    onClick?: () => void;
   }
 </script>
 
@@ -3262,33 +3621,33 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
   export let attributes: ButtonProps[\\"attributes\\"];
   export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
   export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+  export let onClick: ButtonProps[\\"onClick\\"] = () => {
+    console.log(\\"hi\\");
+  };
 </script>
 
 <div>
-  <div _text=\\"\\" />
   {#if link}
-    <div _text=\\"\\" />
     <a
       {...attributes}
       href={link}
       target={openLinkInNewTab ? \\"_blank\\" : undefined}
-      ><div _text=\\"\\" />
-      {text}
-      <div _text=\\"\\" /></a
     >
-    <div _text=\\"\\" />
+      {text}
+    </a>
   {/if}
-  <div _text=\\"\\" />
+
   {#if !link}
-    <div _text=\\"\\" />
-    <button type=\\"button\\" {...attributes}
-      ><div _text=\\"\\" />
-      {text}
-      <div _text=\\"\\" /></button
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
     >
-    <div _text=\\"\\" />
+      {text}
+    </button>
   {/if}
-  <div _text=\\"\\" />
 </div>"
 `;
 
@@ -3299,6 +3658,7 @@ exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
     text?: string;
     link?: string;
     openLinkInNewTab?: boolean;
+    onClick: () => void;
   }
 </script>
 
@@ -3307,33 +3667,31 @@ exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
   export let attributes: ButtonProps[\\"attributes\\"];
   export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
   export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+  export let onClick: ButtonProps[\\"onClick\\"] = () => {};
 </script>
 
 <div>
-  <div _text=\\"\\" />
   {#if link}
-    <div _text=\\"\\" />
     <a
       {...attributes}
       href={link}
       target={openLinkInNewTab ? \\"_blank\\" : undefined}
-      ><div _text=\\"\\" />
-      {text}
-      <div _text=\\"\\" /></a
     >
-    <div _text=\\"\\" />
+      {text}
+    </a>
   {/if}
-  <div _text=\\"\\" />
+
   {#if !link}
-    <div _text=\\"\\" />
-    <button type=\\"button\\" {...attributes}
-      ><div _text=\\"\\" />
-      {text}
-      <div _text=\\"\\" /></button
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
     >
-    <div _text=\\"\\" />
+      {text}
+    </button>
   {/if}
-  <div _text=\\"\\" />
 </div>"
 `;
 
@@ -3352,7 +3710,7 @@ exports[`Svelte > jsx > Typescript Test > defaultValsWithTypes 1`] = `
   export let name: Props[\\"name\\"];
 </script>
 
-<div>Hello{name || DEFAULT_VALUES.name}</div>"
+<div>Hello {name || DEFAULT_VALUES.name}</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > expressionState 1`] = `
@@ -3436,19 +3794,52 @@ exports[`Svelte > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 exports[`Svelte > jsx > Typescript Test > multipleSpreads 1`] = `"unknown: Maximum call stack size exceeded"`;
 
 exports[`Svelte > jsx > Typescript Test > nestedShow 1`] = `
-"unknown: Unexpected token (1:8)
+"<script context=\\"module\\" lang=\\"ts\\">
+  interface Props {
+    conditionA: boolean;
+    conditionB: boolean;
+  }
+</script>
 
-> 1 | let _ = else-condition-A
-    |         ^"
+<script lang=\\"ts\\">
+  export let conditionA: Props[\\"conditionA\\"];
+  export let conditionB: Props[\\"conditionB\\"];
+</script>
+
+{#if conditionA}
+  {#if !conditionB}
+    <div>if condition A and condition B</div>
+  {:else}
+    <div>else-condition-B</div>
+  {/if}
+{:else}
+  <div>else-condition-A</div>
+{/if}"
 `;
 
 exports[`Svelte > jsx > Typescript Test > nestedStyles 1`] = `
-"unknown: Missing semicolon. (2:11)
+"<script lang=\\"ts\\">
+</script>
 
-  1 | let _ = 
-> 2 |       Hello world
-    |            ^
-  3 |     "
+<div class=\\"div\\">Hello world</div>
+
+<style>
+  .div {
+    display: flex;
+    foo: var(--bar);
+  }
+  @media (max-width: env(--mobile)) {
+    .div {
+      display: block;
+    }
+  }
+  .div:hover {
+    display: flex;
+  }
+  .div .nested-selector {
+    display: grid;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > onInit & onMount 1`] = `
@@ -3466,10 +3857,25 @@ exports[`Svelte > jsx > Typescript Test > onInit & onMount 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > onInit 1`] = `
-"unknown: Missing semicolon. (1:15)
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    name: string;
+  };
+</script>
 
-> 1 | let _ = Default name defined by parent 
-    |                ^"
+<script lang=\\"ts\\">
+  export const defaultValues = {
+    name: \\"PatrickJS\\",
+  };
+
+  export let name: Props[\\"name\\"];
+
+  let name = \\"\\";
+  name = defaultValues.name || name;
+  console.log(\\"set defaults with props\\");
+</script>
+
+<div>Default name defined by parent {name}</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > onMount 1`] = `
@@ -3549,33 +3955,105 @@ exports[`Svelte > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > preserveTyping 1`] = `
-"unknown: Missing semicolon. (1:14)
+"<script context=\\"module\\" lang=\\"ts\\">
+  export type A = \\"test\\";
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+  export interface C {
+    n: \\"test\\";
+  }
+
+  type B = \\"test2\\";
+
+  interface D {
+    n: \\"test\\";
+  }
+
+  export interface MyBasicComponentProps {
+    name: string;
+    age?: number;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let name: MyBasicComponentProps[\\"name\\"];
+</script>
+
+<div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > propsDestructure 1`] = `
-"unknown: Missing semicolon. (2:12)
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    children: any;
+    type: string;
+  };
+</script>
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+<script lang=\\"ts\\">
+  export let type: Props[\\"type\\"];
+
+  let name = \\"Decadef20\\";
+</script>
+
+<div>
+  <slot />
+  {type}
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > propsInterface 1`] = `
-"unknown: Missing semicolon. (1:14)
+"<script context=\\"module\\" lang=\\"ts\\">
+  interface Person {
+    name: string;
+    age?: number;
+  }
+</script>
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+<script lang=\\"ts\\">
+  export let name: Person[\\"name\\"];
+</script>
+
+<div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > propsType 1`] = `
-"unknown: Missing semicolon. (1:14)
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Person = {
+    name: string;
+    age?: number;
+  };
+</script>
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+<script lang=\\"ts\\">
+  export let name: Person[\\"name\\"];
+</script>
+
+<div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"<script lang=\\"ts\\">
+  import { afterUpdate } from \\"svelte\\";
+
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  afterUpdate(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+</script>
+
+<div />"
 `;
 
 exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
@@ -3629,9 +4107,7 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
     trackClick(content.id);
   }}
 >
-  <div _text=\\"\\" />
   <RenderBlocks blocks={content.blocks} />
-  <div _text=\\"\\" />
 </div>
 
 <style>
@@ -3659,32 +4135,21 @@ exports[`Svelte > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
   export let text: ButtonProps[\\"text\\"];
 </script>
 
-<div _text=\\"\\" />
-
 {#if link}
-  <div _text=\\"\\" />
   <a
     {...attributes}
     href={link}
     target={openLinkInNewTab ? \\"_blank\\" : undefined}
-    ><div _text=\\"\\" />
-    {text}
-    <div _text=\\"\\" /></a
   >
-  <div _text=\\"\\" />
+    {text}
+  </a>
 {/if}
-<div _text=\\"\\" />
 
 {#if !link}
-  <div _text=\\"\\" />
-  <button type=\\"button\\" {...attributes}
-    ><div _text=\\"\\" />
+  <button type=\\"button\\" {...attributes}>
     {text}
-    <div _text=\\"\\" /></button
-  >
-  <div _text=\\"\\" />
-{/if}
-<div _text=\\"\\" />"
+  </button>
+{/if}"
 `;
 
 exports[`Svelte > jsx > Typescript Test > rootShow 1`] = `
@@ -3699,9 +4164,7 @@ exports[`Svelte > jsx > Typescript Test > rootShow 1`] = `
 </script>
 
 {#if foo === \\"bar\\"}
-  <div _text=\\"\\" />
   <div>Bar</div>
-  <div _text=\\"\\" />
 {:else}
   <div>Foo</div>
 {/if}"
@@ -3720,29 +4183,37 @@ exports[`Svelte > jsx > Typescript Test > self-referencing component with childr
 </script>
 
 <div>
-  <div _text=\\"\\" />
   {name}
-  <div _text=\\"\\" />
   <slot />
-  <div _text=\\"\\" />
+
   {#if name === \\"Batman\\"}
-    <div _text=\\"\\" />
-    <svelte:self name=\\"Bruce\\"
-      ><div _text=\\"\\" />
+    <svelte:self name=\\"Bruce\\">
       <div>Wayne</div>
-      <div _text=\\"\\" /></svelte:self
-    >
-    <div _text=\\"\\" />
+    </svelte:self>
   {/if}
-  <div _text=\\"\\" />
 </div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > showWithFor 1`] = `
-"unknown: Unexpected token (1:8)
+"<script context=\\"module\\" lang=\\"ts\\">
+  interface Props {
+    conditionA: boolean;
+    items: string[];
+  }
+</script>
 
-> 1 | let _ = else-condition-A
-    |         ^"
+<script lang=\\"ts\\">
+  export let conditionA: Props[\\"conditionA\\"];
+  export let items: Props[\\"items\\"];
+</script>
+
+{#if conditionA}
+  {#each items as item, idx (idx)}
+    <div>{item}</div>
+  {/each}
+{:else}
+  <div>else-condition-A</div>
+{/if}"
 `;
 
 exports[`Svelte > jsx > Typescript Test > spreadAttrs 1`] = `
@@ -3809,7 +4280,7 @@ exports[`Svelte > jsx > Typescript Test > use-style-and-css 1`] = `
 "<script lang=\\"ts\\">
 </script>
 
-<button type=\\"button\\" class=\\"button\\">Button</button>
+<button type=\\"button\\" class=\\"button\\"> Button </button>
 
 <style>
   .button {
@@ -3841,12 +4312,14 @@ exports[`Svelte > jsx > Typescript Test > use-style-outside-component 1`] = `
 `;
 
 exports[`Svelte > svelte > Javascript Test > basic 1`] = `
-"unknown: Missing semicolon. (2:8)
+"<script>
+  let name = \\"Steve\\";
+</script>
 
-  1 | let _ = 
-> 2 |   Hello! I can run in React, Vue, Solid, or Liquid!
-    |         ^
-  3 |"
+<div>
+  <input bind:value={name} />
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
 `;
 
 exports[`Svelte > svelte > Javascript Test > bindGroup 1`] = `
@@ -3901,6 +4374,30 @@ exports[`Svelte > svelte > Javascript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Svelte > svelte > Javascript Test > eventHandlers 1`] = `
+"<script>
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+</script>
+
+<div>
+  <button
+    on:click={(a) => {
+      log(\\"hi\\");
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  >
+</div>"
+`;
+
 exports[`Svelte > svelte > Javascript Test > html 1`] = `
 "<script>
   let html = \\"<b>bold</b>\\";
@@ -3921,15 +4418,19 @@ exports[`Svelte > svelte > Javascript Test > ifElse 1`] = `
 {#if show}
   <button
     on:click={(event) => {
-      toggle;
-    }}>Hide</button
+      toggle(event);
+    }}
   >
+    Hide
+  </button>
 {:else}
   <button
     on:click={(event) => {
-      toggle;
-    }}>Show</button
+      toggle(event);
+    }}
   >
+    Show
+  </button>
 {/if}"
 `;
 
@@ -3964,12 +4465,43 @@ exports[`Svelte > svelte > Javascript Test > lifecycleHooks 1`] = `
 `;
 
 exports[`Svelte > svelte > Javascript Test > reactive 1`] = `
-"unknown: Missing semicolon. (2:11)
+"<script>
+  $: lowercaseName = () => {
+    return name.toLowerCase();
+  };
 
-  1 | let _ = 
-> 2 |   Lowercase: 
-    |            ^"
+  let name = \\"Steve\\";
+</script>
+
+<div>
+  <input value={name} />
+  Lowercase: {lowercaseName()}
+</div>"
 `;
+
+exports[`Svelte > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<script>
+  function calculateResult(a_, b_) {
+    result = a_ * b_;
+  }
+
+  let a = 2;
+  let b = 5;
+  let result = null;
+
+  function onUpdateFn_0() {
+    calculateResult(a, b);
+  }
+  $: onUpdateFn_0(...[a, b]);
+</script>
+
+<div>
+  <input type=\\"number\\" bind:value={a} /><input type=\\"number\\" bind:value={b} />
+  Result: {result}
+</div>"
+`;
+
+exports[`Svelte > svelte > Javascript Test > slots 1`] = `"<div><slot>default</slot><slot name=\\"test\\"><div>default</div></slot></div>"`;
 
 exports[`Svelte > svelte > Javascript Test > style 1`] = `
 "<input class=\\"form - input\\" />
@@ -3987,21 +4519,28 @@ exports[`Svelte > svelte > Javascript Test > style 1`] = `
 `;
 
 exports[`Svelte > svelte > Javascript Test > textExpressions 1`] = `
-"unknown: Missing semicolon. (2:8)
+"<script>
+  let a = 5;
+  let b = 12;
+</script>
 
-  1 | let _ = 
-> 2 |   normal:
-    |         ^
-  3 |   "
+<div>
+  normal:
+  {a + b}<br />
+  conditional
+  {a > 2 ? \\"hello\\" : \\"bye\\"}
+</div>"
 `;
 
 exports[`Svelte > svelte > Typescript Test > basic 1`] = `
-"unknown: Missing semicolon. (2:8)
+"<script lang=\\"ts\\">
+  let name = \\"Steve\\";
+</script>
 
-  1 | let _ = 
-> 2 |   Hello! I can run in React, Vue, Solid, or Liquid!
-    |         ^
-  3 |"
+<div>
+  <input bind:value={name} />
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
 `;
 
 exports[`Svelte > svelte > Typescript Test > bindGroup 1`] = `
@@ -4056,6 +4595,30 @@ exports[`Svelte > svelte > Typescript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Svelte > svelte > Typescript Test > eventHandlers 1`] = `
+"<script lang=\\"ts\\">
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+</script>
+
+<div>
+  <button
+    on:click={(a) => {
+      log(\\"hi\\");
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  >
+</div>"
+`;
+
 exports[`Svelte > svelte > Typescript Test > html 1`] = `
 "<script lang=\\"ts\\">
   let html = \\"<b>bold</b>\\";
@@ -4076,15 +4639,19 @@ exports[`Svelte > svelte > Typescript Test > ifElse 1`] = `
 {#if show}
   <button
     on:click={(event) => {
-      toggle;
-    }}>Hide</button
+      toggle(event);
+    }}
   >
+    Hide
+  </button>
 {:else}
   <button
     on:click={(event) => {
-      toggle;
-    }}>Show</button
+      toggle(event);
+    }}
   >
+    Show
+  </button>
 {/if}"
 `;
 
@@ -4119,11 +4686,47 @@ exports[`Svelte > svelte > Typescript Test > lifecycleHooks 1`] = `
 `;
 
 exports[`Svelte > svelte > Typescript Test > reactive 1`] = `
-"unknown: Missing semicolon. (2:11)
+"<script lang=\\"ts\\">
+  $: lowercaseName = () => {
+    return name.toLowerCase();
+  };
 
-  1 | let _ = 
-> 2 |   Lowercase: 
-    |            ^"
+  let name = \\"Steve\\";
+</script>
+
+<div>
+  <input value={name} />
+  Lowercase: {lowercaseName()}
+</div>"
+`;
+
+exports[`Svelte > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<script lang=\\"ts\\">
+  function calculateResult(a_, b_) {
+    result = a_ * b_;
+  }
+
+  let a = 2;
+  let b = 5;
+  let result = null;
+
+  function onUpdateFn_0() {
+    calculateResult(a, b);
+  }
+  $: onUpdateFn_0(...[a, b]);
+</script>
+
+<div>
+  <input type=\\"number\\" bind:value={a} /><input type=\\"number\\" bind:value={b} />
+  Result: {result}
+</div>"
+`;
+
+exports[`Svelte > svelte > Typescript Test > slots 1`] = `
+"<script lang=\\"ts\\">
+</script>
+
+<div><slot>default</slot><slot name=\\"test\\"><div>default</div></slot></div>"
 `;
 
 exports[`Svelte > svelte > Typescript Test > style 1`] = `
@@ -4145,10 +4748,15 @@ exports[`Svelte > svelte > Typescript Test > style 1`] = `
 `;
 
 exports[`Svelte > svelte > Typescript Test > textExpressions 1`] = `
-"unknown: Missing semicolon. (2:8)
+"<script lang=\\"ts\\">
+  let a = 5;
+  let b = 12;
+</script>
 
-  1 | let _ = 
-> 2 |   normal:
-    |         ^
-  3 |   "
+<div>
+  normal:
+  {a + b}<br />
+  conditional
+  {a > 2 ? \\"hello\\" : \\"bye\\"}
+</div>"
 `;

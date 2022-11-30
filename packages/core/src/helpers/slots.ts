@@ -6,7 +6,8 @@ export type SlotMapper = (slotName: string) => string;
 
 export const isSlotProperty = (key: string): boolean => key.startsWith(SLOT_PREFIX);
 
-export const stripSlotPrefix = (key: string): string => key.substring(SLOT_PREFIX.length);
+export const stripSlotPrefix = (key: string): string =>
+  isSlotProperty(key) ? key.substring(SLOT_PREFIX.length) : key;
 
 export function replaceSlotsInString(code: string, mapper: SlotMapper) {
   return babelTransformExpression(code, {

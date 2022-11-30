@@ -2523,6 +2523,15 @@ exports[`Html > jsx > Javascript Test > Select 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > SlotDefault 1`] = `
+"<div>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > SlotHtml 1`] = `
 "<div>
   <ContentSlotCode>
@@ -2610,6 +2619,17 @@ exports[`Html > jsx > Javascript Test > SlotJsx 1`] = `
     update();
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > SlotNamed 1`] = `
+"<div>
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
+</div>
 "
 `;
 
@@ -3622,6 +3642,11 @@ exports[`Html > jsx > Javascript Test > defaultProps 1`] = `
         }
       });
 
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
       document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
         renderTextNode(el, props.text);
       });
@@ -3629,6 +3654,11 @@ exports[`Html > jsx > Javascript Test > defaultProps 1`] = `
       destroyAnyNodes();
 
       pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      props.onClick(event);
     }
 
     // Update with initial state on first load
@@ -3735,6 +3765,11 @@ exports[`Html > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
         }
       });
 
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
       document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
         renderTextNode(el, props.text);
       });
@@ -3742,6 +3777,11 @@ exports[`Html > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
       destroyAnyNodes();
 
       pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      props.onClick(event);
     }
 
     // Update with initial state on first load
@@ -4380,6 +4420,11 @@ exports[`Html > jsx > Javascript Test > propsType 1`] = `
     }
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"<div></div>
 "
 `;
 
@@ -7653,6 +7698,15 @@ exports[`Html > jsx > Typescript Test > Select 1`] = `
 "
 `;
 
+exports[`Html > jsx > Typescript Test > SlotDefault 1`] = `
+"<div>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>
+"
+`;
+
 exports[`Html > jsx > Typescript Test > SlotHtml 1`] = `
 "<div>
   <ContentSlotCode>
@@ -7740,6 +7794,17 @@ exports[`Html > jsx > Typescript Test > SlotJsx 1`] = `
     update();
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > SlotNamed 1`] = `
+"<div>
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
+</div>
 "
 `;
 
@@ -8752,6 +8817,11 @@ exports[`Html > jsx > Typescript Test > defaultProps 1`] = `
         }
       });
 
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
       document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
         renderTextNode(el, props.text);
       });
@@ -8759,6 +8829,11 @@ exports[`Html > jsx > Typescript Test > defaultProps 1`] = `
       destroyAnyNodes();
 
       pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      props.onClick(event);
     }
 
     // Update with initial state on first load
@@ -8865,6 +8940,11 @@ exports[`Html > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
         }
       });
 
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
       document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
         renderTextNode(el, props.text);
       });
@@ -8872,6 +8952,11 @@ exports[`Html > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
       destroyAnyNodes();
 
       pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      props.onClick(event);
     }
 
     // Update with initial state on first load
@@ -9510,6 +9595,11 @@ exports[`Html > jsx > Typescript Test > propsType 1`] = `
     }
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"<div></div>
 "
 `;
 
@@ -10716,6 +10806,81 @@ exports[`Html > svelte > Javascript Test > each 1`] = `
 "
 `;
 
+exports[`Html > svelte > Javascript Test > eventHandlers 1`] = `
+"<div>
+  <button data-el=\\"button-1\\">Log</button>
+  <button data-el=\\"button-2\\">Log</button>
+  <button data-el=\\"button-3\\">Log</button>
+</div>
+<script>
+  (() => {
+    const state = {
+      log: function log(msg = \\"hello\\") {
+        console.log(msg);
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
+      document.querySelectorAll(\\"[data-el='button-2']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton2Click);
+        el.addEventListener(\\"click\\", onButton2Click);
+      });
+
+      document.querySelectorAll(\\"[data-el='button-3']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton3Click);
+        el.addEventListener(\\"click\\", onButton3Click);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(a) {
+      state.log(\\"hi\\");
+    }
+
+    // Event handler for 'click' event on button-2
+    function onButton2Click(event) {
+      state.log(event);
+    }
+
+    // Event handler for 'click' event on button-3
+    function onButton3Click(event) {
+      state.log(event);
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html > svelte > Javascript Test > html 1`] = `
 "<div data-el=\\"div-1\\"></div>
 <script>
@@ -10807,7 +10972,7 @@ exports[`Html > svelte > Javascript Test > ifElse 1`] = `
 
     // Event handler for 'click' event on button-1
     function onButton1Click(event) {
-      state.toggle;
+      state.toggle(event);
     }
 
     // Update with initial state on first load
@@ -10968,6 +11133,110 @@ exports[`Html > svelte > Javascript Test > reactive 1`] = `
     }
   })();
 </script>
+"
+`;
+
+exports[`Html > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<div>
+  <input type=\\"number\\" data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
+  <input type=\\"number\\" data-el=\\"input-3\\" data-dom-state=\\"input-4\\" />
+
+  Result:
+  <template data-el=\\"div-1\\"><!-- state.result --></template>
+</div>
+<script>
+  (() => {
+    const state = {
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        state.result = a_ * b_;
+        update();
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+
+        el.value = state.a;
+      });
+
+      document.querySelectorAll(\\"[data-el='input-3']\\").forEach((el) => {
+        el.removeEventListener(\\"input\\", onInput3Input);
+        el.addEventListener(\\"input\\", onInput3Input);
+
+        el.value = state.b;
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.result);
+      });
+
+      destroyAnyNodes();
+
+      state.calculateResult(state.a, state.b);
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.a = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-3
+    function onInput3Input(event) {
+      state.b = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > svelte > Javascript Test > slots 1`] = `
+"<div>
+  <slot>default</slot>
+  <slot name=\\"Test\\"><div>default</div></slot>
+</div>
 "
 `;
 
@@ -11567,6 +11836,81 @@ exports[`Html > svelte > Typescript Test > each 1`] = `
 "
 `;
 
+exports[`Html > svelte > Typescript Test > eventHandlers 1`] = `
+"<div>
+  <button data-el=\\"button-1\\">Log</button>
+  <button data-el=\\"button-2\\">Log</button>
+  <button data-el=\\"button-3\\">Log</button>
+</div>
+<script>
+  (() => {
+    const state = {
+      log: function log(msg = \\"hello\\") {
+        console.log(msg);
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
+      document.querySelectorAll(\\"[data-el='button-2']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton2Click);
+        el.addEventListener(\\"click\\", onButton2Click);
+      });
+
+      document.querySelectorAll(\\"[data-el='button-3']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton3Click);
+        el.addEventListener(\\"click\\", onButton3Click);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(a) {
+      state.log(\\"hi\\");
+    }
+
+    // Event handler for 'click' event on button-2
+    function onButton2Click(event) {
+      state.log(event);
+    }
+
+    // Event handler for 'click' event on button-3
+    function onButton3Click(event) {
+      state.log(event);
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html > svelte > Typescript Test > html 1`] = `
 "<div data-el=\\"div-1\\"></div>
 <script>
@@ -11658,7 +12002,7 @@ exports[`Html > svelte > Typescript Test > ifElse 1`] = `
 
     // Event handler for 'click' event on button-1
     function onButton1Click(event) {
-      state.toggle;
+      state.toggle(event);
     }
 
     // Update with initial state on first load
@@ -11819,6 +12163,110 @@ exports[`Html > svelte > Typescript Test > reactive 1`] = `
     }
   })();
 </script>
+"
+`;
+
+exports[`Html > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<div>
+  <input type=\\"number\\" data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
+  <input type=\\"number\\" data-el=\\"input-3\\" data-dom-state=\\"input-4\\" />
+
+  Result:
+  <template data-el=\\"div-1\\"><!-- state.result --></template>
+</div>
+<script>
+  (() => {
+    const state = {
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        state.result = a_ * b_;
+        update();
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+
+        el.value = state.a;
+      });
+
+      document.querySelectorAll(\\"[data-el='input-3']\\").forEach((el) => {
+        el.removeEventListener(\\"input\\", onInput3Input);
+        el.addEventListener(\\"input\\", onInput3Input);
+
+        el.value = state.b;
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.result);
+      });
+
+      destroyAnyNodes();
+
+      state.calculateResult(state.a, state.b);
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.a = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-3
+    function onInput3Input(event) {
+      state.b = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > svelte > Typescript Test > slots 1`] = `
+"<div>
+  <slot>default</slot>
+  <slot name=\\"Test\\"><div>default</div></slot>
+</div>
 "
 `;
 

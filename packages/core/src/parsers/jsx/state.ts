@@ -165,8 +165,46 @@ const processStateObjectSlice = (
   }
 };
 
+const processDefaultPropsSlice = (
+  item: babel.types.ObjectMethod | babel.types.ObjectProperty,
+): StateValue => {
+  if (types.isObjectProperty(item)) {
+    if (types.isFunctionExpression(item.value) || types.isArrowFunctionExpression(item.value)) {
+      return {
+        code: parseCode(item.value),
+        type: 'method',
+      };
+    } else {
+      // Remove typescript types, e.g. from
+      // { foo: ('string' as SomeType) }
+      if (types.isTSAsExpression(item.value)) {
+        return {
+          code: parseCode(item.value.expression),
+          type: 'property',
+        };
+      }
+      return {
+        code: parseCode(item.value),
+        type: 'property',
+      };
+    }
+  } else if (types.isObjectMethod(item)) {
+    const n = parseCode({ ...item, returnType: null });
+
+    const isGetter = item.kind === 'get';
+
+    return {
+      code: n,
+      type: isGetter ? 'getter' : 'method',
+    };
+  } else {
+    throw new Error('Unexpected state value type', item);
+  }
+};
+
 export const parseStateObjectToMitosisState = (
   object: babel.types.ObjectExpression,
+  isState: boolean = true, // parse state or defaultProps
 ): MitosisState => {
   const state: MitosisState = {};
   object.properties.forEach((x) => {
@@ -184,7 +222,7 @@ export const parseStateObjectToMitosisState = (
       );
     }
 
-    state[x.key.name] = processStateObjectSlice(x);
+    state[x.key.name] = isState ? processStateObjectSlice(x) : processDefaultPropsSlice(x);
   });
 
   return state;
