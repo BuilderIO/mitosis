@@ -1,73 +1,357 @@
 // Vitest Snapshot v1
 
 exports[`Solid > jsx > Javascript Test > AdvancedRef 1`] = `
-"unknown: Missing semicolon. (2:18)
+"import { Show, on, createEffect, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name().toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  function onUpdateFn_0() {
+    console.log(\\"Received an update\\");
+  }
+  createEffect(on(() => [inputRef, inputNoArgRef], onUpdateFn_0));
+
+  return (
+    <div>
+      <Show when={props.showInput}>
+        <>
+          <input
+            class={css({
+              color: \\"red\\",
+            })}
+            ref={inputRef}
+            value={name()}
+            onBlur={(event) => onBlur()}
+            onInput={(event) => setName(event.target.value)}
+          />
+          <label for=\\"cars\\" ref={inputNoArgRef}>
+            Choose a car:
+          </label>
+          <select name=\\"cars\\" id=\\"cars\\">
+            <option value=\\"supra\\">GR Supra</option>
+            <option value=\\"86\\">GR 86</option>
+          </select>
+        </>
+      </Show>
+      Hello
+      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
+    </div>
+  );
+}
+
+export default MyBasicRefComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > AdvancedRef 2`] = `
-"unknown: Missing semicolon. (2:18)
+"import { Show, on, createEffect, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name().toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  function onUpdateFn_0() {
+    console.log(\\"Received an update\\");
+  }
+  createEffect(on(() => [inputRef, inputNoArgRef], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <Show when={props.showInput}>
+          <>
+            <input
+              class=\\"input-6d81d00c\\"
+              ref={inputRef}
+              value={name()}
+              onBlur={(event) => onBlur()}
+              onInput={(event) => setName(event.target.value)}
+            />
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        </Show>
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input-6d81d00c {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicRefComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > Basic 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+import { css } from \\"solid-styled-components\\";
+
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  const [age, setAge] = createSignal(1);
+
+  const [sports, setSports] = createSignal([\\"\\"]);
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  return (
+    <div
+      class={
+        \\"test \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+    >
+      <input
+        value={DEFAULT_VALUES.name || name()}
+        onInput={(myEvent) => setName(myEvent.target.value)}
+      />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > Basic 2`] = `
-"unknown: Missing semicolon. (1:11)
+"import { Show, For, createSignal } from \\"solid-js\\";
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+function MyBasicForShowComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  return (
+    <div>
+      <For each={names()}>
+        {(person, _index) => {
+          const index = _index();
+          return (
+            <Show when={person === name()}>
+              <input
+                value={name()}
+                onInput={(event) => {
+                  setName(event.target.value + \\" and \\" + person);
+                }}
+              />
+              Hello
+              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+              Liquid!
+            </Show>
+          );
+        }}
+      </For>
+    </div>
+  );
+}
+
+export default MyBasicForShowComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > Basic 3`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+import { css } from \\"solid-styled-components\\";
+
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  const [age, setAge] = createSignal(1);
+
+  const [sports, setSports] = createSignal([\\"\\"]);
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  return (
+    <>
+      <div class=\\"test div-5cae5810\\">
+        <input
+          value={DEFAULT_VALUES.name || name()}
+          onInput={(myEvent) => setName(myEvent.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-5cae5810 {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > Basic 4`] = `
-"unknown: Missing semicolon. (1:11)
+"import { Show, For, createSignal } from \\"solid-js\\";
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicForShowComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  return (
+    <>
+      <div>
+        <For each={names()}>
+          {(person, _index) => {
+            const index = _index();
+            return (
+              <Show when={person === name()}>
+                <input
+                  value={name()}
+                  onInput={(event) => {
+                    setName(event.target.value + \\" and \\" + person);
+                  }}
+                />
+                Hello
+                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+                or Liquid!
+              </Show>
+            );
+          }}
+        </For>
+      </div>
+    </>
+  );
+}
+
+export default MyBasicForShowComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > Basic Context 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { useContext, onMount, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |       "
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
+
+  const myService = useContext(MyService);
+
+  onMount(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  });
+
+  return (
+    <Injector.Provider>
+      <div>
+        {myService.method(\\"hello\\") + name()}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        <input onInput={(event) => onChange} />
+      </div>
+    </Injector.Provider>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > Basic Context 2`] = `
-"unknown: Missing semicolon. (2:12)
+"import { useContext, onMount, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |       "
+import { css } from \\"solid-styled-components\\";
+
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
+
+  const myService = useContext(MyService);
+
+  onMount(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  });
+
+  return (
+    <>
+      <Injector.Provider>
+        <div>
+          {myService.method(\\"hello\\") + name()}
+          Hello! I can run in React, Vue, Solid, or Liquid!
+          <input onInput={(event) => onChange} />
+        </div>
+      </Injector.Provider>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > Basic OnMount Update 1`] = `
@@ -337,37 +621,197 @@ export default MyBasicChildComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > BasicFor 1`] = `
-"unknown: Missing semicolon. (1:11)
+"import { For, onMount, createSignal } from \\"solid-js\\";
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+function MyBasicForComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  onMount(() => {
+    console.log(\\"onMount code\\");
+  });
+
+  return (
+    <div>
+      <For each={names()}>
+        {(person, _index) => {
+          const index = _index();
+          return (
+            <>
+              <input
+                value={name()}
+                onInput={(event) => {
+                  setName(event.target.value + \\" and \\" + person);
+                }}
+              />
+              Hello
+              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+              Liquid!
+            </>
+          );
+        }}
+      </For>
+    </div>
+  );
+}
+
+export default MyBasicForComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > BasicFor 2`] = `
-"unknown: Missing semicolon. (1:11)
+"import { For, onMount, createSignal } from \\"solid-js\\";
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicForComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  onMount(() => {
+    console.log(\\"onMount code\\");
+  });
+
+  return (
+    <>
+      <div>
+        <For each={names()}>
+          {(person, _index) => {
+            const index = _index();
+            return (
+              <>
+                <input
+                  value={name()}
+                  onInput={(event) => {
+                    setName(event.target.value + \\" and \\" + person);
+                  }}
+                />
+                Hello
+                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+                or Liquid!
+              </>
+            );
+          }}
+        </For>
+      </div>
+    </>
+  );
+}
+
+export default MyBasicForComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > BasicRef 1`] = `
-"unknown: Missing semicolon. (2:18)
+"import { Show, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name().toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  return (
+    <div>
+      <Show when={props.showInput}>
+        <>
+          <input
+            class={css({
+              color: \\"red\\",
+            })}
+            ref={inputRef}
+            value={name()}
+            onBlur={(event) => onBlur()}
+            onInput={(event) => setName(event.target.value)}
+          />
+          <label for=\\"cars\\" ref={inputNoArgRef}>
+            Choose a car:
+          </label>
+          <select name=\\"cars\\" id=\\"cars\\">
+            <option value=\\"supra\\">GR Supra</option>
+            <option value=\\"86\\">GR 86</option>
+          </select>
+        </>
+      </Show>
+      Hello
+      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
+    </div>
+  );
+}
+
+export default MyBasicRefComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > BasicRef 2`] = `
-"unknown: Missing semicolon. (2:18)
+"import { Show, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name().toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  return (
+    <>
+      <div>
+        <Show when={props.showInput}>
+          <>
+            <input
+              class=\\"input-6e2a3a12\\"
+              ref={inputRef}
+              value={name()}
+              onBlur={(event) => onBlur()}
+              onInput={(event) => setName(event.target.value)}
+            />
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        </Show>
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input-6e2a3a12 {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicRefComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > BasicRefAssignment 1`] = `
@@ -417,19 +861,87 @@ export default MyBasicRefAssignmentComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"unknown: Missing semicolon. (2:11)
+"import { on, createEffect, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |         Now: 
-    |            ^"
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+function MyPreviousComponent(props) {
+  const [count, setCount] = createSignal(0);
+
+  function onUpdateFn_0() {
+    prevCount = count();
+  }
+  createEffect(on(() => [count()], onUpdateFn_0));
+
+  return (
+    <div>
+      <h1>
+        Now:
+        {count()}, before:
+        {prevCount}
+      </h1>
+      <button onClick={(event) => setCount(1)}>Increment</button>
+    </div>
+  );
+}
+
+export default MyPreviousComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > BasicRefPrevious 2`] = `
-"unknown: Missing semicolon. (2:11)
+"import { on, createEffect, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |         Now: 
-    |            ^"
+import { css } from \\"solid-styled-components\\";
+
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+function MyPreviousComponent(props) {
+  const [count, setCount] = createSignal(0);
+
+  function onUpdateFn_0() {
+    prevCount = count();
+  }
+  createEffect(on(() => [count()], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <h1>
+          Now:
+          {count()}, before:
+          {prevCount}
+        </h1>
+        <button onClick={(event) => setCount(1)}>Increment</button>
+      </div>
+    </>
+  );
+}
+
+export default MyPreviousComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > Button 1`] = `
@@ -590,12 +1102,12 @@ function Column(props) {
 
   return (
     <>
-      <div class=\\"builder - columns div-033cd62c\\">
+      <div class=\\"builder - columns div-605d3524\\">
         <For each={props.columns}>
           {(column, _index) => {
             const index = _index();
             return (
-              <div class=\\"builder - column div-033cd62c-2\\">
+              <div class=\\"builder - column div-605d3524-2\\">
                 {column.content}
                 {index}
               </div>
@@ -604,23 +1116,23 @@ function Column(props) {
         </For>
       </div>
       <style jsx>{\`
-        .div-033cd62c {
+        .div-605d3524 {
           display: flex;
           flex-direction: column;
           align-items: stretch;
           line-height: normal;
         }
         @media (max-width: 999px) {
-          .div-033cd62c {
+          .div-605d3524 {
             flex-direction: row;
           }
         }
         @media (max-width: 639px) {
-          .div-033cd62c {
+          .div-605d3524 {
             flex-direction: row-reverse;
           }
         }
-        .div-033cd62c-2 {
+        .div-605d3524-2 {
           flex-grow: 1;
         }
       \`}</style>
@@ -1590,7 +2102,7 @@ function FormComponent(props) {
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder - form - error - text pre-526a4272\\">
+          <pre class=\\"builder - form - error - text pre-3f62c9e9\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
@@ -1602,7 +2114,7 @@ function FormComponent(props) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-526a4272 {
+        .pre-3f62c9e9 {
           padding: 10px;
           color: red;
           text-align: center;
@@ -1768,7 +2280,7 @@ function Image(props) {
               class={
                 \\"builder-image\\" +
                 (props._class ? \\" \\" + props._class : \\"\\") +
-                \\" img-066280ea\\"
+                \\" img-7ed5bbbe\\"
               }
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -1783,7 +2295,7 @@ function Image(props) {
         {props.children}
       </div>
       <style jsx>{\`
-        .img-066280ea {
+        .img-7ed5bbbe {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -2143,37 +2655,17 @@ export default SelectComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > SlotDefault 1`] = `
-"function SlotCode(props) {
-  return (
-    <div>
-      <Slot>
-        <div class=\\"default-slot\\">Default content</div>
-      </Slot>
-    </div>
-  );
-}
+"unknown: Unexpected token (1:8)
 
-export default SlotCode;
-"
+> 1 | let _ = default-slot
+    |         ^"
 `;
 
 exports[`Solid > jsx > Javascript Test > SlotDefault 2`] = `
-"import { css } from \\"solid-styled-components\\";
+"unknown: Unexpected token (1:8)
 
-function SlotCode(props) {
-  return (
-    <>
-      <div>
-        <Slot>
-          <div class=\\"default-slot\\">Default content</div>
-        </Slot>
-      </div>
-    </>
-  );
-}
-
-export default SlotCode;
-"
+> 1 | let _ = default-slot
+    |         ^"
 `;
 
 exports[`Solid > jsx > Javascript Test > SlotHtml 1`] = `
@@ -2283,17 +2775,17 @@ export default SlotCode;
 `;
 
 exports[`Solid > jsx > Javascript Test > Stamped.io 1`] = `
-"unknown: Missing semicolon. (1:13)
+"unknown: Missing semicolon. (1:11)
 
-> 1 | let _ = Write a review
-    |              ^"
+> 1 | let _ = How was your experience?
+    |            ^"
 `;
 
 exports[`Solid > jsx > Javascript Test > Stamped.io 2`] = `
-"unknown: Missing semicolon. (1:13)
+"unknown: Missing semicolon. (1:11)
 
-> 1 | let _ = Write a review
-    |              ^"
+> 1 | let _ = How was your experience?
+    |            ^"
 `;
 
 exports[`Solid > jsx > Javascript Test > Submit 1`] = `
@@ -2570,7 +3062,7 @@ function MyBasicOnUpdateReturnComponent(props) {
 
   return (
     <div>
-      Hello
+      Hello!
       {name()}
     </div>
   );
@@ -2609,7 +3101,7 @@ function MyBasicOnUpdateReturnComponent(props) {
   return (
     <>
       <div>
-        Hello
+        Hello!
         {name()}
       </div>
     </>
@@ -2635,39 +3127,91 @@ exports[`Solid > jsx > Javascript Test > class + ClassName + css 2`] = `
 `;
 
 exports[`Solid > jsx > Javascript Test > class + css 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+function MyBasicComponent(props) {
+  return (
+    <div
+      class={
+        \\"test \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+    >
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > class + css 2`] = `
-"unknown: Missing semicolon. (2:12)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div class=\\"test div-74a0302e\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-74a0302e {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > className + css 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+function MyBasicComponent(props) {
+  return (
+    <div
+      class={
+        \\"test \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+    >
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > className + css 2`] = `
-"unknown: Missing semicolon. (2:12)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div class=\\"test div-74a0302e\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-74a0302e {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > className 1`] = `
@@ -2685,21 +3229,65 @@ exports[`Solid > jsx > Javascript Test > className 2`] = `
 `;
 
 exports[`Solid > jsx > Javascript Test > classState 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const [classState, setClassState] = createSignal(\\"testClassName\\");
+
+  const [styleState, setStyleState] = createSignal({
+    color: \\"red\\",
+  });
+
+  return (
+    <div
+      class={
+        classState() +
+        \\" \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+      style={styleState()}
+    >
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > classState 2`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const [classState, setClassState] = createSignal(\\"testClassName\\");
+
+  const [styleState, setStyleState] = createSignal({
+    color: \\"red\\",
+  });
+
+  return (
+    <>
+      <div class={classState() + \\" div-24c4ffce\\"} style={styleState()}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-24c4ffce {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > componentWithContext 1`] = `
@@ -2779,17 +3367,47 @@ export default ComponentWithContext;
 `;
 
 exports[`Solid > jsx > Javascript Test > contentState 1`] = `
-"unknown: Missing semicolon. (1:15)
+"import BuilderContext from \\"@dummy/context.jsx\\";
 
-> 1 | let _ = setting context
-    |                ^"
+function RenderContent(props) {
+  return (
+    <BuilderContext.Provider
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+    >
+      <div>setting context</div>
+    </BuilderContext.Provider>
+  );
+}
+
+export default RenderContent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > contentState 2`] = `
-"unknown: Missing semicolon. (1:15)
+"import { css } from \\"solid-styled-components\\";
 
-> 1 | let _ = setting context
-    |                ^"
+import BuilderContext from \\"@dummy/context.jsx\\";
+
+function RenderContent(props) {
+  return (
+    <>
+      <BuilderContext.Provider
+        value={{
+          content: props.content,
+          registeredComponents: props.customComponents,
+        }}
+      >
+        <div>setting context</div>
+      </BuilderContext.Provider>
+    </>
+  );
+}
+
+export default RenderContent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > defaultProps 1`] = `
@@ -2936,6 +3554,7 @@ exports[`Solid > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 function ComponentWithTypes(props) {
   return (
     <div>
+      {\\" \\"}
       Hello
       {props.name || DEFAULT_VALUES.name}
     </div>
@@ -2957,6 +3576,7 @@ function ComponentWithTypes(props) {
   return (
     <>
       <div>
+        {\\" \\"}
         Hello
         {props.name || DEFAULT_VALUES.name}
       </div>
@@ -3201,35 +3821,102 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > nestedShow 1`] = `
-"unknown: Unexpected token (1:8)
+"import { Show } from \\"solid-js\\";
 
-> 1 | let _ = else-condition-A
-    |         ^"
+function NestedShow(props) {
+  return (
+    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+      <Show fallback={<div>else-condition-B</div>} when={!props.conditionB}>
+        <div>if condition A and condition B</div>
+      </Show>
+    </Show>
+  );
+}
+
+export default NestedShow;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > nestedShow 2`] = `
-"unknown: Unexpected token (1:8)
+"import { Show } from \\"solid-js\\";
 
-> 1 | let _ = else-condition-A
-    |         ^"
+import { css } from \\"solid-styled-components\\";
+
+function NestedShow(props) {
+  return (
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        <Show fallback={<div>else-condition-B</div>} when={!props.conditionB}>
+          <div>if condition A and condition B</div>
+        </Show>
+      </Show>
+    </>
+  );
+}
+
+export default NestedShow;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > nestedStyles 1`] = `
-"unknown: Missing semicolon. (2:11)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello world
-    |            ^
-  3 |     "
+function NestedStyles(props) {
+  return (
+    <div
+      class={css({
+        display: \\"flex\\",
+        foo: \\"var(--bar)\\",
+        \\"@media (max-width: env(--mobile))\\": {
+          display: \\"block\\",
+        },
+        \\"&:hover\\": {
+          display: \\"flex\\",
+        },
+        \\".nested-selector\\": {
+          display: \\"grid\\",
+        },
+      })}
+    >
+      Hello world
+    </div>
+  );
+}
+
+export default NestedStyles;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > nestedStyles 2`] = `
-"unknown: Missing semicolon. (2:11)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello world
-    |            ^
-  3 |     "
+function NestedStyles(props) {
+  return (
+    <>
+      <div class=\\"div-92502f5c\\">Hello world</div>
+      <style jsx>{\`
+        .div-92502f5c {
+          display: flex;
+          foo: var(--bar);
+        }
+        @media (max-width: env(--mobile)) {
+          .div-92502f5c {
+            display: block;
+          }
+        }
+        .div-92502f5c:hover {
+          display: flex;
+        }
+        .div-92502f5c .nested-selector {
+          display: grid;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default NestedStyles;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > onInit & onMount 1`] = `
@@ -3269,17 +3956,51 @@ export default OnInit;
 `;
 
 exports[`Solid > jsx > Javascript Test > onInit 1`] = `
-"unknown: Missing semicolon. (1:15)
+"import { createSignal } from \\"solid-js\\";
 
-> 1 | let _ = Default name defined by parent 
-    |                ^"
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+function OnInit(props) {
+  const [name, setName] = createSignal(\\"\\");
+
+  return (
+    <div>
+      Default name defined by parent
+      {name()}
+    </div>
+  );
+}
+
+export default OnInit;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > onInit 2`] = `
-"unknown: Missing semicolon. (1:15)
+"import { createSignal } from \\"solid-js\\";
 
-> 1 | let _ = Default name defined by parent 
-    |                ^"
+import { css } from \\"solid-styled-components\\";
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+function OnInit(props) {
+  const [name, setName] = createSignal(\\"\\");
+
+  return (
+    <>
+      <div>
+        Default name defined by parent
+        {name()}
+      </div>
+    </>
+  );
+}
+
+export default OnInit;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > onMount 1`] = `
@@ -3429,63 +4150,141 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > preserveTyping 1`] = `
-"unknown: Missing semicolon. (1:14)
+"function MyBasicComponent(props) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
+}
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > preserveTyping 2`] = `
-"unknown: Missing semicolon. (1:14)
+"import { css } from \\"solid-styled-components\\";
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > propsDestructure 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"Decadef20\\");
+
+  return (
+    <div>
+      {props.children}
+      {props.type}
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > propsDestructure 2`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"Decadef20\\");
+
+  return (
+    <>
+      <div>
+        {props.children}
+        {props.type}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > propsInterface 1`] = `
-"unknown: Missing semicolon. (1:14)
+"function MyBasicComponent(props) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
+}
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > propsInterface 2`] = `
-"unknown: Missing semicolon. (1:14)
+"import { css } from \\"solid-styled-components\\";
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > propsType 1`] = `
-"unknown: Missing semicolon. (1:14)
+"function MyBasicComponent(props) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
+}
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > propsType 2`] = `
-"unknown: Missing semicolon. (1:14)
+"import { css } from \\"solid-styled-components\\";
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > referencingFunInsideHook 1`] = `
@@ -3625,14 +4424,14 @@ function RenderContent(props) {
         }}
       >
         <div
-          class=\\"div-975179a0\\"
+          class=\\"div-6c469b00\\"
           onClick={(event) => trackClick(props.content.id)}
         >
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
       </BuilderContext.Provider>
       <style jsx>{\`
-        .div-975179a0 {
+        .div-6c469b00 {
           display: flex;
           flex-direction: columns;
         }
@@ -3800,17 +4599,47 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > showWithFor 1`] = `
-"unknown: Unexpected token (1:8)
+"import { Show, For } from \\"solid-js\\";
 
-> 1 | let _ = else-condition-A
-    |         ^"
+function NestedShow(props) {
+  return (
+    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+      <For each={props.items}>
+        {(item, _index) => {
+          const idx = _index();
+          return <div key={idx}>{item}</div>;
+        }}
+      </For>
+    </Show>
+  );
+}
+
+export default NestedShow;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > showWithFor 2`] = `
-"unknown: Unexpected token (1:8)
+"import { Show, For } from \\"solid-js\\";
 
-> 1 | let _ = else-condition-A
-    |         ^"
+import { css } from \\"solid-styled-components\\";
+
+function NestedShow(props) {
+  return (
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        <For each={props.items}>
+          {(item, _index) => {
+            const idx = _index();
+            return <div key={idx}>{item}</div>;
+          }}
+        </For>
+      </Show>
+    </>
+  );
+}
+
+export default NestedShow;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > spreadAttrs 1`] = `
@@ -3998,11 +4827,11 @@ exports[`Solid > jsx > Javascript Test > use-style-and-css 2`] = `
 function MyComponent(props) {
   return (
     <>
-      <button class=\\"button-9f7d04e4\\" type=\\"button\\">
+      <button class=\\"button-625c33fa\\" type=\\"button\\">
         Button
       </button>
       <style jsx>{\`
-        .button-9f7d04e4 {
+        .button-625c33fa {
           background: blue;
           color: white;
         }
@@ -4054,74 +4883,398 @@ export default MyComponent;
 "
 `;
 
-exports[`Solid > jsx > Typescript Test > AdvancedRef 1`] = `
-"unknown: Missing semicolon. (2:18)
+exports[`Solid > jsx > Remove Internal mitosis package 1`] = `
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  return (
+    <div>
+      Hello
+      {name()}! I can run in React, Qwik, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid > jsx > Remove Internal mitosis package 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  return (
+    <>
+      <div>
+        Hello
+        {name()}! I can run in React, Qwik, Vue, Solid, or Liquid!
+      </div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > AdvancedRef 1`] = `
+"import { Show, on, createEffect, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name().toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  function onUpdateFn_0() {
+    console.log(\\"Received an update\\");
+  }
+  createEffect(on(() => [inputRef, inputNoArgRef], onUpdateFn_0));
+
+  return (
+    <div>
+      <Show when={props.showInput}>
+        <>
+          <input
+            class={css({
+              color: \\"red\\",
+            })}
+            ref={inputRef}
+            value={name()}
+            onBlur={(event) => onBlur()}
+            onInput={(event) => setName(event.target.value)}
+          />
+          <label for=\\"cars\\" ref={inputNoArgRef}>
+            Choose a car:
+          </label>
+          <select name=\\"cars\\" id=\\"cars\\">
+            <option value=\\"supra\\">GR Supra</option>
+            <option value=\\"86\\">GR 86</option>
+          </select>
+        </>
+      </Show>
+      Hello
+      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
+    </div>
+  );
+}
+
+export default MyBasicRefComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > AdvancedRef 2`] = `
-"unknown: Missing semicolon. (2:18)
+"import { Show, on, createEffect, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name().toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  function onUpdateFn_0() {
+    console.log(\\"Received an update\\");
+  }
+  createEffect(on(() => [inputRef, inputNoArgRef], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <Show when={props.showInput}>
+          <>
+            <input
+              class=\\"input-6d81d00c\\"
+              ref={inputRef}
+              value={name()}
+              onBlur={(event) => onBlur()}
+              onInput={(event) => setName(event.target.value)}
+            />
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        </Show>
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input-6d81d00c {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicRefComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > Basic 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+import { css } from \\"solid-styled-components\\";
+
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  const [age, setAge] = createSignal(1);
+
+  const [sports, setSports] = createSignal([\\"\\"]);
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  return (
+    <div
+      class={
+        \\"test \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+    >
+      <input
+        value={DEFAULT_VALUES.name || name()}
+        onInput={(myEvent) => setName(myEvent.target.value)}
+      />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > Basic 2`] = `
-"unknown: Missing semicolon. (1:11)
+"import { Show, For, createSignal } from \\"solid-js\\";
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+function MyBasicForShowComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  return (
+    <div>
+      <For each={names()}>
+        {(person, _index) => {
+          const index = _index();
+          return (
+            <Show when={person === name()}>
+              <input
+                value={name()}
+                onInput={(event) => {
+                  setName(event.target.value + \\" and \\" + person);
+                }}
+              />
+              Hello
+              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+              Liquid!
+            </Show>
+          );
+        }}
+      </For>
+    </div>
+  );
+}
+
+export default MyBasicForShowComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > Basic 3`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+import { css } from \\"solid-styled-components\\";
+
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  const [age, setAge] = createSignal(1);
+
+  const [sports, setSports] = createSignal([\\"\\"]);
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  return (
+    <>
+      <div class=\\"test div-5cae5810\\">
+        <input
+          value={DEFAULT_VALUES.name || name()}
+          onInput={(myEvent) => setName(myEvent.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-5cae5810 {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > Basic 4`] = `
-"unknown: Missing semicolon. (1:11)
+"import { Show, For, createSignal } from \\"solid-js\\";
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicForShowComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  return (
+    <>
+      <div>
+        <For each={names()}>
+          {(person, _index) => {
+            const index = _index();
+            return (
+              <Show when={person === name()}>
+                <input
+                  value={name()}
+                  onInput={(event) => {
+                    setName(event.target.value + \\" and \\" + person);
+                  }}
+                />
+                Hello
+                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+                or Liquid!
+              </Show>
+            );
+          }}
+        </For>
+      </div>
+    </>
+  );
+}
+
+export default MyBasicForShowComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > Basic Context 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { useContext, onMount, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |       "
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
+
+  const myService = useContext(MyService);
+
+  onMount(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  });
+
+  return (
+    <Injector.Provider>
+      <div>
+        {myService.method(\\"hello\\") + name()}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        <input onInput={(event) => onChange} />
+      </div>
+    </Injector.Provider>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > Basic Context 2`] = `
-"unknown: Missing semicolon. (2:12)
+"import { useContext, onMount, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |       "
+import { css } from \\"solid-styled-components\\";
+
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
+
+  const myService = useContext(MyService);
+
+  onMount(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  });
+
+  return (
+    <>
+      <Injector.Provider>
+        <div>
+          {myService.method(\\"hello\\") + name()}
+          Hello! I can run in React, Vue, Solid, or Liquid!
+          <input onInput={(event) => onChange} />
+        </div>
+      </Injector.Provider>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > Basic OnMount Update 1`] = `
@@ -4391,37 +5544,197 @@ export default MyBasicChildComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicFor 1`] = `
-"unknown: Missing semicolon. (1:11)
+"import { For, onMount, createSignal } from \\"solid-js\\";
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+function MyBasicForComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  onMount(() => {
+    console.log(\\"onMount code\\");
+  });
+
+  return (
+    <div>
+      <For each={names()}>
+        {(person, _index) => {
+          const index = _index();
+          return (
+            <>
+              <input
+                value={name()}
+                onInput={(event) => {
+                  setName(event.target.value + \\" and \\" + person);
+                }}
+              />
+              Hello
+              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+              Liquid!
+            </>
+          );
+        }}
+      </For>
+    </div>
+  );
+}
+
+export default MyBasicForComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicFor 2`] = `
-"unknown: Missing semicolon. (1:11)
+"import { For, onMount, createSignal } from \\"solid-js\\";
 
-> 1 | let _ = ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-    |            ^
-  2 |           "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicForComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  onMount(() => {
+    console.log(\\"onMount code\\");
+  });
+
+  return (
+    <>
+      <div>
+        <For each={names()}>
+          {(person, _index) => {
+            const index = _index();
+            return (
+              <>
+                <input
+                  value={name()}
+                  onInput={(event) => {
+                    setName(event.target.value + \\" and \\" + person);
+                  }}
+                />
+                Hello
+                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+                or Liquid!
+              </>
+            );
+          }}
+        </For>
+      </div>
+    </>
+  );
+}
+
+export default MyBasicForComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicRef 1`] = `
-"unknown: Missing semicolon. (2:18)
+"import { Show, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name().toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  return (
+    <div>
+      <Show when={props.showInput}>
+        <>
+          <input
+            class={css({
+              color: \\"red\\",
+            })}
+            ref={inputRef}
+            value={name()}
+            onBlur={(event) => onBlur()}
+            onInput={(event) => setName(event.target.value)}
+          />
+          <label for=\\"cars\\" ref={inputNoArgRef}>
+            Choose a car:
+          </label>
+          <select name=\\"cars\\" id=\\"cars\\">
+            <option value=\\"supra\\">GR Supra</option>
+            <option value=\\"86\\">GR 86</option>
+          </select>
+        </>
+      </Show>
+      Hello
+      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
+    </div>
+  );
+}
+
+export default MyBasicRefComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicRef 2`] = `
-"unknown: Missing semicolon. (2:18)
+"import { Show, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |             Choose a car:
-    |                   ^
-  3 |           "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefComponent(props) {
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name().toLowerCase();
+  }
+
+  let inputRef;
+  let inputNoArgRef;
+
+  return (
+    <>
+      <div>
+        <Show when={props.showInput}>
+          <>
+            <input
+              class=\\"input-6e2a3a12\\"
+              ref={inputRef}
+              value={name()}
+              onBlur={(event) => onBlur()}
+              onInput={(event) => setName(event.target.value)}
+            />
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        </Show>
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input-6e2a3a12 {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicRefComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicRefAssignment 1`] = `
@@ -4471,19 +5784,87 @@ export default MyBasicRefAssignmentComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"unknown: Missing semicolon. (2:11)
+"import { on, createEffect, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |         Now: 
-    |            ^"
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+function MyPreviousComponent(props) {
+  const [count, setCount] = createSignal(0);
+
+  function onUpdateFn_0() {
+    prevCount = count();
+  }
+  createEffect(on(() => [count()], onUpdateFn_0));
+
+  return (
+    <div>
+      <h1>
+        Now:
+        {count()}, before:
+        {prevCount}
+      </h1>
+      <button onClick={(event) => setCount(1)}>Increment</button>
+    </div>
+  );
+}
+
+export default MyPreviousComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicRefPrevious 2`] = `
-"unknown: Missing semicolon. (2:11)
+"import { on, createEffect, createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |         Now: 
-    |            ^"
+import { css } from \\"solid-styled-components\\";
+
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+function MyPreviousComponent(props) {
+  const [count, setCount] = createSignal(0);
+
+  function onUpdateFn_0() {
+    prevCount = count();
+  }
+  createEffect(on(() => [count()], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <h1>
+          Now:
+          {count()}, before:
+          {prevCount}
+        </h1>
+        <button onClick={(event) => setCount(1)}>Increment</button>
+      </div>
+    </>
+  );
+}
+
+export default MyPreviousComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > Button 1`] = `
@@ -4644,12 +6025,12 @@ function Column(props) {
 
   return (
     <>
-      <div class=\\"builder - columns div-033cd62c\\">
+      <div class=\\"builder - columns div-605d3524\\">
         <For each={props.columns}>
           {(column, _index) => {
             const index = _index();
             return (
-              <div class=\\"builder - column div-033cd62c-2\\">
+              <div class=\\"builder - column div-605d3524-2\\">
                 {column.content}
                 {index}
               </div>
@@ -4658,23 +6039,23 @@ function Column(props) {
         </For>
       </div>
       <style jsx>{\`
-        .div-033cd62c {
+        .div-605d3524 {
           display: flex;
           flex-direction: column;
           align-items: stretch;
           line-height: normal;
         }
         @media (max-width: 999px) {
-          .div-033cd62c {
+          .div-605d3524 {
             flex-direction: row;
           }
         }
         @media (max-width: 639px) {
-          .div-033cd62c {
+          .div-605d3524 {
             flex-direction: row-reverse;
           }
         }
-        .div-033cd62c-2 {
+        .div-605d3524-2 {
           flex-grow: 1;
         }
       \`}</style>
@@ -5644,7 +7025,7 @@ function FormComponent(props) {
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder - form - error - text pre-526a4272\\">
+          <pre class=\\"builder - form - error - text pre-3f62c9e9\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
@@ -5656,7 +7037,7 @@ function FormComponent(props) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-526a4272 {
+        .pre-3f62c9e9 {
           padding: 10px;
           color: red;
           text-align: center;
@@ -5822,7 +7203,7 @@ function Image(props) {
               class={
                 \\"builder-image\\" +
                 (props._class ? \\" \\" + props._class : \\"\\") +
-                \\" img-066280ea\\"
+                \\" img-7ed5bbbe\\"
               }
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -5837,7 +7218,7 @@ function Image(props) {
         {props.children}
       </div>
       <style jsx>{\`
-        .img-066280ea {
+        .img-7ed5bbbe {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -6197,37 +7578,17 @@ export default SelectComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > SlotDefault 1`] = `
-"function SlotCode(props) {
-  return (
-    <div>
-      <Slot>
-        <div class=\\"default-slot\\">Default content</div>
-      </Slot>
-    </div>
-  );
-}
+"unknown: Unexpected token (1:8)
 
-export default SlotCode;
-"
+> 1 | let _ = default-slot
+    |         ^"
 `;
 
 exports[`Solid > jsx > Typescript Test > SlotDefault 2`] = `
-"import { css } from \\"solid-styled-components\\";
+"unknown: Unexpected token (1:8)
 
-function SlotCode(props) {
-  return (
-    <>
-      <div>
-        <Slot>
-          <div class=\\"default-slot\\">Default content</div>
-        </Slot>
-      </div>
-    </>
-  );
-}
-
-export default SlotCode;
-"
+> 1 | let _ = default-slot
+    |         ^"
 `;
 
 exports[`Solid > jsx > Typescript Test > SlotHtml 1`] = `
@@ -6337,17 +7698,17 @@ export default SlotCode;
 `;
 
 exports[`Solid > jsx > Typescript Test > Stamped.io 1`] = `
-"unknown: Missing semicolon. (1:13)
+"unknown: Missing semicolon. (1:11)
 
-> 1 | let _ = Write a review
-    |              ^"
+> 1 | let _ = How was your experience?
+    |            ^"
 `;
 
 exports[`Solid > jsx > Typescript Test > Stamped.io 2`] = `
-"unknown: Missing semicolon. (1:13)
+"unknown: Missing semicolon. (1:11)
 
-> 1 | let _ = Write a review
-    |              ^"
+> 1 | let _ = How was your experience?
+    |            ^"
 `;
 
 exports[`Solid > jsx > Typescript Test > Submit 1`] = `
@@ -6624,7 +7985,7 @@ function MyBasicOnUpdateReturnComponent(props) {
 
   return (
     <div>
-      Hello
+      Hello!
       {name()}
     </div>
   );
@@ -6663,7 +8024,7 @@ function MyBasicOnUpdateReturnComponent(props) {
   return (
     <>
       <div>
-        Hello
+        Hello!
         {name()}
       </div>
     </>
@@ -6689,39 +8050,91 @@ exports[`Solid > jsx > Typescript Test > class + ClassName + css 2`] = `
 `;
 
 exports[`Solid > jsx > Typescript Test > class + css 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+function MyBasicComponent(props) {
+  return (
+    <div
+      class={
+        \\"test \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+    >
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > class + css 2`] = `
-"unknown: Missing semicolon. (2:12)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div class=\\"test div-74a0302e\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-74a0302e {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > className + css 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+function MyBasicComponent(props) {
+  return (
+    <div
+      class={
+        \\"test \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+    >
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > className + css 2`] = `
-"unknown: Missing semicolon. (2:12)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div class=\\"test div-74a0302e\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-74a0302e {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > className 1`] = `
@@ -6739,21 +8152,65 @@ exports[`Solid > jsx > Typescript Test > className 2`] = `
 `;
 
 exports[`Solid > jsx > Typescript Test > classState 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const [classState, setClassState] = createSignal(\\"testClassName\\");
+
+  const [styleState, setStyleState] = createSignal({
+    color: \\"red\\",
+  });
+
+  return (
+    <div
+      class={
+        classState() +
+        \\" \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+      style={styleState()}
+    >
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > classState 2`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const [classState, setClassState] = createSignal(\\"testClassName\\");
+
+  const [styleState, setStyleState] = createSignal({
+    color: \\"red\\",
+  });
+
+  return (
+    <>
+      <div class={classState() + \\" div-24c4ffce\\"} style={styleState()}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-24c4ffce {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > componentWithContext 1`] = `
@@ -6833,17 +8290,47 @@ export default ComponentWithContext;
 `;
 
 exports[`Solid > jsx > Typescript Test > contentState 1`] = `
-"unknown: Missing semicolon. (1:15)
+"import BuilderContext from \\"@dummy/context.jsx\\";
 
-> 1 | let _ = setting context
-    |                ^"
+function RenderContent(props) {
+  return (
+    <BuilderContext.Provider
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+    >
+      <div>setting context</div>
+    </BuilderContext.Provider>
+  );
+}
+
+export default RenderContent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > contentState 2`] = `
-"unknown: Missing semicolon. (1:15)
+"import { css } from \\"solid-styled-components\\";
 
-> 1 | let _ = setting context
-    |                ^"
+import BuilderContext from \\"@dummy/context.jsx\\";
+
+function RenderContent(props) {
+  return (
+    <>
+      <BuilderContext.Provider
+        value={{
+          content: props.content,
+          registeredComponents: props.customComponents,
+        }}
+      >
+        <div>setting context</div>
+      </BuilderContext.Provider>
+    </>
+  );
+}
+
+export default RenderContent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > defaultProps 1`] = `
@@ -6990,6 +8477,7 @@ exports[`Solid > jsx > Typescript Test > defaultValsWithTypes 1`] = `
 function ComponentWithTypes(props) {
   return (
     <div>
+      {\\" \\"}
       Hello
       {props.name || DEFAULT_VALUES.name}
     </div>
@@ -7011,6 +8499,7 @@ function ComponentWithTypes(props) {
   return (
     <>
       <div>
+        {\\" \\"}
         Hello
         {props.name || DEFAULT_VALUES.name}
       </div>
@@ -7255,35 +8744,102 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > nestedShow 1`] = `
-"unknown: Unexpected token (1:8)
+"import { Show } from \\"solid-js\\";
 
-> 1 | let _ = else-condition-A
-    |         ^"
+function NestedShow(props) {
+  return (
+    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+      <Show fallback={<div>else-condition-B</div>} when={!props.conditionB}>
+        <div>if condition A and condition B</div>
+      </Show>
+    </Show>
+  );
+}
+
+export default NestedShow;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > nestedShow 2`] = `
-"unknown: Unexpected token (1:8)
+"import { Show } from \\"solid-js\\";
 
-> 1 | let _ = else-condition-A
-    |         ^"
+import { css } from \\"solid-styled-components\\";
+
+function NestedShow(props) {
+  return (
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        <Show fallback={<div>else-condition-B</div>} when={!props.conditionB}>
+          <div>if condition A and condition B</div>
+        </Show>
+      </Show>
+    </>
+  );
+}
+
+export default NestedShow;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > nestedStyles 1`] = `
-"unknown: Missing semicolon. (2:11)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello world
-    |            ^
-  3 |     "
+function NestedStyles(props) {
+  return (
+    <div
+      class={css({
+        display: \\"flex\\",
+        foo: \\"var(--bar)\\",
+        \\"@media (max-width: env(--mobile))\\": {
+          display: \\"block\\",
+        },
+        \\"&:hover\\": {
+          display: \\"flex\\",
+        },
+        \\".nested-selector\\": {
+          display: \\"grid\\",
+        },
+      })}
+    >
+      Hello world
+    </div>
+  );
+}
+
+export default NestedStyles;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > nestedStyles 2`] = `
-"unknown: Missing semicolon. (2:11)
+"import { css } from \\"solid-styled-components\\";
 
-  1 | let _ = 
-> 2 |       Hello world
-    |            ^
-  3 |     "
+function NestedStyles(props) {
+  return (
+    <>
+      <div class=\\"div-92502f5c\\">Hello world</div>
+      <style jsx>{\`
+        .div-92502f5c {
+          display: flex;
+          foo: var(--bar);
+        }
+        @media (max-width: env(--mobile)) {
+          .div-92502f5c {
+            display: block;
+          }
+        }
+        .div-92502f5c:hover {
+          display: flex;
+        }
+        .div-92502f5c .nested-selector {
+          display: grid;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default NestedStyles;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > onInit & onMount 1`] = `
@@ -7323,17 +8879,51 @@ export default OnInit;
 `;
 
 exports[`Solid > jsx > Typescript Test > onInit 1`] = `
-"unknown: Missing semicolon. (1:15)
+"import { createSignal } from \\"solid-js\\";
 
-> 1 | let _ = Default name defined by parent 
-    |                ^"
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+function OnInit(props) {
+  const [name, setName] = createSignal(\\"\\");
+
+  return (
+    <div>
+      Default name defined by parent
+      {name()}
+    </div>
+  );
+}
+
+export default OnInit;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > onInit 2`] = `
-"unknown: Missing semicolon. (1:15)
+"import { createSignal } from \\"solid-js\\";
 
-> 1 | let _ = Default name defined by parent 
-    |                ^"
+import { css } from \\"solid-styled-components\\";
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+function OnInit(props) {
+  const [name, setName] = createSignal(\\"\\");
+
+  return (
+    <>
+      <div>
+        Default name defined by parent
+        {name()}
+      </div>
+    </>
+  );
+}
+
+export default OnInit;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > onMount 1`] = `
@@ -7483,63 +9073,141 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > preserveTyping 1`] = `
-"unknown: Missing semicolon. (1:14)
+"function MyBasicComponent(props) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
+}
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > preserveTyping 2`] = `
-"unknown: Missing semicolon. (1:14)
+"import { css } from \\"solid-styled-components\\";
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > propsDestructure 1`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"Decadef20\\");
+
+  return (
+    <div>
+      {props.children}
+      {props.type}
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > propsDestructure 2`] = `
-"unknown: Missing semicolon. (2:12)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |       Hello! I can run in React, Vue, Solid, or Liquid!
-    |             ^
-  3 |     "
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const [name, setName] = createSignal(\\"Decadef20\\");
+
+  return (
+    <>
+      <div>
+        {props.children}
+        {props.type}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > propsInterface 1`] = `
-"unknown: Missing semicolon. (1:14)
+"function MyBasicComponent(props) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
+}
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > propsInterface 2`] = `
-"unknown: Missing semicolon. (1:14)
+"import { css } from \\"solid-styled-components\\";
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > propsType 1`] = `
-"unknown: Missing semicolon. (1:14)
+"function MyBasicComponent(props) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
+}
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > propsType 2`] = `
-"unknown: Missing semicolon. (1:14)
+"import { css } from \\"solid-styled-components\\";
 
-> 1 | let _ = Hello! I can run in React, Vue, Solid, or Liquid! 
-    |               ^"
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > referencingFunInsideHook 1`] = `
@@ -7679,14 +9347,14 @@ function RenderContent(props) {
         }}
       >
         <div
-          class=\\"div-975179a0\\"
+          class=\\"div-6c469b00\\"
           onClick={(event) => trackClick(props.content.id)}
         >
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
       </BuilderContext.Provider>
       <style jsx>{\`
-        .div-975179a0 {
+        .div-6c469b00 {
           display: flex;
           flex-direction: columns;
         }
@@ -7854,17 +9522,47 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > showWithFor 1`] = `
-"unknown: Unexpected token (1:8)
+"import { Show, For } from \\"solid-js\\";
 
-> 1 | let _ = else-condition-A
-    |         ^"
+function NestedShow(props) {
+  return (
+    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+      <For each={props.items}>
+        {(item, _index) => {
+          const idx = _index();
+          return <div key={idx}>{item}</div>;
+        }}
+      </For>
+    </Show>
+  );
+}
+
+export default NestedShow;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > showWithFor 2`] = `
-"unknown: Unexpected token (1:8)
+"import { Show, For } from \\"solid-js\\";
 
-> 1 | let _ = else-condition-A
-    |         ^"
+import { css } from \\"solid-styled-components\\";
+
+function NestedShow(props) {
+  return (
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        <For each={props.items}>
+          {(item, _index) => {
+            const idx = _index();
+            return <div key={idx}>{item}</div>;
+          }}
+        </For>
+      </Show>
+    </>
+  );
+}
+
+export default NestedShow;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > spreadAttrs 1`] = `
@@ -8052,11 +9750,11 @@ exports[`Solid > jsx > Typescript Test > use-style-and-css 2`] = `
 function MyComponent(props) {
   return (
     <>
-      <button class=\\"button-9f7d04e4\\" type=\\"button\\">
+      <button class=\\"button-625c33fa\\" type=\\"button\\">
         Button
       </button>
       <style jsx>{\`
-        .button-9f7d04e4 {
+        .button-625c33fa {
           background: blue;
           color: white;
         }
@@ -8109,21 +9807,46 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Javascript Test > basic 1`] = `
-"unknown: Missing semicolon. (2:8)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   Hello! I can run in React, Vue, Solid, or Liquid!
-    |         ^
-  3 |"
+function MyComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  return (
+    <div>
+      <input onInput={(event) => setName(event.target.value)} value={name()} />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Javascript Test > basic 2`] = `
-"unknown: Missing semicolon. (2:8)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   Hello! I can run in React, Vue, Solid, or Liquid!
-    |         ^
-  3 |"
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  return (
+    <>
+      <div>
+        <input
+          onInput={(event) => setName(event.target.value)}
+          value={name()}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Javascript Test > bindGroup 1`] = `
@@ -8374,10 +10097,10 @@ function MyComponent(props) {
 
   return (
     <Show
-      fallback={<button onClick={(event) => toggle(event)}>Show</button>}
+      fallback={<button onClick={(event) => toggle(event)}> Show </button>}
       when={show()}
     >
-      <button onClick={(event) => toggle(event)}>Hide</button>
+      <button onClick={(event) => toggle(event)}> Hide </button>
     </Show>
   );
 }
@@ -8401,10 +10124,10 @@ function MyComponent(props) {
   return (
     <>
       <Show
-        fallback={<button onClick={(event) => toggle(event)}>Show</button>}
+        fallback={<button onClick={(event) => toggle(event)}> Show </button>}
         when={show()}
       >
-        <button onClick={(event) => toggle(event)}>Hide</button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       </Show>
     </>
   );
@@ -8497,19 +10220,53 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Javascript Test > reactive 1`] = `
-"unknown: Missing semicolon. (2:11)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   Lowercase: 
-    |            ^"
+function MyComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  function lowercaseName() {
+    return name().toLowerCase();
+  }
+
+  return (
+    <div>
+      <input value={name()} />
+      Lowercase:
+      {lowercaseName()}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Javascript Test > reactive 2`] = `
-"unknown: Missing semicolon. (2:11)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   Lowercase: 
-    |            ^"
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  function lowercaseName() {
+    return name().toLowerCase();
+  }
+
+  return (
+    <>
+      <div>
+        <input value={name()} />
+        Lowercase:
+        {lowercaseName()}
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Javascript Test > reactiveWithFn 1`] = `
@@ -8671,39 +10428,96 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Javascript Test > textExpressions 1`] = `
-"unknown: Missing semicolon. (2:8)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   normal:
-    |         ^
-  3 |   "
+function MyComponent(props) {
+  const [a, setA] = createSignal(5);
+
+  const [b, setB] = createSignal(12);
+
+  return (
+    <div>
+      normal:
+      {a() + b()}
+      <br />
+      conditional
+      {a() > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Javascript Test > textExpressions 2`] = `
-"unknown: Missing semicolon. (2:8)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   normal:
-    |         ^
-  3 |   "
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(5);
+
+  const [b, setB] = createSignal(12);
+
+  return (
+    <>
+      <div>
+        normal:
+        {a() + b()}
+        <br />
+        conditional
+        {a() > 2 ? \\"hello\\" : \\"bye\\"}
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Typescript Test > basic 1`] = `
-"unknown: Missing semicolon. (2:8)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   Hello! I can run in React, Vue, Solid, or Liquid!
-    |         ^
-  3 |"
+function MyComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  return (
+    <div>
+      <input onInput={(event) => setName(event.target.value)} value={name()} />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Typescript Test > basic 2`] = `
-"unknown: Missing semicolon. (2:8)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   Hello! I can run in React, Vue, Solid, or Liquid!
-    |         ^
-  3 |"
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  return (
+    <>
+      <div>
+        <input
+          onInput={(event) => setName(event.target.value)}
+          value={name()}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Typescript Test > bindGroup 1`] = `
@@ -8954,10 +10768,10 @@ function MyComponent(props) {
 
   return (
     <Show
-      fallback={<button onClick={(event) => toggle(event)}>Show</button>}
+      fallback={<button onClick={(event) => toggle(event)}> Show </button>}
       when={show()}
     >
-      <button onClick={(event) => toggle(event)}>Hide</button>
+      <button onClick={(event) => toggle(event)}> Hide </button>
     </Show>
   );
 }
@@ -8981,10 +10795,10 @@ function MyComponent(props) {
   return (
     <>
       <Show
-        fallback={<button onClick={(event) => toggle(event)}>Show</button>}
+        fallback={<button onClick={(event) => toggle(event)}> Show </button>}
         when={show()}
       >
-        <button onClick={(event) => toggle(event)}>Hide</button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       </Show>
     </>
   );
@@ -9077,19 +10891,53 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Typescript Test > reactive 1`] = `
-"unknown: Missing semicolon. (2:11)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   Lowercase: 
-    |            ^"
+function MyComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  function lowercaseName() {
+    return name().toLowerCase();
+  }
+
+  return (
+    <div>
+      <input value={name()} />
+      Lowercase:
+      {lowercaseName()}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Typescript Test > reactive 2`] = `
-"unknown: Missing semicolon. (2:11)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   Lowercase: 
-    |            ^"
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  function lowercaseName() {
+    return name().toLowerCase();
+  }
+
+  return (
+    <>
+      <div>
+        <input value={name()} />
+        Lowercase:
+        {lowercaseName()}
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Typescript Test > reactiveWithFn 1`] = `
@@ -9251,19 +11099,51 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Typescript Test > textExpressions 1`] = `
-"unknown: Missing semicolon. (2:8)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   normal:
-    |         ^
-  3 |   "
+function MyComponent(props) {
+  const [a, setA] = createSignal(5);
+
+  const [b, setB] = createSignal(12);
+
+  return (
+    <div>
+      normal:
+      {a() + b()}
+      <br />
+      conditional
+      {a() > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`Solid > svelte > Typescript Test > textExpressions 2`] = `
-"unknown: Missing semicolon. (2:8)
+"import { createSignal } from \\"solid-js\\";
 
-  1 | let _ = 
-> 2 |   normal:
-    |         ^
-  3 |   "
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(5);
+
+  const [b, setB] = createSignal(12);
+
+  return (
+    <>
+      <div>
+        normal:
+        {a() + b()}
+        <br />
+        conditional
+        {a() > 2 ? \\"hello\\" : \\"bye\\"}
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
 `;
