@@ -4,6 +4,7 @@ const tsPreset = require('@babel/preset-typescript');
 const decorators = require('@babel/plugin-syntax-decorators');
 import type { Visitor } from '@babel/traverse';
 import { pipe } from 'fp-ts/lib/function';
+import { checkIsGetter } from './patterns';
 
 const handleErrorOrExpression = <VisitorContextType = any>({
   code,
@@ -25,7 +26,11 @@ const handleErrorOrExpression = <VisitorContextType = any>({
       !code.startsWith('function') && code.match(/^[a-z0-9_]+\s*\([^\)]*\)\s*[\{:]/i),
     );
 
-    if (isMethod) {
+    const isGetter = checkIsGetter(code);
+
+    const isMethodOrGetter = isMethod || isGetter;
+
+    if (isMethodOrGetter) {
       useCode = `function ${useCode}`;
     }
 
@@ -40,7 +45,7 @@ const handleErrorOrExpression = <VisitorContextType = any>({
       (str) => str.replace(/let _ =\s/, ''),
     );
 
-    if (isMethod) {
+    if (isMethodOrGetter) {
       return result.replace('function', '');
     }
 
@@ -113,7 +118,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
   }
 
   if (code.trim() !== code) {
-    console.log({ code });
+    console.log('trim is different', { code });
   }
 
   const isGetter = code.trim().startsWith('get ');
