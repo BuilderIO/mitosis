@@ -51,7 +51,7 @@ const handleErrorOrExpression = <VisitorContextType = any>({
 
     return result;
   } catch (err) {
-    console.error('Error parsing code:\n', { code, result, useCode });
+    // console.error('Error parsing code:\n', { code, result, useCode });
     throw err;
   }
 };

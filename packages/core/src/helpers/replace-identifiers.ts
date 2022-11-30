@@ -122,11 +122,11 @@ export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
       (code) => code.trim(),
     );
   } catch (err) {
-    console.error('could not replace identifiers for ', {
-      code,
-      from: from.toString(),
-      to: to?.toString(),
-    });
-    return code;
+    // console.error('could not replace identifiers for ', {
+    //   code,
+    //   from: from.toString(),
+    //   to: to?.toString(),
+    // });
+    throw err;
   }
 };
