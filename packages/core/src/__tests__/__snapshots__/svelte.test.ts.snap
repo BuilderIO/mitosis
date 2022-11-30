@@ -414,9 +414,9 @@ exports[`Svelte > jsx > Javascript Test > Columns 1`] = `
   }
 </script>
 
-<div class=\\"builder - columns div\\">
+<div class=\\"builder-columns div\\">
   {#each columns as column, index}
-    <div class=\\"builder - column div-2\\">
+    <div class=\\"builder-column div-2\\">
       {column.content}
       {index}
     </div>
@@ -857,7 +857,7 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
   {/if}
 
   {#if submissionState() === \\"error\\" && responseData}
-    <pre class=\\"builder - form - error - text pre\\">
+    <pre class=\\"builder-form-error-text pre\\">
         {JSON.stringify(responseData, null, 2)}
       </pre>
   {/if}
@@ -971,10 +971,16 @@ exports[`Svelte > jsx > Javascript Test > Image 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > Image State 1`] = `
-"unknown: Unexpected token, expected \\"{\\" (1:20)
+"<script>
+  let canShow = true;
+  let images = [\\"http://example.com/qwik.png\\"];
+</script>
 
-> 1 | let _ = custom-class
-    |                     ^"
+<div>
+  {#each images as item, itemIndex}
+    <img class=\\"custom-class\\" src={item} key={itemIndex} />
+  {/each}
+</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Img 1`] = `
@@ -1133,10 +1139,101 @@ exports[`Svelte > jsx > Javascript Test > Select 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
-"unknown: Missing semicolon. (1:11)
+"<script>
+  import { onMount } from \\"svelte\\";
 
-> 1 | let _ = How was your experience?
-    |            ^"
+  import { kebabCase } from \\"lodash\\";
+  import { snakeCase } from \\"lodash\\";
+
+  export let apiKey;
+  export let productId;
+
+  function kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+
+  function snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  let reviews = [];
+  let name = \\"test\\";
+  let showReviewPrompt = false;
+
+  onMount(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        reviews = data.data;
+      });
+  });
+</script>
+
+<div data-user={name}>
+  <button
+    on:click={(event) => {
+      showReviewPrompt = true;
+    }}>Write a review</button
+  >
+
+  {#if showReviewPrompt || \\"asdf\\"}
+    <input placeholder=\\"Email\\" />
+
+    <input placeholder=\\"Title\\" class=\\"input\\" />
+
+    <textarea placeholder=\\"How was your experience?\\" class=\\"textarea\\" />
+
+    <button
+      class=\\"button\\"
+      on:click={(event) => {
+        event.preventDefault();
+        showReviewPrompt = false;
+      }}
+    >
+      Submit
+    </button>
+  {/if}
+
+  {#each reviews as review, index (review.id)}
+    <div class=\\"review\\">
+      <img class=\\"img\\" src={review.avatar} />
+      <div class={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+        <div>N: {index}</div>
+        <div>{review.author}</div>
+        <div>{review.reviewMessage}</div>
+      </div>
+    </div>
+  {/each}
+</div>
+
+<style>
+  .input {
+    display: block;
+  }
+  .textarea {
+    display: block;
+  }
+  .button {
+    display: block;
+  }
+  .review {
+    margin: 10px;
+    padding: 10px;
+    background: white;
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .img {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Submit 1`] = `
@@ -1310,10 +1407,15 @@ exports[`Svelte > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > class + ClassName + css 1`] = `
-"unknown: Missing semicolon. (1:13)
+"<div class=\\"test2 test div\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
 
-> 1 | let _ = test2 test
-    |              ^"
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > class + css 1`] = `
@@ -1337,10 +1439,15 @@ exports[`Svelte > jsx > Javascript Test > className + css 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > className 1`] = `
-"unknown: Missing semicolon. (1:10)
+"<script>
+  let bindings = \\"a binding\\";
+</script>
 
-> 1 | let _ = no binding
-    |           ^"
+<div>
+  <div class=\\"no binding\\">Without Binding</div>
+
+  <div class={bindings}>With binding</div>
+</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > componentWithContext 1`] = `
@@ -1817,10 +1924,17 @@ exports[`Svelte > jsx > Javascript Test > rootShow 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > self-referencing component 1`] = `
-"unknown: Missing semicolon. (1:13)
+"<script>
+  export let name;
+</script>
 
-> 1 | let _ = Bruce Wayne
-    |              ^"
+<div>
+  {name}
+
+  {#if name === \\"Batman\\"}
+    <svelte:self name=\\"Bruce Wayne\\" />
+  {/if}
+</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > self-referencing component with children 1`] = `
@@ -2423,9 +2537,9 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
   }
 </script>
 
-<div class=\\"builder - columns div\\">
+<div class=\\"builder-columns div\\">
   {#each columns as column, index}
-    <div class=\\"builder - column div-2\\">
+    <div class=\\"builder-column div-2\\">
       {column.content}
       {index}
     </div>
@@ -2907,7 +3021,7 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
   {/if}
 
   {#if submissionState() === \\"error\\" && responseData}
-    <pre class=\\"builder - form - error - text pre\\">
+    <pre class=\\"builder-form-error-text pre\\">
         {JSON.stringify(responseData, null, 2)}
       </pre>
   {/if}
@@ -3042,10 +3156,16 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Image State 1`] = `
-"unknown: Unexpected token, expected \\"{\\" (1:20)
+"<script lang=\\"ts\\">
+  let canShow = true;
+  let images = [\\"http://example.com/qwik.png\\"];
+</script>
 
-> 1 | let _ = custom-class
-    |                     ^"
+<div>
+  {#each images as item, itemIndex}
+    <img class=\\"custom-class\\" src={item} key={itemIndex} />
+  {/each}
+</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Img 1`] = `
@@ -3271,10 +3391,108 @@ exports[`Svelte > jsx > Typescript Test > Select 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
-"unknown: Missing semicolon. (1:11)
+"<script context=\\"module\\" lang=\\"ts\\">
+  type SmileReviewsProps = {
+    productId: string;
+    apiKey: string;
+  };
+</script>
 
-> 1 | let _ = How was your experience?
-    |            ^"
+<script lang=\\"ts\\">
+  import { onMount } from \\"svelte\\";
+
+  import { kebabCase } from \\"lodash\\";
+  import { snakeCase } from \\"lodash\\";
+
+  export let apiKey: SmileReviewsProps[\\"apiKey\\"];
+  export let productId: SmileReviewsProps[\\"productId\\"];
+
+  function kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+
+  function snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  let reviews = [];
+  let name = \\"test\\";
+  let showReviewPrompt = false;
+
+  onMount(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        reviews = data.data;
+      });
+  });
+</script>
+
+<div data-user={name}>
+  <button
+    on:click={(event) => {
+      showReviewPrompt = true;
+    }}>Write a review</button
+  >
+
+  {#if showReviewPrompt || \\"asdf\\"}
+    <input placeholder=\\"Email\\" />
+
+    <input placeholder=\\"Title\\" class=\\"input\\" />
+
+    <textarea placeholder=\\"How was your experience?\\" class=\\"textarea\\" />
+
+    <button
+      class=\\"button\\"
+      on:click={(event) => {
+        event.preventDefault();
+        showReviewPrompt = false;
+      }}
+    >
+      Submit
+    </button>
+  {/if}
+
+  {#each reviews as review, index (review.id)}
+    <div class=\\"review\\">
+      <img class=\\"img\\" src={review.avatar} />
+      <div class={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+        <div>N: {index}</div>
+        <div>{review.author}</div>
+        <div>{review.reviewMessage}</div>
+      </div>
+    </div>
+  {/each}
+</div>
+
+<style>
+  .input {
+    display: block;
+  }
+  .textarea {
+    display: block;
+  }
+  .button {
+    display: block;
+  }
+  .review {
+    margin: 10px;
+    padding: 10px;
+    background: white;
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .img {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Submit 1`] = `
@@ -3517,10 +3735,18 @@ exports[`Svelte > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > class + ClassName + css 1`] = `
-"unknown: Missing semicolon. (1:13)
+"<script lang=\\"ts\\">
+</script>
 
-> 1 | let _ = test2 test
-    |              ^"
+<div class=\\"test2 test div\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > class + css 1`] = `
@@ -3550,10 +3776,22 @@ exports[`Svelte > jsx > Typescript Test > className + css 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > className 1`] = `
-"unknown: Missing semicolon. (1:10)
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string | JSX.Element;
+    slotTesting: JSX.Element;
+  };
+</script>
 
-> 1 | let _ = no binding
-    |           ^"
+<script lang=\\"ts\\">
+  let bindings = \\"a binding\\";
+</script>
+
+<div>
+  <div class=\\"no binding\\">Without Binding</div>
+
+  <div class={bindings}>With binding</div>
+</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
@@ -4171,10 +4409,17 @@ exports[`Svelte > jsx > Typescript Test > rootShow 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > self-referencing component 1`] = `
-"unknown: Missing semicolon. (1:13)
+"<script lang=\\"ts\\">
+  export let name;
+</script>
 
-> 1 | let _ = Bruce Wayne
-    |              ^"
+<div>
+  {name}
+
+  {#if name === \\"Batman\\"}
+    <svelte:self name=\\"Bruce Wayne\\" />
+  {/if}
+</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > self-referencing component with children 1`] = `
@@ -4323,10 +4568,65 @@ exports[`Svelte > svelte > Javascript Test > basic 1`] = `
 `;
 
 exports[`Svelte > svelte > Javascript Test > bindGroup 1`] = `
-"unknown: Missing semicolon. (1:13)
+"<script>
+  let tortilla = \\"Plain\\";
+  let fillings = [];
+</script>
 
-> 1 | let _ = Whole wheat
-    |              ^"
+<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    checked={tortilla === \\"Plain\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    checked={tortilla === \\"Whole wheat\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    checked={tortilla === \\"Spinach\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><br /><br /><input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    checked={fillings === \\"Rice\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    checked={fillings === \\"Beans\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    checked={fillings === \\"Cheese\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    checked={fillings === \\"Guac (extra)\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  />
+  <p>Tortilla: {tortilla}</p>
+  <p>Fillings: {fillings}</p>
+</div>"
 `;
 
 exports[`Svelte > svelte > Javascript Test > bindProperty 1`] = `
@@ -4504,7 +4804,7 @@ exports[`Svelte > svelte > Javascript Test > reactiveWithFn 1`] = `
 exports[`Svelte > svelte > Javascript Test > slots 1`] = `"<div><slot>default</slot><slot name=\\"test\\"><div>default</div></slot></div>"`;
 
 exports[`Svelte > svelte > Javascript Test > style 1`] = `
-"<input class=\\"form - input\\" />
+"<input class=\\"form-input\\" />
 
 <style>
   input {
@@ -4544,10 +4844,65 @@ exports[`Svelte > svelte > Typescript Test > basic 1`] = `
 `;
 
 exports[`Svelte > svelte > Typescript Test > bindGroup 1`] = `
-"unknown: Missing semicolon. (1:13)
+"<script lang=\\"ts\\">
+  let tortilla = \\"Plain\\";
+  let fillings = [];
+</script>
 
-> 1 | let _ = Whole wheat
-    |              ^"
+<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    checked={tortilla === \\"Plain\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    checked={tortilla === \\"Whole wheat\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    checked={tortilla === \\"Spinach\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><br /><br /><input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    checked={fillings === \\"Rice\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    checked={fillings === \\"Beans\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    checked={fillings === \\"Cheese\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    checked={fillings === \\"Guac (extra)\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  />
+  <p>Tortilla: {tortilla}</p>
+  <p>Fillings: {fillings}</p>
+</div>"
 `;
 
 exports[`Svelte > svelte > Typescript Test > bindProperty 1`] = `
@@ -4733,7 +5088,7 @@ exports[`Svelte > svelte > Typescript Test > style 1`] = `
 "<script lang=\\"ts\\">
 </script>
 
-<input class=\\"form - input\\" />
+<input class=\\"form-input\\" />
 
 <style>
   input {

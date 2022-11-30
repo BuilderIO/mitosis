@@ -19,12 +19,12 @@ const preProcessBlockCode = ({
   codeProcessor: CodeProcessor;
 }) => {
   const propertiesProcessor = codeProcessor('properties');
-  for (const key in json.properties) {
-    const value = json.properties[key];
-    if (key !== '_text' && value) {
-      json.properties[key] = propertiesProcessor(value);
-    }
-  }
+  // for (const key in json.properties) {
+  //   const value = json.properties[key];
+  //   if (key !== '_text' && value) {
+  //     json.properties[key] = propertiesProcessor(value);
+  //   }
+  // }
 
   const bindingsProcessor = codeProcessor('bindings');
   for (const key in json.bindings) {
