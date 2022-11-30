@@ -1215,14 +1215,17 @@ export default function SelectComponent(props) {
 `;
 
 exports[`Preact > jsx > Javascript Test > SlotDefault 1`] = `
-"',' expected. (44:59)
-  42 | }
-  43 |
-> 44 | SlotCode.defaultProps = {children: \\"      <div className=\\"default-slot\\">Default content</div>    \\"};
-     |                                                           ^
-  45 |
-  46 |
-  47 |"
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function SlotCode(props) {
+  return <div>{props.children}</div>;
+}
+
+SlotCode.defaultProps = {
+  children: <div className=\\"default-slot\\">Default content</div>,
+};
+"
 `;
 
 exports[`Preact > jsx > Javascript Test > SlotHtml 1`] = `
@@ -3923,14 +3926,21 @@ export default function SelectComponent(props: FormSelectProps) {
 `;
 
 exports[`Preact > jsx > Typescript Test > SlotDefault 1`] = `
-"',' expected. (46:63)
-  44 |   }
-  45 |
-> 46 |   SlotCode.defaultProps = {children: \\"        <div className=\\"default-slot\\">Default content</div>      \\"};
-     |                                                               ^
-  47 |
-  48 |
-  49 |"
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default function SlotCode(props: Props) {
+  return <div>{props.children}</div>;
+}
+
+SlotCode.defaultProps = {
+  children: <div className=\\"default-slot\\">Default content</div>,
+};
+"
 `;
 
 exports[`Preact > jsx > Typescript Test > SlotHtml 1`] = `

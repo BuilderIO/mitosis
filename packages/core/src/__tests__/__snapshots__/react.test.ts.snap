@@ -1188,14 +1188,16 @@ export default function SelectComponent(props) {
 `;
 
 exports[`React > jsx > Javascript Test > SlotDefault 1`] = `
-"',' expected. (42:63)
-  40 |   }
-  41 |
-> 42 |   SlotCode.defaultProps = {children: \\"        <div className=\\"default-slot\\">Default content</div>      \\"};
-     |                                                               ^
-  43 |
-  44 |
-  45 |"
+"import * as React from \\"react\\";
+
+export default function SlotCode(props) {
+  return <div>{props.children}</div>;
+}
+
+SlotCode.defaultProps = {
+  children: <div className=\\"default-slot\\">Default content</div>,
+};
+"
 `;
 
 exports[`React > jsx > Javascript Test > SlotHtml 1`] = `
@@ -3814,14 +3816,20 @@ export default function SelectComponent(props: FormSelectProps) {
 `;
 
 exports[`React > jsx > Typescript Test > SlotDefault 1`] = `
-"',' expected. (44:63)
-  42 |   }
-  43 |
-> 44 |   SlotCode.defaultProps = {children: \\"        <div className=\\"default-slot\\">Default content</div>      \\"};
-     |                                                               ^
-  45 |
-  46 |
-  47 |"
+"import * as React from \\"react\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default function SlotCode(props: Props) {
+  return <div>{props.children}</div>;
+}
+
+SlotCode.defaultProps = {
+  children: <div className=\\"default-slot\\">Default content</div>,
+};
+"
 `;
 
 exports[`React > jsx > Typescript Test > SlotHtml 1`] = `

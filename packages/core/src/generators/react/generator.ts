@@ -82,7 +82,8 @@ const NODE_MAPPERS: {
     const renderChildren = () => {
       const childrenStr = json.children
         ?.map((item) => blockToReact(item, options, component))
-        .join('\n');
+        .join('\n')
+        .trim();
       /**
        * Ad-hoc way of figuring out if the children defaultProp is:
        * - a JSX element, e.g. `<div>foo</div>`
@@ -113,7 +114,7 @@ const NODE_MAPPERS: {
         component.defaultProps = {
           ...(component.defaultProps || {}),
           children: {
-            code: renderChildren().trim(),
+            code: renderChildren(),
             type: 'property',
           },
         };
