@@ -140,8 +140,10 @@ const blockToSolid = ({
       const ${json.scope.indexName || 'index'} = _index();
       return ${needsWrapper ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
-      .map((child) => blockToSolid({ component, json: child, options }))}}}
-      ${needsWrapper ? '</>' : ''}
+      .map((child) => blockToSolid({ component, json: child, options }))
+      .join('\n')
+      }${needsWrapper ? '</>' : ''}
+    }}
     </For>`;
   }
 
