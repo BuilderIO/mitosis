@@ -96,28 +96,37 @@ const _replaceIdentifiers = (
 
 export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
   try {
-    return babelTransformExpression(code, {
-      MemberExpression(path) {
-        _replaceIdentifiers(path, { from, to });
-      },
-      OptionalMemberExpression(path) {
-        _replaceIdentifiers(path, { from, to });
-      },
-      Identifier(path) {
-        // we only want to ignore certain identifiers:
-        if (
-          // (optional) member expressions are already handled in other visitors
-          !types.isMemberExpression(path.parent) &&
-          !types.isOptionalMemberExpression(path.parent) &&
-          // function declaration identifiers shouldn't be transformed
-          !types.isFunctionDeclaration(path.parent)
-        ) {
+    return pipe(
+      babelTransformExpression(code, {
+        MemberExpression(path) {
           _replaceIdentifiers(path, { from, to });
-        }
-      },
-    });
+        },
+        OptionalMemberExpression(path) {
+          _replaceIdentifiers(path, { from, to });
+        },
+        Identifier(path) {
+          // we only want to ignore certain identifiers:
+          if (
+            // (optional) member expressions are already handled in other visitors
+            !types.isMemberExpression(path.parent) &&
+            !types.isOptionalMemberExpression(path.parent) &&
+            // function declaration identifiers shouldn't be transformed
+            !types.isFunctionDeclaration(path.parent)
+          ) {
+            _replaceIdentifiers(path, { from, to });
+          }
+        },
+      }),
+      // merely running `babel.transform` will add spaces around the code, even if we don't end up replacing anything.
+      // This is why we need to trim the output.
+      (code) => code.trim(),
+    );
   } catch (err) {
-    console.log('could not replace identifiers for ', code);
+    console.error('could not replace identifiers for ', {
+      code,
+      from: from.toString(),
+      to: to?.toString(),
+    });
     return code;
   }
 };
