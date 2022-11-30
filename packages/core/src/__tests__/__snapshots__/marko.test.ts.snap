@@ -58,15 +58,155 @@ exports[`Marko > formatting 3`] = `
 "
 `;
 
-exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
+"class {
+  onBlur = function onBlur() {
+    // Maintain focus
+    this.inputRef.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.statename.toLowerCase();
+  };
 
-exports[`Marko > jsx > Javascript Test > Basic 1`] = `"unknown: Maximum call stack size exceeded"`;
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
 
-exports[`Marko > jsx > Javascript Test > Basic 2`] = `"unknown: Maximum call stack size exceeded"`;
+  get inputRef() {
+    return this.getEl(\\"inputRef\\");
+  }
+  get inputNoArgRef() {
+    return this.getEl(\\"inputNoArgRef\\");
+  }
 
-exports[`Marko > jsx > Javascript Test > Basic Context 1`] = `"unknown: Maximum call stack size exceeded"`;
+  onRender() {
+    console.log(\\"Received an update\\");
+  }
+}
 
-exports[`Marko > jsx > Javascript Test > Basic OnMount Update 1`] = `"unknown: Maximum call stack size exceeded"`;
+style { 
+  .input-4a4b9003 {
+    color: red;
+  }
+}
+<div>
+  <if(input.showInput)>
+    <input
+      class=\\"input-4a4b9003\\"
+      key=\\"inputRef\\"
+      value=(state.name)
+      on-blur(event => component.onBlur())
+      on-input(event => state.name = event.target.value)
+    />
+
+    <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  </if>
+
+  Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+  Web Component!
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > Basic 1`] = `
+"export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+class {
+  underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  onCreate() {
+    this.state = { name: \\"Steve\\", age: 1, sports: [\\"\\"] };
+  }
+}
+
+style { 
+  .div-6f8bbe5f {
+    padding: 10px;
+  }
+}
+<div class=\\"test div-6f8bbe5f\\">
+  <input
+    value=(DEFAULT_VALUES.name || state.name)
+    on-input(myEvent => state.name = myEvent.target.value)
+  />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > Basic 2`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  }
+}
+
+<div>
+  <for|person| of=(state.names)>
+    <if(person === state.name)>
+      <input
+        value=(state.name)
+        on-input(event => {
+  state.name = event.target.value + ' and ' + person;
+})
+      />
+
+      Hello \${person} ! I can run in Qwik, Web Component, React, Vue, Solid, or
+      Liquid!
+    </if>
+  </for>
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > Basic Context 1`] = `
+"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+class {
+  onChange = function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  };
+
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  onMount() {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }
+}
+
+<div>
+  \${myService.method('hello') + state.name} Hello! I can run in React, Vue,
+  Solid, or Liquid!
+
+  <input on-input(event => component.onChange) />
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > Basic OnMount Update 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  }
+
+  onMount() {
+    this.statename = \\"PatrickJS onMount\\" + this.input.bye;
+  }
+}
+
+<div>Hello \${state.name}</div>"
+`;
 
 exports[`Marko > jsx > Javascript Test > Basic Outputs 1`] = `
 "class {
@@ -120,11 +260,104 @@ class {}
 </div>"
 `;
 
-exports[`Marko > jsx > Javascript Test > BasicChildComponent 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > BasicChildComponent 1`] = `
+"import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
-exports[`Marko > jsx > Javascript Test > BasicFor 1`] = `"unknown: Maximum call stack size exceeded"`;
+class {
+  onCreate() {
+    this.state = { name: \\"Steve\\", dev: \\"PatrickJS\\" };
+  }
+}
 
-exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>
+  <MyBasicComponent id=(state.dev)></MyBasicComponent>
+
+  <div>
+    <MyBasicOnMountUpdateComponent
+      hi=(state.name)
+      bye=(state.dev)
+    ></MyBasicOnMountUpdateComponent>
+  </div>
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > BasicFor 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  }
+
+  onMount() {
+    console.log(\\"onMount code\\");
+  }
+}
+
+<div>
+  <for|person| of=(state.names)>
+    <input
+      value=(state.name)
+      on-input(event => {
+  state.name = event.target.value + ' and ' + person;
+})
+    />
+
+    Hello \${person} ! I can run in Qwik, Web Component, React, Vue, Solid, or
+    Liquid!
+  </for>
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
+"class {
+  onBlur = function onBlur() {
+    // Maintain focus
+    this.inputRef.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.statename.toLowerCase();
+  };
+
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get inputRef() {
+    return this.getEl(\\"inputRef\\");
+  }
+  get inputNoArgRef() {
+    return this.getEl(\\"inputNoArgRef\\");
+  }
+}
+
+style { 
+  .input-37a1283e {
+    color: red;
+  }
+}
+<div>
+  <if(input.showInput)>
+    <input
+      class=\\"input-37a1283e\\"
+      key=\\"inputRef\\"
+      value=(state.name)
+      on-blur(event => component.onBlur())
+      on-input(event => state.name = event.target.value)
+    />
+
+    <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  </if>
+
+  Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+  Web Component!
+</div>"
+`;
 
 exports[`Marko > jsx > Javascript Test > BasicRefAssignment 1`] = `
 "class {
@@ -140,7 +373,36 @@ exports[`Marko > jsx > Javascript Test > BasicRefAssignment 1`] = `
 </div>"
 `;
 
-exports[`Marko > jsx > Javascript Test > BasicRefPrevious 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > BasicRefPrevious 1`] = `
+"export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+class {
+  onCreate() {
+    this.state = { count: 0 };
+  }
+
+  onRender() {
+    this.prevCount = this.statecount;
+  }
+}
+
+<div>
+  <h1>Now: \${state.count} , before: \${this.prevCount}</h1>
+
+  <button on-click(event => state.count += 1)>Increment</button>
+</div>"
+`;
 
 exports[`Marko > jsx > Javascript Test > Button 1`] = `
 "class {}
@@ -368,11 +630,393 @@ exports[`Marko > jsx > Javascript Test > Embed 1`] = `
 </div>"
 `;
 
-exports[`Marko > jsx > Javascript Test > Form 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > Form 1`] = `
+"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
 
-exports[`Marko > jsx > Javascript Test > Image 1`] = `"unknown: Maximum call stack size exceeded"`;
+class {
+  get submissionState() {
+    return (
+      (Builder.isEditing && this.input.previewState) || this.stateformState
+    );
+  }
+  onSubmit(event) {
+    const sendWithJs =
+      this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
 
-exports[`Marko > jsx > Javascript Test > Image State 1`] = `"unknown: Maximum call stack size exceeded"`;
+    if (this.input.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(this.input.action || this.input.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = this.input.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = this.input.contentType;
+
+      if (this.input.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && this.input.action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+        detail: {
+          body,
+        },
+      });
+
+      if (this.formRef) {
+        this.formRef.dispatchEvent(presubmitEvent);
+
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+
+      this.stateformState = \\"sending\\";
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        this.input.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
+      fetch(
+        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: this.input.method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+
+          if (!res.ok && this.input.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, this.input.errorMessagePath);
+
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
+            error: - email has been taken */
+                message = JSON.stringify(message);
+              }
+
+              this.stateformErrorMessage = message;
+            }
+          }
+
+          this.stateresponseData = body;
+          this.stateformState = res.ok ? \\"success\\" : \\"error\\";
+
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: {
+                res,
+                body,
+              },
+            });
+
+            if (this.formRef) {
+              this.formRef.dispatchEvent(submitSuccessEvent);
+
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */
+
+              if (this.input.resetFormOnSubmit !== false) {
+                this.formRef.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (this.input.successUrl) {
+              if (this.formRef) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: this.input.successUrl,
+                  },
+                });
+                this.formRef.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = this.input.successUrl;
+                }
+              } else {
+                location.href = this.input.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (this.formRef) {
+            this.formRef.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          this.stateresponseData = err;
+          this.stateformState = \\"error\\";
+        }
+      );
+    }
+  }
+
+  onCreate(input) {
+    this.state = {
+      formState: \\"unsubmitted\\",
+      responseData: null,
+      formErrorMessage: \\"\\",
+    };
+  }
+
+  get formRef() {
+    return this.getEl(\\"formRef\\");
+  }
+}
+
+style { 
+  .pre-2a3c5c5a {
+    padding: 10px;
+    color: red;
+    text-align: center;
+  }
+}
+<form
+  validate=(input.validate)
+  key=\\"formRef\\"
+  action=(!input.sendWithJs && input.action)
+  method=(input.method)
+  name=(input.name)
+  on-submit(event => component.onSubmit(event))  ...(props.attributes)
+>
+  <if(input.builderBlock && input.builderBlock.children)>
+    <for|block,index| of=(input.builderBlock?.children)>
+      <BuilderBlockComponent
+        key=(block.id)
+        block=(block)
+        index=(index)
+      ></BuilderBlockComponent> </for></if>
+
+  <if(component.submissionState === 'error')>
+    <BuilderBlocks
+      dataPath=\\"errorMessage\\"
+      blocks=(input.errorMessage)
+    ></BuilderBlocks></if>
+
+  <if(component.submissionState === 'sending')>
+    <BuilderBlocks
+      dataPath=\\"sendingMessage\\"
+      blocks=(input.sendingMessage)
+    ></BuilderBlocks></if>
+
+  <if(state.submissionState === 'error' && state.responseData)>
+    <pre class=\\"builder-form-error-text pre-2a3c5c5a\\">
+          
+\${JSON.stringify(state.responseData, null, 2)}
+
+        </pre>
+  </if>
+
+  <if(component.submissionState === 'success')>
+    <BuilderBlocks
+      dataPath=\\"successMessage\\"
+      blocks=(input.successMessage)
+    ></BuilderBlocks></if>
+</form>"
+`;
+
+exports[`Marko > jsx > Javascript Test > Image 1`] = `
+"class {
+  setLoaded() {
+    this.stateimageLoaded = true;
+  }
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!this.input.lazy && isBrowser();
+  }
+  isBrowser = function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  };
+
+  onCreate(input) {
+    this.state = { scrollListener: null, imageLoaded: false, load: false };
+  }
+
+  get pictureRef() {
+    return this.getEl(\\"pictureRef\\");
+  }
+
+  onMount() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (this.pictureRef) {
+          const rect = this.pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            this.statescrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.statescrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }
+  onDestroy() {
+    if (this.statescrollListener) {
+      window.removeEventListener(\\"scroll\\", this.statescrollListener);
+    }
+  }
+}
+
+style { 
+  .img-a94ec16e {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+<div>
+  <picture key=\\"pictureRef\\">
+    <if(!state.useLazyLoading() || state.load)>
+      <img
+        alt=(input.altText)
+        aria-role=(input.altText ? 'presentation' : undefined)
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-a94ec16e')
+        src=(input.image)
+        on-load(event => component.setLoaded())
+        srcset=(input.srcset)
+        sizes=(input.sizes)
+    /></if>
+
+    <source srcset=(input.srcset) />
+  </picture>
+
+  \${input.children}
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > Image State 1`] = `
+"class {
+  onCreate() {
+    this.state = { canShow: true, images: [\\"http://example.com/qwik.png\\"] };
+  }
+}
+
+<div>
+  <for|item,itemIndex| of=(state.images)>
+    <img class=\\"custom-class\\" src=(item) key=(itemIndex) />
+  </for>
+</div>"
+`;
 
 exports[`Marko > jsx > Javascript Test > Img 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
@@ -427,7 +1071,25 @@ exports[`Marko > jsx > Javascript Test > Section 1`] = `
 </section>"
 `;
 
-exports[`Marko > jsx > Javascript Test > Section 2`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > Section 2`] = `
+"class {
+  onCreate(input) {
+    this.state = { max: 42, items: [42] };
+  }
+}
+
+<if(state.max)>
+  <for|item| of=(state.items)>
+    <section
+      ...(props.attributes)
+      style=({
+  maxWidth: item + state.max
+})
+    >
+      \${input.children}
+    </section>
+  </for></if>"
+`;
 
 exports[`Marko > jsx > Javascript Test > Select 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
@@ -493,7 +1155,96 @@ exports[`Marko > jsx > Javascript Test > SlotNamed 1`] = `
 </div>"
 `;
 
-exports[`Marko > jsx > Javascript Test > Stamped.io 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > Stamped.io 1`] = `
+"import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
+class {
+  kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+  snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  onCreate(input) {
+    this.state = { reviews: [], name: \\"test\\", showReviewPrompt: false };
+  }
+
+  onMount() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.input.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.input.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.statereviews = data.data;
+      });
+  }
+}
+
+style { 
+  .input-017045de {
+    display: block;
+  }
+  .textarea-017045de {
+    display: block;
+  }
+  .button-017045de {
+    display: block;
+  }
+  .review-017045de {
+    margin: 10px;
+    padding: 10px;
+    background: white;
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .img-017045de {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+}
+<div data-user=(state.name)>
+  <button on-click(event => state.showReviewPrompt = true)>
+    Write a review
+  </button>
+
+  <if(state.showReviewPrompt || 'asdf')>
+    <input placeholder=\\"Email\\" />
+    <input placeholder=\\"Title\\" class=\\"input-017045de\\" />
+    <textarea
+      placeholder=\\"How was your experience?\\"
+      class=\\"textarea-017045de\\"
+    ></textarea>
+    <button
+      class=\\"button-017045de\\"
+      on-click(event => {
+  event.preventDefault();
+  state.showReviewPrompt = false;
+})
+    >
+      Submit
+    </button></if>
+
+  <for|review,index| of=(state.reviews)>
+    <div class=\\"review-017045de\\" key=(review.id)>
+      <img class=\\"img-017045de\\" src=(review.avatar) />
+
+      <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
+        <div>N: \${index}</div>
+
+        <div>\${review.author}</div>
+
+        <div>\${review.reviewMessage}</div>
+      </div>
+    </div>
+  </for>
+</div>"
+`;
 
 exports[`Marko > jsx > Javascript Test > Submit 1`] = `
 "class {}
@@ -501,7 +1252,26 @@ exports[`Marko > jsx > Javascript Test > Submit 1`] = `
 <button type=\\"submit\\" ...(props.attributes)>\${input.text}</button>"
 `;
 
-exports[`Marko > jsx > Javascript Test > Text 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > Text 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+class {
+  onCreate(input) {
+    this.state = { name: \\"Decadef20\\" };
+  }
+}
+
+<div
+  contenteditable=(allowEditingText || undefined)
+  data-name=({
+  test: state.name || 'any name'
+})
+>
+  $!{props.text || props.content || state.name || '
+  <p class=\\"text-lg\\">my name</p>
+  '}
+</div>"
+`;
 
 exports[`Marko > jsx > Javascript Test > Textarea 1`] = `
 "class {}
@@ -540,13 +1310,101 @@ exports[`Marko > jsx > Javascript Test > Video 1`] = `
 ></video>"
 `;
 
-exports[`Marko > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
+"class {
+  setName(value) {
+    this.statename = value;
+  }
+  updateNameWithArrowFn(value) {
+    this.statename = value;
+  }
 
-exports[`Marko > jsx > Javascript Test > basicForwardRef 1`] = `"unknown: Maximum call stack size exceeded"`;
+  onCreate() {
+    this.state = { name: \\"steve\\" };
+  }
+}
 
-exports[`Marko > jsx > Javascript Test > basicForwardRefMetadata 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>Hello \${state.name}</div>"
+`;
 
-exports[`Marko > jsx > Javascript Test > basicOnUpdateReturn 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > basicForwardRef 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get propsInputRef() {
+    return this.getEl(\\"propsInputRef\\");
+  }
+}
+
+style { 
+  .input-110b8dfc {
+    color: red;
+  }
+}
+<div>
+  <input
+    class=\\"input-110b8dfc\\"
+    key=\\"propsInputRef\\"
+    value=(state.name)
+    on-input(event => state.name = event.target.value)
+  />
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get propsInputRef() {
+    return this.getEl(\\"propsInputRef\\");
+  }
+}
+
+style { 
+  .input-565a1be8 {
+    color: red;
+  }
+}
+<div>
+  <input
+    class=\\"input-565a1be8\\"
+    key=\\"propsInputRef\\"
+    value=(state.name)
+    on-input(event => state.name = event.target.value)
+  />
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  onRender() {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.statename = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+}
+
+<div>Hello! \${state.name}</div>"
+`;
 
 exports[`Marko > jsx > Javascript Test > class + ClassName + css 1`] = `
 "class {}
@@ -587,9 +1445,41 @@ style {
 </div>"
 `;
 
-exports[`Marko > jsx > Javascript Test > className 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > className 1`] = `
+"class {
+  onCreate() {
+    this.state = { bindings: \\"a binding\\" };
+  }
+}
 
-exports[`Marko > jsx > Javascript Test > classState 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>
+  <div class=\\"no binding\\">Without Binding</div>
+
+  <div class=(state.bindings)>With binding</div>
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > classState 1`] = `
+"class {
+  onCreate() {
+    this.state = {
+      classState: \\"testClassName\\",
+      styleState: {
+        color: \\"red\\",
+      },
+    };
+  }
+}
+
+style { 
+  .div-25715889 {
+    padding: 10px;
+  }
+}
+<div class=(state.classState + ' div-25715889') style=(state.styleState)>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
 
 exports[`Marko > jsx > Javascript Test > componentWithContext 1`] = `
 "import Context1 from \\"@dummy/1\\";
@@ -666,7 +1556,19 @@ class {}
 <div>Hello \${input.name || DEFAULT_VALUES.name}</div>"
 `;
 
-exports[`Marko > jsx > Javascript Test > expressionState 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > expressionState 1`] = `
+"class {
+  onCreate(input) {
+    this.state = {
+      refToUse: !(input.componentRef instanceof Function)
+        ? input.componentRef
+        : null,
+    };
+  }
+}
+
+<div>\${state.refToUse}</div>"
+`;
 
 exports[`Marko > jsx > Javascript Test > import types 1`] = `
 "import RenderBlock from \\"./builder-render-block.raw\\";
@@ -778,7 +1680,19 @@ exports[`Marko > jsx > Javascript Test > onInit & onMount 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > jsx > Javascript Test > onInit 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Javascript Test > onInit 1`] = `
+"export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+class {
+  onCreate(input) {
+    this.state = { name: \\"\\" };
+  }
+}
+
+<div>Default name defined by parent \${state.name}</div>"
+`;
 
 exports[`Marko > jsx > Javascript Test > onMount 1`] = `
 "class {
@@ -1048,15 +1962,167 @@ style {
 <button type=\\"button\\">Button</button>"
 `;
 
-exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Remove Internal mitosis package 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+}
 
-exports[`Marko > jsx > Typescript Test > Basic 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>
+  Hello \${state.name} ! I can run in React, Qwik, Vue, Solid, or Liquid!
+</div>"
+`;
 
-exports[`Marko > jsx > Typescript Test > Basic 2`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
+"class {
+  onBlur = function onBlur() {
+    // Maintain focus
+    this.inputRef.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.statename.toLowerCase();
+  };
 
-exports[`Marko > jsx > Typescript Test > Basic Context 1`] = `"unknown: Maximum call stack size exceeded"`;
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
 
-exports[`Marko > jsx > Typescript Test > Basic OnMount Update 1`] = `"unknown: Maximum call stack size exceeded"`;
+  get inputRef() {
+    return this.getEl(\\"inputRef\\");
+  }
+  get inputNoArgRef() {
+    return this.getEl(\\"inputNoArgRef\\");
+  }
+
+  onRender() {
+    console.log(\\"Received an update\\");
+  }
+}
+
+style { 
+  .input-4a4b9003 {
+    color: red;
+  }
+}
+<div>
+  <if(input.showInput)>
+    <input
+      class=\\"input-4a4b9003\\"
+      key=\\"inputRef\\"
+      value=(state.name)
+      on-blur(event => component.onBlur())
+      on-input(event => state.name = event.target.value)
+    />
+
+    <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  </if>
+
+  Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+  Web Component!
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > Basic 1`] = `
+"export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+class {
+  underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  onCreate() {
+    this.state = { name: \\"Steve\\", age: 1, sports: [\\"\\"] };
+  }
+}
+
+style { 
+  .div-6f8bbe5f {
+    padding: 10px;
+  }
+}
+<div class=\\"test div-6f8bbe5f\\">
+  <input
+    value=(DEFAULT_VALUES.name || state.name)
+    on-input(myEvent => state.name = myEvent.target.value)
+  />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > Basic 2`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  }
+}
+
+<div>
+  <for|person| of=(state.names)>
+    <if(person === state.name)>
+      <input
+        value=(state.name)
+        on-input(event => {
+  state.name = event.target.value + ' and ' + person;
+})
+      />
+
+      Hello \${person} ! I can run in Qwik, Web Component, React, Vue, Solid, or
+      Liquid!
+    </if>
+  </for>
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > Basic Context 1`] = `
+"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+class {
+  onChange = function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  };
+
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  onMount() {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }
+}
+
+<div>
+  \${myService.method('hello') + state.name} Hello! I can run in React, Vue,
+  Solid, or Liquid!
+
+  <input on-input(event => component.onChange) />
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > Basic OnMount Update 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  }
+
+  onMount() {
+    this.statename = \\"PatrickJS onMount\\" + this.input.bye;
+  }
+}
+
+<div>Hello \${state.name}</div>"
+`;
 
 exports[`Marko > jsx > Typescript Test > Basic Outputs 1`] = `
 "class {
@@ -1110,11 +2176,104 @@ class {}
 </div>"
 `;
 
-exports[`Marko > jsx > Typescript Test > BasicChildComponent 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > BasicChildComponent 1`] = `
+"import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
-exports[`Marko > jsx > Typescript Test > BasicFor 1`] = `"unknown: Maximum call stack size exceeded"`;
+class {
+  onCreate() {
+    this.state = { name: \\"Steve\\", dev: \\"PatrickJS\\" };
+  }
+}
 
-exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>
+  <MyBasicComponent id=(state.dev)></MyBasicComponent>
+
+  <div>
+    <MyBasicOnMountUpdateComponent
+      hi=(state.name)
+      bye=(state.dev)
+    ></MyBasicOnMountUpdateComponent>
+  </div>
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > BasicFor 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  }
+
+  onMount() {
+    console.log(\\"onMount code\\");
+  }
+}
+
+<div>
+  <for|person| of=(state.names)>
+    <input
+      value=(state.name)
+      on-input(event => {
+  state.name = event.target.value + ' and ' + person;
+})
+    />
+
+    Hello \${person} ! I can run in Qwik, Web Component, React, Vue, Solid, or
+    Liquid!
+  </for>
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
+"class {
+  onBlur = function onBlur() {
+    // Maintain focus
+    this.inputRef.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.statename.toLowerCase();
+  };
+
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get inputRef() {
+    return this.getEl(\\"inputRef\\");
+  }
+  get inputNoArgRef() {
+    return this.getEl(\\"inputNoArgRef\\");
+  }
+}
+
+style { 
+  .input-37a1283e {
+    color: red;
+  }
+}
+<div>
+  <if(input.showInput)>
+    <input
+      class=\\"input-37a1283e\\"
+      key=\\"inputRef\\"
+      value=(state.name)
+      on-blur(event => component.onBlur())
+      on-input(event => state.name = event.target.value)
+    />
+
+    <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  </if>
+
+  Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+  Web Component!
+</div>"
+`;
 
 exports[`Marko > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "class {
@@ -1130,7 +2289,36 @@ exports[`Marko > jsx > Typescript Test > BasicRefAssignment 1`] = `
 </div>"
 `;
 
-exports[`Marko > jsx > Typescript Test > BasicRefPrevious 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > BasicRefPrevious 1`] = `
+"export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+class {
+  onCreate() {
+    this.state = { count: 0 };
+  }
+
+  onRender() {
+    this.prevCount = this.statecount;
+  }
+}
+
+<div>
+  <h1>Now: \${state.count} , before: \${this.prevCount}</h1>
+
+  <button on-click(event => state.count += 1)>Increment</button>
+</div>"
+`;
 
 exports[`Marko > jsx > Typescript Test > Button 1`] = `
 "class {}
@@ -1358,11 +2546,393 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
 </div>"
 `;
 
-exports[`Marko > jsx > Typescript Test > Form 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > Form 1`] = `
+"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
 
-exports[`Marko > jsx > Typescript Test > Image 1`] = `"unknown: Maximum call stack size exceeded"`;
+class {
+  get submissionState() {
+    return (
+      (Builder.isEditing && this.input.previewState) || this.stateformState
+    );
+  }
+  onSubmit(event) {
+    const sendWithJs =
+      this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
 
-exports[`Marko > jsx > Typescript Test > Image State 1`] = `"unknown: Maximum call stack size exceeded"`;
+    if (this.input.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(this.input.action || this.input.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = this.input.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = this.input.contentType;
+
+      if (this.input.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && this.input.action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+        detail: {
+          body,
+        },
+      });
+
+      if (this.formRef) {
+        this.formRef.dispatchEvent(presubmitEvent);
+
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+
+      this.stateformState = \\"sending\\";
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        this.input.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
+      fetch(
+        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: this.input.method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+
+          if (!res.ok && this.input.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, this.input.errorMessagePath);
+
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
+            error: - email has been taken */
+                message = JSON.stringify(message);
+              }
+
+              this.stateformErrorMessage = message;
+            }
+          }
+
+          this.stateresponseData = body;
+          this.stateformState = res.ok ? \\"success\\" : \\"error\\";
+
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: {
+                res,
+                body,
+              },
+            });
+
+            if (this.formRef) {
+              this.formRef.dispatchEvent(submitSuccessEvent);
+
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */
+
+              if (this.input.resetFormOnSubmit !== false) {
+                this.formRef.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (this.input.successUrl) {
+              if (this.formRef) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: this.input.successUrl,
+                  },
+                });
+                this.formRef.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = this.input.successUrl;
+                }
+              } else {
+                location.href = this.input.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (this.formRef) {
+            this.formRef.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          this.stateresponseData = err;
+          this.stateformState = \\"error\\";
+        }
+      );
+    }
+  }
+
+  onCreate(input) {
+    this.state = {
+      formState: \\"unsubmitted\\",
+      responseData: null,
+      formErrorMessage: \\"\\",
+    };
+  }
+
+  get formRef() {
+    return this.getEl(\\"formRef\\");
+  }
+}
+
+style { 
+  .pre-2a3c5c5a {
+    padding: 10px;
+    color: red;
+    text-align: center;
+  }
+}
+<form
+  validate=(input.validate)
+  key=\\"formRef\\"
+  action=(!input.sendWithJs && input.action)
+  method=(input.method)
+  name=(input.name)
+  on-submit(event => component.onSubmit(event))  ...(props.attributes)
+>
+  <if(input.builderBlock && input.builderBlock.children)>
+    <for|block,index| of=(input.builderBlock?.children)>
+      <BuilderBlockComponent
+        key=(block.id)
+        block=(block)
+        index=(index)
+      ></BuilderBlockComponent> </for></if>
+
+  <if(component.submissionState === 'error')>
+    <BuilderBlocks
+      dataPath=\\"errorMessage\\"
+      blocks=(input.errorMessage)
+    ></BuilderBlocks></if>
+
+  <if(component.submissionState === 'sending')>
+    <BuilderBlocks
+      dataPath=\\"sendingMessage\\"
+      blocks=(input.sendingMessage)
+    ></BuilderBlocks></if>
+
+  <if(state.submissionState === 'error' && state.responseData)>
+    <pre class=\\"builder-form-error-text pre-2a3c5c5a\\">
+          
+\${JSON.stringify(state.responseData, null, 2)}
+
+        </pre>
+  </if>
+
+  <if(component.submissionState === 'success')>
+    <BuilderBlocks
+      dataPath=\\"successMessage\\"
+      blocks=(input.successMessage)
+    ></BuilderBlocks></if>
+</form>"
+`;
+
+exports[`Marko > jsx > Typescript Test > Image 1`] = `
+"class {
+  setLoaded() {
+    this.stateimageLoaded = true;
+  }
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!this.input.lazy && isBrowser();
+  }
+  isBrowser = function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  };
+
+  onCreate(input) {
+    this.state = { scrollListener: null, imageLoaded: false, load: false };
+  }
+
+  get pictureRef() {
+    return this.getEl(\\"pictureRef\\");
+  }
+
+  onMount() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (this.pictureRef) {
+          const rect = this.pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            this.statescrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.statescrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }
+  onDestroy() {
+    if (this.statescrollListener) {
+      window.removeEventListener(\\"scroll\\", this.statescrollListener);
+    }
+  }
+}
+
+style { 
+  .img-a94ec16e {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+<div>
+  <picture key=\\"pictureRef\\">
+    <if(!state.useLazyLoading() || state.load)>
+      <img
+        alt=(input.altText)
+        aria-role=(input.altText ? 'presentation' : undefined)
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-a94ec16e')
+        src=(input.image)
+        on-load(event => component.setLoaded())
+        srcset=(input.srcset)
+        sizes=(input.sizes)
+    /></if>
+
+    <source srcset=(input.srcset) />
+  </picture>
+
+  \${input.children}
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > Image State 1`] = `
+"class {
+  onCreate() {
+    this.state = { canShow: true, images: [\\"http://example.com/qwik.png\\"] };
+  }
+}
+
+<div>
+  <for|item,itemIndex| of=(state.images)>
+    <img class=\\"custom-class\\" src=(item) key=(itemIndex) />
+  </for>
+</div>"
+`;
 
 exports[`Marko > jsx > Typescript Test > Img 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
@@ -1417,7 +2987,25 @@ exports[`Marko > jsx > Typescript Test > Section 1`] = `
 </section>"
 `;
 
-exports[`Marko > jsx > Typescript Test > Section 2`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > Section 2`] = `
+"class {
+  onCreate(input) {
+    this.state = { max: 42, items: [42] };
+  }
+}
+
+<if(state.max)>
+  <for|item| of=(state.items)>
+    <section
+      ...(props.attributes)
+      style=({
+  maxWidth: item + state.max
+})
+    >
+      \${input.children}
+    </section>
+  </for></if>"
+`;
 
 exports[`Marko > jsx > Typescript Test > Select 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
@@ -1483,7 +3071,96 @@ exports[`Marko > jsx > Typescript Test > SlotNamed 1`] = `
 </div>"
 `;
 
-exports[`Marko > jsx > Typescript Test > Stamped.io 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > Stamped.io 1`] = `
+"import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
+class {
+  kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+  snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  onCreate(input) {
+    this.state = { reviews: [], name: \\"test\\", showReviewPrompt: false };
+  }
+
+  onMount() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.input.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.input.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.statereviews = data.data;
+      });
+  }
+}
+
+style { 
+  .input-017045de {
+    display: block;
+  }
+  .textarea-017045de {
+    display: block;
+  }
+  .button-017045de {
+    display: block;
+  }
+  .review-017045de {
+    margin: 10px;
+    padding: 10px;
+    background: white;
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .img-017045de {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+}
+<div data-user=(state.name)>
+  <button on-click(event => state.showReviewPrompt = true)>
+    Write a review
+  </button>
+
+  <if(state.showReviewPrompt || 'asdf')>
+    <input placeholder=\\"Email\\" />
+    <input placeholder=\\"Title\\" class=\\"input-017045de\\" />
+    <textarea
+      placeholder=\\"How was your experience?\\"
+      class=\\"textarea-017045de\\"
+    ></textarea>
+    <button
+      class=\\"button-017045de\\"
+      on-click(event => {
+  event.preventDefault();
+  state.showReviewPrompt = false;
+})
+    >
+      Submit
+    </button></if>
+
+  <for|review,index| of=(state.reviews)>
+    <div class=\\"review-017045de\\" key=(review.id)>
+      <img class=\\"img-017045de\\" src=(review.avatar) />
+
+      <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
+        <div>N: \${index}</div>
+
+        <div>\${review.author}</div>
+
+        <div>\${review.reviewMessage}</div>
+      </div>
+    </div>
+  </for>
+</div>"
+`;
 
 exports[`Marko > jsx > Typescript Test > Submit 1`] = `
 "class {}
@@ -1491,7 +3168,26 @@ exports[`Marko > jsx > Typescript Test > Submit 1`] = `
 <button type=\\"submit\\" ...(props.attributes)>\${input.text}</button>"
 `;
 
-exports[`Marko > jsx > Typescript Test > Text 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > Text 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+class {
+  onCreate(input) {
+    this.state = { name: \\"Decadef20\\" };
+  }
+}
+
+<div
+  contenteditable=(allowEditingText || undefined)
+  data-name=({
+  test: state.name || 'any name'
+})
+>
+  $!{props.text || props.content || state.name || '
+  <p class=\\"text-lg\\">my name</p>
+  '}
+</div>"
+`;
 
 exports[`Marko > jsx > Typescript Test > Textarea 1`] = `
 "class {}
@@ -1530,13 +3226,101 @@ exports[`Marko > jsx > Typescript Test > Video 1`] = `
 ></video>"
 `;
 
-exports[`Marko > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
+"class {
+  setName(value) {
+    this.statename = value;
+  }
+  updateNameWithArrowFn(value) {
+    this.statename = value;
+  }
 
-exports[`Marko > jsx > Typescript Test > basicForwardRef 1`] = `"unknown: Maximum call stack size exceeded"`;
+  onCreate() {
+    this.state = { name: \\"steve\\" };
+  }
+}
 
-exports[`Marko > jsx > Typescript Test > basicForwardRefMetadata 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>Hello \${state.name}</div>"
+`;
 
-exports[`Marko > jsx > Typescript Test > basicOnUpdateReturn 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > basicForwardRef 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get propsInputRef() {
+    return this.getEl(\\"propsInputRef\\");
+  }
+}
+
+style { 
+  .input-110b8dfc {
+    color: red;
+  }
+}
+<div>
+  <input
+    class=\\"input-110b8dfc\\"
+    key=\\"propsInputRef\\"
+    value=(state.name)
+    on-input(event => state.name = event.target.value)
+  />
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get propsInputRef() {
+    return this.getEl(\\"propsInputRef\\");
+  }
+}
+
+style { 
+  .input-565a1be8 {
+    color: red;
+  }
+}
+<div>
+  <input
+    class=\\"input-565a1be8\\"
+    key=\\"propsInputRef\\"
+    value=(state.name)
+    on-input(event => state.name = event.target.value)
+  />
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  onRender() {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.statename = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+}
+
+<div>Hello! \${state.name}</div>"
+`;
 
 exports[`Marko > jsx > Typescript Test > class + ClassName + css 1`] = `
 "class {}
@@ -1577,9 +3361,41 @@ style {
 </div>"
 `;
 
-exports[`Marko > jsx > Typescript Test > className 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > className 1`] = `
+"class {
+  onCreate() {
+    this.state = { bindings: \\"a binding\\" };
+  }
+}
 
-exports[`Marko > jsx > Typescript Test > classState 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>
+  <div class=\\"no binding\\">Without Binding</div>
+
+  <div class=(state.bindings)>With binding</div>
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > classState 1`] = `
+"class {
+  onCreate() {
+    this.state = {
+      classState: \\"testClassName\\",
+      styleState: {
+        color: \\"red\\",
+      },
+    };
+  }
+}
+
+style { 
+  .div-25715889 {
+    padding: 10px;
+  }
+}
+<div class=(state.classState + ' div-25715889') style=(state.styleState)>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
 
 exports[`Marko > jsx > Typescript Test > componentWithContext 1`] = `
 "import Context1 from \\"@dummy/1\\";
@@ -1656,7 +3472,19 @@ class {}
 <div>Hello \${input.name || DEFAULT_VALUES.name}</div>"
 `;
 
-exports[`Marko > jsx > Typescript Test > expressionState 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > expressionState 1`] = `
+"class {
+  onCreate(input) {
+    this.state = {
+      refToUse: !(input.componentRef instanceof Function)
+        ? input.componentRef
+        : null,
+    };
+  }
+}
+
+<div>\${state.refToUse}</div>"
+`;
 
 exports[`Marko > jsx > Typescript Test > import types 1`] = `
 "import RenderBlock from \\"./builder-render-block.raw\\";
@@ -1768,7 +3596,19 @@ exports[`Marko > jsx > Typescript Test > onInit & onMount 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > jsx > Typescript Test > onInit 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > jsx > Typescript Test > onInit 1`] = `
+"export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+class {
+  onCreate(input) {
+    this.state = { name: \\"\\" };
+  }
+}
+
+<div>Default name defined by parent \${state.name}</div>"
+`;
 
 exports[`Marko > jsx > Typescript Test > onMount 1`] = `
 "class {
@@ -2038,17 +3878,125 @@ style {
 <button type=\\"button\\">Button</button>"
 `;
 
-exports[`Marko > svelte > Javascript Test > basic 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Javascript Test > basic 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"Steve\\" };
+  }
+}
 
-exports[`Marko > svelte > Javascript Test > bindGroup 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>
+  <input
+    on-input(event => state.name = event.target.value)
+    value=(state.name)
+  />
 
-exports[`Marko > svelte > Javascript Test > bindProperty 1`] = `"unknown: Maximum call stack size exceeded"`;
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
 
-exports[`Marko > svelte > Javascript Test > classDirective 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Javascript Test > bindGroup 1`] = `
+"class {
+  onCreate() {
+    this.state = { tortilla: \\"Plain\\", fillings: [] };
+  }
+}
 
-exports[`Marko > svelte > Javascript Test > context 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    checked=(state.tortilla === 'Plain')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    checked=(state.tortilla === 'Whole wheat')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    checked=(state.tortilla === 'Spinach')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    checked=(state.fillings === 'Rice')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    checked=(state.fillings === 'Beans')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    checked=(state.fillings === 'Cheese')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    checked=(state.fillings === 'Guac (extra)')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <p>Tortilla: \${state.tortilla}</p>
+  <p>Fillings: \${state.fillings}</p>
+</div>"
+`;
 
-exports[`Marko > svelte > Javascript Test > each 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Javascript Test > bindProperty 1`] = `
+"class {
+  onCreate() {
+    this.state = { value: \\"hello\\" };
+  }
+}
+
+<input value=(state.value) />"
+`;
+
+exports[`Marko > svelte > Javascript Test > classDirective 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { focus: true };
+  }
+}
+
+<input
+  class=(\`form-input \${props.disabled ? 'disabled' : ''} \${state.focus ? 'focus' : ''}\`)
+/>"
+`;
+
+exports[`Marko > svelte > Javascript Test > context 1`] = `
+"class {
+  onCreate() {
+    this.state = { activeTab: 0 };
+  }
+}
+
+<div>\${state.activeTab}</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > each 1`] = `
+"class {
+  onCreate() {
+    this.state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
+  }
+}
+
+<ul>
+  <for|num| of=(state.numbers)>
+    <li>\${num}</li>
+  </for>
+</ul>"
+`;
 
 exports[`Marko > svelte > Javascript Test > eventHandlers 1`] = `
 "class {
@@ -2064,11 +4012,45 @@ exports[`Marko > svelte > Javascript Test > eventHandlers 1`] = `
 </div>"
 `;
 
-exports[`Marko > svelte > Javascript Test > html 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Javascript Test > html 1`] = `
+"class {
+  onCreate() {
+    this.state = { html: \\"<b>bold</b>\\" };
+  }
+}
 
-exports[`Marko > svelte > Javascript Test > ifElse 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>$!{state.html}</div>"
+`;
 
-exports[`Marko > svelte > Javascript Test > imports 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Javascript Test > ifElse 1`] = `
+"class {
+  toggle = function toggle() {
+    this.stateshow = !this.stateshow;
+  };
+
+  onCreate() {
+    this.state = { show: true };
+  }
+}
+
+<if(state.show)>
+  <button on-click(event => component.toggle(event))>Hide</button></if>
+<else><button on-click(event => component.toggle(event))>Show</button></else>"
+`;
+
+exports[`Marko > svelte > Javascript Test > imports 1`] = `
+"import Button from \\"./Button.marko\\";
+
+class {
+  onCreate() {
+    this.state = { disabled: false };
+  }
+}
+
+<div>
+  <button type=\\"button\\" disabled=(state.disabled)><slot></slot></button>
+</div>"
+`;
 
 exports[`Marko > svelte > Javascript Test > lifecycleHooks 1`] = `
 "class {
@@ -2086,9 +4068,54 @@ exports[`Marko > svelte > Javascript Test > lifecycleHooks 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > svelte > Javascript Test > reactive 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Javascript Test > reactive 1`] = `
+"class {
+  get lowercaseName() {
+    return this.statename.toLowerCase();
+  }
 
-exports[`Marko > svelte > Javascript Test > reactiveWithFn 1`] = `"unknown: Maximum call stack size exceeded"`;
+  onCreate() {
+    this.state = { name: \\"Steve\\" };
+  }
+}
+
+<div>
+  <input value=(state.name) />
+
+  Lowercase: \${component.lowercaseName}
+</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > reactiveWithFn 1`] = `
+"class {
+  calculateResult = function calculateResult(a_, b_) {
+    this.stateresult = a_ * b_;
+  };
+
+  onCreate() {
+    this.state = { a: 2, b: 5, result: null };
+  }
+
+  onRender() {
+    this.calculateResult(this.statea, this.stateb);
+  }
+}
+
+<div>
+  <input
+    type=\\"number\\"
+    on-input(event => state.a = event.target.value)
+    value=(state.a)
+  />
+  <input
+    type=\\"number\\"
+    on-input(event => state.b = event.target.value)
+    value=(state.b)
+  />
+
+  Result: \${state.result}
+</div>"
+`;
 
 exports[`Marko > svelte > Javascript Test > slots 1`] = `
 "class {}
@@ -2114,19 +4141,140 @@ style {
 <input class=\\"form-input\\" />"
 `;
 
-exports[`Marko > svelte > Javascript Test > textExpressions 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Javascript Test > textExpressions 1`] = `
+"class {
+  onCreate() {
+    this.state = { a: 5, b: 12 };
+  }
+}
 
-exports[`Marko > svelte > Typescript Test > basic 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>
+  normal: \${state.a + state.b}
+  <br />
 
-exports[`Marko > svelte > Typescript Test > bindGroup 1`] = `"unknown: Maximum call stack size exceeded"`;
+  conditional \${state.a > 2 ? 'hello' : 'bye'}
+</div>"
+`;
 
-exports[`Marko > svelte > Typescript Test > bindProperty 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Typescript Test > basic 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"Steve\\" };
+  }
+}
 
-exports[`Marko > svelte > Typescript Test > classDirective 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>
+  <input
+    on-input(event => state.name = event.target.value)
+    value=(state.name)
+  />
 
-exports[`Marko > svelte > Typescript Test > context 1`] = `"unknown: Maximum call stack size exceeded"`;
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
 
-exports[`Marko > svelte > Typescript Test > each 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Typescript Test > bindGroup 1`] = `
+"class {
+  onCreate() {
+    this.state = { tortilla: \\"Plain\\", fillings: [] };
+  }
+}
+
+<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    checked=(state.tortilla === 'Plain')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    checked=(state.tortilla === 'Whole wheat')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    checked=(state.tortilla === 'Spinach')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    checked=(state.fillings === 'Rice')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    checked=(state.fillings === 'Beans')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    checked=(state.fillings === 'Cheese')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    checked=(state.fillings === 'Guac (extra)')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <p>Tortilla: \${state.tortilla}</p>
+  <p>Fillings: \${state.fillings}</p>
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > bindProperty 1`] = `
+"class {
+  onCreate() {
+    this.state = { value: \\"hello\\" };
+  }
+}
+
+<input value=(state.value) />"
+`;
+
+exports[`Marko > svelte > Typescript Test > classDirective 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { focus: true };
+  }
+}
+
+<input
+  class=(\`form-input \${props.disabled ? 'disabled' : ''} \${state.focus ? 'focus' : ''}\`)
+/>"
+`;
+
+exports[`Marko > svelte > Typescript Test > context 1`] = `
+"class {
+  onCreate() {
+    this.state = { activeTab: 0 };
+  }
+}
+
+<div>\${state.activeTab}</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > each 1`] = `
+"class {
+  onCreate() {
+    this.state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
+  }
+}
+
+<ul>
+  <for|num| of=(state.numbers)>
+    <li>\${num}</li>
+  </for>
+</ul>"
+`;
 
 exports[`Marko > svelte > Typescript Test > eventHandlers 1`] = `
 "class {
@@ -2142,11 +4290,45 @@ exports[`Marko > svelte > Typescript Test > eventHandlers 1`] = `
 </div>"
 `;
 
-exports[`Marko > svelte > Typescript Test > html 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Typescript Test > html 1`] = `
+"class {
+  onCreate() {
+    this.state = { html: \\"<b>bold</b>\\" };
+  }
+}
 
-exports[`Marko > svelte > Typescript Test > ifElse 1`] = `"unknown: Maximum call stack size exceeded"`;
+<div>$!{state.html}</div>"
+`;
 
-exports[`Marko > svelte > Typescript Test > imports 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Typescript Test > ifElse 1`] = `
+"class {
+  toggle = function toggle() {
+    this.stateshow = !this.stateshow;
+  };
+
+  onCreate() {
+    this.state = { show: true };
+  }
+}
+
+<if(state.show)>
+  <button on-click(event => component.toggle(event))>Hide</button></if>
+<else><button on-click(event => component.toggle(event))>Show</button></else>"
+`;
+
+exports[`Marko > svelte > Typescript Test > imports 1`] = `
+"import Button from \\"./Button.marko\\";
+
+class {
+  onCreate() {
+    this.state = { disabled: false };
+  }
+}
+
+<div>
+  <button type=\\"button\\" disabled=(state.disabled)><slot></slot></button>
+</div>"
+`;
 
 exports[`Marko > svelte > Typescript Test > lifecycleHooks 1`] = `
 "class {
@@ -2164,9 +4346,54 @@ exports[`Marko > svelte > Typescript Test > lifecycleHooks 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > svelte > Typescript Test > reactive 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Typescript Test > reactive 1`] = `
+"class {
+  get lowercaseName() {
+    return this.statename.toLowerCase();
+  }
 
-exports[`Marko > svelte > Typescript Test > reactiveWithFn 1`] = `"unknown: Maximum call stack size exceeded"`;
+  onCreate() {
+    this.state = { name: \\"Steve\\" };
+  }
+}
+
+<div>
+  <input value=(state.name) />
+
+  Lowercase: \${component.lowercaseName}
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > reactiveWithFn 1`] = `
+"class {
+  calculateResult = function calculateResult(a_, b_) {
+    this.stateresult = a_ * b_;
+  };
+
+  onCreate() {
+    this.state = { a: 2, b: 5, result: null };
+  }
+
+  onRender() {
+    this.calculateResult(this.statea, this.stateb);
+  }
+}
+
+<div>
+  <input
+    type=\\"number\\"
+    on-input(event => state.a = event.target.value)
+    value=(state.a)
+  />
+  <input
+    type=\\"number\\"
+    on-input(event => state.b = event.target.value)
+    value=(state.b)
+  />
+
+  Result: \${state.result}
+</div>"
+`;
 
 exports[`Marko > svelte > Typescript Test > slots 1`] = `
 "class {}
@@ -2192,4 +4419,17 @@ style {
 <input class=\\"form-input\\" />"
 `;
 
-exports[`Marko > svelte > Typescript Test > textExpressions 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Marko > svelte > Typescript Test > textExpressions 1`] = `
+"class {
+  onCreate() {
+    this.state = { a: 5, b: 12 };
+  }
+}
+
+<div>
+  normal: \${state.a + state.b}
+  <br />
+
+  conditional \${state.a > 2 ? 'hello' : 'bye'}
+</div>"
+`;
