@@ -69,7 +69,7 @@ const consolidateClassBindings = (item: MitosisNode) => {
   }
 
   if (item.properties.class && item.bindings.class) {
-    console.warn(`[${json.name}]: Ended up with both a property and binding for 'class'.`);
+    console.warn(`[${item.name}]: Ended up with both a property and binding for 'class'.`);
   }
 };
 
