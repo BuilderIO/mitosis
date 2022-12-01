@@ -30,7 +30,7 @@ import { JsxCodeEditor } from './JsxCodeEditor';
 
 type Position = { row: number; column: number };
 
-const generateValidJson = (codeJSON: {}) => {
+const generateValidJson = (codeJSON: any) => {
   return {
     '@type': '@builder.io/mitosis/component',
     subComponents: [],
@@ -44,12 +44,12 @@ const generateValidJson = (codeJSON: {}) => {
     name: 'RenderContent',
     ...codeJSON,
     children:
-      codeJSON.children?.map((x) => ({
+      codeJSON.children?.map((x: any) => ({
         '@type': '@builder.io/mitosis/node',
         properties: {},
         ...x,
         children:
-          x?.children?.map((innerX) => ({
+          x?.children?.map((innerX: any) => ({
             properties: {},
             '@type': '@builder.io/mitosis/node',
             children: [],
