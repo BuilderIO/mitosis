@@ -6,14 +6,14 @@
 
 <div>
   <img src="../svelte-logo.png" width={50} />
-  {#if window.location.pathname.endsWith('todo')}
-    <Todos />
-  {:else if window.location.pathname.endsWith('autocomplete')}
+  {#if window.location.pathname.endsWith('autocomplete')}
     <AutoComplete
       getValues={mockApi}
       renderChild={AutocompleteChild}
       transformData={(x) => x.name}
     />
+  {:else}
+    <Todos />
   {/if}
 </div>
 
