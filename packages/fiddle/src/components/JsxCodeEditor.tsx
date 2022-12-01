@@ -106,7 +106,7 @@ export function JsxCodeEditor(props: Props) {
         scrollbar: { vertical: 'hidden' },
         ...props.options,
       }}
-      language="javascript"
+      language={props.disableLinting ? 'javascript' : 'typescript'}
       path="mitosis.tsx"
       {...props}
       onMount={(editor, monaco) => {
