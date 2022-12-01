@@ -435,16 +435,6 @@ export default function Fiddle() {
     },
     options: {
       typescript: localStorageGet('options.typescript') || ('false' as 'true' | 'false'),
-      reactStyleType:
-        localStorageGet('options.reactStyleType') || ('styled-jsx' as 'emotion' | 'styled-jsx'),
-      reactStateType:
-        localStorageGet('options.reactStateType') || ('useState' as 'useState' | 'mobx' | 'solid'),
-      svelteStateType:
-        localStorageGet('options.svelteStateType') || ('variables' as 'variables' | 'proxies'),
-      vueApi: localStorageGet('options.vueApi') || ('options' as 'options' | 'composition'),
-      vueVersion: localStorageGet('options.vueVersion') || ('2' as '2' | '3'),
-      alpineShorthandSyntax: localStorageGet('options.alpineShorthandSyntax') || 'false',
-      alpineInline: localStorageGet('options.alpineInline') || 'false',
     },
     applyPendingBuilderChange(update?: any) {
       const builderJson = update || state.pendingBuilderChange;
@@ -490,8 +480,8 @@ export default function Fiddle() {
 
         state.output = {
           react: componentToReact({
-            stylesType: state.options.reactStyleType,
-            stateType: state.options.reactStateType,
+            stylesType: 'style-tag',
+            stateType: 'useState',
             plugins,
             ...commonOptions,
           })({ component: json }),
@@ -503,12 +493,12 @@ export default function Fiddle() {
 
           vue: componentToVue3({
             plugins,
-            api: state.options.vueApi,
+            api: 'composition',
             ...commonOptions,
           })({ component: json, path: '' }),
 
           svelte: componentToSvelte({
-            stateType: state.options.svelteStateType,
+            stateType: 'variables',
             plugins,
             ...commonOptions,
           })({ component: json }),
@@ -615,22 +605,6 @@ export default function Fiddle() {
     { fireImmediately: false, delay: 1000 },
   );
 
-  useReaction(
-    () => state.options.reactStyleType,
-    (type) => localStorageSet('options.reactStyleType', type),
-  );
-  useReaction(
-    () => state.options.reactStateType,
-    (type) => localStorageSet('options.reactStateType', type),
-  );
-  useReaction(
-    () => state.options.svelteStateType,
-    (type) => localStorageSet('options.svelteStateType', type),
-  );
-  useReaction(
-    () => state.options.vueApi,
-    (type) => localStorageSet('options.vueApi', type),
-  );
   useReaction(
     () => state.code,
     (code) => setQueryParam('code', code),
