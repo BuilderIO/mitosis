@@ -5945,6 +5945,34 @@ export class MyImportComponentModule {}
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > importRaw 3`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-import-component, MyImportComponent\\",
+  template: \`
+    <div>Testing which imports get excluded!</div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyImportComponent {}
+
+@NgModule({
+  declarations: [MyImportComponent],
+  imports: [BrowserModule],
+  exports: [MyImportComponent],
+})
+export class MyImportComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > importRaw 4`] = `"JSON5: invalid character '&' at 2:10"`;
+
 exports[`Angular > jsx > Javascript Test > multipleOnUpdate 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -6658,6 +6686,75 @@ export class OnUpdateWithDeps {
   exports: [OnUpdateWithDeps],
 })
 export class OnUpdateWithDepsModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > outputEventBinding 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+        (someEvent)=\\"console.log()\\"
+      />
+
+      Need to get the output right!
+    </div>
+  \`,
+})
+export class MyComponent {
+  name = \\"Steve\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > outputEventBinding 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+        (someEvent)=\\"console.log()\\"
+      />
+
+      Need to get the output right!
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyComponent {
+  name = \\"Steve\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -14079,6 +14176,34 @@ export class MyImportComponentModule {}
 "
 `;
 
+exports[`Angular > jsx > Typescript Test > importRaw 3`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-import-component, MyImportComponent\\",
+  template: \`
+    <div>Testing which imports get excluded!</div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyImportComponent {}
+
+@NgModule({
+  declarations: [MyImportComponent],
+  imports: [BrowserModule],
+  exports: [MyImportComponent],
+})
+export class MyImportComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > importRaw 4`] = `"JSON5: invalid character '&' at 2:10"`;
+
 exports[`Angular > jsx > Typescript Test > multipleOnUpdate 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -14792,6 +14917,75 @@ export class OnUpdateWithDeps {
   exports: [OnUpdateWithDeps],
 })
 export class OnUpdateWithDepsModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > outputEventBinding 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+        (someEvent)=\\"console.log()\\"
+      />
+
+      Need to get the output right!
+    </div>
+  \`,
+})
+export class MyComponent {
+  name = \\"Steve\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > outputEventBinding 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+        (someEvent)=\\"console.log()\\"
+      />
+
+      Need to get the output right!
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyComponent {
+  name = \\"Steve\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
