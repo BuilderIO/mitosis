@@ -83,16 +83,12 @@ const _replaceIdentifiers = (
           );
 
           /**
-           * If both `path` and `newMemberExpression` are identifier nodes that are equal, do nothing.
+           * If both `path` and `newMemberExpression` are equal nodes, do nothing.
            * This is to prevent infinite loops when the user-provided `to` function returns the same identifier.
            *
            * The infinite loop probably happens because we end up traversing the new `Identifier` node again?
            */
-          if (
-            types.isIdentifier(path.node) &&
-            types.isIdentifier(newMemberExpression) &&
-            path.node.name === newMemberExpression.name
-          ) {
+          if (generate(path.node).code === generate(newMemberExpression).code) {
             return;
           }
 
