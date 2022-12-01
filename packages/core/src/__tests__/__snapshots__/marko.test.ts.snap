@@ -65,7 +65,7 @@ exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
     this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   };
 
   onCreate(input) {
@@ -85,14 +85,14 @@ exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-08f2a5b6 {
+  .input-4a4b9003 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-08f2a5b6\\"
+      class=\\"input-4a4b9003\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -201,7 +201,7 @@ exports[`Marko > jsx > Javascript Test > Basic OnMount Update 1`] = `
   }
 
   onMount() {
-    this.statename = \\"PatrickJS onMount\\" + this.input.bye;
+    this.state.name = \\"PatrickJS onMount\\" + this.input.bye;
   }
 }
 
@@ -215,7 +215,7 @@ exports[`Marko > jsx > Javascript Test > Basic Outputs 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.statename);
+    this.input.onMessage(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -230,7 +230,7 @@ exports[`Marko > jsx > Javascript Test > Basic Outputs Meta 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.statename);
+    this.input.onMessage(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -315,7 +315,7 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
     this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   };
 
   onCreate(input) {
@@ -393,7 +393,7 @@ class {
   }
 
   onRender() {
-    this.prevCount = this.statecount;
+    this.prevCount = this.state.count;
   }
 }
 
@@ -431,14 +431,14 @@ exports[`Marko > jsx > Javascript Test > Columns 1`] = `
     return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
   getWidth(index) {
-    const columns = state.getColumns();
+    const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
   getColumnCssWidth(index) {
-    const columns = state.getColumns();
-    const gutterSize = state.getGutterSize();
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 }
 
@@ -512,11 +512,11 @@ exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -529,12 +529,12 @@ exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -577,11 +577,11 @@ exports[`Marko > jsx > Javascript Test > Embed 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -594,12 +594,12 @@ exports[`Marko > jsx > Javascript Test > Embed 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -640,7 +640,7 @@ import { get } from \\"@fake\\";
 class {
   get submissionState() {
     return (
-      (Builder.isEditing && this.input.previewState) || this.stateformState
+      (Builder.isEditing && this.input.previewState) || this.state.formState
     );
   }
   onSubmit(event) {
@@ -753,7 +753,7 @@ class {
         }
       }
 
-      state.formState = \\"sending\\";
+      this.state.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -785,16 +785,16 @@ class {
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
+            error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
-              state.formErrorMessage = message;
+              this.state.formErrorMessage = message;
             }
           }
 
-          state.responseData = body;
-          state.formState = res.ok ? \\"success\\" : \\"error\\";
+          this.state.responseData = body;
+          this.state.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -851,8 +851,8 @@ class {
             }
           }
 
-          state.responseData = err;
-          state.formState = \\"error\\";
+          this.state.responseData = err;
+          this.state.formState = \\"error\\";
         }
       );
     }
@@ -906,7 +906,7 @@ style {
       blocks=(input.sendingMessage)
     ></BuilderBlocks></if>
 
-  <if(state.submissionState === 'error' && state.responseData)>
+  <if(component.submissionState === 'error' && state.responseData)>
     <pre class=\\"builder-form-error-text pre-2a3c5c5a\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
@@ -925,7 +925,7 @@ style {
 exports[`Marko > jsx > Javascript Test > Image 1`] = `
 "class {
   setLoaded() {
-    state.imageLoaded = true;
+    this.state.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -955,13 +955,13 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
 
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
-            this.statescrollListener = null;
+            this.state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
         }
       };
 
-      this.statescrollListener = listener;
+      this.state.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
         passive: true,
@@ -970,14 +970,14 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
     }
   }
   onDestroy() {
-    if (this.statescrollListener) {
-      window.removeEventListener(\\"scroll\\", this.statescrollListener);
+    if (this.state.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.state.scrollListener);
     }
   }
 }
 
 style { 
-  .img-f006c488 {
+  .img-a94ec16e {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -986,11 +986,11 @@ style {
 }
 <div>
   <picture key=\\"pictureRef\\">
-    <if(!state.useLazyLoading() || state.load)>
+    <if(!component.useLazyLoading() || state.load)>
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-f006c488')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-a94ec16e')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -1111,6 +1111,16 @@ class {}
 </select>"
 `;
 
+exports[`Marko > jsx > Javascript Test > SlotDefault 1`] = `
+"class {}
+
+<div>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -1130,6 +1140,18 @@ class {}
 
 <div>
   <ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode>
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > SlotNamed 1`] = `
+"class {}
+
+<div>
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
 </div>"
 `;
 
@@ -1157,22 +1179,22 @@ class {
     )
       .then((res) => res.json())
       .then((data) => {
-        this.statereviews = data.data;
+        this.state.reviews = data.data;
       });
   }
 }
 
 style { 
-  .input-53151ff6 {
+  .input-017045de {
     display: block;
   }
-  .textarea-53151ff6 {
+  .textarea-017045de {
     display: block;
   }
-  .button-53151ff6 {
+  .button-017045de {
     display: block;
   }
-  .review-53151ff6 {
+  .review-017045de {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -1180,7 +1202,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-53151ff6 {
+  .img-017045de {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -1193,13 +1215,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-53151ff6\\" />
+    <input placeholder=\\"Title\\" class=\\"input-017045de\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-53151ff6\\"
+      class=\\"textarea-017045de\\"
     ></textarea>
     <button
-      class=\\"button-53151ff6\\"
+      class=\\"button-017045de\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -1209,8 +1231,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-53151ff6\\" key=(review.id)>
-      <img class=\\"img-53151ff6\\" src=(review.avatar) />
+    <div class=\\"review-017045de\\" key=(review.id)>
+      <img class=\\"img-017045de\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -1291,10 +1313,10 @@ exports[`Marko > jsx > Javascript Test > Video 1`] = `
 exports[`Marko > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 "class {
   setName(value) {
-    state.name = value;
+    this.state.name = value;
   }
   updateNameWithArrowFn(value) {
-    state.name = value;
+    this.state.name = value;
   }
 
   onCreate() {
@@ -1371,7 +1393,7 @@ exports[`Marko > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
     })
       .then((response) => response.json())
       .then((data) => {
-        this.statename = data.name;
+        this.state.name = data.name;
       });
     return () => {
       if (!signal.aborted) {
@@ -1490,7 +1512,13 @@ exports[`Marko > jsx > Javascript Test > defaultProps 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -1508,7 +1536,13 @@ exports[`Marko > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -1573,16 +1607,16 @@ exports[`Marko > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
   }
 
   onRender() {
-    console.log(\\"Runs when a or b changes\\", this.statea, this.stateb);
+    console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
 
-    if (this.statea === \\"a\\") {
-      this.statea = \\"b\\";
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
     }
 
-    console.log(\\"Runs when c or d changes\\", this.statec, this.stated);
+    console.log(\\"Runs when c or d changes\\", this.state.c, this.state.d);
 
-    if (this.statea === \\"a\\") {
-      this.statea = \\"b\\";
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
     }
   }
 }
@@ -1692,8 +1726,8 @@ exports[`Marko > jsx > Javascript Test > onUpdateWithDeps 1`] = `
   onRender() {
     console.log(
       \\"Runs when a, b or size changes\\",
-      this.statea,
-      this.stateb,
+      this.state.a,
+      this.state.b,
       this.input.size
     );
   }
@@ -1745,6 +1779,26 @@ exports[`Marko > jsx > Javascript Test > propsType 1`] = `
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
+exports[`Marko > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"class {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  onRender() {
+    foo({
+      someOption: bar,
+    });
+  }
+}
+
+<div></div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
@@ -1765,12 +1819,12 @@ class {
 }
 
 style { 
-  .div-183ea214 {
+  .div-6d1158e4 {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-183ea214\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-6d1158e4\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -1927,7 +1981,7 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
     this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   };
 
   onCreate(input) {
@@ -1947,14 +2001,14 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-08f2a5b6 {
+  .input-4a4b9003 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-08f2a5b6\\"
+      class=\\"input-4a4b9003\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -2063,7 +2117,7 @@ exports[`Marko > jsx > Typescript Test > Basic OnMount Update 1`] = `
   }
 
   onMount() {
-    this.statename = \\"PatrickJS onMount\\" + this.input.bye;
+    this.state.name = \\"PatrickJS onMount\\" + this.input.bye;
   }
 }
 
@@ -2077,7 +2131,7 @@ exports[`Marko > jsx > Typescript Test > Basic Outputs 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.statename);
+    this.input.onMessage(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -2092,7 +2146,7 @@ exports[`Marko > jsx > Typescript Test > Basic Outputs Meta 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.statename);
+    this.input.onMessage(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -2177,7 +2231,7 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
     this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   };
 
   onCreate(input) {
@@ -2255,7 +2309,7 @@ class {
   }
 
   onRender() {
-    this.prevCount = this.statecount;
+    this.prevCount = this.state.count;
   }
 }
 
@@ -2293,14 +2347,14 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
     return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
   getWidth(index) {
-    const columns = state.getColumns();
+    const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
   getColumnCssWidth(index) {
-    const columns = state.getColumns();
-    const gutterSize = state.getGutterSize();
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 }
 
@@ -2374,11 +2428,11 @@ exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -2391,12 +2445,12 @@ exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -2439,11 +2493,11 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -2456,12 +2510,12 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -2502,7 +2556,7 @@ import { get } from \\"@fake\\";
 class {
   get submissionState() {
     return (
-      (Builder.isEditing && this.input.previewState) || this.stateformState
+      (Builder.isEditing && this.input.previewState) || this.state.formState
     );
   }
   onSubmit(event) {
@@ -2615,7 +2669,7 @@ class {
         }
       }
 
-      state.formState = \\"sending\\";
+      this.state.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -2647,16 +2701,16 @@ class {
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
+            error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
-              state.formErrorMessage = message;
+              this.state.formErrorMessage = message;
             }
           }
 
-          state.responseData = body;
-          state.formState = res.ok ? \\"success\\" : \\"error\\";
+          this.state.responseData = body;
+          this.state.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -2713,8 +2767,8 @@ class {
             }
           }
 
-          state.responseData = err;
-          state.formState = \\"error\\";
+          this.state.responseData = err;
+          this.state.formState = \\"error\\";
         }
       );
     }
@@ -2768,7 +2822,7 @@ style {
       blocks=(input.sendingMessage)
     ></BuilderBlocks></if>
 
-  <if(state.submissionState === 'error' && state.responseData)>
+  <if(component.submissionState === 'error' && state.responseData)>
     <pre class=\\"builder-form-error-text pre-2a3c5c5a\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
@@ -2787,7 +2841,7 @@ style {
 exports[`Marko > jsx > Typescript Test > Image 1`] = `
 "class {
   setLoaded() {
-    state.imageLoaded = true;
+    this.state.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -2817,13 +2871,13 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
-            this.statescrollListener = null;
+            this.state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
         }
       };
 
-      this.statescrollListener = listener;
+      this.state.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
         passive: true,
@@ -2832,14 +2886,14 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
     }
   }
   onDestroy() {
-    if (this.statescrollListener) {
-      window.removeEventListener(\\"scroll\\", this.statescrollListener);
+    if (this.state.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.state.scrollListener);
     }
   }
 }
 
 style { 
-  .img-f006c488 {
+  .img-a94ec16e {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -2848,11 +2902,11 @@ style {
 }
 <div>
   <picture key=\\"pictureRef\\">
-    <if(!state.useLazyLoading() || state.load)>
+    <if(!component.useLazyLoading() || state.load)>
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-f006c488')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-a94ec16e')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -2973,6 +3027,16 @@ class {}
 </select>"
 `;
 
+exports[`Marko > jsx > Typescript Test > SlotDefault 1`] = `
+"class {}
+
+<div>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>"
+`;
+
 exports[`Marko > jsx > Typescript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -2992,6 +3056,18 @@ class {}
 
 <div>
   <ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode>
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > SlotNamed 1`] = `
+"class {}
+
+<div>
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
 </div>"
 `;
 
@@ -3019,22 +3095,22 @@ class {
     )
       .then((res) => res.json())
       .then((data) => {
-        this.statereviews = data.data;
+        this.state.reviews = data.data;
       });
   }
 }
 
 style { 
-  .input-53151ff6 {
+  .input-017045de {
     display: block;
   }
-  .textarea-53151ff6 {
+  .textarea-017045de {
     display: block;
   }
-  .button-53151ff6 {
+  .button-017045de {
     display: block;
   }
-  .review-53151ff6 {
+  .review-017045de {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -3042,7 +3118,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-53151ff6 {
+  .img-017045de {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -3055,13 +3131,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-53151ff6\\" />
+    <input placeholder=\\"Title\\" class=\\"input-017045de\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-53151ff6\\"
+      class=\\"textarea-017045de\\"
     ></textarea>
     <button
-      class=\\"button-53151ff6\\"
+      class=\\"button-017045de\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -3071,8 +3147,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-53151ff6\\" key=(review.id)>
-      <img class=\\"img-53151ff6\\" src=(review.avatar) />
+    <div class=\\"review-017045de\\" key=(review.id)>
+      <img class=\\"img-017045de\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -3153,10 +3229,10 @@ exports[`Marko > jsx > Typescript Test > Video 1`] = `
 exports[`Marko > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 "class {
   setName(value) {
-    state.name = value;
+    this.state.name = value;
   }
   updateNameWithArrowFn(value) {
-    state.name = value;
+    this.state.name = value;
   }
 
   onCreate() {
@@ -3233,7 +3309,7 @@ exports[`Marko > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
     })
       .then((response) => response.json())
       .then((data) => {
-        this.statename = data.name;
+        this.state.name = data.name;
       });
     return () => {
       if (!signal.aborted) {
@@ -3352,7 +3428,13 @@ exports[`Marko > jsx > Typescript Test > defaultProps 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -3370,7 +3452,13 @@ exports[`Marko > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -3435,16 +3523,16 @@ exports[`Marko > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
   }
 
   onRender() {
-    console.log(\\"Runs when a or b changes\\", this.statea, this.stateb);
+    console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
 
-    if (this.statea === \\"a\\") {
-      this.statea = \\"b\\";
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
     }
 
-    console.log(\\"Runs when c or d changes\\", this.statec, this.stated);
+    console.log(\\"Runs when c or d changes\\", this.state.c, this.state.d);
 
-    if (this.statea === \\"a\\") {
-      this.statea = \\"b\\";
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
     }
   }
 }
@@ -3554,8 +3642,8 @@ exports[`Marko > jsx > Typescript Test > onUpdateWithDeps 1`] = `
   onRender() {
     console.log(
       \\"Runs when a, b or size changes\\",
-      this.statea,
-      this.stateb,
+      this.state.a,
+      this.state.b,
       this.input.size
     );
   }
@@ -3607,6 +3695,26 @@ exports[`Marko > jsx > Typescript Test > propsType 1`] = `
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
+exports[`Marko > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"class {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  onRender() {
+    foo({
+      someOption: bar,
+    });
+  }
+}
+
+<div></div>"
+`;
+
 exports[`Marko > jsx > Typescript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
@@ -3627,12 +3735,12 @@ class {
 }
 
 style { 
-  .div-183ea214 {
+  .div-6d1158e4 {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-183ea214\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-6d1158e4\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -3890,6 +3998,20 @@ exports[`Marko > svelte > Javascript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Marko > svelte > Javascript Test > eventHandlers 1`] = `
+"class {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+<div>
+  <button on-click(a => component.log('hi'))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+</div>"
+`;
+
 exports[`Marko > svelte > Javascript Test > html 1`] = `
 "class {
   onCreate() {
@@ -3903,7 +4025,7 @@ exports[`Marko > svelte > Javascript Test > html 1`] = `
 exports[`Marko > svelte > Javascript Test > ifElse 1`] = `
 "class {
   toggle = function toggle() {
-    this.stateshow = !this.stateshow;
+    this.state.show = !this.state.show;
   };
 
   onCreate() {
@@ -3912,8 +4034,8 @@ exports[`Marko > svelte > Javascript Test > ifElse 1`] = `
 }
 
 <if(state.show)>
-  <button on-click(event => component.toggle)>Hide</button></if>
-<else><button on-click(event => component.toggle)>Show</button></else>"
+  <button on-click(event => component.toggle(event))>Hide</button></if>
+<else><button on-click(event => component.toggle(event))>Show</button></else>"
 `;
 
 exports[`Marko > svelte > Javascript Test > imports 1`] = `
@@ -3949,7 +4071,7 @@ exports[`Marko > svelte > Javascript Test > lifecycleHooks 1`] = `
 exports[`Marko > svelte > Javascript Test > reactive 1`] = `
 "class {
   get lowercaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   }
 
   onCreate() {
@@ -3961,6 +4083,45 @@ exports[`Marko > svelte > Javascript Test > reactive 1`] = `
   <input value=(state.name) />
 
   Lowercase: \${component.lowercaseName}
+</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > reactiveWithFn 1`] = `
+"class {
+  calculateResult = function calculateResult(a_, b_) {
+    this.state.result = a_ * b_;
+  };
+
+  onCreate() {
+    this.state = { a: 2, b: 5, result: null };
+  }
+
+  onRender() {
+    this.calculateResult(this.state.a, this.state.b);
+  }
+}
+
+<div>
+  <input
+    type=\\"number\\"
+    on-input(event => state.a = event.target.value)
+    value=(state.a)
+  />
+  <input
+    type=\\"number\\"
+    on-input(event => state.b = event.target.value)
+    value=(state.b)
+  />
+
+  Result: \${state.result}
+</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > slots 1`] = `
+"class {}
+
+<div>
+  <slot>default</slot> <slot name=\\"Test\\"><div>default</div></slot>
 </div>"
 `;
 
@@ -4115,6 +4276,20 @@ exports[`Marko > svelte > Typescript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Marko > svelte > Typescript Test > eventHandlers 1`] = `
+"class {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+<div>
+  <button on-click(a => component.log('hi'))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+</div>"
+`;
+
 exports[`Marko > svelte > Typescript Test > html 1`] = `
 "class {
   onCreate() {
@@ -4128,7 +4303,7 @@ exports[`Marko > svelte > Typescript Test > html 1`] = `
 exports[`Marko > svelte > Typescript Test > ifElse 1`] = `
 "class {
   toggle = function toggle() {
-    this.stateshow = !this.stateshow;
+    this.state.show = !this.state.show;
   };
 
   onCreate() {
@@ -4137,8 +4312,8 @@ exports[`Marko > svelte > Typescript Test > ifElse 1`] = `
 }
 
 <if(state.show)>
-  <button on-click(event => component.toggle)>Hide</button></if>
-<else><button on-click(event => component.toggle)>Show</button></else>"
+  <button on-click(event => component.toggle(event))>Hide</button></if>
+<else><button on-click(event => component.toggle(event))>Show</button></else>"
 `;
 
 exports[`Marko > svelte > Typescript Test > imports 1`] = `
@@ -4174,7 +4349,7 @@ exports[`Marko > svelte > Typescript Test > lifecycleHooks 1`] = `
 exports[`Marko > svelte > Typescript Test > reactive 1`] = `
 "class {
   get lowercaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   }
 
   onCreate() {
@@ -4186,6 +4361,45 @@ exports[`Marko > svelte > Typescript Test > reactive 1`] = `
   <input value=(state.name) />
 
   Lowercase: \${component.lowercaseName}
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > reactiveWithFn 1`] = `
+"class {
+  calculateResult = function calculateResult(a_, b_) {
+    this.state.result = a_ * b_;
+  };
+
+  onCreate() {
+    this.state = { a: 2, b: 5, result: null };
+  }
+
+  onRender() {
+    this.calculateResult(this.state.a, this.state.b);
+  }
+}
+
+<div>
+  <input
+    type=\\"number\\"
+    on-input(event => state.a = event.target.value)
+    value=(state.a)
+  />
+  <input
+    type=\\"number\\"
+    on-input(event => state.b = event.target.value)
+    value=(state.b)
+  />
+
+  Result: \${state.result}
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > slots 1`] = `
+"class {}
+
+<div>
+  <slot>default</slot> <slot name=\\"Test\\"><div>default</div></slot>
 </div>"
 `;
 

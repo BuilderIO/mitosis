@@ -304,9 +304,7 @@ exports[`Parse JSX > AdvancedRef 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "
-  console.log('Received an update');
-",
+        "code": "console.log('Received an update');",
         "deps": "[inputRef, inputNoArgRef]",
       },
     ],
@@ -731,16 +729,12 @@ exports[`Parse JSX > Basic Context 1`] = `
   "exports": {},
   "hooks": {
     "onInit": {
-      "code": "
-  const hi = myService.method('hi');
-  console.log(hi);
-",
+      "code": "const hi = myService.method('hi');
+  console.log(hi);",
     },
     "onMount": {
-      "code": "
-  const bye = myService.method('hi');
-  console.log(bye);
-",
+      "code": "const bye = myService.method('hi');
+  console.log(bye);",
     },
   },
   "imports": [
@@ -820,14 +814,10 @@ exports[`Parse JSX > Basic OnMount Update 1`] = `
   "exports": {},
   "hooks": {
     "onInit": {
-      "code": "
-  state.name = 'PatrickJS onInit' + props.hi;
-",
+      "code": "state.name = 'PatrickJS onInit' + props.hi;",
     },
     "onMount": {
-      "code": "
-  state.name = 'PatrickJS onMount' + props.bye;
-",
+      "code": "state.name = 'PatrickJS onMount' + props.bye;",
     },
   },
   "imports": [],
@@ -877,10 +867,8 @@ exports[`Parse JSX > Basic Outputs 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "
-  props.onMessage(state.name);
-  props.onEvent(props.message);
-",
+      "code": "props.onMessage(state.name);
+  props.onEvent(props.message);",
     },
   },
   "imports": [],
@@ -920,10 +908,8 @@ exports[`Parse JSX > Basic Outputs Meta 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "
-  props.onMessage(state.name);
-  props.onEvent(props.message);
-",
+      "code": "props.onMessage(state.name);
+  props.onEvent(props.message);",
     },
   },
   "imports": [],
@@ -1462,9 +1448,7 @@ exports[`Parse JSX > BasicFor 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "
-  console.log('onMount code');
-",
+      "code": "console.log('onMount code');",
     },
   },
   "imports": [],
@@ -2105,9 +2089,7 @@ exports[`Parse JSX > BasicRefPrevious 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "
-  prevCount = state.count;
-",
+        "code": "prevCount = state.count;",
         "deps": "[state.count]",
       },
     ],
@@ -3043,9 +3025,7 @@ exports[`Parse JSX > CustomCode 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "
-  state.findAndRunScripts();
-",
+      "code": "state.findAndRunScripts();",
     },
   },
   "imports": [],
@@ -3147,9 +3127,7 @@ exports[`Parse JSX > Embed 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "
-  state.findAndRunScripts();
-",
+      "code": "state.findAndRunScripts();",
     },
   },
   "imports": [],
@@ -4184,8 +4162,7 @@ exports[`Parse JSX > Image 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "
-  if (state.useLazyLoading()) {
+      "code": "if (state.useLazyLoading()) {
     // throttled scroll capture listener
     const listener = () => {
       if (pictureRef) {
@@ -4206,15 +4183,12 @@ exports[`Parse JSX > Image 1`] = `
       passive: true
     });
     listener();
-  }
-",
+  }",
     },
     "onUnMount": {
-      "code": "
-  if (state.scrollListener) {
+      "code": "if (state.scrollListener) {
     window.removeEventListener('scroll', state.scrollListener);
-  }
-",
+  }",
     },
   },
   "imports": [],
@@ -5074,6 +5048,124 @@ exports[`Parse JSX > Select 1`] = `
 }
 `;
 
+exports[`Parse JSX > SlotDefault 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+        ",
+              },
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {},
+                  "children": [],
+                  "meta": {},
+                  "name": "div",
+                  "properties": {
+                    "_text": "Default content",
+                  },
+                  "scope": {},
+                },
+              ],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "class": "default-slot",
+              },
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+      ",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "Slot",
+          "properties": {},
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+    ",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {},
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "SlotCode",
+  "propsTypeRef": "Props",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+  "types": [
+    "type Props = {
+  [key: string]: string;
+};",
+  ],
+}
+`;
+
 exports[`Parse JSX > SlotHtml 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -5255,6 +5347,146 @@ exports[`Parse JSX > SlotJsx 1`] = `
       "path": "./content-slot-jsx.raw",
     },
   ],
+  "inputs": [],
+  "meta": {},
+  "name": "SlotCode",
+  "propsTypeRef": "Props",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+  "types": [
+    "type Props = {
+  [key: string]: string;
+};",
+  ],
+}
+`;
+
+exports[`Parse JSX > SlotNamed 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "Slot",
+          "properties": {
+            "name": "top",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "Default left",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "Slot",
+          "properties": {
+            "name": "left",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "Default Child",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "Slot",
+          "properties": {},
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+    ",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {},
+  "imports": [],
   "inputs": [],
   "meta": {},
   "name": "SlotCode",
@@ -5769,11 +6001,9 @@ exports[`Parse JSX > Stamped.io 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "
-  fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+      "code": "fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
     state.reviews = data.data;
-  });
-",
+  });",
     },
   },
   "imports": [
@@ -6431,8 +6661,7 @@ exports[`Parse JSX > basicOnUpdateReturn 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "
-  const controller = new AbortController();
+        "code": "const controller = new AbortController();
   const signal = controller.signal;
   fetch('https://patrickjs.com/api/resource.json', {
     signal
@@ -6443,8 +6672,7 @@ exports[`Parse JSX > basicOnUpdateReturn 1`] = `
     if (!signal.aborted) {
       controller.abort();
     }
-  };
-",
+  };",
         "deps": "[state.name]",
       },
     ],
@@ -7360,6 +7588,12 @@ exports[`Parse JSX > defaultProps 1`] = `
             {
               "@type": "@builder.io/mitosis/node",
               "bindings": {
+                "onClick": {
+                  "arguments": [
+                    "event",
+                  ],
+                  "code": "props.onClick(event)",
+                },
                 "props.attributes": {
                   "code": "props.attributes",
                   "type": "spread",
@@ -7453,9 +7687,24 @@ exports[`Parse JSX > defaultProps 1`] = `
     "set": {},
   },
   "defaultProps": {
-    "link": "https://builder.io/",
-    "openLinkInNewTab": false,
-    "text": "default text",
+    "link": {
+      "code": "'https://builder.io/'",
+      "type": "property",
+    },
+    "onClick": {
+      "code": "() => {
+  console.log('hi');
+}",
+      "type": "method",
+    },
+    "openLinkInNewTab": {
+      "code": "false",
+      "type": "property",
+    },
+    "text": {
+      "code": "'default text'",
+      "type": "property",
+    },
   },
   "exports": {},
   "hooks": {},
@@ -7473,6 +7722,7 @@ exports[`Parse JSX > defaultProps 1`] = `
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }",
   ],
 }
@@ -7629,6 +7879,12 @@ exports[`Parse JSX > defaultPropsOutsideComponent 1`] = `
             {
               "@type": "@builder.io/mitosis/node",
               "bindings": {
+                "onClick": {
+                  "arguments": [
+                    "event",
+                  ],
+                  "code": "props.onClick(event)",
+                },
                 "props.attributes": {
                   "code": "props.attributes",
                   "type": "spread",
@@ -7722,9 +7978,22 @@ exports[`Parse JSX > defaultPropsOutsideComponent 1`] = `
     "set": {},
   },
   "defaultProps": {
-    "link": "https://builder.io/",
-    "openLinkInNewTab": false,
-    "text": "default text",
+    "link": {
+      "code": "'https://builder.io/'",
+      "type": "property",
+    },
+    "onClick": {
+      "code": "() => {}",
+      "type": "method",
+    },
+    "openLinkInNewTab": {
+      "code": "false",
+      "type": "property",
+    },
+    "text": {
+      "code": "'default text'",
+      "type": "property",
+    },
   },
   "exports": {},
   "hooks": {},
@@ -7742,6 +8011,7 @@ exports[`Parse JSX > defaultPropsOutsideComponent 1`] = `
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }",
   ],
 }
@@ -8218,15 +8488,11 @@ exports[`Parse JSX > multipleOnUpdate 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "
-  console.log('Runs on every update/rerender');
-",
+        "code": "console.log('Runs on every update/rerender');",
         "deps": "",
       },
       {
-        "code": "
-  console.log('Runs on every update/rerender as well');
-",
+        "code": "console.log('Runs on every update/rerender as well');",
         "deps": "",
       },
     ],
@@ -8263,23 +8529,19 @@ exports[`Parse JSX > multipleOnUpdateWithDeps 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "
-  console.log('Runs when a or b changes', state.a, state.b);
+        "code": "console.log('Runs when a or b changes', state.a, state.b);
 
   if (state.a === 'a') {
     state.a = 'b';
-  }
-",
+  }",
         "deps": "[state.a, state.b]",
       },
       {
-        "code": "
-  console.log('Runs when c or d changes', state.c, state.d);
+        "code": "console.log('Runs when c or d changes', state.c, state.d);
 
   if (state.a === 'a') {
     state.a = 'b';
-  }
-",
+  }",
         "deps": "[state.c, state.d]",
       },
     ],
@@ -8608,14 +8870,10 @@ exports[`Parse JSX > onInit & onMount 1`] = `
   "exports": {},
   "hooks": {
     "onInit": {
-      "code": "
-  console.log('onInit');
-",
+      "code": "console.log('onInit');",
     },
     "onMount": {
-      "code": "
-  console.log('onMount');
-",
+      "code": "console.log('onMount');",
     },
   },
   "imports": [],
@@ -8682,10 +8940,8 @@ exports[`Parse JSX > onInit 1`] = `
   },
   "hooks": {
     "onInit": {
-      "code": "
-  state.name = defaultValues.name || props.name;
-  console.log('set defaults with props');
-",
+      "code": "state.name = defaultValues.name || props.name;
+  console.log('set defaults with props');",
     },
   },
   "imports": [],
@@ -8730,14 +8986,10 @@ exports[`Parse JSX > onMount 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "
-  console.log('Runs on mount');
-",
+      "code": "console.log('Runs on mount');",
     },
     "onUnMount": {
-      "code": "
-  console.log('Runs on unMount');
-",
+      "code": "console.log('Runs on unMount');",
     },
   },
   "imports": [],
@@ -8772,9 +9024,7 @@ exports[`Parse JSX > onUpdate 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "
-  console.log('Runs on every update/rerender');
-",
+        "code": "console.log('Runs on every update/rerender');",
         "deps": "",
       },
     ],
@@ -8811,9 +9061,7 @@ exports[`Parse JSX > onUpdateWithDeps 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "
-  console.log('Runs when a, b or size changes', state.a, state.b, props.size);
-",
+        "code": "console.log('Runs when a, b or size changes', state.a, state.b, props.size);",
         "deps": "[state.a, state.b, props.size]",
       },
     ],
@@ -9413,6 +9661,62 @@ exports[`Parse JSX > propsType 1`] = `
 }
 `;
 
+exports[`Parse JSX > referencingFunInsideHook 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onUpdate": [
+      {
+        "code": "foo({
+    someOption: bar
+  });",
+        "deps": "",
+      },
+    ],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "OnUpdate",
+  "refs": {},
+  "state": {
+    "bar": {
+      "code": "function bar() {}",
+      "type": "function",
+    },
+    "foo": {
+      "code": "function foo(params) {}",
+      "type": "function",
+    },
+    "zoo": {
+      "code": "function zoo() {
+  const params = {
+    cb: state.bar
+  };
+}",
+      "type": "function",
+    },
+  },
+  "subComponents": [],
+}
+`;
+
 exports[`Parse JSX > renderContentExample 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -9500,15 +9804,11 @@ exports[`Parse JSX > renderContentExample 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "
-  sendComponentsToVisualEditor(props.customComponents);
-",
+      "code": "sendComponentsToVisualEditor(props.customComponents);",
     },
     "onUpdate": [
       {
-        "code": "
-  dispatchNewContentToVisualEditor(props.content);
-",
+        "code": "dispatchNewContentToVisualEditor(props.content);",
         "deps": "[props.content]",
       },
     ],

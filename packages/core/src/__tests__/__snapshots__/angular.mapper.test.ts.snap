@@ -772,14 +772,14 @@ export class Column {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
   getWidth(index) {
-    const columns = state.getColumns();
+    const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
   getColumnCssWidth(index) {
-    const columns = state.getColumns();
-    const gutterSize = state.getGutterSize();
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 }
 
@@ -909,11 +909,11 @@ export class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -926,12 +926,12 @@ export class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -995,11 +995,11 @@ export class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -1012,12 +1012,12 @@ export class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -1281,7 +1281,7 @@ export class FormComponent {
         }
       }
 
-      state.formState = \\"sending\\";
+      this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -1317,12 +1317,12 @@ export class FormComponent {
                 message = JSON.stringify(message);
               }
 
-              state.formErrorMessage = message;
+              this.formErrorMessage = message;
             }
           }
 
-          state.responseData = body;
-          state.formState = res.ok ? \\"success\\" : \\"error\\";
+          this.responseData = body;
+          this.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -1379,8 +1379,8 @@ export class FormComponent {
             }
           }
 
-          state.responseData = err;
-          state.formState = \\"error\\";
+          this.responseData = err;
+          this.formState = \\"error\\";
         }
       );
     }
@@ -1469,7 +1469,7 @@ export class Image {
   scrollListener = null;
   imageLoaded = false;
   setLoaded() {
-    state.imageLoaded = true;
+    this.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -1839,6 +1839,38 @@ export class SelectComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > SlotDefault 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+@Component({
+  selector: \\"slot-code, SlotCode\\",
+  template: \`
+    <div>
+      <ng-content>
+        <div class=\\"default-slot\\">Default content</div>
+      </ng-content>
+    </div>
+  \`,
+})
+export class SlotCode {}
+
+@NgModule({
+  declarations: [SlotCode],
+  imports: [BrowserModule, SlotModule],
+  exports: [SlotCode],
+  bootstrap: [SomeOtherComponent],
+})
+export class SlotCodeModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > SlotHtml 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -1898,6 +1930,40 @@ export class SlotCode {}
 @NgModule({
   declarations: [SlotCode],
   imports: [BrowserModule, ContentSlotCodeModule],
+  exports: [SlotCode],
+  bootstrap: [SomeOtherComponent],
+})
+export class SlotCodeModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > SlotNamed 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+@Component({
+  selector: \\"slot-code, SlotCode\\",
+  template: \`
+    <div>
+      <ng-content select=\\"[top]\\"></ng-content>
+
+      <ng-content select=\\"[left]\\">Default left</ng-content>
+
+      <ng-content>Default Child</ng-content>
+    </div>
+  \`,
+})
+export class SlotCode {}
+
+@NgModule({
+  declarations: [SlotCode],
+  imports: [BrowserModule, SlotModule],
   exports: [SlotCode],
   bootstrap: [SomeOtherComponent],
 })
@@ -2238,10 +2304,10 @@ import { Component } from \\"@angular/core\\";
 export class MyComponent {
   name = \\"steve\\";
   setName(value) {
-    state.name = value;
+    this.name = value;
   }
   updateNameWithArrowFn(value) {
-    state.name = value;
+    this.name = value;
   }
 }
 
@@ -2629,18 +2695,22 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > defaultProps
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 
 @Component({
@@ -2657,7 +2727,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -2668,6 +2740,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({
@@ -2684,18 +2758,20 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > defaultProps
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 
 @Component({
@@ -2712,7 +2788,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -2723,6 +2801,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({
@@ -3394,6 +3474,44 @@ export class MyBasicComponent {
   bootstrap: [SomeOtherComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-update, OnUpdate\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  ngAfterContentChecked() {
+    this.foo({
+      someOption: this.bar,
+    });
+  }
+}
+
+@NgModule({
+  declarations: [OnUpdate],
+  imports: [BrowserModule],
+  exports: [OnUpdate],
+  bootstrap: [SomeOtherComponent],
+})
+export class OnUpdateModule {}
 "
 `;
 
@@ -4681,14 +4799,14 @@ export class Column {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
   getWidth(index) {
-    const columns = state.getColumns();
+    const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
   getColumnCssWidth(index) {
-    const columns = state.getColumns();
-    const gutterSize = state.getGutterSize();
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 }
 
@@ -4818,11 +4936,11 @@ export class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -4835,12 +4953,12 @@ export class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -4904,11 +5022,11 @@ export class CustomCode {
         const script = scripts[i];
 
         if (script.src) {
-          if (state.scriptsInserted.includes(script.src)) {
+          if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          state.scriptsInserted.push(script.src);
+          this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -4921,12 +5039,12 @@ export class CustomCode {
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (state.scriptsRun.includes(script.innerText)) {
+          if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            state.scriptsRun.push(script.innerText);
+            this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -5190,7 +5308,7 @@ export class FormComponent {
         }
       }
 
-      state.formState = \\"sending\\";
+      this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -5226,12 +5344,12 @@ export class FormComponent {
                 message = JSON.stringify(message);
               }
 
-              state.formErrorMessage = message;
+              this.formErrorMessage = message;
             }
           }
 
-          state.responseData = body;
-          state.formState = res.ok ? \\"success\\" : \\"error\\";
+          this.responseData = body;
+          this.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -5288,8 +5406,8 @@ export class FormComponent {
             }
           }
 
-          state.responseData = err;
-          state.formState = \\"error\\";
+          this.responseData = err;
+          this.formState = \\"error\\";
         }
       );
     }
@@ -5378,7 +5496,7 @@ export class Image {
   scrollListener = null;
   imageLoaded = false;
   setLoaded() {
-    state.imageLoaded = true;
+    this.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -5748,6 +5866,38 @@ export class SelectComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > SlotDefault 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+@Component({
+  selector: \\"slot-code, SlotCode\\",
+  template: \`
+    <div>
+      <ng-content>
+        <div class=\\"default-slot\\">Default content</div>
+      </ng-content>
+    </div>
+  \`,
+})
+export class SlotCode {}
+
+@NgModule({
+  declarations: [SlotCode],
+  imports: [BrowserModule, SlotModule],
+  exports: [SlotCode],
+  bootstrap: [SomeOtherComponent],
+})
+export class SlotCodeModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > SlotHtml 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -5807,6 +5957,40 @@ export class SlotCode {}
 @NgModule({
   declarations: [SlotCode],
   imports: [BrowserModule, ContentSlotCodeModule],
+  exports: [SlotCode],
+  bootstrap: [SomeOtherComponent],
+})
+export class SlotCodeModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > SlotNamed 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+@Component({
+  selector: \\"slot-code, SlotCode\\",
+  template: \`
+    <div>
+      <ng-content select=\\"[top]\\"></ng-content>
+
+      <ng-content select=\\"[left]\\">Default left</ng-content>
+
+      <ng-content>Default Child</ng-content>
+    </div>
+  \`,
+})
+export class SlotCode {}
+
+@NgModule({
+  declarations: [SlotCode],
+  imports: [BrowserModule, SlotModule],
   exports: [SlotCode],
   bootstrap: [SomeOtherComponent],
 })
@@ -6147,10 +6331,10 @@ import { Component } from \\"@angular/core\\";
 export class MyComponent {
   name = \\"steve\\";
   setName(value) {
-    state.name = value;
+    this.name = value;
   }
   updateNameWithArrowFn(value) {
-    state.name = value;
+    this.name = value;
   }
 }
 
@@ -6538,18 +6722,22 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > defaultProps
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 
 @Component({
@@ -6566,7 +6754,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -6577,6 +6767,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({
@@ -6593,18 +6785,20 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > defaultProps
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 
 @Component({
@@ -6621,7 +6815,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -6632,6 +6828,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({
@@ -7303,6 +7501,44 @@ export class MyBasicComponent {
   bootstrap: [SomeOtherComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-update, OnUpdate\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  ngAfterContentChecked() {
+    this.foo({
+      someOption: this.bar,
+    });
+  }
+}
+
+@NgModule({
+  declarations: [OnUpdate],
+  imports: [BrowserModule],
+  exports: [OnUpdate],
+  bootstrap: [SomeOtherComponent],
+})
+export class OnUpdateModule {}
 "
 `;
 
@@ -8012,6 +8248,38 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > eventHandlers 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <button (click)=\\"log('hi')\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+    </div>
+  \`,
+})
+export class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > svelte > Javascript Test > html 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -8048,7 +8316,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component, MyComponent\\",
   template: \`
     <ng-container *ngIf=\\"show\\">
-      <button (click)=\\"toggle\\">Hide</button>
+      <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
   \`,
 })
@@ -8163,6 +8431,73 @@ export class MyComponent {
 @NgModule({
   declarations: [MyComponent],
   imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input type=\\"number\\" (input)=\\"a = $event.target.value\\" [attr.value]=\\"a\\" />
+      <input type=\\"number\\" (input)=\\"b = $event.target.value\\" [attr.value]=\\"b\\" />
+
+      Result: {{result}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  a = 2;
+  b = 5;
+  result = null;
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  ngAfterContentChecked() {
+    this.calculateResult(this.a, this.b);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > slots 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-content>default</ng-content>
+      <ng-content select=\\"[test]\\"><div>default</div></ng-content>
+    </div>
+  \`,
+})
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule, SlotModule],
   exports: [MyComponent],
   bootstrap: [SomeOtherComponent],
 })
@@ -8458,6 +8793,38 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > eventHandlers 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <button (click)=\\"log('hi')\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+    </div>
+  \`,
+})
+export class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > svelte > Typescript Test > html 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -8494,7 +8861,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component, MyComponent\\",
   template: \`
     <ng-container *ngIf=\\"show\\">
-      <button (click)=\\"toggle\\">Hide</button>
+      <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
   \`,
 })
@@ -8609,6 +8976,73 @@ export class MyComponent {
 @NgModule({
   declarations: [MyComponent],
   imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input type=\\"number\\" (input)=\\"a = $event.target.value\\" [attr.value]=\\"a\\" />
+      <input type=\\"number\\" (input)=\\"b = $event.target.value\\" [attr.value]=\\"b\\" />
+
+      Result: {{result}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  a = 2;
+  b = 5;
+  result = null;
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  ngAfterContentChecked() {
+    this.calculateResult(this.a, this.b);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > slots 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-content>default</ng-content>
+      <ng-content select=\\"[test]\\"><div>default</div></ng-content>
+    </div>
+  \`,
+})
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule, SlotModule],
   exports: [MyComponent],
   bootstrap: [SomeOtherComponent],
 })
