@@ -5,7 +5,7 @@
 </script>
 
 <div>
-  <img src="../svelte-logo.png" width={50} />
+  <img src="../svelte-logo.png" width={50} alt="svelte logo" />
   {#if window.location.pathname.endsWith('autocomplete')}
     <AutoComplete
       getValues={mockApi}
@@ -16,16 +16,3 @@
     <Todos />
   {/if}
 </div>
-
-<style>
-  .container {
-    display: flex;
-    height: 100vh;
-  }
-  .container div {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-</style>
