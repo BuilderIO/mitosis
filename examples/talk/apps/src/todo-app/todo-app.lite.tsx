@@ -10,7 +10,7 @@ export interface State {
   deleteItem: (k: number) => void;
 }
 
-export default function TodoApp(props: any) {
+export default function TodoApp(props: {}) {
   const state = useStore<State>({
     list: ['hello', 'world'],
     newItemName: 'New item',

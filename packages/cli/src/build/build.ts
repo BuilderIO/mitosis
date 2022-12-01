@@ -24,6 +24,7 @@ import {
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import glob from 'fast-glob';
+import { flatten } from 'fp-ts/lib/Array';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
@@ -207,7 +208,7 @@ const getTargetContexts = (options: MitosisConfig) =>
 
 const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithConfig) => {
   const files = await buildNonComponentFiles(targetContext);
-  await outputNonComponentFiles({ ...targetContext, files });
+  return await outputNonComponentFiles({ ...targetContext, files });
 };
 
 export async function build(config?: MitosisConfig) {
@@ -228,14 +229,16 @@ export async function build(config?: MitosisConfig) {
       // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
       const files = fastClone(mitosisComponents);
 
-      await Promise.all([
+      const x = await Promise.all([
         buildAndOutputNonComponentFiles({ ...targetContext, options }),
         buildAndOutputComponentFiles({ ...targetContext, options, files }),
       ]);
+
+      console.info(`Mitosis: generated ${flatten(x).length} ${targetContext.target} files.`);
     }),
   );
 
-  console.info('Done!');
+  console.info('Mitosis: generation completed.');
 }
 
 const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['generator'] => {
@@ -349,6 +352,8 @@ async function buildAndOutputComponentFiles({
     await outputFile(`${outputDir}/${outputFilePath}`, transpiled);
   });
   await Promise.all(output);
+
+  return output;
 }
 
 const getNonComponentFileExtension = flow(checkShouldOutputTypeScript, (shouldOutputTypeScript) =>
@@ -369,7 +374,7 @@ const outputNonComponentFiles = async ({
 }) => {
   const extension = getNonComponentFileExtension({ target, options });
   const folderPath = `${options.dest}/${outputPath}`;
-  await Promise.all(
+  return await Promise.all(
     files.map(({ path, output }) =>
       outputFile(`${folderPath}/${path.replace(/\.tsx?$/, extension)}`, output),
     ),
