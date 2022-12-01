@@ -65,9 +65,11 @@ const generateValidJson = (codeJSON: any) => {
   };
 };
 
-const DEFAULT_JSX_CODE = `export default function RenderContent(props) {
+const DEFAULT_JSX_CODE = `
+import RenderBlocks from './RenderBlocks.lite';
+export default function RenderContent(props) {
   // onMount(() => {
-  //   sendComponentsToVisualEditor(registeredComponent);
+  //   sendComponentsToVisualEditor(props.customComponents);
   // });
 
   // onUpdate(() => {
