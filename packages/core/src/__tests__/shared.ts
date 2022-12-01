@@ -241,7 +241,7 @@ const IMPORT_TEST: Tests = {
 
 const OUTPUT_EVENT_BINDINGS_TEST: Tests = {
   outputEventBinding: getRawFile('./data/output-event-bindings.raw.tsx'),
-}
+};
 
 const CONTEXT_TEST: Tests = {
   componentWithContext,
