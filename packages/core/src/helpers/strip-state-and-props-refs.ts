@@ -1,3 +1,5 @@
+import { replaceIdentifiers } from './replace-identifiers';
+
 export type StripStateAndPropsRefsOptions = {
   replaceWith?: string | ((name: string) => string);
   includeProps?: boolean;
@@ -24,9 +26,8 @@ const DEFAULT_OPTIONS: Required<StripStateAndPropsRefsOptions> = {
  * Remove state. and props. from expressions, e.g.
  * state.foo -> foo
  *
- * This is for support for frameworks like Vue, Svelte, liquid,  etc
+ * This is for support for frameworks like Vue, Svelte, liquid, etc
  *
- * @todo proper ref replacement with babel
  */
 export const stripStateAndPropsRefs = (
   code?: string,
@@ -64,22 +65,15 @@ export const stripStateAndPropsRefs = (
   });
 
   if (includeProps !== false) {
-    if (typeof replaceWith === 'string') {
-      newCode = newCode.replace(/props\./g, replaceWith);
-    } else {
-      newCode = newCode.replace(/props\.([\$a-z0-9_]+)/gi, (memo, name) => replaceWith(name));
-    }
+    newCode = replaceIdentifiers({ code: newCode, from: 'props', to: replaceWith || null });
+
     // TODO: webcomponent edge-case
     if (/el\.this\.props/.test(newCode)) {
       newCode = newCode.replace(/el\.this\.props/g, 'el.props');
     }
   }
   if (includeState !== false) {
-    if (typeof replaceWith === 'string') {
-      newCode = newCode.replace(/state\./g, replaceWith);
-    } else {
-      newCode = newCode.replace(/state\.([\$a-z0-9_]+)/gi, (memo, name) => replaceWith(name));
-    }
+    newCode = replaceIdentifiers({ code: newCode, from: 'state', to: replaceWith || null });
   }
 
   const matchPropertyAccessorsArguments = '\\?\\.|,|\\.|\\(| |;|\\)|\\]|$'; // foo?.stuff | foo) | foo | foo] etc.
