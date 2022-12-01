@@ -65,7 +65,7 @@ exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
     this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   };
 
   onCreate(input) {
@@ -201,7 +201,7 @@ exports[`Marko > jsx > Javascript Test > Basic OnMount Update 1`] = `
   }
 
   onMount() {
-    this.statename = \\"PatrickJS onMount\\" + this.input.bye;
+    this.state.name = \\"PatrickJS onMount\\" + this.input.bye;
   }
 }
 
@@ -215,7 +215,7 @@ exports[`Marko > jsx > Javascript Test > Basic Outputs 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.statename);
+    this.input.onMessage(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -230,7 +230,7 @@ exports[`Marko > jsx > Javascript Test > Basic Outputs Meta 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.statename);
+    this.input.onMessage(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -315,7 +315,7 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
     this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   };
 
   onCreate(input) {
@@ -393,7 +393,7 @@ class {
   }
 
   onRender() {
-    this.prevCount = this.statecount;
+    this.prevCount = this.state.count;
   }
 }
 
@@ -512,11 +512,11 @@ exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (this.statescriptsInserted.includes(script.src)) {
+          if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.statescriptsInserted.push(script.src);
+          this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -529,12 +529,12 @@ exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.statescriptsRun.includes(script.innerText)) {
+          if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.statescriptsRun.push(script.innerText);
+            this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -577,11 +577,11 @@ exports[`Marko > jsx > Javascript Test > Embed 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (this.statescriptsInserted.includes(script.src)) {
+          if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.statescriptsInserted.push(script.src);
+          this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -594,12 +594,12 @@ exports[`Marko > jsx > Javascript Test > Embed 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.statescriptsRun.includes(script.innerText)) {
+          if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.statescriptsRun.push(script.innerText);
+            this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -640,7 +640,7 @@ import { get } from \\"@fake\\";
 class {
   get submissionState() {
     return (
-      (Builder.isEditing && this.input.previewState) || this.stateformState
+      (Builder.isEditing && this.input.previewState) || this.state.formState
     );
   }
   onSubmit(event) {
@@ -753,7 +753,7 @@ class {
         }
       }
 
-      this.stateformState = \\"sending\\";
+      this.state.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -789,12 +789,12 @@ class {
                 message = JSON.stringify(message);
               }
 
-              this.stateformErrorMessage = message;
+              this.state.formErrorMessage = message;
             }
           }
 
-          this.stateresponseData = body;
-          this.stateformState = res.ok ? \\"success\\" : \\"error\\";
+          this.state.responseData = body;
+          this.state.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -851,8 +851,8 @@ class {
             }
           }
 
-          this.stateresponseData = err;
-          this.stateformState = \\"error\\";
+          this.state.responseData = err;
+          this.state.formState = \\"error\\";
         }
       );
     }
@@ -906,7 +906,7 @@ style {
       blocks=(input.sendingMessage)
     ></BuilderBlocks></if>
 
-  <if(state.submissionState === 'error' && state.responseData)>
+  <if(component.submissionState === 'error' && state.responseData)>
     <pre class=\\"builder-form-error-text pre-2a3c5c5a\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
@@ -925,7 +925,7 @@ style {
 exports[`Marko > jsx > Javascript Test > Image 1`] = `
 "class {
   setLoaded() {
-    this.stateimageLoaded = true;
+    this.state.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -955,13 +955,13 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
 
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
-            this.statescrollListener = null;
+            this.state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
         }
       };
 
-      this.statescrollListener = listener;
+      this.state.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
         passive: true,
@@ -970,8 +970,8 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
     }
   }
   onDestroy() {
-    if (this.statescrollListener) {
-      window.removeEventListener(\\"scroll\\", this.statescrollListener);
+    if (this.state.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.state.scrollListener);
     }
   }
 }
@@ -986,7 +986,7 @@ style {
 }
 <div>
   <picture key=\\"pictureRef\\">
-    <if(!state.useLazyLoading() || state.load)>
+    <if(!component.useLazyLoading() || state.load)>
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
@@ -1179,7 +1179,7 @@ class {
     )
       .then((res) => res.json())
       .then((data) => {
-        this.statereviews = data.data;
+        this.state.reviews = data.data;
       });
   }
 }
@@ -1267,7 +1267,7 @@ class {
   test: state.name || 'any name'
 })
 >
-  $!{props.text || props.content || state.name || '
+  $!{input.text || input.content || state.name || '
   <p class=\\"text-lg\\">my name</p>
   '}
 </div>"
@@ -1313,10 +1313,10 @@ exports[`Marko > jsx > Javascript Test > Video 1`] = `
 exports[`Marko > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 "class {
   setName(value) {
-    this.statename = value;
+    this.state.name = value;
   }
   updateNameWithArrowFn(value) {
-    this.statename = value;
+    this.state.name = value;
   }
 
   onCreate() {
@@ -1393,7 +1393,7 @@ exports[`Marko > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
     })
       .then((response) => response.json())
       .then((data) => {
-        this.statename = data.name;
+        this.state.name = data.name;
       });
     return () => {
       if (!signal.aborted) {
@@ -1607,16 +1607,16 @@ exports[`Marko > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
   }
 
   onRender() {
-    console.log(\\"Runs when a or b changes\\", this.statea, this.stateb);
+    console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
 
-    if (this.statea === \\"a\\") {
-      this.statea = \\"b\\";
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
     }
 
-    console.log(\\"Runs when c or d changes\\", this.statec, this.stated);
+    console.log(\\"Runs when c or d changes\\", this.state.c, this.state.d);
 
-    if (this.statea === \\"a\\") {
-      this.statea = \\"b\\";
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
     }
   }
 }
@@ -1726,8 +1726,8 @@ exports[`Marko > jsx > Javascript Test > onUpdateWithDeps 1`] = `
   onRender() {
     console.log(
       \\"Runs when a, b or size changes\\",
-      this.statea,
-      this.stateb,
+      this.state.a,
+      this.state.b,
       this.input.size
     );
   }
@@ -1981,7 +1981,7 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
     this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   };
 
   onCreate(input) {
@@ -2117,7 +2117,7 @@ exports[`Marko > jsx > Typescript Test > Basic OnMount Update 1`] = `
   }
 
   onMount() {
-    this.statename = \\"PatrickJS onMount\\" + this.input.bye;
+    this.state.name = \\"PatrickJS onMount\\" + this.input.bye;
   }
 }
 
@@ -2131,7 +2131,7 @@ exports[`Marko > jsx > Typescript Test > Basic Outputs 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.statename);
+    this.input.onMessage(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -2146,7 +2146,7 @@ exports[`Marko > jsx > Typescript Test > Basic Outputs Meta 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.statename);
+    this.input.onMessage(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -2231,7 +2231,7 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
     this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   };
 
   onCreate(input) {
@@ -2309,7 +2309,7 @@ class {
   }
 
   onRender() {
-    this.prevCount = this.statecount;
+    this.prevCount = this.state.count;
   }
 }
 
@@ -2428,11 +2428,11 @@ exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (this.statescriptsInserted.includes(script.src)) {
+          if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.statescriptsInserted.push(script.src);
+          this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -2445,12 +2445,12 @@ exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.statescriptsRun.includes(script.innerText)) {
+          if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.statescriptsRun.push(script.innerText);
+            this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -2493,11 +2493,11 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
         const script = scripts[i];
 
         if (script.src) {
-          if (this.statescriptsInserted.includes(script.src)) {
+          if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
 
-          this.statescriptsInserted.push(script.src);
+          this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
           newScript.src = script.src;
@@ -2510,12 +2510,12 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
             \\"application/ecmascript\\",
           ].includes(script.type)
         ) {
-          if (this.statescriptsRun.includes(script.innerText)) {
+          if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
 
           try {
-            this.statescriptsRun.push(script.innerText);
+            this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
             console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -2556,7 +2556,7 @@ import { get } from \\"@fake\\";
 class {
   get submissionState() {
     return (
-      (Builder.isEditing && this.input.previewState) || this.stateformState
+      (Builder.isEditing && this.input.previewState) || this.state.formState
     );
   }
   onSubmit(event) {
@@ -2669,7 +2669,7 @@ class {
         }
       }
 
-      this.stateformState = \\"sending\\";
+      this.state.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -2705,12 +2705,12 @@ class {
                 message = JSON.stringify(message);
               }
 
-              this.stateformErrorMessage = message;
+              this.state.formErrorMessage = message;
             }
           }
 
-          this.stateresponseData = body;
-          this.stateformState = res.ok ? \\"success\\" : \\"error\\";
+          this.state.responseData = body;
+          this.state.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -2767,8 +2767,8 @@ class {
             }
           }
 
-          this.stateresponseData = err;
-          this.stateformState = \\"error\\";
+          this.state.responseData = err;
+          this.state.formState = \\"error\\";
         }
       );
     }
@@ -2822,7 +2822,7 @@ style {
       blocks=(input.sendingMessage)
     ></BuilderBlocks></if>
 
-  <if(state.submissionState === 'error' && state.responseData)>
+  <if(component.submissionState === 'error' && state.responseData)>
     <pre class=\\"builder-form-error-text pre-2a3c5c5a\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
@@ -2841,7 +2841,7 @@ style {
 exports[`Marko > jsx > Typescript Test > Image 1`] = `
 "class {
   setLoaded() {
-    this.stateimageLoaded = true;
+    this.state.imageLoaded = true;
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
@@ -2871,13 +2871,13 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
-            this.statescrollListener = null;
+            this.state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
         }
       };
 
-      this.statescrollListener = listener;
+      this.state.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
         passive: true,
@@ -2886,8 +2886,8 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
     }
   }
   onDestroy() {
-    if (this.statescrollListener) {
-      window.removeEventListener(\\"scroll\\", this.statescrollListener);
+    if (this.state.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.state.scrollListener);
     }
   }
 }
@@ -2902,7 +2902,7 @@ style {
 }
 <div>
   <picture key=\\"pictureRef\\">
-    <if(!state.useLazyLoading() || state.load)>
+    <if(!component.useLazyLoading() || state.load)>
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
@@ -3095,7 +3095,7 @@ class {
     )
       .then((res) => res.json())
       .then((data) => {
-        this.statereviews = data.data;
+        this.state.reviews = data.data;
       });
   }
 }
@@ -3183,7 +3183,7 @@ class {
   test: state.name || 'any name'
 })
 >
-  $!{props.text || props.content || state.name || '
+  $!{input.text || input.content || state.name || '
   <p class=\\"text-lg\\">my name</p>
   '}
 </div>"
@@ -3229,10 +3229,10 @@ exports[`Marko > jsx > Typescript Test > Video 1`] = `
 exports[`Marko > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 "class {
   setName(value) {
-    this.statename = value;
+    this.state.name = value;
   }
   updateNameWithArrowFn(value) {
-    this.statename = value;
+    this.state.name = value;
   }
 
   onCreate() {
@@ -3309,7 +3309,7 @@ exports[`Marko > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
     })
       .then((response) => response.json())
       .then((data) => {
-        this.statename = data.name;
+        this.state.name = data.name;
       });
     return () => {
       if (!signal.aborted) {
@@ -3523,16 +3523,16 @@ exports[`Marko > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
   }
 
   onRender() {
-    console.log(\\"Runs when a or b changes\\", this.statea, this.stateb);
+    console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
 
-    if (this.statea === \\"a\\") {
-      this.statea = \\"b\\";
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
     }
 
-    console.log(\\"Runs when c or d changes\\", this.statec, this.stated);
+    console.log(\\"Runs when c or d changes\\", this.state.c, this.state.d);
 
-    if (this.statea === \\"a\\") {
-      this.statea = \\"b\\";
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
     }
   }
 }
@@ -3642,8 +3642,8 @@ exports[`Marko > jsx > Typescript Test > onUpdateWithDeps 1`] = `
   onRender() {
     console.log(
       \\"Runs when a, b or size changes\\",
-      this.statea,
-      this.stateb,
+      this.state.a,
+      this.state.b,
       this.input.size
     );
   }
@@ -3970,7 +3970,7 @@ exports[`Marko > svelte > Javascript Test > classDirective 1`] = `
 }
 
 <input
-  class=(\`form-input \${props.disabled ? 'disabled' : ''} \${state.focus ? 'focus' : ''}\`)
+  class=(\`form-input \${input.disabled ? 'disabled' : ''} \${state.focus ? 'focus' : ''}\`)
 />"
 `;
 
@@ -4025,7 +4025,7 @@ exports[`Marko > svelte > Javascript Test > html 1`] = `
 exports[`Marko > svelte > Javascript Test > ifElse 1`] = `
 "class {
   toggle = function toggle() {
-    this.stateshow = !this.stateshow;
+    this.state.show = !this.state.show;
   };
 
   onCreate() {
@@ -4071,7 +4071,7 @@ exports[`Marko > svelte > Javascript Test > lifecycleHooks 1`] = `
 exports[`Marko > svelte > Javascript Test > reactive 1`] = `
 "class {
   get lowercaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   }
 
   onCreate() {
@@ -4089,7 +4089,7 @@ exports[`Marko > svelte > Javascript Test > reactive 1`] = `
 exports[`Marko > svelte > Javascript Test > reactiveWithFn 1`] = `
 "class {
   calculateResult = function calculateResult(a_, b_) {
-    this.stateresult = a_ * b_;
+    this.state.result = a_ * b_;
   };
 
   onCreate() {
@@ -4097,7 +4097,7 @@ exports[`Marko > svelte > Javascript Test > reactiveWithFn 1`] = `
   }
 
   onRender() {
-    this.calculateResult(this.statea, this.stateb);
+    this.calculateResult(this.state.a, this.state.b);
   }
 }
 
@@ -4248,7 +4248,7 @@ exports[`Marko > svelte > Typescript Test > classDirective 1`] = `
 }
 
 <input
-  class=(\`form-input \${props.disabled ? 'disabled' : ''} \${state.focus ? 'focus' : ''}\`)
+  class=(\`form-input \${input.disabled ? 'disabled' : ''} \${state.focus ? 'focus' : ''}\`)
 />"
 `;
 
@@ -4303,7 +4303,7 @@ exports[`Marko > svelte > Typescript Test > html 1`] = `
 exports[`Marko > svelte > Typescript Test > ifElse 1`] = `
 "class {
   toggle = function toggle() {
-    this.stateshow = !this.stateshow;
+    this.state.show = !this.state.show;
   };
 
   onCreate() {
@@ -4349,7 +4349,7 @@ exports[`Marko > svelte > Typescript Test > lifecycleHooks 1`] = `
 exports[`Marko > svelte > Typescript Test > reactive 1`] = `
 "class {
   get lowercaseName() {
-    return this.statename.toLowerCase();
+    return this.state.name.toLowerCase();
   }
 
   onCreate() {
@@ -4367,7 +4367,7 @@ exports[`Marko > svelte > Typescript Test > reactive 1`] = `
 exports[`Marko > svelte > Typescript Test > reactiveWithFn 1`] = `
 "class {
   calculateResult = function calculateResult(a_, b_) {
-    this.stateresult = a_ * b_;
+    this.state.result = a_ * b_;
   };
 
   onCreate() {
@@ -4375,7 +4375,7 @@ exports[`Marko > svelte > Typescript Test > reactiveWithFn 1`] = `
   }
 
   onRender() {
-    this.calculateResult(this.statea, this.stateb);
+    this.calculateResult(this.state.a, this.state.b);
   }
 }
 

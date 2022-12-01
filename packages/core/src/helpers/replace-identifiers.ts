@@ -70,7 +70,7 @@ const _replaceIdentifiers = (
             to,
             (expression) => {
               const [head, ...tail] = expression.split('.');
-              return [head, tail.join('')];
+              return [head, tail.join('.')];
             },
             ([obj, prop]) => {
               const objIdentifier = types.identifier(obj);
