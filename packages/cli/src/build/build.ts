@@ -24,7 +24,6 @@ import {
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import glob from 'fast-glob';
-import { flatten } from 'fp-ts/lib/Array';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
@@ -234,7 +233,9 @@ export async function build(config?: MitosisConfig) {
         buildAndOutputComponentFiles({ ...targetContext, options, files }),
       ]);
 
-      console.info(`Mitosis: generated ${flatten(x).length} ${targetContext.target} files.`);
+      console.info(
+        `Mitosis: ${targetContext.target}: generated ${x[1].length} components, ${x[0].length} regular files.`,
+      );
     }),
   );
 
@@ -351,9 +352,7 @@ async function buildAndOutputComponentFiles({
 
     await outputFile(`${outputDir}/${outputFilePath}`, transpiled);
   });
-  await Promise.all(output);
-
-  return output;
+  return await Promise.all(output);
 }
 
 const getNonComponentFileExtension = flow(checkShouldOutputTypeScript, (shouldOutputTypeScript) =>

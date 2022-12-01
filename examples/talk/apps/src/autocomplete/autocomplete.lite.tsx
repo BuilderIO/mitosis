@@ -1,4 +1,4 @@
-import { onUpdate, Show, useDefaultProps, useStore } from '@builder.io/mitosis';
+import { onUpdate, Show, useStore } from '@builder.io/mitosis';
 
 export type Props = {
   getValues: (input: string) => Promise<any[]>;
