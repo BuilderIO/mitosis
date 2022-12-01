@@ -176,15 +176,13 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         \${
-           myService.method(\\"hello\\") + this.name
-         } Hello! I can run in React, Vue,
-         Solid, or Liquid! <input @input=\${(event) => this.onChange} />
-       </div>
+        
+        <div>
+        \${myService.method(\\"hello\\") + this.name} Hello! I can run in React, Vue,
+        Solid, or Liquid! <input @input=\${(event) => this.onChange} />
+      </div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -217,10 +215,10 @@ export default class MyBasicOnMountUpdateComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>Hello \${this.name}</div>
+        
+        <div>Hello \${this.name}</div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -249,10 +247,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -281,10 +279,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -411,19 +409,19 @@ export default class MyBasicForComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         \${this.names?.map(
-           (person, index) => html\`<my-fragment>
-           <input .value=\${this.name} @input=\${(event) => {
-             this.name = event.target.value + \\" and \\" + person;
-           }} /> Hello \${person} ! I can run in
-           Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
-         >\`
-         )}
-       </div>
+      
+      <div>
+      \${this.names?.map(
+        (person, index) => html\`<my-fragment>
+        <input .value=\${this.name} @input=\${(event) => {
+          this.name = event.target.value + \\" and \\" + person;
+        }} /> Hello \${person} ! I can run in
+        Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
+      >\`
+      )}
+    </div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -683,11 +681,11 @@ export default class Column extends LitElement {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -882,9 +880,9 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-         
-         <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-       \`;
+        
+        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+      \`;
   }
 }
 "
@@ -962,9 +960,9 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-         
-         <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-       \`;
+        
+        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+      \`;
   }
 }
 "
@@ -1047,11 +1045,7 @@ export default class FormComponent extends LitElement {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
+  onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -1065,19 +1059,16 @@ export default class FormComponent extends LitElement {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body: any;
+      let body;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
+      const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!(el as HTMLInputElement).name)
+        .filter((el) => !!el.name)
         .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
+          let value;
+          const key = el.name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -1103,7 +1094,7 @@ export default class FormComponent extends LitElement {
               value = el.value;
             }
           } else {
-            value = (el as HTMLInputElement).value;
+            value = el.value;
           }
 
           return {
@@ -1170,7 +1161,7 @@ export default class FormComponent extends LitElement {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -2840,10 +2831,10 @@ export default class MultipleOnUpdate extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
+      
+      <div></div>
 
-      \`;
+    \`;
   }
 }
 "
@@ -3017,10 +3008,10 @@ export default class OnInit extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -3078,10 +3069,10 @@ export default class Comp extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -3103,10 +3094,10 @@ export default class OnUpdate extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
+      
+      <div></div>
 
-      \`;
+    \`;
   }
 }
 "
@@ -3383,17 +3374,17 @@ export default class RenderContent extends LitElement {
 
   render() {
     return html\`
-         <style>.div {
- display: flex;
- flex-direction: columns;
+        <style>.div {
+display: flex;
+flex-direction: columns;
 }
 </style>
-         <div  @click=\${(event) => trackClick(this.content.id)} >
-             
-       <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
+        <div  @click=\${(event) => trackClick(this.content.id)} >
+            
+      <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
 
-           </div>
-       \`;
+          </div>
+      \`;
   }
 }
 "
@@ -4029,15 +4020,13 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         \${
-           myService.method(\\"hello\\") + this.name
-         } Hello! I can run in React, Vue,
-         Solid, or Liquid! <input @input=\${(event) => this.onChange} />
-       </div>
+        
+        <div>
+        \${myService.method(\\"hello\\") + this.name} Hello! I can run in React, Vue,
+        Solid, or Liquid! <input @input=\${(event) => this.onChange} />
+      </div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -4070,10 +4059,10 @@ export default class MyBasicOnMountUpdateComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>Hello \${this.name}</div>
+        
+        <div>Hello \${this.name}</div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -4102,10 +4091,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -4134,10 +4123,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -4264,19 +4253,19 @@ export default class MyBasicForComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         \${this.names?.map(
-           (person, index) => html\`<my-fragment>
-           <input .value=\${this.name} @input=\${(event) => {
-             this.name = event.target.value + \\" and \\" + person;
-           }} /> Hello \${person} ! I can run in
-           Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
-         >\`
-         )}
-       </div>
+      
+      <div>
+      \${this.names?.map(
+        (person, index) => html\`<my-fragment>
+        <input .value=\${this.name} @input=\${(event) => {
+          this.name = event.target.value + \\" and \\" + person;
+        }} /> Hello \${person} ! I can run in
+        Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
+      >\`
+      )}
+    </div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -4536,11 +4525,11 @@ export default class Column extends LitElement {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -4735,9 +4724,9 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-         
-         <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-       \`;
+        
+        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+      \`;
   }
 }
 "
@@ -4815,9 +4804,9 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-         
-         <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-       \`;
+        
+        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+      \`;
   }
 }
 "
@@ -4900,11 +4889,7 @@ export default class FormComponent extends LitElement {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
+  onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -4918,19 +4903,16 @@ export default class FormComponent extends LitElement {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body: any;
+      let body;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
+      const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!(el as HTMLInputElement).name)
+        .filter((el) => !!el.name)
         .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
+          let value;
+          const key = el.name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -4956,7 +4938,7 @@ export default class FormComponent extends LitElement {
               value = el.value;
             }
           } else {
-            value = (el as HTMLInputElement).value;
+            value = el.value;
           }
 
           return {
@@ -5023,7 +5005,7 @@ export default class FormComponent extends LitElement {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -6693,10 +6675,10 @@ export default class MultipleOnUpdate extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
+      
+      <div></div>
 
-      \`;
+    \`;
   }
 }
 "
@@ -6870,10 +6852,10 @@ export default class OnInit extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -6931,10 +6913,10 @@ export default class Comp extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -6956,10 +6938,10 @@ export default class OnUpdate extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
+      
+      <div></div>
 
-      \`;
+    \`;
   }
 }
 "
@@ -7236,17 +7218,17 @@ export default class RenderContent extends LitElement {
 
   render() {
     return html\`
-         <style>.div {
- display: flex;
- flex-direction: columns;
+        <style>.div {
+display: flex;
+flex-direction: columns;
 }
 </style>
-         <div  @click=\${(event) => trackClick(this.content.id)} >
-             
-       <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
+        <div  @click=\${(event) => trackClick(this.content.id)} >
+            
+      <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
 
-           </div>
-       \`;
+          </div>
+      \`;
   }
 }
 "
@@ -8019,10 +8001,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -8046,14 +8028,14 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         <input .value=\\"\${this.name}\\" />
+        
+        <div>
+        <input .value=\\"\${this.name}\\" />
 
-         Lowercase: \${this.lowercaseName}
-       </div>
+        Lowercase: \${this.lowercaseName}
+      </div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -8513,10 +8495,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -8540,14 +8522,14 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         <input .value=\\"\${this.name}\\" />
+        
+        <div>
+        <input .value=\\"\${this.name}\\" />
 
-         Lowercase: \${this.lowercaseName}
-       </div>
+        Lowercase: \${this.lowercaseName}
+      </div>
 
-       \`;
+      \`;
   }
 }
 "

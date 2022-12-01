@@ -7,36 +7,72 @@ import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { parseCode, uncapitalize } from './helpers';
+import { pipe } from 'fp-ts/lib/function';
+import { MitosisNode } from '@builder.io/mitosis';
 
 const { types } = babel;
 
 function mapStateIdentifiersInExpression(expression: string, stateProperties: string[]) {
   const setExpressions = stateProperties.map((propertyName) => `set${capitalize(propertyName)}`);
 
-  return babelTransformExpression(
-    // foo -> state.foo
-    replaceIdentifiers({ code: expression, from: stateProperties, to: (name) => `state.${name}` }),
-    {
-      CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
-        if (types.isIdentifier(path.node.callee)) {
-          if (setExpressions.includes(path.node.callee.name)) {
-            // setFoo -> foo
-            const statePropertyName = uncapitalize(path.node.callee.name.slice(3));
+  return pipe(
+    replaceIdentifiers({
+      code: expression,
+      from: stateProperties,
+      to: (name) => `state.${name}`,
+    }),
+    (code) =>
+      babelTransformExpression(
+        // foo -> state.foo
+        code,
+        {
+          CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
+            if (types.isIdentifier(path.node.callee)) {
+              if (setExpressions.includes(path.node.callee.name)) {
+                // setFoo -> foo
+                const statePropertyName = uncapitalize(path.node.callee.name.slice(3));
 
-            // setFoo(...) -> state.foo = ...
-            path.replaceWith(
-              types.assignmentExpression(
-                '=',
-                types.identifier(`state.${statePropertyName}`),
-                path.node.arguments[0] as any,
-              ),
-            );
-          }
-        }
-      },
-    },
+                // setFoo(...) -> state.foo = ...
+                path.replaceWith(
+                  types.assignmentExpression(
+                    '=',
+                    types.identifier(`state.${statePropertyName}`),
+                    path.node.arguments[0] as any,
+                  ),
+                );
+              }
+            }
+          },
+        },
+      ),
+    (code) => code.trim(),
   );
 }
+
+const consolidateClassBindings = (item: MitosisNode) => {
+  if (item.bindings.className) {
+    if (item.bindings.class) {
+      // TO-DO: it's too much work to merge 2 bindings, so just remove the old one for now.
+      item.bindings.class = item.bindings.className;
+    } else {
+      item.bindings.class = item.bindings.className;
+    }
+    delete item.bindings.className;
+  }
+
+  if (item.properties.className) {
+    if (item.properties.class) {
+      item.properties.class = `${item.properties.class} ${item.properties.className}`;
+    } else {
+      item.properties.class = item.properties.className;
+    }
+    delete item.properties.className;
+  }
+
+  if (item.properties.class && item.bindings.class) {
+    console.warn(`[${item.name}]: Ended up with both a property and binding for 'class'.`);
+  }
+};
 
 /**
  * Convert state identifiers from React hooks format to the state.* format Mitosis needs
@@ -75,28 +111,7 @@ export function mapStateIdentifiers(json: MitosisComponent) {
         }
       }
 
-      if (item.bindings.className) {
-        if (item.bindings.class) {
-          // TO-DO: it's too much work to merge 2 bindings, so just remove the old one for now.
-          item.bindings.class = item.bindings.className;
-        } else {
-          item.bindings.class = item.bindings.className;
-        }
-        delete item.bindings.className;
-      }
-
-      if (item.properties.className) {
-        if (item.properties.class) {
-          item.properties.class = `${item.properties.class} ${item.properties.className}`;
-        } else {
-          item.properties.class = item.properties.className;
-        }
-        delete item.properties.className;
-      }
-
-      if (item.properties.class && item.bindings.class) {
-        console.warn(`[${json.name}]: Ended up with both a property and binding for 'class'.`);
-      }
+      consolidateClassBindings(item);
     }
   });
 }
@@ -107,7 +122,7 @@ const processStateObjectSlice = (
   if (types.isObjectProperty(item)) {
     if (types.isFunctionExpression(item.value)) {
       return {
-        code: parseCode(item.value),
+        code: parseCode(item.value).trim(),
         type: 'function',
       };
     } else if (types.isArrowFunctionExpression(item.value)) {
@@ -117,7 +132,7 @@ const processStateObjectSlice = (
         item.value.params,
         item.value.body as babel.types.BlockStatement,
       );
-      const code = parseCode(n);
+      const code = parseCode(n).trim();
       return {
         code: code,
         type: 'method',
@@ -127,17 +142,17 @@ const processStateObjectSlice = (
       // { foo: ('string' as SomeType) }
       if (types.isTSAsExpression(item.value)) {
         return {
-          code: parseCode(item.value.expression),
+          code: parseCode(item.value.expression).trim(),
           type: 'property',
         };
       }
       return {
-        code: parseCode(item.value),
+        code: parseCode(item.value).trim(),
         type: 'property',
       };
     }
   } else if (types.isObjectMethod(item)) {
-    const n = parseCode({ ...item, returnType: null });
+    const n = parseCode({ ...item, returnType: null }).trim();
 
     const isGetter = item.kind === 'get';
 
