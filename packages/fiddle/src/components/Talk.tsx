@@ -769,6 +769,7 @@ export default function Fiddle() {
               Input
             </Typography>
             <JsxCodeEditor
+              disableLinting={true}
               options={{
                 renderLineHighlightOnlyWhenFocus: true,
                 overviewRulerBorder: false,

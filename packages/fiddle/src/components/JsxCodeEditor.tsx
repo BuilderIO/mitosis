@@ -9,7 +9,11 @@ import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@mona
 type EditorRefArgs = Parameters<NonNullable<MonacoEditorProps['onMount']>>;
 type Editor = EditorRefArgs[0];
 
-export function JsxCodeEditor(props: MonacoEditorProps) {
+type Props = MonacoEditorProps & {
+  disableLinting?: boolean;
+};
+
+export function JsxCodeEditor(props: Props) {
   const monaco = useMonaco();
 
   useEffect(() => {
@@ -31,8 +35,8 @@ export function JsxCodeEditor(props: MonacoEditorProps) {
     });
 
     monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-      noSemanticValidation: true,
-      noSyntaxValidation: true,
+      noSemanticValidation: props.disableLinting || false,
+      noSyntaxValidation: props.disableLinting || false,
     });
 
     // add types
@@ -82,7 +86,10 @@ export function JsxCodeEditor(props: MonacoEditorProps) {
       if (!result) {
         return;
       }
-      // monaco.editor.setModelMarkers(model, 'eslint', result.markers);
+
+      if (!props.disableLinting) {
+        monaco.editor.setModelMarkers(model, 'eslint', result.markers);
+      }
     },
     2000,
     [props.value, editor],
