@@ -64,27 +64,43 @@ const _replaceIdentifiers = (
 
         // `props.foo` to (name) => `state.${name}.bar`, e.g. `state.foo.bar`
       } else {
-        const newMemberExpression = pipe(
-          getToParam(path),
-          to,
-          (expression) => {
-            const [head, ...tail] = expression.split('.');
-            return [head, tail.join('')];
-          },
-          ([obj, prop]) => {
-            const objIdentifier = types.identifier(obj);
-            if (prop === '') {
-              return objIdentifier;
-            } else {
-              return types.memberExpression(objIdentifier, types.identifier(prop));
-            }
-          },
-        );
-        path.replaceWith(newMemberExpression);
+        try {
+          const newMemberExpression = pipe(
+            getToParam(path),
+            to,
+            (expression) => {
+              const [head, ...tail] = expression.split('.');
+              return [head, tail.join('.')];
+            },
+            ([obj, prop]) => {
+              const objIdentifier = types.identifier(obj);
+              if (prop === '') {
+                return objIdentifier;
+              } else {
+                return types.memberExpression(objIdentifier, types.identifier(prop));
+              }
+            },
+          );
+
+          /**
+           * If both `path` and `newMemberExpression` are equal nodes, do nothing.
+           * This is to prevent infinite loops when the user-provided `to` function returns the same identifier.
+           *
+           * The infinite loop probably happens because we end up traversing the new `Identifier` node again?
+           */
+          if (generate(path.node).code === generate(newMemberExpression).code) {
+            return;
+          }
+
+          path.replaceWith(newMemberExpression);
+        } catch (err) {
+          console.error('Could not replace', path.node, 'with', to);
+          // throw err;
+        }
       }
     } else {
       if (types.isIdentifier(path.node)) {
-        console.error(`could not replace Identifier '${from.toString()}' with nothing.`);
+        console.error(`Could not replace Identifier '${from.toString()}' with nothing.`);
       } else {
         // if we're looking at a member expression, e.g. `props.foo` and no `to` was provided, then we want to strip out
         // the identifier and end up with `foo`. So we replace the member expression with just its `property` value.
@@ -96,28 +112,37 @@ const _replaceIdentifiers = (
 
 export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
   try {
-    return babelTransformExpression(code, {
-      MemberExpression(path) {
-        _replaceIdentifiers(path, { from, to });
-      },
-      OptionalMemberExpression(path) {
-        _replaceIdentifiers(path, { from, to });
-      },
-      Identifier(path) {
-        // we only want to ignore certain identifiers:
-        if (
-          // (optional) member expressions are already handled in other visitors
-          !types.isMemberExpression(path.parent) &&
-          !types.isOptionalMemberExpression(path.parent) &&
-          // function declaration identifiers shouldn't be transformed
-          !types.isFunctionDeclaration(path.parent)
-        ) {
+    return pipe(
+      babelTransformExpression(code, {
+        MemberExpression(path) {
           _replaceIdentifiers(path, { from, to });
-        }
-      },
-    });
+        },
+        OptionalMemberExpression(path) {
+          _replaceIdentifiers(path, { from, to });
+        },
+        Identifier(path) {
+          // we only want to ignore certain identifiers:
+          if (
+            // (optional) member expressions are already handled in other visitors
+            !types.isMemberExpression(path.parent) &&
+            !types.isOptionalMemberExpression(path.parent) &&
+            // function declaration identifiers shouldn't be transformed
+            !types.isFunctionDeclaration(path.parent)
+          ) {
+            _replaceIdentifiers(path, { from, to });
+          }
+        },
+      }),
+      // merely running `babel.transform` will add spaces around the code, even if we don't end up replacing anything.
+      // This is why we need to trim the output.
+      (code) => code.trim(),
+    );
   } catch (err) {
-    console.log('could not replace identifiers for ', code);
-    return code;
+    // console.error('could not replace identifiers for ', {
+    //   code,
+    //   from: from.toString(),
+    //   to: to?.toString(),
+    // });
+    throw err;
   }
 };

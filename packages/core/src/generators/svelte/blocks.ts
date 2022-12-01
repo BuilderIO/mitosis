@@ -66,9 +66,21 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
 {/if}`;
   },
   Slot({ json, options, parentComponent }) {
-    if (!json.bindings.name) {
+    const slotName = json.bindings.name?.code || json.properties.name;
+
+    const renderChildren = () =>
+      json.children
+        ?.map((item) => blockToSvelte({ json: item, options, parentComponent }))
+        .join('\n');
+
+    if (!slotName) {
       const key = Object.keys(json.bindings).find(Boolean);
-      if (!key) return '<slot />';
+      if (!key) {
+        if (!json.children?.length) {
+          return '<slot/>';
+        }
+        return `<slot>${renderChildren()}</slot>`;
+      }
 
       return `
         <span #${key}>
@@ -77,9 +89,7 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
       `;
     }
 
-    return `<slot name="${stripSlotPrefix(json.bindings.name.code).toLowerCase()}">${json.children
-      ?.map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('\n')}</slot>`;
+    return `<slot name="${stripSlotPrefix(slotName).toLowerCase()}">${renderChildren()}</slot>`;
   },
 };
 

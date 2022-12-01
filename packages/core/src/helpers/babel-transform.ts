@@ -4,6 +4,7 @@ const tsPreset = require('@babel/preset-typescript');
 const decorators = require('@babel/plugin-syntax-decorators');
 import type { Visitor } from '@babel/traverse';
 import { pipe } from 'fp-ts/lib/function';
+import { checkIsGetter } from './patterns';
 
 const handleErrorOrExpression = <VisitorContextType = any>({
   code,
@@ -22,10 +23,14 @@ const handleErrorOrExpression = <VisitorContextType = any>({
     // Detect method fragments. These get passed sometimes and otherwise
     // generate compile errors. They are of the form `foo() { ... }`
     const isMethod = Boolean(
-      !code.startsWith('function') && code.match(/^[a-z0-9_]+\s*\([^\)]*\)\s*[\{:]/i),
+      !code.trim().startsWith('function') && code.trim().match(/^[a-z0-9_]+\s*\([^\)]*\)\s*[\{:]/i),
     );
 
-    if (isMethod) {
+    const isGetter = checkIsGetter(code);
+
+    const isMethodOrGetter = isMethod || isGetter;
+
+    if (isMethodOrGetter) {
       useCode = `function ${useCode}`;
     }
 
@@ -40,13 +45,13 @@ const handleErrorOrExpression = <VisitorContextType = any>({
       (str) => str.replace(/let _ =\s/, ''),
     );
 
-    if (isMethod) {
+    if (isMethodOrGetter) {
       return result.replace('function', '');
     }
 
     return result;
   } catch (err) {
-    console.error('Error parsing code:\n', { code, result, useCode });
+    // console.error('Error parsing code:\n', { code, result, useCode });
     throw err;
   }
 };
@@ -110,10 +115,6 @@ export const babelTransformExpression = <VisitorContextType = any>(
 ): string => {
   if (!code) {
     return '';
-  }
-
-  if (code.trim() !== code) {
-    console.log({ code });
   }
 
   const isGetter = code.trim().startsWith('get ');

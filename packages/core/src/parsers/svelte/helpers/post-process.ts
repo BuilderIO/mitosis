@@ -1,18 +1,30 @@
+import generate from '@babel/generator';
+import * as parser from '@babel/parser';
+import * as types from '@babel/types';
+
 import type { MitosisNode } from '../../../types/mitosis-node';
 import type { extendedHook, StateValue } from '../../../types/mitosis-component';
 import type { SveltosisComponent } from '../types';
-
 import { processBindings } from './bindings';
+
+type SveltosisStateValue = StateValue & { arguments?: string[]; type: string };
 
 export function preventNameCollissions(
   json: SveltosisComponent,
-  input: string,
-  arguments_: string[],
+  item: SveltosisStateValue,
   prepend = '',
   append = '_',
 ) {
-  let output = input;
-  const argumentsOutput = arguments_;
+  let output = item.code;
+  let argumentsOutput: string[] = [];
+
+  try {
+    let parsed = parser.parse(item.code);
+    let body = parsed.program.body[0];
+    if (types.isFunctionDeclaration(body)) {
+      argumentsOutput = body.params.map((p) => generate(p).code);
+    }
+  } catch (e) {}
 
   const keys = [...Object.keys(json.props), ...Object.keys(json.state), ...Object.keys(json.refs)];
 
@@ -20,26 +32,29 @@ export function preventNameCollissions(
     const regex = () => new RegExp(`(?<!=(?:\\s))${key}\\b`, 'g');
     let isInArguments = false;
 
-    argumentsOutput.forEach((argument, index) => {
+    argumentsOutput.forEach((argument: string, index: number) => {
       if (regex().test(argument)) {
         isInArguments = true;
         argumentsOutput.splice(index, 1, argument.replace(regex(), `${prepend}${key}${append}`));
       }
     });
 
-    const isInOutput = regex().test(output);
+    const outputRegex = () => new RegExp(`\\b${key}\\b`, 'g');
+
+    const isInOutput = outputRegex().test(output);
 
     if (isInArguments && isInOutput) {
-      output = output.replace(regex(), `${prepend}${key}${append}`);
+      output = output.replace(outputRegex(), `${prepend}${key}${append}`);
     }
   }
 
   return argumentsOutput?.length
     ? {
+        ...item,
         code: output,
         arguments: argumentsOutput,
       }
-    : { code: output };
+    : { ...item, code: output };
 }
 
 function prependProperties(json: SveltosisComponent, input: string) {
@@ -60,10 +75,7 @@ function prependState(json: SveltosisComponent, input: string) {
   let output = input;
   const stateKeys = Object.keys(json.state);
   for (const state of stateKeys) {
-    const regex = new RegExp(
-      `(?<!(\\.|'|"|\`|function ))\\b(state\\.)?${state}\\b(?!(\\s+)?\\()`,
-      'g',
-    );
+    const regex = new RegExp(`(?<!(\\.|'|"|\`|function |get ))\\b(state\\.)?${state}\\b`, 'g');
     if (regex.test(output)) {
       output = output.replace(regex, `state.${state}`);
     }
@@ -83,6 +95,7 @@ function addPropertiesAndStateToNode(json: SveltosisComponent, node: MitosisNode
     if (Object.prototype.hasOwnProperty.call(node.bindings, key)) {
       node.bindings[key] = {
         code: addPropertiesAndState(json, node.bindings[key]?.code ?? '').trim(),
+        arguments: node.bindings[key]?.arguments,
         type: node.bindings[key]?.type,
       };
     }
@@ -91,10 +104,10 @@ function addPropertiesAndStateToNode(json: SveltosisComponent, node: MitosisNode
 
 function postProcessState(json: SveltosisComponent) {
   for (const key of Object.keys(json.state)) {
-    const item: StateValue & { arguments?: string[] } = json.state[key] as StateValue;
+    const item = json.state[key] as SveltosisStateValue;
 
     if (item?.type !== 'property') {
-      const output = preventNameCollissions(json, item.code, item?.arguments || []);
+      const output = preventNameCollissions(json, item);
 
       output.code = addPropertiesAndState(json, output.code);
 
@@ -142,7 +155,6 @@ function postProcessHooks(json: SveltosisComponent) {
   const hookKeys = Object.keys(json.hooks) as Array<keyof typeof json.hooks>;
   for (const key of hookKeys) {
     const hook = json.hooks[key];
-
     if (!hook) {
       continue;
     }

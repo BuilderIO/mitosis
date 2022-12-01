@@ -1,5 +1,4 @@
 import dedent from 'dedent';
-import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
@@ -20,7 +19,7 @@ import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
 import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';
-import { kebabCase, uniq } from 'lodash';
+import { isString, kebabCase, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
@@ -29,6 +28,7 @@ import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
+import { replaceIdentifiers } from '../helpers/replace-identifiers';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
 import { pipe } from 'fp-ts/lib/function';
 
@@ -59,10 +59,13 @@ const mappers: {
       .join('\n')}</ng-container>`;
   },
   Slot: (json, options) => {
-    return `<ng-content ${Object.entries(json.bindings)
+    const renderChildren = () =>
+      json.children?.map((item) => blockToAngular(item, options)).join('\n');
+
+    return `<ng-content ${Object.entries({ ...json.bindings, ...json.properties })
       .map(([binding, value]) => {
         if (value && binding === 'name') {
-          const selector = pipe(value.code, stripSlotPrefix, kebabCase);
+          const selector = pipe(isString(value) ? value : value.code, stripSlotPrefix, kebabCase);
           return `select="[${selector}]"`;
         }
       })
@@ -72,7 +75,7 @@ const mappers: {
           return value.code;
         }
       })
-      .join('\n')}</ng-content>`;
+      .join('\n')}${renderChildren()}</ng-content>`;
   },
 };
 
@@ -252,13 +255,28 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         switch (codeType) {
           case 'hooks':
             return (code) => {
-              return stripStateAndPropsRefs(code, {
-                replaceWith: 'this.',
-                contextVars,
-                outputVars,
-                domRefs: Array.from(domRefs),
-                stateVars,
-              });
+              return pipe(
+                stripStateAndPropsRefs(code, {
+                  replaceWith: 'this.',
+                  contextVars,
+                  outputVars,
+                  domRefs: Array.from(domRefs),
+                  stateVars,
+                }),
+                (code) => {
+                  const allMethodNames = Object.entries(json.state)
+                    .filter(
+                      ([key, value]) => value?.type === 'function' || value?.type === 'method',
+                    )
+                    .map(([key]) => key);
+
+                  return replaceIdentifiers({
+                    code,
+                    from: allMethodNames,
+                    to: (name) => `this.${name}`,
+                  });
+                },
+              );
             };
           case 'bindings':
             return (code) => {
@@ -393,6 +411,20 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     Object.entries(json.meta.angularConfig || {}).forEach(([key, value]) => {
       componentMetadata[key] = value;
     });
+
+    const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
+      if (!json.defaultProps) return '';
+      const defalutPropsString = Object.keys(json.defaultProps)
+        .map((prop) => {
+          const value = json.defaultProps!.hasOwnProperty(prop)
+            ? json.defaultProps![prop]?.code
+            : '{}';
+          return `${prop}: ${value}`;
+        })
+        .join(',');
+      return `const defaultProps = {${defalutPropsString}};\n`;
+    };
+
     let str = dedent`
     import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
       options?.experimental?.inject ? 'Inject, forwardRef,' : ''
@@ -402,7 +434,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
-    ${!json.defaultProps ? '' : `const defaultProps = ${json5.stringify(json.defaultProps)}\n`}
+    ${getPropsDefinition({ json })}
     ${renderPreComponent({
       component: json,
       target: 'angular',

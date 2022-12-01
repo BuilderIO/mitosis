@@ -45,6 +45,7 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
           },
         },
       ),
+    (code) => code.trim(),
   );
 }
 
@@ -69,7 +70,7 @@ const consolidateClassBindings = (item: MitosisNode) => {
   }
 
   if (item.properties.class && item.bindings.class) {
-    console.warn(`[${json.name}]: Ended up with both a property and binding for 'class'.`);
+    console.warn(`[${item.name}]: Ended up with both a property and binding for 'class'.`);
   }
 };
 
@@ -121,7 +122,7 @@ const processStateObjectSlice = (
   if (types.isObjectProperty(item)) {
     if (types.isFunctionExpression(item.value)) {
       return {
-        code: parseCode(item.value),
+        code: parseCode(item.value).trim(),
         type: 'function',
       };
     } else if (types.isArrowFunctionExpression(item.value)) {
@@ -131,9 +132,46 @@ const processStateObjectSlice = (
         item.value.params,
         item.value.body as babel.types.BlockStatement,
       );
-      const code = parseCode(n);
+      const code = parseCode(n).trim();
       return {
         code: code,
+        type: 'method',
+      };
+    } else {
+      // Remove typescript types, e.g. from
+      // { foo: ('string' as SomeType) }
+      if (types.isTSAsExpression(item.value)) {
+        return {
+          code: parseCode(item.value.expression).trim(),
+          type: 'property',
+        };
+      }
+      return {
+        code: parseCode(item.value).trim(),
+        type: 'property',
+      };
+    }
+  } else if (types.isObjectMethod(item)) {
+    const n = parseCode({ ...item, returnType: null }).trim();
+
+    const isGetter = item.kind === 'get';
+
+    return {
+      code: n,
+      type: isGetter ? 'getter' : 'method',
+    };
+  } else {
+    throw new Error('Unexpected state value type', item);
+  }
+};
+
+const processDefaultPropsSlice = (
+  item: babel.types.ObjectMethod | babel.types.ObjectProperty,
+): StateValue => {
+  if (types.isObjectProperty(item)) {
+    if (types.isFunctionExpression(item.value) || types.isArrowFunctionExpression(item.value)) {
+      return {
+        code: parseCode(item.value),
         type: 'method',
       };
     } else {
@@ -166,6 +204,7 @@ const processStateObjectSlice = (
 
 export const parseStateObjectToMitosisState = (
   object: babel.types.ObjectExpression,
+  isState: boolean = true, // parse state or defaultProps
 ): MitosisState => {
   const state: MitosisState = {};
   object.properties.forEach((x) => {
@@ -183,7 +222,7 @@ export const parseStateObjectToMitosisState = (
       );
     }
 
-    state[x.key.name] = processStateObjectSlice(x);
+    state[x.key.name] = isState ? processStateObjectSlice(x) : processDefaultPropsSlice(x);
   });
 
   return state;

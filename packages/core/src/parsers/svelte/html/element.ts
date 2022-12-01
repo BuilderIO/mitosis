@@ -118,19 +118,32 @@ export function parseElement(json: SveltosisComponent, node: TemplateNode) {
           break;
         }
         case 'EventHandler': {
-          let object: { code: string; arguments: string[] } = { code: '', arguments: [] };
+          let object: { code: string; arguments: string[] | undefined } = {
+            code: '',
+            arguments: [],
+          };
 
           if (attribute.expression?.type === 'ArrowTypeFunction') {
             const expression = attribute.expression as ArrowFunctionExpression;
 
+            let code = generate(expression.body);
+
             object = {
-              code: generate(expression.body),
+              code,
               arguments: (expression.body as BaseCallExpression)?.arguments?.map(
-                (a) => (a as Identifier).name,
+                (a) => (a as Identifier).name ?? [],
               ),
             };
           } else if (attribute.expression) {
             let code = generate(attribute.expression);
+
+            if (attribute.expression.body?.type === 'CallExpression') {
+              code = generate(attribute.expression.body);
+            }
+
+            if (!code.startsWith(')') && !code.endsWith(')')) {
+              code += '()';
+            }
 
             if (
               !attribute.expression.arguments?.length &&
@@ -139,9 +152,19 @@ export function parseElement(json: SveltosisComponent, node: TemplateNode) {
               code = code.replace(/\(\)/g, '(event)');
             }
 
+            let args: string[] | undefined = undefined;
+            if (attribute.expression.type === 'ArrowFunctionExpression') {
+              args = attribute.expression.params?.map((arg: any) => generate(arg)) ?? [];
+            } else if (
+              attribute.expression.type === 'CallExpression' &&
+              attribute.expression.arguments.length
+            ) {
+              args = [];
+            }
+
             object = {
               code,
-              arguments: ['event'],
+              arguments: args,
             };
           } else {
             object = {
