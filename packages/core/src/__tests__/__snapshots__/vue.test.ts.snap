@@ -1085,12 +1085,107 @@ export default {
 `;
 
 exports[`Vue > jsx > Javascript Test > Image 1`] = `
-"unknown: Missing semicolon. (1:20)
+"<template>
+  <div>
+    <picture ref=\\"pictureRef\\">
+      <template v-if=\\"!useLazyLoading() || load\\">
+        <img
+          :alt=\\"altText\\"
+          :aria-role=\\"altText ? 'presentation' : undefined\\"
+          :class=\\"
+            _classStringToObject(
+              'builder-image' + (_class ? ' ' + _class : '') + ' img'
+            )
+          \\"
+          :src=\\"image\\"
+          @load=\\"setLoaded()\\"
+          :srcset=\\"srcset\\"
+          :sizes=\\"sizes\\"
+        />
+      </template>
 
-> 1 | let _ =  setLoaded() {
-    |                     ^
-  2 |   this.imageLoaded = true;
-  3 | }"
+      <source :srcset=\\"srcset\\" />
+    </picture>
+    <slot />
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"image\\",
+
+  props: [\\"lazy\\", \\"altText\\", \\"_class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
+
+  data: () => ({ scrollListener: null, imageLoaded: false, load: false }),
+
+  mounted() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (this.$refs.pictureRef) {
+          const rect = this.$refs.pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            this.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  },
+
+  unmounted() {
+    if (this.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.scrollListener);
+    }
+  },
+
+  methods: {
+    setLoaded() {
+      this.imageLoaded = true;
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!this.lazy && this.isBrowser();
+    },
+    isBrowser: function isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+};
+</script>
+
+<style scoped>
+.img {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
+}
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Image State 1`] = `
@@ -3828,12 +3923,126 @@ export default {
 `;
 
 exports[`Vue > jsx > Typescript Test > Image 1`] = `
-"unknown: Missing semicolon. (1:20)
+"<template>
+  <div>
+    <picture ref=\\"pictureRef\\">
+      <template v-if=\\"!useLazyLoading() || load\\">
+        <img
+          :alt=\\"altText\\"
+          :aria-role=\\"altText ? 'presentation' : undefined\\"
+          :class=\\"
+            _classStringToObject(
+              'builder-image' + (_class ? ' ' + _class : '') + ' img'
+            )
+          \\"
+          :src=\\"image\\"
+          @load=\\"setLoaded()\\"
+          :srcset=\\"srcset\\"
+          :sizes=\\"sizes\\"
+        />
+      </template>
 
-> 1 | let _ =  setLoaded() {
-    |                     ^
-  2 |   this.imageLoaded = true;
-  3 | }"
+      <source :srcset=\\"srcset\\" />
+    </picture>
+    <slot />
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+// TODO: AMP Support?
+export interface ImageProps {
+  _class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}
+
+export default {
+  name: \\"image\\",
+
+  props: [\\"lazy\\", \\"altText\\", \\"_class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
+
+  data: () => ({ scrollListener: null, imageLoaded: false, load: false }),
+
+  mounted() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (this.$refs.pictureRef) {
+          const rect = this.$refs.pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            this.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  },
+
+  unmounted() {
+    if (this.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.scrollListener);
+    }
+  },
+
+  methods: {
+    setLoaded() {
+      this.imageLoaded = true;
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!this.lazy && this.isBrowser();
+    },
+    isBrowser: function isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+};
+</script>
+
+<style scoped>
+.img {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
+}
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Image State 1`] = `

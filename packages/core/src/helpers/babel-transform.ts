@@ -23,7 +23,7 @@ const handleErrorOrExpression = <VisitorContextType = any>({
     // Detect method fragments. These get passed sometimes and otherwise
     // generate compile errors. They are of the form `foo() { ... }`
     const isMethod = Boolean(
-      !code.startsWith('function') && code.match(/^[a-z0-9_]+\s*\([^\)]*\)\s*[\{:]/i),
+      !code.trim().startsWith('function') && code.trim().match(/^[a-z0-9_]+\s*\([^\)]*\)\s*[\{:]/i),
     );
 
     const isGetter = checkIsGetter(code);
