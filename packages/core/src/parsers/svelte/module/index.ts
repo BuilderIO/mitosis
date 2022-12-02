@@ -8,6 +8,8 @@ import type { SveltosisComponent } from '../types';
 function handleExportNamedDeclaration(json: SveltosisComponent, node: ExportNamedDeclaration) {
   const declarations = (node.declaration as VariableDeclaration)?.declarations;
 
+  // FIXME(milahu): loop declarations
+  //for (const declaration of node.declarations) {}
   if (declarations?.length) {
     const declaration = declarations[0];
     const property = (declaration.id as Identifier).name;
