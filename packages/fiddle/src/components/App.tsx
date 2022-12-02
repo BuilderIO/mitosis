@@ -5,8 +5,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { colors } from '../constants/colors';
 import Fiddle from './Fiddle';
 import { theme } from '../constants/theme';
+import Talk from './Talk';
 
-export default function App() {
+export default function App({ talk }: { talk?: boolean }) {
   return useObserver(() => {
     const muiTheme = createTheme({
       palette: {
@@ -24,7 +25,7 @@ export default function App() {
               background-color: ${colors.background};
             }
           `}</style>
-          {<Fiddle />}
+          {talk ? <Talk /> : <Fiddle />}
         </ThemeProvider>
       </React.StrictMode>
     );
