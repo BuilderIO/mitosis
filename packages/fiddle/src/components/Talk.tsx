@@ -702,7 +702,7 @@ export default function Fiddle() {
                 state.showInput = !state.showInput;
               }}
             >
-              TOGGLE INPUT
+              HIDE/SHOW INPUT
             </button>
           </div>
 
@@ -717,7 +717,7 @@ export default function Fiddle() {
                 state.inputType = state.inputType === 'json' ? 'jsx' : 'json';
               }}
             >
-              {state.inputType}
+              USE {state.inputType.toUpperCase()}
             </button>
           </div>
         </div>
@@ -725,7 +725,7 @@ export default function Fiddle() {
           <div
             css={{
               position: 'relative',
-              height: 280,
+              height: 380,
               border: '1px solid black',
               margin: '0 300px',
               flexGrow: 1,
@@ -753,6 +753,7 @@ export default function Fiddle() {
                 automaticLayout: true,
                 minimap: { enabled: false },
                 scrollbar: { vertical: 'hidden' },
+                fontSize: 18,
               }}
               onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
               theme={monacoTheme}
@@ -816,6 +817,7 @@ export default function Fiddle() {
                       renderLineHighlight: 'none',
                       selectionHighlight: false,
                       scrollbar: { vertical: 'hidden' },
+                      fontSize: 18,
                     }}
                     theme={monacoTheme}
                     language={output === 'qwik' || output === 'solid' ? 'typescript' : 'html'}
