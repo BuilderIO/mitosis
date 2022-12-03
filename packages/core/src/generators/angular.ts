@@ -30,7 +30,7 @@ import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
 import { replaceIdentifiers } from '../helpers/replace-identifiers';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
-import { pipe } from 'fp-ts/lib/function';
+import { flow, pipe } from 'fp-ts/lib/function';
 
 import { MitosisComponent } from '..';
 import { mergeOptions } from '../helpers/merge-options';
@@ -231,6 +231,29 @@ export const blockToAngular = (
   return str;
 };
 
+const processAngularCode =
+  ({
+    contextVars,
+    outputVars,
+    domRefs,
+    stateVars,
+    replaceWith,
+  }: {
+    contextVars: string[];
+    outputVars: string[];
+    domRefs: string[];
+    stateVars?: string[];
+    replaceWith?: string;
+  }) =>
+  (code: string) =>
+    stripStateAndPropsRefs(code, {
+      replaceWith,
+      contextVars,
+      outputVars,
+      domRefs,
+      stateVars,
+    });
+
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
   ({ component: _component }) => {
@@ -251,40 +274,37 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     options.plugins = [
       ...(options.plugins || []),
       CODE_PROCESSOR_PLUGIN((codeType) => {
-        const domRefs = getRefs(json);
         switch (codeType) {
           case 'hooks':
-            return (code) => {
-              return pipe(
-                stripStateAndPropsRefs(code, {
-                  replaceWith: 'this.',
-                  contextVars,
-                  outputVars,
-                  domRefs: Array.from(domRefs),
-                  stateVars,
-                }),
-                (code) => {
-                  const allMethodNames = Object.entries(json.state)
-                    .filter(
-                      ([key, value]) => value?.type === 'function' || value?.type === 'method',
-                    )
-                    .map(([key]) => key);
+            return flow(
+              processAngularCode({
+                replaceWith: 'this',
+                contextVars,
+                outputVars,
+                domRefs: Array.from(getRefs(json)),
+                stateVars,
+              }),
+              (code) => {
+                const allMethodNames = Object.entries(json.state)
+                  .filter(([_, value]) => value?.type === 'function' || value?.type === 'method')
+                  .map(([key]) => key);
 
-                  return replaceIdentifiers({
-                    code,
-                    from: allMethodNames,
-                    to: (name) => `this.${name}`,
-                  });
-                },
-              );
-            };
+                return replaceIdentifiers({
+                  code,
+                  from: allMethodNames,
+                  to: (name) => `this.${name}`,
+                });
+              },
+            );
+
           case 'bindings':
             return (code) => {
-              return stripStateAndPropsRefs(code, {
+              const newLocal = processAngularCode({
                 contextVars: [],
                 outputVars,
                 domRefs: [], // the template doesn't need the this keyword.
-              }).replace(/"/g, '&quot;');
+              })(code);
+              return newLocal.replace(/"/g, '&quot;');
             };
           case 'hooks-deps':
           case 'state':
@@ -379,14 +399,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'class',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(code, {
-          replaceWith: 'this.',
-          contextVars,
-          outputVars,
-          domRefs: Array.from(domRefs),
-          stateVars,
-        }),
+      valueMapper: processAngularCode({
+        replaceWith: 'this',
+        contextVars,
+        outputVars,
+        domRefs: Array.from(domRefs),
+        stateVars,
+      }),
     });
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
@@ -479,13 +498,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           const typeParameter = json.refs[ref].typeParameter;
           return `private _${ref}${typeParameter ? `: ${typeParameter}` : ''}${
             argument
-              ? ` = ${stripStateAndPropsRefs(argument, {
+              ? ` = ${processAngularCode({
                   replaceWith: 'this.',
                   contextVars,
                   outputVars,
                   domRefs: Array.from(domRefs),
                   stateVars,
-                })}`
+                })(argument)}`
               : ''
           };`;
         })
