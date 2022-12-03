@@ -49,7 +49,7 @@ export const stripStateAndPropsRefs = (
     ..._options,
   };
 
-  contextVars.forEach((_var) => {
+  contextVars?.forEach((_var) => {
     newCode = newCode.replace(
       // determine expression edge cases - https://regex101.com/r/iNcTSM/1
       new RegExp('(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
@@ -57,7 +57,7 @@ export const stripStateAndPropsRefs = (
     );
   });
 
-  outputVars.forEach((_var) => {
+  outputVars?.forEach((_var) => {
     // determine expression edge cases onMessage( to this.onMessage.emit(
     const regexp = '(^|\\s|;|\\()(props\\.?)' + _var + '\\(';
     const replacer = '$1' + context + _var + '.emit(';
@@ -79,18 +79,16 @@ export const stripStateAndPropsRefs = (
   const matchPropertyAccessorsArguments = '\\?\\.|,|\\.|\\(| |;|\\)|\\]|$'; // foo?.stuff | foo) | foo | foo] etc.
   const matchVariableUseInClass = '^|\\n|\\r| |;|\\(|\\[|!|,'; //  foo | (foo | !foo | foo, | [foo etc.
 
-  if (domRefs.length) {
-    domRefs.forEach((_var) => {
-      newCode = newCode.replace(
-        new RegExp(`(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`, 'g'),
-        '$1' + 'this.' + _var + '$2',
-      );
-    });
-  }
-  if (stateVars.length) {
-    stateVars.forEach((_var) => {
-      newCode = newCode.replace(
-        /*
+  domRefs?.forEach((_var) => {
+    newCode = newCode.replace(
+      new RegExp(`(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`, 'g'),
+      '$1' + 'this.' + _var + '$2',
+    );
+  });
+
+  stateVars?.forEach((_var) => {
+    newCode = newCode.replace(
+      /*
           1. Skip anything that is a class variable declaration
              myClass() {
               stuff = 'hi'
@@ -100,13 +98,12 @@ export const stripStateAndPropsRefs = (
              stuff = function stuff() {}  or  get stuff
           3. If the conditions are met then try to match all use cases of the class variables, see above.
         */
-        new RegExp(
-          `(?!^${_var}|^ ${_var})(?<!function|get)(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`,
-          'g',
-        ),
-        '$1' + 'this.' + _var + '$2',
-      );
-    });
-  }
+      new RegExp(
+        `(?!^${_var}|^ ${_var})(?<!function|get)(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`,
+        'g',
+      ),
+      '$1' + 'this.' + _var + '$2',
+    );
+  });
   return newCode;
 };
