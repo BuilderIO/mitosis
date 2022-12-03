@@ -35,6 +35,7 @@ import { updateStateCode } from './state/helpers';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { hasGetContext } from '../helpers/context';
+import { objectHasKey } from '../../helpers/typescript';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
@@ -142,6 +143,15 @@ const preProcessBlockCode = ({
   }
 };
 
+const ATTTRIBUTE_MAPPERS = {
+  for: 'htmlFor',
+};
+
+const transformAttributeName = (name: string) => {
+  if (objectHasKey(ATTTRIBUTE_MAPPERS, name)) return ATTTRIBUTE_MAPPERS[name];
+  return name;
+};
+
 const blockToSolid = ({
   json,
   options,
@@ -191,7 +201,8 @@ const blockToSolid = ({
 
   for (const key in json.properties) {
     const value = json.properties[key];
-    str += ` ${key}="${value}" `;
+    const newKey = transformAttributeName(key);
+    str += ` ${newKey}="${value}" `;
   }
   for (const key in json.bindings) {
     const { code, arguments: cusArg = ['event'], type } = json.bindings[key]!;
@@ -226,7 +237,8 @@ const blockToSolid = ({
           },
         });
       }
-      str += ` ${key}={${useValue}} `;
+      const newKey = transformAttributeName(key);
+      str += ` ${newKey}={${useValue}} `;
     }
   }
   if (selfClosingTags.has(json.name)) {
@@ -352,7 +364,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
 
     function ${json.name}(props) {
       ${state?.str ?? ''}
-      
+
       ${getRefsString(json)}
       ${getContextString(json, options)}
 

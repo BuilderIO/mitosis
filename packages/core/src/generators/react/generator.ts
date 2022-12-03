@@ -174,6 +174,7 @@ const ATTTRIBUTE_MAPPERS: { [key: string]: string } = {
   spellcheck: 'spellCheck',
   autocapitalize: 'autoCapitalize',
   autocomplete: 'autoComplete',
+  for: 'htmlFor',
 };
 
 // TODO: Maybe in the future allow defining `string | function` as values
