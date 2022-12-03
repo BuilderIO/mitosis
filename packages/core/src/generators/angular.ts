@@ -6,7 +6,10 @@ import { getRefs } from '../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
+import {
+  DO_NOT_USE_VARS_TRANSFORMS,
+  stripStateAndPropsRefs,
+} from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import {
@@ -246,49 +249,15 @@ const processAngularCode =
     replaceWith?: string;
   }) =>
   (code: string) =>
-    pipe(stripStateAndPropsRefs(code, { replaceWith }), (newCode) => {
-      const context = 'this.';
-      outputVars?.forEach((_var) => {
-        // determine expression edge cases onMessage( to this.onMessage.emit(
-        const regexp = '(^|\\s|;|\\()(props\\.?)' + _var + '\\(';
-        const replacer = '$1' + context + _var + '.emit(';
-        newCode = newCode.replace(new RegExp(regexp, 'g'), replacer);
-      });
-
-      const matchPropertyAccessorsArguments = '\\?\\.|,|\\.|\\(| |;|\\)|\\]|$'; // foo?.stuff | foo) | foo | foo] etc.
-      const matchVariableUseInClass = '^|\\n|\\r| |;|\\(|\\[|!|,'; //  foo | (foo | !foo | foo, | [foo etc.
-
-      domRefs?.forEach((_var) => {
-        newCode = newCode.replace(
-          new RegExp(
-            `(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`,
-            'g',
-          ),
-          '$1' + context + _var + '$2',
-        );
-      });
-
-      stateVars?.forEach((_var) => {
-        newCode = newCode.replace(
-          /*
-            1. Skip anything that is a class variable declaration
-              myClass() {
-                stuff = 'hi'
-                foo = 'bar'  <-- in the event that formatting is off
-              }
-            2. Skip anything that is the name of a function declaration or a getter
-              stuff = function stuff() {}  or  get stuff
-            3. If the conditions are met then try to match all use cases of the class variables, see above.
-          */
-          new RegExp(
-            `(?!^${_var}|^ ${_var})(?<!function|get)(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`,
-            'g',
-          ),
-          '$1' + context + _var + '$2',
-        );
-      });
-      return newCode;
-    });
+    pipe(
+      DO_NOT_USE_VARS_TRANSFORMS(code, {
+        contextVars,
+        domRefs,
+        outputVars,
+        stateVars,
+      }),
+      (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
+    );
 
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
