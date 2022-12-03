@@ -4,22 +4,85 @@ export type StripStateAndPropsRefsOptions = {
   replaceWith?: string | ((name: string) => string);
   includeProps?: boolean;
   includeState?: boolean;
-  contextVars?: string[];
-  outputVars?: string[];
-  stateVars?: string[];
-  context?: string;
-  domRefs?: string[];
 };
 
 const DEFAULT_OPTIONS: Required<StripStateAndPropsRefsOptions> = {
   replaceWith: '',
-  contextVars: [],
-  outputVars: [],
-  stateVars: [],
-  context: 'this.',
-  domRefs: [],
   includeProps: true,
   includeState: true,
+};
+
+export const DO_NOT_USE_tranformContextVars = ({
+  code,
+  contextVars,
+  context,
+}: {
+  code: string;
+  contextVars?: string[];
+  context: string;
+}): string => {
+  contextVars?.forEach((_var) => {
+    code = code.replace(
+      // determine expression edge cases - https://regex101.com/r/iNcTSM/1
+      new RegExp('(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
+      '$1' + context + _var + '$2',
+    );
+  });
+  return code;
+};
+
+export type DO_NOT_USE_ARGS = {
+  outputVars?: string[];
+  domRefs?: string[];
+  stateVars?: string[];
+  contextVars?: string[];
+  context?: string;
+};
+
+export const DO_NOT_USE_VARS_TRANSFORMS = (
+  newCode: string,
+  { context = 'this.', domRefs, outputVars, stateVars, contextVars }: DO_NOT_USE_ARGS,
+): string => {
+  newCode = DO_NOT_USE_tranformContextVars({ code: newCode, context, contextVars });
+
+  outputVars?.forEach((_var) => {
+    // determine expression edge cases onMessage( to this.onMessage.emit(
+    const regexp = '(^|\\s|;|\\()(props\\.?)' + _var + '\\(';
+    const replacer = '$1' + context + _var + '.emit(';
+    newCode = newCode.replace(new RegExp(regexp, 'g'), replacer);
+  });
+
+  const matchPropertyAccessorsArguments = '\\?\\.|,|\\.|\\(| |;|\\)|\\]|$'; // foo?.stuff | foo) | foo | foo] etc.
+  const matchVariableUseInClass = '^|\\n|\\r| |;|\\(|\\[|!|,'; //  foo | (foo | !foo | foo, | [foo etc.
+
+  domRefs?.forEach((_var) => {
+    newCode = newCode.replace(
+      new RegExp(`(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`, 'g'),
+      '$1' + 'this.' + _var + '$2',
+    );
+  });
+
+  stateVars?.forEach((_var) => {
+    newCode = newCode.replace(
+      /*
+        1. Skip anything that is a class variable declaration
+          myClass() {
+            stuff = 'hi'
+            foo = 'bar'  <-- in the event that formatting is off
+          }
+        2. Skip anything that is the name of a function declaration or a getter
+          stuff = function stuff() {}  or  get stuff
+        3. If the conditions are met then try to match all use cases of the class variables, see above.
+      */
+      new RegExp(
+        `(?!^${_var}|^ ${_var})(?<!function|get)(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`,
+        'g',
+      ),
+      '$1' + 'this.' + _var + '$2',
+    );
+  });
+
+  return newCode;
 };
 
 /**
@@ -35,34 +98,10 @@ export const stripStateAndPropsRefs = (
 ): string => {
   let newCode = code || '';
 
-  const {
-    replaceWith,
-    contextVars,
-    outputVars,
-    context,
-    domRefs,
-    includeProps,
-    includeState,
-    stateVars,
-  } = {
+  const { replaceWith, includeProps, includeState } = {
     ...DEFAULT_OPTIONS,
     ..._options,
   };
-
-  contextVars?.forEach((_var) => {
-    newCode = newCode.replace(
-      // determine expression edge cases - https://regex101.com/r/iNcTSM/1
-      new RegExp('(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
-      '$1' + context + _var + '$2',
-    );
-  });
-
-  outputVars?.forEach((_var) => {
-    // determine expression edge cases onMessage( to this.onMessage.emit(
-    const regexp = '(^|\\s|;|\\()(props\\.?)' + _var + '\\(';
-    const replacer = '$1' + context + _var + '.emit(';
-    newCode = newCode.replace(new RegExp(regexp, 'g'), replacer);
-  });
 
   if (includeProps !== false) {
     newCode = replaceIdentifiers({ code: newCode, from: 'props', to: replaceWith || null });
@@ -76,34 +115,5 @@ export const stripStateAndPropsRefs = (
     newCode = replaceIdentifiers({ code: newCode, from: 'state', to: replaceWith || null });
   }
 
-  const matchPropertyAccessorsArguments = '\\?\\.|,|\\.|\\(| |;|\\)|\\]|$'; // foo?.stuff | foo) | foo | foo] etc.
-  const matchVariableUseInClass = '^|\\n|\\r| |;|\\(|\\[|!|,'; //  foo | (foo | !foo | foo, | [foo etc.
-
-  domRefs?.forEach((_var) => {
-    newCode = newCode.replace(
-      new RegExp(`(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`, 'g'),
-      '$1' + 'this.' + _var + '$2',
-    );
-  });
-
-  stateVars?.forEach((_var) => {
-    newCode = newCode.replace(
-      /*
-          1. Skip anything that is a class variable declaration
-             myClass() {
-              stuff = 'hi'
-               foo = 'bar'  <-- in the event that formatting is off
-             }
-          2. Skip anything that is the name of a function declaration or a getter
-             stuff = function stuff() {}  or  get stuff
-          3. If the conditions are met then try to match all use cases of the class variables, see above.
-        */
-      new RegExp(
-        `(?!^${_var}|^ ${_var})(?<!function|get)(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`,
-        'g',
-      ),
-      '$1' + 'this.' + _var + '$2',
-    );
-  });
   return newCode;
 };

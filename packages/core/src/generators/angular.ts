@@ -246,12 +246,48 @@ const processAngularCode =
     replaceWith?: string;
   }) =>
   (code: string) =>
-    stripStateAndPropsRefs(code, {
-      replaceWith,
-      contextVars,
-      outputVars,
-      domRefs,
-      stateVars,
+    pipe(stripStateAndPropsRefs(code, { replaceWith }), (newCode) => {
+      const context = 'this.';
+      outputVars?.forEach((_var) => {
+        // determine expression edge cases onMessage( to this.onMessage.emit(
+        const regexp = '(^|\\s|;|\\()(props\\.?)' + _var + '\\(';
+        const replacer = '$1' + context + _var + '.emit(';
+        newCode = newCode.replace(new RegExp(regexp, 'g'), replacer);
+      });
+
+      const matchPropertyAccessorsArguments = '\\?\\.|,|\\.|\\(| |;|\\)|\\]|$'; // foo?.stuff | foo) | foo | foo] etc.
+      const matchVariableUseInClass = '^|\\n|\\r| |;|\\(|\\[|!|,'; //  foo | (foo | !foo | foo, | [foo etc.
+
+      domRefs?.forEach((_var) => {
+        newCode = newCode.replace(
+          new RegExp(
+            `(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`,
+            'g',
+          ),
+          '$1' + context + _var + '$2',
+        );
+      });
+
+      stateVars?.forEach((_var) => {
+        newCode = newCode.replace(
+          /*
+            1. Skip anything that is a class variable declaration
+              myClass() {
+                stuff = 'hi'
+                foo = 'bar'  <-- in the event that formatting is off
+              }
+            2. Skip anything that is the name of a function declaration or a getter
+              stuff = function stuff() {}  or  get stuff
+            3. If the conditions are met then try to match all use cases of the class variables, see above.
+          */
+          new RegExp(
+            `(?!^${_var}|^ ${_var})(?<!function|get)(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`,
+            'g',
+          ),
+          '$1' + context + _var + '$2',
+        );
+      });
+      return newCode;
     });
 
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
