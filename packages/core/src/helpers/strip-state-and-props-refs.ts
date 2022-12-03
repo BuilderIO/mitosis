@@ -12,7 +12,13 @@ const DEFAULT_OPTIONS: Required<StripStateAndPropsRefsOptions> = {
   includeState: true,
 };
 
-export const DO_NOT_USE_tranformContextVars = ({
+/**
+ * Do not use this anywhere. We are migrating to AST transforms and should avoid Regex String.replace() as they are
+ * very brittle.
+ *
+ * If you need to re-use this, re-create it as an AST tranform first.
+ */
+export const DO_NOT_USE_CONTEXT_VARS_TRANSFORMS = ({
   code,
   contextVars,
   context,
@@ -39,11 +45,17 @@ export type DO_NOT_USE_ARGS = {
   context?: string;
 };
 
+/**
+ * Do not use these anywhere. We are migrating to AST transforms and should avoid Regex String.replace() as they are
+ * very brittle.
+ *
+ * If you need to re-use a part of this, re-create it as an AST tranform first.
+ */
 export const DO_NOT_USE_VARS_TRANSFORMS = (
   newCode: string,
   { context = 'this.', domRefs, outputVars, stateVars, contextVars }: DO_NOT_USE_ARGS,
 ): string => {
-  newCode = DO_NOT_USE_tranformContextVars({ code: newCode, context, contextVars });
+  newCode = DO_NOT_USE_CONTEXT_VARS_TRANSFORMS({ code: newCode, context, contextVars });
 
   outputVars?.forEach((_var) => {
     // determine expression edge cases onMessage( to this.onMessage.emit(

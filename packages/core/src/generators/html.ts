@@ -25,7 +25,7 @@ import { MitosisComponent } from '../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import {
   DO_NOT_USE_ARGS,
-  DO_NOT_USE_tranformContextVars,
+  DO_NOT_USE_CONTEXT_VARS_TRANSFORMS,
   DO_NOT_USE_VARS_TRANSFORMS,
   stripStateAndPropsRefs,
   StripStateAndPropsRefsOptions,
@@ -265,7 +265,7 @@ const updateReferencesInCode = (
           includeState: false,
           replaceWith: context + 'props.',
         }),
-      (newCode) => DO_NOT_USE_tranformContextVars({ code: newCode, context, contextVars }),
+      (newCode) => DO_NOT_USE_CONTEXT_VARS_TRANSFORMS({ code: newCode, context, contextVars }),
     );
   }
   return code;
@@ -1036,7 +1036,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
                     replaceWith: 'self.props.',
                   }),
                 (code) =>
-                  DO_NOT_USE_tranformContextVars({
+                  DO_NOT_USE_CONTEXT_VARS_TRANSFORMS({
                     code,
                     contextVars,
                     // correctly ref the class not state object
