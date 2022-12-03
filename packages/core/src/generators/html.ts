@@ -1028,7 +1028,6 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
                   // TODO: if it's an arrow function it's this.state.
                   replaceWith: 'self.state.',
                 }),
-                (newCode) => stripStateAndPropsRefs(newCode),
                 (newCode) =>
                   stripStateAndPropsRefs(newCode, {
                     // TODO: replace with `this.` and add setters that call this.update()
