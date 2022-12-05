@@ -204,10 +204,6 @@ export default class FooComponent {
 type EditorRefArgs = Parameters<NonNullable<EditorProps['onMount']>>;
 type Editor = EditorRefArgs[0];
 
-const hasBothTsAndJsSupport = (outputTab: string) => {
-  return ['svelte', 'vue'].includes(outputTab);
-};
-
 // TODO: Build this Fiddle app with Mitosis :)
 export default function Fiddle() {
   const monaco = useMonaco();
@@ -310,8 +306,8 @@ export default function Fiddle() {
             break;
         }
 
-        let commonOptions: { typescript: boolean } = {
-          typescript: hasBothTsAndJsSupport(state.outputTab) && state.options.typescript === 'true',
+        const commonOptions: { typescript: boolean } = {
+          typescript: state.options.typescript === 'true',
         };
 
         const generateOptions = () => {
@@ -566,6 +562,7 @@ export default function Fiddle() {
             </a>
             <div
               css={{
+                marginLeft: 'auto',
                 marginRight: 'auto',
                 [smallBreakpoint]: { display: 'none' },
               }}
@@ -573,50 +570,74 @@ export default function Fiddle() {
               <AlphaPreviewMessage />
             </div>
 
-            <a
-              target="_blank"
-              rel="noreferrer"
+            <div
               css={{
-                marginRight: 25,
                 display: 'flex',
-                alignItems: 'center',
               }}
-              href="https://github.com/builderio/figma-html"
             >
-              <span css={{ [smallBreakpoint]: { display: 'none' } }}>Figma</span>
-              <img
-                width={20}
-                src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb77e93c28e044178e4694cc939bf4cf"
-                css={{ marginLeft: 10 }}
-                alt="Figma Logo"
-              />
-            </a>
-            <a
-              target="_blank"
-              rel="noreferrer"
-              css={{
-                marginRight: 25,
-                display: 'flex',
-                alignItems: 'center',
-              }}
-              href="https://github.com/builderio/mitosis"
-            >
-              <span
+              <Button
+                size="small"
+                variant="outlined"
+                color="default"
                 css={{
-                  [smallBreakpoint]: { display: 'none' },
-                  marginRight: '5px',
+                  marginLeft: 'auto',
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                  marginRight: 10,
+                  flexShrink: 0,
+                }}
+                onClick={() => {
+                  theme.darkMode = !theme.darkMode;
                 }}
               >
-                Source
-              </span>
-              <Image
-                width={30}
-                height={30}
-                src={'/github-logo.png'}
-                css={{ marginLeft: 10 }}
-                alt="Github Mark"
-              />
-            </a>
+                🔆
+              </Button>
+
+              <a
+                target="_blank"
+                rel="noreferrer"
+                css={{
+                  marginRight: 25,
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                href="https://github.com/builderio/figma-html"
+              >
+                <span css={{ [smallBreakpoint]: { display: 'none' } }}>Figma</span>
+                <img
+                  width={20}
+                  src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb77e93c28e044178e4694cc939bf4cf"
+                  css={{ marginLeft: 10 }}
+                  alt="Figma Logo"
+                />
+              </a>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                css={{
+                  marginRight: 25,
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                href="https://github.com/builderio/mitosis"
+              >
+                <span
+                  css={{
+                    [smallBreakpoint]: { display: 'none' },
+                    marginRight: '5px',
+                  }}
+                >
+                  Source
+                </span>
+                <Image
+                  width={30}
+                  height={30}
+                  src={'/github-logo.png'}
+                  css={{ marginLeft: 10 }}
+                  alt="Github Mark"
+                />
+              </a>
+            </div>
           </div>
           <div
             css={{
@@ -1015,49 +1036,47 @@ export default function Fiddle() {
                 SwiftUI support is <b>experimental</b>
               </Alert>
             </Show>
-            <Show when={hasBothTsAndJsSupport(state.outputTab)}>
-              <div
+            <div
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.03)',
+              }}
+            >
+              <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
+                Typescript:
+              </Typography>
+              <RadioGroup
                 css={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
+                  flexDirection: 'row',
+                  marginRight: 10,
+                  '& .MuiFormControlLabel-label': {
+                    fontSize: 12,
+                  },
+                }}
+                aria-label="Typescript"
+                name="typescript"
+                value={state.options.typescript}
+                onChange={(e) => {
+                  state.options.typescript = e.target.value;
+                  state.updateOutput();
                 }}
               >
-                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
-                  Typescript:
-                </Typography>
-                <RadioGroup
-                  css={{
-                    flexDirection: 'row',
-                    marginRight: 10,
-                    '& .MuiFormControlLabel-label': {
-                      fontSize: 12,
-                    },
-                  }}
-                  aria-label="Typescript"
-                  name="typescript"
-                  value={state.options.typescript}
-                  onChange={(e) => {
-                    state.options.typescript = e.target.value;
-                    state.updateOutput();
-                  }}
-                >
-                  <FormControlLabel
-                    value="true"
-                    control={<Radio color="primary" />}
-                    labelPlacement="start"
-                    label="Typescript"
-                  />
-                  <FormControlLabel
-                    value="false"
-                    labelPlacement="start"
-                    control={<Radio color="primary" />}
-                    label="Javascript"
-                  />
-                </RadioGroup>
-              </div>
-              <Divider css={{ opacity: 0.6 }} />
-            </Show>
+                <FormControlLabel
+                  value="true"
+                  control={<Radio color="primary" />}
+                  labelPlacement="start"
+                  label="Typescript"
+                />
+                <FormControlLabel
+                  value="false"
+                  labelPlacement="start"
+                  control={<Radio color="primary" />}
+                  label="Javascript"
+                />
+              </RadioGroup>
+            </div>
+            <Divider css={{ opacity: 0.6 }} />
             <Show when={state.outputTab === 'vue'}>
               <div
                 css={{

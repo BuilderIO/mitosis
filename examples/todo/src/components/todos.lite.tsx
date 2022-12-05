@@ -1,5 +1,5 @@
 import { For, Show, createContext } from '@builder.io/mitosis';
-import todosState from '../shared/todos-state.lite';
+import todosState from '../shared/todos-state';
 import Todo from './todo.lite';
 import Header from './header.svelte';
 
