@@ -4,6 +4,7 @@ import { checkIsDefined } from '../../helpers/nullable';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { ForNode, MitosisNode } from '../../types/mitosis-node';
 import { pipe } from 'fp-ts/lib/function';
+import { transformAttributeName } from './helpers';
 
 const { types } = babel;
 
@@ -188,7 +189,7 @@ export const jsxElementToJson = (
     name: nodeName,
     properties: node.openingElement.attributes.reduce<MitosisNode['properties']>((memo, item) => {
       if (types.isJSXAttribute(item)) {
-        const key = item.name.name as string;
+        const key = transformAttributeName(item.name.name as string);
         const value = item.value;
         if (types.isStringLiteral(value)) {
           memo[key] = value.value;
@@ -203,7 +204,7 @@ export const jsxElementToJson = (
     }, {}),
     bindings: node.openingElement.attributes.reduce<MitosisNode['bindings']>((memo, item) => {
       if (types.isJSXAttribute(item)) {
-        const key = item.name.name as string;
+        const key = transformAttributeName(item.name.name as string);
         const value = item.value;
 
         // boolean attribute

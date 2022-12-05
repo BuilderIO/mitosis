@@ -1,6 +1,7 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { tryParseJson } from '../../helpers/json';
+import { objectHasKey } from '../../helpers/typescript';
 
 const { types } = babel;
 
@@ -40,3 +41,12 @@ export const parseCodeJson = (node: babel.types.Node) => {
 
 export const isImportOrDefaultExport = (node: babel.Node) =>
   types.isExportDefaultDeclaration(node) || types.isImportDeclaration(node);
+
+export const HTML_ATTR_FROM_JSX = {
+  htmlFor: 'for',
+};
+
+export const transformAttributeName = (name: string) => {
+  if (objectHasKey(HTML_ATTR_FROM_JSX, name)) return HTML_ATTR_FROM_JSX[name];
+  return name;
+};
