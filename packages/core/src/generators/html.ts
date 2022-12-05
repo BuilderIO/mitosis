@@ -23,7 +23,13 @@ import { getPropFunctions } from '../helpers/get-prop-functions';
 import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
+import {
+  DO_NOT_USE_ARGS,
+  DO_NOT_USE_CONTEXT_VARS_TRANSFORMS,
+  DO_NOT_USE_VARS_TRANSFORMS,
+  stripStateAndPropsRefs,
+  StripStateAndPropsRefsOptions,
+} from '../helpers/strip-state-and-props-refs';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -37,6 +43,7 @@ import { renderPreComponent } from '../helpers/render-imports';
 
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { getForArguments } from '../helpers/nodes/for';
+import { pipe } from 'fp-ts/lib/function';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
   format?: 'class' | 'script';
@@ -201,35 +208,64 @@ const createGlobalId = (name: string, options: InternalToHtmlOptions) => {
   return `${name}${options.prefix ? `-${options.prefix}` : ''}-${newNameNum}`;
 };
 
+const deprecatedStripStateAndPropsRefs = (
+  code: string,
+  {
+    context,
+    contextVars,
+    domRefs,
+    includeProps,
+    includeState,
+    outputVars,
+    replaceWith,
+    stateVars,
+  }: StripStateAndPropsRefsOptions & DO_NOT_USE_ARGS,
+) => {
+  return pipe(
+    stripStateAndPropsRefs(code, {
+      includeProps,
+      includeState,
+      replaceWith,
+    }),
+    (newCode) =>
+      DO_NOT_USE_VARS_TRANSFORMS(newCode, {
+        context,
+        contextVars,
+        domRefs,
+        outputVars,
+        stateVars,
+      }),
+  );
+};
+
 // TODO: overloaded function
 const updateReferencesInCode = (
   code: string,
   options: InternalToHtmlOptions,
   blockOptions: BlockOptions = {},
-) => {
+): string => {
   const contextVars = blockOptions.contextVars || [];
   const context = blockOptions?.context || 'this.';
   if (options?.experimental?.updateReferencesInCode) {
     return options?.experimental?.updateReferencesInCode(code, options, {
-      stripStateAndPropsRefs,
+      stripStateAndPropsRefs: deprecatedStripStateAndPropsRefs,
     });
   }
   if (options.format === 'class') {
-    return stripStateAndPropsRefs(
+    return pipe(
       stripStateAndPropsRefs(code, {
         includeProps: false,
         includeState: true,
         replaceWith: context + 'state.',
-        context,
       }),
-      {
-        // TODO: replace with `this.` and add setters that call this.update()
-        includeProps: true,
-        includeState: false,
-        replaceWith: context + 'props.',
-        contextVars,
-        context,
-      },
+      (newCode) =>
+        stripStateAndPropsRefs(newCode, {
+          // TODO: replace with `this.` and add setters that call this.update()
+          includeProps: true,
+          includeState: false,
+          replaceWith: context + 'props.',
+        }),
+      (newCode) => DO_NOT_USE_CONTEXT_VARS_TRANSFORMS({ code: newCode, context, contextVars }),
     );
   }
   return code;
@@ -984,25 +1020,29 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
           ${!json.hooks?.onInit?.code ? '' : 'this.onInitOnce = false;'}
 
           this.state = ${getStateObjectStringFromComponent(json, {
-            valueMapper: (value) => {
-              return stripStateAndPropsRefs(
+            valueMapper: (value) =>
+              pipe(
                 stripStateAndPropsRefs(addUpdateAfterSetInCode(value, useOptions, 'self.update'), {
                   includeProps: false,
                   includeState: true,
                   // TODO: if it's an arrow function it's this.state.
                   replaceWith: 'self.state.',
                 }),
-                {
-                  // TODO: replace with `this.` and add setters that call this.update()
-                  includeProps: true,
-                  includeState: false,
-                  replaceWith: 'self.props.',
-                  contextVars,
-                  // correctly ref the class not state object
-                  context: 'self.',
-                },
-              );
-            },
+                (newCode) =>
+                  stripStateAndPropsRefs(newCode, {
+                    // TODO: replace with `this.` and add setters that call this.update()
+                    includeProps: true,
+                    includeState: false,
+                    replaceWith: 'self.props.',
+                  }),
+                (code) =>
+                  DO_NOT_USE_CONTEXT_VARS_TRANSFORMS({
+                    code,
+                    contextVars,
+                    // correctly ref the class not state object
+                    context: 'self.',
+                  }),
+              ),
           })};
           if (!this.props) {
             this.props = {};
