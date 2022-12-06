@@ -3299,6 +3299,40 @@ export class OnUpdateWithDepsModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > outputEventBinding 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+        (changeOrSomething)=\\"name = $event.target.value\\"
+      />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+})
+export class MyComponent {
+  name = \\"Steve\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -7323,6 +7357,40 @@ export class OnUpdateWithDeps {
   bootstrap: [SomeOtherComponent],
 })
 export class OnUpdateWithDepsModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > outputEventBinding 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+        (changeOrSomething)=\\"name = $event.target.value\\"
+      />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+})
+export class MyComponent {
+  name = \\"Steve\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
 "
 `;
 

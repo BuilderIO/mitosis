@@ -1,46 +1,16 @@
-import { useStore } from '@builder.io/mitosis';
+import { useState } from "@builder.io/mitosis";
 
-export interface TestComponentProps {
-    toggled: boolean;
-    myToggleChange: (value: any) => void;
-}
-
-export function MyComponent(props: TestComponentProps) {
-    const state = useStore({
-        _toggled: false
-    });
-
-    function handleToggleSwitch(): void {
-        state._toggled = !state._toggled;
-        props.toggled = !props.toggled;
-
-        if (props.myToggleChange) {
-            props.myToggleChange(state._toggled);
-        }
-    }
-
-    return (
-        <button type="button" onClick={() => handleToggleSwitch()}>
-            Toggled [{state._toggled}]
-        </button>
-    );
-}
-
-export default function outputEventBindingExample(props: TestComponentProps) {
-    const state = useStore({
-        toggledParent: false,
-        testToggle: (val: boolean) => {
-            console.log('Inverse Event: ', val);
-            state.toggledParent = val;
-        },
-    });
+export default function MyComponent(props) {
+    const [name, setName] = useState("Steve");
 
     return (
         <div>
-            <MyComponent
-                toggled={state.toggledParent}
-                myToggleChange={(val) => state.testToggle(val)}
-            ></MyComponent>
+            <input
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                onChangeOrSomething={(event) => setName(event.target.value)}
+            />
+            Hello! I can run in React, Vue, Solid, or Liquid!
         </div>
     );
 }
