@@ -39,7 +39,7 @@ import { MitosisComponent } from '..';
 import { mergeOptions } from '../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
 
-const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
+const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
@@ -90,13 +90,13 @@ const generateNgModule = (
   bootstrapMapper: Function | null | undefined,
 ): string => {
   return `import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 
 ${content}
 
 @NgModule({
   declarations: [${name}],
-  imports: [BrowserModule${
+  imports: [CommonModule${
     componentsUsed.length ? ', ' + componentsUsed.map((comp) => `${comp}Module`).join(', ') : ''
   }],
   exports: [${name}],
