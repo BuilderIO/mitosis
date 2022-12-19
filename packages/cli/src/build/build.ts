@@ -33,7 +33,6 @@ import { getFileExtensionForTarget } from './helpers/extensions';
 import {
   checkIsMitosisComponentFilePath,
   INPUT_EXTENSIONS,
-  INPUT_EXTENSIONS_ARRAY,
   INPUT_EXTENSION_REGEX,
 } from './helpers/inputs-extensions';
 import { checkShouldOutputTypeScript } from './helpers/options';
@@ -64,7 +63,7 @@ const DEFAULT_CONFIG: Partial<MitosisConfig> = {
   getTargetPath,
 };
 
-const getOptions = (config?: MitosisConfig): MitosisConfig => ({
+export const getOptions = (config?: MitosisConfig): MitosisConfig => ({
   ...DEFAULT_CONFIG,
   ...config,
   options: {
@@ -73,7 +72,7 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => ({
   },
 });
 
-async function clean(options: MitosisConfig) {
+export async function clean(options: MitosisConfig) {
   const patterns = options.targets.map(
     (target) => `${options.dest}/${options.getTargetPath({ target })}/${options.files}`,
   );
@@ -166,9 +165,14 @@ const parseSvelteComponent = async ({ path, file }: { path: string; file: string
   return output;
 };
 
-const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
-  const pattern = `**/*(${INPUT_EXTENSIONS_ARRAY.join('|')})`;
-  const paths = (await glob(options.files, { cwd })).filter(checkIsMitosisComponentFilePath);
+export const getMitosisComponentJSONs = async (
+  options: MitosisConfig,
+  paths?: string[],
+): Promise<ParsedMitosisJson[]> => {
+  if (!paths) {
+    paths = (await glob(options.files, { cwd })).filter(checkIsMitosisComponentFilePath);
+  }
+
   return Promise.all(
     paths.map(async (path): Promise<ParsedMitosisJson> => {
       try {
@@ -196,7 +200,7 @@ interface TargetContextWithConfig extends TargetContext {
   options: MitosisConfig;
 }
 
-const getTargetContexts = (options: MitosisConfig) =>
+export const getTargetContexts = (options: MitosisConfig) =>
   options.targets.map(
     (target): TargetContext => ({
       target,
@@ -205,7 +209,7 @@ const getTargetContexts = (options: MitosisConfig) =>
     }),
   );
 
-const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithConfig) => {
+export const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithConfig) => {
   const files = await buildNonComponentFiles(targetContext);
   return await outputNonComponentFiles({ ...targetContext, files });
 };
@@ -304,7 +308,7 @@ const getComponentOutputFileName = ({
 /**
  * Transpiles and outputs Mitosis component files.
  */
-async function buildAndOutputComponentFiles({
+export async function buildAndOutputComponentFiles({
   target,
   files,
   options,
@@ -380,7 +384,7 @@ const outputNonComponentFiles = async ({
   );
 };
 
-async function buildContextFile({
+export async function buildContextFile({
   target,
   options,
   path,
@@ -409,7 +413,7 @@ async function buildContextFile({
 /**
  * Transpiles all non-component files, including Context files.
  */
-async function buildNonComponentFiles(args: TargetContextWithConfig) {
+export async function buildNonComponentFiles(args: TargetContextWithConfig) {
   const { target, options } = args;
   const nonComponentFiles = (await glob(options.files, { cwd })).filter(
     (file) => file.endsWith('.ts') || file.endsWith('.js'),

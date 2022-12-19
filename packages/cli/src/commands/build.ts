@@ -3,7 +3,7 @@ import { MitosisConfig, Target } from '@builder.io/mitosis';
 import { build } from '../build/build';
 import { getMitosisConfig } from '../helpers/get-mitosis-config';
 
-const getTargets = (mitosisConfig: MitosisConfig, cliOpts: GluegunParameters['options']) => {
+export const getTargets = (mitosisConfig: MitosisConfig, cliOpts: GluegunParameters['options']) => {
   const targetsFromCli: Target[] = (cliOpts.targets || '').split(',');
   const excludeTargetsMap: Record<Target, true> = (cliOpts.excludeTargets || '')
     .split(',')
