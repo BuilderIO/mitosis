@@ -37,7 +37,7 @@ const command: GluegunCommand = {
       const start = new Date();
       console.log(`detected change in ${path}, rebuilding...`);
       try {
-        const data = await dev({ config: { ...config, targets }, paths: [path] });
+        const data = await dev({ config: { ...config, targets }, path: path });
         const end = new Date();
         const time = (end.getTime() - start.getTime()) / 1000;
         log({ data, time });

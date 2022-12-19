@@ -7,35 +7,50 @@ import {
   buildAndOutputNonComponentFiles,
   buildAndOutputComponentFiles,
 } from './build';
+import { checkIsMitosisComponentFilePath } from './helpers/inputs-extensions';
 
-export async function dev({ config, paths }: { config: MitosisConfig; paths: string[] }) {
+export async function dev({ config, path }: { config: MitosisConfig; path: string }) {
   const options = getOptions(config);
+  // if it's a component
+  if (checkIsMitosisComponentFilePath(path)) {
+    // get all mitosis component JSONs
+    const mitosisComponents = await getMitosisComponentJSONs(options, [path]);
 
-  // get all mitosis component JSONs
-  const mitosisComponents = await getMitosisComponentJSONs(options, paths);
+    const targetContexts = getTargetContexts(options);
 
-  const targetContexts = getTargetContexts(options);
+    const generated: { target: Target; components: number; files: number }[] = [];
 
-  const generated: { target: Target; components: number; files: number }[] = [];
+    await Promise.all(
+      targetContexts.map(async (targetContext) => {
+        // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
+        // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
+        const files = fastClone(mitosisComponents);
 
-  await Promise.all(
-    targetContexts.map(async (targetContext) => {
-      // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
-      // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
-      const files = fastClone(mitosisComponents);
+        const x = await buildAndOutputComponentFiles({ ...targetContext, options, files });
 
-      const x = await Promise.all([
-        buildAndOutputNonComponentFiles({ ...targetContext, options }),
-        buildAndOutputComponentFiles({ ...targetContext, options, files }),
-      ]);
+        generated.push({
+          target: targetContext.target,
+          components: x.length,
+          files: 0,
+        });
+      }),
+    );
 
-      generated.push({
-        target: targetContext.target,
-        components: x[1].length,
-        files: x[0].length,
-      });
-    }),
-  );
+    return generated;
+  }
+  // it's a non component file
+  else {
+    const targetContexts = getTargetContexts(options);
 
-  return generated;
+    const generated: { target: Target; components: number; files: number }[] = await Promise.all(
+      targetContexts.map(async (targetContext) => {
+        return {
+          files: (await buildAndOutputNonComponentFiles({ ...targetContext, options })).length,
+          components: 0,
+          target: targetContext.target,
+        };
+      }),
+    );
+    return generated;
+  }
 }
