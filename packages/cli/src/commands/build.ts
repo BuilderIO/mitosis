@@ -1,22 +1,7 @@
-import { GluegunCommand, GluegunParameters } from 'gluegun';
-import { MitosisConfig, Target } from '@builder.io/mitosis';
+import { GluegunCommand } from 'gluegun';
 import { build } from '../build/build';
 import { getMitosisConfig } from '../helpers/get-mitosis-config';
-
-export const getTargets = (mitosisConfig: MitosisConfig, cliOpts: GluegunParameters['options']) => {
-  const targetsFromCli: Target[] = (cliOpts.targets || '').split(',');
-  const excludeTargetsMap: Record<Target, true> = (cliOpts.excludeTargets || '')
-    .split(',')
-    .reduce((accu, t) => {
-      accu[t] = true;
-      return accu;
-    }, {});
-
-  const targets = Array.from(new Set([...mitosisConfig.targets, ...targetsFromCli])).filter(
-    (t) => t && !excludeTargetsMap[t],
-  );
-  return targets;
-};
+import {getTargets} from "../helpers/get-targets"
 
 const command: GluegunCommand = {
   name: 'build',

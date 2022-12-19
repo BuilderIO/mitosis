@@ -1,4 +1,4 @@
-import { MitosisConfig } from '@builder.io/mitosis';
+import { MitosisConfig, Target } from '@builder.io/mitosis';
 import { fastClone } from '../helpers/fast-clone';
 import {
   getMitosisComponentJSONs,
@@ -16,6 +16,8 @@ export async function dev({ config, paths }: { config: MitosisConfig; paths: str
 
   const targetContexts = getTargetContexts(options);
 
+  const generated: { target: Target; components: number; files: number }[] = [];
+
   await Promise.all(
     targetContexts.map(async (targetContext) => {
       // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
@@ -27,11 +29,13 @@ export async function dev({ config, paths }: { config: MitosisConfig; paths: str
         buildAndOutputComponentFiles({ ...targetContext, options, files }),
       ]);
 
-      console.info(
-        `Mitosis: ${targetContext.target}: generated ${x[1].length} components, ${x[0].length} regular files.`,
-      );
+      generated.push({
+        target: targetContext.target,
+        components: x[1].length,
+        files: x[0].length,
+      });
     }),
   );
 
-  console.info('Mitosis: generation completed.');
+  return generated;
 }
