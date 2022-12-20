@@ -25,6 +25,19 @@ You can get more information by running `mitosis --help`
   - transpiles them as-is to JS
 - Performs necessary transformations to both Mitosis & non-Mitosis files so that the output folder is coherent and valid (like renaming all component imports in a Svelte target such that they match the output name, ending in `.svelte`)
 
+## `mitosis dev`
+
+**Warning: mitosis dev is still experimental.**
+
+`mitosis dev` is meant to reflect changes in your mitosis components more quickly. It: 
+
+- Reads the config in `mitosis.config.js` (also could specify config file by option: `--config=<file>`)
+- Identifies a source folder
+- Starts with running mitosis build (see above)
+- Recompiles components on change
+- Recompiles other files on change
+- Currently does NOT recompile on change in override file but reruns mitosis build when this happens. 
+
 ### options
 
 |                             Option                              | Description                                           | Example                                                                                           |

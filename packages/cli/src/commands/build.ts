@@ -1,7 +1,7 @@
 import { GluegunCommand } from 'gluegun';
 import { build } from '../build/build';
 import { getMitosisConfig } from '../helpers/get-mitosis-config';
-import {getTargets} from "../helpers/get-targets"
+import { getTargets } from '../helpers/get-targets';
 
 const command: GluegunCommand = {
   name: 'build',

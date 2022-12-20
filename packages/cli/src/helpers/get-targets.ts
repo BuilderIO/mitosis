@@ -1,5 +1,5 @@
-import { MitosisConfig, Target } from "@builder.io/mitosis";
-import { GluegunParameters } from "gluegun";
+import { MitosisConfig, Target } from '@builder.io/mitosis';
+import { GluegunParameters } from 'gluegun';
 
 export const getTargets = (mitosisConfig: MitosisConfig, cliOpts: GluegunParameters['options']) => {
   const targetsFromCli: Target[] = (cliOpts.targets || '').split(',');
