@@ -10,6 +10,7 @@ import { types } from '@babel/core';
 import { pickBy } from 'lodash';
 import { stripGetter } from '../../helpers/patterns';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { VALID_HTML_TAGS } from '../../constants/html_tags';
 
 export const addPropertiesToJson =
   (properties: MitosisNode['properties']) =>
@@ -43,7 +44,14 @@ export function encodeQuotes(string: string) {
 
 // Transform <FooBar> to <foo-bar> as Vue2 needs
 export const renameMitosisComponentsToKebabCase = (str: string) =>
-  str.replace(/<\/?\w+/g, (match) => match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase());
+  str.replace(/<\/?\w+/g, (match) => {
+    const tagName = match.replaceAll('<', '').replaceAll('/', '');
+    if (VALID_HTML_TAGS.includes(tagName)) {
+      return match;
+    } else {
+      return match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    }
+  });
 
 export function getContextNames(json: MitosisComponent) {
   return Object.keys(json.context.get);

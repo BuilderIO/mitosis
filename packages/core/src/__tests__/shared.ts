@@ -35,6 +35,7 @@ const preserveExportOrLocalStatement = getRawFile(
   './data/basic-preserve-export-or-local-statement.raw.tsx',
 );
 const arrowFunctionInUseStore = getRawFile('./data/arrow-function-in-use-store.raw.tsx');
+const svgComponent = getRawFile('./data/svg.raw.tsx');
 
 const propsType = getRawFile('./data/types/component-props-type.raw.tsx');
 const propsInterface = getRawFile('./data/types/component-props-interface.raw.tsx');
@@ -190,6 +191,7 @@ const BASIC_TESTS: Tests = {
   expressionState,
   contentState,
   referencingFunInsideHook,
+  svgComponent,
 };
 
 const SLOTS_TESTS: Tests = {

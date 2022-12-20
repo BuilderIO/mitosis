@@ -5019,6 +5019,74 @@ exports[`Html > jsx > Javascript Test > subComponent 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > svgComponent 1`] = `
+"<svg fill=\\"none\\" role=\\"img\\" data-el=\\"svg-1\\">
+  <defs>
+    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
+      <feBlend
+        in=\\"SourceGraphic\\"
+        in2=\\"BackgroundImageFix\\"
+        result=\\"shape\\"
+      ></feBlend>
+
+      <feGaussianBlur
+        result=\\"effect1_foregroundBlur\\"
+        data-el=\\"fe-gaussian-blur\\"
+      ></feGaussianBlur>
+    </filter>
+  </defs>
+</svg>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='svg-1']\\").forEach((el) => {
+        el.setAttribute(\\"viewBox\\", \\"0 0 \\" + 42 + \\" \\" + 42);
+
+        el.setAttribute(\\"width\\", 42);
+
+        el.setAttribute(\\"height\\", 42);
+      });
+
+      document
+        .querySelectorAll(\\"[data-el='fe-gaussian-blur']\\")
+        .forEach((el) => {
+          el.setAttribute(\\"stdDeviation\\", 7);
+        });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > typeDependency 1`] = `
 "<div>
   <template data-el=\\"div-1\\"><!-- props.foo --></template>
@@ -10191,6 +10259,74 @@ exports[`Html > jsx > Typescript Test > spreadProps 1`] = `
 
 exports[`Html > jsx > Typescript Test > subComponent 1`] = `
 "<Foo></Foo>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > svgComponent 1`] = `
+"<svg fill=\\"none\\" role=\\"img\\" data-el=\\"svg-1\\">
+  <defs>
+    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
+      <feBlend
+        in=\\"SourceGraphic\\"
+        in2=\\"BackgroundImageFix\\"
+        result=\\"shape\\"
+      ></feBlend>
+
+      <feGaussianBlur
+        result=\\"effect1_foregroundBlur\\"
+        data-el=\\"fe-gaussian-blur\\"
+      ></feGaussianBlur>
+    </filter>
+  </defs>
+</svg>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='svg-1']\\").forEach((el) => {
+        el.setAttribute(\\"viewBox\\", \\"0 0 \\" + 42 + \\" \\" + 42);
+
+        el.setAttribute(\\"width\\", 42);
+
+        el.setAttribute(\\"height\\", 42);
+      });
+
+      document
+        .querySelectorAll(\\"[data-el='fe-gaussian-blur']\\")
+        .forEach((el) => {
+          el.setAttribute(\\"stdDeviation\\", 7);
+        });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
 "
 `;
 
