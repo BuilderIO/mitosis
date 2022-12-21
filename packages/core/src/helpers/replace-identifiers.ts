@@ -110,7 +110,7 @@ const _replaceIdentifiers = (
           (newMemberExpression as AllowMeta)._builder_meta = { newlyGenerated: true };
           path.replaceWith(newMemberExpression);
         } catch (err) {
-          console.error('Could not replace', path.node, 'with', to.toString());
+          console.debug('Could not replace', path.node, 'with', to.toString());
           // throw err;
         }
       }
