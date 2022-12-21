@@ -20,6 +20,9 @@
   <a href="https://www.npmjs.com/package/@builder.io/mitosis" rel="nofollow"><img src="https://img.shields.io/npm/v/@builder.io/mitosis.svg?sanitize=true"></a>
 </p>
 
+_PS: we are a _very_ small and lean team, and the surface area of Mitosis is fairly large. As the tool is under active development in beta, we ask for your patience and help in contributing to this amazing project. We always do our best to empower folks to contribute substantially to the project and have an impact._
+
+
 ## Table of contents
 
 - [Quick Start Guide](#quick-start-guide)
