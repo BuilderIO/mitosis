@@ -20,7 +20,7 @@
   <a href="https://www.npmjs.com/package/@builder.io/mitosis" rel="nofollow"><img src="https://img.shields.io/npm/v/@builder.io/mitosis.svg?sanitize=true"></a>
 </p>
 
-_PS: we are a _very_ small and lean team, and the surface area of Mitosis is fairly large. As the tool is under active development in beta, we ask for your patience and help in contributing to this amazing project. We always do our best to empower folks to contribute substantially to the project and have an impact._
+_PS: We are actively looking for interested folks to become active contributors to Mitosis. Given its large surface area, there is tons of room for anyone to make a large and sustained impact on Mitosis. We invest a ton of time in helping newcomers get onboarded to the project and teach them how to make changes to the codebase ( [example1](https://github.com/BuilderIO/mitosis/issues/847#issuecomment-1307439504), [example2](https://github.com/BuilderIO/mitosis/issues/372#issuecomment-1133471614), [example3](https://github.com/BuilderIO/mitosis/issues/734#issuecomment-1255453702) ). If interested, look at our list of [good first issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or reach out on our [Discord](https://discord.gg/SNusEyNGsx)_
 
 
 ## Table of contents
