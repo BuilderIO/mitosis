@@ -5,29 +5,17 @@ import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
-import {
-  MitosisComponent,
-  extendedHook,
-  ContextSetInfo,
-  ContextGetInfo,
-} from '../../types/mitosis-component';
+import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
-import { encodeQuotes, getContextValue, getOnUpdateHookName } from './helpers';
+import { encodeQuotes, getContextKey, getContextValue, getOnUpdateHookName } from './helpers';
 import { ToVueOptions } from './types';
-
-const checkIfContextHasStrName = (context: ContextGetInfo | ContextSetInfo) => {
-  // check if the name is wrapped in single or double quotes
-  const isStrName = context.name.startsWith("'") || context.name.startsWith('"');
-  return isStrName;
-};
 
 const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) => {
   return `{
     ${Object.values(json.context.set)
       .map((setVal) => {
-        const key = checkIfContextHasStrName(setVal) ? setVal.name : `[${setVal.name}.key]`;
-
-        return `${key}: ${getContextValue({ options, json, thisPrefix: '_this' })(setVal)}`;
+        const key = getContextKey(setVal);
+        return `[${key}]: ${getContextValue({ options, json, thisPrefix: '_this' })(setVal)}`;
       })
       .join(',')}
   }`;
@@ -41,7 +29,7 @@ function getContextInjectString(component: MitosisComponent, options: ToVueOptio
   for (const key in contextGetters) {
     const context = contextGetters[key];
     str += `
-      ${key}: ${encodeQuotes(context.name)}${checkIfContextHasStrName(context) ? '' : '.key'},
+      ${key}: ${encodeQuotes(getContextKey(context))},
     `;
   }
 

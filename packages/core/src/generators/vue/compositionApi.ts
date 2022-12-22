@@ -3,7 +3,7 @@ import json5 from 'json5';
 import { pickBy } from 'lodash';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
-import { getContextValue } from './helpers';
+import { getContextKey, getContextValue } from './helpers';
 import { ToVueOptions } from './types';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { processBinding } from './helpers';
@@ -81,18 +81,19 @@ export function generateCompositionApiScript(
     ${props.length ? getCompositionPropDefinition({ component, props, options }) : ''}
     ${refs}
 
-    ${Object.keys(component.context.get)
-      ?.map((key) => `const ${key} = inject(${component.context.get[key].name})`)
+    ${Object.entries(component.context.get)
+      ?.map(([key, context]) => {
+        return `const ${key} = inject(${getContextKey(context)})`;
+      })
       .join('\n')}
 
     ${Object.values(component.context.set)
-      ?.map(
-        (contextSet) =>
-          `provide(${contextSet.name}, ${getContextValue({
-            json: component,
-            options,
-          })(contextSet)})`,
-      )
+      ?.map((contextSet) => {
+        const contextValue = getContextValue({ json: component, options })(contextSet);
+        const key = getContextKey(contextSet);
+
+        return `provide(${key}, ${contextValue})`;
+      })
       .join('\n')}
 
     ${Object.keys(component.refs)

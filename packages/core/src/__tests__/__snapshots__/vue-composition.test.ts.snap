@@ -134,9 +134,9 @@ import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 const name = ref(\\"PatrickJS\\");
 
-const myService = inject(MyService);
+const myService = inject(MyService.key);
 
-provide(Injector, createInjector());
+provide(Injector.key, createInjector());
 
 const hi = myService.method(\\"hi\\");
 console.log(hi);
@@ -1746,15 +1746,15 @@ import Context2 from \\"@dummy/2\\";
 
 const props = defineProps([\\"content\\"]);
 
-const foo = inject(Context1);
+const foo = inject(Context1.key);
 
-provide(Context1, {
+provide(Context1.key, {
   foo: \\"bar\\",
   content() {
     return props.content;
   },
 });
-provide(Context2, { bar: \\"baz\\" });
+provide(Context2.key, { bar: \\"baz\\" });
 </script>"
 `;
 
@@ -1770,7 +1770,7 @@ import BuilderContext from \\"@dummy/context.vue\\";
 
 const props = defineProps([\\"content\\", \\"customComponents\\"]);
 
-provide(BuilderContext, {
+provide(BuilderContext.key, {
   content: props.content,
   registeredComponents: props.customComponents,
 });
@@ -2196,7 +2196,7 @@ import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 const props = defineProps([\\"content\\", \\"customComponents\\"]);
 
-provide(BuilderContext, {
+provide(BuilderContext.key, {
   get content() {
     return 3;
   },
@@ -2594,9 +2594,9 @@ import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 const name = ref(\\"PatrickJS\\");
 
-const myService = inject(MyService);
+const myService = inject(MyService.key);
 
-provide(Injector, createInjector());
+provide(Injector.key, createInjector());
 
 const hi = myService.method(\\"hi\\");
 console.log(hi);
@@ -4383,15 +4383,15 @@ import Context2 from \\"@dummy/2\\";
 
 const props = defineProps<ComponentWithContextProps>();
 
-const foo = inject(Context1);
+const foo = inject(Context1.key);
 
-provide(Context1, {
+provide(Context1.key, {
   foo: \\"bar\\",
   content() {
     return props.content;
   },
 });
-provide(Context2, { bar: \\"baz\\" });
+provide(Context2.key, { bar: \\"baz\\" });
 </script>"
 `;
 
@@ -4407,7 +4407,7 @@ import BuilderContext from \\"@dummy/context.vue\\";
 
 const props = defineProps([\\"content\\", \\"customComponents\\"]);
 
-provide(BuilderContext, {
+provide(BuilderContext.key, {
   content: props.content,
   registeredComponents: props.customComponents,
 });
@@ -4914,7 +4914,7 @@ import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 const props = defineProps<Props>();
 
-provide(BuilderContext, {
+provide(BuilderContext.key, {
   get content() {
     return 3;
   },

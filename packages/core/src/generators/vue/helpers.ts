@@ -1,7 +1,7 @@
 import { Nullable } from '../../helpers/nullable';
 import { stringifyContextValue } from '../../helpers/get-state-object-string';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
+import { ContextGetInfo, ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { ToVueOptions } from './types';
 import { pipe } from 'fp-ts/lib/function';
@@ -208,3 +208,15 @@ export const getContextValue =
 
     return valueStr;
   };
+
+export const checkIfContextHasStrName = (context: ContextGetInfo | ContextSetInfo) => {
+  // check if the name is wrapped in single or double quotes
+  const isStrName = context.name.startsWith("'") || context.name.startsWith('"');
+  return isStrName;
+};
+
+export const getContextKey = (context: ContextGetInfo | ContextSetInfo) => {
+  const isStrName = checkIfContextHasStrName(context);
+  const key = isStrName ? context.name : `${context.name}.key`;
+  return key;
+};
