@@ -180,9 +180,14 @@ export const processBinding = ({
           }
         },
       }),
-      (code) => processRefs({ input: code, component: json, options, thisPrefix }),
-      (code) => prefixMethodsWithThis(code, json, options),
-      (code) => (preserveGetter === false ? stripGetter(code) : code),
+      (x) => {
+        return pipe(
+          x,
+          (code) => processRefs({ input: code, component: json, options, thisPrefix }),
+          (code) => prefixMethodsWithThis(code, json, options),
+          (code) => (preserveGetter === false ? stripGetter(code) : code),
+        );
+      },
     );
   } catch (e) {
     console.log('could not process bindings in ', { code });
