@@ -1,7 +1,7 @@
 import { Nullable } from '../../helpers/nullable';
 import { stringifyContextValue } from '../../helpers/get-state-object-string';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
+import { ContextGetInfo, ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { ToVueOptions } from './types';
 import { pipe } from 'fp-ts/lib/function';
@@ -106,14 +106,24 @@ const getAllRefs = (component: MitosisComponent) => {
   return allKeys;
 };
 
-function processRefs(input: string, component: MitosisComponent, options: ToVueOptions) {
+function processRefs({
+  input,
+  component,
+  options,
+  thisPrefix,
+}: {
+  input: string;
+  component: MitosisComponent;
+  options: ToVueOptions;
+  thisPrefix: ProcessBinding['thisPrefix'];
+}) {
   const refs = options.api === 'options' ? getContextNames(component) : getAllRefs(component);
 
   return babelTransformExpression(input, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
       const name = path.node.name;
       if (refs.includes(name) && shouldAppendValueToRef(path)) {
-        const newValue = options.api === 'options' ? `this.${name}` : `${name}.value`;
+        const newValue = options.api === 'options' ? `${thisPrefix}.${name}` : `${name}.value`;
         path.replaceWith(types.identifier(newValue));
       }
     },
@@ -134,6 +144,14 @@ function prefixMethodsWithThis(input: string, component: MitosisComponent, optio
   }
 }
 
+type ProcessBinding = {
+  code: string;
+  options: ToVueOptions;
+  json: MitosisComponent;
+  preserveGetter?: boolean;
+  thisPrefix?: 'this' | '_this';
+};
+
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
 export const processBinding = ({
@@ -141,12 +159,8 @@ export const processBinding = ({
   options,
   json,
   preserveGetter = false,
-}: {
-  code: string;
-  options: ToVueOptions;
-  json: MitosisComponent;
-  preserveGetter?: boolean;
-}): string => {
+  thisPrefix = 'this',
+}: ProcessBinding): string => {
   try {
     return pipe(
       stripStateAndPropsRefs(code, {
@@ -160,15 +174,20 @@ export const processBinding = ({
               return name;
             case 'options':
               if (name === 'children' || name.startsWith('children.')) {
-                return 'this.$slots.default';
+                return '${thisPrefix}.$slots.default';
               }
-              return `this.${name}`;
+              return `${thisPrefix}.${name}`;
           }
         },
       }),
-      (code) => processRefs(code, json, options),
-      (code) => prefixMethodsWithThis(code, json, options),
-      (code) => (preserveGetter === false ? stripGetter(code) : code),
+      (x) => {
+        return pipe(
+          x,
+          (code) => processRefs({ input: code, component: json, options, thisPrefix }),
+          (code) => prefixMethodsWithThis(code, json, options),
+          (code) => (preserveGetter === false ? stripGetter(code) : code),
+        );
+      },
     );
   } catch (e) {
     console.log('could not process bindings in ', { code });
@@ -177,23 +196,27 @@ export const processBinding = ({
 };
 
 export const getContextValue =
-  ({ options, json }: { options: ToVueOptions; json: MitosisComponent }) =>
+  (args: Pick<ProcessBinding, 'options' | 'json' | 'thisPrefix'>) =>
   ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
     const valueStr = value
       ? stringifyContextValue(value, {
-          valueMapper: (code) => processBinding({ code, options, json, preserveGetter: true }),
+          valueMapper: (code) => processBinding({ code, ...args, preserveGetter: true }),
         })
       : ref
-      ? processBinding({ code: ref, options, json, preserveGetter: true })
+      ? processBinding({ code: ref, ...args, preserveGetter: true })
       : null;
 
     return valueStr;
   };
 
-export const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) => {
-  return `{
-    ${Object.values(json.context.set)
-      .map((setVal) => `${setVal.name}: ${getContextValue({ options, json })(setVal)}`)
-      .join(',')}
-  }`;
+export const checkIfContextHasStrName = (context: ContextGetInfo | ContextSetInfo) => {
+  // check if the name is wrapped in single or double quotes
+  const isStrName = context.name.startsWith("'") || context.name.startsWith('"');
+  return isStrName;
+};
+
+export const getContextKey = (context: ContextGetInfo | ContextSetInfo) => {
+  const isStrName = checkIfContextHasStrName(context);
+  const key = isStrName ? context.name : `${context.name}.key`;
+  return key;
 };

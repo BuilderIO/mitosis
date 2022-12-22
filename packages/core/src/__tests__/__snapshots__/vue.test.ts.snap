@@ -150,12 +150,13 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   provide() {
+    const _this = this;
     return {
-      Injector: createInjector(),
+      [Injector.key]: createInjector(),
     };
   },
   inject: {
-    myService: MyService,
+    myService: MyService.key,
   },
   created() {
     const hi = this.myService.method(\\"hi\\");
@@ -1936,10 +1937,11 @@ export default {
   props: [\\"content\\", \\"customComponents\\"],
 
   provide() {
+    const _this = this;
     return {
-      BuilderContext: {
-        content: this.content,
-        registeredComponents: this.customComponents,
+      [BuilderContext.key]: {
+        content: _this.content,
+        registeredComponents: _this.customComponents,
       },
     };
   },
@@ -2476,8 +2478,9 @@ export default {
   data: () => ({ trackClick }),
 
   provide() {
+    const _this = this;
     return {
-      BuilderContext: {
+      [BuilderContext.key]: {
         get content() {
           return 3;
         },
@@ -2934,12 +2937,13 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   provide() {
+    const _this = this;
     return {
-      Injector: createInjector(),
+      [Injector.key]: createInjector(),
     };
   },
   inject: {
-    myService: MyService,
+    myService: MyService.key,
   },
   created() {
     const hi = this.myService.method(\\"hi\\");
@@ -4964,10 +4968,11 @@ export default {
   props: [\\"content\\", \\"customComponents\\"],
 
   provide() {
+    const _this = this;
     return {
-      BuilderContext: {
-        content: this.content,
-        registeredComponents: this.customComponents,
+      [BuilderContext.key]: {
+        content: _this.content,
+        registeredComponents: _this.customComponents,
       },
     };
   },
@@ -5589,8 +5594,9 @@ export default {
   data: () => ({ trackClick }),
 
   provide() {
+    const _this = this;
     return {
-      BuilderContext: {
+      [BuilderContext.key]: {
         get content() {
           return 3;
         },
@@ -6023,8 +6029,9 @@ export default {
   data: () => ({ activeTab: 0 }),
 
   provide() {
+    const _this = this;
     return {
-      activeTab: this.activeTab,
+      [\\"activeTab\\"]: _this.activeTab,
     };
   },
   inject: {
@@ -6402,8 +6409,9 @@ export default {
   data: () => ({ activeTab: 0 }),
 
   provide() {
+    const _this = this;
     return {
-      activeTab: this.activeTab,
+      [\\"activeTab\\"]: _this.activeTab,
     };
   },
   inject: {
