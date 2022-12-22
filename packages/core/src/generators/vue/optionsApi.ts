@@ -7,8 +7,19 @@ import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
-import { encodeQuotes, getContextProvideString, getOnUpdateHookName } from './helpers';
+import { encodeQuotes, getContextValue, getOnUpdateHookName } from './helpers';
 import { ToVueOptions } from './types';
+
+const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) => {
+  return `{
+    ${Object.values(json.context.set)
+      .map(
+        (setVal) =>
+          `${setVal.name}: ${getContextValue({ options, json, thisPrefix: '_this' })(setVal)}`,
+      )
+      .join(',')}
+  }`;
+};
 
 function getContextInjectString(component: MitosisComponent, options: ToVueOptions) {
   let str = '{';
@@ -187,6 +198,7 @@ export function generateOptionsApiScript(
         ${
           size(component.context.set)
             ? `provide() {
+                const _this = this;
                 return ${getContextProvideString(component, options)}
               },`
             : ''
