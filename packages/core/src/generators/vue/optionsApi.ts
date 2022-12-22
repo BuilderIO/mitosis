@@ -15,7 +15,9 @@ const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) 
     ${Object.values(json.context.set)
       .map(
         (setVal) =>
-          `${setVal.name}: ${getContextValue({ options, json, thisPrefix: '_this' })(setVal)}`,
+          `[${setVal.name}.key]: ${getContextValue({ options, json, thisPrefix: '_this' })(
+            setVal,
+          )}`,
       )
       .join(',')}
   }`;
@@ -24,9 +26,11 @@ const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) 
 function getContextInjectString(component: MitosisComponent, options: ToVueOptions) {
   let str = '{';
 
-  for (const key in component.context.get) {
+  const contextGetters = component.context.get;
+
+  for (const key in contextGetters) {
     str += `
-      ${key}: ${encodeQuotes(component.context.get[key].name)},
+      ${key}: ${encodeQuotes(contextGetters[key].name)}.key,
     `;
   }
 
