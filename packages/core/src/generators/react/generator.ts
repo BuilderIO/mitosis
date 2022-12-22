@@ -52,7 +52,7 @@ export const contextPropDrillingKey = '_context';
 const openFrag = (options: ToReactOptions) => getFragment('open', options);
 const closeFrag = (options: ToReactOptions) => getFragment('close', options);
 function getFragment(type: 'open' | 'close', options: ToReactOptions) {
-  const tagName = options.preact ? 'Fragment' : 'React.Fragment';
+  const tagName = options.preact ? 'Fragment' : '';
   return type === 'open' ? `<${tagName}>` : `</${tagName}>`;
 }
 
