@@ -166,14 +166,9 @@ export const processBinding = ({
           }
         },
       }),
-      (x) => {
-        return pipe(
-          x,
-          (code) => processRefs(code, json, options),
-          (code) => prefixMethodsWithThis(code, json, options),
-          (code) => (preserveGetter === false ? stripGetter(code) : code),
-        );
-      },
+      (code) => processRefs(code, json, options),
+      (code) => prefixMethodsWithThis(code, json, options),
+      (code) => (preserveGetter === false ? stripGetter(code) : code),
     );
   } catch (e) {
     console.log('could not process bindings in ', { code });

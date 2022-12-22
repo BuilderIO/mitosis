@@ -44,6 +44,28 @@ const TEST_SPECS: Spec[] = [
     from: 'state',
     to: (name) => (name === 'children' ? '$$slots.default' : name),
   },
+  {
+    code: `
+    const x = {
+      foo: bar,
+      test: 123,
+    }
+
+    const foo = x.foo;
+
+    const y = {
+      l: x.foo,
+      m: foo
+    }
+
+    const bar = foo;
+    `,
+    from: ['foo', 'test'],
+    to: (name) => {
+      console.log({ name });
+      return `${name}.value`;
+    },
+  },
 ];
 
 describe('replaceIdentifiers', () => {

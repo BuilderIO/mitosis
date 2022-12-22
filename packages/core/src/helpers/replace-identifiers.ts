@@ -3,6 +3,18 @@ import generate from '@babel/generator';
 import { pipe } from 'fp-ts/lib/function';
 import { babelTransformExpression } from './babel-transform';
 
+/**
+ * Type hack.
+ *
+ * We want to augment the `BaseNode` interface to include a `_builder_meta` property but couldn't get
+ * `yarn patch-package` to cooperate with us. So we're doing it this way.
+ */
+type AllowMeta<T = types.Node> = T & {
+  _builder_meta?: {
+    newlyGenerated: boolean;
+  };
+};
+
 type ReplaceArgs = {
   code: string;
   from: string | string[];
@@ -17,10 +29,10 @@ const getToParam = (
   path: babel.NodePath<types.Identifier | types.MemberExpression | types.OptionalMemberExpression>,
 ): string => {
   if (types.isMemberExpression(path.node) || types.isOptionalMemberExpression(path.node)) {
-    // if simple member expression e.g. `props.foo`, returns `foo`
     if (types.isIdentifier(path.node.property)) {
-      const newLocal = path.node.property.name;
-      return newLocal;
+      // if simple member expression e.g. `props.foo`, returns `foo`
+      const propertyName = path.node.property.name;
+      return propertyName;
     } else {
       // if nested member expression e.g. `props.foo.bar.baz`, returns `foo.bar.baz`
       const x = generate(path.node.property).code;
@@ -28,7 +40,8 @@ const getToParam = (
     }
   } else {
     // if naked identifier e.g. `foo`, returns `foo`
-    return path.node.name;
+    const nodeName = path.node.name;
+    return nodeName;
   }
 };
 
@@ -39,7 +52,10 @@ const _replaceIdentifiers = (
   const memberExpressionObject = types.isIdentifier(path.node) ? path.node : path.node.object;
   const normalizedFrom = Array.isArray(from) ? from : [from];
 
-  if (!types.isIdentifier(memberExpressionObject)) {
+  if (
+    !types.isIdentifier(memberExpressionObject) ||
+    (path.node as AllowMeta)?._builder_meta?.newlyGenerated
+  ) {
     return;
   }
 
@@ -91,16 +107,16 @@ const _replaceIdentifiers = (
           if (generate(path.node).code === generate(newMemberExpression).code) {
             return;
           }
-
+          (newMemberExpression as AllowMeta)._builder_meta = { newlyGenerated: true };
           path.replaceWith(newMemberExpression);
         } catch (err) {
-          console.error('Could not replace', path.node, 'with', to);
+          console.debug('Could not replace', path.node, 'with', to.toString());
           // throw err;
         }
       }
     } else {
       if (types.isIdentifier(path.node)) {
-        console.error(`Could not replace Identifier '${from.toString()}' with nothing.`);
+        console.debug(`Could not replace Identifier '${from.toString()}' with nothing.`);
       } else {
         // if we're looking at a member expression, e.g. `props.foo` and no `to` was provided, then we want to strip out
         // the identifier and end up with `foo`. So we replace the member expression with just its `property` value.
@@ -128,13 +144,15 @@ export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
             !types.isOptionalMemberExpression(path.parent) &&
             // function declaration identifiers shouldn't be transformed
             !types.isFunctionDeclaration(path.parent)
+            // variable declaration identifiers shouldn't be transformed
+            // !(types.isVariableDeclarator(path.parent) && path.parent.id === path.node)
           ) {
             _replaceIdentifiers(path, { from, to });
           }
         },
       }),
       // merely running `babel.transform` will add spaces around the code, even if we don't end up replacing anything.
-      // This is why we need to trim the output.
+      // we have some other code downstream that cannot have untrimmed spaces, so we need to trim the output.
       (code) => code.trim(),
     );
   } catch (err) {
