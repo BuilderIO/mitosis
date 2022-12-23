@@ -301,6 +301,42 @@ const getComponentOutputFileName = ({
   );
 };
 
+const getOverrideFile = async ({
+  path,
+  filename,
+}: {
+  path: string;
+  filename: string;
+}): Promise<string | null> => {
+  const filePaths: string[] = [
+    `${path}/${filename}`,
+    // We can't do this now because the output file extension needs to match that of the override, e.g. can't store a
+    // .tsx override in a .jsx file as that will cause compilation errors.
+
+    // // we wanna make sure to allow both JS and TS files as overrides, regardless of typescript output choice.
+    // ...(filename.endsWith('.ts') || filename.endsWith('.tsx')
+    //   ? [`${path}/${filename.replace(/\.ts(x?)$/, '.js$1')}`]
+    //   : []),
+    // ...(filename.endsWith('.js') || filename.endsWith('.jsx')
+    //   ? [`${path}/${filename.replace(/\.js(x?)$/, '.ts$1')}`]
+    //   : []),
+  ];
+
+  // find first file that exists and return it, or else return undefined
+  const foundFilePath = (
+    await Promise.all(
+      filePaths.map(async (filePath) => ({ filePath, exists: await pathExists(filePath) })),
+    )
+  ).find(({ exists }) => exists);
+
+  if (foundFilePath) {
+    console.log('found override file', foundFilePath);
+    return readFile(foundFilePath.filePath, 'utf8');
+  } else {
+    return null;
+  }
+};
+
 /**
  * Transpiles and outputs Mitosis component files.
  */
@@ -322,12 +358,12 @@ async function buildAndOutputComponentFiles({
      * NOTE: we use the default `getTargetPath` even if a user-provided alternative is given. That's because the
      * user-provided alternative is only for the output path, not the override input path.
      */
-    const overrideFilePath = `${options.overridesDir}/${getTargetPath({
-      target,
-    })}/${outputFilePath}`;
-    const overrideFile = (await pathExists(overrideFilePath))
-      ? await readFile(overrideFilePath, 'utf8')
-      : null;
+
+    const overrideFilePath = `${options.overridesDir}/${getTargetPath({ target })}`;
+    const overrideFile = await getOverrideFile({
+      filename: outputFilePath,
+      path: overrideFilePath,
+    });
 
     debugTarget(`transpiling ${path}...`);
     let transpiled = '';
