@@ -135,12 +135,15 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     let json = fastClone(component);
     json = runPreJsonPlugins(json, options.plugins);
 
-    const refs = Array.from(getRefs(json));
     useBindValue(json, options);
 
     gettersToFunctions(json);
 
     const props = Array.from(getProps(json)).filter((prop) => !isSlotProperty(prop));
+
+    const refs = Array.from(getRefs(json))
+      .map(stripStateAndProps({ json, options }))
+      .filter((x) => !props.includes(x));
 
     json = runPostJsonPlugins(json, options.plugins);
 
@@ -276,7 +279,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
 
-      ${refs.map((ref) => `let ${stripStateAndProps({ json, options })(ref)}`).join('\n')}
+      ${refs.map((ref) => `let ${ref}`).join('\n')}
 
       ${
         options.stateType === 'proxies'
