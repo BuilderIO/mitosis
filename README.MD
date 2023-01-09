@@ -115,6 +115,8 @@ Here are some helpful resources on trying out Mitosis:
 
 ## What is Mitosis?
 
+Check out [this talk](https://portal.gitnation.org/contents/its-time-to-de-fragment-the-web) given by Sami Jaber, the core maintainer of Mitosis. It gives a good overview of the impetus behind Mitosis, and a high-level understanding of its different pieces.
+
 [![Mitosis Video](https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffa5c422309ce4fbea9eaa133fa471877)](https://www.youtube.com/watch?v=XQIuv34-K_8 'Mitosis Video')
 
 ## Docs
