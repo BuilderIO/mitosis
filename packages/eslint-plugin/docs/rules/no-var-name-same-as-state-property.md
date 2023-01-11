@@ -22,6 +22,59 @@ export default function MyComponent(props) {
 }
 ```
 
+```js
+import { useStore } from '@builder.io/mitosis';
+
+export default function MyComponent(props) {
+  const state = useStore({
+    foo: 'bar',
+
+    abc() {
+      const foo = 'baz';
+
+      return foo;
+    },
+  });
+
+  return <div />;
+}
+```
+
+```js
+import { useStore } from '@builder.io/mitosis';
+
+export default function MyComponent(props) {
+  const state = useStore({
+    foo: 'bar',
+  });
+
+  function myFunction() {
+    const foo = 'some value';
+    state.foo = foo;
+  }
+
+  return <div />;
+}
+```
+
+```js
+import { useStore } from '@builder.io/mitosis';
+
+export default function MyComponent(props) {
+  const state = useStore({
+    foo: 'bar',
+  });
+
+  function myFunction() {
+    const { foo } = props.obj;
+
+    state.foo = foo;
+  }
+
+  return <div />;
+}
+```
+
 Examples of **correct** code for this rule:
 
 ```js
@@ -33,6 +86,24 @@ export default function MyComponent(props) {
   });
 
   const foo_ = bar;
+
+  return <div />;
+}
+```
+
+```js
+import { useStore } from '@builder.io/mitosis';
+
+export default function MyComponent(props) {
+  const state = useStore({
+    foo: 'bar',
+  });
+
+  function myFunction() {
+    const { foo: foo1 } = props.obj;
+
+    state.foo = foo;
+  }
 
   return <div />;
 }

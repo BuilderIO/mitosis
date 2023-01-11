@@ -35,6 +35,7 @@ const preserveExportOrLocalStatement = getRawFile(
   './data/basic-preserve-export-or-local-statement.raw.tsx',
 );
 const arrowFunctionInUseStore = getRawFile('./data/arrow-function-in-use-store.raw.tsx');
+const svgComponent = getRawFile('./data/svg.raw.tsx');
 
 const propsType = getRawFile('./data/types/component-props-type.raw.tsx');
 const propsInterface = getRawFile('./data/types/component-props-interface.raw.tsx');
@@ -80,14 +81,18 @@ const selfRefCompWChildren = getRawFile(
   './data/blocks/self-referencing-component-with-children.raw.tsx',
 );
 const selfRefComp = getRawFile('./data/blocks/self-referencing-component.raw.tsx');
+const slotDefault = getRawFile('./data/blocks/slot-default.raw.tsx');
 const slotHtml = getRawFile('./data/blocks/slot-html.raw.tsx');
 const slotJsx = getRawFile('./data/blocks/slot-jsx.raw.tsx');
+const slotNamed = getRawFile('./data/blocks/slot-named.raw.tsx');
 const stamped = getRawFile('./data/blocks/stamped-io.raw.tsx');
 const submitButtonBlock = getRawFile('./data/blocks/submit-button.raw.tsx');
 const text = getRawFile('./data/blocks/text.raw.tsx');
 const textarea = getRawFile('./data/blocks/textarea.raw.tsx');
 const video = getRawFile('./data/blocks/video.raw.tsx');
-
+const referencingFunInsideHook = getRawFile(
+  './data/blocks/referencing-function-inside-hook.raw.tsx',
+);
 const multipleSpreads = getRawFile('./data/spread/multiple-spreads.raw.tsx');
 const spreadAttrs = getRawFile('./data/spread/spread-attrs.raw.tsx');
 const spreadNestedProps = getRawFile('./data/spread/spread-nested-props.raw.tsx');
@@ -110,10 +115,13 @@ const SVELTE_SYNTAX_TESTS: Tests = {
   context: getRawFile('./syntax/svelte/context.raw.svelte'),
   each: getRawFile('./syntax/svelte/each.raw.svelte'),
   html: getRawFile('./syntax/svelte/html.raw.svelte'),
+  eventHandlers: getRawFile('./syntax/svelte/event-handlers.raw.svelte'),
   ifElse: getRawFile('./syntax/svelte/if-else.raw.svelte'),
   imports: getRawFile('./syntax/svelte/imports.raw.svelte'),
   lifecycleHooks: getRawFile('./syntax/svelte/lifecycle-hooks.raw.svelte'),
   reactive: getRawFile('./syntax/svelte/reactive.raw.svelte'),
+  reactiveWithFn: getRawFile('./syntax/svelte/reactive-with-fn.raw.svelte'),
+  slots: getRawFile('./syntax/svelte/slots.raw.svelte'),
   style: getRawFile('./syntax/svelte/style.raw.svelte'),
   textExpressions: getRawFile('./syntax/svelte/text-expressions.raw.svelte'),
 };
@@ -182,13 +190,17 @@ const BASIC_TESTS: Tests = {
   arrowFunctionInUseStore,
   expressionState,
   contentState,
+  referencingFunInsideHook,
+  svgComponent,
 };
 
 const SLOTS_TESTS: Tests = {
   ContentSlotJSX: contentSlotJsx,
   ContentSlotHtml: contentSlotHtml,
+  SlotDefault: slotDefault,
   SlotJsx: slotJsx,
   SlotHtml: slotHtml,
+  SlotNamed: slotNamed,
   classState,
 };
 
@@ -227,6 +239,10 @@ const ON_UPDATE_RETURN: Tests = {
 
 const IMPORT_TEST: Tests = {
   importRaw: getRawFile('./data/import.raw.tsx'),
+};
+
+const OUTPUT_EVENT_BINDINGS_TEST: Tests = {
+  outputEventBinding: getRawFile('./data/output-event-bindings.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {
@@ -295,6 +311,7 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     ADVANCED_REF,
     ON_UPDATE_RETURN,
     IMPORT_TEST,
+    OUTPUT_EVENT_BINDINGS_TEST,
   ],
   lit: [
     CONTEXT_TEST,
@@ -439,6 +456,14 @@ export const runTestsForJsx = () => {
         const component = parseJsx(await tests[key]);
         expect(component).toMatchSnapshot();
       });
+    });
+  });
+};
+export const runTestsForSvelteSyntax = () => {
+  Object.keys(SVELTE_SYNTAX_TESTS).forEach((key) => {
+    test(key, async () => {
+      const component = await parseSvelte(await SVELTE_SYNTAX_TESTS[key]);
+      expect(component).toMatchSnapshot();
     });
   });
 };

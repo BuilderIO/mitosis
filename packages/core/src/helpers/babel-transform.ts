@@ -4,6 +4,7 @@ const tsPreset = require('@babel/preset-typescript');
 const decorators = require('@babel/plugin-syntax-decorators');
 import type { Visitor } from '@babel/traverse';
 import { pipe } from 'fp-ts/lib/function';
+import { checkIsGetter } from './patterns';
 
 const handleErrorOrExpression = <VisitorContextType = any>({
   code,
@@ -22,26 +23,35 @@ const handleErrorOrExpression = <VisitorContextType = any>({
     // Detect method fragments. These get passed sometimes and otherwise
     // generate compile errors. They are of the form `foo() { ... }`
     const isMethod = Boolean(
-      !code.startsWith('function') && code.match(/^[a-z0-9_]+\s*\([^\)]*\)\s*[\{:]/i),
+      !code.trim().startsWith('function') && code.trim().match(/^[a-z0-9_]+\s*\([^\)]*\)\s*[\{:]/i),
     );
 
-    if (isMethod) {
+    const isGetter = checkIsGetter(code);
+
+    const isMethodOrGetter = isMethod || isGetter;
+
+    if (isMethodOrGetter) {
       useCode = `function ${useCode}`;
     }
-    // Parse the code as an expression (instead of the default, a block) by giving it a fake variable assignment
-    // e.g. if the code parsed is { ... } babel will treat that as a block by deafult, unless processed as an expression
-    // that is an object
-    useCode = `let _ = ${useCode}`;
-    result = pipe(babelTransformCode(useCode, visitor), trimSemicolons, (str) =>
+
+    result = pipe(
+      // Parse the code as an expression (instead of the default, a block) by giving it a fake variable assignment
+      // e.g. if the code parsed is { ... } babel will treat that as a block by deafult, unless processed as an expression
+      // that is an object
+      `let _ = ${useCode}`,
+      (code) => babelTransformCode(code, visitor),
+      trimSemicolons,
       // Remove our fake variable assignment
-      str.replace(/let _ =\s/, ''),
+      (str) => str.replace(/let _ =\s/, ''),
     );
-    if (isMethod) {
+
+    if (isMethodOrGetter) {
       return result.replace('function', '');
     }
+
     return result;
   } catch (err) {
-    console.error('Error parsing code:\n', code, '\n', result);
+    // console.error('Error parsing code:\n', { code, result, useCode });
     throw err;
   }
 };
@@ -107,17 +117,32 @@ export const babelTransformExpression = <VisitorContextType = any>(
     return '';
   }
 
-  const type = getType(code, initialType);
+  const isGetter = code.trim().startsWith('get ');
 
-  const useCode = type === 'functionBody' ? `function(){${code}}` : code;
+  return pipe(
+    code,
+    (code) => {
+      code = isGetter ? code.replace('get', 'function ') : code;
 
-  if (type !== 'expression') {
-    try {
-      return pipe(babelTransformCode(useCode, visitor), trimExpression(type));
-    } catch (error) {
-      return handleErrorOrExpression({ code, useCode, result: null, visitor });
-    }
-  } else {
-    return handleErrorOrExpression({ code, useCode, result: null, visitor });
-  }
+      const type = getType(code, initialType);
+
+      const useCode = type === 'functionBody' ? `function(){${code}}` : code;
+
+      return { type, useCode };
+    },
+    ({ type, useCode }) => {
+      if (type !== 'expression') {
+        try {
+          return pipe(babelTransformCode(useCode, visitor), trimExpression(type));
+        } catch (error) {
+          return handleErrorOrExpression({ code, useCode, result: null, visitor });
+        }
+      } else {
+        return handleErrorOrExpression({ code, useCode, result: null, visitor });
+      }
+    },
+    (transformed) => {
+      return isGetter ? transformed.replace('function ', 'get ') : transformed;
+    },
+  );
 };

@@ -33,7 +33,7 @@ export const generateContextFile = async ({
       case 'vue':
       case 'vue2':
       case 'vue3':
-        return contextToVue(context);
+        return contextToVue(options.options[target])({ context });
       case 'solid':
         return contextToSolid()({ context });
       case 'react':
@@ -46,7 +46,10 @@ export const generateContextFile = async ({
         return contextToQwik()({ context });
       default:
         console.warn('Context files are not supported for this target. Outputting no-op');
-        return contextToVue(context);
+        return `
+        // Noop file
+        export default {};
+      `;
     }
   }
 };

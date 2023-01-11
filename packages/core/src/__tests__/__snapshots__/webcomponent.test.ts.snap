@@ -259,6 +259,7 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-smile-reviews']\\")
       .forEach((el) => {
         const whenCondition = this.state.showReviewPrompt;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -282,7 +283,6 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='div-smile-reviews-2']\\")
       .forEach((el) => {
         const review = this.getScope(el, \\"review\\");
-
         el.key = review.id;
       });
 
@@ -290,7 +290,6 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='img-smile-reviews-1']\\")
       .forEach((el) => {
         const review = this.getScope(el, \\"review\\");
-
         el.setAttribute(\\"src\\", review.avatar);
       });
 
@@ -627,6 +626,7 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-basic-ref-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.showInput;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -636,10 +636,8 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-ref-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(\\"blur\\", this.onInputMyBasicRefComponent1Blur);
         el.addEventListener(\\"blur\\", this.onInputMyBasicRefComponent1Blur);
-
         el.removeEventListener(\\"input\\", this.onInputMyBasicRefComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicRefComponent1Input);
       });
@@ -812,7 +810,6 @@ class MyBasicComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-component-1']\\")
       .forEach((el) => {
         el.value = DEFAULT_VALUES.name || this.state.name;
-
         el.removeEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
       });
@@ -997,6 +994,7 @@ class MyBasicForShowComponent extends HTMLElement {
       .forEach((el) => {
         const person = this.getScope(el, \\"person\\");
         const whenCondition = person === this.state.name;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -1006,7 +1004,6 @@ class MyBasicForShowComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-for-show-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(
           \\"input\\",
           this.onInputMyBasicForShowComponent1Input
@@ -1899,6 +1896,7 @@ class MyBooleanAttribute extends HTMLElement {
 
         if (el.props) {
           el.props.toggle = true;
+
           if (el.update) {
             el.update();
           }
@@ -1918,6 +1916,7 @@ class MyBooleanAttribute extends HTMLElement {
 
         if (el.props) {
           el.props.toggle = true;
+
           if (el.update) {
             el.update();
           }
@@ -1937,6 +1936,7 @@ class MyBooleanAttribute extends HTMLElement {
 
         if (el.props) {
           el.props.list = null;
+
           if (el.update) {
             el.update();
           }
@@ -2065,6 +2065,7 @@ class MyBasicChildComponent extends HTMLElement {
 
         if (el.props) {
           el.props.hi = this.state.name;
+
           if (el.update) {
             el.update();
           }
@@ -2078,6 +2079,7 @@ class MyBasicChildComponent extends HTMLElement {
 
         if (el.props) {
           el.props.bye = this.state.dev;
+
           if (el.update) {
             el.update();
           }
@@ -2245,7 +2247,6 @@ class MyBasicForComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-for-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(\\"input\\", this.onInputMyBasicForComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicForComponent1Input);
       });
@@ -2549,6 +2550,7 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-basic-ref-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.showInput;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -2558,10 +2560,8 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-ref-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(\\"blur\\", this.onInputMyBasicRefComponent1Blur);
         el.addEventListener(\\"blur\\", this.onInputMyBasicRefComponent1Blur);
-
         el.removeEventListener(\\"input\\", this.onInputMyBasicRefComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicRefComponent1Input);
       });
@@ -2998,6 +2998,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -3005,7 +3006,6 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='a-button-1']\\").forEach((el) => {
       el.setAttribute(\\"href\\", this.props.link);
-
       el.setAttribute(
         \\"target\\",
         this.props.openLinkInNewTab ? \\"_blank\\" : undefined
@@ -3018,6 +3018,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -3531,6 +3532,7 @@ class ContentSlotJsxCode extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-content-slot-jsx-code']\\")
       .forEach((el) => {
         const whenCondition = this.props.slotTesting;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -3707,7 +3709,6 @@ class CustomCode extends HTMLElement {
         el.className =
           \\"builder-custom-code\\" +
           (this.props.replaceNodes ? \\" replace-nodes\\" : \\"\\");
-
         el.innerHTML = this.props.code;
       });
   }
@@ -3876,7 +3877,6 @@ class CustomCode extends HTMLElement {
         el.className =
           \\"builder-custom-code\\" +
           (this.props.replaceNodes ? \\" replace-nodes\\" : \\"\\");
-
         el.innerHTML = this.props.code;
       });
   }
@@ -4112,6 +4112,7 @@ class Image extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-image']\\").forEach((el) => {
       const whenCondition = !this.state.useLazyLoading() || this.state.load;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -4119,24 +4120,18 @@ class Image extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='img-image-1']\\").forEach((el) => {
       el.setAttribute(\\"alt\\", this.props.altText);
-
       el.setAttribute(
         \\"aria-role\\",
         this.props.altText ? \\"presentation\\" : undefined
       );
-
       el.className =
         \\"builder-image\\" +
         (this.props._class ? \\" \\" + this.props._class : \\"\\") +
         \\" img\\";
-
       el.setAttribute(\\"src\\", this.props.image);
-
       el.removeEventListener(\\"load\\", this.onImgImage1Load);
       el.addEventListener(\\"load\\", this.onImgImage1Load);
-
       el.setAttribute(\\"srcset\\", this.props.srcset);
-
       el.setAttribute(\\"sizes\\", this.props.sizes);
     });
 
@@ -4248,9 +4243,7 @@ class ImgStateComponent extends HTMLElement {
       .forEach((el) => {
         const item = this.getScope(el, \\"item\\");
         const itemIndex = this.getScope(el, \\"itemIndex\\");
-
         el.setAttribute(\\"src\\", item);
-
         el.key = itemIndex;
       });
   }
@@ -4442,11 +4435,8 @@ class ImgComponent extends HTMLElement {
           objectFit: this.props.backgroundSize || \\"cover\\",
           objectPosition: this.props.backgroundPosition || \\"center\\",
         });
-
         el.key = (Builder.isEditing && this.props.imgSrc) || \\"default-key\\";
-
         el.setAttribute(\\"alt\\", this.props.altText);
-
         el.setAttribute(\\"src\\", this.props.imgSrc);
       });
   }
@@ -4620,17 +4610,11 @@ class FormInputComponent extends HTMLElement {
           Builder.isEditing && this.props.defaultValue
             ? this.props.defaultValue
             : \\"default-key\\";
-
         el.setAttribute(\\"placeholder\\", this.props.placeholder);
-
         el.setAttribute(\\"type\\", this.props.type);
-
         el.setAttribute(\\"name\\", this.props.name);
-
         el.value = this.props.value;
-
         el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
-
         el.setAttribute(\\"required\\", this.props.required);
       });
   }
@@ -4745,7 +4729,6 @@ class RawText extends HTMLElement {
     this._root.querySelectorAll(\\"[data-el='span-raw-text-1']\\").forEach((el) => {
       el.className =
         this.props.attributes?.class || this.props.attributes?.className;
-
       el.innerHTML = this.props.text || \\"\\";
     });
   }
@@ -5012,6 +4995,7 @@ class SectionStateComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-section-state-component']\\")
       .forEach((el) => {
         const whenCondition = this.state.max;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -5260,14 +5244,11 @@ class SelectComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='select-select-component-1']\\")
       .forEach((el) => {
         el.value = this.props.value;
-
         el.key =
           Builder.isEditing && this.props.defaultValue
             ? this.props.defaultValue
             : \\"default-key\\";
-
         el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
-
         el.setAttribute(\\"name\\", this.props.name);
       });
 
@@ -5283,9 +5264,7 @@ class SelectComponent extends HTMLElement {
       .forEach((el) => {
         const option = this.getScope(el, \\"option\\");
         const index = this.getScope(el, \\"index\\");
-
         el.value = option.value;
-
         el.setAttribute(\\"data-index\\", index);
       });
 
@@ -5365,6 +5344,102 @@ class SelectComponent extends HTMLElement {
 }
 
 customElements.define(\\"select-component\\", SelectComponent);
+"
+`;
+
+exports[`webcomponent > jsx > Javascript Test > SlotDefault 1`] = `
+"type Props = {
+  [key: string]: string;
+};
+
+/**
+ * Usage:
+ *
+ *  <slot-code></slot-code>
+ *
+ */
+class SlotCode extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {};
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <slot>
+          <div class=\\"default-slot\\">Default content</div>
+        </slot>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {}
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"slot-code\\", SlotCode);
 "
 `;
 
@@ -5555,6 +5630,7 @@ class SlotCode extends HTMLElement {
 
         if (el.props) {
           el.props.slotTesting = <div>Hello</div>;
+
           if (el.update) {
             el.update();
           }
@@ -5564,6 +5640,104 @@ class SlotCode extends HTMLElement {
         }
       });
   }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"slot-code\\", SlotCode);
+"
+`;
+
+exports[`webcomponent > jsx > Javascript Test > SlotNamed 1`] = `
+"type Props = {
+  [key: string]: string;
+};
+
+/**
+ * Usage:
+ *
+ *  <slot-code></slot-code>
+ *
+ */
+class SlotCode extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {};
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <slot name=\\"top\\"></slot>
+      
+        <slot name=\\"left\\">Default left</slot>
+      
+        <slot>Default Child</slot>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {}
 
   // Helper to render content
   renderTextNode(el, text) {
@@ -5856,6 +6030,7 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-smile-reviews']\\")
       .forEach((el) => {
         const whenCondition = this.state.showReviewPrompt || \\"asdf\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -5879,7 +6054,6 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='div-smile-reviews-2']\\")
       .forEach((el) => {
         const review = this.getScope(el, \\"review\\");
-
         el.key = review.id;
       });
 
@@ -5887,7 +6061,6 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='img-smile-reviews-1']\\")
       .forEach((el) => {
         const review = this.getScope(el, \\"review\\");
-
         el.setAttribute(\\"src\\", review.avatar);
       });
 
@@ -6204,11 +6377,9 @@ class Text extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='div-text-1']\\").forEach((el) => {
       el.setAttribute(\\"contentEditable\\", allowEditingText || undefined);
-
       el.setAttribute(\\"data-name\\", {
         test: this.state.name || \\"any name\\",
       });
-
       el.innerHTML =
         this.props.text ||
         this.props.content ||
@@ -6377,11 +6548,8 @@ class Textarea extends HTMLElement {
       .querySelectorAll(\\"[data-el='textarea-textarea-1']\\")
       .forEach((el) => {
         el.setAttribute(\\"placeholder\\", this.props.placeholder);
-
         el.setAttribute(\\"name\\", this.props.name);
-
         el.value = this.props.value;
-
         el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
       });
   }
@@ -6535,17 +6703,11 @@ class Video extends HTMLElement {
         // not have the video overflow
         borderRadius: 1,
       });
-
       el.key = this.props.video || \\"no-src\\";
-
       el.setAttribute(\\"poster\\", this.props.posterImage);
-
       el.setAttribute(\\"autoplay\\", this.props.autoPlay);
-
       el.setAttribute(\\"muted\\", this.props.muted);
-
       el.setAttribute(\\"controls\\", this.props.controls);
-
       el.setAttribute(\\"loop\\", this.props.loop);
     });
   }
@@ -6807,7 +6969,6 @@ class MyBasicForwardRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-forward-ref-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(
           \\"input\\",
           this.onInputMyBasicForwardRefComponent1Input
@@ -6972,7 +7133,6 @@ class MyBasicForwardRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-forward-ref-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(
           \\"input\\",
           this.onInputMyBasicForwardRefComponent1Input
@@ -7601,7 +7761,6 @@ class MyBasicComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='div-my-basic-component-1']\\")
       .forEach((el) => {
         el.className = this.state.classState + \\" div\\";
-
         Object.assign(el.style, this.state.styleState);
       });
   }
@@ -7868,6 +8027,7 @@ exports[`webcomponent > jsx > Javascript Test > defaultProps 1`] = `
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 
 /**
@@ -7890,12 +8050,23 @@ class Button extends HTMLElement {
       this.props = {};
     }
 
-    this.componentProps = [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"];
+    this.componentProps = [
+      \\"link\\",
+      \\"attributes\\",
+      \\"openLinkInNewTab\\",
+      \\"text\\",
+      \\"onClick\\",
+    ];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
     this.pendingUpdate = false;
+
+    // Event handler for 'click' event on button-button-1
+    this.onButtonButton1Click = (event) => {
+      this.props.onClick(event);
+    };
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -7987,6 +8158,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -7994,7 +8166,6 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='a-button-1']\\").forEach((el) => {
       el.setAttribute(\\"href\\", this.props.link);
-
       el.setAttribute(
         \\"target\\",
         this.props.openLinkInNewTab ? \\"_blank\\" : undefined
@@ -8007,9 +8178,15 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
+    });
+
+    this._root.querySelectorAll(\\"[data-el='button-button-1']\\").forEach((el) => {
+      el.removeEventListener(\\"click\\", this.onButtonButton1Click);
+      el.addEventListener(\\"click\\", this.onButtonButton1Click);
     });
 
     this._root.querySelectorAll(\\"[data-el='div-button-2']\\").forEach((el) => {
@@ -8041,6 +8218,7 @@ exports[`webcomponent > jsx > Javascript Test > defaultPropsOutsideComponent 1`]
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 
 /**
@@ -8063,12 +8241,23 @@ class Button extends HTMLElement {
       this.props = {};
     }
 
-    this.componentProps = [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"];
+    this.componentProps = [
+      \\"link\\",
+      \\"attributes\\",
+      \\"openLinkInNewTab\\",
+      \\"text\\",
+      \\"onClick\\",
+    ];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
     this.pendingUpdate = false;
+
+    // Event handler for 'click' event on button-button-1
+    this.onButtonButton1Click = (event) => {
+      this.props.onClick(event);
+    };
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -8160,6 +8349,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -8167,7 +8357,6 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='a-button-1']\\").forEach((el) => {
       el.setAttribute(\\"href\\", this.props.link);
-
       el.setAttribute(
         \\"target\\",
         this.props.openLinkInNewTab ? \\"_blank\\" : undefined
@@ -8180,9 +8369,15 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
+    });
+
+    this._root.querySelectorAll(\\"[data-el='button-button-1']\\").forEach((el) => {
+      el.removeEventListener(\\"click\\", this.onButtonButton1Click);
+      el.addEventListener(\\"click\\", this.onButtonButton1Click);
     });
 
     this._root.querySelectorAll(\\"[data-el='div-button-2']\\").forEach((el) => {
@@ -9027,6 +9222,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -9036,6 +9232,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show-2']\\")
       .forEach((el) => {
         const whenCondition = !this.props.conditionB;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -10292,6 +10489,110 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 "
 `;
 
+exports[`webcomponent > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"/**
+ * Usage:
+ *
+ *  <on-update></on-update>
+ *
+ */
+class OnUpdate extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      foo: function foo(params) {},
+      bar: function bar() {},
+      zoo: function zoo() {
+        const params = {
+          cb: self.state.bar,
+        };
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    this.updateDeps = [[]];
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div></div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {
+    const self = this;
+
+    foo({
+      someOption: bar,
+    });
+  }
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {}
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"on-update\\", OnUpdate);
+"
+`;
+
 exports[`webcomponent > jsx > Javascript Test > renderContentExample 1`] = `
 "type Props = {
   customComponents: string[];
@@ -10435,6 +10736,7 @@ class RenderContent extends HTMLElement {
 
         if (el.props) {
           el.props.blocks = this.props.content.blocks;
+
           if (el.update) {
             el.update();
           }
@@ -10586,6 +10888,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -10593,7 +10896,6 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='a-button-1']\\").forEach((el) => {
       el.setAttribute(\\"href\\", this.props.link);
-
       el.setAttribute(
         \\"target\\",
         this.props.openLinkInNewTab ? \\"_blank\\" : undefined
@@ -10606,6 +10908,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -10748,6 +11051,7 @@ class RenderStyles extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-render-styles']\\")
       .forEach((el) => {
         const whenCondition = this.props.foo === \\"bar\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -10892,6 +11196,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.name === \\"Batman\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -11040,6 +11345,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.name === \\"Batman\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -11183,6 +11489,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -11197,7 +11504,6 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='div-nested-show-1']\\")
       .forEach((el) => {
         const idx = this.getScope(el, \\"idx\\");
-
         el.key = idx;
       });
 
@@ -11766,6 +12072,125 @@ class SubComponent extends HTMLElement {
 }
 
 customElements.define(\\"sub-component\\", SubComponent);
+"
+`;
+
+exports[`webcomponent > jsx > Javascript Test > svgComponent 1`] = `
+"/**
+ * Usage:
+ *
+ *  <svg-component></svg-component>
+ *
+ */
+class SvgComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {};
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <svg fill=\\"none\\" role=\\"img\\" data-el=\\"svg-svg-component-1\\">
+        <defs>
+          <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+            <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+      
+            <feBlend
+              in=\\"SourceGraphic\\"
+              in2=\\"BackgroundImageFix\\"
+              result=\\"shape\\"
+            ></feBlend>
+      
+            <feGaussianBlur
+              result=\\"effect1_foregroundBlur\\"
+              data-el=\\"fe-gaussian-blur-svg-component\\"
+            ></feGaussianBlur>
+          </filter>
+        </defs>
+      </svg>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='svg-svg-component-1']\\")
+      .forEach((el) => {
+        el.setAttribute(\\"viewBox\\", \\"0 0 \\" + 42 + \\" \\" + 42);
+        el.setAttribute(\\"width\\", 42);
+        el.setAttribute(\\"height\\", 42);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='fe-gaussian-blur-svg-component']\\")
+      .forEach((el) => {
+        el.setAttribute(\\"stdDeviation\\", 7);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"svg-component\\", SvgComponent);
 "
 `;
 
@@ -12508,6 +12933,7 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-basic-ref-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.showInput;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12517,10 +12943,8 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-ref-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(\\"blur\\", this.onInputMyBasicRefComponent1Blur);
         el.addEventListener(\\"blur\\", this.onInputMyBasicRefComponent1Blur);
-
         el.removeEventListener(\\"input\\", this.onInputMyBasicRefComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicRefComponent1Input);
       });
@@ -12693,7 +13117,6 @@ class MyBasicComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-component-1']\\")
       .forEach((el) => {
         el.value = DEFAULT_VALUES.name || this.state.name;
-
         el.removeEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
       });
@@ -12878,6 +13301,7 @@ class MyBasicForShowComponent extends HTMLElement {
       .forEach((el) => {
         const person = this.getScope(el, \\"person\\");
         const whenCondition = person === this.state.name;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12887,7 +13311,6 @@ class MyBasicForShowComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-for-show-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(
           \\"input\\",
           this.onInputMyBasicForShowComponent1Input
@@ -13780,6 +14203,7 @@ class MyBooleanAttribute extends HTMLElement {
 
         if (el.props) {
           el.props.toggle = true;
+
           if (el.update) {
             el.update();
           }
@@ -13799,6 +14223,7 @@ class MyBooleanAttribute extends HTMLElement {
 
         if (el.props) {
           el.props.toggle = true;
+
           if (el.update) {
             el.update();
           }
@@ -13818,6 +14243,7 @@ class MyBooleanAttribute extends HTMLElement {
 
         if (el.props) {
           el.props.list = null;
+
           if (el.update) {
             el.update();
           }
@@ -13946,6 +14372,7 @@ class MyBasicChildComponent extends HTMLElement {
 
         if (el.props) {
           el.props.hi = this.state.name;
+
           if (el.update) {
             el.update();
           }
@@ -13959,6 +14386,7 @@ class MyBasicChildComponent extends HTMLElement {
 
         if (el.props) {
           el.props.bye = this.state.dev;
+
           if (el.update) {
             el.update();
           }
@@ -14126,7 +14554,6 @@ class MyBasicForComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-for-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(\\"input\\", this.onInputMyBasicForComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicForComponent1Input);
       });
@@ -14430,6 +14857,7 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-basic-ref-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.showInput;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -14439,10 +14867,8 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-ref-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(\\"blur\\", this.onInputMyBasicRefComponent1Blur);
         el.addEventListener(\\"blur\\", this.onInputMyBasicRefComponent1Blur);
-
         el.removeEventListener(\\"input\\", this.onInputMyBasicRefComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicRefComponent1Input);
       });
@@ -14879,6 +15305,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -14886,7 +15313,6 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='a-button-1']\\").forEach((el) => {
       el.setAttribute(\\"href\\", this.props.link);
-
       el.setAttribute(
         \\"target\\",
         this.props.openLinkInNewTab ? \\"_blank\\" : undefined
@@ -14899,6 +15325,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -15412,6 +15839,7 @@ class ContentSlotJsxCode extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-content-slot-jsx-code']\\")
       .forEach((el) => {
         const whenCondition = this.props.slotTesting;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -15588,7 +16016,6 @@ class CustomCode extends HTMLElement {
         el.className =
           \\"builder-custom-code\\" +
           (this.props.replaceNodes ? \\" replace-nodes\\" : \\"\\");
-
         el.innerHTML = this.props.code;
       });
   }
@@ -15757,7 +16184,6 @@ class CustomCode extends HTMLElement {
         el.className =
           \\"builder-custom-code\\" +
           (this.props.replaceNodes ? \\" replace-nodes\\" : \\"\\");
-
         el.innerHTML = this.props.code;
       });
   }
@@ -15993,6 +16419,7 @@ class Image extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-image']\\").forEach((el) => {
       const whenCondition = !this.state.useLazyLoading() || this.state.load;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -16000,24 +16427,18 @@ class Image extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='img-image-1']\\").forEach((el) => {
       el.setAttribute(\\"alt\\", this.props.altText);
-
       el.setAttribute(
         \\"aria-role\\",
         this.props.altText ? \\"presentation\\" : undefined
       );
-
       el.className =
         \\"builder-image\\" +
         (this.props._class ? \\" \\" + this.props._class : \\"\\") +
         \\" img\\";
-
       el.setAttribute(\\"src\\", this.props.image);
-
       el.removeEventListener(\\"load\\", this.onImgImage1Load);
       el.addEventListener(\\"load\\", this.onImgImage1Load);
-
       el.setAttribute(\\"srcset\\", this.props.srcset);
-
       el.setAttribute(\\"sizes\\", this.props.sizes);
     });
 
@@ -16129,9 +16550,7 @@ class ImgStateComponent extends HTMLElement {
       .forEach((el) => {
         const item = this.getScope(el, \\"item\\");
         const itemIndex = this.getScope(el, \\"itemIndex\\");
-
         el.setAttribute(\\"src\\", item);
-
         el.key = itemIndex;
       });
   }
@@ -16323,11 +16742,8 @@ class ImgComponent extends HTMLElement {
           objectFit: this.props.backgroundSize || \\"cover\\",
           objectPosition: this.props.backgroundPosition || \\"center\\",
         });
-
         el.key = (Builder.isEditing && this.props.imgSrc) || \\"default-key\\";
-
         el.setAttribute(\\"alt\\", this.props.altText);
-
         el.setAttribute(\\"src\\", this.props.imgSrc);
       });
   }
@@ -16501,17 +16917,11 @@ class FormInputComponent extends HTMLElement {
           Builder.isEditing && this.props.defaultValue
             ? this.props.defaultValue
             : \\"default-key\\";
-
         el.setAttribute(\\"placeholder\\", this.props.placeholder);
-
         el.setAttribute(\\"type\\", this.props.type);
-
         el.setAttribute(\\"name\\", this.props.name);
-
         el.value = this.props.value;
-
         el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
-
         el.setAttribute(\\"required\\", this.props.required);
       });
   }
@@ -16626,7 +17036,6 @@ class RawText extends HTMLElement {
     this._root.querySelectorAll(\\"[data-el='span-raw-text-1']\\").forEach((el) => {
       el.className =
         this.props.attributes?.class || this.props.attributes?.className;
-
       el.innerHTML = this.props.text || \\"\\";
     });
   }
@@ -16893,6 +17302,7 @@ class SectionStateComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-section-state-component']\\")
       .forEach((el) => {
         const whenCondition = this.state.max;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -17141,14 +17551,11 @@ class SelectComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='select-select-component-1']\\")
       .forEach((el) => {
         el.value = this.props.value;
-
         el.key =
           Builder.isEditing && this.props.defaultValue
             ? this.props.defaultValue
             : \\"default-key\\";
-
         el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
-
         el.setAttribute(\\"name\\", this.props.name);
       });
 
@@ -17164,9 +17571,7 @@ class SelectComponent extends HTMLElement {
       .forEach((el) => {
         const option = this.getScope(el, \\"option\\");
         const index = this.getScope(el, \\"index\\");
-
         el.value = option.value;
-
         el.setAttribute(\\"data-index\\", index);
       });
 
@@ -17246,6 +17651,102 @@ class SelectComponent extends HTMLElement {
 }
 
 customElements.define(\\"select-component\\", SelectComponent);
+"
+`;
+
+exports[`webcomponent > jsx > Typescript Test > SlotDefault 1`] = `
+"type Props = {
+  [key: string]: string;
+};
+
+/**
+ * Usage:
+ *
+ *  <slot-code></slot-code>
+ *
+ */
+class SlotCode extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {};
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <slot>
+          <div class=\\"default-slot\\">Default content</div>
+        </slot>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {}
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"slot-code\\", SlotCode);
 "
 `;
 
@@ -17436,6 +17937,7 @@ class SlotCode extends HTMLElement {
 
         if (el.props) {
           el.props.slotTesting = <div>Hello</div>;
+
           if (el.update) {
             el.update();
           }
@@ -17445,6 +17947,104 @@ class SlotCode extends HTMLElement {
         }
       });
   }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"slot-code\\", SlotCode);
+"
+`;
+
+exports[`webcomponent > jsx > Typescript Test > SlotNamed 1`] = `
+"type Props = {
+  [key: string]: string;
+};
+
+/**
+ * Usage:
+ *
+ *  <slot-code></slot-code>
+ *
+ */
+class SlotCode extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {};
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <slot name=\\"top\\"></slot>
+      
+        <slot name=\\"left\\">Default left</slot>
+      
+        <slot>Default Child</slot>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {}
 
   // Helper to render content
   renderTextNode(el, text) {
@@ -17737,6 +18337,7 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-smile-reviews']\\")
       .forEach((el) => {
         const whenCondition = this.state.showReviewPrompt || \\"asdf\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -17760,7 +18361,6 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='div-smile-reviews-2']\\")
       .forEach((el) => {
         const review = this.getScope(el, \\"review\\");
-
         el.key = review.id;
       });
 
@@ -17768,7 +18368,6 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='img-smile-reviews-1']\\")
       .forEach((el) => {
         const review = this.getScope(el, \\"review\\");
-
         el.setAttribute(\\"src\\", review.avatar);
       });
 
@@ -18085,11 +18684,9 @@ class Text extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='div-text-1']\\").forEach((el) => {
       el.setAttribute(\\"contentEditable\\", allowEditingText || undefined);
-
       el.setAttribute(\\"data-name\\", {
         test: this.state.name || \\"any name\\",
       });
-
       el.innerHTML =
         this.props.text ||
         this.props.content ||
@@ -18258,11 +18855,8 @@ class Textarea extends HTMLElement {
       .querySelectorAll(\\"[data-el='textarea-textarea-1']\\")
       .forEach((el) => {
         el.setAttribute(\\"placeholder\\", this.props.placeholder);
-
         el.setAttribute(\\"name\\", this.props.name);
-
         el.value = this.props.value;
-
         el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
       });
   }
@@ -18416,17 +19010,11 @@ class Video extends HTMLElement {
         // not have the video overflow
         borderRadius: 1,
       });
-
       el.key = this.props.video || \\"no-src\\";
-
       el.setAttribute(\\"poster\\", this.props.posterImage);
-
       el.setAttribute(\\"autoplay\\", this.props.autoPlay);
-
       el.setAttribute(\\"muted\\", this.props.muted);
-
       el.setAttribute(\\"controls\\", this.props.controls);
-
       el.setAttribute(\\"loop\\", this.props.loop);
     });
   }
@@ -18688,7 +19276,6 @@ class MyBasicForwardRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-forward-ref-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(
           \\"input\\",
           this.onInputMyBasicForwardRefComponent1Input
@@ -18853,7 +19440,6 @@ class MyBasicForwardRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-basic-forward-ref-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
-
         el.removeEventListener(
           \\"input\\",
           this.onInputMyBasicForwardRefComponent1Input
@@ -19482,7 +20068,6 @@ class MyBasicComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='div-my-basic-component-1']\\")
       .forEach((el) => {
         el.className = this.state.classState + \\" div\\";
-
         Object.assign(el.style, this.state.styleState);
       });
   }
@@ -19749,6 +20334,7 @@ exports[`webcomponent > jsx > Typescript Test > defaultProps 1`] = `
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 
 /**
@@ -19771,12 +20357,23 @@ class Button extends HTMLElement {
       this.props = {};
     }
 
-    this.componentProps = [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"];
+    this.componentProps = [
+      \\"link\\",
+      \\"attributes\\",
+      \\"openLinkInNewTab\\",
+      \\"text\\",
+      \\"onClick\\",
+    ];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
     this.pendingUpdate = false;
+
+    // Event handler for 'click' event on button-button-1
+    this.onButtonButton1Click = (event) => {
+      this.props.onClick(event);
+    };
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -19868,6 +20465,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -19875,7 +20473,6 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='a-button-1']\\").forEach((el) => {
       el.setAttribute(\\"href\\", this.props.link);
-
       el.setAttribute(
         \\"target\\",
         this.props.openLinkInNewTab ? \\"_blank\\" : undefined
@@ -19888,9 +20485,15 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
+    });
+
+    this._root.querySelectorAll(\\"[data-el='button-button-1']\\").forEach((el) => {
+      el.removeEventListener(\\"click\\", this.onButtonButton1Click);
+      el.addEventListener(\\"click\\", this.onButtonButton1Click);
     });
 
     this._root.querySelectorAll(\\"[data-el='div-button-2']\\").forEach((el) => {
@@ -19922,6 +20525,7 @@ exports[`webcomponent > jsx > Typescript Test > defaultPropsOutsideComponent 1`]
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 
 /**
@@ -19944,12 +20548,23 @@ class Button extends HTMLElement {
       this.props = {};
     }
 
-    this.componentProps = [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"];
+    this.componentProps = [
+      \\"link\\",
+      \\"attributes\\",
+      \\"openLinkInNewTab\\",
+      \\"text\\",
+      \\"onClick\\",
+    ];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
     this.pendingUpdate = false;
+
+    // Event handler for 'click' event on button-button-1
+    this.onButtonButton1Click = (event) => {
+      this.props.onClick(event);
+    };
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -20041,6 +20656,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -20048,7 +20664,6 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='a-button-1']\\").forEach((el) => {
       el.setAttribute(\\"href\\", this.props.link);
-
       el.setAttribute(
         \\"target\\",
         this.props.openLinkInNewTab ? \\"_blank\\" : undefined
@@ -20061,9 +20676,15 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
+    });
+
+    this._root.querySelectorAll(\\"[data-el='button-button-1']\\").forEach((el) => {
+      el.removeEventListener(\\"click\\", this.onButtonButton1Click);
+      el.addEventListener(\\"click\\", this.onButtonButton1Click);
     });
 
     this._root.querySelectorAll(\\"[data-el='div-button-2']\\").forEach((el) => {
@@ -20908,6 +21529,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -20917,6 +21539,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show-2']\\")
       .forEach((el) => {
         const whenCondition = !this.props.conditionB;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -22173,6 +22796,110 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 "
 `;
 
+exports[`webcomponent > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"/**
+ * Usage:
+ *
+ *  <on-update></on-update>
+ *
+ */
+class OnUpdate extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      foo: function foo(params) {},
+      bar: function bar() {},
+      zoo: function zoo() {
+        const params = {
+          cb: self.state.bar,
+        };
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    this.updateDeps = [[]];
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div></div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {
+    const self = this;
+
+    foo({
+      someOption: bar,
+    });
+  }
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {}
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"on-update\\", OnUpdate);
+"
+`;
+
 exports[`webcomponent > jsx > Typescript Test > renderContentExample 1`] = `
 "type Props = {
   customComponents: string[];
@@ -22316,6 +23043,7 @@ class RenderContent extends HTMLElement {
 
         if (el.props) {
           el.props.blocks = this.props.content.blocks;
+
           if (el.update) {
             el.update();
           }
@@ -22467,6 +23195,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -22474,7 +23203,6 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='a-button-1']\\").forEach((el) => {
       el.setAttribute(\\"href\\", this.props.link);
-
       el.setAttribute(
         \\"target\\",
         this.props.openLinkInNewTab ? \\"_blank\\" : undefined
@@ -22487,6 +23215,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -22629,6 +23358,7 @@ class RenderStyles extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-render-styles']\\")
       .forEach((el) => {
         const whenCondition = this.props.foo === \\"bar\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -22773,6 +23503,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.name === \\"Batman\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -22921,6 +23652,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.name === \\"Batman\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -23064,6 +23796,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -23078,7 +23811,6 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='div-nested-show-1']\\")
       .forEach((el) => {
         const idx = this.getScope(el, \\"idx\\");
-
         el.key = idx;
       });
 
@@ -23650,6 +24382,125 @@ customElements.define(\\"sub-component\\", SubComponent);
 "
 `;
 
+exports[`webcomponent > jsx > Typescript Test > svgComponent 1`] = `
+"/**
+ * Usage:
+ *
+ *  <svg-component></svg-component>
+ *
+ */
+class SvgComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {};
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <svg fill=\\"none\\" role=\\"img\\" data-el=\\"svg-svg-component-1\\">
+        <defs>
+          <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+            <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+      
+            <feBlend
+              in=\\"SourceGraphic\\"
+              in2=\\"BackgroundImageFix\\"
+              result=\\"shape\\"
+            ></feBlend>
+      
+            <feGaussianBlur
+              result=\\"effect1_foregroundBlur\\"
+              data-el=\\"fe-gaussian-blur-svg-component\\"
+            ></feGaussianBlur>
+          </filter>
+        </defs>
+      </svg>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='svg-svg-component-1']\\")
+      .forEach((el) => {
+        el.setAttribute(\\"viewBox\\", \\"0 0 \\" + 42 + \\" \\" + 42);
+        el.setAttribute(\\"width\\", 42);
+        el.setAttribute(\\"height\\", 42);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='fe-gaussian-blur-svg-component']\\")
+      .forEach((el) => {
+        el.setAttribute(\\"stdDeviation\\", 7);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"svg-component\\", SvgComponent);
+"
+`;
+
 exports[`webcomponent > jsx > Typescript Test > typeDependency 1`] = `
 "import type { Foo } from \\"./foo-type\\";
 import type { Foo as Foo2 } from \\"./type-export\\";
@@ -24183,7 +25034,6 @@ class MyComponent extends HTMLElement {
       .forEach((el) => {
         el.removeEventListener(\\"input\\", this.onInputMyComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent1Input);
-
         el.value = this.state.name;
       });
   }
@@ -24411,7 +25261,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-1']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.tortilla === \\"Plain\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent1Input);
       });
@@ -24420,7 +25269,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-2']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.tortilla === \\"Whole wheat\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent2Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent2Input);
       });
@@ -24429,7 +25277,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-3']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.tortilla === \\"Spinach\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent3Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent3Input);
       });
@@ -24438,7 +25285,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-4']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.fillings === \\"Rice\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent4Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent4Input);
       });
@@ -24447,7 +25293,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-5']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.fillings === \\"Beans\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent5Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent5Input);
       });
@@ -24456,7 +25301,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-6']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.fillings === \\"Cheese\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent6Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent6Input);
       });
@@ -24465,7 +25309,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-7']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.fillings === \\"Guac (extra)\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent7Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent7Input);
       });
@@ -25061,6 +25904,138 @@ customElements.define(\\"my-component\\", MyComponent);
 "
 `;
 
+exports[`webcomponent > svelte > Javascript Test > eventHandlers 1`] = `
+"/**
+ * Usage:
+ *
+ *  <my-component></my-component>
+ *
+ */
+class MyComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      log: function log(msg = \\"hello\\") {
+        console.log(msg);
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    // Event handler for 'click' event on button-my-component-1
+    this.onButtonMyComponent1Click = (a) => {
+      this.state.log(\\"hi\\");
+    };
+
+    // Event handler for 'click' event on button-my-component-2
+    this.onButtonMyComponent2Click = (event) => {
+      this.state.log(event);
+    };
+
+    // Event handler for 'click' event on button-my-component-3
+    this.onButtonMyComponent3Click = (event) => {
+      this.state.log(event);
+    };
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <button data-el=\\"button-my-component-1\\">Log</button>
+        <button data-el=\\"button-my-component-2\\">Log</button>
+        <button data-el=\\"button-my-component-3\\">Log</button>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='button-my-component-1']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"click\\", this.onButtonMyComponent1Click);
+        el.addEventListener(\\"click\\", this.onButtonMyComponent1Click);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='button-my-component-2']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"click\\", this.onButtonMyComponent2Click);
+        el.addEventListener(\\"click\\", this.onButtonMyComponent2Click);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='button-my-component-3']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"click\\", this.onButtonMyComponent3Click);
+        el.addEventListener(\\"click\\", this.onButtonMyComponent3Click);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"my-component\\", MyComponent);
+"
+`;
+
 exports[`webcomponent > svelte > Javascript Test > html 1`] = `
 "/**
  * Usage:
@@ -25189,7 +26164,7 @@ class MyComponent extends HTMLElement {
 
     // Event handler for 'click' event on button-my-component-1
     this.onButtonMyComponent1Click = (event) => {
-      this.state.toggle;
+      this.state.toggle(event);
     };
 
     if (undefined) {
@@ -25261,6 +26236,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.state.show;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -25494,12 +26470,437 @@ customElements.define(\\"my-component\\", MyComponent);
 `;
 
 exports[`webcomponent > svelte > Javascript Test > reactive 1`] = `
-"unknown: Missing semicolon. (1:11)
+"/**
+ * Usage:
+ *
+ *  <my-component></my-component>
+ *
+ */
+class MyComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
 
-> 1 | let _ = get lowercaseName() {
-    |            ^
-  2 |   return state.name.toLowerCase();
-  3 | }"
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      name: \\"Steve\\",
+      get lowercaseName() {
+        return self.state.name.toLowerCase();
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <input
+          data-el=\\"input-my-component-1\\"
+          data-dom-state=\\"MyComponent-input-my-component-1\\"
+        />
+      
+        Lowercase:
+        <template data-el=\\"div-my-component-1\\"><!-- state.lowercaseName --></template>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // grab previous input state
+    const preStateful = this.getStateful(this._root);
+    const preValues = this.prepareHydrate(preStateful);
+
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+
+    // hydrate input state
+    if (preValues.length) {
+      const nextStateful = this.getStateful(this._root);
+      this.hydrateDom(preValues, nextStateful);
+    }
+  }
+
+  getStateful(el) {
+    const stateful = el.querySelectorAll(\\"[data-dom-state]\\");
+    return stateful ? Array.from(stateful) : [];
+  }
+  prepareHydrate(stateful) {
+    return stateful.map((el) => {
+      return {
+        id: el.dataset.domState,
+        value: el.value,
+        active: document.activeElement === el,
+        selectionStart: el.selectionStart,
+      };
+    });
+  }
+  hydrateDom(preValues, stateful) {
+    return stateful.map((el, index) => {
+      const prev = preValues.find((prev) => el.dataset.domState === prev.id);
+      if (prev) {
+        el.value = prev.value;
+        if (prev.active) {
+          el.focus();
+          el.selectionStart = prev.selectionStart;
+        }
+      }
+    });
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='input-my-component-1']\\")
+      .forEach((el) => {
+        el.value = this.state.name;
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='div-my-component-1']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.state.lowercaseName);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"my-component\\", MyComponent);
+"
+`;
+
+exports[`webcomponent > svelte > Javascript Test > reactiveWithFn 1`] = `
+"/**
+ * Usage:
+ *
+ *  <my-component></my-component>
+ *
+ */
+class MyComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        self.state.result = a_ * b_;
+        self.update();
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    this.updateDeps = [[this.state.a, this.state.b]];
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    // Event handler for 'input' event on input-my-component-1
+    this.onInputMyComponent1Input = (event) => {
+      this.state.a = event.target.value;
+      this.update();
+    };
+
+    // Event handler for 'input' event on input-my-component-2
+    this.onInputMyComponent2Input = (event) => {
+      this.state.b = event.target.value;
+      this.update();
+    };
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <input
+          type=\\"number\\"
+          data-el=\\"input-my-component-1\\"
+          data-dom-state=\\"MyComponent-input-my-component-1\\"
+        />
+        <input
+          type=\\"number\\"
+          data-el=\\"input-my-component-2\\"
+          data-dom-state=\\"MyComponent-input-my-component-2\\"
+        />
+      
+        Result:
+        <template data-el=\\"div-my-component-1\\"><!-- state.result --></template>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {
+    const self = this;
+
+    (function (__prev, __next) {
+      const __hasChange = __prev.find((val, index) => val !== __next[index]);
+      if (__hasChange !== undefined) {
+        self.state.calculateResult(self.state.a, self.state.b);
+        self.updateDeps[0] = __next;
+      }
+    })(self.updateDeps[0], [self.state.a, self.state.b]);
+  }
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // grab previous input state
+    const preStateful = this.getStateful(this._root);
+    const preValues = this.prepareHydrate(preStateful);
+
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+
+    // hydrate input state
+    if (preValues.length) {
+      const nextStateful = this.getStateful(this._root);
+      this.hydrateDom(preValues, nextStateful);
+    }
+  }
+
+  getStateful(el) {
+    const stateful = el.querySelectorAll(\\"[data-dom-state]\\");
+    return stateful ? Array.from(stateful) : [];
+  }
+  prepareHydrate(stateful) {
+    return stateful.map((el) => {
+      return {
+        id: el.dataset.domState,
+        value: el.value,
+        active: document.activeElement === el,
+        selectionStart: el.selectionStart,
+      };
+    });
+  }
+  hydrateDom(preValues, stateful) {
+    return stateful.map((el, index) => {
+      const prev = preValues.find((prev) => el.dataset.domState === prev.id);
+      if (prev) {
+        el.value = prev.value;
+        if (prev.active) {
+          el.focus();
+          el.selectionStart = prev.selectionStart;
+        }
+      }
+    });
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='input-my-component-1']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"input\\", this.onInputMyComponent1Input);
+        el.addEventListener(\\"input\\", this.onInputMyComponent1Input);
+        el.value = this.state.a;
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='input-my-component-2']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"input\\", this.onInputMyComponent2Input);
+        el.addEventListener(\\"input\\", this.onInputMyComponent2Input);
+        el.value = this.state.b;
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='div-my-component-1']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.state.result);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"my-component\\", MyComponent);
+"
+`;
+
+exports[`webcomponent > svelte > Javascript Test > slots 1`] = `
+"/**
+ * Usage:
+ *
+ *  <my-component></my-component>
+ *
+ */
+class MyComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {};
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <slot>default</slot>
+        <slot name=\\"Test\\"><div>default</div></slot>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {}
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"my-component\\", MyComponent);
+"
 `;
 
 exports[`webcomponent > svelte > Javascript Test > style 1`] = `
@@ -25872,7 +27273,6 @@ class MyComponent extends HTMLElement {
       .forEach((el) => {
         el.removeEventListener(\\"input\\", this.onInputMyComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent1Input);
-
         el.value = this.state.name;
       });
   }
@@ -26100,7 +27500,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-1']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.tortilla === \\"Plain\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent1Input);
       });
@@ -26109,7 +27508,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-2']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.tortilla === \\"Whole wheat\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent2Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent2Input);
       });
@@ -26118,7 +27516,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-3']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.tortilla === \\"Spinach\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent3Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent3Input);
       });
@@ -26127,7 +27524,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-4']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.fillings === \\"Rice\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent4Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent4Input);
       });
@@ -26136,7 +27532,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-5']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.fillings === \\"Beans\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent5Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent5Input);
       });
@@ -26145,7 +27540,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-6']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.fillings === \\"Cheese\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent6Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent6Input);
       });
@@ -26154,7 +27548,6 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='input-my-component-7']\\")
       .forEach((el) => {
         el.setAttribute(\\"checked\\", this.state.fillings === \\"Guac (extra)\\");
-
         el.removeEventListener(\\"input\\", this.onInputMyComponent7Input);
         el.addEventListener(\\"input\\", this.onInputMyComponent7Input);
       });
@@ -26750,6 +28143,138 @@ customElements.define(\\"my-component\\", MyComponent);
 "
 `;
 
+exports[`webcomponent > svelte > Typescript Test > eventHandlers 1`] = `
+"/**
+ * Usage:
+ *
+ *  <my-component></my-component>
+ *
+ */
+class MyComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      log: function log(msg = \\"hello\\") {
+        console.log(msg);
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    // Event handler for 'click' event on button-my-component-1
+    this.onButtonMyComponent1Click = (a) => {
+      this.state.log(\\"hi\\");
+    };
+
+    // Event handler for 'click' event on button-my-component-2
+    this.onButtonMyComponent2Click = (event) => {
+      this.state.log(event);
+    };
+
+    // Event handler for 'click' event on button-my-component-3
+    this.onButtonMyComponent3Click = (event) => {
+      this.state.log(event);
+    };
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <button data-el=\\"button-my-component-1\\">Log</button>
+        <button data-el=\\"button-my-component-2\\">Log</button>
+        <button data-el=\\"button-my-component-3\\">Log</button>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='button-my-component-1']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"click\\", this.onButtonMyComponent1Click);
+        el.addEventListener(\\"click\\", this.onButtonMyComponent1Click);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='button-my-component-2']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"click\\", this.onButtonMyComponent2Click);
+        el.addEventListener(\\"click\\", this.onButtonMyComponent2Click);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='button-my-component-3']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"click\\", this.onButtonMyComponent3Click);
+        el.addEventListener(\\"click\\", this.onButtonMyComponent3Click);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"my-component\\", MyComponent);
+"
+`;
+
 exports[`webcomponent > svelte > Typescript Test > html 1`] = `
 "/**
  * Usage:
@@ -26878,7 +28403,7 @@ class MyComponent extends HTMLElement {
 
     // Event handler for 'click' event on button-my-component-1
     this.onButtonMyComponent1Click = (event) => {
-      this.state.toggle;
+      this.state.toggle(event);
     };
 
     if (undefined) {
@@ -26950,6 +28475,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.state.show;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27183,12 +28709,437 @@ customElements.define(\\"my-component\\", MyComponent);
 `;
 
 exports[`webcomponent > svelte > Typescript Test > reactive 1`] = `
-"unknown: Missing semicolon. (1:11)
+"/**
+ * Usage:
+ *
+ *  <my-component></my-component>
+ *
+ */
+class MyComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
 
-> 1 | let _ = get lowercaseName() {
-    |            ^
-  2 |   return state.name.toLowerCase();
-  3 | }"
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      name: \\"Steve\\",
+      get lowercaseName() {
+        return self.state.name.toLowerCase();
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <input
+          data-el=\\"input-my-component-1\\"
+          data-dom-state=\\"MyComponent-input-my-component-1\\"
+        />
+      
+        Lowercase:
+        <template data-el=\\"div-my-component-1\\"><!-- state.lowercaseName --></template>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // grab previous input state
+    const preStateful = this.getStateful(this._root);
+    const preValues = this.prepareHydrate(preStateful);
+
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+
+    // hydrate input state
+    if (preValues.length) {
+      const nextStateful = this.getStateful(this._root);
+      this.hydrateDom(preValues, nextStateful);
+    }
+  }
+
+  getStateful(el) {
+    const stateful = el.querySelectorAll(\\"[data-dom-state]\\");
+    return stateful ? Array.from(stateful) : [];
+  }
+  prepareHydrate(stateful) {
+    return stateful.map((el) => {
+      return {
+        id: el.dataset.domState,
+        value: el.value,
+        active: document.activeElement === el,
+        selectionStart: el.selectionStart,
+      };
+    });
+  }
+  hydrateDom(preValues, stateful) {
+    return stateful.map((el, index) => {
+      const prev = preValues.find((prev) => el.dataset.domState === prev.id);
+      if (prev) {
+        el.value = prev.value;
+        if (prev.active) {
+          el.focus();
+          el.selectionStart = prev.selectionStart;
+        }
+      }
+    });
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='input-my-component-1']\\")
+      .forEach((el) => {
+        el.value = this.state.name;
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='div-my-component-1']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.state.lowercaseName);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"my-component\\", MyComponent);
+"
+`;
+
+exports[`webcomponent > svelte > Typescript Test > reactiveWithFn 1`] = `
+"/**
+ * Usage:
+ *
+ *  <my-component></my-component>
+ *
+ */
+class MyComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        self.state.result = a_ * b_;
+        self.update();
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    this.updateDeps = [[this.state.a, this.state.b]];
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    // Event handler for 'input' event on input-my-component-1
+    this.onInputMyComponent1Input = (event) => {
+      this.state.a = event.target.value;
+      this.update();
+    };
+
+    // Event handler for 'input' event on input-my-component-2
+    this.onInputMyComponent2Input = (event) => {
+      this.state.b = event.target.value;
+      this.update();
+    };
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <input
+          type=\\"number\\"
+          data-el=\\"input-my-component-1\\"
+          data-dom-state=\\"MyComponent-input-my-component-1\\"
+        />
+        <input
+          type=\\"number\\"
+          data-el=\\"input-my-component-2\\"
+          data-dom-state=\\"MyComponent-input-my-component-2\\"
+        />
+      
+        Result:
+        <template data-el=\\"div-my-component-1\\"><!-- state.result --></template>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {
+    const self = this;
+
+    (function (__prev, __next) {
+      const __hasChange = __prev.find((val, index) => val !== __next[index]);
+      if (__hasChange !== undefined) {
+        self.state.calculateResult(self.state.a, self.state.b);
+        self.updateDeps[0] = __next;
+      }
+    })(self.updateDeps[0], [self.state.a, self.state.b]);
+  }
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // grab previous input state
+    const preStateful = this.getStateful(this._root);
+    const preValues = this.prepareHydrate(preStateful);
+
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+
+    // hydrate input state
+    if (preValues.length) {
+      const nextStateful = this.getStateful(this._root);
+      this.hydrateDom(preValues, nextStateful);
+    }
+  }
+
+  getStateful(el) {
+    const stateful = el.querySelectorAll(\\"[data-dom-state]\\");
+    return stateful ? Array.from(stateful) : [];
+  }
+  prepareHydrate(stateful) {
+    return stateful.map((el) => {
+      return {
+        id: el.dataset.domState,
+        value: el.value,
+        active: document.activeElement === el,
+        selectionStart: el.selectionStart,
+      };
+    });
+  }
+  hydrateDom(preValues, stateful) {
+    return stateful.map((el, index) => {
+      const prev = preValues.find((prev) => el.dataset.domState === prev.id);
+      if (prev) {
+        el.value = prev.value;
+        if (prev.active) {
+          el.focus();
+          el.selectionStart = prev.selectionStart;
+        }
+      }
+    });
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='input-my-component-1']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"input\\", this.onInputMyComponent1Input);
+        el.addEventListener(\\"input\\", this.onInputMyComponent1Input);
+        el.value = this.state.a;
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='input-my-component-2']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"input\\", this.onInputMyComponent2Input);
+        el.addEventListener(\\"input\\", this.onInputMyComponent2Input);
+        el.value = this.state.b;
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='div-my-component-1']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.state.result);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"my-component\\", MyComponent);
+"
+`;
+
+exports[`webcomponent > svelte > Typescript Test > slots 1`] = `
+"/**
+ * Usage:
+ *
+ *  <my-component></my-component>
+ *
+ */
+class MyComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {};
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <slot>default</slot>
+        <slot name=\\"Test\\"><div>default</div></slot>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {}
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"my-component\\", MyComponent);
+"
 `;
 
 exports[`webcomponent > svelte > Typescript Test > style 1`] = `

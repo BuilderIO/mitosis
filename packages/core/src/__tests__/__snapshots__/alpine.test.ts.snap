@@ -1138,6 +1138,20 @@ exports[`Alpine.js > jsx > Javascript Test > Select 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > SlotDefault 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > SlotHtml 1`] = `
 "<div x-data=\\"slotCode()\\">
   <ContentSlotCode>
@@ -1155,6 +1169,22 @@ exports[`Alpine.js > jsx > Javascript Test > SlotHtml 1`] = `
 exports[`Alpine.js > jsx > Javascript Test > SlotJsx 1`] = `
 "<div x-data=\\"slotCode()\\">
   <ContentSlotCode x-bind:slotTesting=\\"<div>Hello</div>\\"></ContentSlotCode>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > SlotNamed 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
 </div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -1564,7 +1594,7 @@ exports[`Alpine.js > jsx > Javascript Test > defaultProps 1`] = `
   </template>
 
   <template x-if=\\"!link\\">
-    <button type=\\"button\\" x-bind=\\"attributes\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick(event)\\">
       <span x-html=\\"text\\"></span>
     </button>
   </template>
@@ -1590,7 +1620,7 @@ exports[`Alpine.js > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = 
   </template>
 
   <template x-if=\\"!link\\">
-    <button type=\\"button\\" x-bind=\\"attributes\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick(event)\\">
       <span x-html=\\"text\\"></span>
     </button>
   </template>
@@ -1657,8 +1687,8 @@ exports[`Alpine.js > jsx > Javascript Test > multipleOnUpdate 1`] = `
 > 2 |               Alpine.data('multipleOnUpdate', () => ({,
     |                                                       ^
   3 | onUpdate() {
-  4 |         
-  5 |   console.log('Runs on every update/rerender');"
+  4 |         console.log('Runs on every update/rerender');
+  5 | console.log('Runs on every update/rerender as well');"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
@@ -1769,8 +1799,8 @@ exports[`Alpine.js > jsx > Javascript Test > onInit & onMount 1`] = `
 > 2 |               Alpine.data('onInit', () => ({, init() {
     |                                             ^
   3 |       
-  4 |       
-  5 |   console.log('onMount');"
+  4 |       console.log('onMount');
+  5 |     }}))"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > onInit 1`] = `
@@ -1795,8 +1825,8 @@ exports[`Alpine.js > jsx > Javascript Test > onMount 1`] = `
 > 2 |               Alpine.data('comp', () => ({, init() {
     |                                           ^
   3 |       
-  4 |       
-  5 |   console.log('Runs on mount');"
+  4 |       console.log('Runs on mount');
+  5 |     }}))"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > onUpdate 1`] = `
@@ -1806,8 +1836,8 @@ exports[`Alpine.js > jsx > Javascript Test > onUpdate 1`] = `
 > 2 |               Alpine.data('onUpdate', () => ({,
     |                                               ^
   3 | onUpdate() {
-  4 |         
-  5 |   console.log('Runs on every update/rerender');"
+  4 |         console.log('Runs on every update/rerender');
+  5 |     }}))"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > onUpdateWithDeps 1`] = `
@@ -1909,6 +1939,30 @@ exports[`Alpine.js > jsx > Javascript Test > propsType 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"<div x-data=\\"onUpdate()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onUpdate\\", () => ({
+      foo: function foo(params) {},
+      bar: function bar() {},
+      zoo: function zoo() {
+        const params = {
+          cb: this.bar,
+        };
+      },
+
+      onUpdate() {
+        foo({
+          someOption: bar,
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > renderContentExample 1`] = `
 "unknown: Unexpected token (2:51)
 
@@ -1916,8 +1970,8 @@ exports[`Alpine.js > jsx > Javascript Test > renderContentExample 1`] = `
 > 2 |               Alpine.data('renderContent', () => ({, init() {
     |                                                    ^
   3 |       
-  4 |       
-  5 |   sendComponentsToVisualEditor(props.customComponents);"
+  4 |       sendComponentsToVisualEditor(props.customComponents);
+  5 |     }}))"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
@@ -2043,6 +2097,40 @@ exports[`Alpine.js > jsx > Javascript Test > subComponent 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"subComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > svgComponent 1`] = `
+"<svg
+  fill=\\"none\\"
+  role=\\"img\\"
+  x-data=\\"svgComponent()\\"
+  x-bind:viewBox=\\"'0 0 ' + 42 + ' ' + 42\\"
+  x-bind:width=\\"42\\"
+  x-bind:height=\\"42\\"
+>
+  <defs>
+    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
+      <feBlend
+        in=\\"SourceGraphic\\"
+        in2=\\"BackgroundImageFix\\"
+        result=\\"shape\\"
+      ></feBlend>
+
+      <feGaussianBlur
+        result=\\"effect1_foregroundBlur\\"
+        x-bind:stdDeviation=\\"7\\"
+      ></feGaussianBlur>
+    </filter>
+  </defs>
+</svg>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"svgComponent\\", () => ({}));
   });
 </script>
 "
@@ -3269,6 +3357,20 @@ exports[`Alpine.js > jsx > Typescript Test > Select 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Typescript Test > SlotDefault 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Typescript Test > SlotHtml 1`] = `
 "<div x-data=\\"slotCode()\\">
   <ContentSlotCode>
@@ -3286,6 +3388,22 @@ exports[`Alpine.js > jsx > Typescript Test > SlotHtml 1`] = `
 exports[`Alpine.js > jsx > Typescript Test > SlotJsx 1`] = `
 "<div x-data=\\"slotCode()\\">
   <ContentSlotCode x-bind:slotTesting=\\"<div>Hello</div>\\"></ContentSlotCode>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > SlotNamed 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
 </div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -3695,7 +3813,7 @@ exports[`Alpine.js > jsx > Typescript Test > defaultProps 1`] = `
   </template>
 
   <template x-if=\\"!link\\">
-    <button type=\\"button\\" x-bind=\\"attributes\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick(event)\\">
       <span x-html=\\"text\\"></span>
     </button>
   </template>
@@ -3721,7 +3839,7 @@ exports[`Alpine.js > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = 
   </template>
 
   <template x-if=\\"!link\\">
-    <button type=\\"button\\" x-bind=\\"attributes\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick(event)\\">
       <span x-html=\\"text\\"></span>
     </button>
   </template>
@@ -3788,8 +3906,8 @@ exports[`Alpine.js > jsx > Typescript Test > multipleOnUpdate 1`] = `
 > 2 |               Alpine.data('multipleOnUpdate', () => ({,
     |                                                       ^
   3 | onUpdate() {
-  4 |         
-  5 |   console.log('Runs on every update/rerender');"
+  4 |         console.log('Runs on every update/rerender');
+  5 | console.log('Runs on every update/rerender as well');"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
@@ -3900,8 +4018,8 @@ exports[`Alpine.js > jsx > Typescript Test > onInit & onMount 1`] = `
 > 2 |               Alpine.data('onInit', () => ({, init() {
     |                                             ^
   3 |       
-  4 |       
-  5 |   console.log('onMount');"
+  4 |       console.log('onMount');
+  5 |     }}))"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > onInit 1`] = `
@@ -3926,8 +4044,8 @@ exports[`Alpine.js > jsx > Typescript Test > onMount 1`] = `
 > 2 |               Alpine.data('comp', () => ({, init() {
     |                                           ^
   3 |       
-  4 |       
-  5 |   console.log('Runs on mount');"
+  4 |       console.log('Runs on mount');
+  5 |     }}))"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > onUpdate 1`] = `
@@ -3937,8 +4055,8 @@ exports[`Alpine.js > jsx > Typescript Test > onUpdate 1`] = `
 > 2 |               Alpine.data('onUpdate', () => ({,
     |                                               ^
   3 | onUpdate() {
-  4 |         
-  5 |   console.log('Runs on every update/rerender');"
+  4 |         console.log('Runs on every update/rerender');
+  5 |     }}))"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > onUpdateWithDeps 1`] = `
@@ -4040,6 +4158,30 @@ exports[`Alpine.js > jsx > Typescript Test > propsType 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"<div x-data=\\"onUpdate()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onUpdate\\", () => ({
+      foo: function foo(params) {},
+      bar: function bar() {},
+      zoo: function zoo() {
+        const params = {
+          cb: this.bar,
+        };
+      },
+
+      onUpdate() {
+        foo({
+          someOption: bar,
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Typescript Test > renderContentExample 1`] = `
 "unknown: Unexpected token (2:51)
 
@@ -4047,8 +4189,8 @@ exports[`Alpine.js > jsx > Typescript Test > renderContentExample 1`] = `
 > 2 |               Alpine.data('renderContent', () => ({, init() {
     |                                                    ^
   3 |       
-  4 |       
-  5 |   sendComponentsToVisualEditor(props.customComponents);"
+  4 |       sendComponentsToVisualEditor(props.customComponents);
+  5 |     }}))"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
@@ -4174,6 +4316,40 @@ exports[`Alpine.js > jsx > Typescript Test > subComponent 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"subComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > svgComponent 1`] = `
+"<svg
+  fill=\\"none\\"
+  role=\\"img\\"
+  x-data=\\"svgComponent()\\"
+  x-bind:viewBox=\\"'0 0 ' + 42 + ' ' + 42\\"
+  x-bind:width=\\"42\\"
+  x-bind:height=\\"42\\"
+>
+  <defs>
+    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
+      <feBlend
+        in=\\"SourceGraphic\\"
+        in2=\\"BackgroundImageFix\\"
+        result=\\"shape\\"
+      ></feBlend>
+
+      <feGaussianBlur
+        result=\\"effect1_foregroundBlur\\"
+        x-bind:stdDeviation=\\"7\\"
+      ></feGaussianBlur>
+    </filter>
+  </defs>
+</svg>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"svgComponent\\", () => ({}));
   });
 </script>
 "
@@ -4343,7 +4519,7 @@ exports[`Alpine.js > svelte > Javascript Test > bindProperty 1`] = `
 exports[`Alpine.js > svelte > Javascript Test > classDirective 1`] = `
 "<input
   x-data=\\"myComponent()\\"
-  x-bind:class=\\"\`form-input \${disabled ? 'disabled'  : ''} \${focus ? 'focus'  : ''}\`\\"
+  x-bind:class=\\"\`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`\\"
 />
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -4383,6 +4559,24 @@ exports[`Alpine.js > svelte > Javascript Test > each 1`] = `
 "
 `;
 
+exports[`Alpine.js > svelte > Javascript Test > eventHandlers 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button x-on:click=\\"log('hi')\\">Log</button>
+  <button x-on:click=\\"log(event)\\">Log</button>
+  <button x-on:click=\\"log(event)\\">Log</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      log: function log(msg = \\"hello\\") {
+        console.log(msg);
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > svelte > Javascript Test > html 1`] = `
 "<div x-data=\\"myComponent()\\" x-bind:innerHTML=\\"html\\"></div>
 <script>
@@ -4397,7 +4591,7 @@ exports[`Alpine.js > svelte > Javascript Test > html 1`] = `
 
 exports[`Alpine.js > svelte > Javascript Test > ifElse 1`] = `
 "<template x-if=\\"show\\">
-  <button x-on:click=\\"toggle\\">Hide</button>
+  <button x-on:click=\\"toggle(event)\\">Hide</button>
 </template>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -4453,6 +4647,48 @@ exports[`Alpine.js > svelte > Javascript Test > reactive 1`] = `
         return this.name.toLowerCase();
       },
     }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input type=\\"number\\" x-on:change=\\"a = $event.target.value\\" x-bind:value=\\"a\\" />
+  <input type=\\"number\\" x-on:change=\\"b = $event.target.value\\" x-bind:value=\\"b\\" />
+
+  Result:
+  <span x-html=\\"result\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        this.result = a_ * b_;
+      },
+
+      init() {
+        this.$watch(\\"a,this.b\\", (value, oldValue) => {
+          this.calculateResult(this.a, this.b);
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > slots 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <slot>default</slot>
+  <slot name=\\"Test\\"><div>default</div></slot>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
   });
 </script>
 "
@@ -4597,7 +4833,7 @@ exports[`Alpine.js > svelte > Typescript Test > bindProperty 1`] = `
 exports[`Alpine.js > svelte > Typescript Test > classDirective 1`] = `
 "<input
   x-data=\\"myComponent()\\"
-  x-bind:class=\\"\`form-input \${disabled ? 'disabled'  : ''} \${focus ? 'focus'  : ''}\`\\"
+  x-bind:class=\\"\`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`\\"
 />
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -4637,6 +4873,24 @@ exports[`Alpine.js > svelte > Typescript Test > each 1`] = `
 "
 `;
 
+exports[`Alpine.js > svelte > Typescript Test > eventHandlers 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button x-on:click=\\"log('hi')\\">Log</button>
+  <button x-on:click=\\"log(event)\\">Log</button>
+  <button x-on:click=\\"log(event)\\">Log</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      log: function log(msg = \\"hello\\") {
+        console.log(msg);
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > svelte > Typescript Test > html 1`] = `
 "<div x-data=\\"myComponent()\\" x-bind:innerHTML=\\"html\\"></div>
 <script>
@@ -4651,7 +4905,7 @@ exports[`Alpine.js > svelte > Typescript Test > html 1`] = `
 
 exports[`Alpine.js > svelte > Typescript Test > ifElse 1`] = `
 "<template x-if=\\"show\\">
-  <button x-on:click=\\"toggle\\">Hide</button>
+  <button x-on:click=\\"toggle(event)\\">Hide</button>
 </template>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -4707,6 +4961,48 @@ exports[`Alpine.js > svelte > Typescript Test > reactive 1`] = `
         return this.name.toLowerCase();
       },
     }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input type=\\"number\\" x-on:change=\\"a = $event.target.value\\" x-bind:value=\\"a\\" />
+  <input type=\\"number\\" x-on:change=\\"b = $event.target.value\\" x-bind:value=\\"b\\" />
+
+  Result:
+  <span x-html=\\"result\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        this.result = a_ * b_;
+      },
+
+      init() {
+        this.$watch(\\"a,this.b\\", (value, oldValue) => {
+          this.calculateResult(this.a, this.b);
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > slots 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <slot>default</slot>
+  <slot name=\\"Test\\"><div>default</div></slot>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
   });
 </script>
 "

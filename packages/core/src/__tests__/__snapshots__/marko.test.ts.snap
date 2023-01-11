@@ -85,14 +85,14 @@ exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-08f2a5b6 {
+  .input-4a4b9003 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-08f2a5b6\\"
+      class=\\"input-4a4b9003\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -977,7 +977,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
 }
 
 style { 
-  .img-f006c488 {
+  .img-a94ec16e {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -990,7 +990,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-f006c488')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-a94ec16e')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -1111,6 +1111,16 @@ class {}
 </select>"
 `;
 
+exports[`Marko > jsx > Javascript Test > SlotDefault 1`] = `
+"class {}
+
+<div>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -1130,6 +1140,18 @@ class {}
 
 <div>
   <ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode>
+</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > SlotNamed 1`] = `
+"class {}
+
+<div>
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
 </div>"
 `;
 
@@ -1163,16 +1185,16 @@ class {
 }
 
 style { 
-  .input-53151ff6 {
+  .input-017045de {
     display: block;
   }
-  .textarea-53151ff6 {
+  .textarea-017045de {
     display: block;
   }
-  .button-53151ff6 {
+  .button-017045de {
     display: block;
   }
-  .review-53151ff6 {
+  .review-017045de {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -1180,7 +1202,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-53151ff6 {
+  .img-017045de {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -1193,13 +1215,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-53151ff6\\" />
+    <input placeholder=\\"Title\\" class=\\"input-017045de\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-53151ff6\\"
+      class=\\"textarea-017045de\\"
     ></textarea>
     <button
-      class=\\"button-53151ff6\\"
+      class=\\"button-017045de\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -1209,8 +1231,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-53151ff6\\" key=(review.id)>
-      <img class=\\"img-53151ff6\\" src=(review.avatar) />
+    <div class=\\"review-017045de\\" key=(review.id)>
+      <img class=\\"img-017045de\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -1490,7 +1512,13 @@ exports[`Marko > jsx > Javascript Test > defaultProps 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -1508,7 +1536,13 @@ exports[`Marko > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -1745,6 +1779,26 @@ exports[`Marko > jsx > Javascript Test > propsType 1`] = `
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
+exports[`Marko > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"class {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  onRender() {
+    foo({
+      someOption: bar,
+    });
+  }
+}
+
+<div></div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
@@ -1765,12 +1819,12 @@ class {
 }
 
 style { 
-  .div-183ea214 {
+  .div-6d1158e4 {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-183ea214\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-6d1158e4\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -1855,6 +1909,35 @@ exports[`Marko > jsx > Javascript Test > subComponent 1`] = `
 class {}
 
 <Foo></Foo>"
+`;
+
+exports[`Marko > jsx > Javascript Test > svgComponent 1`] = `
+"class {}
+
+<svg
+  fill=\\"none\\"
+  role=\\"img\\"
+  viewBox=('0 0 ' + 42 + ' ' + 42)
+  width=(42)
+  height=(42)
+>
+  <defs>
+    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
+      <feBlend
+        in=\\"SourceGraphic\\"
+        in2=\\"BackgroundImageFix\\"
+        result=\\"shape\\"
+      ></feBlend>
+
+      <feGaussianBlur
+        result=\\"effect1_foregroundBlur\\"
+        stdDeviation=(7)
+      ></feGaussianBlur>
+    </filter>
+  </defs>
+</svg>"
 `;
 
 exports[`Marko > jsx > Javascript Test > typeDependency 1`] = `
@@ -1947,14 +2030,14 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-08f2a5b6 {
+  .input-4a4b9003 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-08f2a5b6\\"
+      class=\\"input-4a4b9003\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -2839,7 +2922,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 }
 
 style { 
-  .img-f006c488 {
+  .img-a94ec16e {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -2852,7 +2935,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-f006c488')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-a94ec16e')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -2973,6 +3056,16 @@ class {}
 </select>"
 `;
 
+exports[`Marko > jsx > Typescript Test > SlotDefault 1`] = `
+"class {}
+
+<div>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>"
+`;
+
 exports[`Marko > jsx > Typescript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -2992,6 +3085,18 @@ class {}
 
 <div>
   <ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode>
+</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > SlotNamed 1`] = `
+"class {}
+
+<div>
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
 </div>"
 `;
 
@@ -3025,16 +3130,16 @@ class {
 }
 
 style { 
-  .input-53151ff6 {
+  .input-017045de {
     display: block;
   }
-  .textarea-53151ff6 {
+  .textarea-017045de {
     display: block;
   }
-  .button-53151ff6 {
+  .button-017045de {
     display: block;
   }
-  .review-53151ff6 {
+  .review-017045de {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -3042,7 +3147,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-53151ff6 {
+  .img-017045de {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -3055,13 +3160,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-53151ff6\\" />
+    <input placeholder=\\"Title\\" class=\\"input-017045de\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-53151ff6\\"
+      class=\\"textarea-017045de\\"
     ></textarea>
     <button
-      class=\\"button-53151ff6\\"
+      class=\\"button-017045de\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -3071,8 +3176,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-53151ff6\\" key=(review.id)>
-      <img class=\\"img-53151ff6\\" src=(review.avatar) />
+    <div class=\\"review-017045de\\" key=(review.id)>
+      <img class=\\"img-017045de\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -3352,7 +3457,13 @@ exports[`Marko > jsx > Typescript Test > defaultProps 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -3370,7 +3481,13 @@ exports[`Marko > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
     </a></if>
 
   <if(!input.link)>
-    <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
+    <button
+      type=\\"button\\"
+      ...(props.attributes)
+      on-click(event => input.onClick(event))
+    >
+      \${input.text}
+    </button></if>
 </div>"
 `;
 
@@ -3607,6 +3724,26 @@ exports[`Marko > jsx > Typescript Test > propsType 1`] = `
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
+exports[`Marko > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"class {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  onRender() {
+    foo({
+      someOption: bar,
+    });
+  }
+}
+
+<div></div>"
+`;
+
 exports[`Marko > jsx > Typescript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
@@ -3627,12 +3764,12 @@ class {
 }
 
 style { 
-  .div-183ea214 {
+  .div-6d1158e4 {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-183ea214\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-6d1158e4\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -3717,6 +3854,35 @@ exports[`Marko > jsx > Typescript Test > subComponent 1`] = `
 class {}
 
 <Foo></Foo>"
+`;
+
+exports[`Marko > jsx > Typescript Test > svgComponent 1`] = `
+"class {}
+
+<svg
+  fill=\\"none\\"
+  role=\\"img\\"
+  viewBox=('0 0 ' + 42 + ' ' + 42)
+  width=(42)
+  height=(42)
+>
+  <defs>
+    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
+      <feBlend
+        in=\\"SourceGraphic\\"
+        in2=\\"BackgroundImageFix\\"
+        result=\\"shape\\"
+      ></feBlend>
+
+      <feGaussianBlur
+        result=\\"effect1_foregroundBlur\\"
+        stdDeviation=(7)
+      ></feGaussianBlur>
+    </filter>
+  </defs>
+</svg>"
 `;
 
 exports[`Marko > jsx > Typescript Test > typeDependency 1`] = `
@@ -3890,6 +4056,20 @@ exports[`Marko > svelte > Javascript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Marko > svelte > Javascript Test > eventHandlers 1`] = `
+"class {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+<div>
+  <button on-click(a => component.log('hi'))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+</div>"
+`;
+
 exports[`Marko > svelte > Javascript Test > html 1`] = `
 "class {
   onCreate() {
@@ -3912,8 +4092,8 @@ exports[`Marko > svelte > Javascript Test > ifElse 1`] = `
 }
 
 <if(state.show)>
-  <button on-click(event => component.toggle)>Hide</button></if>
-<else><button on-click(event => component.toggle)>Show</button></else>"
+  <button on-click(event => component.toggle(event))>Hide</button></if>
+<else><button on-click(event => component.toggle(event))>Show</button></else>"
 `;
 
 exports[`Marko > svelte > Javascript Test > imports 1`] = `
@@ -3961,6 +4141,45 @@ exports[`Marko > svelte > Javascript Test > reactive 1`] = `
   <input value=(state.name) />
 
   Lowercase: \${component.lowercaseName}
+</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > reactiveWithFn 1`] = `
+"class {
+  calculateResult = function calculateResult(a_, b_) {
+    this.state.result = a_ * b_;
+  };
+
+  onCreate() {
+    this.state = { a: 2, b: 5, result: null };
+  }
+
+  onRender() {
+    this.calculateResult(this.state.a, this.state.b);
+  }
+}
+
+<div>
+  <input
+    type=\\"number\\"
+    on-input(event => state.a = event.target.value)
+    value=(state.a)
+  />
+  <input
+    type=\\"number\\"
+    on-input(event => state.b = event.target.value)
+    value=(state.b)
+  />
+
+  Result: \${state.result}
+</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > slots 1`] = `
+"class {}
+
+<div>
+  <slot>default</slot> <slot name=\\"Test\\"><div>default</div></slot>
 </div>"
 `;
 
@@ -4115,6 +4334,20 @@ exports[`Marko > svelte > Typescript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Marko > svelte > Typescript Test > eventHandlers 1`] = `
+"class {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+<div>
+  <button on-click(a => component.log('hi'))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+</div>"
+`;
+
 exports[`Marko > svelte > Typescript Test > html 1`] = `
 "class {
   onCreate() {
@@ -4137,8 +4370,8 @@ exports[`Marko > svelte > Typescript Test > ifElse 1`] = `
 }
 
 <if(state.show)>
-  <button on-click(event => component.toggle)>Hide</button></if>
-<else><button on-click(event => component.toggle)>Show</button></else>"
+  <button on-click(event => component.toggle(event))>Hide</button></if>
+<else><button on-click(event => component.toggle(event))>Show</button></else>"
 `;
 
 exports[`Marko > svelte > Typescript Test > imports 1`] = `
@@ -4186,6 +4419,45 @@ exports[`Marko > svelte > Typescript Test > reactive 1`] = `
   <input value=(state.name) />
 
   Lowercase: \${component.lowercaseName}
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > reactiveWithFn 1`] = `
+"class {
+  calculateResult = function calculateResult(a_, b_) {
+    this.state.result = a_ * b_;
+  };
+
+  onCreate() {
+    this.state = { a: 2, b: 5, result: null };
+  }
+
+  onRender() {
+    this.calculateResult(this.state.a, this.state.b);
+  }
+}
+
+<div>
+  <input
+    type=\\"number\\"
+    on-input(event => state.a = event.target.value)
+    value=(state.a)
+  />
+  <input
+    type=\\"number\\"
+    on-input(event => state.b = event.target.value)
+    value=(state.b)
+  />
+
+  Result: \${state.result}
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > slots 1`] = `
+"class {}
+
+<div>
+  <slot>default</slot> <slot name=\\"Test\\"><div>default</div></slot>
 </div>"
 `;
 

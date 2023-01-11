@@ -28,18 +28,23 @@ const isValidAttributeName = (str: string) => {
 export const blockToMitosis = (
   json: MitosisNode,
   toMitosisOptions: Partial<ToMitosisOptions> = {},
+  component: MitosisComponent,
 ): string => {
   const options: ToMitosisOptions = {
     format: DEFAULT_FORMAT,
     ...toMitosisOptions,
   };
   if (options.format === 'react') {
-    return blockToReact(json, {
-      format: 'lite',
-      stateType: 'useState',
-      stylesType: 'emotion',
-      prettier: options.prettier,
-    });
+    return blockToReact(
+      json,
+      {
+        format: 'lite',
+        stateType: 'useState',
+        stylesType: 'emotion',
+        prettier: options.prettier,
+      },
+      component,
+    );
   }
 
   if (checkIsForNode(json)) {
@@ -47,7 +52,7 @@ export const blockToMitosis = (
     return `<For each={${json.bindings.each?.code}}>
     {(${json.scope.forName}, index) =>
       ${needsWrapper ? '<>' : ''}
-        ${json.children.map((child) => blockToMitosis(child, options))}}
+        ${json.children.map((child) => blockToMitosis(child, options, component))}}
       ${needsWrapper ? '</>' : ''}
     </For>`;
   }
@@ -99,7 +104,7 @@ export const blockToMitosis = (
   }
   str += '>';
   if (json.children) {
-    str += json.children.map((item) => blockToMitosis(item, options)).join('\n');
+    str += json.children.map((item) => blockToMitosis(item, options, component)).join('\n');
   }
 
   str += `</${json.name}>`;
@@ -192,7 +197,7 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
       ${!json.hooks.onUnMount?.code ? '' : `onUnMount(() => { ${json.hooks.onUnMount.code} })`}
 
       return (${addWrapper ? '<>' : ''}
-        ${json.children.map((item) => blockToMitosis(item, options)).join('\n')}
+        ${json.children.map((item) => blockToMitosis(item, options, component)).join('\n')}
         ${addWrapper ? '</>' : ''})
     }
 

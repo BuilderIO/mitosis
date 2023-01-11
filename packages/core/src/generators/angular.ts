@@ -1,5 +1,4 @@
 import dedent from 'dedent';
-import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
@@ -7,7 +6,10 @@ import { getRefs } from '../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
+import {
+  DO_NOT_USE_VARS_TRANSFORMS,
+  stripStateAndPropsRefs,
+} from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import {
@@ -20,7 +22,7 @@ import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
 import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';
-import { kebabCase, uniq } from 'lodash';
+import { isString, kebabCase, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import {
@@ -34,14 +36,15 @@ import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
+import { replaceIdentifiers } from '../helpers/replace-identifiers';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
-import { pipe } from 'fp-ts/lib/function';
+import { flow, pipe } from 'fp-ts/lib/function';
 
 import { MitosisComponent } from '..';
 import { mergeOptions } from '../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
 
-const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
+const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
@@ -64,10 +67,13 @@ const mappers: {
       .join('\n')}</ng-container>`;
   },
   Slot: (json, options) => {
-    return `<ng-content ${Object.entries(json.bindings)
+    const renderChildren = () =>
+      json.children?.map((item) => blockToAngular(item, options)).join('\n');
+
+    return `<ng-content ${Object.entries({ ...json.bindings, ...json.properties })
       .map(([binding, value]) => {
         if (value && binding === 'name') {
-          const selector = pipe(value.code, stripSlotPrefix, kebabCase);
+          const selector = pipe(isString(value) ? value : value.code, stripSlotPrefix, kebabCase);
           return `select="[${selector}]"`;
         }
       })
@@ -77,7 +83,7 @@ const mappers: {
           return value.code;
         }
       })
-      .join('\n')}</ng-content>`;
+      .join('\n')}${renderChildren()}</ng-content>`;
   },
 };
 
@@ -89,13 +95,13 @@ const generateNgModule = (
   bootstrapMapper: Function | null | undefined,
 ): string => {
   return `import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 
 ${content}
 
 @NgModule({
   declarations: [${name}],
-  imports: [BrowserModule${
+  imports: [CommonModule${
     componentsUsed.length ? ', ' + componentsUsed.map((comp) => `${comp}Module`).join(', ') : ''
   }],
   exports: [${name}],
@@ -186,7 +192,9 @@ export const blockToAngular = (
       // TODO: proper babel transform to replace. Util for this
 
       if (key.startsWith('on')) {
-        let event = key.replace('on', '').toLowerCase();
+        let event = key.replace('on', '');
+        event = event.charAt(0).toLowerCase() + event.slice(1);
+
         if (event === 'change' && json.name === 'input' /* todo: other tags */) {
           event = 'input';
         }
@@ -233,6 +241,31 @@ export const blockToAngular = (
   return str;
 };
 
+const processAngularCode =
+  ({
+    contextVars,
+    outputVars,
+    domRefs,
+    stateVars,
+    replaceWith,
+  }: {
+    contextVars: string[];
+    outputVars: string[];
+    domRefs: string[];
+    stateVars?: string[];
+    replaceWith?: string;
+  }) =>
+  (code: string) =>
+    pipe(
+      DO_NOT_USE_VARS_TRANSFORMS(code, {
+        contextVars,
+        domRefs,
+        outputVars,
+        stateVars,
+      }),
+      (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
+    );
+
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
   ({ component: _component }) => {
@@ -253,25 +286,37 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     options.plugins = [
       ...(options.plugins || []),
       CODE_PROCESSOR_PLUGIN((codeType) => {
-        const domRefs = getRefs(json);
         switch (codeType) {
           case 'hooks':
-            return (code) => {
-              return stripStateAndPropsRefs(code, {
-                replaceWith: 'this.',
+            return flow(
+              processAngularCode({
+                replaceWith: 'this',
                 contextVars,
                 outputVars,
-                domRefs: Array.from(domRefs),
+                domRefs: Array.from(getRefs(json)),
                 stateVars,
-              });
-            };
+              }),
+              (code) => {
+                const allMethodNames = Object.entries(json.state)
+                  .filter(([_, value]) => value?.type === 'function' || value?.type === 'method')
+                  .map(([key]) => key);
+
+                return replaceIdentifiers({
+                  code,
+                  from: allMethodNames,
+                  to: (name) => `this.${name}`,
+                });
+              },
+            );
+
           case 'bindings':
             return (code) => {
-              return stripStateAndPropsRefs(code, {
+              const newLocal = processAngularCode({
                 contextVars: [],
                 outputVars,
                 domRefs: [], // the template doesn't need the this keyword.
-              }).replace(/"/g, '&quot;');
+              })(code);
+              return newLocal.replace(/"/g, '&quot;');
             };
           case 'hooks-deps':
           case 'state':
@@ -366,14 +411,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'class',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(code, {
-          replaceWith: 'this.',
-          contextVars,
-          outputVars,
-          domRefs: Array.from(domRefs),
-          stateVars,
-        }),
+      valueMapper: processAngularCode({
+        replaceWith: 'this',
+        contextVars,
+        outputVars,
+        domRefs: Array.from(domRefs),
+        stateVars,
+      }),
     });
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
@@ -398,6 +442,20 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     Object.entries(json.meta.angularConfig || {}).forEach(([key, value]) => {
       componentMetadata[key] = value;
     });
+
+    const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
+      if (!json.defaultProps) return '';
+      const defalutPropsString = Object.keys(json.defaultProps)
+        .map((prop) => {
+          const value = json.defaultProps!.hasOwnProperty(prop)
+            ? json.defaultProps![prop]?.code
+            : '{}';
+          return `${prop}: ${value}`;
+        })
+        .join(',');
+      return `const defaultProps = {${defalutPropsString}};\n`;
+    };
+
     let str = dedent`
     import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
       options?.experimental?.inject ? 'Inject, forwardRef,' : ''
@@ -407,7 +465,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
-    ${!json.defaultProps ? '' : `const defaultProps = ${json5.stringify(json.defaultProps)}\n`}
+    ${getPropsDefinition({ json })}
     ${renderPreComponent({
       component: json,
       target: 'angular',
@@ -452,13 +510,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           const typeParameter = json.refs[ref].typeParameter;
           return `private _${ref}${typeParameter ? `: ${typeParameter}` : ''}${
             argument
-              ? ` = ${stripStateAndPropsRefs(argument, {
+              ? ` = ${processAngularCode({
                   replaceWith: 'this.',
                   contextVars,
                   outputVars,
                   domRefs: Array.from(domRefs),
                   stateVars,
-                })}`
+                })(argument)}`
               : ''
           };`;
         })

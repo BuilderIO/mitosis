@@ -1,12 +1,16 @@
 import { Plugin } from '../../types/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { checkIsDefined } from '../nullable';
 import { traverseNodes } from '../traverse-nodes';
 
 type CodeType = 'hooks' | 'hooks-deps' | 'bindings' | 'properties' | 'state';
 
-type CodeProcessor = (codeType: CodeType) => (code: string) => string;
+declare function codeProcessor(
+  codeType: CodeType,
+): (code: string, hookType?: keyof MitosisComponent['hooks']) => string;
+
+type CodeProcessor = typeof codeProcessor;
 
 /**
  * Process code in bindings and properties of a node
@@ -18,13 +22,13 @@ const preProcessBlockCode = ({
   json: MitosisNode;
   codeProcessor: CodeProcessor;
 }) => {
-  const propertiesProcessor = codeProcessor('properties');
-  for (const key in json.properties) {
-    const value = json.properties[key];
-    if (value) {
-      json.properties[key] = propertiesProcessor(value);
-    }
-  }
+  // const propertiesProcessor = codeProcessor('properties');
+  // for (const key in json.properties) {
+  //   const value = json.properties[key];
+  //   if (key !== '_text' && value) {
+  //     json.properties[key] = propertiesProcessor(value);
+  //   }
+  // }
 
   const bindingsProcessor = codeProcessor('bindings');
   for (const key in json.bindings) {
@@ -43,7 +47,12 @@ export const CODE_PROCESSOR_PLUGIN =
   () => ({
     json: {
       post: (json: MitosisComponent) => {
-        const processHookCode = codeProcessor('hooks');
+        function processHook(key: keyof typeof json.hooks, hook: extendedHook) {
+          hook.code = codeProcessor('hooks')(hook.code, key);
+          if (hook.deps) {
+            hook.deps = codeProcessor('hooks-deps')(hook.deps);
+          }
+        }
 
         /**
          * process code in hooks
@@ -52,17 +61,13 @@ export const CODE_PROCESSOR_PLUGIN =
           const typedKey = key as keyof typeof json.hooks;
           const hooks = json.hooks[typedKey];
 
-          if (checkIsDefined(hooks) && Array.isArray(hooks)) {
-            for (const hook of hooks) {
-              hook.code = processHookCode(hook.code);
-              if (hook.deps) {
-                hook.deps = codeProcessor('hooks-deps')(hook.deps);
+          if (checkIsDefined(hooks)) {
+            if (Array.isArray(hooks)) {
+              for (const hook of hooks) {
+                processHook(typedKey, hook);
               }
-            }
-          } else if (checkIsDefined(hooks)) {
-            hooks.code = processHookCode(hooks.code);
-            if (hooks.deps) {
-              hooks.deps = codeProcessor('hooks-deps')(hooks.deps);
+            } else {
+              processHook(typedKey, hooks);
             }
           }
         }

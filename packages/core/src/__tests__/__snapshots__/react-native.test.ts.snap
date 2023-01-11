@@ -35,7 +35,7 @@ export default function MyBasicRefComponent(props) {
             style={styles.view1}
           />
 
-          <View for=\\"cars\\" ref={inputNoArgRef}>
+          <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
             <Text>Choose a car:</Text>
           </View>
 
@@ -325,7 +325,7 @@ export default function MyBasicRefComponent(props) {
             style={styles.view1}
           />
 
-          <View for=\\"cars\\" ref={inputNoArgRef}>
+          <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
             <Text>Choose a car:</Text>
           </View>
 
@@ -1160,6 +1160,24 @@ export default function SelectComponent(props) {
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > SlotDefault 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function SlotCode(props) {
+  return <View>{props.children}</View>;
+}
+
+SlotCode.defaultProps = {
+  children: (
+    <View>
+      <Text>Default content</Text>
+    </View>
+  ),
+};
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > SlotHtml 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -1187,6 +1205,29 @@ export default function SlotCode(props) {
     </View>
   );
 }
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > SlotNamed 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function SlotCode(props) {
+  return (
+    <View>
+      {props.slotTop}
+
+      {props.slotLeft}
+
+      {props.children}
+    </View>
+  );
+}
+
+SlotCode.defaultProps = {
+  slotLeft: <Text>Default left</Text>,
+  children: <Text>Default Child</Text>,
+};
 "
 `;
 
@@ -1661,7 +1702,11 @@ export default function Button(props) {
 
       {!props.link ? (
         <>
-          <View type=\\"button\\" {...props.attributes}>
+          <View
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             <Text>{props.text}</Text>
           </View>
         </>
@@ -1674,6 +1719,9 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 "
 `;
@@ -1699,7 +1747,11 @@ export default function Button(props) {
 
       {!props.link ? (
         <>
-          <View type=\\"button\\" {...props.attributes}>
+          <View
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             <Text>{props.text}</Text>
           </View>
         </>
@@ -1712,6 +1764,7 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 "
 `;
@@ -2080,6 +2133,33 @@ export default function MyBasicComponent(props) {
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function OnUpdate(props) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <View />;
+}
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -2298,6 +2378,34 @@ export default function SubComponent(props) {
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > svgComponent 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function SvgComponent(props) {
+  return (
+    <View
+      fill=\\"none\\"
+      role=\\"img\\"
+      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+      width={42}
+      height={42}
+    >
+      <View>
+        <View id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+          <feFlood result=\\"BackgroundImageFix\\" />
+
+          <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
+
+          <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
+        </View>
+      </View>
+    </View>
+  );
+}
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > typeDependency 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -2420,7 +2528,7 @@ export default function MyBasicRefComponent(props: Props) {
             style={styles.view1}
           />
 
-          <View for=\\"cars\\" ref={inputNoArgRef}>
+          <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
             <Text>Choose a car:</Text>
           </View>
 
@@ -2728,7 +2836,7 @@ export default function MyBasicRefComponent(props: Props) {
             style={styles.view1}
           />
 
-          <View for=\\"cars\\" ref={inputNoArgRef}>
+          <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
             <Text>Choose a car:</Text>
           </View>
 
@@ -3707,6 +3815,28 @@ export default function SelectComponent(props: FormSelectProps) {
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > SlotDefault 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default function SlotCode(props: Props) {
+  return <View>{props.children}</View>;
+}
+
+SlotCode.defaultProps = {
+  children: (
+    <View>
+      <Text>Default content</Text>
+    </View>
+  ),
+};
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > SlotHtml 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -3742,6 +3872,33 @@ export default function SlotCode(props: Props) {
     </View>
   );
 }
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > SlotNamed 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default function SlotCode(props: Props) {
+  return (
+    <View>
+      {props.slotTop}
+
+      {props.slotLeft}
+
+      {props.children}
+    </View>
+  );
+}
+
+SlotCode.defaultProps = {
+  slotLeft: <Text>Default left</Text>,
+  children: <Text>Default Child</Text>,
+};
 "
 `;
 
@@ -4281,6 +4438,7 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 
 export default function Button(props: ButtonProps) {
@@ -4300,7 +4458,11 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View type=\\"button\\" {...props.attributes}>
+          <View
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             <Text>{props.text}</Text>
           </View>
         </>
@@ -4313,6 +4475,9 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 "
 `;
@@ -4326,6 +4491,7 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 
 export default function Button(props: ButtonProps) {
@@ -4345,7 +4511,11 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View type=\\"button\\" {...props.attributes}>
+          <View
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             <Text>{props.text}</Text>
           </View>
         </>
@@ -4358,6 +4528,7 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 "
 `;
@@ -4787,6 +4958,33 @@ export default function MyBasicComponent(props: Person) {
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function OnUpdate(props: any) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <View />;
+}
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -5029,6 +5227,34 @@ export default function SubComponent(props: any) {
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > svgComponent 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function SvgComponent(props: any) {
+  return (
+    <View
+      fill=\\"none\\"
+      role=\\"img\\"
+      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+      width={42}
+      height={42}
+    >
+      <View>
+        <View id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+          <feFlood result=\\"BackgroundImageFix\\" />
+
+          <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
+
+          <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
+        </View>
+      </View>
+    </View>
+  );
+}
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > typeDependency 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -5257,6 +5483,32 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`React Native > svelte > Javascript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <View>
+      <View onClick={(a) => log(\\"hi\\")}>
+        <Text>Log</Text>
+      </View>
+      <View onClick={(event) => log(event)}>
+        <Text>Log</Text>
+      </View>
+      <View onClick={(event) => log(event)}>
+        <Text>Log</Text>
+      </View>
+    </View>
+  );
+}
+"
+`;
+
 exports[`React Native > svelte > Javascript Test > html 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -5285,11 +5537,11 @@ export default function MyComponent(props) {
   return (
     <>
       {show ? (
-        <View onClick={(event) => toggle}>
+        <View onClick={(event) => toggle(event)}>
           <Text> Hide </Text>
         </View>
       ) : (
-        <View onClick={(event) => toggle}>
+        <View onClick={(event) => toggle(event)}>
           <Text> Show </Text>
         </View>
       )}
@@ -5364,6 +5616,70 @@ export default function MyComponent(props) {
     </View>
   );
 }
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyComponent(props) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <View>
+      <View
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <View
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      <Text>Result: </Text>
+      <Text>{result}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > slots 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props) {
+  return (
+    <View>
+      {props.children}
+      {props.slotTest}
+    </View>
+  );
+}
+
+MyComponent.defaultProps = {
+  children: <Text>default</Text>,
+  slotTest: (
+    <View>
+      <Text>default</Text>
+    </View>
+  ),
+};
 "
 `;
 
@@ -5560,6 +5876,32 @@ export default function MyComponent(props: any) {
 "
 `;
 
+exports[`React Native > svelte > Typescript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props: any) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <View>
+      <View onClick={(a) => log(\\"hi\\")}>
+        <Text>Log</Text>
+      </View>
+      <View onClick={(event) => log(event)}>
+        <Text>Log</Text>
+      </View>
+      <View onClick={(event) => log(event)}>
+        <Text>Log</Text>
+      </View>
+    </View>
+  );
+}
+"
+`;
+
 exports[`React Native > svelte > Typescript Test > html 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -5588,11 +5930,11 @@ export default function MyComponent(props: any) {
   return (
     <>
       {show ? (
-        <View onClick={(event) => toggle}>
+        <View onClick={(event) => toggle(event)}>
           <Text> Hide </Text>
         </View>
       ) : (
-        <View onClick={(event) => toggle}>
+        <View onClick={(event) => toggle(event)}>
           <Text> Show </Text>
         </View>
       )}
@@ -5667,6 +6009,70 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <View>
+      <View
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <View
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      <Text>Result: </Text>
+      <Text>{result}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > slots 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <View>
+      {props.children}
+      {props.slotTest}
+    </View>
+  );
+}
+
+MyComponent.defaultProps = {
+  children: <Text>default</Text>,
+  slotTest: (
+    <View>
+      <Text>default</Text>
+    </View>
+  ),
+};
 "
 `;
 

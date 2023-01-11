@@ -1,14 +1,3 @@
-import { MitosisContext } from '../../types/mitosis-context';
+import { getContextWithSymbolKey } from './helpers/context-with-symbol-key';
 
-type ContextToVueOptions = {
-  format?: boolean;
-};
-
-export function contextToVue(context: MitosisContext, options: ContextToVueOptions = {}): string {
-  let str = `
-    // Noop file
-    export default {};
-  `;
-
-  return str;
-}
+export const contextToVue = getContextWithSymbolKey;

@@ -35,7 +35,7 @@ export default function MyBasicRefComponent(props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label for=\\"cars\\" ref={inputNoArgRef}>
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
 
@@ -319,7 +319,7 @@ export default function MyBasicRefComponent(props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label for=\\"cars\\" ref={inputNoArgRef}>
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
 
@@ -1187,6 +1187,19 @@ export default function SelectComponent(props) {
 "
 `;
 
+exports[`React > jsx > Javascript Test > SlotDefault 1`] = `
+"import * as React from \\"react\\";
+
+export default function SlotCode(props) {
+  return <div>{props.children}</div>;
+}
+
+SlotCode.defaultProps = {
+  children: <div className=\\"default-slot\\">Default content</div>,
+};
+"
+`;
+
 exports[`React > jsx > Javascript Test > SlotHtml 1`] = `
 "import * as React from \\"react\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
@@ -1212,6 +1225,25 @@ export default function SlotCode(props) {
     </div>
   );
 }
+"
+`;
+
+exports[`React > jsx > Javascript Test > SlotNamed 1`] = `
+"import * as React from \\"react\\";
+
+export default function SlotCode(props) {
+  return (
+    <div>
+      {props.slotTop}
+
+      {props.slotLeft}
+
+      {props.children}
+    </div>
+  );
+}
+
+SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 "
 `;
 
@@ -1701,7 +1733,11 @@ export default function Button(props) {
 
       {!props.link ? (
         <>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </>
@@ -1714,6 +1750,9 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 "
 `;
@@ -1738,7 +1777,11 @@ export default function Button(props) {
 
       {!props.link ? (
         <>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </>
@@ -1751,6 +1794,7 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 "
 `;
@@ -2099,6 +2143,32 @@ export default function MyBasicComponent(props) {
 "
 `;
 
+exports[`React > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+export default function OnUpdate(props) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
+}
+"
+`;
+
 exports[`React > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { useContext, useEffect } from \\"react\\";
@@ -2298,6 +2368,33 @@ export default function SubComponent(props) {
 "
 `;
 
+exports[`React > jsx > Javascript Test > svgComponent 1`] = `
+"import * as React from \\"react\\";
+
+export default function SvgComponent(props) {
+  return (
+    <svg
+      fill=\\"none\\"
+      role=\\"img\\"
+      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+      width={42}
+      height={42}
+    >
+      <defs>
+        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+          <feFlood result=\\"BackgroundImageFix\\" />
+
+          <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
+
+          <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+"
+`;
+
 exports[`React > jsx > Javascript Test > typeDependency 1`] = `
 "import * as React from \\"react\\";
 
@@ -2431,7 +2528,7 @@ export default function MyBasicRefComponent(props: Props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label for=\\"cars\\" ref={inputNoArgRef}>
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
 
@@ -2733,7 +2830,7 @@ export default function MyBasicRefComponent(props: Props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label for=\\"cars\\" ref={inputNoArgRef}>
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
 
@@ -3745,6 +3842,23 @@ export default function SelectComponent(props: FormSelectProps) {
 "
 `;
 
+exports[`React > jsx > Typescript Test > SlotDefault 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default function SlotCode(props: Props) {
+  return <div>{props.children}</div>;
+}
+
+SlotCode.defaultProps = {
+  children: <div className=\\"default-slot\\">Default content</div>,
+};
+"
+`;
+
 exports[`React > jsx > Typescript Test > SlotHtml 1`] = `
 "import * as React from \\"react\\";
 
@@ -3778,6 +3892,29 @@ export default function SlotCode(props: Props) {
     </div>
   );
 }
+"
+`;
+
+exports[`React > jsx > Typescript Test > SlotNamed 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default function SlotCode(props: Props) {
+  return (
+    <div>
+      {props.slotTop}
+
+      {props.slotLeft}
+
+      {props.children}
+    </div>
+  );
+}
+
+SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 "
 `;
 
@@ -4332,6 +4469,7 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 
 export default function Button(props: ButtonProps) {
@@ -4351,7 +4489,11 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </>
@@ -4364,6 +4506,9 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 "
 `;
@@ -4376,6 +4521,7 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 
 export default function Button(props: ButtonProps) {
@@ -4395,7 +4541,11 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </>
@@ -4408,6 +4558,7 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 "
 `;
@@ -4817,6 +4968,32 @@ export default function MyBasicComponent(props: Person) {
 "
 `;
 
+exports[`React > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+export default function OnUpdate(props: any) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
+}
+"
+`;
+
 exports[`React > jsx > Typescript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { useContext, useEffect } from \\"react\\";
@@ -5036,6 +5213,33 @@ import Foo from \\"./foo-sub-component.lite\\";
 
 export default function SubComponent(props: any) {
   return <Foo />;
+}
+"
+`;
+
+exports[`React > jsx > Typescript Test > svgComponent 1`] = `
+"import * as React from \\"react\\";
+
+export default function SvgComponent(props: any) {
+  return (
+    <svg
+      fill=\\"none\\"
+      role=\\"img\\"
+      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+      width={42}
+      height={42}
+    >
+      <defs>
+        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+          <feFlood result=\\"BackgroundImageFix\\" />
+
+          <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
+
+          <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
+        </filter>
+      </defs>
+    </svg>
+  );
 }
 "
 `;
@@ -5483,6 +5687,25 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`React > svelte > Javascript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`React > svelte > Javascript Test > html 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
@@ -5509,9 +5732,9 @@ export default function MyComponent(props) {
   return (
     <>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </>
   );
@@ -5581,6 +5804,64 @@ export default function MyComponent(props) {
     </div>
   );
 }
+"
+`;
+
+exports[`React > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyComponent(props) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > slots 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props) {
+  return (
+    <div>
+      {props.children}
+      {props.slotTest}
+    </div>
+  );
+}
+
+MyComponent.defaultProps = {
+  children: \\"default\\",
+  slotTest: <div>default</div>,
+};
 "
 `;
 
@@ -5783,6 +6064,25 @@ export default function MyComponent(props: any) {
 "
 `;
 
+exports[`React > svelte > Typescript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`React > svelte > Typescript Test > html 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
@@ -5809,9 +6109,9 @@ export default function MyComponent(props: any) {
   return (
     <>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </>
   );
@@ -5881,6 +6181,64 @@ export default function MyComponent(props: any) {
     </div>
   );
 }
+"
+`;
+
+exports[`React > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > slots 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <div>
+      {props.children}
+      {props.slotTest}
+    </div>
+  );
+}
+
+MyComponent.defaultProps = {
+  children: \\"default\\",
+  slotTest: <div>default</div>,
+};
 "
 `;
 

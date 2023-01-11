@@ -70,7 +70,7 @@ export function parseReferences(json: SveltosisComponent, node: VariableDeclarat
       break;
     }
     default: {
-      code = (declaration?.init as SimpleLiteral)?.value as string;
+      code = ((declaration?.init as SimpleLiteral)?.value as string) ?? null;
     }
   }
 

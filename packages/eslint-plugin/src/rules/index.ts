@@ -12,6 +12,7 @@ import noVarNameSameAsStateProperty from './no-var-name-same-as-state-property';
 import onlyDefaultFunctionAndImports from './only-default-function-and-imports';
 import noConditionalLogicInComponentRender from './no-conditional-logic-in-component-render';
 import noVarDeclarationOrAssignmentInComponent from './no-var-declaration-or-assignment-in-component';
+import noMapFunctionInJsxReturnBody from './no-map-function-in-jsx-return-body';
 import { staticControlFlow } from './static-control-flow';
 
 export const rules = {
@@ -30,4 +31,5 @@ export const rules = {
   'only-default-function-and-imports': onlyDefaultFunctionAndImports,
   'no-conditional-logic-in-component-render': noConditionalLogicInComponentRender,
   'no-var-declaration-or-assignment-in-component': noVarDeclarationOrAssignmentInComponent,
+  'no-map-function-in-jsx-return-body': noMapFunctionInJsxReturnBody,
 };

@@ -532,11 +532,11 @@ export default class Column {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -813,11 +813,7 @@ export default class FormComponent {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
+  onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -831,19 +827,16 @@ export default class FormComponent {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body: any;
+      let body;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
+      const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!(el as HTMLInputElement).name)
+        .filter((el) => !!el.name)
         .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
+          let value;
+          const key = el.name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -869,7 +862,7 @@ export default class FormComponent {
               value = el.value;
             }
           } else {
-            value = (el as HTMLInputElement).value;
+            value = el.value;
           }
 
           return {
@@ -936,7 +929,7 @@ export default class FormComponent {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -1389,6 +1382,26 @@ export default class SelectComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > SlotDefault 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"slot-code\\",
+})
+export default class SlotCode {
+  render() {
+    return (
+      <div>
+        <Slot>
+          <div>Default content</div>
+        </Slot>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -1424,6 +1437,28 @@ export default class SlotCode {
     return (
       <div>
         <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > SlotNamed 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"slot-code\\",
+})
+export default class SlotCode {
+  render() {
+    return (
+      <div>
+        <Slot name=\\"top\\"></Slot>
+
+        <Slot name=\\"left\\">Default left</Slot>
+
+        <Slot>Default Child</Slot>
       </div>
     );
   }
@@ -1953,6 +1988,7 @@ export default class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any;
   @Prop() text: any;
+  @Prop() onClick: any;
 
   render() {
     return (
@@ -1971,7 +2007,11 @@ export default class Button {
 
         {!this.link ? (
           <>
-            <button type=\\"button\\" {...props.attributes}>
+            <button
+              type=\\"button\\"
+              {...props.attributes}
+              onClick={(event) => this.onClick(event)}
+            >
               {this.text}
             </button>
           </>
@@ -1994,6 +2034,7 @@ export default class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any;
   @Prop() text: any;
+  @Prop() onClick: any;
 
   render() {
     return (
@@ -2012,7 +2053,11 @@ export default class Button {
 
         {!this.link ? (
           <>
-            <button type=\\"button\\" {...props.attributes}>
+            <button
+              type=\\"button\\"
+              {...props.attributes}
+              onClick={(event) => this.onClick(event)}
+            >
               {this.text}
             </button>
           </>
@@ -2363,6 +2408,34 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"on-update\\",
+})
+export default class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  componentDidUpdate() {
+    foo({
+      someOption: bar,
+    });
+  }
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
@@ -2377,10 +2450,10 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"render-content\\",
   styles: \`
-       .div {
-         display: flex;
-         flex-direction: columns;
-       }
+    .div {
+      display: flex;
+      flex-direction: columns;
+    }
 \`,
 })
 export default class RenderContent {
@@ -2559,6 +2632,45 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 export default class SubComponent {
   render() {
     return <Foo></Foo>;
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > svgComponent 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"svg-component\\",
+})
+export default class SvgComponent {
+  render() {
+    return (
+      <svg
+        fill=\\"none\\"
+        role=\\"img\\"
+        viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+        width={42}
+        height={42}
+      >
+        <defs>
+          <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+            <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
+            <feBlend
+              in=\\"SourceGraphic\\"
+              in2=\\"BackgroundImageFix\\"
+              result=\\"shape\\"
+            ></feBlend>
+
+            <feGaussianBlur
+              result=\\"effect1_foregroundBlur\\"
+              stdDeviation={7}
+            ></feGaussianBlur>
+          </filter>
+        </defs>
+      </svg>
+    );
   }
 }
 "
@@ -3202,11 +3314,11 @@ export default class Column {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -3483,11 +3595,7 @@ export default class FormComponent {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
+  onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -3501,19 +3609,16 @@ export default class FormComponent {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body: any;
+      let body;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
+      const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!(el as HTMLInputElement).name)
+        .filter((el) => !!el.name)
         .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
+          let value;
+          const key = el.name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -3539,7 +3644,7 @@ export default class FormComponent {
               value = el.value;
             }
           } else {
-            value = (el as HTMLInputElement).value;
+            value = el.value;
           }
 
           return {
@@ -3606,7 +3711,7 @@ export default class FormComponent {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -4059,6 +4164,26 @@ export default class SelectComponent {
 "
 `;
 
+exports[`Stencil > jsx > Typescript Test > SlotDefault 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"slot-code\\",
+})
+export default class SlotCode {
+  render() {
+    return (
+      <div>
+        <Slot>
+          <div>Default content</div>
+        </Slot>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Typescript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -4094,6 +4219,28 @@ export default class SlotCode {
     return (
       <div>
         <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > SlotNamed 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"slot-code\\",
+})
+export default class SlotCode {
+  render() {
+    return (
+      <div>
+        <Slot name=\\"top\\"></Slot>
+
+        <Slot name=\\"left\\">Default left</Slot>
+
+        <Slot>Default Child</Slot>
       </div>
     );
   }
@@ -4623,6 +4770,7 @@ export default class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any;
   @Prop() text: any;
+  @Prop() onClick: any;
 
   render() {
     return (
@@ -4641,7 +4789,11 @@ export default class Button {
 
         {!this.link ? (
           <>
-            <button type=\\"button\\" {...props.attributes}>
+            <button
+              type=\\"button\\"
+              {...props.attributes}
+              onClick={(event) => this.onClick(event)}
+            >
               {this.text}
             </button>
           </>
@@ -4664,6 +4816,7 @@ export default class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any;
   @Prop() text: any;
+  @Prop() onClick: any;
 
   render() {
     return (
@@ -4682,7 +4835,11 @@ export default class Button {
 
         {!this.link ? (
           <>
-            <button type=\\"button\\" {...props.attributes}>
+            <button
+              type=\\"button\\"
+              {...props.attributes}
+              onClick={(event) => this.onClick(event)}
+            >
               {this.text}
             </button>
           </>
@@ -5033,6 +5190,34 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Stencil > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"on-update\\",
+})
+export default class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  componentDidUpdate() {
+    foo({
+      someOption: bar,
+    });
+  }
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Typescript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
@@ -5047,10 +5232,10 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"render-content\\",
   styles: \`
-       .div {
-         display: flex;
-         flex-direction: columns;
-       }
+    .div {
+      display: flex;
+      flex-direction: columns;
+    }
 \`,
 })
 export default class RenderContent {
@@ -5229,6 +5414,45 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 export default class SubComponent {
   render() {
     return <Foo></Foo>;
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > svgComponent 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"svg-component\\",
+})
+export default class SvgComponent {
+  render() {
+    return (
+      <svg
+        fill=\\"none\\"
+        role=\\"img\\"
+        viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+        width={42}
+        height={42}
+      >
+        <defs>
+          <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+            <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
+            <feBlend
+              in=\\"SourceGraphic\\"
+              in2=\\"BackgroundImageFix\\"
+              result=\\"shape\\"
+            ></feBlend>
+
+            <feGaussianBlur
+              result=\\"effect1_foregroundBlur\\"
+              stdDeviation={7}
+            ></feGaussianBlur>
+          </filter>
+        </defs>
+      </svg>
+    );
   }
 }
 "
@@ -5493,6 +5717,30 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > svelte > Javascript Test > eventHandlers 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+
+  render() {
+    return (
+      <div>
+        <button onClick={(a) => this.log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > svelte > Javascript Test > html 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -5515,8 +5763,8 @@ exports[`Stencil > svelte > Javascript Test > ifElse 1`] = `
   24 |       
 > 25 |         {this.show ? (
      |              ^
-  26 |     <button  onClick={event => this.toggle} > Hide </button>
-  27 |   ) : <button  onClick={event => this.toggle} > Show </button>}
+  26 |     <button  onClick={event => this.toggle(event)} > Hide </button>
+  27 |   ) : <button  onClick={event => this.toggle(event)} > Show </button>}
   28 |"
 `;
 
@@ -5587,6 +5835,68 @@ export default class MyComponent {
         <input value={this.name} />
         Lowercase:
         {this.lowercaseName}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() a = 2;
+  @State() b = 5;
+  @State() result = null;
+
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  componentDidUpdate() {
+    this.calculateResult(this.a, this.b);
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.a = event.target.value)}
+          value={this.a}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.b = event.target.value)}
+          value={this.b}
+        />
+        Result:
+        {this.result}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > svelte > Javascript Test > slots 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  render() {
+    return (
+      <div>
+        <Slot>default</Slot>
+        <Slot name=\\"Test\\">
+          <div>default</div>
+        </Slot>
       </div>
     );
   }
@@ -5817,6 +6127,30 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > svelte > Typescript Test > eventHandlers 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+
+  render() {
+    return (
+      <div>
+        <button onClick={(a) => this.log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > svelte > Typescript Test > html 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -5839,8 +6173,8 @@ exports[`Stencil > svelte > Typescript Test > ifElse 1`] = `
   24 |       
 > 25 |         {this.show ? (
      |              ^
-  26 |     <button  onClick={event => this.toggle} > Hide </button>
-  27 |   ) : <button  onClick={event => this.toggle} > Show </button>}
+  26 |     <button  onClick={event => this.toggle(event)} > Hide </button>
+  27 |   ) : <button  onClick={event => this.toggle(event)} > Show </button>}
   28 |"
 `;
 
@@ -5911,6 +6245,68 @@ export default class MyComponent {
         <input value={this.name} />
         Lowercase:
         {this.lowercaseName}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() a = 2;
+  @State() b = 5;
+  @State() result = null;
+
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  componentDidUpdate() {
+    this.calculateResult(this.a, this.b);
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.a = event.target.value)}
+          value={this.a}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.b = event.target.value)}
+          value={this.b}
+        />
+        Result:
+        {this.result}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > svelte > Typescript Test > slots 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  render() {
+    return (
+      <div>
+        <Slot>default</Slot>
+        <Slot name=\\"Test\\">
+          <div>default</div>
+        </Slot>
       </div>
     );
   }

@@ -198,11 +198,13 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
       json = runPostJsonPlugins(json, options.plugins);
     }
 
+    const componentName = camelCase(json.name) || 'MyComponent';
+
     const stateObjectString = getStateObjectString(json);
     // Set x-data on root element
     json.children[0].properties['x-data'] = options.inlineState
       ? stateObjectString
-      : `${camelCase(json.name)}()`;
+      : `${componentName}()`;
 
     if (hasRootUpdateHook(json)) {
       json.children[0].properties['x-effect'] = 'onUpdate';
@@ -214,7 +216,7 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
     if (!options.inlineState) {
       str += `<script>
           ${babelTransformCode(`document.addEventListener('alpine:init', () => {
-              Alpine.data('${camelCase(json.name)}', () => (${stateObjectString}))
+              Alpine.data('${componentName}', () => (${stateObjectString}))
           })`)}
         </script>`;
     }

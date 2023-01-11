@@ -1344,8 +1344,6 @@ exports[`Svelte > jsx > Javascript Test > basicForwardRef 1`] = `
 "<script>
   export let inputRef;
 
-  let inputRef;
-
   let name = \\"PatrickJS\\";
 </script>
 
@@ -1363,8 +1361,6 @@ exports[`Svelte > jsx > Javascript Test > basicForwardRef 1`] = `
 exports[`Svelte > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 "<script>
   export let inputRef;
-
-  let inputRef;
 
   let name = \\"PatrickJS\\";
 </script>
@@ -1462,11 +1458,14 @@ exports[`Svelte > jsx > Javascript Test > componentWithContext 1`] = `
   let foo = getContext(Context1.key);
   setContext(Context1.key, {
     foo: \\"bar\\",
+
     content() {
       return content;
     },
   });
-  setContext(Context2.key, { bar: \\"baz\\" });
+  setContext(Context2.key, {
+    bar: \\"baz\\",
+  });
 </script>
 
 {foo.value}"
@@ -1496,6 +1495,9 @@ exports[`Svelte > jsx > Javascript Test > defaultProps 1`] = `
   export let attributes;
   export let openLinkInNewTab = false;
   export let text = \\"default text\\";
+  export let onClick = () => {
+    console.log(\\"hi\\");
+  };
 </script>
 
 <div>
@@ -1510,7 +1512,13 @@ exports[`Svelte > jsx > Javascript Test > defaultProps 1`] = `
   {/if}
 
   {#if !link}
-    <button type=\\"button\\" {...attributes}>
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
+    >
       {text}
     </button>
   {/if}
@@ -1523,6 +1531,7 @@ exports[`Svelte > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
   export let attributes;
   export let openLinkInNewTab = false;
   export let text = \\"default text\\";
+  export let onClick = () => {};
 </script>
 
 <div>
@@ -1537,7 +1546,13 @@ exports[`Svelte > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
   {/if}
 
   {#if !link}
-    <button type=\\"button\\" {...attributes}>
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
+    >
       {text}
     </button>
   {/if}
@@ -1799,6 +1814,30 @@ exports[`Svelte > jsx > Javascript Test > propsType 1`] = `
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"<script>
+  import { afterUpdate } from \\"svelte\\";
+
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  afterUpdate(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+</script>
+
+<div />"
+`;
+
 exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
 "<script>
   import { onMount, setContext } from \\"svelte\\";
@@ -1818,6 +1857,7 @@ exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
     get content() {
       return 3;
     },
+
     get registeredComponents() {
       return 4;
     },
@@ -1951,6 +1991,24 @@ exports[`Svelte > jsx > Javascript Test > subComponent 1`] = `
 </script>
 
 <Foo />"
+`;
+
+exports[`Svelte > jsx > Javascript Test > svgComponent 1`] = `
+"<svg
+  fill=\\"none\\"
+  role=\\"img\\"
+  viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+  width={42}
+  height={42}
+>
+  <defs>
+    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <feFlood result=\\"BackgroundImageFix\\" />
+      <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
+      <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
+    </filter>
+  </defs>
+</svg>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > typeDependency 1`] = `
@@ -3629,8 +3687,6 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
 <script lang=\\"ts\\">
   export let inputRef: Props[\\"inputRef\\"];
 
-  let inputRef;
-
   let name = \\"PatrickJS\\";
 </script>
 
@@ -3655,8 +3711,6 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 
 <script lang=\\"ts\\">
   export let inputRef: Props[\\"inputRef\\"];
-
-  let inputRef;
 
   let name = \\"PatrickJS\\";
 </script>
@@ -3776,11 +3830,14 @@ exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
   let foo = getContext(Context1.key);
   setContext(Context1.key, {
     foo: \\"bar\\",
+
     content() {
       return content;
     },
   });
-  setContext(Context2.key, { bar: \\"baz\\" });
+  setContext(Context2.key, {
+    bar: \\"baz\\",
+  });
 </script>
 
 {foo.value}"
@@ -3811,6 +3868,7 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
     text?: string;
     link?: string;
     openLinkInNewTab?: boolean;
+    onClick?: () => void;
   }
 </script>
 
@@ -3819,6 +3877,9 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
   export let attributes: ButtonProps[\\"attributes\\"];
   export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
   export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+  export let onClick: ButtonProps[\\"onClick\\"] = () => {
+    console.log(\\"hi\\");
+  };
 </script>
 
 <div>
@@ -3833,7 +3894,13 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
   {/if}
 
   {#if !link}
-    <button type=\\"button\\" {...attributes}>
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
+    >
       {text}
     </button>
   {/if}
@@ -3847,6 +3914,7 @@ exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
     text?: string;
     link?: string;
     openLinkInNewTab?: boolean;
+    onClick: () => void;
   }
 </script>
 
@@ -3855,6 +3923,7 @@ exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
   export let attributes: ButtonProps[\\"attributes\\"];
   export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
   export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+  export let onClick: ButtonProps[\\"onClick\\"] = () => {};
 </script>
 
 <div>
@@ -3869,7 +3938,13 @@ exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
   {/if}
 
   {#if !link}
-    <button type=\\"button\\" {...attributes}>
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
+    >
       {text}
     </button>
   {/if}
@@ -4221,6 +4296,30 @@ exports[`Svelte > jsx > Typescript Test > propsType 1`] = `
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
 `;
 
+exports[`Svelte > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"<script lang=\\"ts\\">
+  import { afterUpdate } from \\"svelte\\";
+
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  afterUpdate(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+</script>
+
+<div />"
+`;
+
 exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   type Props = {
@@ -4250,6 +4349,7 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
     get content() {
       return 3;
     },
+
     get registeredComponents() {
       return 4;
     },
@@ -4415,6 +4515,27 @@ exports[`Svelte > jsx > Typescript Test > subComponent 1`] = `
 </script>
 
 <Foo />"
+`;
+
+exports[`Svelte > jsx > Typescript Test > svgComponent 1`] = `
+"<script lang=\\"ts\\">
+</script>
+
+<svg
+  fill=\\"none\\"
+  role=\\"img\\"
+  viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+  width={42}
+  height={42}
+>
+  <defs>
+    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <feFlood result=\\"BackgroundImageFix\\" />
+      <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
+      <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
+    </filter>
+  </defs>
+</svg>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > typeDependency 1`] = `
@@ -4605,6 +4726,30 @@ exports[`Svelte > svelte > Javascript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Svelte > svelte > Javascript Test > eventHandlers 1`] = `
+"<script>
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+</script>
+
+<div>
+  <button
+    on:click={(a) => {
+      log(\\"hi\\");
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  >
+</div>"
+`;
+
 exports[`Svelte > svelte > Javascript Test > html 1`] = `
 "<script>
   let html = \\"<b>bold</b>\\";
@@ -4625,7 +4770,7 @@ exports[`Svelte > svelte > Javascript Test > ifElse 1`] = `
 {#if show}
   <button
     on:click={(event) => {
-      toggle;
+      toggle(event);
     }}
   >
     Hide
@@ -4633,7 +4778,7 @@ exports[`Svelte > svelte > Javascript Test > ifElse 1`] = `
 {:else}
   <button
     on:click={(event) => {
-      toggle;
+      toggle(event);
     }}
   >
     Show
@@ -4685,6 +4830,30 @@ exports[`Svelte > svelte > Javascript Test > reactive 1`] = `
   Lowercase: {lowercaseName()}
 </div>"
 `;
+
+exports[`Svelte > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<script>
+  function calculateResult(a_, b_) {
+    result = a_ * b_;
+  }
+
+  let a = 2;
+  let b = 5;
+  let result = null;
+
+  function onUpdateFn_0() {
+    calculateResult(a, b);
+  }
+  $: onUpdateFn_0(...[a, b]);
+</script>
+
+<div>
+  <input type=\\"number\\" bind:value={a} /><input type=\\"number\\" bind:value={b} />
+  Result: {result}
+</div>"
+`;
+
+exports[`Svelte > svelte > Javascript Test > slots 1`] = `"<div><slot>default</slot><slot name=\\"test\\"><div>default</div></slot></div>"`;
 
 exports[`Svelte > svelte > Javascript Test > style 1`] = `
 "<input class=\\"form-input\\" />
@@ -4833,6 +5002,30 @@ exports[`Svelte > svelte > Typescript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Svelte > svelte > Typescript Test > eventHandlers 1`] = `
+"<script lang=\\"ts\\">
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+</script>
+
+<div>
+  <button
+    on:click={(a) => {
+      log(\\"hi\\");
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  >
+</div>"
+`;
+
 exports[`Svelte > svelte > Typescript Test > html 1`] = `
 "<script lang=\\"ts\\">
   let html = \\"<b>bold</b>\\";
@@ -4853,7 +5046,7 @@ exports[`Svelte > svelte > Typescript Test > ifElse 1`] = `
 {#if show}
   <button
     on:click={(event) => {
-      toggle;
+      toggle(event);
     }}
   >
     Hide
@@ -4861,7 +5054,7 @@ exports[`Svelte > svelte > Typescript Test > ifElse 1`] = `
 {:else}
   <button
     on:click={(event) => {
-      toggle;
+      toggle(event);
     }}
   >
     Show
@@ -4912,6 +5105,35 @@ exports[`Svelte > svelte > Typescript Test > reactive 1`] = `
   <input value={name} />
   Lowercase: {lowercaseName()}
 </div>"
+`;
+
+exports[`Svelte > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<script lang=\\"ts\\">
+  function calculateResult(a_, b_) {
+    result = a_ * b_;
+  }
+
+  let a = 2;
+  let b = 5;
+  let result = null;
+
+  function onUpdateFn_0() {
+    calculateResult(a, b);
+  }
+  $: onUpdateFn_0(...[a, b]);
+</script>
+
+<div>
+  <input type=\\"number\\" bind:value={a} /><input type=\\"number\\" bind:value={b} />
+  Result: {result}
+</div>"
+`;
+
+exports[`Svelte > svelte > Typescript Test > slots 1`] = `
+"<script lang=\\"ts\\">
+</script>
+
+<div><slot>default</slot><slot name=\\"test\\"><div>default</div></slot></div>"
 `;
 
 exports[`Svelte > svelte > Typescript Test > style 1`] = `

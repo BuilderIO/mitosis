@@ -36,10 +36,11 @@ const inputRef = ref(null);
 const inputNoArgRef = ref(null);
 
 watch(
-  () => [inputRef, inputNoArgRef],
+  () => [inputRef.value, inputNoArgRef.value],
   ([inputRef, inputNoArgRef]) => {
     console.log(\\"Received an update\\");
-  }
+  },
+  { immediate: true }
 );
 function onBlur() {
   // Maintain focus
@@ -133,9 +134,9 @@ import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 const name = ref(\\"PatrickJS\\");
 
-const myService = inject(MyService);
+const myService = inject(MyService.key);
 
-provide(Injector, createInjector());
+provide(Injector.key, createInjector());
 
 const hi = myService.method(\\"hi\\");
 console.log(hi);
@@ -385,10 +386,11 @@ const count = ref(0);
 const prevCount = ref(null);
 
 watch(
-  () => [count],
+  () => [count.value],
   ([count]) => {
     prevCount.value = count.value;
-  }
+  },
+  { immediate: true }
 );
 </script>"
 `;
@@ -1265,6 +1267,16 @@ const props = defineProps([
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > SlotDefault 1`] = `
+"<template>
+  <div>
+    <slot>
+      <div class=\\"default-slot\\">Default content</div>
+    </slot>
+  </div>
+</template>"
+`;
+
 exports[`Vue > jsx > Javascript Test > SlotHtml 1`] = `
 "<template>
   <div>
@@ -1291,6 +1303,16 @@ exports[`Vue > jsx > Javascript Test > SlotJsx 1`] = `
 <script setup>
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 </script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > SlotNamed 1`] = `
+"<template>
+  <div>
+    <slot name=\\"top\\"></slot>
+    <slot name=\\"left\\">Default left</slot>
+    <slot>Default Child</slot>
+  </div>
+</template>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
@@ -1582,7 +1604,7 @@ import { ref, watch } from \\"vue\\";
 const name = ref(\\"PatrickJS\\");
 
 watch(
-  () => [name],
+  () => [name.value],
   ([name]) => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -1598,7 +1620,8 @@ watch(
         controller.abort();
       }
     };
-  }
+  },
+  { immediate: true }
 );
 </script>"
 `;
@@ -1723,15 +1746,15 @@ import Context2 from \\"@dummy/2\\";
 
 const props = defineProps([\\"content\\"]);
 
-const foo = inject(Context1);
+const foo = inject(Context1.key);
 
-provide(Context1, {
+provide(Context1.key, {
   foo: \\"bar\\",
   content() {
     return props.content;
   },
 });
-provide(Context2, { bar: \\"baz\\" });
+provide(Context2.key, { bar: \\"baz\\" });
 </script>"
 `;
 
@@ -1747,7 +1770,7 @@ import BuilderContext from \\"@dummy/context.vue\\";
 
 const props = defineProps([\\"content\\", \\"customComponents\\"]);
 
-provide(BuilderContext, {
+provide(BuilderContext.key, {
   content: props.content,
   registeredComponents: props.customComponents,
 });
@@ -1768,7 +1791,7 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -1777,9 +1800,13 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
 
 <script setup>
 const props = withDefaults(defineProps(), {
-  text: \\"default text\\",
   link: \\"https://builder.io/\\",
+  attributes: {},
   openLinkInNewTab: false,
+  text: \\"default text\\",
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 });
 </script>"
 `;
@@ -1798,7 +1825,7 @@ exports[`Vue > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -1807,9 +1834,11 @@ exports[`Vue > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 
 <script setup>
 const props = withDefaults(defineProps(), {
-  text: \\"default text\\",
   link: \\"https://builder.io/\\",
+  attributes: {},
   openLinkInNewTab: false,
+  text: \\"default text\\",
+  onClick: () => {},
 });
 </script>"
 `;
@@ -1891,24 +1920,26 @@ const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
 watch(
-  () => [a, b],
+  () => [a.value, b.value],
   ([a, b]) => {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
 watch(
-  () => [c, d],
+  () => [c.value, d.value],
   ([c, d]) => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
 </script>"
 `;
@@ -2052,10 +2083,11 @@ const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
 watch(
-  () => [a, b, props.size],
+  () => [a.value, b.value, props.size],
   ([a, b, size]) => {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
-  }
+  },
+  { immediate: true }
 );
 </script>"
 `;
@@ -2120,6 +2152,30 @@ const props = defineProps([\\"name\\"]);
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script setup>
+import { onUpdated } from \\"vue\\";
+
+onUpdated(() =>
+  foo({
+    someOption: bar,
+  })
+);
+
+function foo(params) {}
+function bar() {}
+function zoo() {
+  const params = {
+    cb: bar,
+  };
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > renderContentExample 1`] = `
 "<template>
   <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
@@ -2140,7 +2196,7 @@ import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 const props = defineProps([\\"content\\", \\"customComponents\\"]);
 
-provide(BuilderContext, {
+provide(BuilderContext.key, {
   get content() {
     return 3;
   },
@@ -2157,7 +2213,8 @@ watch(
   () => [props.content],
   ([content]) => {
     dispatchNewContentToVisualEditor(props.content);
-  }
+  },
+  { immediate: true }
 );
 </script>
 
@@ -2294,6 +2351,33 @@ import Foo from \\"./foo-sub-component.vue\\";
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > svgComponent 1`] = `
+"<template>
+  <svg
+    fill=\\"none\\"
+    role=\\"img\\"
+    :viewBox=\\"'0 0 ' + 42 + ' ' + 42\\"
+    :width=\\"42\\"
+    :height=\\"42\\"
+  >
+    <defs>
+      <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+        <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+        <feBlend
+          in=\\"SourceGraphic\\"
+          in2=\\"BackgroundImageFix\\"
+          result=\\"shape\\"
+        ></feBlend>
+        <feGaussianBlur
+          result=\\"effect1_foregroundBlur\\"
+          :stdDeviation=\\"7\\"
+        ></feGaussianBlur>
+      </filter>
+    </defs>
+  </svg>
+</template>"
+`;
+
 exports[`Vue > jsx > Javascript Test > typeDependency 1`] = `
 "<template>
   <div>{{ foo }}</div>
@@ -2409,10 +2493,11 @@ const inputRef = ref<HTMLInputElement>();
 const inputNoArgRef = ref<HTMLLabelElement>();
 
 watch(
-  () => [inputRef, inputNoArgRef],
+  () => [inputRef.value, inputNoArgRef.value],
   ([inputRef, inputNoArgRef]) => {
     console.log(\\"Received an update\\");
-  }
+  },
+  { immediate: true }
 );
 function onBlur() {
   // Maintain focus
@@ -2509,9 +2594,9 @@ import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 const name = ref(\\"PatrickJS\\");
 
-const myService = inject(MyService);
+const myService = inject(MyService.key);
 
-provide(Injector, createInjector());
+provide(Injector.key, createInjector());
 
 const hi = myService.method(\\"hi\\");
 console.log(hi);
@@ -2780,10 +2865,11 @@ const count = ref(0);
 const prevCount = ref<undefined>();
 
 watch(
-  () => [count],
+  () => [count.value],
   ([count]) => {
     prevCount.value = count.value;
-  }
+  },
+  { immediate: true }
 );
 </script>"
 `;
@@ -3749,6 +3835,22 @@ const props = defineProps<FormSelectProps>();
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > SlotDefault 1`] = `
+"<template>
+  <div>
+    <slot>
+      <div class=\\"default-slot\\">Default content</div>
+    </slot>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+type Props = {
+  [key: string]: string;
+};
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > SlotHtml 1`] = `
 "<template>
   <div>
@@ -3782,6 +3884,22 @@ type Props = {
 };
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > SlotNamed 1`] = `
+"<template>
+  <div>
+    <slot name=\\"top\\"></slot>
+    <slot name=\\"left\\">Default left</slot>
+    <slot>Default Child</slot>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+type Props = {
+  [key: string]: string;
+};
 </script>"
 `;
 
@@ -4116,7 +4234,7 @@ import { ref, watch } from \\"vue\\";
 const name = ref(\\"PatrickJS\\");
 
 watch(
-  () => [name],
+  () => [name.value],
   ([name]) => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -4132,7 +4250,8 @@ watch(
         controller.abort();
       }
     };
-  }
+  },
+  { immediate: true }
 );
 </script>"
 `;
@@ -4264,15 +4383,15 @@ import Context2 from \\"@dummy/2\\";
 
 const props = defineProps<ComponentWithContextProps>();
 
-const foo = inject(Context1);
+const foo = inject(Context1.key);
 
-provide(Context1, {
+provide(Context1.key, {
   foo: \\"bar\\",
   content() {
     return props.content;
   },
 });
-provide(Context2, { bar: \\"baz\\" });
+provide(Context2.key, { bar: \\"baz\\" });
 </script>"
 `;
 
@@ -4288,7 +4407,7 @@ import BuilderContext from \\"@dummy/context.vue\\";
 
 const props = defineProps([\\"content\\", \\"customComponents\\"]);
 
-provide(BuilderContext, {
+provide(BuilderContext.key, {
   content: props.content,
   registeredComponents: props.customComponents,
 });
@@ -4309,7 +4428,7 @@ exports[`Vue > jsx > Typescript Test > defaultProps 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -4322,12 +4441,17 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 
 const props = withDefaults(defineProps<ButtonProps>(), {
-  text: \\"default text\\",
   link: \\"https://builder.io/\\",
+  attributes: {},
   openLinkInNewTab: false,
+  text: \\"default text\\",
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 });
 </script>"
 `;
@@ -4346,7 +4470,7 @@ exports[`Vue > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -4359,12 +4483,15 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 
 const props = withDefaults(defineProps<ButtonProps>(), {
-  text: \\"default text\\",
   link: \\"https://builder.io/\\",
+  attributes: {},
   openLinkInNewTab: false,
+  text: \\"default text\\",
+  onClick: () => {},
 });
 </script>"
 `;
@@ -4456,24 +4583,26 @@ const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
 watch(
-  () => [a, b],
+  () => [a.value, b.value],
   ([a, b]) => {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
 watch(
-  () => [c, d],
+  () => [c.value, d.value],
   ([c, d]) => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
 </script>"
 `;
@@ -4628,10 +4757,11 @@ const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
 watch(
-  () => [a, b, props.size],
+  () => [a.value, b.value, props.size],
   ([a, b, size]) => {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
-  }
+  },
+  { immediate: true }
 );
 </script>"
 `;
@@ -4733,6 +4863,30 @@ const props = defineProps<Person>();
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { onUpdated } from \\"vue\\";
+
+onUpdated(() =>
+  foo({
+    someOption: bar,
+  })
+);
+
+function foo(params) {}
+function bar() {}
+function zoo() {
+  const params = {
+    cb: bar,
+  };
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > renderContentExample 1`] = `
 "<template>
   <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
@@ -4760,7 +4914,7 @@ import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 const props = defineProps<Props>();
 
-provide(BuilderContext, {
+provide(BuilderContext.key, {
   get content() {
     return 3;
   },
@@ -4777,7 +4931,8 @@ watch(
   () => [props.content],
   ([content]) => {
     dispatchNewContentToVisualEditor(props.content);
-  }
+  },
+  { immediate: true }
 );
 </script>
 
@@ -4928,6 +5083,33 @@ exports[`Vue > jsx > Typescript Test > subComponent 1`] = `
 <script setup lang=\\"ts\\">
 import Foo from \\"./foo-sub-component.vue\\";
 </script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > svgComponent 1`] = `
+"<template>
+  <svg
+    fill=\\"none\\"
+    role=\\"img\\"
+    :viewBox=\\"'0 0 ' + 42 + ' ' + 42\\"
+    :width=\\"42\\"
+    :height=\\"42\\"
+  >
+    <defs>
+      <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+        <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+        <feBlend
+          in=\\"SourceGraphic\\"
+          in2=\\"BackgroundImageFix\\"
+          result=\\"shape\\"
+        ></feBlend>
+        <feGaussianBlur
+          result=\\"effect1_foregroundBlur\\"
+          :stdDeviation=\\"7\\"
+        ></feGaussianBlur>
+      </filter>
+    </defs>
+  </svg>
+</template>"
 `;
 
 exports[`Vue > jsx > Typescript Test > typeDependency 1`] = `
@@ -5094,7 +5276,7 @@ exports[`Vue > svelte > Javascript Test > classDirective 1`] = `
 <script setup>
 import { ref } from \\"vue\\";
 
-const props = withDefaults(defineProps(), {});
+const props = withDefaults(defineProps(), { disabled: {} });
 const focus = ref(true);
 
 function _classStringToObject(str) {
@@ -5143,6 +5325,22 @@ const numbers = ref([\\"one\\", \\"two\\", \\"three\\"]);
 </script>"
 `;
 
+exports[`Vue > svelte > Javascript Test > eventHandlers 1`] = `
+"<template>
+  <div>
+    <button @click=\\"log('hi')\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button>
+  </div>
+</template>
+
+<script setup>
+function log(msg = \\"hello\\") {
+  console.log(msg);
+}
+</script>"
+`;
+
 exports[`Vue > svelte > Javascript Test > html 1`] = `
 "<template>
   <div v-html=\\"html\\"></div>
@@ -5158,11 +5356,11 @@ const html = ref(\\"<b>bold</b>\\");
 exports[`Vue > svelte > Javascript Test > ifElse 1`] = `
 "<template>
   <template v-if=\\"show\\">
-    <button @click=\\"toggle\\">Hide</button>
+    <button @click=\\"toggle($event)\\">Hide</button>
   </template>
 
   <template v-else>
-    <button @click=\\"toggle\\">Show</button>
+    <button @click=\\"toggle($event)\\">Show</button>
   </template>
 </template>
 
@@ -5226,6 +5424,46 @@ const lowercaseName = computed(() => {
   return name.value.toLowerCase();
 });
 </script>"
+`;
+
+exports[`Vue > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<template>
+  <div>
+    <input type=\\"number\\" @input=\\"a = $event.target.value\\" :value=\\"a\\" /><input
+      type=\\"number\\"
+      @input=\\"b = $event.target.value\\"
+      :value=\\"b\\"
+    />
+    Result: {{ result }}
+  </div>
+</template>
+
+<script setup>
+import { ref, watch } from \\"vue\\";
+
+const a = ref(2);
+const b = ref(5);
+const result = ref(null);
+
+watch(
+  () => [a.value, b.value],
+  ([a, b]) => {
+    calculateResult(a, b);
+  },
+  { immediate: true }
+);
+function calculateResult(a_, b_) {
+  result.value = a_ * b_;
+}
+</script>"
+`;
+
+exports[`Vue > svelte > Javascript Test > slots 1`] = `
+"<template>
+  <div>
+    <slot>default</slot><slot name=\\"test\\"><div>default</div></slot>
+  </div>
+</template>"
 `;
 
 exports[`Vue > svelte > Javascript Test > style 1`] = `
@@ -5358,7 +5596,7 @@ exports[`Vue > svelte > Typescript Test > classDirective 1`] = `
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
-const props = withDefaults(defineProps<undefined>(), {});
+const props = withDefaults(defineProps<undefined>(), { disabled: {} });
 const focus = ref(true);
 
 function _classStringToObject(str) {
@@ -5407,6 +5645,22 @@ const numbers = ref([\\"one\\", \\"two\\", \\"three\\"]);
 </script>"
 `;
 
+exports[`Vue > svelte > Typescript Test > eventHandlers 1`] = `
+"<template>
+  <div>
+    <button @click=\\"log('hi')\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+function log(msg = \\"hello\\") {
+  console.log(msg);
+}
+</script>"
+`;
+
 exports[`Vue > svelte > Typescript Test > html 1`] = `
 "<template>
   <div v-html=\\"html\\"></div>
@@ -5422,11 +5676,11 @@ const html = ref(\\"<b>bold</b>\\");
 exports[`Vue > svelte > Typescript Test > ifElse 1`] = `
 "<template>
   <template v-if=\\"show\\">
-    <button @click=\\"toggle\\">Hide</button>
+    <button @click=\\"toggle($event)\\">Hide</button>
   </template>
 
   <template v-else>
-    <button @click=\\"toggle\\">Show</button>
+    <button @click=\\"toggle($event)\\">Show</button>
   </template>
 </template>
 
@@ -5490,6 +5744,46 @@ const lowercaseName = computed(() => {
   return name.value.toLowerCase();
 });
 </script>"
+`;
+
+exports[`Vue > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<template>
+  <div>
+    <input type=\\"number\\" @input=\\"a = $event.target.value\\" :value=\\"a\\" /><input
+      type=\\"number\\"
+      @input=\\"b = $event.target.value\\"
+      :value=\\"b\\"
+    />
+    Result: {{ result }}
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref, watch } from \\"vue\\";
+
+const a = ref(2);
+const b = ref(5);
+const result = ref(null);
+
+watch(
+  () => [a.value, b.value],
+  ([a, b]) => {
+    calculateResult(a, b);
+  },
+  { immediate: true }
+);
+function calculateResult(a_, b_) {
+  result.value = a_ * b_;
+}
+</script>"
+`;
+
+exports[`Vue > svelte > Typescript Test > slots 1`] = `
+"<template>
+  <div>
+    <slot>default</slot><slot name=\\"test\\"><div>default</div></slot>
+  </div>
+</template>"
 `;
 
 exports[`Vue > svelte > Typescript Test > style 1`] = `

@@ -20,6 +20,7 @@ const recommendedRules: Record<RulesKeys, string> = {
   '@builder.io/mitosis/use-state-var-declarator': 'error',
   '@builder.io/mitosis/static-control-flow': 'error',
   '@builder.io/mitosis/no-var-name-same-as-prop-name': 'error',
+  '@builder.io/mitosis/no-map-function-in-jsx-return-body': 'warning',
 };
 
 export default {

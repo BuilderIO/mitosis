@@ -1,7 +1,7 @@
-import { babelTransformCode } from './babel-transform';
+import { babelTransformCode, babelTransformExpression } from './babel-transform';
 
-test('babelTransform', () => {
-  const code = `
+const SPECS = [
+  `
 const symbol = symbol;
 
 if (symbol) {
@@ -11,7 +11,25 @@ if (symbol) {
     content = response;
   });
 }
-`;
+`,
+  `state.tortilla === 'Plain'`,
+  `state.tortilla = event.target.value`,
+];
 
-  expect(babelTransformCode(code)).toMatchSnapshot();
+describe('babelTransform', () => {
+  SPECS.forEach((args, index) => {
+    test(`Check #${index}`, () => {
+      const output = babelTransformCode(args);
+      expect(output).toMatchSnapshot();
+    });
+  });
+});
+
+describe('babelTransformExpression', () => {
+  SPECS.forEach((args, index) => {
+    test(`Check #${index}`, () => {
+      const output = babelTransformExpression(args, {});
+      expect(output).toMatchSnapshot();
+    });
+  });
 });

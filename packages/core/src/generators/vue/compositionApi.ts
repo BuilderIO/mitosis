@@ -3,9 +3,10 @@ import json5 from 'json5';
 import { pickBy } from 'lodash';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
-import { getContextValue } from './helpers';
+import { getContextKey, getContextValue } from './helpers';
 import { ToVueOptions } from './types';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { processBinding } from './helpers';
 
 const getCompositionPropDefinition = ({
   options,
@@ -20,7 +21,15 @@ const getCompositionPropDefinition = ({
 
   if (component.defaultProps) {
     const generic = options.typescript ? `<${component.propsTypeRef}>` : '';
-    str += `withDefaults(defineProps${generic}(), ${json5.stringify(component.defaultProps)})`;
+    const defalutPropsString = props
+      .map((prop) => {
+        const value = component.defaultProps!.hasOwnProperty(prop)
+          ? component.defaultProps![prop]?.code
+          : '{}';
+        return `${prop}: ${value}`;
+      })
+      .join(',');
+    str += `withDefaults(defineProps${generic}(), {${defalutPropsString}})`;
   } else if (options.typescript && component.propsTypeRef && component.propsTypeRef !== 'any') {
     str += `defineProps<${component.propsTypeRef}>()`;
   } else {
@@ -72,18 +81,19 @@ export function generateCompositionApiScript(
     ${props.length ? getCompositionPropDefinition({ component, props, options }) : ''}
     ${refs}
 
-    ${Object.keys(component.context.get)
-      ?.map((key) => `const ${key} = inject(${component.context.get[key].name})`)
+    ${Object.entries(component.context.get)
+      ?.map(([key, context]) => {
+        return `const ${key} = inject(${getContextKey(context)})`;
+      })
       .join('\n')}
 
     ${Object.values(component.context.set)
-      ?.map(
-        (contextSet) =>
-          `provide(${contextSet.name}, ${getContextValue({
-            json: component,
-            options,
-          })(contextSet)})`,
-      )
+      ?.map((contextSet) => {
+        const contextValue = getContextValue({ json: component, options })(contextSet);
+        const key = getContextKey(contextSet);
+
+        return `provide(${key}, ${contextValue})`;
+      })
       .join('\n')}
 
     ${Object.keys(component.refs)
@@ -125,10 +135,13 @@ export function generateCompositionApiScript(
 
     ${
       onUpdateWithDeps
-        ?.map(
-          (hook) =>
-            `watch(() => ${hook.deps}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} })`,
-        )
+        ?.map((hook) => {
+          return `watch(() => ${processBinding({
+            code: hook.deps || '',
+            options,
+            json: component,
+          })}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} }, {immediate: true})`;
+        })
         .join('\n') || ''
     }
     ${methods ?? ''}

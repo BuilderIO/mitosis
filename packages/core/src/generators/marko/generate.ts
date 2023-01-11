@@ -122,24 +122,29 @@ function processBinding(
   code: string,
   type: 'attribute' | 'class' | 'state' = 'attribute',
 ) {
-  return stripStateAndPropsRefs(
-    stripStateAndPropsRefs(code, {
-      replaceWith: type === 'state' ? 'input.' : type === 'class' ? 'this.input.' : 'input.',
-      includeProps: true,
-      includeState: false,
-    }),
-    {
-      replaceWith: (key) => {
-        const isProperty = getStatePropertyNames(json).includes(key);
-        if (isProperty) {
-          return (type === 'state' || type === 'class' ? 'this.state.' : 'state.') + key;
-        }
-        return (type === 'class' || type === 'state' ? 'this.' : 'component.') + key;
+  try {
+    return stripStateAndPropsRefs(
+      stripStateAndPropsRefs(code, {
+        replaceWith: type === 'state' ? 'input.' : type === 'class' ? 'this.input.' : 'input.',
+        includeProps: true,
+        includeState: false,
+      }),
+      {
+        replaceWith: (key) => {
+          const isProperty = getStatePropertyNames(json).includes(key);
+          if (isProperty) {
+            return (type === 'state' || type === 'class' ? 'this.state.' : 'state.') + key;
+          }
+          return (type === 'class' || type === 'state' ? 'this.' : 'component.') + key;
+        },
+        includeProps: false,
+        includeState: true,
       },
-      includeProps: false,
-      includeState: true,
-    },
-  );
+    );
+  } catch (error) {
+    console.error('Marko: could not process binding', code);
+    return code;
+  }
 }
 
 export const componentToMarko: TranspilerGenerator<ToMarkoOptions> =

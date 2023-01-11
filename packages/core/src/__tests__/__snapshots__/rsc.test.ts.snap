@@ -24,7 +24,7 @@ export default function MyBasicRefComponent(props) {
           <>
             <input className=\\"input-9fa26074\\" value={state.name} />
 
-            <label for=\\"cars\\">Choose a car:</label>
+            <label htmlFor=\\"cars\\">Choose a car:</label>
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
@@ -273,7 +273,7 @@ export default function MyBasicRefComponent(props) {
           <>
             <input className=\\"input-9fa26074\\" value={state.name} />
 
-            <label for=\\"cars\\">Choose a car:</label>
+            <label htmlFor=\\"cars\\">Choose a car:</label>
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
@@ -1087,6 +1087,17 @@ export default function SelectComponent(props) {
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > SlotDefault 1`] = `
+"import * as React from \\"react\\";
+
+export default function SlotCode(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <div slotContext={_context}></div>;
+}
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > SlotHtml 1`] = `
 "import * as React from \\"react\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
@@ -1119,6 +1130,25 @@ export default function SlotCode(props) {
     </div>
   );
 }
+"
+`;
+
+exports[`RSC > jsx > Javascript Test > SlotNamed 1`] = `
+"import * as React from \\"react\\";
+
+export default function SlotCode(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <div slotContext={_context}>
+      {props.slotTop}
+
+      {props.slotLeft}
+    </div>
+  );
+}
+
+SlotCode.defaultProps = { slotLeft: \\"Default left\\" };
 "
 `;
 
@@ -1569,6 +1599,9 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 "
 `;
@@ -1608,6 +1641,7 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 "
 `;
@@ -1930,6 +1964,27 @@ export default function MyBasicComponent(props) {
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+
+export default function OnUpdate(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    foo: function foo(params) {},
+    bar: function bar() {},
+    zoo: function zoo() {
+      const params = {
+        cb: state.bar,
+      };
+    },
+  };
+
+  return <div />;
+}
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -2135,6 +2190,44 @@ export default function SubComponent(props) {
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > svgComponent 1`] = `
+"import * as React from \\"react\\";
+
+export default function SvgComponent(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <svg
+      fill=\\"none\\"
+      role=\\"img\\"
+      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+      width={42}
+      height={42}
+    >
+      <defs>
+        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+          <feFlood result=\\"BackgroundImageFix\\" _context={_context} />
+
+          <feBlend
+            in=\\"SourceGraphic\\"
+            in2=\\"BackgroundImageFix\\"
+            result=\\"shape\\"
+            _context={_context}
+          />
+
+          <feGaussianBlur
+            result=\\"effect1_foregroundBlur\\"
+            stdDeviation={7}
+            _context={_context}
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > typeDependency 1`] = `
 "import * as React from \\"react\\";
 
@@ -2267,7 +2360,7 @@ export default function MyBasicRefComponent(props: Props) {
           <>
             <input className=\\"input-9fa26074\\" value={state.name} />
 
-            <label for=\\"cars\\">Choose a car:</label>
+            <label htmlFor=\\"cars\\">Choose a car:</label>
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
@@ -2534,7 +2627,7 @@ export default function MyBasicRefComponent(props: Props) {
           <>
             <input className=\\"input-9fa26074\\" value={state.name} />
 
-            <label for=\\"cars\\">Choose a car:</label>
+            <label htmlFor=\\"cars\\">Choose a car:</label>
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
@@ -3492,6 +3585,21 @@ export default function SelectComponent(props: FormSelectProps) {
 "
 `;
 
+exports[`RSC > jsx > Typescript Test > SlotDefault 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default function SlotCode(props: Props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <div slotContext={_context}></div>;
+}
+"
+`;
+
 exports[`RSC > jsx > Typescript Test > SlotHtml 1`] = `
 "import * as React from \\"react\\";
 
@@ -3532,6 +3640,29 @@ export default function SlotCode(props: Props) {
     </div>
   );
 }
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > SlotNamed 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default function SlotCode(props: Props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <div slotContext={_context}>
+      {props.slotTop}
+
+      {props.slotLeft}
+    </div>
+  );
+}
+
+SlotCode.defaultProps = { slotLeft: \\"Default left\\" };
 "
 `;
 
@@ -4031,6 +4162,7 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 
 export default function Button(props: ButtonProps) {
@@ -4065,6 +4197,9 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 "
 `;
@@ -4077,6 +4212,7 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 
 export default function Button(props: ButtonProps) {
@@ -4111,6 +4247,7 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 "
 `;
@@ -4494,6 +4631,27 @@ export default function MyBasicComponent(props: Person) {
 "
 `;
 
+exports[`RSC > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+
+export default function OnUpdate(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    foo: function foo(params) {},
+    bar: function bar() {},
+    zoo: function zoo() {
+      const params = {
+        cb: state.bar,
+      };
+    },
+  };
+
+  return <div />;
+}
+"
+`;
+
 exports[`RSC > jsx > Typescript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 
@@ -4719,6 +4877,44 @@ export default function SubComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
   return <Foo _context={_context} />;
+}
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > svgComponent 1`] = `
+"import * as React from \\"react\\";
+
+export default function SvgComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <svg
+      fill=\\"none\\"
+      role=\\"img\\"
+      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+      width={42}
+      height={42}
+    >
+      <defs>
+        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+          <feFlood result=\\"BackgroundImageFix\\" _context={_context} />
+
+          <feBlend
+            in=\\"SourceGraphic\\"
+            in2=\\"BackgroundImageFix\\"
+            result=\\"shape\\"
+            _context={_context}
+          />
+
+          <feGaussianBlur
+            result=\\"effect1_foregroundBlur\\"
+            stdDeviation={7}
+            _context={_context}
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
 }
 "
 `;
@@ -4950,6 +5146,29 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`RSC > svelte > Javascript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    log: function log(msg = \\"hello\\") {
+      console.log(msg);
+    },
+  };
+
+  return (
+    <div>
+      <button>Log</button>
+      <button>Log</button>
+      <button>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`RSC > svelte > Javascript Test > html 1`] = `
 "import * as React from \\"react\\";
 
@@ -5036,6 +5255,46 @@ export default function MyComponent(props) {
     </div>
   );
 }
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    a: 2,
+    b: 5,
+    result: null,
+    calculateResult: function calculateResult(a_, b_) {
+      state.result = a_ * b_;
+    },
+  };
+
+  return (
+    <div>
+      <input type=\\"number\\" value={state.a} />
+      <input type=\\"number\\" value={state.b} />
+      Result:
+      {state.result}
+    </div>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > slots 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <div slotContext={_context}>{props.slotTest}</div>;
+}
+
+MyComponent.defaultProps = { slotTest: <div>default</div> };
 "
 `;
 
@@ -5221,6 +5480,29 @@ export default function MyComponent(props: any) {
 "
 `;
 
+exports[`RSC > svelte > Typescript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    log: function log(msg = \\"hello\\") {
+      console.log(msg);
+    },
+  };
+
+  return (
+    <div>
+      <button>Log</button>
+      <button>Log</button>
+      <button>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`RSC > svelte > Typescript Test > html 1`] = `
 "import * as React from \\"react\\";
 
@@ -5307,6 +5589,46 @@ export default function MyComponent(props: any) {
     </div>
   );
 }
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    a: 2,
+    b: 5,
+    result: null,
+    calculateResult: function calculateResult(a_, b_) {
+      state.result = a_ * b_;
+    },
+  };
+
+  return (
+    <div>
+      <input type=\\"number\\" value={state.a} />
+      <input type=\\"number\\" value={state.b} />
+      Result:
+      {state.result}
+    </div>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > slots 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <div slotContext={_context}>{props.slotTest}</div>;
+}
+
+MyComponent.defaultProps = { slotTest: <div>default</div> };
 "
 `;
 

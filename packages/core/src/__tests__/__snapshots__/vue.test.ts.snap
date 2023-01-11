@@ -35,8 +35,11 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   watch: {
-    onUpdateHook0() {
-      console.log(\\"Received an update\\");
+    onUpdateHook0: {
+      handler() {
+        console.log(\\"Received an update\\");
+      },
+      immediate: true,
     },
   },
 
@@ -147,12 +150,13 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   provide() {
+    const _this = this;
     return {
-      Injector: createInjector(),
+      [Injector.key]: createInjector(),
     };
   },
   inject: {
-    myService: \\"MyService\\",
+    myService: MyService.key,
   },
   created() {
     const hi = this.myService.method(\\"hi\\");
@@ -436,8 +440,11 @@ export default {
   data: () => ({ count: 0 }),
 
   watch: {
-    onUpdateHook0() {
-      this.$refs.prevCount = this.count;
+    onUpdateHook0: {
+      handler() {
+        this.$refs.prevCount = this.count;
+      },
+      immediate: true,
     },
   },
 
@@ -1149,7 +1156,7 @@ export default {
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!this.lazy && isBrowser();
+      return !!this.lazy && this.isBrowser();
     },
     isBrowser: function isBrowser() {
       return (
@@ -1375,6 +1382,22 @@ export default {
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > SlotDefault 1`] = `
+"<template>
+  <div>
+    <slot>
+      <div class=\\"default-slot\\">Default content</div>
+    </slot>
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"slot-code\\",
+};
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > SlotHtml 1`] = `
 "<template>
   <div>
@@ -1409,6 +1432,22 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 export default {
   name: \\"slot-code\\",
   components: { ContentSlotCode: ContentSlotCode },
+};
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > SlotNamed 1`] = `
+"<template>
+  <div>
+    <slot name=\\"top\\"></slot>
+    <slot name=\\"left\\">Default left</slot>
+    <slot>Default Child</slot>
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"slot-code\\",
 };
 </script>"
 `;
@@ -1721,21 +1760,24 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   watch: {
-    onUpdateHook0() {
-      const controller = new AbortController();
-      const signal = controller.signal;
-      fetch(\\"https://patrickjs.com/api/resource.json\\", {
-        signal,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          this.name = data.name;
-        });
-      return () => {
-        if (!signal.aborted) {
-          controller.abort();
-        }
-      };
+    onUpdateHook0: {
+      handler() {
+        const controller = new AbortController();
+        const signal = controller.signal;
+        fetch(\\"https://patrickjs.com/api/resource.json\\", {
+          signal,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            this.name = data.name;
+          });
+        return () => {
+          if (!signal.aborted) {
+            controller.abort();
+          }
+        };
+      },
+      immediate: true,
     },
   },
 
@@ -1895,10 +1937,11 @@ export default {
   props: [\\"content\\", \\"customComponents\\"],
 
   provide() {
+    const _this = this;
     return {
-      BuilderContext: {
-        content: this.content,
-        registeredComponents: this.customComponents,
+      [BuilderContext.key]: {
+        content: _this.content,
+        registeredComponents: _this.customComponents,
       },
     };
   },
@@ -1920,7 +1963,7 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -1933,9 +1976,14 @@ export default {
 
   props: {
     link: { default: \\"https://builder.io/\\" },
-    attributes: {},
+    attributes: { default: {} },
     openLinkInNewTab: { default: false },
     text: { default: \\"default text\\" },
+    onClick: {
+      default: () => {
+        console.log(\\"hi\\");
+      },
+    },
   },
 };
 </script>"
@@ -1955,7 +2003,7 @@ exports[`Vue > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -1968,9 +2016,10 @@ export default {
 
   props: {
     link: { default: \\"https://builder.io/\\" },
-    attributes: {},
+    attributes: { default: {} },
     openLinkInNewTab: { default: false },
     text: { default: \\"default text\\" },
+    onClick: { default: () => {} },
   },
 };
 </script>"
@@ -2072,19 +2121,25 @@ export default {
   data: () => ({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" }),
 
   watch: {
-    onUpdateHook0() {
-      console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    onUpdateHook0: {
+      handler() {
+        console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
-      if (this.a === \\"a\\") {
-        this.a = \\"b\\";
-      }
+        if (this.a === \\"a\\") {
+          this.a = \\"b\\";
+        }
+      },
+      immediate: true,
     },
-    onUpdateHook1() {
-      console.log(\\"Runs when c or d changes\\", this.c, this.d);
+    onUpdateHook1: {
+      handler() {
+        console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
-      if (this.a === \\"a\\") {
-        this.a = \\"b\\";
-      }
+        if (this.a === \\"a\\") {
+          this.a = \\"b\\";
+        }
+      },
+      immediate: true,
     },
   },
 
@@ -2266,8 +2321,16 @@ export default {
   data: () => ({ a: \\"a\\", b: \\"b\\" }),
 
   watch: {
-    onUpdateHook0() {
-      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
+    onUpdateHook0: {
+      handler() {
+        console.log(
+          \\"Runs when a, b or size changes\\",
+          this.a,
+          this.b,
+          this.size
+        );
+      },
+      immediate: true,
     },
   },
 
@@ -2363,6 +2426,34 @@ export default {
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script>
+export default {
+  name: \\"on-update\\",
+
+  updated() {
+    this.foo({
+      someOption: this.bar,
+    });
+  },
+
+  methods: {
+    foo: function foo(params) {},
+    bar: function bar() {},
+    zoo: function zoo() {
+      const params = {
+        cb: this.bar,
+      };
+    },
+  },
+};
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > renderContentExample 1`] = `
 "<template>
   <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
@@ -2387,8 +2478,9 @@ export default {
   data: () => ({ trackClick }),
 
   provide() {
+    const _this = this;
     return {
-      BuilderContext: {
+      [BuilderContext.key]: {
         get content() {
           return 3;
         },
@@ -2404,8 +2496,11 @@ export default {
   },
 
   watch: {
-    onUpdateHook0() {
-      dispatchNewContentToVisualEditor(this.content);
+    onUpdateHook0: {
+      handler() {
+        dispatchNewContentToVisualEditor(this.content);
+      },
+      immediate: true,
     },
   },
 
@@ -2557,6 +2652,39 @@ export default {
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > svgComponent 1`] = `
+"<template>
+  <svg
+    fill=\\"none\\"
+    role=\\"img\\"
+    :viewBox=\\"'0 0 ' + 42 + ' ' + 42\\"
+    :width=\\"42\\"
+    :height=\\"42\\"
+  >
+    <defs>
+      <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+        <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+        <feBlend
+          in=\\"SourceGraphic\\"
+          in2=\\"BackgroundImageFix\\"
+          result=\\"shape\\"
+        ></feBlend>
+        <feGaussianBlur
+          result=\\"effect1_foregroundBlur\\"
+          :stdDeviation=\\"7\\"
+        ></feGaussianBlur>
+      </filter>
+    </defs>
+  </svg>
+</template>
+
+<script>
+export default {
+  name: \\"svg-component\\",
+};
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > typeDependency 1`] = `
 "<template>
   <div>{{ foo }}</div>
@@ -2690,8 +2818,11 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   watch: {
-    onUpdateHook0() {
-      console.log(\\"Received an update\\");
+    onUpdateHook0: {
+      handler() {
+        console.log(\\"Received an update\\");
+      },
+      immediate: true,
     },
   },
 
@@ -2806,12 +2937,13 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   provide() {
+    const _this = this;
     return {
-      Injector: createInjector(),
+      [Injector.key]: createInjector(),
     };
   },
   inject: {
-    myService: \\"MyService\\",
+    myService: MyService.key,
   },
   created() {
     const hi = this.myService.method(\\"hi\\");
@@ -3117,8 +3249,11 @@ export default {
   data: () => ({ count: 0 }),
 
   watch: {
-    onUpdateHook0() {
-      this.$refs.prevCount = this.count;
+    onUpdateHook0: {
+      handler() {
+        this.$refs.prevCount = this.count;
+      },
+      immediate: true,
     },
   },
 
@@ -3914,7 +4049,7 @@ export default {
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!this.lazy && isBrowser();
+      return !!this.lazy && this.isBrowser();
     },
     isBrowser: function isBrowser() {
       return (
@@ -4195,6 +4330,26 @@ export default {
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > SlotDefault 1`] = `
+"<template>
+  <div>
+    <slot>
+      <div class=\\"default-slot\\">Default content</div>
+    </slot>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+type Props = {
+  [key: string]: string;
+};
+
+export default {
+  name: \\"slot-code\\",
+};
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > SlotHtml 1`] = `
 "<template>
   <div>
@@ -4237,6 +4392,26 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 export default {
   name: \\"slot-code\\",
   components: { ContentSlotCode: ContentSlotCode },
+};
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > SlotNamed 1`] = `
+"<template>
+  <div>
+    <slot name=\\"top\\"></slot>
+    <slot name=\\"left\\">Default left</slot>
+    <slot>Default Child</slot>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+type Props = {
+  [key: string]: string;
+};
+
+export default {
+  name: \\"slot-code\\",
 };
 </script>"
 `;
@@ -4611,21 +4786,24 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   watch: {
-    onUpdateHook0() {
-      const controller = new AbortController();
-      const signal = controller.signal;
-      fetch(\\"https://patrickjs.com/api/resource.json\\", {
-        signal,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          this.name = data.name;
-        });
-      return () => {
-        if (!signal.aborted) {
-          controller.abort();
-        }
-      };
+    onUpdateHook0: {
+      handler() {
+        const controller = new AbortController();
+        const signal = controller.signal;
+        fetch(\\"https://patrickjs.com/api/resource.json\\", {
+          signal,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            this.name = data.name;
+          });
+        return () => {
+          if (!signal.aborted) {
+            controller.abort();
+          }
+        };
+      },
+      immediate: true,
     },
   },
 
@@ -4790,10 +4968,11 @@ export default {
   props: [\\"content\\", \\"customComponents\\"],
 
   provide() {
+    const _this = this;
     return {
-      BuilderContext: {
-        content: this.content,
-        registeredComponents: this.customComponents,
+      [BuilderContext.key]: {
+        content: _this.content,
+        registeredComponents: _this.customComponents,
       },
     };
   },
@@ -4815,7 +4994,7 @@ exports[`Vue > jsx > Typescript Test > defaultProps 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -4828,6 +5007,7 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 
 export default {
@@ -4835,9 +5015,14 @@ export default {
 
   props: {
     link: { default: \\"https://builder.io/\\" },
-    attributes: {},
+    attributes: { default: {} },
     openLinkInNewTab: { default: false },
     text: { default: \\"default text\\" },
+    onClick: {
+      default: () => {
+        console.log(\\"hi\\");
+      },
+    },
   },
 };
 </script>"
@@ -4857,7 +5042,7 @@ exports[`Vue > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -4870,6 +5055,7 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 
 export default {
@@ -4877,9 +5063,10 @@ export default {
 
   props: {
     link: { default: \\"https://builder.io/\\" },
-    attributes: {},
+    attributes: { default: {} },
     openLinkInNewTab: { default: false },
     text: { default: \\"default text\\" },
+    onClick: { default: () => {} },
   },
 };
 </script>"
@@ -4991,19 +5178,25 @@ export default {
   data: () => ({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" }),
 
   watch: {
-    onUpdateHook0() {
-      console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    onUpdateHook0: {
+      handler() {
+        console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
-      if (this.a === \\"a\\") {
-        this.a = \\"b\\";
-      }
+        if (this.a === \\"a\\") {
+          this.a = \\"b\\";
+        }
+      },
+      immediate: true,
     },
-    onUpdateHook1() {
-      console.log(\\"Runs when c or d changes\\", this.c, this.d);
+    onUpdateHook1: {
+      handler() {
+        console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
-      if (this.a === \\"a\\") {
-        this.a = \\"b\\";
-      }
+        if (this.a === \\"a\\") {
+          this.a = \\"b\\";
+        }
+      },
+      immediate: true,
     },
   },
 
@@ -5198,8 +5391,16 @@ export default {
   data: () => ({ a: \\"a\\", b: \\"b\\" }),
 
   watch: {
-    onUpdateHook0() {
-      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
+    onUpdateHook0: {
+      handler() {
+        console.log(
+          \\"Runs when a, b or size changes\\",
+          this.a,
+          this.b,
+          this.size
+        );
+      },
+      immediate: true,
     },
   },
 
@@ -5333,6 +5534,34 @@ export default {
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"on-update\\",
+
+  updated() {
+    this.foo({
+      someOption: this.bar,
+    });
+  },
+
+  methods: {
+    foo: function foo(params) {},
+    bar: function bar() {},
+    zoo: function zoo() {
+      const params = {
+        cb: this.bar,
+      };
+    },
+  },
+};
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > renderContentExample 1`] = `
 "<template>
   <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
@@ -5365,8 +5594,9 @@ export default {
   data: () => ({ trackClick }),
 
   provide() {
+    const _this = this;
     return {
-      BuilderContext: {
+      [BuilderContext.key]: {
         get content() {
           return 3;
         },
@@ -5382,8 +5612,11 @@ export default {
   },
 
   watch: {
-    onUpdateHook0() {
-      dispatchNewContentToVisualEditor(this.content);
+    onUpdateHook0: {
+      handler() {
+        dispatchNewContentToVisualEditor(this.content);
+      },
+      immediate: true,
     },
   },
 
@@ -5540,6 +5773,39 @@ import Foo from \\"./foo-sub-component.vue\\";
 export default {
   name: \\"sub-component\\",
   components: { Foo: Foo },
+};
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > svgComponent 1`] = `
+"<template>
+  <svg
+    fill=\\"none\\"
+    role=\\"img\\"
+    :viewBox=\\"'0 0 ' + 42 + ' ' + 42\\"
+    :width=\\"42\\"
+    :height=\\"42\\"
+  >
+    <defs>
+      <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+        <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+        <feBlend
+          in=\\"SourceGraphic\\"
+          in2=\\"BackgroundImageFix\\"
+          result=\\"shape\\"
+        ></feBlend>
+        <feGaussianBlur
+          result=\\"effect1_foregroundBlur\\"
+          :stdDeviation=\\"7\\"
+        ></feGaussianBlur>
+      </filter>
+    </defs>
+  </svg>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"svg-component\\",
 };
 </script>"
 `;
@@ -5730,7 +5996,7 @@ exports[`Vue > svelte > Javascript Test > classDirective 1`] = `
 export default {
   name: \\"my-component\\",
 
-  props: { disabled: {} },
+  props: { disabled: { default: {} } },
 
   data: () => ({ focus: true }),
 
@@ -5763,12 +6029,13 @@ export default {
   data: () => ({ activeTab: 0 }),
 
   provide() {
+    const _this = this;
     return {
-      activeTab: this.activeTab,
+      [\\"activeTab\\"]: _this.activeTab,
     };
   },
   inject: {
-    disabled: \\"'disabled'\\",
+    disabled: \\"disabled\\",
   },
 };
 </script>"
@@ -5790,6 +6057,28 @@ export default {
 </script>"
 `;
 
+exports[`Vue > svelte > Javascript Test > eventHandlers 1`] = `
+"<template>
+  <div>
+    <button @click=\\"log('hi')\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button>
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
+
+  methods: {
+    log: function log(msg = \\"hello\\") {
+      console.log(msg);
+    },
+  },
+};
+</script>"
+`;
+
 exports[`Vue > svelte > Javascript Test > html 1`] = `
 "<template>
   <div v-html=\\"html\\"></div>
@@ -5806,8 +6095,8 @@ export default {
 
 exports[`Vue > svelte > Javascript Test > ifElse 1`] = `
 "<template>
-  <button v-if=\\"show\\" @click=\\"toggle\\">Hide</button>
-  <button v-else @click=\\"toggle\\">Show</button>
+  <button v-if=\\"show\\" @click=\\"toggle($event)\\">Hide</button>
+  <button v-else @click=\\"toggle($event)\\">Show</button>
 </template>
 
 <script>
@@ -5883,6 +6172,65 @@ export default {
       return this.name.toLowerCase();
     },
   },
+};
+</script>"
+`;
+
+exports[`Vue > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<template>
+  <div>
+    <input type=\\"number\\" @input=\\"a = $event.target.value\\" :value=\\"a\\" /><input
+      type=\\"number\\"
+      @input=\\"b = $event.target.value\\"
+      :value=\\"b\\"
+    />
+    Result: {{ result }}
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ a: 2, b: 5, result: null }),
+
+  watch: {
+    onUpdateHook0: {
+      handler() {
+        this.calculateResult(this.a, this.b);
+      },
+      immediate: true,
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.a,
+        1: this.b,
+      };
+    },
+  },
+
+  methods: {
+    calculateResult: function calculateResult(a_, b_) {
+      this.result = a_ * b_;
+    },
+  },
+};
+</script>"
+`;
+
+exports[`Vue > svelte > Javascript Test > slots 1`] = `
+"<template>
+  <div>
+    <slot>default</slot><slot name=\\"test\\"><div>default</div></slot>
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
 };
 </script>"
 `;
@@ -6028,7 +6376,7 @@ exports[`Vue > svelte > Typescript Test > classDirective 1`] = `
 export default {
   name: \\"my-component\\",
 
-  props: { disabled: {} },
+  props: { disabled: { default: {} } },
 
   data: () => ({ focus: true }),
 
@@ -6061,12 +6409,13 @@ export default {
   data: () => ({ activeTab: 0 }),
 
   provide() {
+    const _this = this;
     return {
-      activeTab: this.activeTab,
+      [\\"activeTab\\"]: _this.activeTab,
     };
   },
   inject: {
-    disabled: \\"'disabled'\\",
+    disabled: \\"disabled\\",
   },
 };
 </script>"
@@ -6088,6 +6437,28 @@ export default {
 </script>"
 `;
 
+exports[`Vue > svelte > Typescript Test > eventHandlers 1`] = `
+"<template>
+  <div>
+    <button @click=\\"log('hi')\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
+
+  methods: {
+    log: function log(msg = \\"hello\\") {
+      console.log(msg);
+    },
+  },
+};
+</script>"
+`;
+
 exports[`Vue > svelte > Typescript Test > html 1`] = `
 "<template>
   <div v-html=\\"html\\"></div>
@@ -6104,8 +6475,8 @@ export default {
 
 exports[`Vue > svelte > Typescript Test > ifElse 1`] = `
 "<template>
-  <button v-if=\\"show\\" @click=\\"toggle\\">Hide</button>
-  <button v-else @click=\\"toggle\\">Show</button>
+  <button v-if=\\"show\\" @click=\\"toggle($event)\\">Hide</button>
+  <button v-else @click=\\"toggle($event)\\">Show</button>
 </template>
 
 <script lang=\\"ts\\">
@@ -6181,6 +6552,65 @@ export default {
       return this.name.toLowerCase();
     },
   },
+};
+</script>"
+`;
+
+exports[`Vue > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<template>
+  <div>
+    <input type=\\"number\\" @input=\\"a = $event.target.value\\" :value=\\"a\\" /><input
+      type=\\"number\\"
+      @input=\\"b = $event.target.value\\"
+      :value=\\"b\\"
+    />
+    Result: {{ result }}
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ a: 2, b: 5, result: null }),
+
+  watch: {
+    onUpdateHook0: {
+      handler() {
+        this.calculateResult(this.a, this.b);
+      },
+      immediate: true,
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.a,
+        1: this.b,
+      };
+    },
+  },
+
+  methods: {
+    calculateResult: function calculateResult(a_, b_) {
+      this.result = a_ * b_;
+    },
+  },
+};
+</script>"
+`;
+
+exports[`Vue > svelte > Typescript Test > slots 1`] = `
+"<template>
+  <div>
+    <slot>default</slot><slot name=\\"test\\"><div>default</div></slot>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
 };
 </script>"
 `;
