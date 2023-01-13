@@ -31,10 +31,17 @@ export const getFileExtensionForTarget = ({
     case 'lit':
       return '.ts';
     case 'qwik':
+      return isTs && type === 'filename' ? '.tsx' : '.jsx';
     case 'react':
     case 'reactNative':
     case 'rsc':
-      return isTs && type === 'filename' ? '.tsx' : '.jsx';
+      switch (type) {
+        // we can't have `.jsx`/`.tsx` extensions in the import paths.
+        case 'import':
+          return isTs ? '.ts' : '.js';
+        case 'filename':
+          return isTs ? '.tsx' : '.jsx';
+      }
     case 'marko':
       return '.marko';
     default:
