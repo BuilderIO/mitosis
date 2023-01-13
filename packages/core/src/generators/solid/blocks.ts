@@ -1,11 +1,11 @@
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
-import { babelTransformExpression } from 'src/helpers/babel-transform';
-import { filterEmptyTextNodes } from 'src/helpers/filter-empty-text-nodes';
-import { objectHasKey } from 'src/helpers/typescript';
-import { selfClosingTags } from 'src/parsers/jsx';
-import { MitosisComponent } from 'src/types/mitosis-component';
-import { MitosisNode, checkIsForNode } from 'src/types/mitosis-node';
+import { babelTransformExpression } from '../../helpers/babel-transform';
+import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import { objectHasKey } from '../../helpers/typescript';
+import { selfClosingTags } from '../../parsers/jsx';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
 import { collectClassString } from './helpers/styles';
 import { ToSolidOptions } from './types';
 
