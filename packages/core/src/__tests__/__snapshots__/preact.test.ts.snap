@@ -2237,6 +2237,269 @@ export default function OnUpdate(props) {
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > renderBlock 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
+import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
+import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
+import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import BlockStyles from \\"./block-styles.lite\\";
+import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import RenderComponent from \\"./render-component.lite\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+
+export default function RenderBlock(props) {
+  function component() {
+    const componentName = getProcessedBlock({
+      block: props.block,
+      state: props.context.state,
+      context: props.context.context,
+      shouldEvaluateBindings: false,
+    }).component?.name;
+
+    if (!componentName) {
+      return null;
+    }
+
+    const ref = props.context.registeredComponents[componentName];
+
+    if (!ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
+        Could not find a registered component named \\"\${componentName}\\". 
+        If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+      return undefined;
+    } else {
+      return ref;
+    }
+  }
+
+  function tag() {
+    return getBlockTag(useBlock());
+  }
+
+  function useBlock() {
+    return repeatItemData()
+      ? props.block
+      : getProcessedBlock({
+          block: props.block,
+          state: props.context.state,
+          context: props.context.context,
+          shouldEvaluateBindings: true,
+        });
+  }
+
+  function actions() {
+    return getBlockActions({
+      block: useBlock(),
+      state: props.context.state,
+      context: props.context.context,
+    });
+  }
+
+  function attributes() {
+    const blockProperties = getBlockProperties(useBlock());
+    return {
+      ...blockProperties,
+      ...(TARGET === \\"reactNative\\"
+        ? {
+            style: getReactNativeBlockStyles({
+              block: useBlock(),
+              context: props.context,
+              blockStyles: blockProperties.style,
+            }),
+          }
+        : {}),
+    };
+  }
+
+  function shouldWrap() {
+    return !component?.()?.noWrap;
+  }
+
+  function renderComponentProps() {
+    return {
+      blockChildren: useChildren(),
+      componentRef: component?.()?.component,
+      componentOptions: {
+        ...getBlockComponentOptions(useBlock()),
+
+        /**
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
+         */
+        ...(shouldWrap()
+          ? {}
+          : {
+              attributes: { ...attributes(), ...actions() },
+            }),
+        customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
+      },
+      context: childrenContext(),
+    };
+  }
+
+  function useChildren() {
+    // TO-DO: When should \`canHaveChildren\` dictate rendering?
+    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+    // but still receive and need to render children.
+    // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
+    return useBlock().children ?? [];
+  }
+
+  function childrenWithoutParentComponent() {
+    /**
+     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+     * we render them outside of \`componentRef\`.
+     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+     * blocks, and the children will be repeated within those blocks.
+     */
+    const shouldRenderChildrenOutsideRef =
+      !component?.()?.component && !repeatItemData();
+    return shouldRenderChildrenOutsideRef ? useChildren() : [];
+  }
+
+  function repeatItemData() {
+    /**
+     * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
+     * which will not work if there is a repeat.
+     */
+    const { repeat, ...blockWithoutRepeat } = props.block;
+
+    if (!repeat?.collection) {
+      return undefined;
+    }
+
+    const itemsArray = evaluate({
+      code: repeat.collection,
+      state: props.context.state,
+      context: props.context.context,
+    });
+
+    if (!Array.isArray(itemsArray)) {
+      return undefined;
+    }
+
+    const collectionName = repeat.collection.split(\\".\\").pop();
+    const itemNameToUse =
+      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+    const repeatArray = itemsArray.map((item, index) => ({
+      context: {
+        ...props.context,
+        state: {
+          ...props.context.state,
+          $index: index,
+          $item: item,
+          [itemNameToUse]: item,
+          [\`$\${itemNameToUse}Index\`]: index,
+        },
+      },
+      block: blockWithoutRepeat,
+    }));
+    return repeatArray;
+  }
+
+  function inheritedTextStyles() {
+    if (TARGET !== \\"reactNative\\") {
+      return {};
+    }
+
+    const styles = getReactNativeBlockStyles({
+      block: useBlock(),
+      context: props.context,
+      blockStyles: attributes().style,
+    });
+    return extractTextStyles(styles);
+  }
+
+  function childrenContext() {
+    return {
+      apiKey: props.context.apiKey,
+      state: props.context.state,
+      content: props.context.content,
+      context: props.context.context,
+      registeredComponents: props.context.registeredComponents,
+      inheritedStyles: inheritedTextStyles(),
+    };
+  }
+
+  function renderComponentTag() {
+    if (TARGET === \\"reactNative\\") {
+      return RenderComponentWithContext;
+    } else if (TARGET === \\"vue3\\") {
+      // vue3 expects a string for the component tag
+      return \\"RenderComponent\\";
+    } else {
+      return RenderComponent;
+    }
+  }
+
+  const [componentInfo, setComponentInfo] = useState(() => null);
+
+  const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
+
+  return (
+    <Fragment>
+      {shouldWrap() ? (
+        <Fragment>
+          {isEmptyHtmlElement(tag()) ? (
+            <Fragment>
+              <TagRef {...attributes()} {...actions()} />
+            </Fragment>
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+            <Fragment>
+              {repeatItemData()?.map((data, index) => (
+                <RenderRepeatedBlock
+                  key={index}
+                  repeatContext={data.context}
+                  block={data.block}
+                />
+              ))}
+            </Fragment>
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
+            <Fragment>
+              <TagRef {...attributes()} {...actions()}>
+                <RenderComponentTagRef {...renderComponentProps()} />
+
+                {childrenWithoutParentComponent()?.map((child) => (
+                  <RenderBlock
+                    key={\\"render-block-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  />
+                ))}
+
+                {childrenWithoutParentComponent()?.map((child) => (
+                  <BlockStyles
+                    key={\\"block-style-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  />
+                ))}
+              </TagRef>
+            </Fragment>
+          ) : null}
+        </Fragment>
+      ) : (
+        <RenderComponentTagRef {...renderComponentProps()} />
+      )}
+    </Fragment>
+  );
+}
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > renderContentExample 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5142,6 +5405,281 @@ export default function OnUpdate(props: any) {
   });
 
   return <div />;
+}
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > renderBlock 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
+import type { RenderComponentProps } from \\"./render-component\\";
+import type { RepeatData } from \\"./types.js\\";
+export type RenderBlockProps = {
+  block: BuilderBlock;
+  context: BuilderContextInterface;
+};
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
+import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
+import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
+import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import BlockStyles from \\"./block-styles.lite\\";
+import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import RenderComponent from \\"./render-component.lite\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+
+export default function RenderBlock(props: RenderBlockProps) {
+  function component() {
+    const componentName = getProcessedBlock({
+      block: props.block,
+      state: props.context.state,
+      context: props.context.context,
+      shouldEvaluateBindings: false,
+    }).component?.name;
+
+    if (!componentName) {
+      return null;
+    }
+
+    const ref = props.context.registeredComponents[componentName];
+
+    if (!ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
+        Could not find a registered component named \\"\${componentName}\\". 
+        If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+      return undefined;
+    } else {
+      return ref;
+    }
+  }
+
+  function tag() {
+    return getBlockTag(useBlock());
+  }
+
+  function useBlock() {
+    return repeatItemData()
+      ? props.block
+      : getProcessedBlock({
+          block: props.block,
+          state: props.context.state,
+          context: props.context.context,
+          shouldEvaluateBindings: true,
+        });
+  }
+
+  function actions() {
+    return getBlockActions({
+      block: useBlock(),
+      state: props.context.state,
+      context: props.context.context,
+    });
+  }
+
+  function attributes() {
+    const blockProperties = getBlockProperties(useBlock());
+    return {
+      ...blockProperties,
+      ...(TARGET === \\"reactNative\\"
+        ? {
+            style: getReactNativeBlockStyles({
+              block: useBlock(),
+              context: props.context,
+              blockStyles: blockProperties.style,
+            }),
+          }
+        : {}),
+    };
+  }
+
+  function shouldWrap() {
+    return !component?.()?.noWrap;
+  }
+
+  function renderComponentProps() {
+    return {
+      blockChildren: useChildren(),
+      componentRef: component?.()?.component,
+      componentOptions: {
+        ...getBlockComponentOptions(useBlock()),
+
+        /**
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
+         */
+        ...(shouldWrap()
+          ? {}
+          : {
+              attributes: { ...attributes(), ...actions() },
+            }),
+        customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
+      },
+      context: childrenContext(),
+    };
+  }
+
+  function useChildren() {
+    // TO-DO: When should \`canHaveChildren\` dictate rendering?
+    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+    // but still receive and need to render children.
+    // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
+    return useBlock().children ?? [];
+  }
+
+  function childrenWithoutParentComponent() {
+    /**
+     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+     * we render them outside of \`componentRef\`.
+     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+     * blocks, and the children will be repeated within those blocks.
+     */
+    const shouldRenderChildrenOutsideRef =
+      !component?.()?.component && !repeatItemData();
+    return shouldRenderChildrenOutsideRef ? useChildren() : [];
+  }
+
+  function repeatItemData() {
+    /**
+     * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
+     * which will not work if there is a repeat.
+     */
+    const { repeat, ...blockWithoutRepeat } = props.block;
+
+    if (!repeat?.collection) {
+      return undefined;
+    }
+
+    const itemsArray = evaluate({
+      code: repeat.collection,
+      state: props.context.state,
+      context: props.context.context,
+    });
+
+    if (!Array.isArray(itemsArray)) {
+      return undefined;
+    }
+
+    const collectionName = repeat.collection.split(\\".\\").pop();
+    const itemNameToUse =
+      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+    const repeatArray = itemsArray.map((item, index) => ({
+      context: {
+        ...props.context,
+        state: {
+          ...props.context.state,
+          $index: index,
+          $item: item,
+          [itemNameToUse]: item,
+          [\`$\${itemNameToUse}Index\`]: index,
+        },
+      },
+      block: blockWithoutRepeat,
+    }));
+    return repeatArray;
+  }
+
+  function inheritedTextStyles() {
+    if (TARGET !== \\"reactNative\\") {
+      return {};
+    }
+
+    const styles = getReactNativeBlockStyles({
+      block: useBlock(),
+      context: props.context,
+      blockStyles: attributes().style,
+    });
+    return extractTextStyles(styles);
+  }
+
+  function childrenContext() {
+    return {
+      apiKey: props.context.apiKey,
+      state: props.context.state,
+      content: props.context.content,
+      context: props.context.context,
+      registeredComponents: props.context.registeredComponents,
+      inheritedStyles: inheritedTextStyles(),
+    };
+  }
+
+  function renderComponentTag() {
+    if (TARGET === \\"reactNative\\") {
+      return RenderComponentWithContext;
+    } else if (TARGET === \\"vue3\\") {
+      // vue3 expects a string for the component tag
+      return \\"RenderComponent\\";
+    } else {
+      return RenderComponent;
+    }
+  }
+
+  const [componentInfo, setComponentInfo] = useState(() => null);
+
+  const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
+
+  return (
+    <Fragment>
+      {shouldWrap() ? (
+        <Fragment>
+          {isEmptyHtmlElement(tag()) ? (
+            <Fragment>
+              <TagRef {...attributes()} {...actions()} />
+            </Fragment>
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+            <Fragment>
+              {repeatItemData()?.map((data, index) => (
+                <RenderRepeatedBlock
+                  key={index}
+                  repeatContext={data.context}
+                  block={data.block}
+                />
+              ))}
+            </Fragment>
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
+            <Fragment>
+              <TagRef {...attributes()} {...actions()}>
+                <RenderComponentTagRef {...renderComponentProps()} />
+
+                {childrenWithoutParentComponent()?.map((child) => (
+                  <RenderBlock
+                    key={\\"render-block-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  />
+                ))}
+
+                {childrenWithoutParentComponent()?.map((child) => (
+                  <BlockStyles
+                    key={\\"block-style-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  />
+                ))}
+              </TagRef>
+            </Fragment>
+          ) : null}
+        </Fragment>
+      ) : (
+        <RenderComponentTagRef {...renderComponentProps()} />
+      )}
+    </Fragment>
+  );
 }
 "
 `;
