@@ -130,9 +130,22 @@ const rule: Rule.RuleModule = {
                 });
 
                 for (const d of varDeclarators) {
-                  if (!types.isIdentifier(d.id)) continue;
-
-                  if (d.id.name === name) {
+                  if (!types.isIdentifier(d.id) && !types.isObjectPattern(d.id)) continue;
+                  if (types.isObjectPattern(d.id)) {
+                    for (const p of d.id.properties) {
+                      if (
+                        types.isProperty(p) &&
+                        types.isIdentifier(p.value) &&
+                        p.value.name == name
+                      ) {
+                        context.report({
+                          node: prop,
+                          message:
+                            'variables with the same name as a state property will shadow it',
+                        });
+                      }
+                    }
+                  } else if (d.id.name === name) {
                     context.report({
                       node: prop,
                       message: 'variables with the same name as a state property will shadow it',
