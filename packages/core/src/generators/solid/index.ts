@@ -32,7 +32,7 @@ import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { hasGetContext } from '../helpers/context';
 import { blockToSolid } from './blocks';
 
-// Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
+// Transform <foo.bar key={value} /> to <Dynamic compnent={foo.bar} key={value} />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
   let found = false;
   traverse(json).forEach((node) => {
@@ -118,16 +118,15 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     const componentHasStyles = hasCss(json);
     const addWrapper =
       json.children.filter(filterEmptyTextNodes).length !== 1 || options.stylesType === 'style-tag';
+
+    // we need to run this before we run the code processor plugin, so the dynamic component variables are transformed
+    const foundDynamicComponents = processDynamicComponents(json, options);
+
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
     stripMetaProperties(json);
-    const foundDynamicComponents = processDynamicComponents(json, options);
-    const css =
-      options.stylesType === 'style-tag' &&
-      collectCss(json, {
-        prefix: hash(json),
-      });
+    const css = options.stylesType === 'style-tag' && collectCss(json, { prefix: hash(json) });
 
     const state = getState({ json, options });
     const componentsUsed = getComponentsUsed(json);
