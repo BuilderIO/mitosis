@@ -1,4 +1,4 @@
-import { MitosisNode } from 'src/types/mitosis-node';
+import { MitosisNode } from '../../../types/mitosis-node';
 import { ToSolidOptions } from '../types';
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
