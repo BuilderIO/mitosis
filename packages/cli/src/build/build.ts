@@ -37,6 +37,7 @@ import {
   INPUT_EXTENSION_REGEX,
 } from './helpers/inputs-extensions';
 import { checkShouldOutputTypeScript } from './helpers/options';
+import { getOverrideFile } from './helpers/overrides';
 import { transformImports, transpile, transpileIfNecessary } from './helpers/transpile';
 
 const cwd = process.cwd();
@@ -322,12 +323,13 @@ async function buildAndOutputComponentFiles({
      * NOTE: we use the default `getTargetPath` even if a user-provided alternative is given. That's because the
      * user-provided alternative is only for the output path, not the override input path.
      */
-    const overrideFilePath = `${options.overridesDir}/${getTargetPath({
+
+    const overrideFilePath = `${options.overridesDir}/${getTargetPath({ target })}`;
+    const overrideFile = await getOverrideFile({
+      filename: outputFilePath,
+      path: overrideFilePath,
       target,
-    })}/${outputFilePath}`;
-    const overrideFile = (await pathExists(overrideFilePath))
-      ? await readFile(overrideFilePath, 'utf8')
-      : null;
+    });
 
     debugTarget(`transpiling ${path}...`);
     let transpiled = '';
