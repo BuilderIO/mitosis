@@ -60,10 +60,6 @@ export const getOverrideFile = async ({
     [path, filename].join('/'),
   );
 
-  if (filename.toLowerCase().includes('image') && target === 'reactNative') {
-    console.log({ filePaths, filename });
-  }
-
   // find first file that exists and return it, or else return undefined
   const foundFilePath = (
     await Promise.all(
@@ -72,7 +68,6 @@ export const getOverrideFile = async ({
   ).find(({ exists }) => exists);
 
   if (foundFilePath) {
-    console.log('found override file', foundFilePath);
     return readFile(foundFilePath.filePath, 'utf8');
   } else {
     return null;
