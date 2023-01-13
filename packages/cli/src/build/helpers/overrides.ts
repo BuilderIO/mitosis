@@ -60,7 +60,6 @@ export const getOverrideFile = async ({
     [path, filename].join('/'),
   );
 
-  // find first file that exists and return it, or else return undefined
   const foundFilePath = (
     await Promise.all(
       filePaths.map(async (filePath) => ({ filePath, exists: await pathExists(filePath) })),
