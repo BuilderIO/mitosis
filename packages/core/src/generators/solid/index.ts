@@ -61,8 +61,8 @@ function getContextString(component: MitosisComponent, options: ToSolidOptions) 
 const getRefsString = (json: MitosisComponent, options: ToSolidOptions) =>
   Array.from(getRefs(json))
     .map((ref) => {
-      const typeParameter = options.typescript && json['refs'][ref]?.typeParameter || '';
-      return `let ${ref}${typeParameter ? ': ' + typeParameter : ''};`
+      const typeParameter = (options.typescript && json['refs'][ref]?.typeParameter) || '';
+      return `let ${ref}${typeParameter ? ': ' + typeParameter : ''};`;
     })
     .join('\n');
 
