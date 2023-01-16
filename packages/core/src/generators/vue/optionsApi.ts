@@ -167,7 +167,7 @@ export function generateOptionsApiScript(
         .map((prop) => {
           const value = component.defaultProps!.hasOwnProperty(prop)
             ? component.defaultProps![prop]?.code
-            : '{}';
+            : undefined;
           return `${prop}: { default: ${value} }`;
         })
         .join(',');

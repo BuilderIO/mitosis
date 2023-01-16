@@ -2651,6 +2651,8 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 export interface ButtonProps {
   attributes?: any;
   text?: string;
+  buttonText?: string; // no default value
+
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -2679,7 +2681,7 @@ const defaultProps = {
 
       <ng-container *ngIf=\\"!link\\">
         <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
-          {{text}}
+          {{buttonText}}
         </button>
       </ng-container>
     </div>
@@ -2691,6 +2693,7 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+  @Input() buttonText: ButtonProps[\\"buttonText\\"];
 
   @Output() onClick = new EventEmitter();
 }
@@ -6941,6 +6944,8 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 export interface ButtonProps {
   attributes?: any;
   text?: string;
+  buttonText?: string; // no default value
+
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -6969,7 +6974,7 @@ const defaultProps = {
 
       <ng-container *ngIf=\\"!link\\">
         <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
-          {{text}}
+          {{buttonText}}
         </button>
       </ng-container>
     </div>
@@ -6981,6 +6986,7 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+  @Input() buttonText: ButtonProps[\\"buttonText\\"];
 
   @Output() onClick = new EventEmitter();
 }
