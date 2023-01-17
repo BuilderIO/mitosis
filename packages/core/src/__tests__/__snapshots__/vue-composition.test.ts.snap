@@ -11,9 +11,7 @@ exports[`Vue > jsx > Javascript Test > AdvancedRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -299,9 +297,7 @@ exports[`Vue > jsx > Javascript Test > BasicRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -1758,6 +1754,32 @@ provide(Context2.key, { bar: \\"baz\\" });
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"<template>
+  {{ foo.value }}
+  <div>other</div>
+</template>
+
+<script setup>
+import { inject, provide } from \\"vue\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+const props = defineProps([\\"content\\"]);
+
+const foo = inject(Context1.key);
+
+provide(Context1.key, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(Context2.key, { bar: \\"baz\\" });
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > contentState 1`] = `
 "<template>
   <div>setting context</div>
@@ -2713,9 +2735,7 @@ exports[`Vue > jsx > Typescript Test > AdvancedRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -3016,9 +3036,7 @@ exports[`Vue > jsx > Typescript Test > BasicRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -4618,6 +4636,35 @@ function _classStringToObject(str) {
 exports[`Vue > jsx > Typescript Test > componentWithContext 1`] = `
 "<template>
   {{ foo.value }}
+</template>
+
+<script setup lang=\\"ts\\">
+import { inject, provide } from \\"vue\\";
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+const props = defineProps<ComponentWithContextProps>();
+
+const foo = inject(Context1.key);
+
+provide(Context1.key, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(Context2.key, { bar: \\"baz\\" });
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"<template>
+  {{ foo.value }}
+  <div>other</div>
 </template>
 
 <script setup lang=\\"ts\\">

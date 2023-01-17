@@ -1658,6 +1658,45 @@ export default function ComponentWithContext(props) {
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          <Text>{foo.value}</Text>
+
+          <View>
+            <Text>other</Text>
+          </View>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > contentState 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -4660,6 +4699,50 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
       >
         <>
           <Text>{foo.value}</Text>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          <Text>{foo.value}</Text>
+
+          <View>
+            <Text>other</Text>
+          </View>
         </>
       </Context1.Provider>
     </Context2.Provider>

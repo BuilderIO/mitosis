@@ -11,9 +11,7 @@ exports[`Vue > jsx > Javascript Test > AdvancedRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -348,9 +346,7 @@ exports[`Vue > jsx > Javascript Test > BasicRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -1921,7 +1917,40 @@ export default {
 </style>"
 `;
 
-exports[`Vue > jsx > Javascript Test > componentWithContext 1`] = `"Vue 2 template should have a single root element"`;
+exports[`Vue > jsx > Javascript Test > componentWithContext 1`] = `
+"<template>
+  {{ foo.value }}
+</template>
+
+<script>
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default {
+  name: \\"component-with-context\\",
+
+  props: [\\"content\\"],
+
+  provide() {
+    const _this = this;
+    return {
+      [Context1.key]: {
+        foo: \\"bar\\",
+        content() {
+          return _this.content;
+        },
+      },
+      [Context2.key]: { bar: \\"baz\\" },
+    };
+  },
+  inject: {
+    foo: Context1.key,
+  },
+};
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `"Vue 2 template should have a single root element"`;
 
 exports[`Vue > jsx > Javascript Test > contentState 1`] = `
 "<template>
@@ -3035,9 +3064,7 @@ exports[`Vue > jsx > Typescript Test > AdvancedRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -3390,9 +3417,7 @@ exports[`Vue > jsx > Typescript Test > BasicRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -5197,7 +5222,44 @@ export default {
 </style>"
 `;
 
-exports[`Vue > jsx > Typescript Test > componentWithContext 1`] = `"Vue 2 template should have a single root element"`;
+exports[`Vue > jsx > Typescript Test > componentWithContext 1`] = `
+"<template>
+  {{ foo.value }}
+</template>
+
+<script lang=\\"ts\\">
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default {
+  name: \\"component-with-context\\",
+
+  props: [\\"content\\"],
+
+  provide() {
+    const _this = this;
+    return {
+      [Context1.key]: {
+        foo: \\"bar\\",
+        content() {
+          return _this.content;
+        },
+      },
+      [Context2.key]: { bar: \\"baz\\" },
+    };
+  },
+  inject: {
+    foo: Context1.key,
+  },
+};
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `"Vue 2 template should have a single root element"`;
 
 exports[`Vue > jsx > Typescript Test > contentState 1`] = `
 "<template>

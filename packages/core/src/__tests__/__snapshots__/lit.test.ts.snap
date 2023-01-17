@@ -2541,6 +2541,40 @@ export default class ComponentWithContext extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+@customElement(\\"component-with-context\\")
+export default class ComponentWithContext extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() content: any;
+
+  render() {
+    return html\`
+        
+        <my-fragment>
+        <my-fragment>\${foo.value}</my-fragment>
+
+        <div>other</div>
+      </my-fragment>
+
+      \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > contentState 1`] = `
 "import \\"@dummy/context.js\\";
 
@@ -6704,6 +6738,40 @@ export default class ComponentWithContext extends LitElement {
         
         <my-fragment>
         <my-fragment>\${foo.value}</my-fragment>
+      </my-fragment>
+
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+@customElement(\\"component-with-context\\")
+export default class ComponentWithContext extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() content: any;
+
+  render() {
+    return html\`
+        
+        <my-fragment>
+        <my-fragment>\${foo.value}</my-fragment>
+
+        <div>other</div>
       </my-fragment>
 
       \`;

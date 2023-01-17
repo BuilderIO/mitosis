@@ -2662,6 +2662,45 @@ export class ComponentWithContextModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+@Component({
+  selector: \\"component-with-context, ComponentWithContext\\",
+  template: \`
+    <ng-container>
+      <ng-container>{{foo.value}}</ng-container>
+
+      <div>other</div>
+    </ng-container>
+  \`,
+})
+export class ComponentWithContext {
+  @Input() content: ComponentWithContextProps[\\"content\\"];
+
+  constructor(public foo: Context1) {}
+}
+
+@NgModule({
+  declarations: [ComponentWithContext],
+  imports: [CommonModule],
+  exports: [ComponentWithContext],
+  bootstrap: [SomeOtherComponent],
+})
+export class ComponentWithContextModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > contentState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7022,6 +7061,45 @@ import Context2 from \\"@dummy/2\\";
   template: \`
     <ng-container>
       <ng-container>{{foo.value}}</ng-container>
+    </ng-container>
+  \`,
+})
+export class ComponentWithContext {
+  @Input() content: ComponentWithContextProps[\\"content\\"];
+
+  constructor(public foo: Context1) {}
+}
+
+@NgModule({
+  declarations: [ComponentWithContext],
+  imports: [CommonModule],
+  exports: [ComponentWithContext],
+  bootstrap: [SomeOtherComponent],
+})
+export class ComponentWithContextModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+@Component({
+  selector: \\"component-with-context, ComponentWithContext\\",
+  template: \`
+    <ng-container>
+      <ng-container>{{foo.value}}</ng-container>
+
+      <div>other</div>
     </ng-container>
   \`,
 })
