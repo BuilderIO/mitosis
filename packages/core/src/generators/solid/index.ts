@@ -3,9 +3,7 @@ import { format } from 'prettier/standalone';
 import { hasCss } from '../../helpers/styles/helpers';
 import { getRefs } from '../../helpers/get-refs';
 import { renderPreComponent } from '../../helpers/render-imports';
-import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -20,9 +18,6 @@ import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { TranspilerGenerator } from '../../types/transpiler';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
-import { babelTransformExpression } from '../../helpers/babel-transform';
-import { types } from '@babel/core';
-import { kebabCase } from 'lodash';
 import { ToSolidOptions } from './types';
 import { getState } from './state';
 import { checkIsDefined } from '../../helpers/nullable';
@@ -35,9 +30,9 @@ import { updateStateCode } from './state/helpers';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { hasGetContext } from '../helpers/context';
-import { objectHasKey } from '../../helpers/typescript';
+import { blockToSolid } from './blocks';
 
-// Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
+// Transform <foo.bar key={value} /> to <Dynamic compnent={foo.bar} key={value} />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
   let found = false;
   traverse(json).forEach((node) => {
@@ -63,207 +58,12 @@ function getContextString(component: MitosisComponent, options: ToSolidOptions) 
   return str;
 }
 
-// This should really be a preprocessor mapping the `class` attribute binding based on what other values have
-// to make this more pluggable
-const collectClassString = (json: MitosisNode, options: ToSolidOptions): string | null => {
-  const staticClasses: string[] = [];
-
-  if (json.properties.class) {
-    staticClasses.push(json.properties.class);
-    delete json.properties.class;
-  }
-  if (json.properties.className) {
-    staticClasses.push(json.properties.className);
-    delete json.properties.className;
-  }
-
-  const dynamicClasses: string[] = [];
-  if (typeof json.bindings.class?.code === 'string') {
-    dynamicClasses.push(json.bindings.class.code as any);
-    delete json.bindings.class;
-  }
-  if (typeof json.bindings.className?.code === 'string') {
-    dynamicClasses.push(json.bindings.className.code as any);
-    delete json.bindings.className;
-  }
-  if (
-    typeof json.bindings.css?.code === 'string' &&
-    json.bindings.css.code.trim().length > 4 &&
-    options.stylesType === 'styled-components'
-  ) {
-    dynamicClasses.push(`css(${json.bindings.css.code})`);
-  }
-  delete json.bindings.css;
-  const staticClassesString = staticClasses.join(' ');
-
-  const dynamicClassesString = dynamicClasses.join(" + ' ' + ");
-
-  const hasStaticClasses = Boolean(staticClasses.length);
-  const hasDynamicClasses = Boolean(dynamicClasses.length);
-
-  if (hasStaticClasses && !hasDynamicClasses) {
-    return `"${staticClassesString}"`;
-  }
-
-  if (hasDynamicClasses && !hasStaticClasses) {
-    return `{${dynamicClassesString}}`;
-  }
-
-  if (hasDynamicClasses && hasStaticClasses) {
-    return `{"${staticClassesString} " + ${dynamicClassesString}}`;
-  }
-
-  return null;
-};
-
-const preProcessBlockCode = ({
-  json,
-  options,
-  component,
-}: {
-  json: MitosisNode;
-  options: ToSolidOptions;
-  component: MitosisComponent;
-}) => {
-  for (const key in json.properties) {
-    const value = json.properties[key];
-    if (value) {
-      json.properties[key] = updateStateCode({ options, component, updateSetters: false })(value);
-    }
-  }
-  for (const key in json.bindings) {
-    const value = json.bindings[key];
-    if (value?.code) {
-      json.bindings[key] = {
-        arguments: value.arguments,
-        code: updateStateCode({ options, component, updateSetters: true })(value.code),
-        type: value?.type,
-      };
-    }
-  }
-};
-
-const ATTTRIBUTE_MAPPERS = {
-  for: 'htmlFor',
-};
-
-const transformAttributeName = (name: string) => {
-  if (objectHasKey(ATTTRIBUTE_MAPPERS, name)) return ATTTRIBUTE_MAPPERS[name];
-  return name;
-};
-
-const blockToSolid = ({
-  json,
-  options,
-  component,
-}: {
-  json: MitosisNode;
-  options: ToSolidOptions;
-  component: MitosisComponent;
-}): string => {
-  if (json.properties._text) {
-    return json.properties._text;
-  }
-  if (json.bindings._text?.code) {
-    return `{${json.bindings._text.code}}`;
-  }
-
-  if (checkIsForNode(json)) {
-    const needsWrapper = json.children.length !== 1;
-    // The SolidJS `<For>` component has a special index() signal function.
-    // https://www.solidjs.com/docs/latest#%3Cfor%3E
-    return `<For each={${json.bindings.each?.code}}>
-    {(${json.scope.forName}, _index) => {
-      const ${json.scope.indexName || 'index'} = _index();
-      return ${needsWrapper ? '<>' : ''}${json.children
-      .filter(filterEmptyTextNodes)
-      .map((child) => blockToSolid({ component, json: child, options }))}}}
-      ${needsWrapper ? '</>' : ''}
-    </For>`;
-  }
-
-  let str = '';
-
-  if (json.name === 'Fragment') {
-    str += '<';
-  } else {
-    str += `<${json.name} `;
-  }
-
-  if (json.name === 'Show' && json.meta.else) {
-    str += `fallback={${blockToSolid({ component, json: json.meta.else as any, options })}}`;
-  }
-
-  const classString = collectClassString(json, options);
-  if (classString) {
-    str += ` class=${classString} `;
-  }
-
-  for (const key in json.properties) {
-    const value = json.properties[key];
-    const newKey = transformAttributeName(key);
-    str += ` ${newKey}="${value}" `;
-  }
-  for (const key in json.bindings) {
-    const { code, arguments: cusArg = ['event'], type } = json.bindings[key]!;
-    if (!code) continue;
-
-    if (type === 'spread') {
-      str += ` {...(${code})} `;
-    } else if (key.startsWith('on')) {
-      const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
-      str += ` ${useKey}={(${cusArg.join(',')}) => ${code}} `;
-    } else {
-      let useValue = code;
-      if (key === 'style') {
-        // Convert camelCase keys to kebab-case
-        // TODO: support more than top level objects, may need
-        // a runtime helper for expressions that are not a direct
-        // object literal, such as ternaries and other expression
-        // types
-        useValue = babelTransformExpression(code, {
-          ObjectExpression(path: babel.NodePath<babel.types.ObjectExpression>) {
-            // TODO: limit to top level objects only
-            for (const property of path.node.properties) {
-              if (types.isObjectProperty(property)) {
-                if (types.isIdentifier(property.key) || types.isStringLiteral(property.key)) {
-                  const key = types.isIdentifier(property.key)
-                    ? property.key.name
-                    : property.key.value;
-                  property.key = types.stringLiteral(kebabCase(key));
-                }
-              }
-            }
-          },
-        });
-      }
-      const newKey = transformAttributeName(key);
-      str += ` ${newKey}={${useValue}} `;
-    }
-  }
-  if (selfClosingTags.has(json.name)) {
-    return str + ' />';
-  }
-  str += '>';
-  if (json.children) {
-    str += json.children
-      .filter(filterEmptyTextNodes)
-      .map((item) => blockToSolid({ component, json: item, options }))
-      .join('\n');
-  }
-
-  if (json.name === 'Fragment') {
-    str += '</>';
-  } else {
-    str += `</${json.name}>`;
-  }
-
-  return str;
-};
-
-const getRefsString = (json: MitosisComponent) =>
+const getRefsString = (json: MitosisComponent, options: ToSolidOptions) =>
   Array.from(getRefs(json))
-    .map((ref) => `let ${ref};`)
+    .map((ref) => {
+      const typeParameter = (options.typescript && json['refs'][ref]?.typeParameter) || '';
+      return `let ${ref}${typeParameter ? ': ' + typeParameter : ''};`;
+    })
     .join('\n');
 
 function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) {
@@ -321,16 +121,15 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     const componentHasStyles = hasCss(json);
     const addWrapper =
       json.children.filter(filterEmptyTextNodes).length !== 1 || options.stylesType === 'style-tag';
+
+    // we need to run this before we run the code processor plugin, so the dynamic component variables are transformed
+    const foundDynamicComponents = processDynamicComponents(json, options);
+
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
     stripMetaProperties(json);
-    const foundDynamicComponents = processDynamicComponents(json, options);
-    const css =
-      options.stylesType === 'style-tag' &&
-      collectCss(json, {
-        prefix: hash(json),
-      });
+    const css = options.stylesType === 'style-tag' && collectCss(json, { prefix: hash(json) });
 
     const state = getState({ json, options });
     const componentsUsed = getComponentsUsed(json);
@@ -351,6 +150,9 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
 
     const storeImports = state?.import.store ?? [];
 
+    const propType = json.propsTypeRef || 'any';
+    const propsArgs = `props${options.typescript ? `:${propType}` : ''}`;
+
     let str = dedent`
     ${solidJSImports.length > 0 ? `import { ${solidJSImports.join(', ')} } from 'solid-js';` : ''}
     ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
@@ -360,12 +162,13 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
         ? ''
         : `import { css } from "solid-styled-components";`
     }
+    ${json.types && options.typescript ? json.types.join('\n') : ''}
     ${renderPreComponent({ component: json, target: 'solid' })}
 
-    function ${json.name}(props) {
+    function ${json.name}(${propsArgs}) {
       ${state?.str ?? ''}
 
-      ${getRefsString(json)}
+      ${getRefsString(json, options)}
       ${getContextString(json, options)}
 
       ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} })`}

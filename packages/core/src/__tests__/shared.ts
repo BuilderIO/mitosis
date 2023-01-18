@@ -93,6 +93,7 @@ const video = getRawFile('./data/blocks/video.raw.tsx');
 const referencingFunInsideHook = getRawFile(
   './data/blocks/referencing-function-inside-hook.raw.tsx',
 );
+const renderBlock = getRawFile('./data/blocks/render-block.raw.tsx');
 const multipleSpreads = getRawFile('./data/spread/multiple-spreads.raw.tsx');
 const spreadAttrs = getRawFile('./data/spread/spread-attrs.raw.tsx');
 const spreadNestedProps = getRawFile('./data/spread/spread-nested-props.raw.tsx');
@@ -192,6 +193,7 @@ const BASIC_TESTS: Tests = {
   contentState,
   referencingFunInsideHook,
   svgComponent,
+  renderBlock,
 };
 
 const SLOTS_TESTS: Tests = {

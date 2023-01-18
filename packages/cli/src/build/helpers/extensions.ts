@@ -16,8 +16,6 @@ export const getFileExtensionForTarget = ({
     case 'alpine':
     case 'html':
       return '.html';
-    case 'solid':
-      return '.jsx';
     case 'svelte':
       return '.svelte';
     case 'swift':
@@ -30,9 +28,19 @@ export const getFileExtensionForTarget = ({
       return '.ts';
     case 'lit':
       return '.ts';
+    case 'solid':
     case 'qwik':
-    case 'react':
       return isTs && type === 'filename' ? '.tsx' : '.jsx';
+    case 'react':
+    case 'reactNative':
+    case 'rsc':
+      switch (type) {
+        // we can't have `.jsx`/`.tsx` extensions in the import paths.
+        case 'import':
+          return isTs ? '.ts' : '.js';
+        case 'filename':
+          return isTs ? '.tsx' : '.jsx';
+      }
     case 'marko':
       return '.marko';
     default:
