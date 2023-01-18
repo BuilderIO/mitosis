@@ -58,9 +58,12 @@ function getContextString(component: MitosisComponent, options: ToSolidOptions) 
   return str;
 }
 
-const getRefsString = (json: MitosisComponent) =>
+const getRefsString = (json: MitosisComponent, options: ToSolidOptions) =>
   Array.from(getRefs(json))
-    .map((ref) => `let ${ref};`)
+    .map((ref) => {
+      const typeParameter = (options.typescript && json['refs'][ref]?.typeParameter) || '';
+      return `let ${ref}${typeParameter ? ': ' + typeParameter : ''};`;
+    })
     .join('\n');
 
 function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) {
@@ -147,6 +150,9 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
 
     const storeImports = state?.import.store ?? [];
 
+    const propType = json.propsTypeRef || 'any';
+    const propsArgs = `props${options.typescript ? `:${propType}` : ''}`;
+
     let str = dedent`
     ${solidJSImports.length > 0 ? `import { ${solidJSImports.join(', ')} } from 'solid-js';` : ''}
     ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
@@ -156,12 +162,13 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
         ? ''
         : `import { css } from "solid-styled-components";`
     }
+    ${json.types && options.typescript ? json.types.join('\n') : ''}
     ${renderPreComponent({ component: json, target: 'solid' })}
 
-    function ${json.name}(props) {
+    function ${json.name}(${propsArgs}) {
       ${state?.str ?? ''}
 
-      ${getRefsString(json)}
+      ${getRefsString(json, options)}
       ${getContextString(json, options)}
 
       ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} })`}
