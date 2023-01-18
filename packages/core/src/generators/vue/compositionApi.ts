@@ -25,7 +25,7 @@ const getCompositionPropDefinition = ({
       .map((prop) => {
         const value = component.defaultProps!.hasOwnProperty(prop)
           ? component.defaultProps![prop]?.code
-          : undefined;
+          : 'undefined';
         return `${prop}: ${value}`;
       })
       .join(',');

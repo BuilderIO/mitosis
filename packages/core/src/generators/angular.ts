@@ -444,7 +444,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .map((prop) => {
           const value = json.defaultProps!.hasOwnProperty(prop)
             ? json.defaultProps![prop]?.code
-            : undefined;
+            : 'undefined';
           return `${prop}: ${value}`;
         })
         .join(',');
