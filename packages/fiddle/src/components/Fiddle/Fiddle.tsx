@@ -915,7 +915,6 @@ export default function Fiddle() {
               css={{
                 display: 'flex',
                 alignItems: 'center',
-                padding: 5,
                 flexShrink: 0,
                 height: 40,
                 borderBottom: `1px solid ${colors.contrast}`,

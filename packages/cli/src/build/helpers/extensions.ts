@@ -16,8 +16,6 @@ export const getFileExtensionForTarget = ({
     case 'alpine':
     case 'html':
       return '.html';
-    case 'solid':
-      return '.jsx';
     case 'svelte':
       return '.svelte';
     case 'swift':
@@ -30,6 +28,7 @@ export const getFileExtensionForTarget = ({
       return '.ts';
     case 'lit':
       return '.ts';
+    case 'solid':
     case 'qwik':
       return isTs && type === 'filename' ? '.tsx' : '.jsx';
     case 'react':
