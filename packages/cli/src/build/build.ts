@@ -3,7 +3,9 @@ import {
   componentToAngular,
   componentToCustomElement,
   componentToHtml,
+  componentToLiquid,
   componentToMarko,
+  componentToMitosis,
   componentToPreact,
   componentToLit,
   componentToQwik,
@@ -11,8 +13,10 @@ import {
   componentToRsc,
   componentToReactNative,
   componentToSolid,
+  componentToStencil,
   componentToSvelte,
   componentToSwift,
+  componentToTemplate,
   componentToVue2,
   componentToVue3,
   MitosisComponent,
@@ -282,6 +286,14 @@ const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['g
       return componentToRsc;
     case 'lit':
       return componentToLit;
+    case 'mitosis':
+      return componentToMitosis;
+    case 'stencil':
+      return componentToStencil;
+    case 'template':
+      return componentToTemplate;
+    case 'liquid':
+      return componentToLiquid;
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }

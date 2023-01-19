@@ -12,10 +12,10 @@
     "npm": "99999999.9.9"
   },
   "scripts": {
-    "build:core": "yarn workspace @builder.io/mitosis run build",
-    "build:fiddle": "yarn workspace @builder.io/mitosis-fiddle run build",
-    "build:eslint-plugin": "yarn workspace @builder.io/eslint-plugin-mitosis run build",
-    "ci:build": "yarn workspaces foreach -pt --exclude \"*/e2e*\" --exclude @builder.io/mitosis-fiddle --exclude \"@builder.io/talk-*\" --verbose run build",
+    "build:core": "nx build @builder.io/mitosis",
+    "build:fiddle": "nx build @builder.io/mitosis-fiddle",
+    "build:eslint-plugin": "nx build @builder.io/eslint-plugin-mitosis",
+    "ci:build": "nx run-many --target build --parallel 4 --exclude \"*/e2e*,@builder.io/mitosis-fiddle,@builder.io/talk-*\"",
     "ci:build:core": "yarn run build:core",
     "ci:build:fiddle": "yarn run build:fiddle",
     "ci:build:eslint-plugin": "yarn run build:eslint-plugin",
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.6.0",
+    "@nrwl/nx-cloud": "15.0.2",
     "@playwright/test": "1.24.0",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
@@ -52,6 +53,7 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "execa": "6.1.0",
     "npm-run-all": "^4.1.5",
+    "nx": "15.4.5",
     "prettier": "^2.3.2",
     "typescript": "^4.8.4"
   },
