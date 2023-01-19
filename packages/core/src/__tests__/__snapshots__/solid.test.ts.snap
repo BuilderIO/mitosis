@@ -5895,8 +5895,11 @@ exports[`Solid > jsx > Typescript Test > AdvancedRef 1`] = `
 "import { Show, on, createEffect, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface Props {
+  showInput: boolean;
+}
 
-function MyBasicRefComponent(props) {
+function MyBasicRefComponent(props: Props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onBlur() {
@@ -5908,8 +5911,8 @@ function MyBasicRefComponent(props) {
     return name().toLowerCase();
   }
 
-  let inputRef;
-  let inputNoArgRef;
+  let inputRef: HTMLInputElement;
+  let inputNoArgRef: HTMLLabelElement;
 
   function onUpdateFn_0() {
     console.log(\\"Received an update\\");
@@ -5924,12 +5927,12 @@ function MyBasicRefComponent(props) {
             class={css({
               color: \\"red\\",
             })}
-            ref={inputRef}
+            ref={inputRef!}
             value={name()}
             onBlur={(event) => onBlur()}
             onInput={(event) => setName(event.target.value)}
           />
-          <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+          <label htmlFor=\\"cars\\" ref={inputNoArgRef!}>
             Choose a car:
           </label>
           <select name=\\"cars\\" id=\\"cars\\">
@@ -5952,8 +5955,11 @@ exports[`Solid > jsx > Typescript Test > AdvancedRef 2`] = `
 "import { Show, on, createEffect, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface Props {
+  showInput: boolean;
+}
 
-function MyBasicRefComponent(props) {
+function MyBasicRefComponent(props: Props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onBlur() {
@@ -5965,8 +5971,8 @@ function MyBasicRefComponent(props) {
     return name().toLowerCase();
   }
 
-  let inputRef;
-  let inputNoArgRef;
+  let inputRef: HTMLInputElement;
+  let inputNoArgRef: HTMLLabelElement;
 
   function onUpdateFn_0() {
     console.log(\\"Received an update\\");
@@ -5980,12 +5986,12 @@ function MyBasicRefComponent(props) {
           <>
             <input
               class=\\"input-6d81d00c\\"
-              ref={inputRef}
+              ref={inputRef!}
               value={name()}
               onBlur={(event) => onBlur()}
               onInput={(event) => setName(event.target.value)}
             />
-            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef!}>
               Choose a car:
             </label>
             <select name=\\"cars\\" id=\\"cars\\">
@@ -6015,12 +6021,15 @@ exports[`Solid > jsx > Typescript Test > Basic 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface MyBasicComponentProps {
+  id: string;
+}
 
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: MyBasicComponentProps) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   const [age, setAge] = createSignal(1);
@@ -6056,7 +6065,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > Basic 2`] = `
 "import { Show, For, createSignal } from \\"solid-js\\";
 
-function MyBasicForShowComponent(props) {
+function MyBasicForShowComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
@@ -6093,12 +6102,15 @@ exports[`Solid > jsx > Typescript Test > Basic 3`] = `
 "import { createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface MyBasicComponentProps {
+  id: string;
+}
 
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: MyBasicComponentProps) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   const [age, setAge] = createSignal(1);
@@ -6136,7 +6148,7 @@ exports[`Solid > jsx > Typescript Test > Basic 4`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyBasicForShowComponent(props) {
+function MyBasicForShowComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
@@ -6176,7 +6188,7 @@ exports[`Solid > jsx > Typescript Test > Basic Context 1`] = `
 
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onChange() {
@@ -6213,7 +6225,7 @@ import { css } from \\"solid-styled-components\\";
 
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onChange() {
@@ -6248,7 +6260,12 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > Basic OnMount Update 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
-function MyBasicOnMountUpdateComponent(props) {
+export interface Props {
+  hi: string;
+  bye: string;
+}
+
+function MyBasicOnMountUpdateComponent(props: Props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
@@ -6273,8 +6290,12 @@ exports[`Solid > jsx > Typescript Test > Basic OnMount Update 2`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface Props {
+  hi: string;
+  bye: string;
+}
 
-function MyBasicOnMountUpdateComponent(props) {
+function MyBasicOnMountUpdateComponent(props: Props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
@@ -6300,7 +6321,7 @@ export default MyBasicOnMountUpdateComponent;
 exports[`Solid > jsx > Typescript Test > Basic Outputs 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
-function MyBasicOutputsComponent(props) {
+function MyBasicOutputsComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
@@ -6320,7 +6341,7 @@ exports[`Solid > jsx > Typescript Test > Basic Outputs 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyBasicOutputsComponent(props) {
+function MyBasicOutputsComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
@@ -6342,7 +6363,7 @@ export default MyBasicOutputsComponent;
 exports[`Solid > jsx > Typescript Test > Basic Outputs Meta 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
-function MyBasicOutputsComponent(props) {
+function MyBasicOutputsComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
@@ -6362,7 +6383,7 @@ exports[`Solid > jsx > Typescript Test > Basic Outputs Meta 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyBasicOutputsComponent(props) {
+function MyBasicOutputsComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
@@ -6382,7 +6403,7 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicAttribute 1`] = `
-"function MyComponent(props) {
+"function MyComponent(props: any) {
   return <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />;
 }
 
@@ -6393,7 +6414,7 @@ export default MyComponent;
 exports[`Solid > jsx > Typescript Test > BasicAttribute 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return (
     <>
       <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />
@@ -6406,9 +6427,14 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
-"import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+"type Props = {
+  children: any;
+  type: string;
+};
 
-function MyBooleanAttribute(props) {
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+
+function MyBooleanAttribute(props: Props) {
   return (
     <div>
       {props.children}
@@ -6426,10 +6452,14 @@ export default MyBooleanAttribute;
 
 exports[`Solid > jsx > Typescript Test > BasicBooleanAttribute 2`] = `
 "import { css } from \\"solid-styled-components\\";
+type Props = {
+  children: any;
+  type: string;
+};
 
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-function MyBooleanAttribute(props) {
+function MyBooleanAttribute(props: Props) {
   return (
     <>
       <div>
@@ -6457,7 +6487,7 @@ exports[`Solid > jsx > Typescript Test > BasicChildComponent 1`] = `
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
-function MyBasicChildComponent(props) {
+function MyBasicChildComponent(props: any) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   const [dev, setDev] = createSignal(\\"PatrickJS\\");
@@ -6487,7 +6517,7 @@ import { css } from \\"solid-styled-components\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
-function MyBasicChildComponent(props) {
+function MyBasicChildComponent(props: any) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   const [dev, setDev] = createSignal(\\"PatrickJS\\");
@@ -6514,7 +6544,7 @@ export default MyBasicChildComponent;
 exports[`Solid > jsx > Typescript Test > BasicFor 1`] = `
 "import { For, onMount, createSignal } from \\"solid-js\\";
 
-function MyBasicForComponent(props) {
+function MyBasicForComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
@@ -6556,7 +6586,7 @@ exports[`Solid > jsx > Typescript Test > BasicFor 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyBasicForComponent(props) {
+function MyBasicForComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
@@ -6599,8 +6629,11 @@ exports[`Solid > jsx > Typescript Test > BasicRef 1`] = `
 "import { Show, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface Props {
+  showInput: boolean;
+}
 
-function MyBasicRefComponent(props) {
+function MyBasicRefComponent(props: Props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onBlur() {
@@ -6612,8 +6645,8 @@ function MyBasicRefComponent(props) {
     return name().toLowerCase();
   }
 
-  let inputRef;
-  let inputNoArgRef;
+  let inputRef: HTMLInputElement;
+  let inputNoArgRef: HTMLLabelElement;
 
   return (
     <div>
@@ -6623,12 +6656,12 @@ function MyBasicRefComponent(props) {
             class={css({
               color: \\"red\\",
             })}
-            ref={inputRef}
+            ref={inputRef!}
             value={name()}
             onBlur={(event) => onBlur()}
             onInput={(event) => setName(event.target.value)}
           />
-          <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+          <label htmlFor=\\"cars\\" ref={inputNoArgRef!}>
             Choose a car:
           </label>
           <select name=\\"cars\\" id=\\"cars\\">
@@ -6651,8 +6684,11 @@ exports[`Solid > jsx > Typescript Test > BasicRef 2`] = `
 "import { Show, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface Props {
+  showInput: boolean;
+}
 
-function MyBasicRefComponent(props) {
+function MyBasicRefComponent(props: Props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onBlur() {
@@ -6664,8 +6700,8 @@ function MyBasicRefComponent(props) {
     return name().toLowerCase();
   }
 
-  let inputRef;
-  let inputNoArgRef;
+  let inputRef: HTMLInputElement;
+  let inputNoArgRef: HTMLLabelElement;
 
   return (
     <>
@@ -6674,12 +6710,12 @@ function MyBasicRefComponent(props) {
           <>
             <input
               class=\\"input-6e2a3a12\\"
-              ref={inputRef}
+              ref={inputRef!}
               value={name()}
               onBlur={(event) => onBlur()}
               onInput={(event) => setName(event.target.value)}
             />
-            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef!}>
               Choose a car:
             </label>
             <select name=\\"cars\\" id=\\"cars\\">
@@ -6708,7 +6744,11 @@ export default MyBasicRefComponent;
 exports[`Solid > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyBasicRefAssignmentComponent(props) {
+export interface Props {
+  showInput: boolean;
+}
+
+function MyBasicRefAssignmentComponent(props: Props) {
   function handlerClick(event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
@@ -6730,8 +6770,11 @@ exports[`Solid > jsx > Typescript Test > BasicRefAssignment 2`] = `
 "import { createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface Props {
+  showInput: boolean;
+}
 
-function MyBasicRefAssignmentComponent(props) {
+function MyBasicRefAssignmentComponent(props: Props) {
   function handlerClick(event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
@@ -6754,6 +6797,10 @@ export default MyBasicRefAssignmentComponent;
 exports[`Solid > jsx > Typescript Test > BasicRefPrevious 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
+export interface Props {
+  showInput: boolean;
+}
+
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
@@ -6767,7 +6814,7 @@ export function usePrevious<T>(value: T) {
   return ref;
 }
 
-function MyPreviousComponent(props) {
+function MyPreviousComponent(props: Props) {
   const [count, setCount] = createSignal(0);
 
   function onUpdateFn_0() {
@@ -6795,6 +6842,9 @@ exports[`Solid > jsx > Typescript Test > BasicRefPrevious 2`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface Props {
+  showInput: boolean;
+}
 
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
@@ -6809,7 +6859,7 @@ export function usePrevious<T>(value: T) {
   return ref;
 }
 
-function MyPreviousComponent(props) {
+function MyPreviousComponent(props: Props) {
   const [count, setCount] = createSignal(0);
 
   function onUpdateFn_0() {
@@ -6838,7 +6888,14 @@ export default MyPreviousComponent;
 exports[`Solid > jsx > Typescript Test > Button 1`] = `
 "import { Show } from \\"solid-js\\";
 
-function Button(props) {
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+function Button(props: ButtonProps) {
   return (
     <div>
       <Show when={props.link}>
@@ -6867,8 +6924,14 @@ exports[`Solid > jsx > Typescript Test > Button 2`] = `
 "import { Show } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
 
-function Button(props) {
+function Button(props: ButtonProps) {
   return (
     <>
       <div>
@@ -6899,8 +6962,22 @@ exports[`Solid > jsx > Typescript Test > Columns 1`] = `
 "import { For, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
 
-function Column(props) {
+  width?: number;
+};
+export interface ColumnProps {
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
+  reverseColumnsWhenStacked?: boolean;
+}
+
+function Column(props: ColumnProps) {
   function getColumns() {
     return props.columns || [];
   }
@@ -6969,8 +7046,22 @@ exports[`Solid > jsx > Typescript Test > Columns 2`] = `
 "import { For, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
 
-function Column(props) {
+  width?: number;
+};
+export interface ColumnProps {
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
+  reverseColumnsWhenStacked?: boolean;
+}
+
+function Column(props: ColumnProps) {
   function getColumns() {
     return props.columns || [];
   }
@@ -7036,7 +7127,12 @@ export default Column;
 `;
 
 exports[`Solid > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"function ContentSlotCode(props) {
+"type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+function ContentSlotCode(props: Props) {
   return (
     <div>
       <Slot name={props.slotTesting}></Slot>
@@ -7056,8 +7152,12 @@ export default ContentSlotCode;
 
 exports[`Solid > jsx > Typescript Test > ContentSlotHtml 2`] = `
 "import { css } from \\"solid-styled-components\\";
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
 
-function ContentSlotCode(props) {
+function ContentSlotCode(props: Props) {
   return (
     <>
       <div>
@@ -7080,7 +7180,11 @@ export default ContentSlotCode;
 exports[`Solid > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "import { Show } from \\"solid-js\\";
 
-function ContentSlotJsxCode(props) {
+type Props = {
+  [key: string]: string | JSX.Element;
+};
+
+function ContentSlotJsxCode(props: Props) {
   return (
     <div>
       <Show when={props.slotTesting}>
@@ -7102,8 +7206,11 @@ exports[`Solid > jsx > Typescript Test > ContentSlotJSX 2`] = `
 "import { Show } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type Props = {
+  [key: string]: string | JSX.Element;
+};
 
-function ContentSlotJsxCode(props) {
+function ContentSlotJsxCode(props: Props) {
   return (
     <>
       <div>
@@ -7126,7 +7233,12 @@ export default ContentSlotJsxCode;
 exports[`Solid > jsx > Typescript Test > CustomCode 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
-function CustomCode(props) {
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+function CustomCode(props: CustomCodeProps) {
   const [scriptsInserted, setScriptsInserted] = createSignal([]);
 
   const [scriptsRun, setScriptsRun] = createSignal([]);
@@ -7173,7 +7285,7 @@ function CustomCode(props) {
     }
   }
 
-  let elem;
+  let elem: HTMLDivElement;
 
   onMount(() => {
     findAndRunScripts();
@@ -7184,7 +7296,7 @@ function CustomCode(props) {
       class={
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
-      ref={elem}
+      ref={elem!}
       innerHTML={props.code}
     ></div>
   );
@@ -7198,8 +7310,12 @@ exports[`Solid > jsx > Typescript Test > CustomCode 2`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
 
-function CustomCode(props) {
+function CustomCode(props: CustomCodeProps) {
   const [scriptsInserted, setScriptsInserted] = createSignal([]);
 
   const [scriptsRun, setScriptsRun] = createSignal([]);
@@ -7246,7 +7362,7 @@ function CustomCode(props) {
     }
   }
 
-  let elem;
+  let elem: HTMLDivElement;
 
   onMount(() => {
     findAndRunScripts();
@@ -7258,7 +7374,7 @@ function CustomCode(props) {
         class={
           \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
-        ref={elem}
+        ref={elem!}
         innerHTML={props.code}
       ></div>
     </>
@@ -7272,7 +7388,12 @@ export default CustomCode;
 exports[`Solid > jsx > Typescript Test > Embed 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
-function CustomCode(props) {
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+function CustomCode(props: CustomCodeProps) {
   const [scriptsInserted, setScriptsInserted] = createSignal([]);
 
   const [scriptsRun, setScriptsRun] = createSignal([]);
@@ -7319,7 +7440,7 @@ function CustomCode(props) {
     }
   }
 
-  let elem;
+  let elem: HTMLDivElement;
 
   onMount(() => {
     findAndRunScripts();
@@ -7330,7 +7451,7 @@ function CustomCode(props) {
       class={
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
-      ref={elem}
+      ref={elem!}
       innerHTML={props.code}
     ></div>
   );
@@ -7344,8 +7465,12 @@ exports[`Solid > jsx > Typescript Test > Embed 2`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
 
-function CustomCode(props) {
+function CustomCode(props: CustomCodeProps) {
   const [scriptsInserted, setScriptsInserted] = createSignal([]);
 
   const [scriptsRun, setScriptsRun] = createSignal([]);
@@ -7392,7 +7517,7 @@ function CustomCode(props) {
     }
   }
 
-  let elem;
+  let elem: HTMLDivElement;
 
   onMount(() => {
     findAndRunScripts();
@@ -7404,7 +7529,7 @@ function CustomCode(props) {
         class={
           \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
-        ref={elem}
+        ref={elem!}
         innerHTML={props.code}
       ></div>
     </>
@@ -7419,6 +7544,29 @@ exports[`Solid > jsx > Typescript Test > Form 1`] = `
 "import { Show, For, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface FormProps {
+  attributes?: any;
+  name?: string;
+  action?: string;
+  validate?: boolean;
+  method?: string;
+  builderBlock?: BuilderElement;
+  sendSubmissionsTo?: string;
+  sendSubmissionsToEmail?: string;
+  sendWithJs?: boolean;
+  contentType?: string;
+  customHeaders?: {
+    [key: string]: string;
+  };
+  successUrl?: string;
+  previewState?: FormState;
+  successMessage?: BuilderElement[];
+  errorMessage?: BuilderElement[];
+  sendingMessage?: BuilderElement[];
+  resetFormOnSubmit?: boolean;
+  errorMessagePath?: string;
+}
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
@@ -7426,7 +7574,7 @@ import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
-function FormComponent(props) {
+function FormComponent(props: FormProps) {
   const [formState, setFormState] = createSignal(\\"unsubmitted\\");
 
   const [responseData, setResponseData] = createSignal(null);
@@ -7651,12 +7799,12 @@ function FormComponent(props) {
     }
   }
 
-  let formRef;
+  let formRef: HTMLFormElement;
 
   return (
     <form
       validate={props.validate}
-      ref={formRef}
+      ref={formRef!}
       action={!props.sendWithJs && props.action}
       method={props.method}
       name={props.name}
@@ -7721,6 +7869,29 @@ exports[`Solid > jsx > Typescript Test > Form 2`] = `
 "import { Show, For, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface FormProps {
+  attributes?: any;
+  name?: string;
+  action?: string;
+  validate?: boolean;
+  method?: string;
+  builderBlock?: BuilderElement;
+  sendSubmissionsTo?: string;
+  sendSubmissionsToEmail?: string;
+  sendWithJs?: boolean;
+  contentType?: string;
+  customHeaders?: {
+    [key: string]: string;
+  };
+  successUrl?: string;
+  previewState?: FormState;
+  successMessage?: BuilderElement[];
+  errorMessage?: BuilderElement[];
+  sendingMessage?: BuilderElement[];
+  resetFormOnSubmit?: boolean;
+  errorMessagePath?: string;
+}
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
@@ -7728,7 +7899,7 @@ import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
-function FormComponent(props) {
+function FormComponent(props: FormProps) {
   const [formState, setFormState] = createSignal(\\"unsubmitted\\");
 
   const [responseData, setResponseData] = createSignal(null);
@@ -7953,13 +8124,13 @@ function FormComponent(props) {
     }
   }
 
-  let formRef;
+  let formRef: HTMLFormElement;
 
   return (
     <>
       <form
         validate={props.validate}
-        ref={formRef}
+        ref={formRef!}
         action={!props.sendWithJs && props.action}
         method={props.method}
         name={props.name}
@@ -8023,8 +8194,26 @@ exports[`Solid > jsx > Typescript Test > Image 1`] = `
 "import { Show, onMount, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+// TODO: AMP Support?
+export interface ImageProps {
+  _class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
 
-function Image(props) {
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}
+
+function Image(props: ImageProps) {
   const [scrollListener, setScrollListener] = createSignal(null);
 
   const [imageLoaded, setImageLoaded] = createSignal(false);
@@ -8046,7 +8235,7 @@ function Image(props) {
     );
   }
 
-  let pictureRef;
+  let pictureRef: HTMLElement;
 
   onMount(() => {
     if (useLazyLoading()) {
@@ -8075,7 +8264,7 @@ function Image(props) {
 
   return (
     <div>
-      <picture ref={pictureRef}>
+      <picture ref={pictureRef!}>
         <Show when={!useLazyLoading() || load()}>
           <img
             class={
@@ -8112,8 +8301,26 @@ exports[`Solid > jsx > Typescript Test > Image 2`] = `
 "import { Show, onMount, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+// TODO: AMP Support?
+export interface ImageProps {
+  _class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
 
-function Image(props) {
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}
+
+function Image(props: ImageProps) {
   const [scrollListener, setScrollListener] = createSignal(null);
 
   const [imageLoaded, setImageLoaded] = createSignal(false);
@@ -8135,7 +8342,7 @@ function Image(props) {
     );
   }
 
-  let pictureRef;
+  let pictureRef: HTMLElement;
 
   onMount(() => {
     if (useLazyLoading()) {
@@ -8165,7 +8372,7 @@ function Image(props) {
   return (
     <>
       <div>
-        <picture ref={pictureRef}>
+        <picture ref={pictureRef!}>
           <Show when={!useLazyLoading() || load()}>
             <img
               class={
@@ -8204,7 +8411,7 @@ export default Image;
 exports[`Solid > jsx > Typescript Test > Image State 1`] = `
 "import { For, createSignal } from \\"solid-js\\";
 
-function ImgStateComponent(props) {
+function ImgStateComponent(props: any) {
   const [canShow, setCanShow] = createSignal(true);
 
   const [images, setImages] = createSignal([\\"http://example.com/qwik.png\\"]);
@@ -8234,7 +8441,7 @@ exports[`Solid > jsx > Typescript Test > Image State 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function ImgStateComponent(props) {
+function ImgStateComponent(props: any) {
   const [canShow, setCanShow] = createSignal(true);
 
   const [images, setImages] = createSignal([\\"http://example.com/qwik.png\\"]);
@@ -8262,9 +8469,26 @@ export default ImgStateComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > Img 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+}
 
-function ImgComponent(props) {
+import { Builder } from \\"@builder.io/sdk\\";
+
+function ImgComponent(props: ImgProps) {
   return (
     <img
       style={{
@@ -8285,10 +8509,26 @@ export default ImgComponent;
 
 exports[`Solid > jsx > Typescript Test > Img 2`] = `
 "import { css } from \\"solid-styled-components\\";
+export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+}
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-function ImgComponent(props) {
+function ImgComponent(props: ImgProps) {
   return (
     <>
       <img
@@ -8310,9 +8550,19 @@ export default ImgComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > Input 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+}
 
-function FormInputComponent(props) {
+import { Builder } from \\"@builder.io/sdk\\";
+
+function FormInputComponent(props: FormInputProps) {
   return (
     <input
       {...props.attributes}
@@ -8337,10 +8587,19 @@ export default FormInputComponent;
 
 exports[`Solid > jsx > Typescript Test > Input 2`] = `
 "import { css } from \\"solid-styled-components\\";
+export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+}
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-function FormInputComponent(props) {
+function FormInputComponent(props: FormInputProps) {
   return (
     <>
       <input
@@ -8366,7 +8625,12 @@ export default FormInputComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > RawText 1`] = `
-"function RawText(props) {
+"export interface RawTextProps {
+  attributes?: any;
+  text?: string; // builderBlock?: any;
+}
+
+function RawText(props: RawTextProps) {
   return (
     <span
       class={props.attributes?.class || props.attributes?.className}
@@ -8381,8 +8645,12 @@ export default RawText;
 
 exports[`Solid > jsx > Typescript Test > RawText 2`] = `
 "import { css } from \\"solid-styled-components\\";
+export interface RawTextProps {
+  attributes?: any;
+  text?: string; // builderBlock?: any;
+}
 
-function RawText(props) {
+function RawText(props: RawTextProps) {
   return (
     <>
       <span
@@ -8398,7 +8666,13 @@ export default RawText;
 `;
 
 exports[`Solid > jsx > Typescript Test > Section 1`] = `
-"function SectionComponent(props) {
+"export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+function SectionComponent(props: SectionProps) {
   return (
     <section
       {...props.attributes}
@@ -8422,7 +8696,13 @@ export default SectionComponent;
 exports[`Solid > jsx > Typescript Test > Section 2`] = `
 "import { Show, For, createSignal } from \\"solid-js\\";
 
-function SectionStateComponent(props) {
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+function SectionStateComponent(props: SectionProps) {
   const [max, setMax] = createSignal(42);
 
   const [items, setItems] = createSignal([42]);
@@ -8454,8 +8734,13 @@ export default SectionStateComponent;
 
 exports[`Solid > jsx > Typescript Test > Section 3`] = `
 "import { css } from \\"solid-styled-components\\";
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
 
-function SectionComponent(props) {
+function SectionComponent(props: SectionProps) {
   return (
     <>
       <section
@@ -8482,8 +8767,13 @@ exports[`Solid > jsx > Typescript Test > Section 4`] = `
 "import { Show, For, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
 
-function SectionStateComponent(props) {
+function SectionStateComponent(props: SectionProps) {
   const [max, setMax] = createSignal(42);
 
   const [items, setItems] = createSignal([42]);
@@ -8518,9 +8808,20 @@ export default SectionStateComponent;
 exports[`Solid > jsx > Typescript Test > Select 1`] = `
 "import { For } from \\"solid-js\\";
 
+export interface FormSelectProps {
+  options?: {
+    name?: string;
+    value: string;
+  }[];
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
-function SelectComponent(props) {
+function SelectComponent(props: FormSelectProps) {
   return (
     <select
       {...props.attributes}
@@ -8555,10 +8856,20 @@ exports[`Solid > jsx > Typescript Test > Select 2`] = `
 "import { For } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface FormSelectProps {
+  options?: {
+    name?: string;
+    value: string;
+  }[];
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+}
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-function SelectComponent(props) {
+function SelectComponent(props: FormSelectProps) {
   return (
     <>
       <select
@@ -8592,7 +8903,11 @@ export default SelectComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > SlotDefault 1`] = `
-"function SlotCode(props) {
+"type Props = {
+  [key: string]: string;
+};
+
+function SlotCode(props: Props) {
   return (
     <div>
       <Slot>
@@ -8608,8 +8923,11 @@ export default SlotCode;
 
 exports[`Solid > jsx > Typescript Test > SlotDefault 2`] = `
 "import { css } from \\"solid-styled-components\\";
+type Props = {
+  [key: string]: string;
+};
 
-function SlotCode(props) {
+function SlotCode(props: Props) {
   return (
     <>
       <div>
@@ -8626,9 +8944,13 @@ export default SlotCode;
 `;
 
 exports[`Solid > jsx > Typescript Test > SlotHtml 1`] = `
-"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+"type Props = {
+  [key: string]: string;
+};
 
-function SlotCode(props) {
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+function SlotCode(props: Props) {
   return (
     <div>
       <ContentSlotCode>
@@ -8644,10 +8966,13 @@ export default SlotCode;
 
 exports[`Solid > jsx > Typescript Test > SlotHtml 2`] = `
 "import { css } from \\"solid-styled-components\\";
+type Props = {
+  [key: string]: string;
+};
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-function SlotCode(props) {
+function SlotCode(props: Props) {
   return (
     <>
       <div>
@@ -8664,9 +8989,13 @@ export default SlotCode;
 `;
 
 exports[`Solid > jsx > Typescript Test > SlotJsx 1`] = `
-"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+"type Props = {
+  [key: string]: string;
+};
 
-function SlotCode(props) {
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+function SlotCode(props: Props) {
   return (
     <div>
       <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
@@ -8680,10 +9009,13 @@ export default SlotCode;
 
 exports[`Solid > jsx > Typescript Test > SlotJsx 2`] = `
 "import { css } from \\"solid-styled-components\\";
+type Props = {
+  [key: string]: string;
+};
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-function SlotCode(props) {
+function SlotCode(props: Props) {
   return (
     <>
       <div>
@@ -8698,7 +9030,11 @@ export default SlotCode;
 `;
 
 exports[`Solid > jsx > Typescript Test > SlotNamed 1`] = `
-"function SlotCode(props) {
+"type Props = {
+  [key: string]: string;
+};
+
+function SlotCode(props: Props) {
   return (
     <div>
       <Slot name=\\"top\\"></Slot>
@@ -8714,8 +9050,11 @@ export default SlotCode;
 
 exports[`Solid > jsx > Typescript Test > SlotNamed 2`] = `
 "import { css } from \\"solid-styled-components\\";
+type Props = {
+  [key: string]: string;
+};
 
-function SlotCode(props) {
+function SlotCode(props: Props) {
   return (
     <>
       <div>
@@ -8735,11 +9074,15 @@ exports[`Solid > jsx > Typescript Test > Stamped.io 1`] = `
 "import { Show, For, onMount, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
 
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
-function SmileReviews(props) {
+function SmileReviews(props: SmileReviewsProps) {
   const [reviews, setReviews] = createSignal([]);
 
   const [name, setName] = createSignal(\\"test\\");
@@ -8844,11 +9187,15 @@ exports[`Solid > jsx > Typescript Test > Stamped.io 2`] = `
 "import { Show, For, onMount, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
 
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
-function SmileReviews(props) {
+function SmileReviews(props: SmileReviewsProps) {
   const [reviews, setReviews] = createSignal([]);
 
   const [name, setName] = createSignal(\\"test\\");
@@ -8950,7 +9297,12 @@ export default SmileReviews;
 `;
 
 exports[`Solid > jsx > Typescript Test > Submit 1`] = `
-"function SubmitButton(props) {
+"export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+}
+
+function SubmitButton(props: ButtonProps) {
   return (
     <button type=\\"submit\\" {...props.attributes}>
       {props.text}
@@ -8964,8 +9316,12 @@ export default SubmitButton;
 
 exports[`Solid > jsx > Typescript Test > Submit 2`] = `
 "import { css } from \\"solid-styled-components\\";
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+}
 
-function SubmitButton(props) {
+function SubmitButton(props: ButtonProps) {
   return (
     <>
       <button type=\\"submit\\" {...props.attributes}>
@@ -8982,9 +9338,17 @@ export default SubmitButton;
 exports[`Solid > jsx > Typescript Test > Text 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
-function Text(props) {
+function Text(props: TextProps) {
   const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
@@ -9011,10 +9375,17 @@ exports[`Solid > jsx > Typescript Test > Text 2`] = `
 "import { createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-function Text(props) {
+function Text(props: TextProps) {
   const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
@@ -9040,7 +9411,15 @@ export default Text;
 `;
 
 exports[`Solid > jsx > Typescript Test > Textarea 1`] = `
-"function Textarea(props) {
+"export interface TextareaProps {
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  placeholder?: string;
+}
+
+function Textarea(props: TextareaProps) {
   return (
     <textarea
       {...props.attributes}
@@ -9058,8 +9437,15 @@ export default Textarea;
 
 exports[`Solid > jsx > Typescript Test > Textarea 2`] = `
 "import { css } from \\"solid-styled-components\\";
+export interface TextareaProps {
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  placeholder?: string;
+}
 
-function Textarea(props) {
+function Textarea(props: TextareaProps) {
   return (
     <>
       <textarea
@@ -9078,7 +9464,33 @@ export default Textarea;
 `;
 
 exports[`Solid > jsx > Typescript Test > Video 1`] = `
-"function Video(props) {
+"export interface VideoProps {
+  attributes?: any;
+  video?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  playsInline?: boolean;
+  aspectRatio?: number;
+  width?: number;
+  height?: number;
+  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+  position?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+  posterImage?: string;
+  lazyLoad?: boolean;
+}
+
+function Video(props: VideoProps) {
   return (
     <video
       preload=\\"none\\"
@@ -9109,8 +9521,33 @@ export default Video;
 
 exports[`Solid > jsx > Typescript Test > Video 2`] = `
 "import { css } from \\"solid-styled-components\\";
+export interface VideoProps {
+  attributes?: any;
+  video?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  playsInline?: boolean;
+  aspectRatio?: number;
+  width?: number;
+  height?: number;
+  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+  position?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+  posterImage?: string;
+  lazyLoad?: boolean;
+}
 
-function Video(props) {
+function Video(props: VideoProps) {
   return (
     <>
       <video
@@ -9144,7 +9581,7 @@ export default Video;
 exports[`Solid > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [name, setName] = createSignal(\\"steve\\");
 
   function setName(value) {
@@ -9172,7 +9609,7 @@ exports[`Solid > jsx > Typescript Test > arrowFunctionInUseStore 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [name, setName] = createSignal(\\"steve\\");
 
   function setName(value) {
@@ -9200,7 +9637,7 @@ export default MyComponent;
 exports[`Solid > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
-function MyBasicOnUpdateReturnComponent(props) {
+function MyBasicOnUpdateReturnComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onUpdateFn_0() {
@@ -9238,7 +9675,7 @@ exports[`Solid > jsx > Typescript Test > basicOnUpdateReturn 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyBasicOnUpdateReturnComponent(props) {
+function MyBasicOnUpdateReturnComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onUpdateFn_0() {
@@ -9276,7 +9713,7 @@ export default MyBasicOnUpdateReturnComponent;
 exports[`Solid > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   return (
     <div
       class={
@@ -9298,7 +9735,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > class + ClassName + css 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   return (
     <>
       <div class=\\"test2 test div-45c59d97\\">
@@ -9320,7 +9757,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > class + css 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   return (
     <div
       class={
@@ -9342,7 +9779,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > class + css 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   return (
     <>
       <div class=\\"test div-74a0302e\\">
@@ -9364,7 +9801,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > className + css 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   return (
     <div
       class={
@@ -9386,7 +9823,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > className + css 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   return (
     <>
       <div class=\\"test div-74a0302e\\">
@@ -9408,7 +9845,12 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > className 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function ClassNameCode(props) {
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+function ClassNameCode(props: Props) {
   const [bindings, setBindings] = createSignal(\\"a binding\\");
 
   return (
@@ -9427,8 +9869,12 @@ exports[`Solid > jsx > Typescript Test > className 2`] = `
 "import { createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
 
-function ClassNameCode(props) {
+function ClassNameCode(props: Props) {
   const [bindings, setBindings] = createSignal(\\"a binding\\");
 
   return (
@@ -9450,7 +9896,7 @@ exports[`Solid > jsx > Typescript Test > classState 1`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   const [classState, setClassState] = createSignal(\\"testClassName\\");
 
   const [styleState, setStyleState] = createSignal({
@@ -9482,7 +9928,7 @@ exports[`Solid > jsx > Typescript Test > classState 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   const [classState, setClassState] = createSignal(\\"testClassName\\");
 
   const [styleState, setStyleState] = createSignal({
@@ -9510,10 +9956,14 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > componentWithContext 1`] = `
 "import { useContext } from \\"solid-js\\";
 
+export interface ComponentWithContextProps {
+  content: string;
+}
+
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-function ComponentWithContext(props) {
+function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
@@ -9547,11 +9997,14 @@ exports[`Solid > jsx > Typescript Test > componentWithContext 2`] = `
 "import { useContext } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface ComponentWithContextProps {
+  content: string;
+}
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-function ComponentWithContext(props) {
+function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
@@ -9586,7 +10039,7 @@ export default ComponentWithContext;
 exports[`Solid > jsx > Typescript Test > contentState 1`] = `
 "import BuilderContext from \\"@dummy/context.jsx\\";
 
-function RenderContent(props) {
+function RenderContent(props: any) {
   return (
     <BuilderContext.Provider
       value={{
@@ -9608,7 +10061,7 @@ exports[`Solid > jsx > Typescript Test > contentState 2`] = `
 
 import BuilderContext from \\"@dummy/context.jsx\\";
 
-function RenderContent(props) {
+function RenderContent(props: any) {
   return (
     <>
       <BuilderContext.Provider
@@ -9630,7 +10083,15 @@ export default RenderContent;
 exports[`Solid > jsx > Typescript Test > defaultProps 1`] = `
 "import { Show } from \\"solid-js\\";
 
-function Button(props) {
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick?: () => void;
+}
+
+function Button(props: ButtonProps) {
   return (
     <div>
       <Show when={props.link}>
@@ -9663,8 +10124,15 @@ exports[`Solid > jsx > Typescript Test > defaultProps 2`] = `
 "import { Show } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick?: () => void;
+}
 
-function Button(props) {
+function Button(props: ButtonProps) {
   return (
     <>
       <div>
@@ -9698,7 +10166,15 @@ export default Button;
 exports[`Solid > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
 "import { Show } from \\"solid-js\\";
 
-function Button(props) {
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick: () => void;
+}
+
+function Button(props: ButtonProps) {
   return (
     <div>
       <Show when={props.link}>
@@ -9731,8 +10207,15 @@ exports[`Solid > jsx > Typescript Test > defaultPropsOutsideComponent 2`] = `
 "import { Show } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick: () => void;
+}
 
-function Button(props) {
+function Button(props: ButtonProps) {
   return (
     <>
       <div>
@@ -9764,11 +10247,15 @@ export default Button;
 `;
 
 exports[`Solid > jsx > Typescript Test > defaultValsWithTypes 1`] = `
-"const DEFAULT_VALUES: Props = {
+"type Props = {
+  name: string;
+};
+
+const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
-function ComponentWithTypes(props) {
+function ComponentWithTypes(props: Props) {
   return (
     <div>
       {\\" \\"}
@@ -9784,12 +10271,15 @@ export default ComponentWithTypes;
 
 exports[`Solid > jsx > Typescript Test > defaultValsWithTypes 2`] = `
 "import { css } from \\"solid-styled-components\\";
+type Props = {
+  name: string;
+};
 
 const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
-function ComponentWithTypes(props) {
+function ComponentWithTypes(props: Props) {
   return (
     <>
       <div>
@@ -9808,7 +10298,7 @@ export default ComponentWithTypes;
 exports[`Solid > jsx > Typescript Test > expressionState 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [refToUse, setRefToUse] = createSignal(
     !(props.componentRef instanceof Function) ? props.componentRef : null
   );
@@ -9825,7 +10315,7 @@ exports[`Solid > jsx > Typescript Test > expressionState 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [refToUse, setRefToUse] = createSignal(
     !(props.componentRef instanceof Function) ? props.componentRef : null
   );
@@ -9844,9 +10334,15 @@ export default MyComponent;
 exports[`Solid > jsx > Typescript Test > import types 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
 import RenderBlock from \\"./builder-render-block.raw\\";
 
-function RenderContent(props) {
+function RenderContent(props: RenderContentProps) {
   function getRenderContentProps(block, index) {
     return {
       block: block,
@@ -9869,10 +10365,15 @@ exports[`Solid > jsx > Typescript Test > import types 2`] = `
 "import { createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
 
 import RenderBlock from \\"./builder-render-block.raw\\";
 
-function RenderContent(props) {
+function RenderContent(props: RenderContentProps) {
   function getRenderContentProps(block, index) {
     return {
       block: block,
@@ -9896,7 +10397,7 @@ export default RenderContent;
 exports[`Solid > jsx > Typescript Test > multipleOnUpdate 1`] = `
 "import { on, createEffect } from \\"solid-js\\";
 
-function MultipleOnUpdate(props) {
+function MultipleOnUpdate(props: any) {
   return <div></div>;
 }
 
@@ -9909,7 +10410,7 @@ exports[`Solid > jsx > Typescript Test > multipleOnUpdate 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MultipleOnUpdate(props) {
+function MultipleOnUpdate(props: any) {
   return (
     <>
       <div></div>
@@ -9924,7 +10425,7 @@ export default MultipleOnUpdate;
 exports[`Solid > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
-function MultipleOnUpdateWithDeps(props) {
+function MultipleOnUpdateWithDeps(props: any) {
   const [a, setA] = createSignal(\\"a\\");
 
   const [b, setB] = createSignal(\\"b\\");
@@ -9963,7 +10464,7 @@ exports[`Solid > jsx > Typescript Test > multipleOnUpdateWithDeps 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MultipleOnUpdateWithDeps(props) {
+function MultipleOnUpdateWithDeps(props: any) {
   const [a, setA] = createSignal(\\"a\\");
 
   const [b, setB] = createSignal(\\"b\\");
@@ -10004,7 +10505,7 @@ export default MultipleOnUpdateWithDeps;
 exports[`Solid > jsx > Typescript Test > multipleSpreads 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   const [attrs, setAttrs] = createSignal({
     hello: \\"world\\",
   });
@@ -10021,7 +10522,7 @@ exports[`Solid > jsx > Typescript Test > multipleSpreads 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   const [attrs, setAttrs] = createSignal({
     hello: \\"world\\",
   });
@@ -10040,7 +10541,12 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > nestedShow 1`] = `
 "import { Show } from \\"solid-js\\";
 
-function NestedShow(props) {
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+function NestedShow(props: Props) {
   return (
     <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
       <Show fallback={<div>else-condition-B</div>} when={!props.conditionB}>
@@ -10058,8 +10564,12 @@ exports[`Solid > jsx > Typescript Test > nestedShow 2`] = `
 "import { Show } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
 
-function NestedShow(props) {
+function NestedShow(props: Props) {
   return (
     <>
       <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
@@ -10078,7 +10588,7 @@ export default NestedShow;
 exports[`Solid > jsx > Typescript Test > nestedStyles 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function NestedStyles(props) {
+function NestedStyles(props: any) {
   return (
     <div
       class={css({
@@ -10107,7 +10617,7 @@ export default NestedStyles;
 exports[`Solid > jsx > Typescript Test > nestedStyles 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function NestedStyles(props) {
+function NestedStyles(props: any) {
   return (
     <>
       <div class=\\"div-92502f5c\\">Hello world</div>
@@ -10139,7 +10649,7 @@ export default NestedStyles;
 exports[`Solid > jsx > Typescript Test > onInit & onMount 1`] = `
 "import { onMount } from \\"solid-js\\";
 
-function OnInit(props) {
+function OnInit(props: any) {
   onMount(() => {
     console.log(\\"onMount\\");
   });
@@ -10156,7 +10666,7 @@ exports[`Solid > jsx > Typescript Test > onInit & onMount 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function OnInit(props) {
+function OnInit(props: any) {
   onMount(() => {
     console.log(\\"onMount\\");
   });
@@ -10175,11 +10685,15 @@ export default OnInit;
 exports[`Solid > jsx > Typescript Test > onInit 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
+type Props = {
+  name: string;
+};
+
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
-function OnInit(props) {
+function OnInit(props: Props) {
   const [name, setName] = createSignal(\\"\\");
 
   return (
@@ -10198,12 +10712,15 @@ exports[`Solid > jsx > Typescript Test > onInit 2`] = `
 "import { createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type Props = {
+  name: string;
+};
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
-function OnInit(props) {
+function OnInit(props: Props) {
   const [name, setName] = createSignal(\\"\\");
 
   return (
@@ -10223,7 +10740,7 @@ export default OnInit;
 exports[`Solid > jsx > Typescript Test > onMount 1`] = `
 "import { onMount } from \\"solid-js\\";
 
-function Comp(props) {
+function Comp(props: any) {
   onMount(() => {
     console.log(\\"Runs on mount\\");
   });
@@ -10240,7 +10757,7 @@ exports[`Solid > jsx > Typescript Test > onMount 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function Comp(props) {
+function Comp(props: any) {
   onMount(() => {
     console.log(\\"Runs on mount\\");
   });
@@ -10259,7 +10776,7 @@ export default Comp;
 exports[`Solid > jsx > Typescript Test > onUpdate 1`] = `
 "import { on, createEffect } from \\"solid-js\\";
 
-function OnUpdate(props) {
+function OnUpdate(props: any) {
   return <div></div>;
 }
 
@@ -10272,7 +10789,7 @@ exports[`Solid > jsx > Typescript Test > onUpdate 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function OnUpdate(props) {
+function OnUpdate(props: any) {
   return (
     <>
       <div></div>
@@ -10287,7 +10804,11 @@ export default OnUpdate;
 exports[`Solid > jsx > Typescript Test > onUpdateWithDeps 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
-function OnUpdateWithDeps(props) {
+type Props = {
+  size: string;
+};
+
+function OnUpdateWithDeps(props: Props) {
   const [a, setA] = createSignal(\\"a\\");
 
   const [b, setB] = createSignal(\\"b\\");
@@ -10308,8 +10829,11 @@ exports[`Solid > jsx > Typescript Test > onUpdateWithDeps 2`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type Props = {
+  size: string;
+};
 
-function OnUpdateWithDeps(props) {
+function OnUpdateWithDeps(props: Props) {
   const [a, setA] = createSignal(\\"a\\");
 
   const [b, setB] = createSignal(\\"b\\");
@@ -10331,13 +10855,23 @@ export default OnUpdateWithDeps;
 `;
 
 exports[`Solid > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
-"const b = 3;
+"type Types = {
+  s: any[];
+};
+interface IPost {
+  len: number;
+}
+export interface MyBasicComponentProps {
+  id: string;
+}
+
+const b = 3;
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
 export function run<T>(value: T) {}
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: MyBasicComponentProps) {
   return <div></div>;
 }
 
@@ -10347,6 +10881,15 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Typescript Test > preserveExportOrLocalStatement 2`] = `
 "import { css } from \\"solid-styled-components\\";
+type Types = {
+  s: any[];
+};
+interface IPost {
+  len: number;
+}
+export interface MyBasicComponentProps {
+  id: string;
+}
 
 const b = 3;
 const foo = () => {};
@@ -10354,7 +10897,7 @@ export const a = 3;
 export const bar = () => {};
 export function run<T>(value: T) {}
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: MyBasicComponentProps) {
   return (
     <>
       <div></div>
@@ -10367,7 +10910,20 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > preserveTyping 1`] = `
-"function MyBasicComponent(props) {
+"export type A = \\"test\\";
+export interface C {
+  n: \\"test\\";
+}
+type B = \\"test2\\";
+interface D {
+  n: \\"test\\";
+}
+export interface MyBasicComponentProps {
+  name: string;
+  age?: number;
+}
+
+function MyBasicComponent(props: MyBasicComponentProps) {
   return (
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -10382,8 +10938,20 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Typescript Test > preserveTyping 2`] = `
 "import { css } from \\"solid-styled-components\\";
+export type A = \\"test\\";
+export interface C {
+  n: \\"test\\";
+}
+type B = \\"test2\\";
+interface D {
+  n: \\"test\\";
+}
+export interface MyBasicComponentProps {
+  name: string;
+  age?: number;
+}
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: MyBasicComponentProps) {
   return (
     <>
       <div>
@@ -10401,7 +10969,12 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > propsDestructure 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyBasicComponent(props) {
+type Props = {
+  children: any;
+  type: string;
+};
+
+function MyBasicComponent(props: Props) {
   const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
@@ -10421,8 +10994,12 @@ exports[`Solid > jsx > Typescript Test > propsDestructure 2`] = `
 "import { createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type Props = {
+  children: any;
+  type: string;
+};
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: Props) {
   const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
@@ -10441,7 +11018,12 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > propsInterface 1`] = `
-"function MyBasicComponent(props) {
+"interface Person {
+  name: string;
+  age?: number;
+}
+
+function MyBasicComponent(props: Person | never) {
   return (
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -10456,8 +11038,12 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Typescript Test > propsInterface 2`] = `
 "import { css } from \\"solid-styled-components\\";
+interface Person {
+  name: string;
+  age?: number;
+}
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: Person | never) {
   return (
     <>
       <div>
@@ -10473,7 +11059,12 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > propsType 1`] = `
-"function MyBasicComponent(props) {
+"type Person = {
+  name: string;
+  age?: number;
+};
+
+function MyBasicComponent(props: Person) {
   return (
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -10488,8 +11079,12 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Typescript Test > propsType 2`] = `
 "import { css } from \\"solid-styled-components\\";
+type Person = {
+  name: string;
+  age?: number;
+};
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: Person) {
   return (
     <>
       <div>
@@ -10507,7 +11102,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
-function OnUpdate(props) {
+function OnUpdate(props: any) {
   function foo(params) {}
 
   function bar() {}
@@ -10530,7 +11125,7 @@ exports[`Solid > jsx > Typescript Test > referencingFunInsideHook 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function OnUpdate(props) {
+function OnUpdate(props: any) {
   function foo(params) {}
 
   function bar() {}
@@ -10556,6 +11151,19 @@ exports[`Solid > jsx > Typescript Test > renderBlock 1`] = `
 "import { Show, For, createSignal } from \\"solid-js\\";
 import { Dynamic } from \\"solid-js/web\\";
 
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
+import type { RenderComponentProps } from \\"./render-component\\";
+import type { RepeatData } from \\"./types.js\\";
+export type RenderBlockProps = {
+  block: BuilderBlock;
+  context: BuilderContextInterface;
+};
+
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
@@ -10571,7 +11179,7 @@ import RenderComponentWithContext from \\"./render-component-with-context.jsx\\"
 import RenderComponent from \\"./render-component.jsx\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 
-function RenderBlock(props) {
+function RenderBlock(props: RenderBlockProps) {
   function component() {
     const componentName = getProcessedBlock({
       block: props.block,
@@ -10829,6 +11437,18 @@ exports[`Solid > jsx > Typescript Test > renderBlock 2`] = `
 import { Dynamic } from \\"solid-js/web\\";
 
 import { css } from \\"solid-styled-components\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
+import type { RenderComponentProps } from \\"./render-component\\";
+import type { RepeatData } from \\"./types.js\\";
+export type RenderBlockProps = {
+  block: BuilderBlock;
+  context: BuilderContextInterface;
+};
 
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
@@ -10845,7 +11465,7 @@ import RenderComponentWithContext from \\"./render-component-with-context.jsx\\"
 import RenderComponent from \\"./render-component.jsx\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 
-function RenderBlock(props) {
+function RenderBlock(props: RenderBlockProps) {
   function component() {
     const componentName = getProcessedBlock({
       block: props.block,
@@ -11104,6 +11724,13 @@ exports[`Solid > jsx > Typescript Test > renderContentExample 1`] = `
 "import { onMount, on, createEffect } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
 
 import {
   sendComponentsToVisualEditor,
@@ -11113,7 +11740,7 @@ import {
 import BuilderContext from \\"@dummy/context.jsx\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-function RenderContent(props) {
+function RenderContent(props: Props) {
   onMount(() => {
     sendComponentsToVisualEditor(props.customComponents);
   });
@@ -11156,6 +11783,13 @@ exports[`Solid > jsx > Typescript Test > renderContentExample 2`] = `
 "import { onMount, on, createEffect } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
 
 import {
   sendComponentsToVisualEditor,
@@ -11165,7 +11799,7 @@ import {
 import BuilderContext from \\"@dummy/context.jsx\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-function RenderContent(props) {
+function RenderContent(props: Props) {
   onMount(() => {
     sendComponentsToVisualEditor(props.customComponents);
   });
@@ -11212,7 +11846,14 @@ export default RenderContent;
 exports[`Solid > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
 "import { Show } from \\"solid-js\\";
 
-function Button(props) {
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+function Button(props: ButtonProps) {
   return (
     <>
       <Show when={props.link}>
@@ -11241,8 +11882,14 @@ exports[`Solid > jsx > Typescript Test > rootFragmentMultiNode 2`] = `
 "import { Show } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
 
-function Button(props) {
+function Button(props: ButtonProps) {
   return (
     <>
       <>
@@ -11272,7 +11919,11 @@ export default Button;
 exports[`Solid > jsx > Typescript Test > rootShow 1`] = `
 "import { Show } from \\"solid-js\\";
 
-function RenderStyles(props) {
+export interface RenderStylesProps {
+  foo: string;
+}
+
+function RenderStyles(props: RenderStylesProps) {
   return (
     <Show fallback={<div>Foo</div>} when={props.foo === \\"bar\\"}>
       <div>Bar</div>
@@ -11288,8 +11939,11 @@ exports[`Solid > jsx > Typescript Test > rootShow 2`] = `
 "import { Show } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+export interface RenderStylesProps {
+  foo: string;
+}
 
-function RenderStyles(props) {
+function RenderStyles(props: RenderStylesProps) {
   return (
     <>
       <Show fallback={<div>Foo</div>} when={props.foo === \\"bar\\"}>
@@ -11306,7 +11960,7 @@ export default RenderStyles;
 exports[`Solid > jsx > Typescript Test > self-referencing component 1`] = `
 "import { Show } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return (
     <div>
       {props.name}
@@ -11326,7 +11980,7 @@ exports[`Solid > jsx > Typescript Test > self-referencing component 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return (
     <>
       <div>
@@ -11346,7 +12000,7 @@ export default MyComponent;
 exports[`Solid > jsx > Typescript Test > self-referencing component with children 1`] = `
 "import { Show } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return (
     <div>
       {props.name}
@@ -11369,7 +12023,7 @@ exports[`Solid > jsx > Typescript Test > self-referencing component with childre
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return (
     <>
       <div>
@@ -11392,7 +12046,12 @@ export default MyComponent;
 exports[`Solid > jsx > Typescript Test > showWithFor 1`] = `
 "import { Show, For } from \\"solid-js\\";
 
-function NestedShow(props) {
+interface Props {
+  conditionA: boolean;
+  items: string[];
+}
+
+function NestedShow(props: Props) {
   return (
     <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
       <For each={props.items}>
@@ -11413,8 +12072,12 @@ exports[`Solid > jsx > Typescript Test > showWithFor 2`] = `
 "import { Show, For } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
+interface Props {
+  conditionA: boolean;
+  items: string[];
+}
 
-function NestedShow(props) {
+function NestedShow(props: Props) {
   return (
     <>
       <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
@@ -11434,7 +12097,7 @@ export default NestedShow;
 `;
 
 exports[`Solid > jsx > Typescript Test > spreadAttrs 1`] = `
-"function MyBasicComponent(props) {
+"function MyBasicComponent(props: any) {
   return <input {...attrs} />;
 }
 
@@ -11445,7 +12108,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > spreadAttrs 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   return (
     <>
       <input {...attrs} />
@@ -11458,7 +12121,7 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > spreadNestedProps 1`] = `
-"function MyBasicComponent(props) {
+"function MyBasicComponent(props: any) {
   return <input {...props.nested} />;
 }
 
@@ -11469,7 +12132,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > spreadNestedProps 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   return (
     <>
       <input {...props.nested} />
@@ -11482,7 +12145,7 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > spreadProps 1`] = `
-"function MyBasicComponent(props) {
+"function MyBasicComponent(props: any) {
   return <input {...props} />;
 }
 
@@ -11493,7 +12156,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > spreadProps 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyBasicComponent(props) {
+function MyBasicComponent(props: any) {
   return (
     <>
       <input {...props} />
@@ -11508,7 +12171,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > subComponent 1`] = `
 "import Foo from \\"./foo-sub-component.jsx\\";
 
-function SubComponent(props) {
+function SubComponent(props: any) {
   return <Foo></Foo>;
 }
 
@@ -11521,7 +12184,7 @@ exports[`Solid > jsx > Typescript Test > subComponent 2`] = `
 
 import Foo from \\"./foo-sub-component.jsx\\";
 
-function SubComponent(props) {
+function SubComponent(props: any) {
   return (
     <>
       <Foo></Foo>
@@ -11534,7 +12197,7 @@ export default SubComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > svgComponent 1`] = `
-"function SvgComponent(props) {
+"function SvgComponent(props: any) {
   return (
     <svg
       fill=\\"none\\"
@@ -11568,7 +12231,7 @@ export default SvgComponent;
 exports[`Solid > jsx > Typescript Test > svgComponent 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function SvgComponent(props) {
+function SvgComponent(props: any) {
   return (
     <>
       <svg
@@ -11602,7 +12265,14 @@ export default SvgComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > typeDependency 1`] = `
-"function TypeDependency(props) {
+"import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+  foo2: Foo2;
+};
+
+function TypeDependency(props: TypeDependencyProps) {
   return <div>{props.foo}</div>;
 }
 
@@ -11612,8 +12282,14 @@ export default TypeDependency;
 
 exports[`Solid > jsx > Typescript Test > typeDependency 2`] = `
 "import { css } from \\"solid-styled-components\\";
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+  foo2: Foo2;
+};
 
-function TypeDependency(props) {
+function TypeDependency(props: TypeDependencyProps) {
   return (
     <>
       <div>{props.foo}</div>
@@ -11628,7 +12304,7 @@ export default TypeDependency;
 exports[`Solid > jsx > Typescript Test > use-style 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return <button type=\\"button\\">Button</button>;
 }
 
@@ -11639,7 +12315,7 @@ export default MyComponent;
 exports[`Solid > jsx > Typescript Test > use-style 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return (
     <>
       <button type=\\"button\\">Button</button>
@@ -11662,7 +12338,7 @@ export default MyComponent;
 exports[`Solid > jsx > Typescript Test > use-style-and-css 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return (
     <button
       class={css({
@@ -11683,7 +12359,7 @@ export default MyComponent;
 exports[`Solid > jsx > Typescript Test > use-style-and-css 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return (
     <>
       <button class=\\"button-625c33fa\\" type=\\"button\\">
@@ -11711,7 +12387,7 @@ export default MyComponent;
 exports[`Solid > jsx > Typescript Test > use-style-outside-component 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return <button type=\\"button\\">Button</button>;
 }
 
@@ -11722,7 +12398,7 @@ export default MyComponent;
 exports[`Solid > jsx > Typescript Test > use-style-outside-component 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return (
     <>
       <button type=\\"button\\">Button</button>
@@ -12004,25 +12680,25 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Javascript Test > context 1`] = `
-"'>' expected. (27:19)
-  25 |
-  26 |     return (
-> 27 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+"'>' expected. (28:19)
+  26 |
+  27 |     return (
+> 28 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
      |                   ^
-  28 |       
-  29 |       )
-  30 |   }"
+  29 |       
+  30 |       )
+  31 |   }"
 `;
 
 exports[`Solid > svelte > Javascript Test > context 2`] = `
-"Identifier expected. (27:8)
-  25 |
-  26 |     return (<>
-> 27 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+"Identifier expected. (28:8)
+  26 |
+  27 |     return (<>
+> 28 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
      |        ^
-  28 |       
-  29 |       </>)
-  30 |   }"
+  29 |       
+  30 |       </>)
+  31 |   }"
 `;
 
 exports[`Solid > svelte > Javascript Test > each 1`] = `
@@ -12546,7 +13222,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > basic 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   return (
@@ -12566,7 +13242,7 @@ exports[`Solid > svelte > Typescript Test > basic 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   return (
@@ -12589,7 +13265,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > bindGroup 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [tortilla, setTortilla] = createSignal(\\"Plain\\");
 
   const [fillings, setFillings] = createSignal([]);
@@ -12661,7 +13337,7 @@ exports[`Solid > svelte > Typescript Test > bindGroup 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [tortilla, setTortilla] = createSignal(\\"Plain\\");
 
   const [fillings, setFillings] = createSignal([]);
@@ -12733,7 +13409,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > bindProperty 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [value, setValue] = createSignal(\\"hello\\");
 
   return <input value={value()} />;
@@ -12748,7 +13424,7 @@ exports[`Solid > svelte > Typescript Test > bindProperty 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [value, setValue] = createSignal(\\"hello\\");
 
   return (
@@ -12765,7 +13441,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > classDirective 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [focus, setFocus] = createSignal(true);
 
   return (
@@ -12786,7 +13462,7 @@ exports[`Solid > svelte > Typescript Test > classDirective 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [focus, setFocus] = createSignal(true);
 
   return (
@@ -12805,31 +13481,31 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Typescript Test > context 1`] = `
-"'>' expected. (27:19)
-  25 |
-  26 |     return (
-> 27 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+"'>' expected. (28:19)
+  26 |
+  27 |     return (
+> 28 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
      |                   ^
-  28 |       
-  29 |       )
-  30 |   }"
+  29 |       
+  30 |       )
+  31 |   }"
 `;
 
 exports[`Solid > svelte > Typescript Test > context 2`] = `
-"Identifier expected. (27:8)
-  25 |
-  26 |     return (<>
-> 27 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+"Identifier expected. (28:8)
+  26 |
+  27 |     return (<>
+> 28 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
      |        ^
-  28 |       
-  29 |       </>)
-  30 |   }"
+  29 |       
+  30 |       </>)
+  31 |   }"
 `;
 
 exports[`Solid > svelte > Typescript Test > each 1`] = `
 "import { For, createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [numbers, setNumbers] = createSignal([\\"one\\", \\"two\\", \\"three\\"]);
 
   return (
@@ -12853,7 +13529,7 @@ exports[`Solid > svelte > Typescript Test > each 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [numbers, setNumbers] = createSignal([\\"one\\", \\"two\\", \\"three\\"]);
 
   return (
@@ -12877,7 +13553,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > eventHandlers 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   function log(msg = \\"hello\\") {
     console.log(msg);
   }
@@ -12900,7 +13576,7 @@ exports[`Solid > svelte > Typescript Test > eventHandlers 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   function log(msg = \\"hello\\") {
     console.log(msg);
   }
@@ -12923,7 +13599,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > html 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [html, setHtml] = createSignal(\\"<b>bold</b>\\");
 
   return <div innerHTML={html()}></div>;
@@ -12938,7 +13614,7 @@ exports[`Solid > svelte > Typescript Test > html 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [html, setHtml] = createSignal(\\"<b>bold</b>\\");
 
   return (
@@ -12955,7 +13631,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > ifElse 1`] = `
 "import { Show, createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [show, setShow] = createSignal(true);
 
   function toggle() {
@@ -12981,7 +13657,7 @@ exports[`Solid > svelte > Typescript Test > ifElse 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [show, setShow] = createSignal(true);
 
   function toggle() {
@@ -13009,7 +13685,7 @@ exports[`Solid > svelte > Typescript Test > imports 1`] = `
 
 import Button from \\"./Button.jsx\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [disabled, setDisabled] = createSignal(false);
 
   return (
@@ -13032,7 +13708,7 @@ import { css } from \\"solid-styled-components\\";
 
 import Button from \\"./Button.jsx\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [disabled, setDisabled] = createSignal(false);
 
   return (
@@ -13053,7 +13729,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > lifecycleHooks 1`] = `
 "import { onMount, on, createEffect } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   onMount(() => {
     console.log(\\"onMount\\");
   });
@@ -13070,7 +13746,7 @@ exports[`Solid > svelte > Typescript Test > lifecycleHooks 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   onMount(() => {
     console.log(\\"onMount\\");
   });
@@ -13089,7 +13765,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > reactive 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   function lowercaseName() {
@@ -13114,7 +13790,7 @@ exports[`Solid > svelte > Typescript Test > reactive 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   function lowercaseName() {
@@ -13139,7 +13815,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > reactiveWithFn 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [a, setA] = createSignal(2);
 
   const [b, setB] = createSignal(5);
@@ -13182,7 +13858,7 @@ exports[`Solid > svelte > Typescript Test > reactiveWithFn 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [a, setA] = createSignal(2);
 
   const [b, setB] = createSignal(5);
@@ -13223,7 +13899,7 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Typescript Test > slots 1`] = `
-"function MyComponent(props) {
+"function MyComponent(props: any) {
   return (
     <div>
       <Slot>default</Slot>
@@ -13241,7 +13917,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > slots 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return (
     <>
       <div>
@@ -13261,7 +13937,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > style 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return <input class=\\"form-input\\" />;
 }
 
@@ -13272,7 +13948,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > style 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   return (
     <>
       <input class=\\"form-input\\" />
@@ -13297,7 +13973,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > textExpressions 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [a, setA] = createSignal(5);
 
   const [b, setB] = createSignal(12);
@@ -13322,7 +13998,7 @@ exports[`Solid > svelte > Typescript Test > textExpressions 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-function MyComponent(props) {
+function MyComponent(props: any) {
   const [a, setA] = createSignal(5);
 
   const [b, setB] = createSignal(12);

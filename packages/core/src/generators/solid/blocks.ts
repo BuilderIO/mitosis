@@ -79,6 +79,8 @@ export const blockToSolid = ({
     } else if (key.startsWith('on')) {
       const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
       str += ` ${useKey}={(${cusArg.join(',')}) => ${code}} `;
+    } else if (key === 'ref' && options.typescript) {
+      str += ` ${key}={${code}!} `;
     } else {
       let useValue = code;
       if (key === 'style') {

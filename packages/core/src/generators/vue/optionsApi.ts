@@ -194,7 +194,9 @@ export function generateOptionsApiScript(
           dataString.length < 4
             ? ''
             : `
-        data: () => (${dataString}),
+        data() {
+          return ${dataString}
+        },
         `
         }
 
