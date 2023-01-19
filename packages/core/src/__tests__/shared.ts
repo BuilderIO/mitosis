@@ -15,7 +15,9 @@ const basicOutputsMeta = getRawFile('./data/basic-outputs-meta.raw.tsx');
 const basicOutputs = getRawFile('./data/basic-outputs.raw.tsx');
 const subComponent = getRawFile('./data/sub-component.raw.tsx');
 const componentWithContext = getRawFile('./data/context/component-with-context.raw.tsx');
-const componentWithContextMultiRoot = getRawFile('./data/context/component-with-context-multi-root.raw.tsx');
+const componentWithContextMultiRoot = getRawFile(
+  './data/context/component-with-context-multi-root.raw.tsx',
+);
 
 const expressionState = getRawFile('./data/expression-state.raw.tsx');
 const contentState = getRawFile('./data/context-state.raw.tsx');

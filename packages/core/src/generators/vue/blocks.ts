@@ -38,7 +38,7 @@ const NODE_MAPPERS: {
   [key: string]: BlockRenderer | undefined;
 } = {
   Fragment(json, options, scope) {
-    const children = json.children.filter(filterEmptyTextNodes)
+    const children = json.children.filter(filterEmptyTextNodes);
     if (options.vueVersion === 2 && scope?.isRootNode && children.length > 1) {
       throw new Error('Vue 2 template should have a single root element');
     }
