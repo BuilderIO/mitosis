@@ -61,10 +61,7 @@ const TEST_SPECS: Spec[] = [
     const bar = foo;
     `,
     from: ['foo', 'test'],
-    to: (name) => {
-      console.log({ name });
-      return `${name}.value`;
-    },
+    to: (name) => `${name}.value`,
   },
 ];
 
