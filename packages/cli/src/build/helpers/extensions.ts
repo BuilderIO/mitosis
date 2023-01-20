@@ -28,16 +28,17 @@ export const getFileExtensionForTarget = ({
       return '.ts';
     case 'lit':
       return '.ts';
+
+    // all JSX frameworks
     case 'solid':
     case 'qwik':
-      return isTs && type === 'filename' ? '.tsx' : '.jsx';
     case 'react':
     case 'reactNative':
     case 'rsc':
       switch (type) {
-        // we can't have `.jsx`/`.tsx` extensions in the import paths.
         case 'import':
-          return isTs ? '.ts' : '.js';
+          // we can't have `.jsx`/`.tsx` extensions in the import paths, so we stick with implicit file extensions.
+          return '';
         case 'filename':
           return isTs ? '.tsx' : '.jsx';
       }
