@@ -3,6 +3,7 @@ import { Show, useDefaultProps } from '@builder.io/mitosis';
 export interface ButtonProps {
   attributes?: any;
   text?: string;
+  buttonText?: string; // no default value
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -31,7 +32,7 @@ export default function Button(props: ButtonProps) {
       </Show>
       <Show when={!props.link}>
         <button {...props.attributes} onClick={(event) => props.onClick(event)} type="button">
-          {props.text}
+          {props.buttonText}
         </button>
       </Show>
     </div>

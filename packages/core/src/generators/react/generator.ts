@@ -571,7 +571,7 @@ const _componentToReact = (
       .map((prop) => {
         const value = json.defaultProps!.hasOwnProperty(prop)
           ? json.defaultProps![prop]?.code
-          : '{}';
+          : 'undefined';
         return `${prop}: ${value}`;
       })
       .join(',');
