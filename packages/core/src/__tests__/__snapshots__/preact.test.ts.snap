@@ -1739,6 +1739,43 @@ export default function ComponentWithContext(props) {
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext } from \\"preact/hooks\\";
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <Fragment>
+          {foo.value}
+
+          <div>other</div>
+        </Fragment>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > contentState 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -4827,6 +4864,48 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
         }}
       >
         <Fragment>{foo.value}</Fragment>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext } from \\"preact/hooks\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <Fragment>
+          {foo.value}
+
+          <div>other</div>
+        </Fragment>
       </Context1.Provider>
     </Context2.Provider>
   );

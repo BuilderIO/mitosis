@@ -38,10 +38,11 @@ const NODE_MAPPERS: {
   [key: string]: BlockRenderer | undefined;
 } = {
   Fragment(json, options, scope) {
-    if (options.vueVersion === 2 && scope?.isRootNode) {
+    const children = json.children.filter(filterEmptyTextNodes);
+    if (options.vueVersion === 2 && scope?.isRootNode && children.length > 1) {
       throw new Error('Vue 2 template should have a single root element');
     }
-    return json.children.map((item) => blockToVue(item, options)).join('\n');
+    return children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(_json, options) {
     const json = _json as ForNode;

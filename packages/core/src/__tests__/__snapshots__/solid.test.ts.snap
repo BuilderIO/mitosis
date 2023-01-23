@@ -3692,6 +3692,84 @@ export default ComponentWithContext;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"import { useContext } from \\"solid-js\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          <>{foo.value}</>
+          <div>other</div>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > componentWithContextMultiRoot 2`] = `
+"import { useContext } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <>
+      <Context2.Provider
+        value={{
+          bar: \\"baz\\",
+        }}
+      >
+        <Context1.Provider
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+        >
+          <>
+            <>{foo.value}</>
+            <div>other</div>
+          </>
+        </Context1.Provider>
+      </Context2.Provider>
+    </>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > contentState 1`] = `
 "import BuilderContext from \\"@dummy/context.jsx\\";
 
@@ -10025,6 +10103,91 @@ function ComponentWithContext(props: ComponentWithContextProps) {
         >
           <>
             <>{foo.value}</>
+          </>
+        </Context1.Provider>
+      </Context2.Provider>
+    </>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"import { useContext } from \\"solid-js\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          <>{foo.value}</>
+          <div>other</div>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > componentWithContextMultiRoot 2`] = `
+"import { useContext } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <>
+      <Context2.Provider
+        value={{
+          bar: \\"baz\\",
+        }}
+      >
+        <Context1.Provider
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+        >
+          <>
+            <>{foo.value}</>
+            <div>other</div>
           </>
         </Context1.Provider>
       </Context2.Provider>
