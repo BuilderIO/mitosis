@@ -6,14 +6,15 @@ import { parseChildren } from '../helpers/children';
 
 import type { TemplateNode } from 'svelte/types/compiler/interfaces';
 import type { SveltosisComponent } from '../types';
+import { createSingleBinding } from '../../../helpers/bindings';
 
 export function parseIfElse(json: SveltosisComponent, node: TemplateNode) {
   const mitosisNode = createMitosisNode();
   mitosisNode.name = 'Show';
   mitosisNode.bindings = {
-    when: {
+    when: createSingleBinding({
       code: generate(node.expression),
-    },
+    }),
   };
 
   mitosisNode.children = parseChildren(json, node);

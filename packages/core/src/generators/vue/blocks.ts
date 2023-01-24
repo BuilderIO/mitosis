@@ -1,5 +1,4 @@
 import { pipe, identity } from 'fp-ts/lib/function';
-import { filter } from 'lodash';
 import { Dictionary } from '../../helpers/typescript';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
@@ -8,7 +7,7 @@ import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { replaceSlotsInString, stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
 import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisNode, ForNode, Binding } from '../../types/mitosis-node';
+import { MitosisNode, ForNode, Binding, SpreadType } from '../../types/mitosis-node';
 import {
   encodeQuotes,
   addBindingsToJson,
@@ -16,6 +15,7 @@ import {
   invertBooleanExpression,
 } from './helpers';
 import { ToVueOptions } from './types';
+import { checkIsDefined } from '../../helpers/nullable';
 
 const SPECIAL_PROPERTIES = {
   V_IF: 'v-if',
@@ -50,7 +50,7 @@ const NODE_MAPPERS: {
   },
   For(_json, options) {
     const json = _json as ForNode;
-    const keyValue = json.bindings.key || { code: 'index' };
+    const keyValue = json.bindings.key || { code: 'index', type: 'single' };
     const forValue = `(${json.scope.forName}, index) in ${json.bindings.each?.code}`;
 
     if (options.vueVersion >= 3) {
@@ -330,10 +330,11 @@ const stringifyBinding =
     }
   };
 
-const stringifySpreads = (node: MitosisNode) => {
-  let spreads = filter(node.bindings, (binding) => binding?.type === 'spread').map((value) =>
-    value!.code === 'props' ? '$props' : value!.code,
-  );
+const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType: SpreadType }) => {
+  const spreads = Object.values(node.bindings)
+    .filter(checkIsDefined)
+    .filter((binding) => binding.type === 'spread' && binding.spreadType === spreadType)
+    .map((value) => (value!.code === 'props' ? '$props' : value!.code));
 
   if (spreads.length === 0) {
     return '';
@@ -342,7 +343,9 @@ const stringifySpreads = (node: MitosisNode) => {
   const stringifiedValue =
     spreads.length > 1 ? `{${spreads.map((spread) => `...${spread}`).join(', ')}}` : spreads[0];
 
-  return ` ${SPECIAL_PROPERTIES.V_BIND}="${encodeQuotes(stringifiedValue)}" `;
+  const key = spreadType === 'normal' ? SPECIAL_PROPERTIES.V_BIND : SPECIAL_PROPERTIES.V_ON;
+
+  return ` ${key}="${encodeQuotes(stringifiedValue)}" `;
 };
 
 const getBlockBindings = (node: MitosisNode) => {
@@ -362,7 +365,12 @@ const getBlockBindings = (node: MitosisNode) => {
     .map(stringifyBinding(node))
     .join(' ');
 
-  return [stringifiedProperties, stringifiedBindings, stringifySpreads(node)].join(' ');
+  return [
+    stringifiedProperties,
+    stringifiedBindings,
+    stringifySpreads({ node, spreadType: 'normal' }),
+    stringifySpreads({ node, spreadType: 'event-handlers' }),
+  ].join(' ');
 };
 
 export const blockToVue: BlockRenderer = (node, options, scope) => {
@@ -379,7 +387,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
     // <component is="'style'">...</component>
     node.name = 'component';
-    node.bindings.is = { code: "'style'" };
+    node.bindings.is = { code: "'style'", type: 'single' };
   }
 
   if (node.properties._text) {

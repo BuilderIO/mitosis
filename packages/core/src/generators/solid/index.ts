@@ -31,6 +31,7 @@ import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { hasGetContext } from '../helpers/context';
 import { blockToSolid } from './blocks';
+import { createSingleBinding } from '../../helpers/bindings';
 
 // Transform <foo.bar key={value} /> to <Dynamic compnent={foo.bar} key={value} />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
@@ -38,7 +39,7 @@ function processDynamicComponents(json: MitosisComponent, options: ToSolidOption
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name.includes('.') && !node.name.endsWith('.Provider')) {
-        node.bindings.component = { code: node.name };
+        node.bindings.component = createSingleBinding({ code: node.name });
         node.name = 'Dynamic';
         found = true;
       }
@@ -75,7 +76,7 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
         children: json.children,
         ...(value && {
           bindings: {
-            value: { code: stringifyContextValue(value) },
+            value: createSingleBinding({ code: stringifyContextValue(value) }),
           },
         }),
       }),

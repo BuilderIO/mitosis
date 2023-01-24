@@ -93,11 +93,8 @@ function addPropertiesAndState(json: SveltosisComponent, input: string) {
 function addPropertiesAndStateToNode(json: SveltosisComponent, node: MitosisNode) {
   for (const key of Object.keys(node.bindings)) {
     if (Object.prototype.hasOwnProperty.call(node.bindings, key)) {
-      node.bindings[key] = {
-        code: addPropertiesAndState(json, node.bindings[key]?.code ?? '').trim(),
-        arguments: node.bindings[key]?.arguments,
-        type: node.bindings[key]?.type,
-      };
+      const value = node.bindings[key]!;
+      node.bindings[key]!.code = addPropertiesAndState(json, value?.code ?? '').trim();
     }
   }
 }

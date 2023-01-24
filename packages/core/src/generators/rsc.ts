@@ -1,3 +1,4 @@
+import { createSingleBinding } from '../helpers/bindings';
 import traverse from 'traverse';
 import { Plugin } from '..';
 import { fastClone } from '../helpers/fast-clone';
@@ -39,9 +40,9 @@ const RSC_TRANSFORM_PLUGIN: Plugin = () => ({
             // Drill context down, aka
             // function (props) { return <Component _context{props._context} /> }
             if (!node.bindings[contextPropDrillingKey]) {
-              node.bindings[contextPropDrillingKey] = {
+              node.bindings[contextPropDrillingKey] = createSingleBinding({
                 code: contextPropDrillingKey,
-              };
+              });
             }
           }
           if (node.bindings.ref) {

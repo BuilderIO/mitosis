@@ -30,13 +30,14 @@ import { blockToVue } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { createSingleBinding } from '../../helpers/bindings';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name.includes('.')) {
-        node.bindings.is = { code: node.name };
+        node.bindings.is = createSingleBinding({ code: node.name });
         node.name = 'component';
       }
     }

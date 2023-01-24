@@ -187,25 +187,29 @@ function rewriteHandlers(
   const outBindings: { [key: string]: Binding } = {};
   for (let key in bindings) {
     if (Object.prototype.hasOwnProperty.call(bindings, key)) {
-      let bindingExpr: string | undefined = bindings?.[key]?.code;
+      const bindingValue = bindings[key]!;
+      let bindingExpr: string = bindingValue.code;
       let handlerBlock: string | undefined;
-      if (bindingExpr != null) {
-        if (key == 'css') {
-          continue;
-        } else if ((handlerBlock = handlers.get(bindingExpr))) {
-          key = `${key}$`;
-          bindingExpr = invoke(file.import(file.qwikModule, 'qrl'), [
-            quote(file.qrlPrefix + 'high.js'),
-            quote(handlerBlock),
-            '[state]',
-          ]) as any;
-        } else if (symbolBindings && key.startsWith('symbol.data.')) {
-          symbolBindings[lastProperty(key)] = bindingExpr;
-        } else if (key.startsWith('component.options.')) {
-          key = lastProperty(key);
-        }
-        outBindings[key] = { code: bindingExpr as string, type: bindings?.[key]?.type };
+
+      if (key == 'css') {
+        continue;
+      } else if ((handlerBlock = handlers.get(bindingExpr))) {
+        key = `${key}$`;
+        bindingExpr = invoke(file.import(file.qwikModule, 'qrl'), [
+          quote(file.qrlPrefix + 'high.js'),
+          quote(handlerBlock),
+          '[state]',
+        ]) as any;
+      } else if (symbolBindings && key.startsWith('symbol.data.')) {
+        symbolBindings[lastProperty(key)] = bindingExpr;
+      } else if (key.startsWith('component.options.')) {
+        key = lastProperty(key);
       }
+
+      outBindings[key] = {
+        ...bindingValue,
+        code: bindingExpr,
+      };
     }
   }
   return outBindings;

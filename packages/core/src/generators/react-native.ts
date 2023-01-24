@@ -8,6 +8,7 @@ import { MitosisComponent } from '../types/mitosis-component';
 import { componentToReact, ToReactOptions } from './react';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { Plugin } from '..';
+import { createSingleBinding } from '../helpers/bindings';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'react-native';
@@ -60,7 +61,7 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
     const componentName = camelCase(item.name || 'view');
     const index = (componentIndexes[componentName] = (componentIndexes[componentName] || 0) + 1);
     const className = `${componentName}${index}`;
-    item.bindings.style = { code: `styles.${className}` };
+    item.bindings.style = createSingleBinding({ code: `styles.${className}` });
 
     styleMap[className] = value;
   });
