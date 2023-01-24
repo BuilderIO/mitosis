@@ -1,6 +1,6 @@
 import { pipe, identity } from 'fp-ts/lib/function';
 import { filter } from 'lodash';
-import { Dictionary } from 'src/helpers/typescript';
+import { Dictionary } from '../../helpers/typescript';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
