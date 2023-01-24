@@ -1,4 +1,4 @@
-import { pipe } from 'fp-ts/lib/function';
+import { pipe, identity } from 'fp-ts/lib/function';
 import { filter } from 'lodash';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
@@ -21,6 +21,8 @@ const SPECIAL_PROPERTIES = {
   V_FOR: 'v-for',
   V_ELSE: 'v-else',
   V_ELSE_IF: 'v-else-if',
+  V_ON: 'v-on',
+  V_ON_AT: '@',
 } as const;
 
 type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) => string;
@@ -300,20 +302,21 @@ const stringifyBinding =
           event = 'input';
         }
         const isAssignmentExpression = useValue.includes('=');
-        const valueWRenamedEvent = replaceIdentifiers({
-          code: useValue,
-          from: cusArgs[0],
-          to: '$event',
-        });
 
-        // TODO: proper babel transform to replace. Util for this
-        if (isAssignmentExpression) {
-          return ` @${event}="${encodeQuotes(removeSurroundingBlock(valueWRenamedEvent))}" `;
-        } else {
-          return ` @${event}="${encodeQuotes(
-            removeSurroundingBlock(removeSurroundingBlock(valueWRenamedEvent)),
-          )}" `;
-        }
+        const eventHandlerValue = pipe(
+          replaceIdentifiers({
+            code: useValue,
+            from: cusArgs[0],
+            to: '$event',
+          }),
+          isAssignmentExpression ? identity : removeSurroundingBlock,
+          removeSurroundingBlock,
+          encodeQuotes,
+        );
+
+        const eventHandlerKey = `${SPECIAL_PROPERTIES.V_ON_AT}${event}`;
+
+        return ` ${eventHandlerKey}=${eventHandlerValue}`;
       } else if (key === 'ref') {
         return ` ref="${encodeQuotes(useValue)}" `;
       } else if (BINDING_MAPPERS[key]) {
