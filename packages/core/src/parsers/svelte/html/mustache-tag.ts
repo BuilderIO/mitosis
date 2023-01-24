@@ -1,5 +1,5 @@
 import { generate } from 'astring';
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../../../helpers/bindings';
 import type { TemplateNode } from 'svelte/types/compiler/interfaces';
 import { createMitosisNode } from '../helpers/mitosis-node';
 

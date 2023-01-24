@@ -46,7 +46,7 @@ import {
 import { processBinding } from './helpers';
 import hash from 'hash-sum';
 import { getForArguments } from '../../helpers/nodes/for';
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../../helpers/bindings';
 
 export const contextPropDrillingKey = '_context';
 

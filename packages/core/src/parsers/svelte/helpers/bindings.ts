@@ -1,4 +1,4 @@
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../../../helpers/bindings';
 import type { MitosisNode } from '../../../types/mitosis-node';
 import type { SveltosisComponent } from '../types';
 

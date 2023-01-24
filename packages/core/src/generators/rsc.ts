@@ -1,4 +1,4 @@
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../helpers/bindings';
 import traverse from 'traverse';
 import { Plugin } from '..';
 import { fastClone } from '../helpers/fast-clone';

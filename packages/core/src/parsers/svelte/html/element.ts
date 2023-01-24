@@ -8,7 +8,7 @@ import { parseAction } from './actions';
 import type { TemplateNode, Element, Text, MustacheTag } from 'svelte/types/compiler/interfaces';
 import type { Identifier, ArrowFunctionExpression, BaseCallExpression, Node } from 'estree';
 import type { SveltosisComponent } from '../types';
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../../../helpers/bindings';
 
 interface AttributeShorthand {
   type: 'AttributeShorthand';

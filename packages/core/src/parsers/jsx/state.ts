@@ -9,7 +9,7 @@ import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { parseCode, uncapitalize } from './helpers';
 import { pipe } from 'fp-ts/lib/function';
 import { MitosisNode } from '@builder.io/mitosis';
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../../helpers/bindings';
 
 const { types } = babel;
 

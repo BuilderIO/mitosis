@@ -10,7 +10,7 @@ import { isUpperCase } from '../../helpers/is-upper-case';
 import { getForArguments } from '../../helpers/nodes/for';
 import { ToSvelteOptions } from './types';
 import { stripStateAndProps } from './helpers';
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../../helpers/bindings';
 
 const mappers: {
   For: BlockToSvelte<ForNode>;

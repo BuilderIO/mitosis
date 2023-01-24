@@ -10,7 +10,7 @@ import * as JSON5 from 'json5';
 import { BuilderElement } from '@builder.io/sdk';
 import { builderElementToMitosisNode } from '../parsers/builder';
 import { Plugin } from '..';
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../helpers/bindings';
 
 function getComponentInputNames(componentName: string): string[] {
   const componentInfo = Builder.components.find((item) => item.name === componentName);

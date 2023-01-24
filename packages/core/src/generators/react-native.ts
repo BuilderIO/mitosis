@@ -8,7 +8,7 @@ import { MitosisComponent } from '../types/mitosis-component';
 import { componentToReact, ToReactOptions } from './react';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { Plugin } from '..';
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../helpers/bindings';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'react-native';

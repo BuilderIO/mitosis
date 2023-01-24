@@ -10,7 +10,7 @@ import { babelTransformCode } from '../helpers/babel-transform';
 import { types } from '@babel/core';
 import { MitosisComponent } from '../types/mitosis-component';
 import { capitalize } from '../helpers/capitalize';
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../helpers/bindings';
 import { Dictionary } from 'src/helpers/typescript';
 
 const getTsAST = (code: string) => {

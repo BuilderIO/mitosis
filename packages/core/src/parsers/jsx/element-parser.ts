@@ -5,7 +5,7 @@ import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { ForNode, MitosisNode } from '../../types/mitosis-node';
 import { pipe } from 'fp-ts/lib/function';
 import { transformAttributeName } from './helpers';
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../../helpers/bindings';
 
 const { types } = babel;
 

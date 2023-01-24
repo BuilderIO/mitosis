@@ -15,7 +15,7 @@ import { parseCode, isExpression } from '../../helpers/parsers';
 import { hashCodeAsString, MitosisComponent, MitosisState } from '../..';
 import { mapBuilderContentStateToMitosisState } from './helpers';
 import { parseStateObjectToMitosisState } from '../jsx/state';
-import { createSingleBinding } from 'src/helpers/bindings';
+import { createSingleBinding } from '../../helpers/bindings';
 import { Dictionary } from 'src/helpers/typescript';
 
 // Omit some superflous styles that can come from Builder's web importer
