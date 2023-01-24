@@ -8,7 +8,7 @@ import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { replaceSlotsInString, stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
 import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisNode, ForNode, Binding } from '../../types/mitosis-node';
+import { MitosisNode, ForNode, Binding, BindingType } from '../../types/mitosis-node';
 import {
   encodeQuotes,
   addBindingsToJson,
@@ -330,8 +330,8 @@ const stringifyBinding =
     }
   };
 
-const stringifySpreads = (node: MitosisNode) => {
-  let spreads = filter(node.bindings, (binding) => binding?.type === 'spread').map((value) =>
+const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType: BindingType }) => {
+  let spreads = filter(node.bindings, (binding) => binding?.type === spreadType).map((value) =>
     value!.code === 'props' ? '$props' : value!.code,
   );
 
@@ -342,7 +342,9 @@ const stringifySpreads = (node: MitosisNode) => {
   const stringifiedValue =
     spreads.length > 1 ? `{${spreads.map((spread) => `...${spread}`).join(', ')}}` : spreads[0];
 
-  return ` ${SPECIAL_PROPERTIES.V_BIND}="${encodeQuotes(stringifiedValue)}" `;
+  const key = spreadType === 'spread' ? SPECIAL_PROPERTIES.V_BIND : SPECIAL_PROPERTIES.V_ON;
+
+  return ` ${key}="${encodeQuotes(stringifiedValue)}" `;
 };
 
 const getBlockBindings = (node: MitosisNode) => {
@@ -362,7 +364,12 @@ const getBlockBindings = (node: MitosisNode) => {
     .map(stringifyBinding(node))
     .join(' ');
 
-  return [stringifiedProperties, stringifiedBindings, stringifySpreads(node)].join(' ');
+  return [
+    stringifiedProperties,
+    stringifiedBindings,
+    stringifySpreads({ node, spreadType: 'spread' }),
+    stringifySpreads({ node, spreadType: 'event-handler-spread' }),
+  ].join(' ');
 };
 
 export const blockToVue: BlockRenderer = (node, options, scope) => {
