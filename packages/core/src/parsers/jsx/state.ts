@@ -97,7 +97,12 @@ export function mapStateIdentifiers(json: MitosisComponent) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key]!;
-        item.bindings[key]!.code = mapStateIdentifiersInExpression(value.code, stateProperties);
+        item.bindings[key] = {
+          // we need this default `undefined` value, for the generators to properly handle custom args not being present
+          arguments: undefined,
+          ...value,
+          code: mapStateIdentifiersInExpression(value.code, stateProperties),
+        };
       }
 
       consolidateClassBindings(item);
