@@ -412,14 +412,46 @@ export default class MyBasicRefAssignmentComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"'(' expected. (48:20)
-  46 |
-  47 |     
-> 48 | <button  onClick={ => this.count += 1} >Increment</button>
-     |                    ^
-  49 |
-  50 |   </div>
-  51 |"
+"export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-previous-component\\",
+})
+export default class MyPreviousComponent {
+  @State() count = 0;
+
+  componentDidUpdate() {
+    prevCount = this.count;
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>
+          Now:
+          {this.count}, before:
+          {prevCount}
+        </h1>
+
+        <button onClick={(event) => (this.count += 1)}>Increment</button>
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > jsx > Javascript Test > Button 1`] = `
@@ -1058,14 +1090,106 @@ export default class FormComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > Image 1`] = `
-"'(' expected. (75:193)
-  73 |        
-  74 | {!this.useLazyLoading() || this.load ? (
-> 75 |      <><img  class={'builder-image' + (props._class ? ' ' + props._class : '') + ' img'}  alt={this.altText}  aria-role={this.altText ? 'presentation' : undefined}  src={this.image}  onLoad={ => this.setLoaded()}  srcset={this.srcset}  sizes={this.sizes}  /></>
-     |                                                                                                                                                                                                 ^
-  76 |    ) : null}
-  77 |
-  78 |        "
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"image\\",
+  styles: \`
+       .img {
+         opacity: 1;
+         transition: opacity 0.2s ease-in-out;
+         object-fit: cover;
+         object-position: center;
+       }
+\`,
+})
+export default class Image {
+  @Prop() lazy: any;
+  @Prop() altText: any;
+  @Prop() _class: any;
+  @Prop() image: any;
+  @Prop() srcset: any;
+  @Prop() sizes: any;
+  @Prop() children: any;
+
+  @State() scrollListener = null;
+  @State() imageLoaded = false;
+  @State() load = false;
+
+  setLoaded() {
+    this.imageLoaded = true;
+  }
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!this.lazy && isBrowser();
+  }
+  isBrowser = function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  };
+
+  componentDidLoad() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef) {
+          const rect = pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            this.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }
+  disconnectedCallback() {
+    if (this.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.scrollListener);
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <picture ref={(el) => (this.pictureRef = el)}>
+          {!this.useLazyLoading() || this.load ? (
+            <>
+              <img
+                class={
+                  \\"builder-image\\" +
+                  (props._class ? \\" \\" + props._class : \\"\\") +
+                  \\" img\\"
+                }
+                alt={this.altText}
+                aria-role={this.altText ? \\"presentation\\" : undefined}
+                src={this.image}
+                onLoad={(event) => this.setLoaded()}
+                srcset={this.srcset}
+                sizes={this.sizes}
+              />
+            </>
+          ) : null}
+
+          <source srcset={this.srcset} />
+        </picture>
+
+        {this.children}
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > jsx > Javascript Test > Image State 1`] = `
@@ -1343,14 +1467,109 @@ export default class SlotCode {
 `;
 
 exports[`Stencil > jsx > Javascript Test > Stamped.io 1`] = `
-"'(' expected. (64:20)
-  62 |          <div  data-user={this.name} >
-  63 |      
-> 64 | <button  onClick={ => this.showReviewPrompt = true} >Write a review</button>
-     |                    ^
-  65 |
-  66 |      
-  67 | {this.showReviewPrompt || 'asdf' ? ("
+"import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"smile-reviews\\",
+  styles: \`
+       .input {
+         display: block;
+       }
+       .textarea {
+         display: block;
+       }
+       .button {
+         display: block;
+       }
+       .review {
+         margin: 10px;
+         padding: 10px;
+         background: white;
+         display: flex;
+         border-radius: 5px;
+         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+       }
+       .img {
+         height: 30px;
+         width: 30px;
+         margin-right: 10px;
+       }
+\`,
+})
+export default class SmileReviews {
+  @Prop() apiKey: any;
+  @Prop() productId: any;
+
+  @State() reviews = [];
+  @State() name = \\"test\\";
+  @State() showReviewPrompt = false;
+
+  kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+  snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  componentDidLoad() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.reviews = data.data;
+      });
+  }
+
+  render() {
+    return (
+      <div data-user={this.name}>
+        <button onClick={(event) => (this.showReviewPrompt = true)}>
+          Write a review
+        </button>
+
+        {this.showReviewPrompt || \\"asdf\\" ? (
+          <>
+            <input placeholder=\\"Email\\" />
+            <input placeholder=\\"Title\\" />
+            <textarea placeholder=\\"How was your experience?\\"></textarea>
+            <button
+              onClick={(event) => {
+                event.preventDefault();
+                this.showReviewPrompt = false;
+              }}
+            >
+              Submit
+            </button>
+          </>
+        ) : null}
+
+        {this.reviews?.map((review, index) => (
+          <div key={review.id}>
+            <img src={review.avatar} />
+
+            <div class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+              <div>
+                N:
+                {index}
+              </div>
+
+              <div>{review.author}</div>
+
+              <div>{review.reviewMessage}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > jsx > Javascript Test > Submit 1`] = `
@@ -2255,14 +2474,46 @@ exports[`Stencil > jsx > Javascript Test > renderBlock 1`] = `
 `;
 
 exports[`Stencil > jsx > Javascript Test > renderContentExample 1`] = `
-"'(' expected. (34:23)
-  32 |     return (
-  33 |     
-> 34 |       <div  onClick={ => trackClick(this.content.id)} >
-     |                       ^
-  35 |   
-  36 | <RenderBlocks  blocks={this.content.blocks} ></RenderBlocks>
-  37 |"
+"import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"render-content\\",
+  styles: \`
+    .div {
+      display: flex;
+      flex-direction: columns;
+    }
+\`,
+})
+export default class RenderContent {
+  @Prop() content: any;
+  @Prop() customComponents: any;
+
+  componentDidLoad() {
+    sendComponentsToVisualEditor(this.customComponents);
+  }
+
+  componentDidUpdate() {
+    dispatchNewContentToVisualEditor(this.content);
+  }
+
+  render() {
+    return (
+      <div onClick={(event) => trackClick(this.content.id)}>
+        <RenderBlocks blocks={this.content.blocks}></RenderBlocks>
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
@@ -2980,14 +3231,46 @@ export default class MyBasicRefAssignmentComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"'(' expected. (48:20)
-  46 |
-  47 |     
-> 48 | <button  onClick={ => this.count += 1} >Increment</button>
-     |                    ^
-  49 |
-  50 |   </div>
-  51 |"
+"export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-previous-component\\",
+})
+export default class MyPreviousComponent {
+  @State() count = 0;
+
+  componentDidUpdate() {
+    prevCount = this.count;
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>
+          Now:
+          {this.count}, before:
+          {prevCount}
+        </h1>
+
+        <button onClick={(event) => (this.count += 1)}>Increment</button>
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > jsx > Typescript Test > Button 1`] = `
@@ -3626,14 +3909,106 @@ export default class FormComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > Image 1`] = `
-"'(' expected. (75:193)
-  73 |        
-  74 | {!this.useLazyLoading() || this.load ? (
-> 75 |      <><img  class={'builder-image' + (props._class ? ' ' + props._class : '') + ' img'}  alt={this.altText}  aria-role={this.altText ? 'presentation' : undefined}  src={this.image}  onLoad={ => this.setLoaded()}  srcset={this.srcset}  sizes={this.sizes}  /></>
-     |                                                                                                                                                                                                 ^
-  76 |    ) : null}
-  77 |
-  78 |        "
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"image\\",
+  styles: \`
+       .img {
+         opacity: 1;
+         transition: opacity 0.2s ease-in-out;
+         object-fit: cover;
+         object-position: center;
+       }
+\`,
+})
+export default class Image {
+  @Prop() lazy: any;
+  @Prop() altText: any;
+  @Prop() _class: any;
+  @Prop() image: any;
+  @Prop() srcset: any;
+  @Prop() sizes: any;
+  @Prop() children: any;
+
+  @State() scrollListener = null;
+  @State() imageLoaded = false;
+  @State() load = false;
+
+  setLoaded() {
+    this.imageLoaded = true;
+  }
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!this.lazy && isBrowser();
+  }
+  isBrowser = function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  };
+
+  componentDidLoad() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef) {
+          const rect = pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            this.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }
+  disconnectedCallback() {
+    if (this.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.scrollListener);
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <picture ref={(el) => (this.pictureRef = el)}>
+          {!this.useLazyLoading() || this.load ? (
+            <>
+              <img
+                class={
+                  \\"builder-image\\" +
+                  (props._class ? \\" \\" + props._class : \\"\\") +
+                  \\" img\\"
+                }
+                alt={this.altText}
+                aria-role={this.altText ? \\"presentation\\" : undefined}
+                src={this.image}
+                onLoad={(event) => this.setLoaded()}
+                srcset={this.srcset}
+                sizes={this.sizes}
+              />
+            </>
+          ) : null}
+
+          <source srcset={this.srcset} />
+        </picture>
+
+        {this.children}
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > jsx > Typescript Test > Image State 1`] = `
@@ -3911,14 +4286,109 @@ export default class SlotCode {
 `;
 
 exports[`Stencil > jsx > Typescript Test > Stamped.io 1`] = `
-"'(' expected. (64:20)
-  62 |          <div  data-user={this.name} >
-  63 |      
-> 64 | <button  onClick={ => this.showReviewPrompt = true} >Write a review</button>
-     |                    ^
-  65 |
-  66 |      
-  67 | {this.showReviewPrompt || 'asdf' ? ("
+"import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"smile-reviews\\",
+  styles: \`
+       .input {
+         display: block;
+       }
+       .textarea {
+         display: block;
+       }
+       .button {
+         display: block;
+       }
+       .review {
+         margin: 10px;
+         padding: 10px;
+         background: white;
+         display: flex;
+         border-radius: 5px;
+         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+       }
+       .img {
+         height: 30px;
+         width: 30px;
+         margin-right: 10px;
+       }
+\`,
+})
+export default class SmileReviews {
+  @Prop() apiKey: any;
+  @Prop() productId: any;
+
+  @State() reviews = [];
+  @State() name = \\"test\\";
+  @State() showReviewPrompt = false;
+
+  kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+  snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  componentDidLoad() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.reviews = data.data;
+      });
+  }
+
+  render() {
+    return (
+      <div data-user={this.name}>
+        <button onClick={(event) => (this.showReviewPrompt = true)}>
+          Write a review
+        </button>
+
+        {this.showReviewPrompt || \\"asdf\\" ? (
+          <>
+            <input placeholder=\\"Email\\" />
+            <input placeholder=\\"Title\\" />
+            <textarea placeholder=\\"How was your experience?\\"></textarea>
+            <button
+              onClick={(event) => {
+                event.preventDefault();
+                this.showReviewPrompt = false;
+              }}
+            >
+              Submit
+            </button>
+          </>
+        ) : null}
+
+        {this.reviews?.map((review, index) => (
+          <div key={review.id}>
+            <img src={review.avatar} />
+
+            <div class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+              <div>
+                N:
+                {index}
+              </div>
+
+              <div>{review.author}</div>
+
+              <div>{review.reviewMessage}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > jsx > Typescript Test > Submit 1`] = `
@@ -4823,14 +5293,46 @@ exports[`Stencil > jsx > Typescript Test > renderBlock 1`] = `
 `;
 
 exports[`Stencil > jsx > Typescript Test > renderContentExample 1`] = `
-"'(' expected. (34:23)
-  32 |     return (
-  33 |     
-> 34 |       <div  onClick={ => trackClick(this.content.id)} >
-     |                       ^
-  35 |   
-  36 | <RenderBlocks  blocks={this.content.blocks} ></RenderBlocks>
-  37 |"
+"import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"render-content\\",
+  styles: \`
+    .div {
+      display: flex;
+      flex-direction: columns;
+    }
+\`,
+})
+export default class RenderContent {
+  @Prop() content: any;
+  @Prop() customComponents: any;
+
+  componentDidLoad() {
+    sendComponentsToVisualEditor(this.customComponents);
+  }
+
+  componentDidUpdate() {
+    dispatchNewContentToVisualEditor(this.content);
+  }
+
+  render() {
+    return (
+      <div onClick={(event) => trackClick(this.content.id)}>
+        <RenderBlocks blocks={this.content.blocks}></RenderBlocks>
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > jsx > Typescript Test > rootFragmentMultiNode 1`] = `

@@ -891,7 +891,7 @@ function MyPreviousComponent(props) {
         {count()}, before:
         {prevCount}
       </h1>
-      <button onClick={() => setCount(1)}>Increment</button>
+      <button onClick={(event) => setCount(1)}>Increment</button>
     </div>
   );
 }
@@ -934,7 +934,7 @@ function MyPreviousComponent(props) {
           {count()}, before:
           {prevCount}
         </h1>
-        <button onClick={() => setCount(1)}>Increment</button>
+        <button onClick={(event) => setCount(1)}>Increment</button>
       </div>
     </>
   );
@@ -2201,7 +2201,7 @@ function Image(props) {
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
             src={props.image}
-            onLoad={() => setLoaded()}
+            onLoad={(event) => setLoaded()}
             srcset={props.srcset}
             sizes={props.sizes}
           />
@@ -2280,12 +2280,12 @@ function Image(props) {
               class={
                 \\"builder-image\\" +
                 (props._class ? \\" \\" + props._class : \\"\\") +
-                \\" img-72e2f7f7\\"
+                \\" img-0a07dada\\"
               }
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
               src={props.image}
-              onLoad={() => setLoaded()}
+              onLoad={(event) => setLoaded()}
               srcset={props.srcset}
               sizes={props.sizes}
             />
@@ -2295,7 +2295,7 @@ function Image(props) {
         {props.children}
       </div>
       <style jsx>{\`
-        .img-72e2f7f7 {
+        .img-0a07dada {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -2877,7 +2877,9 @@ function SmileReviews(props) {
 
   return (
     <div data-user={name()}>
-      <button onClick={() => setShowReviewPrompt(true)}>Write a review</button>
+      <button onClick={(event) => setShowReviewPrompt(true)}>
+        Write a review
+      </button>
       <Show when={showReviewPrompt() || \\"asdf\\"}>
         <input placeholder=\\"Email\\" />
         <input
@@ -2985,18 +2987,18 @@ function SmileReviews(props) {
   return (
     <>
       <div data-user={name()}>
-        <button onClick={() => setShowReviewPrompt(true)}>
+        <button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </button>
         <Show when={showReviewPrompt() || \\"asdf\\"}>
           <input placeholder=\\"Email\\" />
-          <input class=\\"input-e52372f2\\" placeholder=\\"Title\\" />
+          <input class=\\"input-4bfe25f8\\" placeholder=\\"Title\\" />
           <textarea
-            class=\\"textarea-e52372f2\\"
+            class=\\"textarea-4bfe25f8\\"
             placeholder=\\"How was your experience?\\"
           ></textarea>
           <button
-            class=\\"button-e52372f2\\"
+            class=\\"button-4bfe25f8\\"
             onClick={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
@@ -3009,8 +3011,8 @@ function SmileReviews(props) {
           {(review, _index) => {
             const index = _index();
             return (
-              <div class=\\"div-e52372f2\\" key={review.id}>
-                <img class=\\"img-e52372f2\\" src={review.avatar} />
+              <div class=\\"div-4bfe25f8\\" key={review.id}>
+                <img class=\\"img-4bfe25f8\\" src={review.avatar} />
                 <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
                   <div>
                     N:
@@ -3025,16 +3027,16 @@ function SmileReviews(props) {
         </For>
       </div>
       <style jsx>{\`
-        .input-e52372f2 {
+        .input-4bfe25f8 {
           display: block;
         }
-        .textarea-e52372f2 {
+        .textarea-4bfe25f8 {
           display: block;
         }
-        .button-e52372f2 {
+        .button-4bfe25f8 {
           display: block;
         }
-        .div-e52372f2 {
+        .div-4bfe25f8 {
           margin: 10px;
           padding: 10px;
           background: white;
@@ -3042,7 +3044,7 @@ function SmileReviews(props) {
           border-radius: 5px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .img-e52372f2 {
+        .img-4bfe25f8 {
           height: 30px;
           width: 30px;
           margin-right: 10px;
@@ -5325,7 +5327,7 @@ function RenderContent(props) {
           display: \\"flex\\",
           flexDirection: \\"columns\\",
         })}
-        onClick={() => trackClick(props.content.id)}
+        onClick={(event) => trackClick(props.content.id)}
       >
         <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
       </div>
@@ -5373,12 +5375,15 @@ function RenderContent(props) {
           },
         }}
       >
-        <div class=\\"div-6b2690bb\\" onClick={() => trackClick(props.content.id)}>
+        <div
+          class=\\"div-a20d28ba\\"
+          onClick={(event) => trackClick(props.content.id)}
+        >
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
       </BuilderContext.Provider>
       <style jsx>{\`
-        .div-6b2690bb {
+        .div-a20d28ba {
           display: flex;
           flex-direction: columns;
         }
@@ -6902,7 +6907,7 @@ function MyPreviousComponent(props: Props) {
         {count()}, before:
         {prevCount}
       </h1>
-      <button onClick={() => setCount(1)}>Increment</button>
+      <button onClick={(event) => setCount(1)}>Increment</button>
     </div>
   );
 }
@@ -6948,7 +6953,7 @@ function MyPreviousComponent(props: Props) {
           {count()}, before:
           {prevCount}
         </h1>
-        <button onClick={() => setCount(1)}>Increment</button>
+        <button onClick={(event) => setCount(1)}>Increment</button>
       </div>
     </>
   );
@@ -8354,7 +8359,7 @@ function Image(props: ImageProps) {
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
             src={props.image}
-            onLoad={() => setLoaded()}
+            onLoad={(event) => setLoaded()}
             srcset={props.srcset}
             sizes={props.sizes}
           />
@@ -8451,12 +8456,12 @@ function Image(props: ImageProps) {
               class={
                 \\"builder-image\\" +
                 (props._class ? \\" \\" + props._class : \\"\\") +
-                \\" img-72e2f7f7\\"
+                \\" img-0a07dada\\"
               }
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
               src={props.image}
-              onLoad={() => setLoaded()}
+              onLoad={(event) => setLoaded()}
               srcset={props.srcset}
               sizes={props.sizes}
             />
@@ -8466,7 +8471,7 @@ function Image(props: ImageProps) {
         {props.children}
       </div>
       <style jsx>{\`
-        .img-72e2f7f7 {
+        .img-0a07dada {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -9184,7 +9189,9 @@ function SmileReviews(props: SmileReviewsProps) {
 
   return (
     <div data-user={name()}>
-      <button onClick={() => setShowReviewPrompt(true)}>Write a review</button>
+      <button onClick={(event) => setShowReviewPrompt(true)}>
+        Write a review
+      </button>
       <Show when={showReviewPrompt() || \\"asdf\\"}>
         <input placeholder=\\"Email\\" />
         <input
@@ -9296,18 +9303,18 @@ function SmileReviews(props: SmileReviewsProps) {
   return (
     <>
       <div data-user={name()}>
-        <button onClick={() => setShowReviewPrompt(true)}>
+        <button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </button>
         <Show when={showReviewPrompt() || \\"asdf\\"}>
           <input placeholder=\\"Email\\" />
-          <input class=\\"input-e52372f2\\" placeholder=\\"Title\\" />
+          <input class=\\"input-4bfe25f8\\" placeholder=\\"Title\\" />
           <textarea
-            class=\\"textarea-e52372f2\\"
+            class=\\"textarea-4bfe25f8\\"
             placeholder=\\"How was your experience?\\"
           ></textarea>
           <button
-            class=\\"button-e52372f2\\"
+            class=\\"button-4bfe25f8\\"
             onClick={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
@@ -9320,8 +9327,8 @@ function SmileReviews(props: SmileReviewsProps) {
           {(review, _index) => {
             const index = _index();
             return (
-              <div class=\\"div-e52372f2\\" key={review.id}>
-                <img class=\\"img-e52372f2\\" src={review.avatar} />
+              <div class=\\"div-4bfe25f8\\" key={review.id}>
+                <img class=\\"img-4bfe25f8\\" src={review.avatar} />
                 <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
                   <div>
                     N:
@@ -9336,16 +9343,16 @@ function SmileReviews(props: SmileReviewsProps) {
         </For>
       </div>
       <style jsx>{\`
-        .input-e52372f2 {
+        .input-4bfe25f8 {
           display: block;
         }
-        .textarea-e52372f2 {
+        .textarea-4bfe25f8 {
           display: block;
         }
-        .button-e52372f2 {
+        .button-4bfe25f8 {
           display: block;
         }
-        .div-e52372f2 {
+        .div-4bfe25f8 {
           margin: 10px;
           padding: 10px;
           background: white;
@@ -9353,7 +9360,7 @@ function SmileReviews(props: SmileReviewsProps) {
           border-radius: 5px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .img-e52372f2 {
+        .img-4bfe25f8 {
           height: 30px;
           width: 30px;
           margin-right: 10px;
@@ -11927,7 +11934,7 @@ function RenderContent(props: Props) {
           display: \\"flex\\",
           flexDirection: \\"columns\\",
         })}
-        onClick={() => trackClick(props.content.id)}
+        onClick={(event) => trackClick(props.content.id)}
       >
         <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
       </div>
@@ -11982,12 +11989,15 @@ function RenderContent(props: Props) {
           },
         }}
       >
-        <div class=\\"div-6b2690bb\\" onClick={() => trackClick(props.content.id)}>
+        <div
+          class=\\"div-a20d28ba\\"
+          onClick={(event) => trackClick(props.content.id)}
+        >
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
       </BuilderContext.Provider>
       <style jsx>{\`
-        .div-6b2690bb {
+        .div-a20d28ba {
           display: flex;
           flex-direction: columns;
         }

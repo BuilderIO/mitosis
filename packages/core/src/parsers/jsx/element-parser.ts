@@ -219,9 +219,10 @@ export const jsxElementToJson = (
           const { expression } = value;
           if (types.isArrowFunctionExpression(expression)) {
             if (key.startsWith('on')) {
+              const args = expression.params.map((node) => (node as babel.types.Identifier)?.name);
               memo[key] = createSingleBinding({
                 code: generate(expression.body).code,
-                arguments: expression.params.map((node) => (node as babel.types.Identifier)?.name),
+                arguments: args.length ? args : undefined,
               });
             } else {
               memo[key] = createSingleBinding({ code: generate(expression.body).code });
