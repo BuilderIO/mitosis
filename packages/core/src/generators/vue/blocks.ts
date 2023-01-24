@@ -15,7 +15,7 @@ import {
   invertBooleanExpression,
 } from './helpers';
 import { ToVueOptions } from './types';
-import { checkIsDefined } from 'src/helpers/nullable';
+import { checkIsDefined } from '../../helpers/nullable';
 
 const SPECIAL_PROPERTIES = {
   V_IF: 'v-if',
