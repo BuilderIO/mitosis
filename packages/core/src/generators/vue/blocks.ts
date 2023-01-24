@@ -1,5 +1,4 @@
 import { pipe, identity } from 'fp-ts/lib/function';
-import { filter } from 'lodash';
 import { Dictionary } from '../../helpers/typescript';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
@@ -16,6 +15,7 @@ import {
   invertBooleanExpression,
 } from './helpers';
 import { ToVueOptions } from './types';
+import { checkIsDefined } from 'src/helpers/nullable';
 
 const SPECIAL_PROPERTIES = {
   V_IF: 'v-if',
@@ -331,10 +331,10 @@ const stringifyBinding =
   };
 
 const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType: SpreadType }) => {
-  const spreads = filter(
-    node.bindings,
-    (binding) => binding?.type === 'spread' && binding.spreadType === spreadType,
-  ).map((value) => (value!.code === 'props' ? '$props' : value!.code));
+  const spreads = Object.values(node.bindings)
+    .filter(checkIsDefined)
+    .filter((binding) => binding.type === 'spread' && binding.spreadType === spreadType)
+    .map((value) => (value!.code === 'props' ? '$props' : value!.code));
 
   if (spreads.length === 0) {
     return '';
