@@ -327,38 +327,59 @@ exports[`Svelte > jsx > Javascript Test > BasicRefAssignment 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"<script>
+"<script >
+    
+    
+
+    
+  
   export function usePrevious<T>(value: T) {
-    // The ref object is a generic container whose current property is mutable ...
-    // ... and can hold any value, similar to an instance property on a class
-    let ref = useRef<T>(null); // Store current value in ref
+// The ref object is a generic container whose current property is mutable ...
+// ... and can hold any value, similar to an instance property on a class
+let ref = useRef<T>(null); // Store current value in ref
 
-    onUpdate(() => {
-      ref = value;
-    }, [value]); // Only re-run if value changes
-    // Return previous value (happens before update in useEffect above)
+onUpdate(() => {
+  ref = value;
+}, [value]); // Only re-run if value changes
+// Return previous value (happens before update in useEffect above)
 
-    return ref;
-  }
+return ref;
+}
+  
 
-  let count = 0;
 
-  function onUpdateFn_0() {
-    prevCount = count;
-  }
-  $: onUpdateFn_0(...[count]);
-</script>
+    
+    
+    
+    
+    
 
-<div>
-  <h1>
-    Now: {count}, before: {prevCount}
-  </h1>
-  <button
-    on:click={(event) => {
-      count += 1;
-    }}>Increment</button
-  >
-</div>"
+    
+    
+
+    
+
+    let count = 0;
+    
+
+    
+
+    
+            function onUpdateFn_0() {
+              prevCount = count;
+            }
+            $: onUpdateFn_0(...[count])
+          
+
+    
+  </script>
+
+  <div >
+    <h1 >
+      Now: {count}, before: {prevCount}
+    </h1>
+    <button  on:click=\\"{ => {count += 1}}\\" >Increment</button>
+  </div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Button 1`] = `
@@ -877,97 +898,104 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > Image 1`] = `
-"<script>
-  import { onDestroy, onMount } from \\"svelte\\";
+"<script >
+    import { onDestroy, onMount } from 'svelte'
+    
 
-  export let lazy;
-  export let altText;
-  export let _class;
-  export let image;
-  export let srcset;
-  export let sizes;
+    
+  
+  
+  
 
-  function setLoaded() {
-    imageLoaded = true;
-  }
 
-  function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!lazy && isBrowser();
-  }
+    
+    export let lazy;
+export let altText;
+export let _class;
+export let image;
+export let srcset;
+export let sizes;
 
-  function isBrowser() {
-    return (
-      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
-    );
-  }
+    
+    
+    
 
-  let pictureRef;
+    function setLoaded() {
+imageLoaded = true;
+}
 
-  let scrollListener = null;
-  let imageLoaded = false;
-  let load = false;
+function useLazyLoading() {
+// TODO: Add more checks here, like testing for real web browsers
+return !!lazy && isBrowser();
+}
 
-  onMount(() => {
-    if (useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+function isBrowser() {
+return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
+}
+    
 
-          if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
-            scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
-          }
-        }
-      };
+    let pictureRef
 
-      scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+    let scrollListener = null;
+let imageLoaded = false;
+let load = false;
+    
+
+    onMount(() => { if (useLazyLoading()) {
+// throttled scroll capture listener
+const listener = () => {
+  if (pictureRef) {
+    const rect = pictureRef.getBoundingClientRect();
+    const buffer = window.innerHeight / 2;
+
+    if (rect.top < window.innerHeight + buffer) {
+      setLoad(true);
+      scrollListener = null;
+      window.removeEventListener('scroll', listener);
     }
-  });
-
-  onDestroy(() => {
-    if (scrollListener) {
-      window.removeEventListener(\\"scroll\\", scrollListener);
-    }
-  });
-</script>
-
-<div>
-  <picture bind:this={pictureRef}>
-    {#if !useLazyLoading() || load}
-      <img
-        alt={altText}
-        aria-role={altText ? \\"presentation\\" : undefined}
-        class={\\"builder-image\\" + (_class ? \\" \\" + _class : \\"\\") + \\" img\\"}
-        src={image}
-        on:load={(event) => {
-          setLoaded();
-        }}
-        {srcset}
-        {sizes}
-      />
-    {/if}
-    <source {srcset} />
-  </picture>
-  <slot />
-</div>
-
-<style>
-  .img {
-    opacity: 1;
-    transition: opacity 0.2s ease-in-out;
-    object-fit: cover;
-    object-position: center;
   }
-</style>"
+};
+
+scrollListener = listener;
+window.addEventListener('scroll', listener, {
+  capture: true,
+  passive: true
+});
+listener();
+} });
+
+    
+
+    onDestroy(() => { if (scrollListener) {
+window.removeEventListener('scroll', scrollListener);
+} });
+  </script>
+
+  <div >
+    <picture  bind:this={pictureRef} >
+      
+{#if !useLazyLoading() || load }
+
+        
+<img  alt={altText}  aria-role={altText ? 'presentation' : undefined}  class={'builder-image' + (_class ? ' ' + _class : '') + ' img'}  src={image}  on:load=\\"{ => {setLoaded()}}\\"  srcset={srcset}  sizes={sizes}  />
+
+      
+
+
+{/if}
+      <source  srcset={srcset}  />
+    </picture>
+    <slot></slot>
+  </div>
+
+  <style>
+    .img {
+opacity: 1;
+transition: opacity 0.2s ease-in-out;
+object-fit: cover;
+object-position: center;
+}
+  </style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Image State 1`] = `
@@ -1139,101 +1167,111 @@ exports[`Svelte > jsx > Javascript Test > Select 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
-"<script>
-  import { onMount } from \\"svelte\\";
+"<script >
+    import { onMount } from 'svelte'
+    
 
-  import { kebabCase } from \\"lodash\\";
-  import { snakeCase } from \\"lodash\\";
+    
+  import { kebabCase } from 'lodash';
+import { snakeCase } from 'lodash';
+  
+  
 
-  export let apiKey;
-  export let productId;
 
-  function kebabCaseValue() {
-    return kebabCase(\\"testThat\\");
-  }
+    
+    export let apiKey;
+export let productId;
+    
+    
+    
 
-  function snakeCaseValue() {
-    return snakeCase(\\"testThis\\");
-  }
+    function kebabCaseValue() {
+return kebabCase('testThat');
+}
 
-  let reviews = [];
-  let name = \\"test\\";
-  let showReviewPrompt = false;
+function snakeCaseValue() {
+return snakeCase('testThis');
+}
+    
 
-  onMount(() => {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        reviews = data.data;
-      });
-  });
-</script>
+    
 
-<div data-user={name}>
-  <button
-    on:click={(event) => {
-      showReviewPrompt = true;
-    }}>Write a review</button
-  >
+    let reviews = [];
+let name = 'test';
+let showReviewPrompt = false;
+    
 
-  {#if showReviewPrompt || \\"asdf\\"}
-    <input placeholder=\\"Email\\" />
+    onMount(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+reviews = data.data;
+}); });
 
-    <input placeholder=\\"Title\\" class=\\"input\\" />
+    
 
-    <textarea placeholder=\\"How was your experience?\\" class=\\"textarea\\" />
+    
+  </script>
 
-    <button
-      class=\\"button\\"
-      on:click={(event) => {
-        event.preventDefault();
-        showReviewPrompt = false;
-      }}
-    >
-      Submit
-    </button>
-  {/if}
+  <div  data-user={name} >
+    <button  on:click=\\"{ => {showReviewPrompt = true}}\\" >Write a review</button>
+    
+{#if showReviewPrompt || 'asdf' }
 
-  {#each reviews as review, index (review.id)}
-    <div class=\\"review\\">
-      <img class=\\"img\\" src={review.avatar} />
-      <div class={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-        <div>N: {index}</div>
-        <div>{review.author}</div>
-        <div>{review.reviewMessage}</div>
-      </div>
-    </div>
-  {/each}
-</div>
+      
+<input  placeholder=\\"Email\\"  />
 
-<style>
-  .input {
-    display: block;
-  }
-  .textarea {
-    display: block;
-  }
-  .button {
-    display: block;
-  }
-  .review {
-    margin: 10px;
-    padding: 10px;
-    background: white;
-    display: flex;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  .img {
-    height: 30px;
-    width: 30px;
-    margin-right: 10px;
-  }
-</style>"
+
+      
+<input  placeholder=\\"Title\\"  class=\\"input\\"  />
+
+
+      
+<textarea  placeholder=\\"How was your experience?\\"  class=\\"textarea\\" ></textarea>
+
+      
+<button  class=\\"button\\"  on:click=\\"{event => {
+event.preventDefault();
+showReviewPrompt = false;
+}}\\" >
+        Submit
+      </button>
+
+    
+
+
+{/if}
+    
+{#each reviews as review, index (review.id)}
+<div  class=\\"review\\" >
+          <img  class=\\"img\\"  src={review.avatar}  />
+          <div  class={showReviewPrompt ? 'bg-primary' : 'bg-secondary'} >
+            <div >N: {index}</div>
+            <div >{review.author}</div>
+            <div >{review.reviewMessage}</div>
+          </div>
+        </div>
+{/each}
+
+  </div>
+
+  <style>
+    .input {
+display: block;
+}.textarea {
+display: block;
+}.button {
+display: block;
+}.review {
+margin: 10px;
+padding: 10px;
+background: white;
+display: flex;
+border-radius: 5px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}.img {
+height: 30px;
+width: 30px;
+margin-right: 10px;
+}
+  </style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Submit 1`] = `
@@ -2105,55 +2143,64 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
-"<script>
-  import { onMount, setContext } from \\"svelte\\";
+"<script >
+    import { onMount, setContext } from 'svelte'
+    
 
-  import {
-    sendComponentsToVisualEditor,
-    dispatchNewContentToVisualEditor,
-    trackClick,
-  } from \\"@dummy/injection-js\\";
-  import BuilderContext from \\"@dummy/context.svelte\\";
-  import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+    
+  import { sendComponentsToVisualEditor, dispatchNewContentToVisualEditor, trackClick } from '@dummy/injection-js';
+import BuilderContext from '@dummy/context.svelte';
+import RenderBlocks from '@dummy/RenderBlocks.lite.tsx';
+  
+  
 
-  export let content;
-  export let customComponents;
 
-  setContext(BuilderContext.key, {
-    get content() {
-      return 3;
-    },
+    
+    export let content;
+export let customComponents;
+    
+    
+    setContext(BuilderContext.key, {
+get content() {
+  return 3;
+},
 
-    get registeredComponents() {
-      return 4;
-    },
-  });
+get registeredComponents() {
+  return 4;
+}
 
-  onMount(() => {
-    sendComponentsToVisualEditor(customComponents);
-  });
+});
 
-  function onUpdateFn_0() {
-    dispatchNewContentToVisualEditor(content);
-  }
-  $: onUpdateFn_0(...[content]);
-</script>
+    
+    
 
-<div
-  class=\\"div\\"
-  on:click={(event) => {
-    trackClick(content.id);
-  }}
->
-  <RenderBlocks blocks={content.blocks} />
-</div>
+    
 
-<style>
-  .div {
-    display: flex;
-    flex-direction: columns;
-  }
-</style>"
+    
+    
+
+    onMount(() => { sendComponentsToVisualEditor(customComponents); });
+
+    
+            function onUpdateFn_0() {
+              dispatchNewContentToVisualEditor(content);
+            }
+            $: onUpdateFn_0(...[content])
+          
+
+    
+  </script>
+
+  <div  class=\\"div\\"  on:click=\\"{ => {trackClick(content.id)}}\\" >
+    <RenderBlocks  blocks={content.blocks} ></RenderBlocks>
+  </div>
+
+  <style>
+    .div {
+display: flex;
+flex-direction: columns;
+}
+  </style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
@@ -2705,44 +2752,68 @@ exports[`Svelte > jsx > Typescript Test > BasicRefAssignment 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-  }
-</script>
+"<script context='module' lang='ts'>
+      export interface Props {
+showInput: boolean;
+}
 
-<script lang=\\"ts\\">
+    </script>
+    
+
+    
+<script lang='ts'>
+    
+    
+
+    
+  
   export function usePrevious<T>(value: T) {
-    // The ref object is a generic container whose current property is mutable ...
-    // ... and can hold any value, similar to an instance property on a class
-    let ref = useRef<T>(null); // Store current value in ref
+// The ref object is a generic container whose current property is mutable ...
+// ... and can hold any value, similar to an instance property on a class
+let ref = useRef<T>(null); // Store current value in ref
 
-    onUpdate(() => {
-      ref = value;
-    }, [value]); // Only re-run if value changes
-    // Return previous value (happens before update in useEffect above)
+onUpdate(() => {
+  ref = value;
+}, [value]); // Only re-run if value changes
+// Return previous value (happens before update in useEffect above)
 
-    return ref;
-  }
+return ref;
+}
+  
 
-  let count = 0;
 
-  function onUpdateFn_0() {
-    prevCount = count;
-  }
-  $: onUpdateFn_0(...[count]);
-</script>
+    
+    
+    
+    
+    
 
-<div>
-  <h1>
-    Now: {count}, before: {prevCount}
-  </h1>
-  <button
-    on:click={(event) => {
-      count += 1;
-    }}>Increment</button
-  >
-</div>"
+    
+    
+
+    
+
+    let count = 0;
+    
+
+    
+
+    
+            function onUpdateFn_0() {
+              prevCount = count;
+            }
+            $: onUpdateFn_0(...[count])
+          
+
+    
+  </script>
+
+  <div >
+    <h1 >
+      Now: {count}, before: {prevCount}
+    </h1>
+    <button  on:click=\\"{ => {count += 1}}\\" >Increment</button>
+  </div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Button 1`] = `
@@ -3329,118 +3400,128 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Image 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  // TODO: AMP Support?
-  export interface ImageProps {
-    _class?: string;
-    image: string;
-    sizes?: string;
-    lazy?: boolean;
-    height?: number;
-    width?: number;
-    altText?: string;
-    backgroundSize?: string;
-    backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+"<script context='module' lang='ts'>
+      // TODO: AMP Support?
+export interface ImageProps {
+_class?: string;
+image: string;
+sizes?: string;
+lazy?: boolean;
+height?: number;
+width?: number;
+altText?: string;
+backgroundSize?: string;
+backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
 
-    srcset?: string; // TODO: Implement support for custom aspect ratios
+srcset?: string; // TODO: Implement support for custom aspect ratios
 
-    aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
 
-    children?: any;
-  }
-</script>
+children?: any;
+}
 
-<script lang=\\"ts\\">
-  import { onDestroy, onMount } from \\"svelte\\";
+    </script>
+    
 
-  export let lazy: ImageProps[\\"lazy\\"];
-  export let altText: ImageProps[\\"altText\\"];
-  export let _class: ImageProps[\\"_class\\"];
-  export let image: ImageProps[\\"image\\"];
-  export let srcset: ImageProps[\\"srcset\\"];
-  export let sizes: ImageProps[\\"sizes\\"];
+    
+<script lang='ts'>
+    import { onDestroy, onMount } from 'svelte'
+    
 
-  function setLoaded() {
-    imageLoaded = true;
-  }
+    
+  
+  
+  
 
-  function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!lazy && isBrowser();
-  }
 
-  function isBrowser() {
-    return (
-      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
-    );
-  }
+    
+    export let lazy: ImageProps['lazy'];
+export let altText: ImageProps['altText'];
+export let _class: ImageProps['_class'];
+export let image: ImageProps['image'];
+export let srcset: ImageProps['srcset'];
+export let sizes: ImageProps['sizes'];
 
-  let pictureRef;
+    
+    
+    
 
-  let scrollListener = null;
-  let imageLoaded = false;
-  let load = false;
+    function setLoaded() {
+imageLoaded = true;
+}
 
-  onMount(() => {
-    if (useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+function useLazyLoading() {
+// TODO: Add more checks here, like testing for real web browsers
+return !!lazy && isBrowser();
+}
 
-          if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
-            scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
-          }
-        }
-      };
+function isBrowser() {
+return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
+}
+    
 
-      scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+    let pictureRef
+
+    let scrollListener = null;
+let imageLoaded = false;
+let load = false;
+    
+
+    onMount(() => { if (useLazyLoading()) {
+// throttled scroll capture listener
+const listener = () => {
+  if (pictureRef) {
+    const rect = pictureRef.getBoundingClientRect();
+    const buffer = window.innerHeight / 2;
+
+    if (rect.top < window.innerHeight + buffer) {
+      setLoad(true);
+      scrollListener = null;
+      window.removeEventListener('scroll', listener);
     }
-  });
-
-  onDestroy(() => {
-    if (scrollListener) {
-      window.removeEventListener(\\"scroll\\", scrollListener);
-    }
-  });
-</script>
-
-<div>
-  <picture bind:this={pictureRef}>
-    {#if !useLazyLoading() || load}
-      <img
-        alt={altText}
-        aria-role={altText ? \\"presentation\\" : undefined}
-        class={\\"builder-image\\" + (_class ? \\" \\" + _class : \\"\\") + \\" img\\"}
-        src={image}
-        on:load={(event) => {
-          setLoaded();
-        }}
-        {srcset}
-        {sizes}
-      />
-    {/if}
-    <source {srcset} />
-  </picture>
-  <slot />
-</div>
-
-<style>
-  .img {
-    opacity: 1;
-    transition: opacity 0.2s ease-in-out;
-    object-fit: cover;
-    object-position: center;
   }
-</style>"
+};
+
+scrollListener = listener;
+window.addEventListener('scroll', listener, {
+  capture: true,
+  passive: true
+});
+listener();
+} });
+
+    
+
+    onDestroy(() => { if (scrollListener) {
+window.removeEventListener('scroll', scrollListener);
+} });
+  </script>
+
+  <div >
+    <picture  bind:this={pictureRef} >
+      
+{#if !useLazyLoading() || load }
+
+        
+<img  alt={altText}  aria-role={altText ? 'presentation' : undefined}  class={'builder-image' + (_class ? ' ' + _class : '') + ' img'}  src={image}  on:load=\\"{ => {setLoaded()}}\\"  srcset={srcset}  sizes={sizes}  />
+
+      
+
+
+{/if}
+      <source  srcset={srcset}  />
+    </picture>
+    <slot></slot>
+  </div>
+
+  <style>
+    .img {
+opacity: 1;
+transition: opacity 0.2s ease-in-out;
+object-fit: cover;
+object-position: center;
+}
+  </style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Image State 1`] = `
@@ -3679,108 +3760,121 @@ exports[`Svelte > jsx > Typescript Test > Select 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type SmileReviewsProps = {
-    productId: string;
-    apiKey: string;
-  };
-</script>
+"<script context='module' lang='ts'>
+      type SmileReviewsProps = {
+productId: string;
+apiKey: string;
+};
 
-<script lang=\\"ts\\">
-  import { onMount } from \\"svelte\\";
+    </script>
+    
 
-  import { kebabCase } from \\"lodash\\";
-  import { snakeCase } from \\"lodash\\";
+    
+<script lang='ts'>
+    import { onMount } from 'svelte'
+    
 
-  export let apiKey: SmileReviewsProps[\\"apiKey\\"];
-  export let productId: SmileReviewsProps[\\"productId\\"];
+    
+  import { kebabCase } from 'lodash';
+import { snakeCase } from 'lodash';
+  
+  
 
-  function kebabCaseValue() {
-    return kebabCase(\\"testThat\\");
-  }
 
-  function snakeCaseValue() {
-    return snakeCase(\\"testThis\\");
-  }
+    
+    export let apiKey: SmileReviewsProps['apiKey'];
+export let productId: SmileReviewsProps['productId'];
+    
+    
+    
 
-  let reviews = [];
-  let name = \\"test\\";
-  let showReviewPrompt = false;
+    function kebabCaseValue() {
+return kebabCase('testThat');
+}
 
-  onMount(() => {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        reviews = data.data;
-      });
-  });
-</script>
+function snakeCaseValue() {
+return snakeCase('testThis');
+}
+    
 
-<div data-user={name}>
-  <button
-    on:click={(event) => {
-      showReviewPrompt = true;
-    }}>Write a review</button
-  >
+    
 
-  {#if showReviewPrompt || \\"asdf\\"}
-    <input placeholder=\\"Email\\" />
+    let reviews = [];
+let name = 'test';
+let showReviewPrompt = false;
+    
 
-    <input placeholder=\\"Title\\" class=\\"input\\" />
+    onMount(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+reviews = data.data;
+}); });
 
-    <textarea placeholder=\\"How was your experience?\\" class=\\"textarea\\" />
+    
 
-    <button
-      class=\\"button\\"
-      on:click={(event) => {
-        event.preventDefault();
-        showReviewPrompt = false;
-      }}
-    >
-      Submit
-    </button>
-  {/if}
+    
+  </script>
 
-  {#each reviews as review, index (review.id)}
-    <div class=\\"review\\">
-      <img class=\\"img\\" src={review.avatar} />
-      <div class={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-        <div>N: {index}</div>
-        <div>{review.author}</div>
-        <div>{review.reviewMessage}</div>
-      </div>
-    </div>
-  {/each}
-</div>
+  <div  data-user={name} >
+    <button  on:click=\\"{ => {showReviewPrompt = true}}\\" >Write a review</button>
+    
+{#if showReviewPrompt || 'asdf' }
 
-<style>
-  .input {
-    display: block;
-  }
-  .textarea {
-    display: block;
-  }
-  .button {
-    display: block;
-  }
-  .review {
-    margin: 10px;
-    padding: 10px;
-    background: white;
-    display: flex;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  .img {
-    height: 30px;
-    width: 30px;
-    margin-right: 10px;
-  }
-</style>"
+      
+<input  placeholder=\\"Email\\"  />
+
+
+      
+<input  placeholder=\\"Title\\"  class=\\"input\\"  />
+
+
+      
+<textarea  placeholder=\\"How was your experience?\\"  class=\\"textarea\\" ></textarea>
+
+      
+<button  class=\\"button\\"  on:click=\\"{event => {
+event.preventDefault();
+showReviewPrompt = false;
+}}\\" >
+        Submit
+      </button>
+
+    
+
+
+{/if}
+    
+{#each reviews as review, index (review.id)}
+<div  class=\\"review\\" >
+          <img  class=\\"img\\"  src={review.avatar}  />
+          <div  class={showReviewPrompt ? 'bg-primary' : 'bg-secondary'} >
+            <div >N: {index}</div>
+            <div >{review.author}</div>
+            <div >{review.reviewMessage}</div>
+          </div>
+        </div>
+{/each}
+
+  </div>
+
+  <style>
+    .input {
+display: block;
+}.textarea {
+display: block;
+}.button {
+display: block;
+}.review {
+margin: 10px;
+padding: 10px;
+background: white;
+display: flex;
+border-radius: 5px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}.img {
+height: 30px;
+width: 30px;
+margin-right: 10px;
+}
+  </style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Submit 1`] = `
@@ -4881,65 +4975,77 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    customComponents: string[];
-    content: {
-      blocks: any[];
-      id: string;
-    };
-  };
-</script>
+"<script context='module' lang='ts'>
+      type Props = {
+customComponents: string[];
+content: {
+  blocks: any[];
+  id: string;
+};
+};
 
-<script lang=\\"ts\\">
-  import { onMount, setContext } from \\"svelte\\";
+    </script>
+    
 
-  import {
-    sendComponentsToVisualEditor,
-    dispatchNewContentToVisualEditor,
-    trackClick,
-  } from \\"@dummy/injection-js\\";
-  import BuilderContext from \\"@dummy/context.svelte\\";
-  import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+    
+<script lang='ts'>
+    import { onMount, setContext } from 'svelte'
+    
 
-  export let content: Props[\\"content\\"];
-  export let customComponents: Props[\\"customComponents\\"];
+    
+  import { sendComponentsToVisualEditor, dispatchNewContentToVisualEditor, trackClick } from '@dummy/injection-js';
+import BuilderContext from '@dummy/context.svelte';
+import RenderBlocks from '@dummy/RenderBlocks.lite.tsx';
+  
+  
 
-  setContext(BuilderContext.key, {
-    get content() {
-      return 3;
-    },
 
-    get registeredComponents() {
-      return 4;
-    },
-  });
+    
+    export let content: Props['content'];
+export let customComponents: Props['customComponents'];
+    
+    
+    setContext(BuilderContext.key, {
+get content() {
+  return 3;
+},
 
-  onMount(() => {
-    sendComponentsToVisualEditor(customComponents);
-  });
+get registeredComponents() {
+  return 4;
+}
 
-  function onUpdateFn_0() {
-    dispatchNewContentToVisualEditor(content);
-  }
-  $: onUpdateFn_0(...[content]);
-</script>
+});
 
-<div
-  class=\\"div\\"
-  on:click={(event) => {
-    trackClick(content.id);
-  }}
->
-  <RenderBlocks blocks={content.blocks} />
-</div>
+    
+    
 
-<style>
-  .div {
-    display: flex;
-    flex-direction: columns;
-  }
-</style>"
+    
+
+    
+    
+
+    onMount(() => { sendComponentsToVisualEditor(customComponents); });
+
+    
+            function onUpdateFn_0() {
+              dispatchNewContentToVisualEditor(content);
+            }
+            $: onUpdateFn_0(...[content])
+          
+
+    
+  </script>
+
+  <div  class=\\"div\\"  on:click=\\"{ => {trackClick(content.id)}}\\" >
+    <RenderBlocks  blocks={content.blocks} ></RenderBlocks>
+  </div>
+
+  <style>
+    .div {
+display: flex;
+flex-direction: columns;
+}
+  </style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > rootFragmentMultiNode 1`] = `

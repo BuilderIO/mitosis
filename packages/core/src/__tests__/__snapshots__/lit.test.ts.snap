@@ -528,39 +528,54 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
 
 exports[`Lit > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "export function usePrevious<T>(value: T) {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+// The ref object is a generic container whose current property is mutable ...
+// ... and can hold any value, similar to an instance property on a class
+let ref = useRef<T>(null); // Store current value in ref
 
-  onUpdate(() => {
-    ref = value;
-  }, [value]); // Only re-run if value changes
-  // Return previous value (happens before update in useEffect above)
+onUpdate(() => {
+  ref = value;
+}, [value]); // Only re-run if value changes
+// Return previous value (happens before update in useEffect above)
 
-  return ref;
+return ref;
 }
+  
 
-import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
+  import { LitElement, html, css } from 'lit';
+  import { customElement, property, state, query } from 'lit/decorators.js';
 
-export interface Props {
-  showInput: boolean;
+  export interface Props {
+showInput: boolean;
 }
+  
 
-@customElement(\\"my-previous-component\\")
-export default class MyPreviousComponent extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+  @customElement('my-previous-component')
+  export default class MyPreviousComponent extends LitElement {
+    
+      createRenderRoot() {
+        return this;
+      }
+      
 
-  @state() count = 0;
+    
 
-  updated() {
-    prevCount = this.count;
-  }
+    
+  
 
-  render() {
-    return html\`
+    
+
+      @state()  count= 0
+
+      
+    
+      
+      
+      updated() { 
+            prevCount = this.count 
+          }
+  
+    render() {
+      return html\`
         
         <div >
             
@@ -573,13 +588,12 @@ export default class MyPreviousComponent extends LitElement {
             </h1>
 
             
-      <button  @click=\${(event) => (this.count += 1)} >Increment</button>
+      <button  @click=\${ => this.count += 1} >Increment</button>
 
           </div>
-      \`;
-  }
-}
-"
+      \`
+    }
+  }"
 `;
 
 exports[`Lit > jsx > Javascript Test > Button 1`] = `
@@ -1321,94 +1335,98 @@ export default class FormComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > Image 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
+"import { LitElement, html, css } from 'lit';
+   import { customElement, property, state, query } from 'lit/decorators.js';
 
-// TODO: AMP Support?
+   // TODO: AMP Support?
 export interface ImageProps {
-  _class?: string;
-  image: string;
-  sizes?: string;
-  lazy?: boolean;
-  height?: number;
-  width?: number;
-  altText?: string;
-  backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+ _class?: string;
+ image: string;
+ sizes?: string;
+ lazy?: boolean;
+ height?: number;
+ width?: number;
+ altText?: string;
+ backgroundSize?: string;
+ backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
 
-  srcset?: string; // TODO: Implement support for custom aspect ratios
+ srcset?: string; // TODO: Implement support for custom aspect ratios
 
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+ aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
 
-  children?: any;
+ children?: any;
+}
+   
+
+   @customElement('my-image')
+   export default class Image extends LitElement {
+     
+       createRenderRoot() {
+         return this;
+       }
+       
+
+     
+
+     
+         @query('[ref=\\"pictureRef\\"]')
+         pictureRef!: HTMLElement;
+         
+   
+ 
+     @property() lazy: any
+@property() altText: any
+@property() _class: any
+@property() image: any
+@property() srcset: any
+@property() sizes: any
+@property() children: any
+
+       @state()  scrollListener= null
+@state()  imageLoaded= false
+@state()  load= false
+
+        setLoaded() {
+ this.imageLoaded = true;
+}
+useLazyLoading() {
+ // TODO: Add more checks here, like testing for real web browsers
+ return !!this.lazy && isBrowser();
+}
+isBrowser = function isBrowser() {
+ return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
 }
 
-@customElement(\\"my-image\\")
-export default class Image extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+     
+       connectedCallback() { if (this.useLazyLoading()) {
+ // throttled scroll capture listener
+ const listener = () => {
+   if (pictureRef) {
+     const rect = pictureRef.getBoundingClientRect();
+     const buffer = window.innerHeight / 2;
 
-  @query('[ref=\\"pictureRef\\"]')
-  pictureRef!: HTMLElement;
+     if (rect.top < window.innerHeight + buffer) {
+       setLoad(true);
+       this.scrollListener = null;
+       window.removeEventListener('scroll', listener);
+     }
+   }
+ };
 
-  @property() lazy: any;
-  @property() altText: any;
-  @property() _class: any;
-  @property() image: any;
-  @property() srcset: any;
-  @property() sizes: any;
-  @property() children: any;
-
-  @state() scrollListener = null;
-  @state() imageLoaded = false;
-  @state() load = false;
-
-  setLoaded() {
-    this.imageLoaded = true;
-  }
-  useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
-  }
-  isBrowser = function isBrowser() {
-    return (
-      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
-    );
-  };
-
-  connectedCallback() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
-
-          if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
-          }
-        }
-      };
-
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
-    }
-  }
-  disconnectedCallback() {
-    if (this.scrollListener) {
-      window.removeEventListener(\\"scroll\\", this.scrollListener);
-    }
-  }
-
-  render() {
-    return html\`
+ this.scrollListener = listener;
+ window.addEventListener('scroll', listener, {
+   capture: true,
+   passive: true
+ });
+ listener();
+} }
+       disconnectedCallback() { if (this.scrollListener) {
+ window.removeEventListener('scroll', this.scrollListener);
+} }
+       
+   
+     render() {
+       return html\`
          <style>.img {
  opacity: 1;
  transition: opacity 0.2s ease-in-out;
@@ -1418,19 +1436,11 @@ export default class Image extends LitElement {
 </style>
          <div>
          <picture ref=\\"pictureRef\\">
-           \${
-             !this.useLazyLoading() || this.load
-               ? html\`<img class={'builder-image' +
-           (props._class ? ' ' + props._class : '') + ' img'} .alt=\${
-             this.altText
-           }
-           aria-role=\${this.altText ? \\"presentation\\" : undefined} .src=\${
-                   this.image
-                 }
-           @load=\${(event) => this.setLoaded()} .srcset=\${this.srcset}
-           .sizes=\${this.sizes} />\`
-               : null
-           }
+           \${!this.useLazyLoading() || this.load ? html\`<img class={'builder-image' +
+           (props._class ? ' ' + props._class : '') + ' img'} .alt=\${this.altText}
+           aria-role=\${this.altText ? 'presentation' : undefined} .src=\${this.image}
+           @load=\${ => this.setLoaded()} .srcset=\${this.srcset} .sizes=\${this.sizes}
+           />\` : null}
 
            <source .srcset=\\"\${this.srcset}\\" />
          </picture>
@@ -1438,10 +1448,9 @@ export default class Image extends LitElement {
          \${this.children}
        </div>
 
-       \`;
-  }
-}
-"
+       \`
+     }
+   }"
 `;
 
 exports[`Lit > jsx > Javascript Test > Image State 1`] = `
@@ -1906,51 +1915,56 @@ export default class SlotCode extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > Stamped.io 1`] = `
-"import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+"import { kebabCase } from 'lodash';
+import { snakeCase } from 'lodash';
+   
+   
+ 
+   import { LitElement, html, css } from 'lit';
+   import { customElement, property, state, query } from 'lit/decorators.js';
 
-import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
+   type SmileReviewsProps = {
+ productId: string;
+ apiKey: string;
 };
+   
 
-@customElement(\\"smile-reviews\\")
-export default class SmileReviews extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+   @customElement('smile-reviews')
+   export default class SmileReviews extends LitElement {
+     
+       createRenderRoot() {
+         return this;
+       }
+       
 
-  @property() apiKey: any;
-  @property() productId: any;
+     
 
-  @state() reviews = [];
-  @state() name = \\"test\\";
-  @state() showReviewPrompt = false;
+     
+   
+ 
+     @property() apiKey: any
+@property() productId: any
 
-  kebabCaseValue() {
-    return kebabCase(\\"testThat\\");
-  }
-  snakeCaseValue() {
-    return snakeCase(\\"testThis\\");
-  }
+       @state()  reviews= []
+@state()  name= 'test'
+@state()  showReviewPrompt= false
 
-  connectedCallback() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
-  }
+        kebabCaseValue() {
+ return kebabCase('testThat');
+}
+snakeCaseValue() {
+ return snakeCase('testThis');
+}
 
-  render() {
-    return html\`
+     
+       connectedCallback() { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${this.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${this.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+ this.reviews = data.data;
+}) }
+       
+       
+   
+     render() {
+       return html\`
          <style>.input {
  display: block;
 }
@@ -1976,28 +1990,24 @@ export default class SmileReviews extends LitElement {
 </style>
          <div  data-user=\${this.name} >
              
-       <button  @click=\${(event) =>
-         (this.showReviewPrompt = true)} >Write a review</button>
+       <button  @click=\${ => this.showReviewPrompt = true} >Write a review</button>
 
              
-       \${
-         this.showReviewPrompt || \\"asdf\\"
-           ? html\`<input  placeholder=\\"Email\\"  />
+       \${this.showReviewPrompt || 'asdf' ?
+             html\`<input  placeholder=\\"Email\\"  />
        <input  placeholder=\\"Title\\"  />
        <textarea  placeholder=\\"How was your experience?\\" ></textarea>
-       <button  @click=\${(event) => {
+       <button  @click=\${event => {
          event.preventDefault();
          this.showReviewPrompt = false;
        }} >
                  Submit
                </button>\`
-           : null
-       }
+           : null}
 
              
-       \${this.reviews?.map(
-         (review, index) =>
-           html\`<div  .key=\${review.id} >
+       \${this.reviews?.map((review, index) => (
+             html\`<div  .key=\${review.id} >
                    
        <img  .src=\${review.avatar}  />
 
@@ -2016,13 +2026,12 @@ export default class SmileReviews extends LitElement {
                    </div>
 
                  </div>\`
-       )}
+           ))}
 
            </div>
-       \`;
-  }
-}
-"
+       \`
+     }
+   }"
 `;
 
 exports[`Lit > jsx > Javascript Test > Submit 1`] = `
@@ -3660,58 +3669,64 @@ export default class RenderBlock extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
-  dispatchNewContentToVisualEditor,
-  trackClick,
-} from \\"@dummy/injection-js\\";
-import \\"@dummy/context.js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+"import { sendComponentsToVisualEditor, dispatchNewContentToVisualEditor, trackClick } from '@dummy/injection-js';
+import '@dummy/context.js';
+import RenderBlocks from '@dummy/RenderBlocks.lite.tsx';
+  
+  
 
-import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
+  import { LitElement, html, css } from 'lit';
+  import { customElement, property, state, query } from 'lit/decorators.js';
 
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
+  type Props = {
+customComponents: string[];
+content: {
+  blocks: any[];
+  id: string;
 };
+};
+  
 
-@customElement(\\"render-content\\")
-export default class RenderContent extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+  @customElement('render-content')
+  export default class RenderContent extends LitElement {
+    
+      createRenderRoot() {
+        return this;
+      }
+      
 
-  @property() content: any;
-  @property() customComponents: any;
+    
 
-  connectedCallback() {
-    sendComponentsToVisualEditor(this.customComponents);
-  }
+    
+  
 
-  updated() {
-    dispatchNewContentToVisualEditor(this.content);
-  }
+    @property() content: any
+@property() customComponents: any
 
-  render() {
-    return html\`
+      
+      
+    
+      connectedCallback() { sendComponentsToVisualEditor(this.customComponents) }
+      
+      updated() { 
+            dispatchNewContentToVisualEditor(this.content) 
+          }
+  
+    render() {
+      return html\`
         <style>.div {
 display: flex;
 flex-direction: columns;
 }
 </style>
-        <div  @click=\${(event) => trackClick(this.content.id)} >
+        <div  @click=\${ => trackClick(this.content.id)} >
             
       <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
 
           </div>
-      \`;
-  }
-}
-"
+      \`
+    }
+  }"
 `;
 
 exports[`Lit > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
@@ -4736,39 +4751,54 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
 
 exports[`Lit > jsx > Typescript Test > BasicRefPrevious 1`] = `
 "export function usePrevious<T>(value: T) {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+// The ref object is a generic container whose current property is mutable ...
+// ... and can hold any value, similar to an instance property on a class
+let ref = useRef<T>(null); // Store current value in ref
 
-  onUpdate(() => {
-    ref = value;
-  }, [value]); // Only re-run if value changes
-  // Return previous value (happens before update in useEffect above)
+onUpdate(() => {
+  ref = value;
+}, [value]); // Only re-run if value changes
+// Return previous value (happens before update in useEffect above)
 
-  return ref;
+return ref;
 }
+  
 
-import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
+  import { LitElement, html, css } from 'lit';
+  import { customElement, property, state, query } from 'lit/decorators.js';
 
-export interface Props {
-  showInput: boolean;
+  export interface Props {
+showInput: boolean;
 }
+  
 
-@customElement(\\"my-previous-component\\")
-export default class MyPreviousComponent extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+  @customElement('my-previous-component')
+  export default class MyPreviousComponent extends LitElement {
+    
+      createRenderRoot() {
+        return this;
+      }
+      
 
-  @state() count = 0;
+    
 
-  updated() {
-    prevCount = this.count;
-  }
+    
+  
 
-  render() {
-    return html\`
+    
+
+      @state()  count= 0
+
+      
+    
+      
+      
+      updated() { 
+            prevCount = this.count 
+          }
+  
+    render() {
+      return html\`
         
         <div >
             
@@ -4781,13 +4811,12 @@ export default class MyPreviousComponent extends LitElement {
             </h1>
 
             
-      <button  @click=\${(event) => (this.count += 1)} >Increment</button>
+      <button  @click=\${ => this.count += 1} >Increment</button>
 
           </div>
-      \`;
-  }
-}
-"
+      \`
+    }
+  }"
 `;
 
 exports[`Lit > jsx > Typescript Test > Button 1`] = `
@@ -5529,94 +5558,98 @@ export default class FormComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > Image 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
+"import { LitElement, html, css } from 'lit';
+   import { customElement, property, state, query } from 'lit/decorators.js';
 
-// TODO: AMP Support?
+   // TODO: AMP Support?
 export interface ImageProps {
-  _class?: string;
-  image: string;
-  sizes?: string;
-  lazy?: boolean;
-  height?: number;
-  width?: number;
-  altText?: string;
-  backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+ _class?: string;
+ image: string;
+ sizes?: string;
+ lazy?: boolean;
+ height?: number;
+ width?: number;
+ altText?: string;
+ backgroundSize?: string;
+ backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
 
-  srcset?: string; // TODO: Implement support for custom aspect ratios
+ srcset?: string; // TODO: Implement support for custom aspect ratios
 
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+ aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
 
-  children?: any;
+ children?: any;
+}
+   
+
+   @customElement('my-image')
+   export default class Image extends LitElement {
+     
+       createRenderRoot() {
+         return this;
+       }
+       
+
+     
+
+     
+         @query('[ref=\\"pictureRef\\"]')
+         pictureRef!: HTMLElement;
+         
+   
+ 
+     @property() lazy: any
+@property() altText: any
+@property() _class: any
+@property() image: any
+@property() srcset: any
+@property() sizes: any
+@property() children: any
+
+       @state()  scrollListener= null
+@state()  imageLoaded= false
+@state()  load= false
+
+        setLoaded() {
+ this.imageLoaded = true;
+}
+useLazyLoading() {
+ // TODO: Add more checks here, like testing for real web browsers
+ return !!this.lazy && isBrowser();
+}
+isBrowser = function isBrowser() {
+ return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
 }
 
-@customElement(\\"my-image\\")
-export default class Image extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+     
+       connectedCallback() { if (this.useLazyLoading()) {
+ // throttled scroll capture listener
+ const listener = () => {
+   if (pictureRef) {
+     const rect = pictureRef.getBoundingClientRect();
+     const buffer = window.innerHeight / 2;
 
-  @query('[ref=\\"pictureRef\\"]')
-  pictureRef!: HTMLElement;
+     if (rect.top < window.innerHeight + buffer) {
+       setLoad(true);
+       this.scrollListener = null;
+       window.removeEventListener('scroll', listener);
+     }
+   }
+ };
 
-  @property() lazy: any;
-  @property() altText: any;
-  @property() _class: any;
-  @property() image: any;
-  @property() srcset: any;
-  @property() sizes: any;
-  @property() children: any;
-
-  @state() scrollListener = null;
-  @state() imageLoaded = false;
-  @state() load = false;
-
-  setLoaded() {
-    this.imageLoaded = true;
-  }
-  useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
-  }
-  isBrowser = function isBrowser() {
-    return (
-      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
-    );
-  };
-
-  connectedCallback() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
-
-          if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
-          }
-        }
-      };
-
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
-    }
-  }
-  disconnectedCallback() {
-    if (this.scrollListener) {
-      window.removeEventListener(\\"scroll\\", this.scrollListener);
-    }
-  }
-
-  render() {
-    return html\`
+ this.scrollListener = listener;
+ window.addEventListener('scroll', listener, {
+   capture: true,
+   passive: true
+ });
+ listener();
+} }
+       disconnectedCallback() { if (this.scrollListener) {
+ window.removeEventListener('scroll', this.scrollListener);
+} }
+       
+   
+     render() {
+       return html\`
          <style>.img {
  opacity: 1;
  transition: opacity 0.2s ease-in-out;
@@ -5626,19 +5659,11 @@ export default class Image extends LitElement {
 </style>
          <div>
          <picture ref=\\"pictureRef\\">
-           \${
-             !this.useLazyLoading() || this.load
-               ? html\`<img class={'builder-image' +
-           (props._class ? ' ' + props._class : '') + ' img'} .alt=\${
-             this.altText
-           }
-           aria-role=\${this.altText ? \\"presentation\\" : undefined} .src=\${
-                   this.image
-                 }
-           @load=\${(event) => this.setLoaded()} .srcset=\${this.srcset}
-           .sizes=\${this.sizes} />\`
-               : null
-           }
+           \${!this.useLazyLoading() || this.load ? html\`<img class={'builder-image' +
+           (props._class ? ' ' + props._class : '') + ' img'} .alt=\${this.altText}
+           aria-role=\${this.altText ? 'presentation' : undefined} .src=\${this.image}
+           @load=\${ => this.setLoaded()} .srcset=\${this.srcset} .sizes=\${this.sizes}
+           />\` : null}
 
            <source .srcset=\\"\${this.srcset}\\" />
          </picture>
@@ -5646,10 +5671,9 @@ export default class Image extends LitElement {
          \${this.children}
        </div>
 
-       \`;
-  }
-}
-"
+       \`
+     }
+   }"
 `;
 
 exports[`Lit > jsx > Typescript Test > Image State 1`] = `
@@ -6114,51 +6138,56 @@ export default class SlotCode extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > Stamped.io 1`] = `
-"import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+"import { kebabCase } from 'lodash';
+import { snakeCase } from 'lodash';
+   
+   
+ 
+   import { LitElement, html, css } from 'lit';
+   import { customElement, property, state, query } from 'lit/decorators.js';
 
-import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
+   type SmileReviewsProps = {
+ productId: string;
+ apiKey: string;
 };
+   
 
-@customElement(\\"smile-reviews\\")
-export default class SmileReviews extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+   @customElement('smile-reviews')
+   export default class SmileReviews extends LitElement {
+     
+       createRenderRoot() {
+         return this;
+       }
+       
 
-  @property() apiKey: any;
-  @property() productId: any;
+     
 
-  @state() reviews = [];
-  @state() name = \\"test\\";
-  @state() showReviewPrompt = false;
+     
+   
+ 
+     @property() apiKey: any
+@property() productId: any
 
-  kebabCaseValue() {
-    return kebabCase(\\"testThat\\");
-  }
-  snakeCaseValue() {
-    return snakeCase(\\"testThis\\");
-  }
+       @state()  reviews= []
+@state()  name= 'test'
+@state()  showReviewPrompt= false
 
-  connectedCallback() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
-  }
+        kebabCaseValue() {
+ return kebabCase('testThat');
+}
+snakeCaseValue() {
+ return snakeCase('testThis');
+}
 
-  render() {
-    return html\`
+     
+       connectedCallback() { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${this.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${this.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+ this.reviews = data.data;
+}) }
+       
+       
+   
+     render() {
+       return html\`
          <style>.input {
  display: block;
 }
@@ -6184,28 +6213,24 @@ export default class SmileReviews extends LitElement {
 </style>
          <div  data-user=\${this.name} >
              
-       <button  @click=\${(event) =>
-         (this.showReviewPrompt = true)} >Write a review</button>
+       <button  @click=\${ => this.showReviewPrompt = true} >Write a review</button>
 
              
-       \${
-         this.showReviewPrompt || \\"asdf\\"
-           ? html\`<input  placeholder=\\"Email\\"  />
+       \${this.showReviewPrompt || 'asdf' ?
+             html\`<input  placeholder=\\"Email\\"  />
        <input  placeholder=\\"Title\\"  />
        <textarea  placeholder=\\"How was your experience?\\" ></textarea>
-       <button  @click=\${(event) => {
+       <button  @click=\${event => {
          event.preventDefault();
          this.showReviewPrompt = false;
        }} >
                  Submit
                </button>\`
-           : null
-       }
+           : null}
 
              
-       \${this.reviews?.map(
-         (review, index) =>
-           html\`<div  .key=\${review.id} >
+       \${this.reviews?.map((review, index) => (
+             html\`<div  .key=\${review.id} >
                    
        <img  .src=\${review.avatar}  />
 
@@ -6224,13 +6249,12 @@ export default class SmileReviews extends LitElement {
                    </div>
 
                  </div>\`
-       )}
+           ))}
 
            </div>
-       \`;
-  }
-}
-"
+       \`
+     }
+   }"
 `;
 
 exports[`Lit > jsx > Typescript Test > Submit 1`] = `
@@ -7868,58 +7892,64 @@ export default class RenderBlock extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
-  dispatchNewContentToVisualEditor,
-  trackClick,
-} from \\"@dummy/injection-js\\";
-import \\"@dummy/context.js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+"import { sendComponentsToVisualEditor, dispatchNewContentToVisualEditor, trackClick } from '@dummy/injection-js';
+import '@dummy/context.js';
+import RenderBlocks from '@dummy/RenderBlocks.lite.tsx';
+  
+  
 
-import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
+  import { LitElement, html, css } from 'lit';
+  import { customElement, property, state, query } from 'lit/decorators.js';
 
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
+  type Props = {
+customComponents: string[];
+content: {
+  blocks: any[];
+  id: string;
 };
+};
+  
 
-@customElement(\\"render-content\\")
-export default class RenderContent extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+  @customElement('render-content')
+  export default class RenderContent extends LitElement {
+    
+      createRenderRoot() {
+        return this;
+      }
+      
 
-  @property() content: any;
-  @property() customComponents: any;
+    
 
-  connectedCallback() {
-    sendComponentsToVisualEditor(this.customComponents);
-  }
+    
+  
 
-  updated() {
-    dispatchNewContentToVisualEditor(this.content);
-  }
+    @property() content: any
+@property() customComponents: any
 
-  render() {
-    return html\`
+      
+      
+    
+      connectedCallback() { sendComponentsToVisualEditor(this.customComponents) }
+      
+      updated() { 
+            dispatchNewContentToVisualEditor(this.content) 
+          }
+  
+    render() {
+      return html\`
         <style>.div {
 display: flex;
 flex-direction: columns;
 }
 </style>
-        <div  @click=\${(event) => trackClick(this.content.id)} >
+        <div  @click=\${ => trackClick(this.content.id)} >
             
       <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
 
           </div>
-      \`;
-  }
-}
-"
+      \`
+    }
+  }"
 `;
 
 exports[`Lit > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
