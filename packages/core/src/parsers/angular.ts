@@ -11,7 +11,7 @@ import { types } from '@babel/core';
 import { MitosisComponent } from '../types/mitosis-component';
 import { capitalize } from '../helpers/capitalize';
 import { createSingleBinding } from '../helpers/bindings';
-import { Dictionary } from 'src/helpers/typescript';
+import { Dictionary } from '../../helpers/typescript';
 
 const getTsAST = (code: string) => {
   return ts.createSourceFile('code.ts', code, ts.ScriptTarget.Latest, true);

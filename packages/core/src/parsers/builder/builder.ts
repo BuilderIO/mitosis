@@ -16,7 +16,7 @@ import { hashCodeAsString, MitosisComponent, MitosisState } from '../..';
 import { mapBuilderContentStateToMitosisState } from './helpers';
 import { parseStateObjectToMitosisState } from '../jsx/state';
 import { createSingleBinding } from '../../helpers/bindings';
-import { Dictionary } from 'src/helpers/typescript';
+import { Dictionary } from '../../helpers/typescript';
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (keyof CSSStyleDeclaration | 'backgroundRepeatX' | 'backgroundRepeatY')[] = [

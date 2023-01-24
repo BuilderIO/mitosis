@@ -3,7 +3,7 @@ import { parseChildren } from '../helpers/children';
 
 import type { TemplateNode } from 'svelte/types/compiler/interfaces';
 import type { SveltosisComponent } from '../types';
-import { MitosisNode } from 'src/types/mitosis-node';
+import { MitosisNode } from '../../../types/mitosis-node';
 import { createSingleBinding } from '../../../helpers/bindings';
 
 export function parseEach(json: SveltosisComponent, node: TemplateNode): MitosisNode {
