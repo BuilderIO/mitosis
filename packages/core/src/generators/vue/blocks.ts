@@ -319,7 +319,7 @@ const stringifyBinding =
 
         const eventHandlerKey = `${SPECIAL_PROPERTIES.V_ON_AT}${event}`;
 
-        return `${eventHandlerKey}=${eventHandlerValue}`;
+        return `${eventHandlerKey}="${eventHandlerValue}"`;
       } else if (key === 'ref') {
         return `ref="${encodeQuotes(useValue)}"`;
       } else if (BINDING_MAPPERS[key]) {
@@ -339,15 +339,14 @@ const stringifySpreads = (node: MitosisNode) => {
     return '';
   }
 
-  const stringifiedValue = pipe(
-    spreads.length > 1 ? spreads.map((spread) => `...${spread}`).join(', ') : spreads[0],
-  );
+  const stringifiedValue =
+    spreads.length > 1 ? `{${spreads.map((spread) => `...${spread}`).join(', ')}}` : spreads[0];
 
-  return ` ${SPECIAL_PROPERTIES.V_BIND}=${encodeQuotes(stringifiedValue)} `;
+  return ` ${SPECIAL_PROPERTIES.V_BIND}="${encodeQuotes(stringifiedValue)}" `;
 };
 
 const getBlockBindings = (node: MitosisNode) => {
-  const stringifiedProperties = Object.entries(node.bindings)
+  const stringifiedProperties = Object.entries(node.properties)
     .map(([key, value]) => {
       if (key === 'className') {
         return '';
@@ -395,7 +394,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     return `{{${textCode}}}`;
   }
 
-  let str = '';
+  let str = `<${node.name} `;
 
   str += getBlockBindings(node);
 
