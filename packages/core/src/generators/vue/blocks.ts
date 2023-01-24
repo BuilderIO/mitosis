@@ -23,6 +23,7 @@ const SPECIAL_PROPERTIES = {
   V_ELSE_IF: 'v-else-if',
   V_ON: 'v-on',
   V_ON_AT: '@',
+  V_BIND: 'v-bind',
 } as const;
 
 type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) => string;
@@ -289,7 +290,7 @@ const stringifyBinding =
     if (node.bindings[key]?.type === 'spread') {
       return ''; // we handle this after
     } else if (key === 'class') {
-      return ` :class="_classStringToObject(${value?.code})" `;
+      return `:class="_classStringToObject(${value?.code})"`;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
     } else {
@@ -317,13 +318,13 @@ const stringifyBinding =
 
         const eventHandlerKey = `${SPECIAL_PROPERTIES.V_ON_AT}${event}`;
 
-        return ` ${eventHandlerKey}=${eventHandlerValue}`;
+        return `${eventHandlerKey}=${eventHandlerValue}`;
       } else if (key === 'ref') {
-        return ` ref="${encodeQuotes(useValue)}" `;
+        return `ref="${encodeQuotes(useValue)}"`;
       } else if (BINDING_MAPPERS[key]) {
-        return ` ${BINDING_MAPPERS[key]}="${encodeQuotes(useValue.replace(/"/g, "\\'"))}" `;
+        return `${BINDING_MAPPERS[key]}="${encodeQuotes(useValue.replace(/"/g, "\\'"))}"`;
       } else {
-        return ` :${key}="${encodeQuotes(useValue)}" `;
+        return `:${key}="${encodeQuotes(useValue)}"`;
       }
     }
   };
@@ -360,36 +361,42 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   str += `<${node.name} `;
 
-  for (const key in node.properties) {
-    const value = node.properties[key];
+  const stringifiedProperties = Object.entries(node.bindings)
+    .map(([key, value]) => {
+      if (key === 'className') {
+        return '';
+      } else if (key === SPECIAL_PROPERTIES.V_ELSE) {
+        return `${key}`;
+      } else if (typeof value === 'string') {
+        return `${key}="${encodeQuotes(value)}"`;
+      }
+    })
+    .join(' ');
 
-    if (key === 'className') {
-      continue;
-    } else if (key === SPECIAL_PROPERTIES.V_ELSE) {
-      str += ` ${key} `;
-    } else if (typeof value === 'string') {
-      str += ` ${key}="${encodeQuotes(value)}" `;
-    }
-  }
+  const stringifiedBindings = Object.entries(node.bindings).map(stringifyBinding(node)).join(' ');
 
-  const stringifiedBindings = Object.entries(node.bindings).map(stringifyBinding(node)).join('');
-
+  str += stringifiedProperties;
   str += stringifiedBindings;
 
   // spreads
 
-  let spreads = filter(node.bindings, (binding) => binding?.type === 'spread').map((value) =>
-    value?.code === 'props' ? '$props' : value?.code,
-  );
+  const stringifySpreads = () => {
+    let spreads = filter(node.bindings, (binding) => binding?.type === 'spread').map((value) =>
+      value!.code === 'props' ? '$props' : value!.code,
+    );
 
-  if (spreads?.length) {
-    if (spreads.length > 1) {
-      let spreadsString = `{...${spreads.join(', ...')}}`;
-      str += ` v-bind="${encodeQuotes(spreadsString)}"`;
-    } else {
-      str += ` v-bind="${encodeQuotes(spreads.join(''))}"`;
+    if (spreads.length === 0) {
+      return '';
     }
-  }
+
+    const stringifiedValue = pipe(
+      spreads.length > 1 ? spreads.map((spread) => `...${spread}`).join(', ') : spreads[0],
+    );
+
+    return ` ${SPECIAL_PROPERTIES.V_BIND}=${encodeQuotes(stringifiedValue)} `;
+  };
+
+  str += stringifySpreads();
 
   if (selfClosingTags.has(node.name)) {
     return str + ' />';
