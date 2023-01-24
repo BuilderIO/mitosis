@@ -371,10 +371,7 @@ export default function MyComponent(props) {
   const elem = useRef();
 
   onMount(() => {
-    var props = state;
-    onMount(() => {
-      state.findAndRunScripts();
-    });
+    state.findAndRunScripts();
   });
 
   return (
@@ -571,10 +568,7 @@ export default function MyComponent(props) {
   const elem = useRef();
 
   onMount(() => {
-    var props = state;
-    onMount(() => {
-      state.findAndRunScripts();
-    });
+    state.findAndRunScripts();
   });
 
   return <div class=\\"builder-embed\\" ref={elem} innerHTML={props.content} />;
@@ -800,31 +794,28 @@ export default function MyComponent(props) {
   const pictureRef = useRef();
 
   onMount(() => {
-    var props = state;
-    onMount(() => {
-      if (state.useLazyLoading()) {
-        // throttled scroll capture listener
-        const listener = () => {
-          if (pictureRef.current) {
-            const rect = pictureRef.current.getBoundingClientRect();
-            const buffer = window.innerHeight / 2;
+    if (state.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef.current) {
+          const rect = pictureRef.current.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
 
-            if (rect.top < window.innerHeight + buffer) {
-              setLoad(true);
-              state.scrollListener = null;
-              window.removeEventListener(\\"scroll\\", listener);
-            }
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            state.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
           }
-        };
+        }
+      };
 
-        state.scrollListener = listener;
-        window.addEventListener(\\"scroll\\", listener, {
-          capture: true,
-          passive: true,
-        });
-        listener();
-      }
-    });
+      state.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
   });
 
   return (
@@ -1521,18 +1512,15 @@ export default function MyComponent(props) {
   });
 
   onMount(() => {
-    var props = state;
-    onMount(() => {
-      fetch(
-        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-          props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-        }&productId=\${props.productId || \\"2410511106127\\"}\`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          state.reviews = data.data;
-        });
-    });
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        state.reviews = data.data;
+      });
   });
 
   return (
