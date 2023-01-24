@@ -5,6 +5,7 @@ import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { ForNode, MitosisNode } from '../../types/mitosis-node';
 import { pipe } from 'fp-ts/lib/function';
 import { transformAttributeName } from './helpers';
+import { createSingleBinding } from 'src/helpers/bindings';
 
 const { types } = babel;
 
@@ -55,11 +56,11 @@ export const jsxElementToJson = (
           return createMitosisNode({
             name: 'For',
             bindings: {
-              each: {
+              each: createSingleBinding({
                 code: generate(node.expression.callee)
                   .code // Remove .map or potentially ?.map
                   .replace(/\??\.map$/, ''),
-              },
+              }),
             },
             scope: forArguments,
             children: [jsxElementToJson(callback.body as any)!],
@@ -74,7 +75,7 @@ export const jsxElementToJson = (
         return createMitosisNode({
           name: 'Show',
           bindings: {
-            when: { code: generate(node.expression.left).code! },
+            when: createSingleBinding({ code: generate(node.expression.left).code! }),
           },
           children: [jsxElementToJson(node.expression.right as any)!],
         });
@@ -91,7 +92,7 @@ export const jsxElementToJson = (
           else: jsxElementToJson(node.expression.alternate as any)!,
         },
         bindings: {
-          when: { code: generate(node.expression.test).code! },
+          when: createSingleBinding({ code: generate(node.expression.test).code! }),
         },
         children: [jsxElementToJson(node.expression.consequent as any)!],
       });
@@ -101,7 +102,7 @@ export const jsxElementToJson = (
 
     return createMitosisNode({
       bindings: {
-        _text: { code: generate(node.expression).code },
+        _text: createSingleBinding({ code: generate(node.expression).code }),
       },
     });
   }
@@ -145,7 +146,7 @@ export const jsxElementToJson = (
         else: elseValue || undefined,
       },
       bindings: {
-        ...(whenValue ? { when: { code: whenValue } } : {}),
+        ...(whenValue ? { when: createSingleBinding({ code: whenValue }) } : {}),
       },
       children: node.children.map(jsxElementToJson).filter(checkIsDefined),
     });
@@ -174,9 +175,9 @@ export const jsxElementToJson = (
         return createMitosisNode({
           name: 'For',
           bindings: {
-            each: {
+            each: createSingleBinding({
               code: forCode,
-            },
+            }),
           },
           scope: forArguments,
           children: [jsxElementToJson(childExpression.body as any)!],
@@ -209,24 +210,24 @@ export const jsxElementToJson = (
 
         // boolean attribute
         if (value === null) {
-          memo[key] = {
+          memo[key] = createSingleBinding({
             code: 'true',
-          };
+          });
           return memo;
         }
         if (types.isJSXExpressionContainer(value) && !types.isStringLiteral(value.expression)) {
           const { expression } = value;
           if (types.isArrowFunctionExpression(expression)) {
             if (key.startsWith('on')) {
-              memo[key] = {
+              memo[key] = createSingleBinding({
                 code: generate(expression.body).code,
                 arguments: expression.params.map((node) => (node as babel.types.Identifier)?.name),
-              };
+              });
             } else {
-              memo[key] = { code: generate(expression.body).code };
+              memo[key] = createSingleBinding({ code: generate(expression.body).code });
             }
           } else {
-            memo[key] = { code: generate(expression).code };
+            memo[key] = createSingleBinding({ code: generate(expression).code });
           }
 
           return memo;
@@ -241,6 +242,7 @@ export const jsxElementToJson = (
         memo[key] = {
           code: types.stringLiteral(generate(item.argument).code).value,
           type: 'spread',
+          spreadType: 'normal',
         };
       }
       return memo;

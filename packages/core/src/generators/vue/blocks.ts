@@ -8,7 +8,7 @@ import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { replaceSlotsInString, stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
 import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisNode, ForNode, Binding, BindingType } from '../../types/mitosis-node';
+import { MitosisNode, ForNode, Binding, SpreadType } from '../../types/mitosis-node';
 import {
   encodeQuotes,
   addBindingsToJson,
@@ -50,7 +50,7 @@ const NODE_MAPPERS: {
   },
   For(_json, options) {
     const json = _json as ForNode;
-    const keyValue = json.bindings.key || { code: 'index' };
+    const keyValue = json.bindings.key || { code: 'index', type: 'single' };
     const forValue = `(${json.scope.forName}, index) in ${json.bindings.each?.code}`;
 
     if (options.vueVersion >= 3) {
@@ -330,10 +330,11 @@ const stringifyBinding =
     }
   };
 
-const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType: BindingType }) => {
-  let spreads = filter(node.bindings, (binding) => binding?.type === spreadType).map((value) =>
-    value!.code === 'props' ? '$props' : value!.code,
-  );
+const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType: SpreadType }) => {
+  let spreads = filter(
+    node.bindings,
+    (binding) => binding?.type === 'spread' && binding.spreadType === spreadType,
+  ).map((value) => (value!.code === 'props' ? '$props' : value!.code));
 
   if (spreads.length === 0) {
     return '';
@@ -342,7 +343,7 @@ const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType:
   const stringifiedValue =
     spreads.length > 1 ? `{${spreads.map((spread) => `...${spread}`).join(', ')}}` : spreads[0];
 
-  const key = spreadType === 'spread' ? SPECIAL_PROPERTIES.V_BIND : SPECIAL_PROPERTIES.V_ON;
+  const key = spreadType === 'normal' ? SPECIAL_PROPERTIES.V_BIND : SPECIAL_PROPERTIES.V_ON;
 
   return ` ${key}="${encodeQuotes(stringifiedValue)}" `;
 };
@@ -367,8 +368,8 @@ const getBlockBindings = (node: MitosisNode) => {
   return [
     stringifiedProperties,
     stringifiedBindings,
-    stringifySpreads({ node, spreadType: 'spread' }),
-    stringifySpreads({ node, spreadType: 'event-handler-spread' }),
+    stringifySpreads({ node, spreadType: 'normal' }),
+    stringifySpreads({ node, spreadType: 'event-handlers' }),
   ].join(' ');
 };
 
@@ -386,7 +387,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
     // <component is="'style'">...</component>
     node.name = 'component';
-    node.bindings.is = { code: "'style'" };
+    node.bindings.is = { code: "'style'", type: 'single' };
   }
 
   if (node.properties._text) {

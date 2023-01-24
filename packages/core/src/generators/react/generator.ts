@@ -46,6 +46,7 @@ import {
 import { processBinding } from './helpers';
 import hash from 'hash-sum';
 import { getForArguments } from '../../helpers/nodes/for';
+import { createSingleBinding } from 'src/helpers/bindings';
 
 export const contextPropDrillingKey = '_context';
 
@@ -362,9 +363,9 @@ function provideContext(json: MitosisComponent, options: ToReactOptions): string
             children: json.children,
             ...(value && {
               bindings: {
-                value: {
+                value: createSingleBinding({
                   code: stringifyContextValue(value),
-                },
+                }),
               },
             }),
           }),
@@ -376,9 +377,7 @@ function provideContext(json: MitosisComponent, options: ToReactOptions): string
             children: json.children,
             ...(ref && {
               bindings: {
-                value: {
-                  code: ref,
-                },
+                value: createSingleBinding({ code: ref }),
               },
             }),
           }),

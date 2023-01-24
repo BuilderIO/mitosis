@@ -9,6 +9,7 @@ import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { parseCode, uncapitalize } from './helpers';
 import { pipe } from 'fp-ts/lib/function';
 import { MitosisNode } from '@builder.io/mitosis';
+import { createSingleBinding } from 'src/helpers/bindings';
 
 const { types } = babel;
 
@@ -99,9 +100,9 @@ export function mapStateIdentifiers(json: MitosisComponent) {
         const value = item.bindings[key];
 
         if (value) {
-          item.bindings[key] = {
+          item.bindings[key] = createSingleBinding({
             code: mapStateIdentifiersInExpression(value.code, stateProperties),
-          };
+          });
           if (value.arguments?.length) {
             item.bindings[key]!.arguments = value.arguments;
           }

@@ -8,6 +8,7 @@ import { parseAction } from './actions';
 import type { TemplateNode, Element, Text, MustacheTag } from 'svelte/types/compiler/interfaces';
 import type { Identifier, ArrowFunctionExpression, BaseCallExpression, Node } from 'estree';
 import type { SveltosisComponent } from '../types';
+import { createSingleBinding } from 'src/helpers/bindings';
 
 interface AttributeShorthand {
   type: 'AttributeShorthand';
@@ -25,9 +26,7 @@ export function parseElement(json: SveltosisComponent, node: TemplateNode) {
     if (!Object.keys(json.refs).includes(nodeReference)) {
       json.refs[nodeReference] = { argument: '', typeParameter: '' };
 
-      mitosisNode.bindings.ref = {
-        code: nodeReference,
-      };
+      mitosisNode.bindings.ref = createSingleBinding({ code: nodeReference });
     }
 
     return nodeReference;
@@ -84,9 +83,7 @@ export function parseElement(json: SveltosisComponent, node: TemplateNode) {
                   : '`${' + code + '}`';
               }
 
-              mitosisNode.bindings[attribute.name] = {
-                code,
-              };
+              mitosisNode.bindings[attribute.name] = createSingleBinding({ code });
 
               break;
             }
@@ -94,15 +91,15 @@ export function parseElement(json: SveltosisComponent, node: TemplateNode) {
               // e.g. <input {value}/>
               const value: AttributeShorthand = attribute.value[0];
               const code = value.expression.name;
-              mitosisNode.bindings[code] = {
-                code,
-              };
+              mitosisNode.bindings[code] = createSingleBinding({ code });
 
               break;
             }
             default: {
               const name = attribute.name;
-              mitosisNode.bindings[name] = { code: attribute.value.toString() };
+              mitosisNode.bindings[name] = createSingleBinding({
+                code: attribute.value.toString(),
+              });
             }
           }
 
@@ -113,6 +110,7 @@ export function parseElement(json: SveltosisComponent, node: TemplateNode) {
           mitosisNode.bindings[expression.name] = {
             code: expression.name,
             type: 'spread',
+            spreadType: 'normal',
           };
 
           break;
@@ -173,7 +171,7 @@ export function parseElement(json: SveltosisComponent, node: TemplateNode) {
             };
           }
 
-          mitosisNode.bindings[`on${upperFirst(attribute.name)}`] = object;
+          mitosisNode.bindings[`on${upperFirst(attribute.name)}`] = createSingleBinding(object);
 
           // add event handlers as props (e.g. props.onClick)
           json.props = {
@@ -209,15 +207,15 @@ export function parseElement(json: SveltosisComponent, node: TemplateNode) {
 
           if (name !== 'ref' && name !== 'group' && name !== 'this') {
             const onChangeCode = `${binding} = event.target.value`;
-            mitosisNode.bindings['onChange'] = {
+            mitosisNode.bindings['onChange'] = createSingleBinding({
               code: onChangeCode,
               arguments: ['event'],
-            };
+            });
           }
 
-          mitosisNode.bindings[name] = {
+          mitosisNode.bindings[name] = createSingleBinding({
             code: binding,
-          };
+          });
 
           break;
         }
@@ -249,15 +247,11 @@ export function parseElement(json: SveltosisComponent, node: TemplateNode) {
               ' ${' + binding + '}',
               mitosisNode.bindings.class.code.length - 1,
             );
-            mitosisNode.bindings.class = {
-              code,
-            };
+            mitosisNode.bindings.class = createSingleBinding({ code });
           } else {
             // otherwise just assign
             code = '`' + code + '${' + binding + '}`';
-            mitosisNode.bindings.class = {
-              code,
-            };
+            mitosisNode.bindings.class = createSingleBinding({ code });
           }
           break;
         }
@@ -280,9 +274,9 @@ export function parseElement(json: SveltosisComponent, node: TemplateNode) {
     const child = filteredChildren[0] as MustacheTag;
 
     mitosisNode.children = [];
-    mitosisNode.bindings.innerHTML = {
+    mitosisNode.bindings.innerHTML = createSingleBinding({
       code: generate(child.expression),
-    };
+    });
   } else {
     mitosisNode.children = parseChildren(json, node);
   }

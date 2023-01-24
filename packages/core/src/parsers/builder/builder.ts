@@ -9,12 +9,14 @@ import { Size, sizeNames, sizes } from '../../constants/media-sizes';
 import { capitalize } from '../../helpers/capitalize';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
-import { MitosisNode } from '../../types/mitosis-node';
+import { Binding, MitosisNode } from '../../types/mitosis-node';
 import { parseJsx } from '../jsx';
 import { parseCode, isExpression } from '../../helpers/parsers';
 import { hashCodeAsString, MitosisComponent, MitosisState } from '../..';
 import { mapBuilderContentStateToMitosisState } from './helpers';
 import { parseStateObjectToMitosisState } from '../jsx/state';
+import { createSingleBinding } from 'src/helpers/bindings';
+import { Dictionary } from 'src/helpers/typescript';
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (keyof CSSStyleDeclaration | 'backgroundRepeatX' | 'backgroundRepeatY')[] = [
@@ -87,7 +89,7 @@ const getActionBindingsFromBlock = (
         continue;
       }
       const useKey = `on${upperFirst(key)}`;
-      bindings[useKey] = { code: `${wrapBindingIfNeeded(value, options)}` };
+      bindings[useKey] = createSingleBinding({ code: `${wrapBindingIfNeeded(value, options)}` });
     }
   }
 
@@ -244,23 +246,25 @@ const componentMappers: {
     const styleString = getStyleStringFromBlock(block, options);
     const actionBindings = getActionBindingsFromBlock(block, options);
 
+    const bindings: Dictionary<Binding> = {
+      symbol: createSingleBinding({
+        code: JSON.stringify({
+          data: block.component?.options.symbol.data,
+          content: block.component?.options.symbol.content,
+        }),
+      }),
+      ...actionBindings,
+      ...(styleString && {
+        style: createSingleBinding({ code: styleString }),
+      }),
+      ...(Object.keys(css).length && {
+        css: createSingleBinding({ code: JSON.stringify(css) }),
+      }),
+    };
+
     return createMitosisNode({
       name: 'Symbol',
-      bindings: {
-        symbol: {
-          code: JSON.stringify({
-            data: block.component?.options.symbol.data,
-            content: block.component?.options.symbol.content,
-          }),
-        },
-        ...actionBindings,
-        ...(styleString && {
-          style: { code: styleString },
-        }),
-        ...(Object.keys(css).length && {
-          css: { code: JSON.stringify(css) },
-        }),
-      },
+      bindings: bindings,
     });
   },
   ...(!symbolBlocksAsChildren
@@ -281,18 +285,18 @@ const componentMappers: {
             name: 'Symbol',
             bindings: {
               // TODO: this doesn't use all attrs
-              symbol: {
+              symbol: createSingleBinding({
                 code: JSON.stringify({
                   data: block.component?.options.symbol.content.data,
                   content: content, // TODO: convert to <SymbolInternal>...</SymbolInternal> so can be parsed
                 }),
-              },
+              }),
               ...actionBindings,
               ...(styleString && {
-                style: { code: styleString },
+                style: createSingleBinding({ code: styleString }),
               }),
               ...(Object.keys(css).length && {
-                css: { code: JSON.stringify(css) },
+                css: createSingleBinding({ code: JSON.stringify(css) }),
               }),
             },
             children: !blocks
@@ -337,7 +341,9 @@ const componentMappers: {
     return createMitosisNode({
       name: 'For',
       bindings: {
-        each: { code: `state.${block.component!.options!.repeat!.collection}` },
+        each: createSingleBinding({
+          code: `state.${block.component!.options!.repeat!.collection}`,
+        }),
       },
       scope: {
         forName: block.component!.options!.repeat!.itemName,
@@ -384,9 +390,9 @@ const componentMappers: {
     const innerBindings: MitosisNode['bindings'] = {};
     const componentOptionsText = blockBindings['component.options.text'];
     if (componentOptionsText) {
-      innerBindings[options.preserveTextBlocks ? 'innerHTML' : '_text'] = {
+      innerBindings[options.preserveTextBlocks ? 'innerHTML' : '_text'] = createSingleBinding({
         code: wrapBindingIfNeeded(componentOptionsText.code, options),
-      };
+      });
     }
     const innerProperties = {
       [options.preserveTextBlocks ? 'innerHTML' : '_text']: block.component!.options.text,
@@ -469,13 +475,13 @@ export const builderElementToMitosisNode = (
     if (isFragment) {
       return createMitosisNode({
         name: 'Show',
-        bindings: { when: { code: code } },
+        bindings: { when: createSingleBinding({ code }) },
         children: block.children?.map((child) => builderElementToMitosisNode(child, options)) || [],
       });
     } else {
       return createMitosisNode({
         name: 'Show',
-        bindings: { when: { code: code } },
+        bindings: { when: createSingleBinding({ code }) },
         children: [
           builderElementToMitosisNode(
             {
@@ -500,9 +506,9 @@ export const builderElementToMitosisNode = (
       return createMitosisNode({
         name: 'For',
         bindings: {
-          each: {
+          each: createSingleBinding({
             code: wrapBindingIfNeeded(block.repeat?.collection!, options),
-          },
+          }),
         },
         scope: {
           forName: block.repeat?.itemName || 'item',
@@ -517,9 +523,9 @@ export const builderElementToMitosisNode = (
       return createMitosisNode({
         name: 'For',
         bindings: {
-          each: {
+          each: createSingleBinding({
             code: wrapBindingIfNeeded(block.repeat?.collection!, options),
-          },
+          }),
         },
         scope: {
           forName: block.repeat?.itemName || 'item',
@@ -921,9 +927,9 @@ function mapBuilderBindingsToMitosisBindingWithCode(
     Object.keys(bindings).forEach((key) => {
       const value: string | { code: string } = bindings[key] as any;
       if (typeof value === 'string') {
-        result[key] = { code: value };
+        result[key] = createSingleBinding({ code: value });
       } else if (value && typeof value === 'object' && value.code) {
-        result[key] = { code: value.code };
+        result[key] = createSingleBinding({ code: value.code });
       } else {
         throw new Error('Unexpected binding value: ' + JSON.stringify(value));
       }

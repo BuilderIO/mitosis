@@ -10,6 +10,7 @@ import { isUpperCase } from '../../helpers/is-upper-case';
 import { getForArguments } from '../../helpers/nodes/for';
 import { ToSvelteOptions } from './types';
 import { stripStateAndProps } from './helpers';
+import { createSingleBinding } from 'src/helpers/bindings';
 
 const mappers: {
   For: BlockToSvelte<ForNode>;
@@ -127,9 +128,9 @@ const getTagName = ({
   // TO-DO: no way to decide between <svelte:component> and <svelte:element>...need to do that through metadata
   // overrides for now
   if (!isValidHtmlTag && !isSpecialSvelteTag && !hasMatchingImport) {
-    json.bindings.this = {
+    json.bindings.this = createSingleBinding({
       code: stripStateAndProps({ json: parentComponent, options })(json.name),
-    };
+    });
     return SVELTE_SPECIAL_TAGS.COMPONENT;
   }
 

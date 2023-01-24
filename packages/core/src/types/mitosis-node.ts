@@ -1,12 +1,20 @@
 import { JSONObject } from './json';
 
-export type BindingType = 'spread' | 'event-handler-spread';
+export type SpreadType = 'normal' | 'event-handlers';
+
+type BindingProperties =
+  | {
+      type: 'spread';
+      spreadType: SpreadType;
+    }
+  | {
+      type: 'single';
+    };
 
 export type Binding = {
   code: string;
   arguments?: string[];
-  type?: BindingType;
-};
+} & BindingProperties;
 
 export type BaseNode = {
   '@type': '@builder.io/mitosis/node';
