@@ -94,12 +94,7 @@ function addPropertiesAndStateToNode(json: SveltosisComponent, node: MitosisNode
   for (const key of Object.keys(node.bindings)) {
     if (Object.prototype.hasOwnProperty.call(node.bindings, key)) {
       const value = node.bindings[key]!;
-      node.bindings[key] = {
-        // we need this default `undefined` value, for the generators to properly handle custom args not being present
-        arguments: undefined,
-        ...value,
-        code: addPropertiesAndState(json, value?.code ?? '').trim(),
-      };
+      node.bindings[key]!.code = addPropertiesAndState(json, value?.code ?? '').trim();
     }
   }
 }
