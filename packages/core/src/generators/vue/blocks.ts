@@ -1,5 +1,6 @@
 import { pipe, identity } from 'fp-ts/lib/function';
 import { filter } from 'lodash';
+import { Dictionary } from 'src/helpers/typescript';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
@@ -286,8 +287,8 @@ const NODE_MAPPERS: {
 
 const stringifyBinding =
   (node: MitosisNode) =>
-  ([key, value]: [string, Binding | undefined]) => {
-    if (node.bindings[key]?.type === 'spread') {
+  ([key, value]: [string, Binding]) => {
+    if (value.type === 'spread') {
       return ''; // we handle this after
     } else if (key === 'class') {
       return `:class="_classStringToObject(${value?.code})"`;
@@ -328,6 +329,43 @@ const stringifyBinding =
       }
     }
   };
+
+const stringifySpreads = (node: MitosisNode) => {
+  let spreads = filter(node.bindings, (binding) => binding?.type === 'spread').map((value) =>
+    value!.code === 'props' ? '$props' : value!.code,
+  );
+
+  if (spreads.length === 0) {
+    return '';
+  }
+
+  const stringifiedValue = pipe(
+    spreads.length > 1 ? spreads.map((spread) => `...${spread}`).join(', ') : spreads[0],
+  );
+
+  return ` ${SPECIAL_PROPERTIES.V_BIND}=${encodeQuotes(stringifiedValue)} `;
+};
+
+const getBlockBindings = (node: MitosisNode) => {
+  const stringifiedProperties = Object.entries(node.bindings)
+    .map(([key, value]) => {
+      if (key === 'className') {
+        return '';
+      } else if (key === SPECIAL_PROPERTIES.V_ELSE) {
+        return `${key}`;
+      } else if (typeof value === 'string') {
+        return `${key}="${encodeQuotes(value)}"`;
+      }
+    })
+    .join(' ');
+
+  const stringifiedBindings = Object.entries(node.bindings as Dictionary<Binding>)
+    .map(stringifyBinding(node))
+    .join(' ');
+
+  return [stringifiedProperties, stringifiedBindings, stringifySpreads(node)].join(' ');
+};
+
 export const blockToVue: BlockRenderer = (node, options, scope) => {
   const nodeMapper = NODE_MAPPERS[node.name];
   if (nodeMapper) {
@@ -359,44 +397,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   let str = '';
 
-  str += `<${node.name} `;
-
-  const stringifiedProperties = Object.entries(node.bindings)
-    .map(([key, value]) => {
-      if (key === 'className') {
-        return '';
-      } else if (key === SPECIAL_PROPERTIES.V_ELSE) {
-        return `${key}`;
-      } else if (typeof value === 'string') {
-        return `${key}="${encodeQuotes(value)}"`;
-      }
-    })
-    .join(' ');
-
-  const stringifiedBindings = Object.entries(node.bindings).map(stringifyBinding(node)).join(' ');
-
-  str += stringifiedProperties;
-  str += stringifiedBindings;
-
-  // spreads
-
-  const stringifySpreads = () => {
-    let spreads = filter(node.bindings, (binding) => binding?.type === 'spread').map((value) =>
-      value!.code === 'props' ? '$props' : value!.code,
-    );
-
-    if (spreads.length === 0) {
-      return '';
-    }
-
-    const stringifiedValue = pipe(
-      spreads.length > 1 ? spreads.map((spread) => `...${spread}`).join(', ') : spreads[0],
-    );
-
-    return ` ${SPECIAL_PROPERTIES.V_BIND}=${encodeQuotes(stringifiedValue)} `;
-  };
-
-  str += stringifySpreads();
+  str += getBlockBindings(node);
 
   if (selfClosingTags.has(node.name)) {
     return str + ' />';
