@@ -1693,6 +1693,42 @@ export default function ComponentWithContext(props) {
 "
 `;
 
+exports[`React > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          {foo.value}
+
+          <div>other</div>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+"
+`;
+
 exports[`React > jsx > Javascript Test > contentState 1`] = `
 "import * as React from \\"react\\";
 import { useContext } from \\"react\\";
@@ -1738,7 +1774,7 @@ export default function Button(props) {
             {...props.attributes}
             onClick={(event) => props.onClick(event)}
           >
-            {props.text}
+            {props.buttonText}
           </button>
         </>
       ) : null}
@@ -4703,6 +4739,47 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
 "
 `;
 
+exports[`React > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          {foo.value}
+
+          <div>other</div>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+"
+`;
+
 exports[`React > jsx > Typescript Test > contentState 1`] = `
 "import * as React from \\"react\\";
 import { useContext } from \\"react\\";
@@ -4729,6 +4806,8 @@ exports[`React > jsx > Typescript Test > defaultProps 1`] = `
 export interface ButtonProps {
   attributes?: any;
   text?: string;
+  buttonText?: string; // no default value
+
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -4756,7 +4835,7 @@ export default function Button(props: ButtonProps) {
             {...props.attributes}
             onClick={(event) => props.onClick(event)}
           >
-            {props.text}
+            {props.buttonText}
           </button>
         </>
       ) : null}

@@ -1471,6 +1471,33 @@ exports[`Svelte > jsx > Javascript Test > componentWithContext 1`] = `
 {foo.value}"
 `;
 
+exports[`Svelte > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"<script>
+  import { getContext, setContext } from \\"svelte\\";
+
+  import Context1 from \\"@dummy/1\\";
+  import Context2 from \\"@dummy/2\\";
+
+  export let content;
+
+  let foo = getContext(Context1.key);
+  setContext(Context1.key, {
+    foo: \\"bar\\",
+
+    content() {
+      return content;
+    },
+  });
+  setContext(Context2.key, {
+    bar: \\"baz\\",
+  });
+</script>
+
+{foo.value}
+
+<div>other</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > contentState 1`] = `
 "<script>
   import { setContext } from \\"svelte\\";
@@ -1498,6 +1525,7 @@ exports[`Svelte > jsx > Javascript Test > defaultProps 1`] = `
   export let onClick = () => {
     console.log(\\"hi\\");
   };
+  export let buttonText;
 </script>
 
 <div>
@@ -1519,7 +1547,7 @@ exports[`Svelte > jsx > Javascript Test > defaultProps 1`] = `
         onClick(event);
       }}
     >
-      {text}
+      {buttonText}
     </button>
   {/if}
 </div>"
@@ -4081,6 +4109,39 @@ exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
 {foo.value}"
 `;
 
+exports[`Svelte > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ComponentWithContextProps {
+    content: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  import { getContext, setContext } from \\"svelte\\";
+
+  import Context1 from \\"@dummy/1\\";
+  import Context2 from \\"@dummy/2\\";
+
+  export let content: ComponentWithContextProps[\\"content\\"];
+
+  let foo = getContext(Context1.key);
+  setContext(Context1.key, {
+    foo: \\"bar\\",
+
+    content() {
+      return content;
+    },
+  });
+  setContext(Context2.key, {
+    bar: \\"baz\\",
+  });
+</script>
+
+{foo.value}
+
+<div>other</div>"
+`;
+
 exports[`Svelte > jsx > Typescript Test > contentState 1`] = `
 "<script lang=\\"ts\\">
   import { setContext } from \\"svelte\\";
@@ -4104,6 +4165,8 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
   export interface ButtonProps {
     attributes?: any;
     text?: string;
+    buttonText?: string; // no default value
+
     link?: string;
     openLinkInNewTab?: boolean;
     onClick?: () => void;
@@ -4118,6 +4181,7 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
   export let onClick: ButtonProps[\\"onClick\\"] = () => {
     console.log(\\"hi\\");
   };
+  export let buttonText: ButtonProps[\\"buttonText\\"];
 </script>
 
 <div>
@@ -4139,7 +4203,7 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
         onClick(event);
       }}
     >
-      {text}
+      {buttonText}
     </button>
   {/if}
 </div>"

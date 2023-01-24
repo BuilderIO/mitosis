@@ -3692,6 +3692,84 @@ export default ComponentWithContext;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"import { useContext } from \\"solid-js\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          <>{foo.value}</>
+          <div>other</div>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > componentWithContextMultiRoot 2`] = `
+"import { useContext } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <>
+      <Context2.Provider
+        value={{
+          bar: \\"baz\\",
+        }}
+      >
+        <Context1.Provider
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+        >
+          <>
+            <>{foo.value}</>
+            <div>other</div>
+          </>
+        </Context1.Provider>
+      </Context2.Provider>
+    </>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > contentState 1`] = `
 "import BuilderContext from \\"@dummy/context.jsx\\";
 
@@ -3757,7 +3835,7 @@ function Button(props) {
           {...props.attributes}
           onClick={(event) => props.onClick(event)}
         >
-          {props.text}
+          {props.buttonText}
         </button>
       </Show>
     </div>
@@ -3792,7 +3870,7 @@ function Button(props) {
             {...props.attributes}
             onClick={(event) => props.onClick(event)}
           >
-            {props.text}
+            {props.buttonText}
           </button>
         </Show>
       </div>
@@ -10036,6 +10114,91 @@ export default ComponentWithContext;
 "
 `;
 
+exports[`Solid > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"import { useContext } from \\"solid-js\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          <>{foo.value}</>
+          <div>other</div>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > componentWithContextMultiRoot 2`] = `
+"import { useContext } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <>
+      <Context2.Provider
+        value={{
+          bar: \\"baz\\",
+        }}
+      >
+        <Context1.Provider
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+        >
+          <>
+            <>{foo.value}</>
+            <div>other</div>
+          </>
+        </Context1.Provider>
+      </Context2.Provider>
+    </>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
 exports[`Solid > jsx > Typescript Test > contentState 1`] = `
 "import BuilderContext from \\"@dummy/context.jsx\\";
 
@@ -10086,6 +10249,8 @@ exports[`Solid > jsx > Typescript Test > defaultProps 1`] = `
 export interface ButtonProps {
   attributes?: any;
   text?: string;
+  buttonText?: string; // no default value
+
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -10109,7 +10274,7 @@ function Button(props: ButtonProps) {
           {...props.attributes}
           onClick={(event) => props.onClick(event)}
         >
-          {props.text}
+          {props.buttonText}
         </button>
       </Show>
     </div>
@@ -10127,6 +10292,8 @@ import { css } from \\"solid-styled-components\\";
 export interface ButtonProps {
   attributes?: any;
   text?: string;
+  buttonText?: string; // no default value
+
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -10151,7 +10318,7 @@ function Button(props: ButtonProps) {
             {...props.attributes}
             onClick={(event) => props.onClick(event)}
           >
-            {props.text}
+            {props.buttonText}
           </button>
         </Show>
       </div>

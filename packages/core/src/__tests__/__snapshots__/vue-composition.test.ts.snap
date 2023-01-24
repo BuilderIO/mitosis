@@ -11,9 +11,7 @@ exports[`Vue > jsx > Javascript Test > AdvancedRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -299,9 +297,7 @@ exports[`Vue > jsx > Javascript Test > BasicRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -1758,6 +1754,32 @@ provide(Context2.key, { bar: \\"baz\\" });
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"<template>
+  {{ foo.value }}
+  <div>other</div>
+</template>
+
+<script setup>
+import { inject, provide } from \\"vue\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+const props = defineProps([\\"content\\"]);
+
+const foo = inject(Context1.key);
+
+provide(Context1.key, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(Context2.key, { bar: \\"baz\\" });
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > contentState 1`] = `
 "<template>
   <div>setting context</div>
@@ -1792,7 +1814,7 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
 
     <template v-if=\\"!link\\">
       <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
-        {{ text }}
+        {{ buttonText }}
       </button>
     </template>
   </div>
@@ -1801,12 +1823,13 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
 <script setup>
 const props = withDefaults(defineProps(), {
   link: \\"https://builder.io/\\",
-  attributes: {},
+  attributes: undefined,
   openLinkInNewTab: false,
   text: \\"default text\\",
   onClick: () => {
     console.log(\\"hi\\");
   },
+  buttonText: undefined,
 });
 </script>"
 `;
@@ -1835,7 +1858,7 @@ exports[`Vue > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 <script setup>
 const props = withDefaults(defineProps(), {
   link: \\"https://builder.io/\\",
-  attributes: {},
+  attributes: undefined,
   openLinkInNewTab: false,
   text: \\"default text\\",
   onClick: () => {},
@@ -2713,9 +2736,7 @@ exports[`Vue > jsx > Typescript Test > AdvancedRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -3016,9 +3037,7 @@ exports[`Vue > jsx > Typescript Test > BasicRef 1`] = `
         @blur=\\"onBlur()\\"
         @input=\\"name = $event.target.value\\"
       />
-
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
@@ -4643,6 +4662,35 @@ provide(Context2.key, { bar: \\"baz\\" });
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"<template>
+  {{ foo.value }}
+  <div>other</div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { inject, provide } from \\"vue\\";
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+const props = defineProps<ComponentWithContextProps>();
+
+const foo = inject(Context1.key);
+
+provide(Context1.key, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(Context2.key, { bar: \\"baz\\" });
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > contentState 1`] = `
 "<template>
   <div>setting context</div>
@@ -4677,7 +4725,7 @@ exports[`Vue > jsx > Typescript Test > defaultProps 1`] = `
 
     <template v-if=\\"!link\\">
       <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
-        {{ text }}
+        {{ buttonText }}
       </button>
     </template>
   </div>
@@ -4687,6 +4735,8 @@ exports[`Vue > jsx > Typescript Test > defaultProps 1`] = `
 export interface ButtonProps {
   attributes?: any;
   text?: string;
+  buttonText?: string; // no default value
+
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -4694,12 +4744,13 @@ export interface ButtonProps {
 
 const props = withDefaults(defineProps<ButtonProps>(), {
   link: \\"https://builder.io/\\",
-  attributes: {},
+  attributes: undefined,
   openLinkInNewTab: false,
   text: \\"default text\\",
   onClick: () => {
     console.log(\\"hi\\");
   },
+  buttonText: undefined,
 });
 </script>"
 `;
@@ -4736,7 +4787,7 @@ export interface ButtonProps {
 
 const props = withDefaults(defineProps<ButtonProps>(), {
   link: \\"https://builder.io/\\",
-  attributes: {},
+  attributes: undefined,
   openLinkInNewTab: false,
   text: \\"default text\\",
   onClick: () => {},
@@ -5784,7 +5835,7 @@ exports[`Vue > svelte > Javascript Test > classDirective 1`] = `
 <script setup>
 import { ref } from \\"vue\\";
 
-const props = withDefaults(defineProps(), { disabled: {} });
+const props = withDefaults(defineProps(), { disabled: undefined });
 const focus = ref(true);
 
 function _classStringToObject(str) {
@@ -6104,7 +6155,7 @@ exports[`Vue > svelte > Typescript Test > classDirective 1`] = `
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
-const props = withDefaults(defineProps<undefined>(), { disabled: {} });
+const props = withDefaults(defineProps<undefined>(), { disabled: undefined });
 const focus = ref(true);
 
 function _classStringToObject(str) {
