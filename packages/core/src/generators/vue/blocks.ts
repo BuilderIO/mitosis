@@ -331,7 +331,7 @@ const stringifyBinding =
   };
 
 const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType: SpreadType }) => {
-  let spreads = filter(
+  const spreads = filter(
     node.bindings,
     (binding) => binding?.type === 'spread' && binding.spreadType === spreadType,
   ).map((value) => (value!.code === 'props' ? '$props' : value!.code));
