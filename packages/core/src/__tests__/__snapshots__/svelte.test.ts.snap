@@ -116,7 +116,6 @@ exports[`Svelte > jsx > Javascript Test > Basic Context 1`] = `
   import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
   let myService = getContext(MyService.key);
-  setContext(Injector, createInjector());
 
   function onChange() {
     const change = myService.method(\\"change\\");
@@ -131,6 +130,8 @@ exports[`Svelte > jsx > Javascript Test > Basic Context 1`] = `
     const bye = myService.method(\\"hi\\");
     console.log(bye);
   });
+
+  setContext(Injector, createInjector());
 </script>
 
 <div>
@@ -1456,6 +1457,7 @@ exports[`Svelte > jsx > Javascript Test > componentWithContext 1`] = `
   export let content;
 
   let foo = getContext(Context1.key);
+
   setContext(Context1.key, {
     foo: \\"bar\\",
 
@@ -1481,6 +1483,7 @@ exports[`Svelte > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
   export let content;
 
   let foo = getContext(Context1.key);
+
   setContext(Context1.key, {
     foo: \\"bar\\",
 
@@ -2119,6 +2122,15 @@ exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
   export let content;
   export let customComponents;
 
+  onMount(() => {
+    sendComponentsToVisualEditor(customComponents);
+  });
+
+  function onUpdateFn_0() {
+    dispatchNewContentToVisualEditor(content);
+  }
+  $: onUpdateFn_0(...[content]);
+
   setContext(BuilderContext.key, {
     get content() {
       return 3;
@@ -2128,15 +2140,6 @@ exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
       return 4;
     },
   });
-
-  onMount(() => {
-    sendComponentsToVisualEditor(customComponents);
-  });
-
-  function onUpdateFn_0() {
-    dispatchNewContentToVisualEditor(content);
-  }
-  $: onUpdateFn_0(...[content]);
 </script>
 
 <div
@@ -2463,7 +2466,6 @@ exports[`Svelte > jsx > Typescript Test > Basic Context 1`] = `
   import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
   let myService = getContext(MyService.key);
-  setContext(Injector, createInjector());
 
   function onChange() {
     const change = myService.method(\\"change\\");
@@ -2478,6 +2480,8 @@ exports[`Svelte > jsx > Typescript Test > Basic Context 1`] = `
     const bye = myService.method(\\"hi\\");
     console.log(bye);
   });
+
+  setContext(Injector, createInjector());
 </script>
 
 <div>
@@ -4094,6 +4098,7 @@ exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
   export let content: ComponentWithContextProps[\\"content\\"];
 
   let foo = getContext(Context1.key);
+
   setContext(Context1.key, {
     foo: \\"bar\\",
 
@@ -4125,6 +4130,7 @@ exports[`Svelte > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
   export let content: ComponentWithContextProps[\\"content\\"];
 
   let foo = getContext(Context1.key);
+
   setContext(Context1.key, {
     foo: \\"bar\\",
 
@@ -4905,6 +4911,15 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
   export let content: Props[\\"content\\"];
   export let customComponents: Props[\\"customComponents\\"];
 
+  onMount(() => {
+    sendComponentsToVisualEditor(customComponents);
+  });
+
+  function onUpdateFn_0() {
+    dispatchNewContentToVisualEditor(content);
+  }
+  $: onUpdateFn_0(...[content]);
+
   setContext(BuilderContext.key, {
     get content() {
       return 3;
@@ -4914,15 +4929,6 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
       return 4;
     },
   });
-
-  onMount(() => {
-    sendComponentsToVisualEditor(customComponents);
-  });
-
-  function onUpdateFn_0() {
-    dispatchNewContentToVisualEditor(content);
-  }
-  $: onUpdateFn_0(...[content]);
 </script>
 
 <div
@@ -5266,9 +5272,10 @@ exports[`Svelte > svelte > Javascript Test > context 1`] = `
   import { getContext, setContext } from \\"svelte\\";
 
   let disabled = getContext(\\"disabled\\".key);
-  setContext(\\"activeTab\\", activeTab);
 
   let activeTab = 0;
+
+  setContext(\\"activeTab\\", activeTab);
 </script>
 
 <div>{activeTab}</div>"
@@ -5542,9 +5549,10 @@ exports[`Svelte > svelte > Typescript Test > context 1`] = `
   import { getContext, setContext } from \\"svelte\\";
 
   let disabled = getContext(\\"disabled\\".key);
-  setContext(\\"activeTab\\", activeTab);
 
   let activeTab = 0;
+
+  setContext(\\"activeTab\\", activeTab);
 </script>
 
 <div>{activeTab}</div>"
