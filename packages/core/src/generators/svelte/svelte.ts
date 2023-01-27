@@ -274,7 +274,6 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           : ''
       }
       ${getContextCode(json)}
-      ${setContextCode({ json, options })}
 
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
@@ -308,6 +307,11 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             `;
           })
           .join(';') || ''
+      }
+
+      ${
+        // make sure this is after all other state/code is initialized
+        setContextCode({ json, options })
       }
 
       ${!json.hooks.onUnMount?.code ? '' : `onDestroy(() => { ${json.hooks.onUnMount.code} });`}
