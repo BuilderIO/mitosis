@@ -35,7 +35,7 @@ const getOverrideFilenames = ({
     case 'solid':
     case 'qwik': {
       // strip 'tsx', 'ts', 'jsx', 'js' from filename
-      const filenameStrippedFromExtensions = filename.replace(/(.jsx?|.tsx?)/, '');
+      const filenameStrippedFromExtensions = filename.replace(/(\.jsx?|\.tsx?)/, '');
 
       const EXTENSIONS = ['.tsx', '.ts', '.jsx', '.js'];
       const filePaths: string[] = EXTENSIONS.map((ext) => filenameStrippedFromExtensions + ext);
