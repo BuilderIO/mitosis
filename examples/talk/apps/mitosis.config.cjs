@@ -1,5 +1,5 @@
 /**
- * @type {import('@builder.io/mitosis'.MitosisConfig)}
+ * @type {import('@builder.io/mitosis').MitosisConfig}
  */
 module.exports = {
   files: 'src/**',
