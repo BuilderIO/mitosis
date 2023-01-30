@@ -94,7 +94,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
             emitUseContextProvider(file, component);
             emitUseClientEffect(file, component);
             emitUseMount(file, component);
-            emitUseWatch(file, component);
+            emitUseTask(file, component);
             emitUseCleanup(file, component);
 
             emitTagNameHack(file, component, component.meta.useMetadata?.elementTag);
@@ -171,10 +171,10 @@ function emitUseMount(file: File, component: MitosisComponent) {
   }
 }
 
-function emitUseWatch(file: File, component: MitosisComponent) {
+function emitUseTask(file: File, component: MitosisComponent) {
   if (component.hooks.onUpdate) {
     component.hooks.onUpdate.forEach((onUpdate) => {
-      file.src.emit(file.import(file.qwikModule, 'useWatch$').localName, '(({track})=>{');
+      file.src.emit(file.import(file.qwikModule, 'useTask$').localName, '(({track})=>{');
       emitTrackExpressions(file.src, onUpdate.deps);
       file.src.emit(convertTypeScriptToJS(onUpdate.code));
       file.src.emit('});');
@@ -183,18 +183,16 @@ function emitUseWatch(file: File, component: MitosisComponent) {
 }
 
 function emitTrackExpressions(src: SrcBuilder, deps?: string) {
-  if (deps && deps.startsWith('[') && deps.endsWith(']')) {
-    const dependencies = deps.substring(1, deps.length - 1).split(',');
-    dependencies.forEach((dep) => {
-      const lastDotIdx = dep.lastIndexOf('.');
-      if (lastDotIdx > 0) {
-        const objExp = dep.substring(0, lastDotIdx).replace(/\?$/, '');
-        const objProp = dep.substring(lastDotIdx + 1);
-        objExp && src.emit(objExp, '&&track(', objExp, ',"', objProp, '");');
-      }
-    });
+  if (!deps) {
+    return;
   }
+
+  const dependencies = deps.substring(1, deps.length - 1).split(',');
+  dependencies.forEach((dep) => {
+    src.emit(`track(() => ${dep});`);
+  });
 }
+
 function emitUseCleanup(file: File, component: MitosisComponent) {
   if (component.hooks.onUnMount) {
     const code = component.hooks.onUnMount.code;
@@ -214,34 +212,32 @@ function emitJSX(file: File, component: MitosisComponent, mutable: string[]) {
 }
 
 function emitUseContextProvider(file: File, component: MitosisComponent) {
-  Object.keys(component.context.set).forEach((ctxKey) => {
-    const context = component.context.set[ctxKey];
-    file.src.emit(
-      file.import(file.qwikModule, 'useContextProvider').localName,
-      '(',
-      context.name,
-      ',',
-      file.import(file.qwikModule, 'useStore').localName,
-      '({',
-    );
-    for (const prop of Object.keys(context.value || {})) {
-      const propValue = context.value![prop];
-      file.src.emit(prop, ':');
+  Object.entries(component.context.set).forEach(([_ctxKey, context]) => {
+    file.src.emit(`
+      ${file.import(file.qwikModule, 'useContextProvider').localName}(
+        ${context.name}, ${file.import(file.qwikModule, 'useStore').localName}({
+      `);
+
+    for (const [prop, propValue] of Object.entries(context.value || {})) {
+      file.src.emit(`${prop}: `);
       switch (propValue?.type) {
         case 'getter':
-          file.src.emit('(()=>{', extractGetterBody(propValue.code), '})(),');
-          continue;
+          file.src.emit(`(()=>{
+            ${extractGetterBody(propValue.code)}
+          })()`);
+          break;
 
         case 'function':
         case 'method':
           throw new Error('Qwik: Functions are not supported in context');
 
         case 'property':
-          file.src.emit(stableInject(propValue.code), ',');
-          continue;
+          file.src.emit(stableInject(propValue.code));
+          break;
       }
+      file.src.emit(',');
     }
-    file.src.emit('})', ');');
+    file.src.emit('}));');
   });
 }
 
