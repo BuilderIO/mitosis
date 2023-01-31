@@ -1,7 +1,7 @@
 import glob from 'fast-glob';
 
 /**
- * get all files that match `files`glob, and filter out those that match `exclude` glob.
+ * get all files that match `files` glob, and filter out those that match `exclude` glob.
  *
  */
 export const getFiles = ({
