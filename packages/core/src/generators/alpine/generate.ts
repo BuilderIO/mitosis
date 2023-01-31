@@ -21,6 +21,7 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
 import { renderMountHook } from './render-mount-hook';
 import { babelTransformCode } from '../../helpers/babel-transform';
+import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 
 export interface ToAlpineOptions extends BaseTranspilerOptions {
   /**
@@ -60,7 +61,6 @@ export const isValidAlpineBinding = (str = '') => {
 };
 
 const removeOnFromEventName = (str: string) => str.replace(/^on/, '');
-const prefixEvent = (str: string) => str.replace(/(?<=[\s]|^)event/gm, '$event');
 const removeTrailingSemicolon = (str: string) => str.replace(/;$/, '');
 const trim = (str: string) => str.trim();
 
@@ -84,7 +84,12 @@ const getStateObjectString = (json: MitosisComponent) =>
 
 const bindEventHandlerKey = compose(dashCase, removeOnFromEventName);
 const bindEventHandlerValue = compose(
-  prefixEvent,
+  (x: string) =>
+    replaceIdentifiers({
+      code: x,
+      from: 'event',
+      to: '$event',
+    }),
   removeTrailingSemicolon,
   trim,
   removeSurroundingBlock,
