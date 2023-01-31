@@ -21,7 +21,7 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
 import { renderMountHook } from './render-mount-hook';
 import { babelTransformCode } from '../../helpers/babel-transform';
-import { replaceIdentifiers } from 'src/helpers/replace-identifiers';
+import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 
 export interface ToAlpineOptions extends BaseTranspilerOptions {
   /**
