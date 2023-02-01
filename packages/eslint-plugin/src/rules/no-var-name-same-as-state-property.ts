@@ -79,14 +79,50 @@ const rule: Rule.RuleModule = {
 
           if (types.isFunctionExpression((prop as types.Property).value)) {
             const { body } = ((prop as types.Property).value as types.FunctionExpression).body;
+            const params = ((prop as types.Property).value as types.FunctionExpression).params;
+
+            for (const prop of node.arguments[0].properties) {
+              if (!types.isProperty(prop) || !types.isIdentifier((prop as types.Property).key))
+                continue;
+              const { name } = (prop as types.Property).key as types.Identifier;
+              params.forEach((p) => {
+                if (types.isIdentifier(p) && p.name === name) {
+                  context.report({
+                    node: prop,
+                    message: 'variables with the same name as a state property will shadow it',
+                  });
+                }
+              });
+            }
+
             const varDeclarators: types.VariableDeclarator[] = [];
+            const functionDeclarations: types.FunctionDeclaration[] = [];
             body.forEach((n) => {
               if (types.isVariableDeclaration(n)) {
                 varDeclarators.push(...n.declarations);
+              } else if (types.isFunctionDeclaration(n)) {
+                functionDeclarations.push(n);
               }
             });
 
-            if (!varDeclarators.length) continue;
+            if (!varDeclarators.length && !functionDeclarations.length) continue;
+
+            for (const d of functionDeclarations) {
+              for (const p of d.params) {
+                if (!types.isIdentifier(p)) continue;
+                for (const prop of node.arguments[0].properties) {
+                  if (!types.isProperty(prop) || !types.isIdentifier((prop as types.Property).key))
+                    continue;
+                  const { name } = (prop as types.Property).key as types.Identifier;
+                  if (p.name === name) {
+                    context.report({
+                      node: prop,
+                      message: 'variables with the same name as a state property will shadow it',
+                    });
+                  }
+                }
+              }
+            }
 
             for (const d of varDeclarators) {
               for (const prop of node.arguments[0].properties) {
@@ -98,6 +134,19 @@ const rule: Rule.RuleModule = {
                   context.report({
                     node: prop,
                     message: 'variables with the same name as a state property will shadow it',
+                  });
+                } else if (
+                  types.isArrowFunctionExpression(d.init) ||
+                  types.isFunctionExpression(d.init)
+                ) {
+                  const { params } = d.init;
+                  params.forEach((p) => {
+                    if (types.isIdentifier(p) && p.name === name) {
+                      context.report({
+                        node: prop,
+                        message: 'variables with the same name as a state property will shadow it',
+                      });
+                    }
                   });
                 }
               }
