@@ -66,7 +66,8 @@ export interface ToTaroOptions extends BaseTranspilerOptions {
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
 }
 
-export const collectTaroeStyles = (json: MitosisComponent): ClassStyleMap => {
+// TODO: px to 2 px
+export const collectTaroStyles = (json: MitosisComponent): ClassStyleMap => {
   const styleMap: ClassStyleMap = {};
 
   const componentIndexes: { [className: string]: number | undefined } = {};
@@ -123,7 +124,7 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
     pre: (json: MitosisComponent) => {
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
-          // TODO: handle TextInput, Image, etc
+          // TODO: More dom tags convert to  @tarojs/components
           if(!!TagMap[node.name]) {
             node.name = TagMap[node.name];
           } else if (node.name.toLowerCase() === node.name) {
