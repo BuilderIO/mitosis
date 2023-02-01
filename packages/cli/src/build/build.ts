@@ -27,17 +27,16 @@ import {
   parseSvelte,
 } from '@builder.io/mitosis';
 import debug from 'debug';
-import glob from 'fast-glob';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
+import { getFiles } from './helpers/files';
 import {
   checkIsMitosisComponentFilePath,
   INPUT_EXTENSIONS,
-  INPUT_EXTENSIONS_ARRAY,
   INPUT_EXTENSION_REGEX,
 } from './helpers/inputs-extensions';
 import { checkShouldOutputTypeScript } from './helpers/options';
@@ -82,7 +81,7 @@ async function clean(options: MitosisConfig) {
   const patterns = options.targets.map(
     (target) => `${options.dest}/${options.getTargetPath({ target })}/${options.files}`,
   );
-  const files = await glob(patterns);
+  const files = getFiles({ files: patterns, exclude: options.exclude });
   await Promise.all(
     files.map(async (file) => {
       await remove(file);
@@ -172,8 +171,9 @@ const parseSvelteComponent = async ({ path, file }: { path: string; file: string
 };
 
 const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
-  const pattern = `**/*(${INPUT_EXTENSIONS_ARRAY.join('|')})`;
-  const paths = (await glob(options.files, { cwd })).filter(checkIsMitosisComponentFilePath);
+  const paths = getFiles({ files: options.files, exclude: options.exclude }).filter(
+    checkIsMitosisComponentFilePath,
+  );
   return Promise.all(
     paths.map(async (path): Promise<ParsedMitosisJson> => {
       try {
@@ -425,7 +425,7 @@ async function buildContextFile({
  */
 async function buildNonComponentFiles(args: TargetContextWithConfig) {
   const { target, options } = args;
-  const nonComponentFiles = (await glob(options.files, { cwd })).filter(
+  const nonComponentFiles = getFiles({ files: options.files, exclude: options.exclude }).filter(
     (file) => file.endsWith('.ts') || file.endsWith('.js'),
   );
 
