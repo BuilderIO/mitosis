@@ -60,8 +60,8 @@ export const DEFAULT_Component_SET = new Set<string>([
   'NavigationBar',
   'PageMeta',
   'VoipRoom',
-  'AdCustom'
-])
+  'AdCustom',
+]);
 
 export interface ToTaroOptions extends BaseTranspilerOptions {
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
@@ -90,7 +90,7 @@ export const collectTaroStyles = (json: MitosisComponent): ClassStyleMap => {
         let newValue = parseFloat(propertyValue);
         if (!isNaN(newValue)) {
           if (propertyValue.endsWith('px')) {
-            newValue = 2 * newValue
+            newValue = 2 * newValue;
             value[key] = `${newValue}px`;
           } else {
             value[key] = newValue;
@@ -110,13 +110,13 @@ export const collectTaroStyles = (json: MitosisComponent): ClassStyleMap => {
 };
 
 export const TagMap: Record<string, string> = {
-  'span': 'Text',
-  'button': 'Button',
-  'input': 'Input',
-  'img': 'Image',
-  'form': 'Form',
-  'textarea': 'Textarea'
-}
+  span: 'Text',
+  button: 'Button',
+  input: 'Input',
+  img: 'Image',
+  form: 'Form',
+  textarea: 'Textarea',
+};
 
 /**
  * Plugin that handles necessary transformations from React to React Native:
@@ -129,7 +129,7 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
           // TODO: More dom tags convert to  @tarojs/components
-          if(!!TagMap[node.name]) {
+          if (!!TagMap[node.name]) {
             node.name = TagMap[node.name];
           } else if (node.name.toLowerCase() === node.name) {
             node.name = 'View';
