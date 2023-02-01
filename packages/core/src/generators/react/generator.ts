@@ -470,6 +470,30 @@ export const componentToReact: TranspilerGenerator<ToReactOptions> =
     return str;
   };
 
+const getDefaultImport = (options: ToReactOptions): string => {
+  const { preact, type } = options
+  if (preact) {
+    return `
+    /** @jsx h */
+    import { h, Fragment } from 'preact';
+    `
+  }
+  if (type === 'native') {
+    return `
+    import * as React from 'react';
+    import { View, StyleSheet, Image, Text } from 'react-native';
+    `
+  }
+  if (type === 'taro') {
+    return `
+    import * as React from 'react';
+    import { View, StyleSheet, Image, Text } from '@tarojs/components';
+    `
+  }
+
+  return "import * as React from 'react';"
+}
+  
 const _componentToReact = (
   json: MitosisComponent,
   options: ToReactOptions,
@@ -579,17 +603,7 @@ const _componentToReact = (
 
   let str = dedent`
   ${
-    options.preact
-      ? `
-    /** @jsx h */
-    import { h, Fragment } from 'preact';
-    `
-      : options.type !== 'native'
-      ? "import * as React from 'react';"
-      : `
-  import * as React from 'react';
-  import { View, StyleSheet, Image, Text } from 'react-native';
-  `
+    getDefaultImport(options)
   }
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${

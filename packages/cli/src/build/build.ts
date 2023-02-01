@@ -19,6 +19,7 @@ import {
   componentToTemplate,
   componentToVue2,
   componentToVue3,
+  componentToTaro,
   MitosisComponent,
   MitosisConfig,
   parseJsx,
@@ -294,6 +295,8 @@ const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['g
       return componentToTemplate;
     case 'liquid':
       return componentToLiquid;
+    case 'taro':
+      return componentToTaro;
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }
