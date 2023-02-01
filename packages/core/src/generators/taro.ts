@@ -10,6 +10,7 @@ import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler'
 import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
 
+// @tarojs/components
 export const DEFAULT_Component_SET = new Set<string>([
   'View',
   'Icon',
