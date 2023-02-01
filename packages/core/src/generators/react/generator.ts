@@ -470,6 +470,7 @@ export const componentToReact: TranspilerGenerator<ToReactOptions> =
     return str;
   };
 
+// TODO: import target components when they are required
 const getDefaultImport = (options: ToReactOptions): string => {
   const { preact, type } = options
   if (preact) {
@@ -487,7 +488,7 @@ const getDefaultImport = (options: ToReactOptions): string => {
   if (type === 'taro') {
     return `
     import * as React from 'react';
-    import { View, StyleSheet, Image, Text } from '@tarojs/components';
+    import { View, Image, Text, Button, Input, Textarea, Form } from '@tarojs/components';
     `
   }
 

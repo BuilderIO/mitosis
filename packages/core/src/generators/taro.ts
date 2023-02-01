@@ -113,6 +113,9 @@ export const TagMap: Record<string, string> = {
   'span': 'Text',
   'button': 'Button',
   'input': 'Input',
+  'img': 'Image',
+  'form': 'Form',
+  'textarea': 'Textarea'
 }
 
 /**
