@@ -14,6 +14,6 @@ export type Plugin = (options?: any) => {
     post?: (code: string) => string;
   };
   components?: {
-    pre?: (json: MitosisComponent) => string
-  }
+    pre?: (json: MitosisComponent) => string;
+  };
 };

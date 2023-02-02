@@ -489,7 +489,7 @@ const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): stri
   if (type === 'taro') {
     return `
     import * as React from 'react';
-    ${runPreComponentsPlugin(json, plugins ||[])}
+    ${runPreComponentsPlugin(json, plugins || [])}
     `;
   }
 

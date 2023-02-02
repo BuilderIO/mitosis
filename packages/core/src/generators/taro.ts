@@ -157,22 +157,22 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
   },
   components: {
     pre: (json: MitosisComponent) => {
-      const componentsList:Set<string> = new Set()
+      const componentsList: Set<string> = new Set();
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
           if (DEFAULT_Component_SET.has(node.name)) {
-            componentsList.add(node.name)
+            componentsList.add(node.name);
           }
           if (node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length) {
             componentsList.add('Text');
           }
         }
       });
-      const components: string[] = []
-      componentsList.forEach((value) => components.push(value))
-      return `import { ${components} } from '@tarojs/components';`
-    }
-  }
+      const components: string[] = [];
+      componentsList.forEach((value) => components.push(value));
+      return `import { ${components} } from '@tarojs/components';`;
+    },
+  },
 });
 
 const DEFAULT_OPTIONS: ToTaroOptions = {
