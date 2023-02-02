@@ -46,3 +46,14 @@ export const runPostCodePlugins = (code: string, plugins: Plugin[], options?: an
   }
   return string;
 };
+
+export const runPreComponentsPlugin = (json: MitosisComponent, plugins: Plugin[], options?: any) => {
+  const imports = []
+  for (const plugin of plugins) {
+    const preFunction = plugin(options).components?.pre;
+    if (preFunction) {
+      imports.push(preFunction(json) || '');
+    }
+  }
+  return imports.join('\n');
+}

@@ -27,6 +27,7 @@ import {
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
+  runPreComponentsPlugin,
 } from '../../modules/plugins';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
@@ -471,8 +472,8 @@ export const componentToReact: TranspilerGenerator<ToReactOptions> =
   };
 
 // TODO: import target components when they are required
-const getDefaultImport = (options: ToReactOptions): string => {
-  const { preact, type } = options;
+const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): string => {
+  const { preact, type, plugins } = options;
   if (preact) {
     return `
     /** @jsx h */
@@ -488,7 +489,7 @@ const getDefaultImport = (options: ToReactOptions): string => {
   if (type === 'taro') {
     return `
     import * as React from 'react';
-    import { View, Image, Text, Button, Input, Textarea, Form } from '@tarojs/components';
+    ${runPreComponentsPlugin(json, plugins ||[])}
     `;
   }
 
@@ -603,7 +604,7 @@ const _componentToReact = (
   };
 
   let str = dedent`
-  ${getDefaultImport(options)}
+  ${getDefaultImport(json, options)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${
     reactLibImports.size
