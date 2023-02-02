@@ -75,6 +75,55 @@ export default function MyComponent(props) {
 }
 ```
 
+```js
+import { useStore } from '@builder.io/mitosis';
+
+export default function MyComponent(props) {
+  const state = useStore({
+    response: 'null',
+    saveResponse(response) {
+      state.response = response;
+    },
+  });
+
+  return <div>Hello</div>;
+}
+```
+
+```js
+import { useStore } from '@builder.io/mitosis';
+
+export default function MyComponent(props) {
+  const state = useStore({
+    response: 'null',
+    saveResponse() {
+      const bar = (response) => {
+        return response;
+      };
+    },
+  });
+
+  return <div>Hello</div>;
+}
+```
+
+```js
+import { useStore } from '@builder.io/mitosis';
+
+export default function MyComponent(props) {
+  const state = useStore({
+    response: 'null',
+    saveResponse() {
+      function baz(response) {
+        return response;
+      }
+    },
+  });
+
+  return <div>Hello</div>;
+}
+```
+
 Examples of **correct** code for this rule:
 
 ```js
