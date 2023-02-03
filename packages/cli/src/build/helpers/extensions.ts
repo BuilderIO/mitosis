@@ -35,6 +35,7 @@ export const getFileExtensionForTarget = ({
     case 'react':
     case 'reactNative':
     case 'rsc':
+    case 'stencil':
       switch (type) {
         case 'import':
           // we can't have `.jsx`/`.tsx` extensions in the import paths, so we stick with implicit file extensions.
