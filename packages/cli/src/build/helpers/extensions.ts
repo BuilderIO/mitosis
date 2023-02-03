@@ -28,6 +28,8 @@ export const getFileExtensionForTarget = ({
       return '.ts';
     case 'lit':
       return '.ts';
+    case 'stencil':
+      return isTs ? '.ts' : '.js';
 
     // all JSX frameworks
     case 'solid':
