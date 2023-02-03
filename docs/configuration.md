@@ -1,12 +1,12 @@
 # Configuration
 
-
 ## Mitosis Configuration
+
 In the root of the project, from which you run mitosis, you can add a `mitosis.config.js` file that will be read by Mitosis. You can also specify a config file by option: `--config=<file>`.
 
 The `mitosis.config.js` file can take the following shape:
 
-```typescript
+````typescript
 
 type MitosisConfig = {
   /**
@@ -63,37 +63,35 @@ type MitosisConfig = {
    * If you provide this function, you must provide a value for every target yourself.
    */
   getTargetPath: ({ target }: { target: Target }) => string;
-```
+````
 
+The `Targets` type can be any one of, or an array of the following strings:
 
-The `Targets` type can be any one of, or an array of the following strings: 
 ```typescript
 type targets =
-  "alpine"
-  | "angular"
-  | "customElement"
-  | "html"
-  | "mitosis"
-  | "liquid"
-  | "react"
-  | "reactNative"
-  | "solid"
-  | "svelte"
-  | "swift"
-  | "template"
-  | "webcomponent"
-  | "vue"  
-  | "vue2"  
-  | "vue3"  
-  | "stencil"
-  | "qwik"
-  | "marko"
-  | "preact"
-  | "lit"
-  | "rsc";
-
+  | 'alpine'
+  | 'angular'
+  | 'customElement'
+  | 'html'
+  | 'mitosis'
+  | 'liquid'
+  | 'react'
+  | 'reactNative'
+  | 'solid'
+  | 'svelte'
+  | 'swift'
+  | 'template'
+  | 'webcomponent'
+  | 'vue'
+  | 'vue2'
+  | 'vue3'
+  | 'stencil'
+  | 'qwik'
+  | 'marko'
+  | 'preact'
+  | 'lit'
+  | 'rsc';
 ```
-
 
 Note that you can configure each target generator individually, providing plugins on a case-by-case basis.
 
