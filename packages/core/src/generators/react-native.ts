@@ -4,7 +4,7 @@ import { fastClone } from '../helpers/fast-clone';
 import traverse from 'traverse';
 import { ClassStyleMap } from '../helpers/styles/helpers';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 import { componentToReact, ToReactOptions } from './react';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { Plugin } from '..';
@@ -77,14 +77,18 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
 const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
   json: {
     pre: (json: MitosisComponent) => {
+      const RNComponentsImports: MitosisImport = { path: 'react-native', imports: {} };
+      json.imports.push(RNComponentsImports);
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
           // TODO: handle TextInput, Image, etc
           if (node.name.toLowerCase() === node.name) {
+            RNComponentsImports.imports.View = 'View';
             node.name = 'View';
           }
 
           if (node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length) {
+            RNComponentsImports.imports.Text = 'Text';
             node.name = 'Text';
           }
 

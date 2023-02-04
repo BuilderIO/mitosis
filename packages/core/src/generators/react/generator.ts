@@ -584,11 +584,8 @@ const _componentToReact = (
     /** @jsx h */
     import { h, Fragment } from 'preact';
     `
-      : options.type !== 'native'
-      ? "import * as React from 'react';"
       : `
   import * as React from 'react';
-  import { View, StyleSheet, Image, Text } from 'react-native';
   `
   }
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
