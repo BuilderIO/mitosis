@@ -27,7 +27,6 @@ import {
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-  runPreComponentsPlugin,
 } from '../../modules/plugins';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
@@ -489,7 +488,6 @@ const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): stri
   if (type === 'taro') {
     return `
     import * as React from 'react';
-    ${runPreComponentsPlugin(json, plugins || [])}
     `;
   }
 

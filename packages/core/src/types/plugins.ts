@@ -13,7 +13,4 @@ export type Plugin = (options?: any) => {
     // Happens after formatting
     post?: (code: string) => string;
   };
-  components?: {
-    pre?: (json: MitosisComponent) => string;
-  };
 };

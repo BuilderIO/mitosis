@@ -4,7 +4,7 @@ import traverse from 'traverse';
 import { fastClone } from '../helpers/fast-clone';
 import { ClassStyleMap } from '../helpers/styles/helpers';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 import { componentToReact, ToReactOptions } from './react';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { Plugin } from '..';
@@ -126,16 +126,21 @@ export const TagMap: Record<string, string> = {
 const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
   json: {
     pre: (json: MitosisComponent) => {
+      const TaroComponentsImports: MitosisImport = { path: '@tarojs/components', imports: {} };
+      json.imports.push(TaroComponentsImports);
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
           // TODO: More dom tags convert to  @tarojs/components
           if (!!TagMap[node.name]) {
+            TaroComponentsImports.imports[TagMap[node.name]] = TagMap[node.name];
             node.name = TagMap[node.name];
           } else if (node.name.toLowerCase() === node.name) {
+            TaroComponentsImports.imports.View = 'View';
             node.name = 'View';
           }
 
           if (node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length) {
+            TaroComponentsImports.imports.Text = 'Text';
             node.name = 'Text';
           }
 
@@ -153,24 +158,6 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           }
         }
       });
-    },
-  },
-  components: {
-    pre: (json: MitosisComponent) => {
-      const componentsList: Set<string> = new Set();
-      traverse(json).forEach((node) => {
-        if (isMitosisNode(node)) {
-          if (DEFAULT_Component_SET.has(node.name)) {
-            componentsList.add(node.name);
-          }
-          if (node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length) {
-            componentsList.add('Text');
-          }
-        }
-      });
-      const components: string[] = [];
-      componentsList.forEach((value) => components.push(value));
-      return `import { ${components} } from '@tarojs/components';`;
     },
   },
 });
