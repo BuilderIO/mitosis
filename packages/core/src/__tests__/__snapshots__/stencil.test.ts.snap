@@ -34,6 +34,7 @@ export default class MyBasicRefComponent {
         {this.showInput ? (
           <Fragment>
             <input
+              class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
               onBlur={(event) => this.onBlur()}
@@ -87,7 +88,7 @@ export default class MyBasicComponent {
 
   render() {
     return (
-      <div>
+      <div class=\\"test div\\">
         <input
           value={DEFAULT_VALUES.name || this.name}
           onInput={(myEvent) => (this.name = myEvent.target.value)}
@@ -360,6 +361,7 @@ export default class MyBasicRefComponent {
         {this.showInput ? (
           <Fragment>
             <input
+              class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
               onBlur={(event) => this.onBlur()}
@@ -545,9 +547,9 @@ export default class Column {
 
   render() {
     return (
-      <div>
+      <div class=\\"builder-columns div\\">
         {this.columns?.map((column, index) => (
-          <div>
+          <div class=\\"builder-column div-2\\">
             {column.content}
 
             {index}
@@ -1070,7 +1072,9 @@ export default class FormComponent {
 
         {this.submissionState === \\"error\\" && this.responseData ? (
           <>
-            <pre>{JSON.stringify(this.responseData, null, 2)}</pre>
+            <pre class=\\"builder-form-error-text pre\\">
+              {JSON.stringify(this.responseData, null, 2)}
+            </pre>
           </>
         ) : null}
 
@@ -1207,7 +1211,7 @@ export default class ImgStateComponent {
       <div>
         {this.images?.map((item, itemIndex) => (
           <Fragment>
-            <img src={item} key={itemIndex} />
+            <img class=\\"custom-class\\" src={item} key={itemIndex} />
           </Fragment>
         ))}
       </div>
@@ -1393,7 +1397,7 @@ export default class SlotCode {
     return (
       <div>
         <Slot>
-          <div>Default content</div>
+          <div class=\\"default-slot\\">Default content</div>
         </Slot>
       </div>
     );
@@ -1536,9 +1540,13 @@ export default class SmileReviews {
         {this.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" />
-            <textarea placeholder=\\"How was your experience?\\"></textarea>
+            <input class=\\"input\\" placeholder=\\"Title\\" />
+            <textarea
+              class=\\"textarea\\"
+              placeholder=\\"How was your experience?\\"
+            ></textarea>
             <button
+              class=\\"button\\"
               onClick={(event) => {
                 event.preventDefault();
                 this.showReviewPrompt = false;
@@ -1550,8 +1558,8 @@ export default class SmileReviews {
         ) : null}
 
         {this.reviews?.map((review, index) => (
-          <div key={review.id}>
-            <img src={review.avatar} />
+          <div class=\\"review\\" key={review.id}>
+            <img class=\\"img\\" src={review.avatar} />
 
             <div class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
               <div>
@@ -1748,6 +1756,7 @@ export default class MyBasicForwardRefComponent {
     return (
       <div>
         <input
+          class=\\"input\\"
           ref={(el) => (this.props.inputRef = el)}
           value={this.name}
           onInput={(event) => (this.name = event.target.value)}
@@ -1779,6 +1788,7 @@ export default class MyBasicForwardRefComponent {
     return (
       <div>
         <input
+          class=\\"input\\"
           ref={(el) => (this.props.inputRef = el)}
           value={this.name}
           onInput={(event) => (this.name = event.target.value)}
@@ -1841,7 +1851,11 @@ exports[`Stencil > jsx > Javascript Test > class + ClassName + css 1`] = `
 })
 export default class MyBasicComponent {
   render() {
-    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
+    return (
+      <div class=\\"test2 test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    );
   }
 }
 "
@@ -1860,7 +1874,11 @@ exports[`Stencil > jsx > Javascript Test > class + css 1`] = `
 })
 export default class MyBasicComponent {
   render() {
-    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
+    return (
+      <div class=\\"test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    );
   }
 }
 "
@@ -1879,7 +1897,11 @@ exports[`Stencil > jsx > Javascript Test > className + css 1`] = `
 })
 export default class MyBasicComponent {
   render() {
-    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
+    return (
+      <div class=\\"test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    );
   }
 }
 "
@@ -1897,7 +1919,7 @@ export default class ClassNameCode {
   render() {
     return (
       <div>
-        <div>Without Binding</div>
+        <div class=\\"no binding\\">Without Binding</div>
 
         <div class={state.bindings}>With binding</div>
       </div>
@@ -2213,7 +2235,7 @@ exports[`Stencil > jsx > Javascript Test > nestedStyles 1`] = `
 })
 export default class NestedStyles {
   render() {
-    return <div>Hello world</div>;
+    return <div class=\\"div\\">Hello world</div>;
   }
 }
 "
@@ -2507,7 +2529,7 @@ export default class RenderContent {
 
   render() {
     return (
-      <div onClick={(event) => trackClick(this.content.id)}>
+      <div class=\\"div\\" onClick={(event) => trackClick(this.content.id)}>
         <RenderBlocks blocks={this.content.blocks}></RenderBlocks>
       </div>
     );
@@ -2770,7 +2792,11 @@ exports[`Stencil > jsx > Javascript Test > use-style-and-css 1`] = `
 })
 export default class MyComponent {
   render() {
-    return <button type=\\"button\\">Button</button>;
+    return (
+      <button class=\\"button\\" type=\\"button\\">
+        Button
+      </button>
+    );
   }
 }
 "
@@ -2853,6 +2879,7 @@ export default class MyBasicRefComponent {
         {this.showInput ? (
           <Fragment>
             <input
+              class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
               onBlur={(event) => this.onBlur()}
@@ -2906,7 +2933,7 @@ export default class MyBasicComponent {
 
   render() {
     return (
-      <div>
+      <div class=\\"test div\\">
         <input
           value={DEFAULT_VALUES.name || this.name}
           onInput={(myEvent) => (this.name = myEvent.target.value)}
@@ -3179,6 +3206,7 @@ export default class MyBasicRefComponent {
         {this.showInput ? (
           <Fragment>
             <input
+              class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
               onBlur={(event) => this.onBlur()}
@@ -3364,9 +3392,9 @@ export default class Column {
 
   render() {
     return (
-      <div>
+      <div class=\\"builder-columns div\\">
         {this.columns?.map((column, index) => (
-          <div>
+          <div class=\\"builder-column div-2\\">
             {column.content}
 
             {index}
@@ -3889,7 +3917,9 @@ export default class FormComponent {
 
         {this.submissionState === \\"error\\" && this.responseData ? (
           <>
-            <pre>{JSON.stringify(this.responseData, null, 2)}</pre>
+            <pre class=\\"builder-form-error-text pre\\">
+              {JSON.stringify(this.responseData, null, 2)}
+            </pre>
           </>
         ) : null}
 
@@ -4026,7 +4056,7 @@ export default class ImgStateComponent {
       <div>
         {this.images?.map((item, itemIndex) => (
           <Fragment>
-            <img src={item} key={itemIndex} />
+            <img class=\\"custom-class\\" src={item} key={itemIndex} />
           </Fragment>
         ))}
       </div>
@@ -4212,7 +4242,7 @@ export default class SlotCode {
     return (
       <div>
         <Slot>
-          <div>Default content</div>
+          <div class=\\"default-slot\\">Default content</div>
         </Slot>
       </div>
     );
@@ -4355,9 +4385,13 @@ export default class SmileReviews {
         {this.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" />
-            <textarea placeholder=\\"How was your experience?\\"></textarea>
+            <input class=\\"input\\" placeholder=\\"Title\\" />
+            <textarea
+              class=\\"textarea\\"
+              placeholder=\\"How was your experience?\\"
+            ></textarea>
             <button
+              class=\\"button\\"
               onClick={(event) => {
                 event.preventDefault();
                 this.showReviewPrompt = false;
@@ -4369,8 +4403,8 @@ export default class SmileReviews {
         ) : null}
 
         {this.reviews?.map((review, index) => (
-          <div key={review.id}>
-            <img src={review.avatar} />
+          <div class=\\"review\\" key={review.id}>
+            <img class=\\"img\\" src={review.avatar} />
 
             <div class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
               <div>
@@ -4567,6 +4601,7 @@ export default class MyBasicForwardRefComponent {
     return (
       <div>
         <input
+          class=\\"input\\"
           ref={(el) => (this.props.inputRef = el)}
           value={this.name}
           onInput={(event) => (this.name = event.target.value)}
@@ -4598,6 +4633,7 @@ export default class MyBasicForwardRefComponent {
     return (
       <div>
         <input
+          class=\\"input\\"
           ref={(el) => (this.props.inputRef = el)}
           value={this.name}
           onInput={(event) => (this.name = event.target.value)}
@@ -4660,7 +4696,11 @@ exports[`Stencil > jsx > Typescript Test > class + ClassName + css 1`] = `
 })
 export default class MyBasicComponent {
   render() {
-    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
+    return (
+      <div class=\\"test2 test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    );
   }
 }
 "
@@ -4679,7 +4719,11 @@ exports[`Stencil > jsx > Typescript Test > class + css 1`] = `
 })
 export default class MyBasicComponent {
   render() {
-    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
+    return (
+      <div class=\\"test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    );
   }
 }
 "
@@ -4698,7 +4742,11 @@ exports[`Stencil > jsx > Typescript Test > className + css 1`] = `
 })
 export default class MyBasicComponent {
   render() {
-    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
+    return (
+      <div class=\\"test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    );
   }
 }
 "
@@ -4716,7 +4764,7 @@ export default class ClassNameCode {
   render() {
     return (
       <div>
-        <div>Without Binding</div>
+        <div class=\\"no binding\\">Without Binding</div>
 
         <div class={state.bindings}>With binding</div>
       </div>
@@ -5032,7 +5080,7 @@ exports[`Stencil > jsx > Typescript Test > nestedStyles 1`] = `
 })
 export default class NestedStyles {
   render() {
-    return <div>Hello world</div>;
+    return <div class=\\"div\\">Hello world</div>;
   }
 }
 "
@@ -5326,7 +5374,7 @@ export default class RenderContent {
 
   render() {
     return (
-      <div onClick={(event) => trackClick(this.content.id)}>
+      <div class=\\"div\\" onClick={(event) => trackClick(this.content.id)}>
         <RenderBlocks blocks={this.content.blocks}></RenderBlocks>
       </div>
     );
@@ -5589,7 +5637,11 @@ exports[`Stencil > jsx > Typescript Test > use-style-and-css 1`] = `
 })
 export default class MyComponent {
   render() {
-    return <button type=\\"button\\">Button</button>;
+    return (
+      <button class=\\"button\\" type=\\"button\\">
+        Button
+      </button>
+    );
   }
 }
 "
@@ -5996,7 +6048,7 @@ exports[`Stencil > svelte > Javascript Test > style 1`] = `
 })
 export default class MyComponent {
   render() {
-    return <input />;
+    return <input class=\\"form-input\\" />;
   }
 }
 "
@@ -6406,7 +6458,7 @@ exports[`Stencil > svelte > Typescript Test > style 1`] = `
 })
 export default class MyComponent {
   render() {
-    return <input />;
+    return <input class=\\"form-input\\" />;
   }
 }
 "
