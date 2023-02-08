@@ -2,6 +2,7 @@
 
 - [useRef](#useref)
   - [forwardRef for React](#forwardref-for-react)
+- [useStyle](#usestyle)
 - [onMount](#onmount)
 - [onUnMount](#onunmount)
 - [onUpdate](#onupdate)
@@ -70,6 +71,18 @@ export default forwardRef(function MyInput(props, inputRef) {
 
 <hr />
 </details>
+
+## useStyle
+
+The useStyle hook can be used to add extra CSS to your component.
+
+```jsx
+useStyle(`
+input:focus {
+outline: 1px solid blue;
+}
+`);
+```
 
 ## onMount
 
