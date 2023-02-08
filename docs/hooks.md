@@ -81,8 +81,7 @@ useStyle(`
 input:focus {
 outline: 1px solid blue;
 }
-`)
-
+`);
 ```
 
 ## onMount
