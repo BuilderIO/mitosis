@@ -662,7 +662,7 @@ const _componentToReact = (
               str: json.hooks.onInit.code,
               options,
             })}
-          })
+          }, [])
           `
           : ''
       }
