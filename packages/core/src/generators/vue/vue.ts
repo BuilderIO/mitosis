@@ -196,13 +196,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     const tsLangAttribute = options.typescript ? `lang='ts'` : '';
 
     let str: string = dedent`
-    ${
-      template.trim().length > 0
-        ? `<template>
-      ${template}
-    </template>`
-        : ''
-    }
+    ${template.trim().length > 0 ? `<template>${template}</template>` : ''}
 
 
     <script ${options.api === 'composition' ? 'setup' : ''} ${tsLangAttribute}>
