@@ -317,7 +317,7 @@ const _componentToReact = (
       ? "import * as React from 'react';"
       : `
   import * as React from 'react';
-  import { View, StyleSheet, Image, Text } from 'react-native';
+  import { FlatList, ScrollView, View, StyleSheet, Image, Text } from 'react-native';
   `
   }
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
