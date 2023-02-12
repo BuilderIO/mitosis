@@ -288,27 +288,26 @@ const NODE_MAPPERS: {
 const stringifyBinding =
   (node: MitosisNode) =>
   ([key, value]: [string, Binding]) => {
+    const bindingValue = replaceSlotsInString(value.code || '', (slotName) => `$slots.${slotName}`);
+
     if (value.type === 'spread') {
       return ''; // we handle this after
     } else if (key === 'class') {
-      return `:class="_classStringToObject(${value?.code})"`;
+      return `:class="_classStringToObject(${bindingValue})"`;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
     } else {
-      // TODO: proper babel transform to replace. Util for this
-      const useValue = value?.code || '';
-
       if (key.startsWith('on')) {
         const { arguments: cusArgs = ['event'] } = value!;
         let event = key.replace('on', '').toLowerCase();
         if (event === 'change' && node.name === 'input') {
           event = 'input';
         }
-        const isAssignmentExpression = useValue.includes('=');
+        const isAssignmentExpression = bindingValue.includes('=');
 
         const eventHandlerValue = pipe(
           replaceIdentifiers({
-            code: useValue,
+            code: bindingValue,
             from: cusArgs[0],
             to: '$event',
           }),
@@ -321,11 +320,11 @@ const stringifyBinding =
 
         return `${eventHandlerKey}="${eventHandlerValue}"`;
       } else if (key === 'ref') {
-        return `ref="${encodeQuotes(useValue)}"`;
+        return `ref="${encodeQuotes(bindingValue)}"`;
       } else if (BINDING_MAPPERS[key]) {
-        return `${BINDING_MAPPERS[key]}="${encodeQuotes(useValue.replace(/"/g, "\\'"))}"`;
+        return `${BINDING_MAPPERS[key]}="${encodeQuotes(bindingValue.replace(/"/g, "\\'"))}"`;
       } else {
-        return `:${key}="${encodeQuotes(useValue)}"`;
+        return `:${key}="${encodeQuotes(bindingValue)}"`;
       }
     }
   };
