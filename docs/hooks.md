@@ -1,6 +1,7 @@
 **Table of contents**
 
 - [useRef](#useref)
+  - [forwardRef for React](#forwardref-for-react)
 - [useStyle](#usestyle)
 - [onInit](#oninit)
 - [onMount](#onmount)
@@ -47,8 +48,9 @@ export default function MyComponent() {
 }
 ```
 
+### forwardRef for React
+
 <details>
-  <summary><strong>forwardRef</strong> for <strong>React</strong></summary>
 
 In React you may need to wrap your component with `forwardRef` to provide direct access to an element (`input` for example). You can do this by using using a `prop` value as the `ref`
 
