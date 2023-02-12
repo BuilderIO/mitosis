@@ -5,6 +5,7 @@ import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
+import { replaceSlotsInString } from '../../helpers/slots';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
 import { encodeQuotes, getContextKey, getContextValue, getOnUpdateHookName } from './helpers';
@@ -103,17 +104,23 @@ export function generateOptionsApiScript(
     dataString = appendToDataString({ dataString, newContent: localVarAsData.join(',') });
   }
 
-  const getterString = getStateObjectStringFromComponent(component, {
-    data: false,
-    getters: true,
-    functions: false,
-  });
+  const getterString = replaceSlotsInString(
+    getStateObjectStringFromComponent(component, {
+      data: false,
+      getters: true,
+      functions: false,
+    }),
+    (slotName) => `$slots.${slotName}`,
+  );
 
-  let functionsString = getStateObjectStringFromComponent(component, {
-    data: false,
-    getters: false,
-    functions: true,
-  });
+  let functionsString = replaceSlotsInString(
+    getStateObjectStringFromComponent(component, {
+      data: false,
+      getters: false,
+      functions: true,
+    }),
+    (slotName) => `$slots.${slotName}`,
+  );
 
   const includeClassMapHelper = template.includes('_classStringToObject');
 
