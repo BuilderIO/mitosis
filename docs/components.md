@@ -182,14 +182,12 @@ Use `<Show>` for conditional logic. It takes a singular `when` prop for a condit
 export default function MyComponent(props) {
   return (
     <>
-      <Show
-        when={props.showContents}
-        else={<span {...props.attributes}>{props.text}</span>}
-      >
+      <Show when={props.showContents} else={<span {...props.attributes}>{props.text}</span>}>
         Hello, I may or may not show!
-      </Show>;
+      </Show>
+      ;
     </>
-  )
+  );
 }
 ```
 
