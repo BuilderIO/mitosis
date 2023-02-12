@@ -12,7 +12,7 @@
   - [For](#for)
   - [Children](#children)
   - [Slot](#slot)
-- [Default Slot content](#default-slot-content)
+  - [Default Slot content](#default-slot-content)
 
 ## At a glance
 
@@ -360,7 +360,7 @@ export default function Layout(props) {
 
 </details>
 
-## Default Slot content
+### Default Slot content
 
 ```jsx
 import { Slot } from '@builder.io/mitosis';
