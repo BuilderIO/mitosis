@@ -205,7 +205,7 @@ export default function OnUpdateWithDeps() {
 
 ## useDefaultProps
 
-The useDefaultProps hook is set default values for the props.
+The `useDefaultProps` hook sets default values for a component's props:
 
 ```jsx
 import { useDefaultProps } from '@builder.io/mitosis';
