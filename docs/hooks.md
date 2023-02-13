@@ -233,7 +233,7 @@ export default function Button(props) {
 }
 ```
 
-And useDefaultProps can also use outside component:
+You can also use `useDefaultProps` outside of the component body:
 
 ```jsx
 import { useDefaultProps } from '@builder.io/mitosis';
