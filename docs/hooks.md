@@ -125,7 +125,7 @@ useStyle(`
 
 ## onInit
 
-The onInit hook is the best place to put custom code to execute before the component mounts, it is executed earlier than the onmount hook.
+The `onInit` hook is the best place to put custom code to execute before the component mounts. It is executed before the `onMount` hook.
 
 ```jsx
 import { onInit, onMount } from '@builder.io/mitosis';
