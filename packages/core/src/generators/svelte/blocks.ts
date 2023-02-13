@@ -4,7 +4,7 @@ import { BaseNode, Binding, ForNode, MitosisNode } from '../../types/mitosis-nod
 
 import isChildren from '../../helpers/is-children';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
+import { isSlotProperty, replaceSlotsInString, stripSlotPrefix } from '../../helpers/slots';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { getForArguments } from '../../helpers/nodes/for';
@@ -48,8 +48,13 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
 `;
   },
   Show: ({ json, options, parentComponent }) => {
+    const code = replaceSlotsInString(
+      json.bindings.when?.code || '',
+      (slotName) => `$$slots.${slotName}`,
+    );
+
     return `
-{#if ${json.bindings.when?.code} }
+{#if ${code} }
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 
   ${
@@ -151,15 +156,16 @@ const stringifyBinding =
     }
 
     const { code, arguments: cusArgs = ['event'], type } = binding;
+    const bindingCode = replaceSlotsInString(code || '', (slotName) => `$$slots.${slotName}`);
 
     if (type === 'spread') {
-      const spreadValue = key === 'props' ? '$$props' : code;
+      const spreadValue = key === 'props' ? '$$props' : bindingCode;
       return ` {...${spreadValue}} `;
     } else if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
 
-      const valueWithoutBlock = removeSurroundingBlock(code);
+      const valueWithoutBlock = removeSurroundingBlock(bindingCode);
 
       if (valueWithoutBlock === key) {
         return ` on:${event}={${valueWithoutBlock}} `;
@@ -167,9 +173,9 @@ const stringifyBinding =
         return ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
       }
     } else if (key === 'ref') {
-      return ` bind:this={${code}} `;
+      return ` bind:this={${bindingCode}} `;
     } else {
-      return ` ${key}={${code}} `;
+      return ` ${key}={${bindingCode}} `;
     }
   };
 
