@@ -3,9 +3,10 @@ import json5 from 'json5';
 import { pickBy } from 'lodash';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
-import { getContextKey, getContextValue } from './helpers';
+import { getContextKey, getContextValue, hasSlotProps } from './helpers';
 import { ToVueOptions } from './types';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { replaceSlotsInString } from '../../helpers/slots';
 import { processBinding } from './helpers';
 
 const getCompositionPropDefinition = ({
@@ -56,6 +57,7 @@ export function generateCompositionApiScript(
     keyPrefix: 'const',
   });
 
+  // TODO replace
   let methods = getStateObjectStringFromComponent(component, {
     data: false,
     getters: false,
@@ -80,6 +82,8 @@ export function generateCompositionApiScript(
   let str = dedent`
     ${props.length ? getCompositionPropDefinition({ component, props, options }) : ''}
     ${refs}
+
+    ${hasSlotProps(component) ? 'const slots = useSlots()' : ''}
 
     ${Object.entries(component.context.get)
       ?.map(([key, context]) => {
@@ -116,6 +120,11 @@ export function generateCompositionApiScript(
       getterKeys
         ?.map((key) => {
           const code = component.state[key]?.code?.toString();
+          // TODO replace
+          // const code = replaceSlotsInString(
+          //   component.state[key]?.code || '',
+          //   (slotName) => `$slots.${slotName}`,
+          // );
 
           if (!code) {
             return '';
