@@ -104,7 +104,7 @@ export default function MyComponent(props) {
 }
 ```
 
-And useStyle can also use outside component:
+`useStyle` can also be used outside of the component's body:
 
 ```jsx
 import { useStyle } from '@builder.io/mitosis';
