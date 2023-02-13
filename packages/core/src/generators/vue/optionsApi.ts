@@ -1,5 +1,6 @@
 import json5 from 'json5';
 import { uniq, kebabCase, size } from 'lodash';
+import { pipe } from 'fp-ts/lib/function';
 import { getComponentsUsed } from '../../helpers/get-components-used';
 import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
@@ -104,22 +105,22 @@ export function generateOptionsApiScript(
     dataString = appendToDataString({ dataString, newContent: localVarAsData.join(',') });
   }
 
-  const getterString = replaceSlotsInString(
+  const getterString = pipe(
     getStateObjectStringFromComponent(component, {
       data: false,
       getters: true,
       functions: false,
     }),
-    (slotName) => `$slots.${slotName}`,
+    (getterString) => replaceSlotsInString(getterString, (slotName) => `$slots.${slotName}`),
   );
 
-  let functionsString = replaceSlotsInString(
+  let functionsString = pipe(
     getStateObjectStringFromComponent(component, {
       data: false,
       getters: false,
       functions: true,
     }),
-    (slotName) => `$slots.${slotName}`,
+    (functionsString) => replaceSlotsInString(functionsString, (slotName) => `$slots.${slotName}`),
   );
 
   const includeClassMapHelper = template.includes('_classStringToObject');
