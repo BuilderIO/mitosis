@@ -25,7 +25,7 @@ import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { babelTransformCode } from '../../helpers/babel-transform';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { hasGetContext, hasSetContext } from '../helpers/context';
-import { isSlotProperty } from '../../helpers/slots';
+import { isSlotProperty, replaceSlotsInString } from '../../helpers/slots';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
@@ -176,6 +176,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         },
       }),
       babelTransformCode,
+      (getterString) => replaceSlotsInString(getterString, (slotName) => `$$slots.${slotName}`),
     );
 
     const functionsString = pipe(
@@ -186,6 +187,8 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         format: 'variables',
       }),
       babelTransformCode,
+      (functionsString) =>
+        replaceSlotsInString(functionsString, (slotName) => `$$slots.${slotName}`),
     );
 
     const hasData = dataString.length > 4;
