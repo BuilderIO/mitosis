@@ -7,9 +7,11 @@ import { ToVueOptions } from './types';
 import { pipe } from 'fp-ts/lib/function';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
-import { pickBy } from 'lodash';
+import { pickBy, size } from 'lodash';
 import { stripGetter } from '../../helpers/patterns';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { isSlotProperty } from '../../helpers/slots';
+import { getProps } from '../../helpers/get-props';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 
 export const addPropertiesToJson =
@@ -220,3 +222,6 @@ export const getContextKey = (context: ContextGetInfo | ContextSetInfo) => {
   const key = isStrName ? context.name : `${context.name}.key`;
   return key;
 };
+
+export const hasSlotProps = (component: MitosisComponent) =>
+  size(Array.from(getProps(component)).filter((prop) => isSlotProperty(prop)));

@@ -22,7 +22,7 @@ import { TranspilerGenerator } from '../../types/transpiler';
 import { pipe } from 'fp-ts/lib/function';
 import { isSlotProperty } from '../../helpers/slots';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
-import { getOnUpdateHookName, processBinding, renameMitosisComponentsToKebabCase } from './helpers';
+import { getOnUpdateHookName, processBinding, renameMitosisComponentsToKebabCase, hasSlotProps } from './helpers';
 import { ToVueOptions, VueOptsWithoutVersion } from './types';
 import { generateOptionsApiScript } from './optionsApi';
 import { generateCompositionApiScript } from './compositionApi';
@@ -191,6 +191,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
       size(
         Object.keys(component.state).filter((key) => component.state[key]?.type === 'property'),
       ) && vueImports.push('ref');
+      hasSlotProps(component) && vueImports.push('useSlots');
     }
 
     const tsLangAttribute = options.typescript ? `lang='ts'` : '';
