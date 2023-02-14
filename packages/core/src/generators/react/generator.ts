@@ -202,7 +202,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
 
 // TODO: import target components when they are required
 const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): string => {
-  const { preact, type, plugins } = options;
+  const { preact, type } = options;
   if (preact) {
     return `
     /** @jsx h */
@@ -464,11 +464,9 @@ const _componentToReact = (
     ${getPropsDefinition({ json })}
 
     ${
-      !(options.stylesType === 'react-native' && componentHasStyles)
-        ? ''
-        : `
-      const styles = StyleSheet.create(${json5.stringify(collectReactNativeStyles(json))});
-    `
+      options.stylesType === 'react-native' && componentHasStyles
+        ? `const styles = StyleSheet.create(${json5.stringify(collectReactNativeStyles(json))});`
+        : ''
     }
 
     ${styledComponentsCode ?? ''}
