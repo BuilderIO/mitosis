@@ -235,7 +235,7 @@ const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
       return `${prop}: ${value}`;
     })
     .join(',');
-  return `${json.name || 'MyComponent'}.defaultProps = {${defaultPropsString}};`;
+  return `${json.name}.defaultProps = {${defaultPropsString}};`;
 };
 
 const _componentToReact = (
@@ -251,6 +251,10 @@ const _componentToReact = (
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
     updateStateSetters(json, options);
+  }
+
+  if (!json.name) {
+    json.name = 'MyComponent';
   }
 
   // const domRefs = getRefs(json);
@@ -275,7 +279,7 @@ const _componentToReact = (
     hasState = true;
   }
 
-  const useStateCode = options.stateType === 'useState' && getUseStateCode(json, options);
+  const useStateCode = options.stateType === 'useState' ? getUseStateCode(json, options) : '';
   if (options.plugins) {
     json = runPostJsonPlugins(json, options.plugins);
   }
@@ -299,7 +303,7 @@ const _componentToReact = (
   }
 
   const reactLibImports: Set<ReactExports> = new Set();
-  if (useStateCode && useStateCode.includes('useState')) {
+  if (useStateCode.includes('useState')) {
     reactLibImports.add('useState');
   }
   if (hasContext(json) && options.contextType !== 'prop-drill') {
@@ -327,8 +331,6 @@ const _componentToReact = (
     isRootSpecialNode(json);
 
   const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
-  const nativeStyles =
-    options.stylesType === 'react-native' && componentHasStyles && collectReactNativeStyles(json);
 
   const propType = json.propsTypeRef || 'any';
   const propsArgs = `props${options.typescript ? `:${propType}` : ''}`;
@@ -365,38 +367,34 @@ const _componentToReact = (
       component: json,
       target: options.type === 'native' ? 'reactNative' : 'react',
     })}
-    ${
-      options.stateType === 'mobx' && isForwardRef ? `const ${json.name || 'MyComponent'} = ` : ``
-    }${isSubComponent || options.stateType === 'mobx' ? '' : 'export default '}${
+    ${options.stateType === 'mobx' && isForwardRef ? `const ${json.name} = ` : ``}${
+    isSubComponent || options.stateType === 'mobx' ? '' : 'export default '
+  }${
     isForwardRef
       ? `forwardRef${forwardRefType && options.typescript ? `<${forwardRefType}>` : ''}(`
       : ''
-  }function ${json.name || 'MyComponent'}(${propsArgs}${
-    isForwardRef ? `, ${options.forwardRef}` : ''
-  }) {
+  }function ${json.name}(${propsArgs}${isForwardRef ? `, ${options.forwardRef}` : ''}) {
     ${
       options.contextType === 'prop-drill'
         ? `const ${contextPropDrillingKey} = { ...props['${contextPropDrillingKey}'] };`
         : ''
     }
     ${hasStateArgument ? '' : refsString}
-      ${
-        hasState
-          ? options.stateType === 'mobx'
-            ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(
-                json,
-              )}));`
-            : options.stateType === 'useState'
-            ? useStateCode
-            : options.stateType === 'solid'
-            ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
-            : options.stateType === 'builder'
-            ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
-            : options.stateType === 'variables'
-            ? `const state = ${getStateObjectStringFromComponent(json)};`
-            : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
-          : ''
-      }
+    ${
+      hasState
+        ? options.stateType === 'mobx'
+          ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(json)}));`
+          : options.stateType === 'useState'
+          ? useStateCode
+          : options.stateType === 'solid'
+          ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
+          : options.stateType === 'builder'
+          ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
+          : options.stateType === 'variables'
+          ? `const state = ${getStateObjectStringFromComponent(json)};`
+          : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
+        : ''
+    }
       ${hasStateArgument ? refsString : ''}
       ${getContextString(json, options)}
       ${getInitCode(json, options)}
@@ -466,10 +464,10 @@ const _componentToReact = (
     ${getPropsDefinition({ json })}
 
     ${
-      !nativeStyles
+      !(options.stylesType === 'react-native' && componentHasStyles)
         ? ''
         : `
-      const styles = StyleSheet.create(${json5.stringify(nativeStyles)});
+      const styles = StyleSheet.create(${json5.stringify(collectReactNativeStyles(json))});
     `
     }
 
@@ -477,8 +475,8 @@ const _componentToReact = (
     ${
       options.stateType === 'mobx'
         ? `
-      const observed${json.name || 'MyComponent'} = observer(${json.name || 'MyComponent'});
-      export default observed${json.name || 'MyComponent'};
+      const observed${json.name} = observer(${json.name});
+      export default observed${json.name};
     `
         : ''
     }
