@@ -247,6 +247,9 @@ const _componentToReact = (
   processTagReferences(json);
   const contextStr = provideContext(json, options);
   const componentHasStyles = hasCss(json);
+  if (json.name === 'Column' && options.type === 'native') {
+    console.log('componentHasStyles', componentHasStyles);
+  }
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
     updateStateSetters(json, options);
@@ -331,6 +334,13 @@ const _componentToReact = (
     isRootSpecialNode(json);
 
   const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
+
+  // NOTE: `collectReactNativeStyles` must run before style generation in the component generation body, as it has
+  // side effects that delete styles bindings from the JSON.
+  const reactNativeStyles =
+    options.stylesType === 'react-native' && componentHasStyles
+      ? collectReactNativeStyles(json)
+      : undefined;
 
   const propType = json.propsTypeRef || 'any';
   const propsArgs = `props${options.typescript ? `:${propType}` : ''}`;
@@ -466,8 +476,8 @@ const _componentToReact = (
     ${getPropsDefinition({ json })}
 
     ${
-      options.stylesType === 'react-native' && componentHasStyles
-        ? `const styles = StyleSheet.create(${json5.stringify(collectReactNativeStyles(json))});`
+      reactNativeStyles
+        ? `const styles = StyleSheet.create(${json5.stringify(reactNativeStyles)});`
         : ''
     }
 

@@ -36,12 +36,10 @@ export default function MyBasicRefComponent(props) {
         <>
           <View
             ref={inputRef}
-            css={{
-              color: \\"red\\",
-            }}
             value={name}
             onBlur={(event) => onBlur()}
             onChange={(event) => setName(event.target.value)}
+            style={styles.view1}
           />
 
           <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -98,11 +96,7 @@ export default function MyBasicComponent(props) {
   const [sports, setSports] = useState(() => [\\"\\"]);
 
   return (
-    <View
-      css={{
-        padding: \\"10px\\",
-      }}
-    >
+    <View style={styles.view1}>
       <View
         value={DEFAULT_VALUES.name || name}
         onChange={(myEvent) => setName(myEvent.target.value)}
@@ -402,12 +396,10 @@ export default function MyBasicRefComponent(props) {
         <>
           <View
             ref={inputRef}
-            css={{
-              color: \\"red\\",
-            }}
             value={name}
             onBlur={(event) => onBlur()}
             onChange={(event) => setName(event.target.value)}
+            style={styles.view1}
           />
 
           <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -591,26 +583,9 @@ export default function Column(props) {
   }
 
   return (
-    <View
-      css={{
-        display: \\"flex\\",
-        flexDirection: \\"column\\",
-        alignItems: \\"stretch\\",
-        lineHeight: \\"normal\\",
-        \\"@media (max-width: 999px)\\": {
-          flexDirection: \\"row\\",
-        },
-        \\"@media (max-width: 639px)\\": {
-          flexDirection: \\"row-reverse\\",
-        },
-      }}
-    >
+    <View style={styles.view1}>
       {props.columns?.map((column, index) => (
-        <View
-          css={{
-            flexGrow: \\"1\\",
-          }}
-        >
+        <View style={styles.view2}>
           <Text>{column.content}</Text>
 
           <Text>{index}</Text>
@@ -1105,13 +1080,7 @@ export default function FormComponent(props) {
 
       {submissionState() === \\"error\\" && responseData ? (
         <>
-          <View
-            css={{
-              padding: \\"10px\\",
-              color: \\"red\\",
-              textAlign: \\"center\\",
-            }}
-          >
+          <View style={styles.view1}>
             <Text>{JSON.stringify(responseData, null, 2)}</Text>
           </View>
         </>
@@ -1211,16 +1180,11 @@ export default function Image(props) {
             <View
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
-              css={{
-                opacity: \\"1\\",
-                transition: \\"opacity 0.2s ease-in-out\\",
-                objectFit: \\"cover\\",
-                objectPosition: \\"center\\",
-              }}
               src={props.image}
               onLoad={(event) => setLoaded()}
               srcset={props.srcset}
               sizes={props.sizes}
+              style={styles.view1}
             />
           </>
         ) : null}
@@ -1568,26 +1532,14 @@ export default function SmileReviews(props) {
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <View placeholder=\\"Email\\" />
+          <View placeholder=\\"Title\\" style={styles.view1} />
+          <View placeholder=\\"How was your experience?\\" style={styles.view2} />
           <View
-            placeholder=\\"Title\\"
-            css={{
-              display: \\"block\\",
-            }}
-          />
-          <View
-            placeholder=\\"How was your experience?\\"
-            css={{
-              display: \\"block\\",
-            }}
-          />
-          <View
-            css={{
-              display: \\"block\\",
-            }}
             onClick={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
             }}
+            style={styles.view3}
           >
             <Text>Submit</Text>
           </View>
@@ -1595,25 +1547,8 @@ export default function SmileReviews(props) {
       ) : null}
 
       {reviews?.map((review, index) => (
-        <View
-          key={review.id}
-          css={{
-            margin: \\"10px\\",
-            padding: \\"10px\\",
-            background: \\"white\\",
-            display: \\"flex\\",
-            borderRadius: \\"5px\\",
-            boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
-          }}
-        >
-          <View
-            css={{
-              height: \\"30px\\",
-              width: \\"30px\\",
-              marginRight: \\"10px\\",
-            }}
-            src={review.avatar}
-          />
+        <View key={review.id} style={styles.view4}>
+          <View src={review.avatar} style={styles.view5} />
 
           <View>
             <View>
@@ -1823,11 +1758,9 @@ export default forwardRef(function MyBasicForwardRefComponent(props, inputRef) {
     <View>
       <View
         ref={inputRef}
-        css={{
-          color: \\"red\\",
-        }}
         value={name}
         onChange={(event) => setName(event.target.value)}
+        style={styles.view1}
       />
     </View>
   );
@@ -1856,11 +1789,9 @@ export default forwardRef(function MyBasicForwardRefComponent(props, inputRef) {
     <View>
       <View
         ref={inputRef}
-        css={{
-          color: \\"red\\",
-        }}
         value={name}
         onChange={(event) => setName(event.target.value)}
+        style={styles.view1}
       />
     </View>
   );
@@ -1925,11 +1856,7 @@ import {
 
 export default function MyBasicComponent(props) {
   return (
-    <View
-      css={{
-        padding: \\"10px\\",
-      }}
-    >
+    <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -1952,11 +1879,7 @@ import {
 
 export default function MyBasicComponent(props) {
   return (
-    <View
-      css={{
-        padding: \\"10px\\",
-      }}
-    >
+    <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -1979,11 +1902,7 @@ import {
 
 export default function MyBasicComponent(props) {
   return (
-    <View
-      css={{
-        padding: \\"10px\\",
-      }}
-    >
+    <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -2043,12 +1962,7 @@ export default function MyBasicComponent(props) {
   }));
 
   return (
-    <View
-      css={{
-        padding: \\"10px\\",
-      }}
-      style={styleState}
-    >
+    <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -2499,21 +2413,7 @@ import {
 
 export default function NestedStyles(props) {
   return (
-    <View
-      css={{
-        display: \\"flex\\",
-        foo: \\"var(--bar)\\",
-        \\"@media (max-width: env(--mobile))\\": {
-          display: \\"block\\",
-        },
-        \\"&:hover\\": {
-          display: \\"flex\\",
-        },
-        \\".nested-selector\\": {
-          display: \\"grid\\",
-        },
-      }}
-    >
+    <View style={styles.view1}>
       <Text>Hello world</Text>
     </View>
   );
@@ -3126,11 +3026,8 @@ export default function RenderContent(props) {
       }}
     >
       <View
-        css={{
-          display: \\"flex\\",
-          flexDirection: \\"columns\\",
-        }}
         onClick={(event) => trackClick(props.content.id)}
+        style={styles.view1}
       >
         <RenderBlocks blocks={props.content.blocks} />
       </View>
@@ -3468,13 +3365,7 @@ import {
 
 export default function MyComponent(props) {
   return (
-    <View
-      type=\\"button\\"
-      css={{
-        background: \\"blue\\",
-        color: \\"white\\",
-      }}
-    >
+    <View type=\\"button\\" style={styles.view1}>
       <Text>Button</Text>
     </View>
   );
@@ -3575,12 +3466,10 @@ export default function MyBasicRefComponent(props: Props) {
         <>
           <View
             ref={inputRef}
-            css={{
-              color: \\"red\\",
-            }}
             value={name}
             onBlur={(event) => onBlur()}
             onChange={(event) => setName(event.target.value)}
+            style={styles.view1}
           />
 
           <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -3641,11 +3530,7 @@ export default function MyBasicComponent(props: MyBasicComponentProps) {
   const [sports, setSports] = useState(() => [\\"\\"]);
 
   return (
-    <View
-      css={{
-        padding: \\"10px\\",
-      }}
-    >
+    <View style={styles.view1}>
       <View
         value={DEFAULT_VALUES.name || name}
         onChange={(myEvent) => setName(myEvent.target.value)}
@@ -3959,12 +3844,10 @@ export default function MyBasicRefComponent(props: Props) {
         <>
           <View
             ref={inputRef}
-            css={{
-              color: \\"red\\",
-            }}
             value={name}
             onBlur={(event) => onBlur()}
             onChange={(event) => setName(event.target.value)}
+            style={styles.view1}
           />
 
           <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -4178,26 +4061,9 @@ export default function Column(props: ColumnProps) {
   }
 
   return (
-    <View
-      css={{
-        display: \\"flex\\",
-        flexDirection: \\"column\\",
-        alignItems: \\"stretch\\",
-        lineHeight: \\"normal\\",
-        \\"@media (max-width: 999px)\\": {
-          flexDirection: \\"row\\",
-        },
-        \\"@media (max-width: 639px)\\": {
-          flexDirection: \\"row-reverse\\",
-        },
-      }}
-    >
+    <View style={styles.view1}>
       {props.columns?.map((column, index) => (
-        <View
-          css={{
-            flexGrow: \\"1\\",
-          }}
-        >
+        <View style={styles.view2}>
           <Text>{column.content}</Text>
 
           <Text>{index}</Text>
@@ -4735,13 +4601,7 @@ export default function FormComponent(props: FormProps) {
 
       {submissionState() === \\"error\\" && responseData ? (
         <>
-          <View
-            css={{
-              padding: \\"10px\\",
-              color: \\"red\\",
-              textAlign: \\"center\\",
-            }}
-          >
+          <View style={styles.view1}>
             <Text>{JSON.stringify(responseData, null, 2)}</Text>
           </View>
         </>
@@ -4860,16 +4720,11 @@ export default function Image(props: ImageProps) {
             <View
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
-              css={{
-                opacity: \\"1\\",
-                transition: \\"opacity 0.2s ease-in-out\\",
-                objectFit: \\"cover\\",
-                objectPosition: \\"center\\",
-              }}
               src={props.image}
               onLoad={(event) => setLoaded()}
               srcset={props.srcset}
               sizes={props.sizes}
+              style={styles.view1}
             />
           </>
         ) : null}
@@ -5290,26 +5145,14 @@ export default function SmileReviews(props: SmileReviewsProps) {
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <View placeholder=\\"Email\\" />
+          <View placeholder=\\"Title\\" style={styles.view1} />
+          <View placeholder=\\"How was your experience?\\" style={styles.view2} />
           <View
-            placeholder=\\"Title\\"
-            css={{
-              display: \\"block\\",
-            }}
-          />
-          <View
-            placeholder=\\"How was your experience?\\"
-            css={{
-              display: \\"block\\",
-            }}
-          />
-          <View
-            css={{
-              display: \\"block\\",
-            }}
             onClick={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
             }}
+            style={styles.view3}
           >
             <Text>Submit</Text>
           </View>
@@ -5317,25 +5160,8 @@ export default function SmileReviews(props: SmileReviewsProps) {
       ) : null}
 
       {reviews?.map((review, index) => (
-        <View
-          key={review.id}
-          css={{
-            margin: \\"10px\\",
-            padding: \\"10px\\",
-            background: \\"white\\",
-            display: \\"flex\\",
-            borderRadius: \\"5px\\",
-            boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
-          }}
-        >
-          <View
-            css={{
-              height: \\"30px\\",
-              width: \\"30px\\",
-              marginRight: \\"10px\\",
-            }}
-            src={review.avatar}
-          />
+        <View key={review.id} style={styles.view4}>
+          <View src={review.avatar} style={styles.view5} />
 
           <View>
             <View>
@@ -5599,11 +5425,9 @@ export default forwardRef<Props[\\"inputRef\\"]>(
       <View>
         <View
           ref={inputRef}
-          css={{
-            color: \\"red\\",
-          }}
           value={name}
           onChange={(event) => setName(event.target.value)}
+          style={styles.view1}
         />
       </View>
     );
@@ -5639,11 +5463,9 @@ export default forwardRef<Props[\\"inputRef\\"]>(
       <View>
         <View
           ref={inputRef}
-          css={{
-            color: \\"red\\",
-          }}
           value={name}
           onChange={(event) => setName(event.target.value)}
+          style={styles.view1}
         />
       </View>
     );
@@ -5709,11 +5531,7 @@ import {
 
 export default function MyBasicComponent(props: any) {
   return (
-    <View
-      css={{
-        padding: \\"10px\\",
-      }}
-    >
+    <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -5736,11 +5554,7 @@ import {
 
 export default function MyBasicComponent(props: any) {
   return (
-    <View
-      css={{
-        padding: \\"10px\\",
-      }}
-    >
+    <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -5763,11 +5577,7 @@ import {
 
 export default function MyBasicComponent(props: any) {
   return (
-    <View
-      css={{
-        padding: \\"10px\\",
-      }}
-    >
+    <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -5832,12 +5642,7 @@ export default function MyBasicComponent(props: any) {
   }));
 
   return (
-    <View
-      css={{
-        padding: \\"10px\\",
-      }}
-      style={styleState}
-    >
+    <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -6331,21 +6136,7 @@ import {
 
 export default function NestedStyles(props: any) {
   return (
-    <View
-      css={{
-        display: \\"flex\\",
-        foo: \\"var(--bar)\\",
-        \\"@media (max-width: env(--mobile))\\": {
-          display: \\"block\\",
-        },
-        \\"&:hover\\": {
-          display: \\"flex\\",
-        },
-        \\".nested-selector\\": {
-          display: \\"grid\\",
-        },
-      }}
-    >
+    <View style={styles.view1}>
       <Text>Hello world</Text>
     </View>
   );
@@ -7024,11 +6815,8 @@ export default function RenderContent(props: Props) {
       }}
     >
       <View
-        css={{
-          display: \\"flex\\",
-          flexDirection: \\"columns\\",
-        }}
         onClick={(event) => trackClick(props.content.id)}
+        style={styles.view1}
       >
         <RenderBlocks blocks={props.content.blocks} />
       </View>
@@ -7388,13 +7176,7 @@ import {
 
 export default function MyComponent(props: any) {
   return (
-    <View
-      type=\\"button\\"
-      css={{
-        background: \\"blue\\",
-        color: \\"white\\",
-      }}
-    >
+    <View type=\\"button\\" style={styles.view1}>
       <Text>Button</Text>
     </View>
   );
