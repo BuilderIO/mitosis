@@ -9,7 +9,6 @@ export function collectClassString(
 ): string | null {
   const staticClasses: string[] = [];
 
-  const hasStaticClasses = Boolean(staticClasses.length);
   if (json.properties.class) {
     staticClasses.push(json.properties.class);
     delete json.properties.class;
@@ -32,6 +31,8 @@ export function collectClassString(
   const staticClassesString = staticClasses.join(' ');
 
   const dynamicClassesString = dynamicClasses.join(" + ' ' + ");
+
+  const hasStaticClasses = Boolean(staticClasses.length);
 
   const hasDynamicClasses = Boolean(dynamicClasses.length);
 
