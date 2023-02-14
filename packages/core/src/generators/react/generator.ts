@@ -344,7 +344,9 @@ const _componentToReact = (
       : undefined;
 
   const propType = json.propsTypeRef || 'any';
-  const propsArgs = `props${options.typescript ? `:${propType}` : ''}`;
+  const componentArgs = [`props${options.typescript ? `:${propType}` : ''}`, options.forwardRef]
+    .filter(Boolean)
+    .join(',');
 
   const componentBody = dedent`
     ${
@@ -466,11 +468,9 @@ const _componentToReact = (
       component: json,
       target: options.type === 'native' ? 'reactNative' : 'react',
     })}
-    ${options.stateType === 'mobx' && isForwardRef ? `const ${json.name} = ` : ``}${
-    isSubComponent || options.stateType === 'mobx' ? '' : 'export default '
-  }${isForwardRef ? `forwardRef${forwardRefType}(` : ''}function ${json.name}(${propsArgs}${
-    isForwardRef ? `, ${options.forwardRef}` : ''
-  }) {
+    ${isForwardRef ? `const ${json.name} = forwardRef${forwardRefType}(` : ''}function ${
+    json.name
+  }(${componentArgs}) {
     ${componentBody}
   }${isForwardRef ? ')' : ''}
 
@@ -484,12 +484,14 @@ const _componentToReact = (
 
     ${styledComponentsCode ?? ''}
     ${
-      options.stateType === 'mobx'
+      isSubComponent
+        ? ''
+        : options.stateType === 'mobx'
         ? `
       const observed${json.name} = observer(${json.name});
       export default observed${json.name};
     `
-        : ''
+        : `export default ${json.name};`
     }
 
   `;

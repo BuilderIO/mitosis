@@ -495,7 +495,7 @@ import { getBlockActions } from \\"../functions/get-block-actions\\";
 import { getProcessedBlock } from \\"../functions/get-processed-block\\";
 import BlockStyles from \\"./block-styles.lite\\";
 
-export default function RenderBlock(props) {
+function RenderBlock(props) {
   function component() {
     const componentName = useBlock().component?.name;
 
@@ -508,8 +508,8 @@ export default function RenderBlock(props) {
     if (componentName && !ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-        Could not find a registered component named \\"\${componentName}\\".
-        If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+      Could not find a registered component named \\"\${componentName}\\".
+      If you registered it, is the file that registered it imported by the file that needs to render it?\`);
     }
 
     return ref;
@@ -585,6 +585,8 @@ export default function RenderBlock(props) {
     </>
   );
 }
+
+export default RenderBlock;
 "
 `;
 
@@ -722,7 +724,7 @@ import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props) {
+function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
@@ -745,6 +747,8 @@ export default function ComponentWithContext(props) {
     </Context2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;
 
@@ -762,7 +766,7 @@ import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props) {
+function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
@@ -787,5 +791,7 @@ export default function ComponentWithContext(props) {
     </Context2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;
