@@ -123,7 +123,7 @@ export const TagMap: Record<string, string> = {
  * - Converts DOM tags to @tarojs/components
  * - Removes redundant `class`/`className` attributes
  */
-const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
+const PROCESS_TARO_PLUGIN: Plugin = () => ({
   json: {
     pre: (json: MitosisComponent) => {
       const TaroComponentsImports: MitosisImport = { path: '@tarojs/components', imports: {} };
@@ -164,7 +164,7 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
 
 const DEFAULT_OPTIONS: ToTaroOptions = {
   stateType: 'useState',
-  plugins: [PROCESS_REACT_NATIVE_PLUGIN],
+  plugins: [PROCESS_TARO_PLUGIN],
 };
 
 export const componentToTaro: TranspilerGenerator<ToTaroOptions> =
