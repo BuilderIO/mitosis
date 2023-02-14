@@ -1,12 +1,10 @@
 import json5 from 'json5';
 import { uniq, kebabCase, size } from 'lodash';
-import { pipe } from 'fp-ts/lib/function';
 import { getComponentsUsed } from '../../helpers/get-components-used';
 import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
-import { replaceSlotsInString } from '../../helpers/slots';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
 import { encodeQuotes, getContextKey, getContextValue, getOnUpdateHookName } from './helpers';
@@ -105,23 +103,17 @@ export function generateOptionsApiScript(
     dataString = appendToDataString({ dataString, newContent: localVarAsData.join(',') });
   }
 
-  const getterString = pipe(
-    getStateObjectStringFromComponent(component, {
-      data: false,
-      getters: true,
-      functions: false,
-    }),
-    (getterString) => replaceSlotsInString(getterString, (slotName) => `$slots.${slotName}`),
-  );
+  const getterString = getStateObjectStringFromComponent(component, {
+    data: false,
+    getters: true,
+    functions: false,
+  });
 
-  let functionsString = pipe(
-    getStateObjectStringFromComponent(component, {
-      data: false,
-      getters: false,
-      functions: true,
-    }),
-    (functionsString) => replaceSlotsInString(functionsString, (slotName) => `$slots.${slotName}`),
-  );
+  let functionsString = getStateObjectStringFromComponent(component, {
+    data: false,
+    getters: false,
+    functions: true,
+  });
 
   const includeClassMapHelper = template.includes('_classStringToObject');
 

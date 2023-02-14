@@ -10,7 +10,7 @@ import { types } from '@babel/core';
 import { pickBy, size } from 'lodash';
 import { stripGetter } from '../../helpers/patterns';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { isSlotProperty } from '../../helpers/slots';
+import { isSlotProperty, replaceSlotsInString } from '../../helpers/slots';
 import { getProps } from '../../helpers/get-props';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 
@@ -173,12 +173,14 @@ export const processBinding = ({
         replaceWith: (name) => {
           switch (options.api) {
             case 'composition':
-              return name;
+              return isSlotProperty(name) ? replaceSlotsInString(name, (x) => `slots.${x}`) : name;
             case 'options':
               if (name === 'children' || name.startsWith('children.')) {
                 return '${thisPrefix}.$slots.default';
               }
-              return `${thisPrefix}.${name}`;
+              return isSlotProperty(name)
+                ? replaceSlotsInString(name, (x) => `this.$slots.${x}`)
+                : `${thisPrefix}.${name}`;
           }
         },
       }),
