@@ -294,9 +294,10 @@ const _componentToReact = (
       : null;
 
   const styledComponentsCode =
-    options.stylesType === 'styled-components' &&
-    componentHasStyles &&
-    collectStyledComponents(json);
+    (options.stylesType === 'styled-components' &&
+      componentHasStyles &&
+      collectStyledComponents(json)) ||
+    '';
 
   if (options.format !== 'lite') {
     stripMetaProperties(json);
