@@ -9,10 +9,11 @@ import { componentToReact, ToReactOptions } from './react';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
+import { Dictionary } from '../helpers/typescript';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
-  stylesType?: 'emotion' | 'react-native';
-  stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
+  stylesType: 'emotion' | 'react-native';
+  stateType: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
 }
 
 const stylePropertiesThatMustBeNumber = new Set(['lineHeight']);
@@ -22,7 +23,7 @@ const MEDIA_QUERY_KEY_REGEX = /^@media.*/;
 export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap => {
   const styleMap: ClassStyleMap = {};
 
-  const componentIndexes: { [className: string]: number | undefined } = {};
+  const componentIndexes: Dictionary<number | undefined> = {};
 
   traverse(json).forEach(function (item) {
     if (!isMitosisNode(item) || typeof item.bindings.css?.code !== 'string') {
@@ -112,7 +113,7 @@ const DEFAULT_OPTIONS: ToReactNativeOptions = {
   plugins: [PROCESS_REACT_NATIVE_PLUGIN],
 };
 
-export const componentToReactNative: TranspilerGenerator<ToReactNativeOptions> =
+export const componentToReactNative: TranspilerGenerator<Partial<ToReactNativeOptions>> =
   (_options = {}) =>
   ({ component, path }) => {
     const json = fastClone(component);
