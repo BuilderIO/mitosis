@@ -273,9 +273,9 @@ const _componentToReact = (
     options.forwardRef = meta || forwardRef;
   }
   const forwardRefType =
-    json.propsTypeRef && forwardRef && json.propsTypeRef !== 'any'
-      ? `${json.propsTypeRef}["${forwardRef}"]`
-      : undefined;
+    options.typescript && json.propsTypeRef && forwardRef && json.propsTypeRef !== 'any'
+      ? `<${json.propsTypeRef}["${forwardRef}"]>`
+      : '';
 
   if (options.stateType === 'builder') {
     // Always use state if we are generate Builder react code
@@ -346,6 +346,94 @@ const _componentToReact = (
   const propType = json.propsTypeRef || 'any';
   const propsArgs = `props${options.typescript ? `:${propType}` : ''}`;
 
+  const componentBody = dedent`
+  ${
+    options.contextType === 'prop-drill'
+      ? `const ${contextPropDrillingKey} = { ...props['${contextPropDrillingKey}'] };`
+      : ''
+  }
+  ${hasStateArgument ? '' : refsString}
+  ${
+    hasState
+      ? options.stateType === 'mobx'
+        ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(json)}));`
+        : options.stateType === 'useState'
+        ? useStateCode
+        : options.stateType === 'solid'
+        ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
+        : options.stateType === 'builder'
+        ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
+        : options.stateType === 'variables'
+        ? `const state = ${getStateObjectStringFromComponent(json)};`
+        : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
+      : ''
+  }
+    ${hasStateArgument ? refsString : ''}
+    ${getContextString(json, options)}
+    ${getInitCode(json, options)}
+    ${contextStr || ''}
+
+    ${
+      json.hooks.onInit?.code
+        ? `
+        useEffect(() => {
+          ${processHookCode({
+            str: json.hooks.onInit.code,
+            options,
+          })}
+        }, [])
+        `
+        : ''
+    }
+    ${
+      json.hooks.onMount?.code
+        ? `useEffect(() => {
+          ${processHookCode({
+            str: json.hooks.onMount.code,
+            options,
+          })}
+        }, [])`
+        : ''
+    }
+
+    ${
+      json.hooks.onUpdate
+        ?.map(
+          (hook) => `useEffect(() => {
+          ${processHookCode({ str: hook.code, options })}
+        },
+        ${hook.deps ? processHookCode({ str: hook.deps, options }) : ''})`,
+        )
+        .join(';') ?? ''
+    }
+
+    ${
+      json.hooks.onUnMount?.code
+        ? `useEffect(() => {
+          return () => {
+            ${processHookCode({
+              str: json.hooks.onUnMount.code,
+              options,
+            })}
+          }
+        }, [])`
+        : ''
+    }
+
+    return (
+      ${wrap ? openFrag(options) : ''}
+      ${json.children.map((item) => blockToReact(item, options, json, [])).join('\n')}
+      ${
+        componentHasStyles && options.stylesType === 'styled-jsx'
+          ? `<style jsx>{\`${css}\`}</style>`
+          : componentHasStyles && options.stylesType === 'style-tag'
+          ? `<style>{\`${css}\`}</style>`
+          : ''
+      }
+      ${wrap ? closeFrag(options) : ''}
+    );
+  `;
+
   const str = dedent`
   ${getDefaultImport(json, options)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
@@ -380,97 +468,11 @@ const _componentToReact = (
     })}
     ${options.stateType === 'mobx' && isForwardRef ? `const ${json.name} = ` : ``}${
     isSubComponent || options.stateType === 'mobx' ? '' : 'export default '
-  }${
-    isForwardRef
-      ? `forwardRef${forwardRefType && options.typescript ? `<${forwardRefType}>` : ''}(`
-      : ''
-  }function ${json.name}(${propsArgs}${isForwardRef ? `, ${options.forwardRef}` : ''}) {
-    ${
-      options.contextType === 'prop-drill'
-        ? `const ${contextPropDrillingKey} = { ...props['${contextPropDrillingKey}'] };`
-        : ''
-    }
-    ${hasStateArgument ? '' : refsString}
-    ${
-      hasState
-        ? options.stateType === 'mobx'
-          ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(json)}));`
-          : options.stateType === 'useState'
-          ? useStateCode
-          : options.stateType === 'solid'
-          ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
-          : options.stateType === 'builder'
-          ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
-          : options.stateType === 'variables'
-          ? `const state = ${getStateObjectStringFromComponent(json)};`
-          : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
-        : ''
-    }
-      ${hasStateArgument ? refsString : ''}
-      ${getContextString(json, options)}
-      ${getInitCode(json, options)}
-      ${contextStr || ''}
-
-      ${
-        json.hooks.onInit?.code
-          ? `
-          useEffect(() => {
-            ${processHookCode({
-              str: json.hooks.onInit.code,
-              options,
-            })}
-          }, [])
-          `
-          : ''
-      }
-      ${
-        json.hooks.onMount?.code
-          ? `useEffect(() => {
-            ${processHookCode({
-              str: json.hooks.onMount.code,
-              options,
-            })}
-          }, [])`
-          : ''
-      }
-
-      ${
-        json.hooks.onUpdate
-          ?.map(
-            (hook) => `useEffect(() => {
-            ${processHookCode({ str: hook.code, options })}
-          },
-          ${hook.deps ? processHookCode({ str: hook.deps, options }) : ''})`,
-          )
-          .join(';') ?? ''
-      }
-
-      ${
-        json.hooks.onUnMount?.code
-          ? `useEffect(() => {
-            return () => {
-              ${processHookCode({
-                str: json.hooks.onUnMount.code,
-                options,
-              })}
-            }
-          }, [])`
-          : ''
-      }
-
-      return (
-        ${wrap ? openFrag(options) : ''}
-        ${json.children.map((item) => blockToReact(item, options, json, [])).join('\n')}
-        ${
-          componentHasStyles && options.stylesType === 'styled-jsx'
-            ? `<style jsx>{\`${css}\`}</style>`
-            : componentHasStyles && options.stylesType === 'style-tag'
-            ? `<style>{\`${css}\`}</style>`
-            : ''
-        }
-        ${wrap ? closeFrag(options) : ''}
-      );
-    }${isForwardRef ? ')' : ''}
+  }${isForwardRef ? `forwardRef${forwardRefType}(` : ''}function ${json.name}(${propsArgs}${
+    isForwardRef ? `, ${options.forwardRef}` : ''
+  }) {
+    ${componentBody}
+  }${isForwardRef ? ')' : ''}
 
     ${getPropsDefinition({ json })}
 
