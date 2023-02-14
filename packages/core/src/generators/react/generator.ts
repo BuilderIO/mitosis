@@ -199,6 +199,30 @@ export const componentToReact: TranspilerGenerator<ToReactOptions> =
     return str;
   };
 
+// TODO: import target components when they are required
+const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): string => {
+  const { preact, type, plugins } = options;
+  if (preact) {
+    return `
+    /** @jsx h */
+    import { h, Fragment } from 'preact';
+    `;
+  }
+  if (type === 'native') {
+    return `
+    import * as React from 'react';
+    import { FlatList, ScrollView, View, StyleSheet, Image, Text } from 'react-native';
+    `;
+  }
+  if (type === 'taro') {
+    return `
+    import * as React from 'react';
+    `;
+  }
+
+  return "import * as React from 'react';";
+};
+
 const _componentToReact = (
   json: MitosisComponent,
   options: ToReactOptions,
@@ -307,19 +331,7 @@ const _componentToReact = (
   };
 
   let str = dedent`
-  ${
-    options.preact
-      ? `
-    /** @jsx h */
-    import { h, Fragment } from 'preact';
-    `
-      : options.type !== 'native'
-      ? "import * as React from 'react';"
-      : `
-  import * as React from 'react';
-  import { FlatList, ScrollView, View, StyleSheet, Image, Text } from 'react-native';
-  `
-  }
+  ${getDefaultImport(json, options)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${
     reactLibImports.size

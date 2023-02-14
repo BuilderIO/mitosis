@@ -446,6 +446,17 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FORM_BLOCK_TESTS,
     FOR_SHOW_TESTS,
   ],
+  taro: [
+    CONTEXT_TEST,
+    BASIC_TESTS,
+    SLOTS_TESTS,
+    SHOW_TESTS,
+    FORWARD_REF_TESTS,
+    MULTI_ON_UPDATE_TESTS,
+    FORM_BLOCK_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
+  ],
 };
 
 export const runTestsForJsx = () => {
