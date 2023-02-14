@@ -17,7 +17,6 @@ import { mapRefs } from '../../helpers/map-refs';
 import { processHttpRequests } from '../../helpers/process-http-requests';
 import { processTagReferences } from '../../helpers/process-tag-references';
 import { renderPreComponent } from '../../helpers/render-imports';
-import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import {
   runPostCodePlugins,
@@ -334,7 +333,7 @@ const _componentToReact = (
   const propType = json.propsTypeRef || 'any';
   const propsArgs = `props${options.typescript ? `:${propType}` : ''}`;
 
-  let str = dedent`
+  const str = dedent`
   ${getDefaultImport(json, options)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${
@@ -485,8 +484,6 @@ const _componentToReact = (
     }
 
   `;
-
-  str = stripNewlinesInStrings(str);
 
   return str;
 };
