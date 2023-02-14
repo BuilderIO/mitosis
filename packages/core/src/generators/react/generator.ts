@@ -148,15 +148,18 @@ type ReactExports =
 const DEFAULT_OPTIONS: ToReactOptions = {
   stateType: 'useState',
   stylesType: 'styled-jsx',
+  type: 'dom',
 };
 
-export const componentToPreact: TranspilerGenerator<ToReactOptions> = (reactOptions = {}) =>
+export const componentToPreact: TranspilerGenerator<Partial<ToReactOptions>> = (
+  reactOptions = {},
+) =>
   componentToReact({
     ...reactOptions,
     preact: true,
   });
 
-export const componentToReact: TranspilerGenerator<ToReactOptions> =
+export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
   (reactOptions = {}) =>
   ({ component }) => {
     let json = fastClone(component);
@@ -223,6 +226,19 @@ const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): stri
   return "import * as React from 'react';";
 };
 
+const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
+  if (!json.defaultProps) return '';
+  const defaultPropsString = Object.keys(json.defaultProps)
+    .map((prop) => {
+      const value = json.defaultProps!.hasOwnProperty(prop)
+        ? json.defaultProps![prop]?.code
+        : 'undefined';
+      return `${prop}: ${value}`;
+    })
+    .join(',');
+  return `${json.name || 'MyComponent'}.defaultProps = {${defaultPropsString}};`;
+};
+
 const _componentToReact = (
   json: MitosisComponent,
   options: ToReactOptions,
@@ -255,29 +271,29 @@ const _componentToReact = (
       ? `${json.propsTypeRef}["${forwardRef}"]`
       : undefined;
 
-  const stylesType = options.stylesType || 'emotion';
-  const stateType = options.stateType || 'mobx';
-  if (stateType === 'builder') {
+  if (options.stateType === 'builder') {
     // Always use state if we are generate Builder react code
     hasState = true;
   }
 
-  const useStateCode = stateType === 'useState' && getUseStateCode(json, options);
+  const useStateCode = options.stateType === 'useState' && getUseStateCode(json, options);
   if (options.plugins) {
     json = runPostJsonPlugins(json, options.plugins);
   }
 
   const css =
-    stylesType === 'styled-jsx'
+    options.stylesType === 'styled-jsx'
       ? collectCss(json)
-      : stylesType === 'style-tag'
+      : options.stylesType === 'style-tag'
       ? collectCss(json, {
           prefix: hash(json),
         })
       : null;
 
   const styledComponentsCode =
-    stylesType === 'styled-components' && componentHasStyles && collectStyledComponents(json);
+    options.stylesType === 'styled-components' &&
+    componentHasStyles &&
+    collectStyledComponents(json);
 
   if (options.format !== 'lite') {
     stripMetaProperties(json);
@@ -307,28 +323,16 @@ const _componentToReact = (
 
   const wrap =
     wrapInFragment(json) ||
-    (componentHasStyles && (stylesType === 'styled-jsx' || stylesType === 'style-tag')) ||
+    (componentHasStyles &&
+      (options.stylesType === 'styled-jsx' || options.stylesType === 'style-tag')) ||
     isRootSpecialNode(json);
 
   const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
   const nativeStyles =
-    stylesType === 'react-native' && componentHasStyles && collectReactNativeStyles(json);
+    options.stylesType === 'react-native' && componentHasStyles && collectReactNativeStyles(json);
 
   const propType = json.propsTypeRef || 'any';
   const propsArgs = `props${options.typescript ? `:${propType}` : ''}`;
-
-  const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
-    if (!json.defaultProps) return '';
-    const defalutPropsString = Object.keys(json.defaultProps)
-      .map((prop) => {
-        const value = json.defaultProps!.hasOwnProperty(prop)
-          ? json.defaultProps![prop]?.code
-          : 'undefined';
-        return `${prop}: ${value}`;
-      })
-      .join(',');
-    return `${json.name || 'MyComponent'}.defaultProps = {${defalutPropsString}};`;
-  };
 
   let str = dedent`
   ${getDefaultImport(json, options)}
@@ -341,15 +345,19 @@ const _componentToReact = (
       : ''
   }
   ${
-    componentHasStyles && stylesType === 'emotion' && options.format !== 'lite'
+    componentHasStyles && options.stylesType === 'emotion' && options.format !== 'lite'
       ? `/** @jsx jsx */
     import { jsx } from '@emotion/react'`.trim()
       : ''
   }
-    ${hasState && stateType === 'valtio' ? `import { useLocalProxy } from 'valtio/utils';` : ''}
-    ${hasState && stateType === 'solid' ? `import { useMutable } from 'react-solid-state';` : ''}
     ${
-      stateType === 'mobx' && hasState
+      !hasState
+        ? ''
+        : options.stateType === 'valtio'
+        ? `import { useLocalProxy } from 'valtio/utils';`
+        : options.stateType === 'solid'
+        ? `import { useMutable } from 'react-solid-state';`
+        : options.stateType === 'mobx'
         ? `import { useLocalObservable, observer } from 'mobx-react-lite';`
         : ''
     }
@@ -358,9 +366,9 @@ const _componentToReact = (
       component: json,
       target: options.type === 'native' ? 'reactNative' : 'react',
     })}
-    ${stateType === 'mobx' && isForwardRef ? `const ${json.name || 'MyComponent'} = ` : ``}${
-    isSubComponent || stateType === 'mobx' ? '' : 'export default '
-  }${
+    ${
+      options.stateType === 'mobx' && isForwardRef ? `const ${json.name || 'MyComponent'} = ` : ``
+    }${isSubComponent || options.stateType === 'mobx' ? '' : 'export default '}${
     isForwardRef
       ? `forwardRef${forwardRefType && options.typescript ? `<${forwardRefType}>` : ''}(`
       : ''
@@ -375,17 +383,17 @@ const _componentToReact = (
     ${hasStateArgument ? '' : refsString}
       ${
         hasState
-          ? stateType === 'mobx'
+          ? options.stateType === 'mobx'
             ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(
                 json,
               )}));`
-            : stateType === 'useState'
+            : options.stateType === 'useState'
             ? useStateCode
-            : stateType === 'solid'
+            : options.stateType === 'solid'
             ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
-            : stateType === 'builder'
+            : options.stateType === 'builder'
             ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
-            : stateType === 'variables'
+            : options.stateType === 'variables'
             ? `const state = ${getStateObjectStringFromComponent(json)};`
             : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
           : ''
@@ -446,9 +454,9 @@ const _componentToReact = (
         ${wrap ? openFrag(options) : ''}
         ${json.children.map((item) => blockToReact(item, options, json, [])).join('\n')}
         ${
-          componentHasStyles && stylesType === 'styled-jsx'
+          componentHasStyles && options.stylesType === 'styled-jsx'
             ? `<style jsx>{\`${css}\`}</style>`
-            : componentHasStyles && stylesType === 'style-tag'
+            : componentHasStyles && options.stylesType === 'style-tag'
             ? `<style>{\`${css}\`}</style>`
             : ''
         }
@@ -466,9 +474,9 @@ const _componentToReact = (
     `
     }
 
-    ${styledComponentsCode ? styledComponentsCode : ''}
+    ${styledComponentsCode ?? ''}
     ${
-      stateType === 'mobx'
+      options.stateType === 'mobx'
         ? `
       const observed${json.name || 'MyComponent'} = observer(${json.name || 'MyComponent'});
       export default observed${json.name || 'MyComponent'};
