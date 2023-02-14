@@ -6,9 +6,10 @@ import { ClassStyleMap } from '../helpers/styles/helpers';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 import { componentToReact, ToReactOptions } from './react';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
+import { TranspilerGenerator } from '../types/transpiler';
 import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
+import { mergeOptions } from 'src/helpers/merge-options';
 
 // @tarojs/components
 export const DEFAULT_Component_SET = new Set<string>([
@@ -63,9 +64,7 @@ export const DEFAULT_Component_SET = new Set<string>([
   'AdCustom',
 ]);
 
-export interface ToTaroOptions extends BaseTranspilerOptions {
-  stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
-}
+export type ToTaroOptions = ToReactOptions;
 
 // TODO: px to 2 px
 export const collectTaroStyles = (json: MitosisComponent): ClassStyleMap => {
@@ -162,22 +161,19 @@ const PROCESS_TARO_PLUGIN: Plugin = () => ({
   },
 });
 
-const DEFAULT_OPTIONS: ToTaroOptions = {
+const DEFAULT_OPTIONS: Partial<ToTaroOptions> = {
   stateType: 'useState',
   plugins: [PROCESS_TARO_PLUGIN],
 };
 
-export const componentToTaro: TranspilerGenerator<ToTaroOptions> =
+export const componentToTaro: TranspilerGenerator<Partial<ToTaroOptions>> =
   (_options = {}) =>
   ({ component, path }) => {
     const json = fastClone(component);
 
-    const options: ToReactOptions = {
-      ...DEFAULT_OPTIONS,
-      ..._options,
-      plugins: [...(DEFAULT_OPTIONS.plugins || []), ...(_options.plugins || [])],
+    const options = mergeOptions(DEFAULT_OPTIONS, _options, {
       type: 'taro',
-    };
+    });
 
     return componentToReact(options)({ component: json, path });
   };

@@ -4,10 +4,11 @@ import { Plugin } from '..';
 import { fastClone } from '../helpers/fast-clone';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
+import { TranspilerGenerator } from '../types/transpiler';
 import { componentToReact, contextPropDrillingKey, ToReactOptions } from './react';
+import { mergeOptions } from 'src/helpers/merge-options';
 
-export interface ToRscOptions extends BaseTranspilerOptions {}
+export type ToRscOptions = ToReactOptions;
 
 /**
  * Transform react to be RSC compatible, such as
@@ -59,23 +60,20 @@ const RSC_TRANSFORM_PLUGIN: Plugin = () => ({
   },
 });
 
-const DEFAULT_OPTIONS: ToRscOptions = {
+const DEFAULT_OPTIONS: Partial<ToRscOptions> = {
   plugins: [RSC_TRANSFORM_PLUGIN],
 };
 
-export const componentToRsc: TranspilerGenerator<ToRscOptions> =
+export const componentToRsc: TranspilerGenerator<Partial<ToRscOptions>> =
   (_options = {}) =>
   ({ component, path }) => {
     const json = fastClone(component);
 
-    const options: ToReactOptions = {
-      ...DEFAULT_OPTIONS,
-      ..._options,
-      plugins: [...(DEFAULT_OPTIONS.plugins || []), ...(_options.plugins || [])],
+    const options = mergeOptions(DEFAULT_OPTIONS, _options, {
       stylesType: 'style-tag',
       stateType: 'variables',
       contextType: 'prop-drill',
-    };
+    });
 
     return componentToReact(options)({ component: json, path });
   };
