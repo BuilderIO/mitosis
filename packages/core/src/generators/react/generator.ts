@@ -380,21 +380,23 @@ const _componentToReact = (
         : ''
     }
     ${hasStateArgument ? '' : refsString}
-    ${
-      hasState
-        ? options.stateType === 'mobx'
-          ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(json)}));`
-          : options.stateType === 'useState'
-          ? useStateCode
-          : options.stateType === 'solid'
-          ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
-          : options.stateType === 'builder'
-          ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
-          : options.stateType === 'variables'
-          ? `const state = ${getStateObjectStringFromComponent(json)};`
-          : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
-        : ''
-    }
+      ${
+        hasState
+          ? options.stateType === 'mobx'
+            ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(
+                json,
+              )}));`
+            : options.stateType === 'useState'
+            ? useStateCode
+            : options.stateType === 'solid'
+            ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
+            : options.stateType === 'builder'
+            ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
+            : options.stateType === 'variables'
+            ? `const state = ${getStateObjectStringFromComponent(json)};`
+            : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
+          : ''
+      }
       ${hasStateArgument ? refsString : ''}
       ${getContextString(json, options)}
       ${getInitCode(json, options)}
