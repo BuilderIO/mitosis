@@ -176,10 +176,10 @@ export const processBinding = ({
               return isSlotProperty(name) ? replaceSlotsInString(name, (x) => `slots.${x}`) : name;
             case 'options':
               if (name === 'children' || name.startsWith('children.')) {
-                return '${thisPrefix}.$slots.default';
+                return `${thisPrefix}.$slots.default`;
               }
               return isSlotProperty(name)
-                ? replaceSlotsInString(name, (x) => `this.$slots.${x}`)
+                ? replaceSlotsInString(name, (x) => `${thisPrefix}.$slots.${x}`)
                 : `${thisPrefix}.${name}`;
           }
         },
