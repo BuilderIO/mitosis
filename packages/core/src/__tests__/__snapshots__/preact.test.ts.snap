@@ -809,27 +809,20 @@ export default function FormComponent(props) {
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+          /* Zapier doesn't allow content-type header to be sent from browsers */ !(
+            sendWithJs && props.action?.includes(\\"zapier.com\\")
+          )
         ) {
           headers[\\"content-type\\"] = contentType;
         }
       }
-
-      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-        detail: {
-          body,
-        },
-      });
-
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", { detail: { body } });
       if (formRef.current) {
         formRef.current.dispatchEvent(presubmitEvent);
-
         if (presubmitEvent.defaultPrevented) {
           return;
         }
       }
-
       setFormState(\\"sending\\");
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -837,73 +830,55 @@ export default function FormComponent(props) {
         props.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
       fetch(
-        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: props.method || \\"post\\",
-        }
+        props.sendSubmissionsTo === \\"email\\"
+          ? formUrl
+          : props.action /* TODO: throw error if no action URL */,
+        { body, headers, method: props.method || \\"post\\" }
       ).then(
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
-
           if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
             body = await res.json();
           } else {
             body = await res.text();
           }
-
           if (!res.ok && props.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
-            let message = get(body, props.errorMessagePath);
-
+            /* TODO: allow supplying an error formatter function */ let message =
+              get(body, props.errorMessagePath);
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
-                message = JSON.stringify(message);
+                /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message =
+                  JSON.stringify(message);
               }
-
               setFormErrorMessage(message);
             }
           }
-
           setResponseData(body);
           setFormState(res.ok ? \\"success\\" : \\"error\\");
-
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-              detail: {
-                res,
-                body,
-              },
+              detail: { res, body },
             });
-
             if (formRef.current) {
               formRef.current.dispatchEvent(submitSuccessEvent);
-
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
-
-              if (props.resetFormOnSubmit !== false) {
+              /* TODO: option to turn this on/off? */ if (
+                props.resetFormOnSubmit !== false
+              ) {
                 formRef.current.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
-
-            if (props.successUrl) {
+            /* TODO: client side route event first that can be preventDefaulted */ if (
+              props.successUrl
+            ) {
               if (formRef.current) {
                 const event = new CustomEvent(\\"route\\", {
-                  detail: {
-                    url: props.successUrl,
-                  },
+                  detail: { url: props.successUrl },
                 });
                 formRef.current.dispatchEvent(event);
-
                 if (!event.defaultPrevented) {
                   location.href = props.successUrl;
                 }
@@ -915,28 +890,23 @@ export default function FormComponent(props) {
         },
         (err) => {
           const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-            detail: {
-              error: err,
-            },
+            detail: { error: err },
           });
-
           if (formRef.current) {
             formRef.current.dispatchEvent(submitErrorEvent);
-
             if (submitErrorEvent.defaultPrevented) {
               return;
             }
           }
-
           setResponseData(err);
           setFormState(\\"error\\");
         }
       );
     }
   }
-
   return (
     <Fragment>
+      {\\" \\"}
       <form
         validate={props.validate}
         ref={formRef}
@@ -946,6 +916,7 @@ export default function FormComponent(props) {
         onSubmit={(event) => onSubmit(event)}
         {...props.attributes}
       >
+        {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <Fragment>
             {props.builderBlock?.children?.map((block, index) => (
@@ -956,8 +927,7 @@ export default function FormComponent(props) {
               />
             ))}
           </Fragment>
-        ) : null}
-
+        ) : null}{\\" \\"}
         {submissionState() === \\"error\\" ? (
           <Fragment>
             <BuilderBlocks
@@ -965,8 +935,7 @@ export default function FormComponent(props) {
               blocks={props.errorMessage}
             />
           </Fragment>
-        ) : null}
-
+        ) : null}{\\" \\"}
         {submissionState() === \\"sending\\" ? (
           <Fragment>
             <BuilderBlocks
@@ -974,16 +943,15 @@ export default function FormComponent(props) {
               blocks={props.sendingMessage}
             />
           </Fragment>
-        ) : null}
-
+        ) : null}{\\" \\"}
         {submissionState() === \\"error\\" && responseData ? (
           <Fragment>
             <pre className=\\"builder-form-error-text pre\\">
-              {JSON.stringify(responseData, null, 2)}
+              {\\" \\"}
+              {JSON.stringify(responseData, null, 2)}{\\" \\"}
             </pre>
           </Fragment>
-        ) : null}
-
+        ) : null}{\\" \\"}
         {submissionState() === \\"success\\" ? (
           <Fragment>
             <BuilderBlocks
@@ -991,15 +959,15 @@ export default function FormComponent(props) {
               blocks={props.successMessage}
             />
           </Fragment>
-        ) : null}
-      </form>
+        ) : null}{\\" \\"}
+      </form>{\\" \\"}
       <style jsx>{\`
         .pre {
           padding: 10px;
           color: red;
           text-align: center;
         }
-      \`}</style>
+      \`}</style>{\\" \\"}
     </Fragment>
   );
 }
@@ -3809,27 +3777,20 @@ export default function FormComponent(props: FormProps) {
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+          /* Zapier doesn't allow content-type header to be sent from browsers */ !(
+            sendWithJs && props.action?.includes(\\"zapier.com\\")
+          )
         ) {
           headers[\\"content-type\\"] = contentType;
         }
       }
-
-      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-        detail: {
-          body,
-        },
-      });
-
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", { detail: { body } });
       if (formRef.current) {
         formRef.current.dispatchEvent(presubmitEvent);
-
         if (presubmitEvent.defaultPrevented) {
           return;
         }
       }
-
       setFormState(\\"sending\\");
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -3837,73 +3798,55 @@ export default function FormComponent(props: FormProps) {
         props.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
       fetch(
-        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: props.method || \\"post\\",
-        }
+        props.sendSubmissionsTo === \\"email\\"
+          ? formUrl
+          : props.action /* TODO: throw error if no action URL */,
+        { body, headers, method: props.method || \\"post\\" }
       ).then(
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
-
           if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
             body = await res.json();
           } else {
             body = await res.text();
           }
-
           if (!res.ok && props.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
-            let message = get(body, props.errorMessagePath);
-
+            /* TODO: allow supplying an error formatter function */ let message =
+              get(body, props.errorMessagePath);
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
-                message = JSON.stringify(message);
+                /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message =
+                  JSON.stringify(message);
               }
-
               setFormErrorMessage(message);
             }
           }
-
           setResponseData(body);
           setFormState(res.ok ? \\"success\\" : \\"error\\");
-
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-              detail: {
-                res,
-                body,
-              },
+              detail: { res, body },
             });
-
             if (formRef.current) {
               formRef.current.dispatchEvent(submitSuccessEvent);
-
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
-
-              if (props.resetFormOnSubmit !== false) {
+              /* TODO: option to turn this on/off? */ if (
+                props.resetFormOnSubmit !== false
+              ) {
                 formRef.current.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
-
-            if (props.successUrl) {
+            /* TODO: client side route event first that can be preventDefaulted */ if (
+              props.successUrl
+            ) {
               if (formRef.current) {
                 const event = new CustomEvent(\\"route\\", {
-                  detail: {
-                    url: props.successUrl,
-                  },
+                  detail: { url: props.successUrl },
                 });
                 formRef.current.dispatchEvent(event);
-
                 if (!event.defaultPrevented) {
                   location.href = props.successUrl;
                 }
@@ -3915,28 +3858,23 @@ export default function FormComponent(props: FormProps) {
         },
         (err) => {
           const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-            detail: {
-              error: err,
-            },
+            detail: { error: err },
           });
-
           if (formRef.current) {
             formRef.current.dispatchEvent(submitErrorEvent);
-
             if (submitErrorEvent.defaultPrevented) {
               return;
             }
           }
-
           setResponseData(err);
           setFormState(\\"error\\");
         }
       );
     }
   }
-
   return (
     <Fragment>
+      {\\" \\"}
       <form
         validate={props.validate}
         ref={formRef}
@@ -3946,6 +3884,7 @@ export default function FormComponent(props: FormProps) {
         onSubmit={(event) => onSubmit(event)}
         {...props.attributes}
       >
+        {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <Fragment>
             {props.builderBlock?.children?.map((block, index) => (
@@ -3956,8 +3895,7 @@ export default function FormComponent(props: FormProps) {
               />
             ))}
           </Fragment>
-        ) : null}
-
+        ) : null}{\\" \\"}
         {submissionState() === \\"error\\" ? (
           <Fragment>
             <BuilderBlocks
@@ -3965,8 +3903,7 @@ export default function FormComponent(props: FormProps) {
               blocks={props.errorMessage}
             />
           </Fragment>
-        ) : null}
-
+        ) : null}{\\" \\"}
         {submissionState() === \\"sending\\" ? (
           <Fragment>
             <BuilderBlocks
@@ -3974,16 +3911,15 @@ export default function FormComponent(props: FormProps) {
               blocks={props.sendingMessage}
             />
           </Fragment>
-        ) : null}
-
+        ) : null}{\\" \\"}
         {submissionState() === \\"error\\" && responseData ? (
           <Fragment>
             <pre className=\\"builder-form-error-text pre\\">
-              {JSON.stringify(responseData, null, 2)}
+              {\\" \\"}
+              {JSON.stringify(responseData, null, 2)}{\\" \\"}
             </pre>
           </Fragment>
-        ) : null}
-
+        ) : null}{\\" \\"}
         {submissionState() === \\"success\\" ? (
           <Fragment>
             <BuilderBlocks
@@ -3991,15 +3927,15 @@ export default function FormComponent(props: FormProps) {
               blocks={props.successMessage}
             />
           </Fragment>
-        ) : null}
-      </form>
+        ) : null}{\\" \\"}
+      </form>{\\" \\"}
       <style jsx>{\`
         .pre {
           padding: 10px;
           color: red;
           text-align: center;
         }
-      \`}</style>
+      \`}</style>{\\" \\"}
     </Fragment>
   );
 }

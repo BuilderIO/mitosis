@@ -37,6 +37,7 @@ import hash from 'hash-sum';
 import { createSingleBinding } from '../../helpers/bindings';
 import { blockToReact } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
+import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 
 export const contextPropDrillingKey = '_context';
 
@@ -493,5 +494,5 @@ const _componentToReact = (
 
   `;
 
-  return str;
+  return stripNewlinesInStrings(str);
 };
