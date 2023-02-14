@@ -36,6 +36,7 @@ import { closeFrag, openFrag, processBinding, wrapInFragment } from './helpers';
 import hash from 'hash-sum';
 import { createSingleBinding } from '../../helpers/bindings';
 import { blockToReact } from './blocks';
+import { mergeOptions } from '../../helpers/merge-options';
 
 export const contextPropDrillingKey = '_context';
 
@@ -162,10 +163,8 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
   (reactOptions = {}) =>
   ({ component }) => {
     let json = fastClone(component);
-    const options: ToReactOptions = {
-      ...DEFAULT_OPTIONS,
-      ...reactOptions,
-    };
+    const options: ToReactOptions = mergeOptions(DEFAULT_OPTIONS, reactOptions);
+
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }

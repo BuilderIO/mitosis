@@ -5,11 +5,12 @@ import traverse from 'traverse';
 import { ClassStyleMap } from '../helpers/styles/helpers';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
-import { componentToReact, ToReactOptions } from './react';
+import { componentToReact } from './react';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
 import { Dictionary } from '../helpers/typescript';
+import { mergeOptions } from '../helpers/merge-options';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType: 'emotion' | 'react-native';
@@ -118,12 +119,7 @@ export const componentToReactNative: TranspilerGenerator<Partial<ToReactNativeOp
   ({ component, path }) => {
     const json = fastClone(component);
 
-    const options: ToReactOptions = {
-      ...DEFAULT_OPTIONS,
-      ..._options,
-      plugins: [...(DEFAULT_OPTIONS.plugins || []), ...(_options.plugins || [])],
-      type: 'native',
-    };
+    const options = mergeOptions(DEFAULT_OPTIONS, _options);
 
-    return componentToReact(options)({ component: json, path });
+    return componentToReact({ ...options, type: 'native' })({ component: json, path });
   };
