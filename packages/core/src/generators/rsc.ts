@@ -6,7 +6,7 @@ import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
 import { TranspilerGenerator } from '../types/transpiler';
 import { componentToReact, contextPropDrillingKey, ToReactOptions } from './react';
-import { mergeOptions } from 'src/helpers/merge-options';
+import { mergeOptions } from '../helpers/merge-options';
 
 export type ToRscOptions = ToReactOptions;
 

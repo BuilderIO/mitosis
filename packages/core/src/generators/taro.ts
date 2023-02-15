@@ -9,7 +9,7 @@ import { componentToReact, ToReactOptions } from './react';
 import { TranspilerGenerator } from '../types/transpiler';
 import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
-import { mergeOptions } from 'src/helpers/merge-options';
+import { mergeOptions } from '../helpers/merge-options';
 
 // @tarojs/components
 export const DEFAULT_Component_SET = new Set<string>([
