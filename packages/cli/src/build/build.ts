@@ -78,14 +78,30 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => ({
   },
 });
 
-async function clean(options: MitosisConfig) {
-  const patterns = options.targets.map(
-    (target) => `${options.dest}/${options.getTargetPath({ target })}/${options.files}`,
+async function clean(options: MitosisConfig, target: Target) {
+  const pattern = `${options.dest}/${options.getTargetPath({ target })}/${options.files}`;
+  const newFiles = getFiles({ files: options.files, exclude: options.exclude }).filter(
+    (path) => checkIsMitosisComponentFilePath(path) || path.endsWith('.js') || path.endsWith('.ts'),
   );
-  const files = getFiles({ files: patterns, exclude: options.exclude });
+  const files = getFiles({ files: pattern, exclude: options.exclude });
   await Promise.all(
     files.map(async (file) => {
-      await remove(file);
+      // the output file paths include the output folder structure, so we need to check the ending
+      if (
+        !newFiles.some((newFile) => {
+          // get output file path for
+          if (checkIsMitosisComponentFilePath(newFile)) {
+            newFile =
+              newFile.split('.')[0] +
+              getFileExtensionForTarget({ type: 'filename', target, options });
+          } else if (newFile.endsWith('.ts') && !checkShouldOutputTypeScript({ target, options })) {
+            newFile = newFile.split('.')[0] + '.js';
+          }
+          return file.endsWith(newFile);
+        })
+      ) {
+        await remove(file);
+      }
     }),
   );
 }
@@ -220,9 +236,6 @@ export async function build(config?: MitosisConfig) {
   // merge default options
   const options = getOptions(config);
 
-  // clean output directory
-  await clean(options);
-
   // get all mitosis component JSONs
   const mitosisComponents = await getMitosisComponentJSONs(options);
 
@@ -230,6 +243,8 @@ export async function build(config?: MitosisConfig) {
 
   await Promise.all(
     targetContexts.map(async (targetContext) => {
+      // clean output directory
+      await clean(options, targetContext.target);
       // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
       // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
       const files = fastClone(mitosisComponents);
