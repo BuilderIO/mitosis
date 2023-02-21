@@ -1,9 +1,9 @@
 // Vitest Snapshot v1
 
-exports[`Preact > jsx > Javascript Test > AdvancedRef 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > AdvancedRef 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyBasicRefComponent(props) {
   const inputRef = useRef(null);
@@ -24,11 +24,11 @@ function MyBasicRefComponent(props) {
   }, [inputRef.current, inputNoArgRef.current]);
 
   return (
-    <Fragment>
-      <div>
+    <>
+      <View>
         {props.showInput ? (
-          <Fragment>
-            <input
+          <>
+            <Input
               className=\\"input\\"
               ref={inputRef}
               value={name}
@@ -36,27 +36,27 @@ function MyBasicRefComponent(props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+            <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
-            </label>
+            </View>
 
-            <select name=\\"cars\\" id=\\"cars\\">
-              <option value=\\"supra\\">GR Supra</option>
+            <View name=\\"cars\\" id=\\"cars\\">
+              <View value=\\"supra\\">GR Supra</View>
 
-              <option value=\\"86\\">GR 86</option>
-            </select>
-          </Fragment>
+              <View value=\\"86\\">GR 86</View>
+            </View>
+          </>
         ) : null}
         Hello
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
-      </div>
+      </View>
       <style jsx>{\`
         .input {
           color: red;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -64,11 +64,10 @@ export default MyBasicRefComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Basic 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
-
+exports[`Taro > jsx > Javascript Test > Basic 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
@@ -85,20 +84,20 @@ function MyBasicComponent(props) {
   const [sports, setSports] = useState(() => [\\"\\"]);
 
   return (
-    <Fragment>
-      <div className=\\"test div\\">
-        <input
+    <>
+      <View className=\\"view\\">
+        <Input
           value={DEFAULT_VALUES.name || name}
           onChange={(myEvent) => setName(myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           padding: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -106,11 +105,11 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Basic Context 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useContext, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > Basic Context 1`] = `
+"import * as React from \\"react\\";
+import { useState, useContext, useEffect } from \\"react\\";
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { View, Text, Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -134,11 +133,11 @@ function MyBasicComponent(props) {
 
   return (
     <Context.Provider value={createInjector()}>
-      <div>
+      <View>
         {myService.method(\\"hello\\") + name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onChange={(event) => onChange} />
-      </div>
+        <Input onChange={(event) => onChange} />
+      </View>
     </Context.Provider>
   );
 }
@@ -147,10 +146,10 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Basic OnMount Update 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > Basic OnMount Update 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicOnMountUpdateComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -166,10 +165,10 @@ function MyBasicOnMountUpdateComponent(props) {
   }, []);
 
   return (
-    <div>
+    <View>
       Hello
       {name}
-    </div>
+    </View>
   );
 }
 
@@ -177,10 +176,10 @@ export default MyBasicOnMountUpdateComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Basic Outputs 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > Basic Outputs 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -190,17 +189,17 @@ function MyBasicOutputsComponent(props) {
     props.onEvent(props.message);
   }, []);
 
-  return <div />;
+  return <View />;
 }
 
 export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > Basic Outputs Meta 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -210,33 +209,33 @@ function MyBasicOutputsComponent(props) {
     props.onEvent(props.message);
   }, []);
 
-  return <div />;
+  return <View />;
 }
 
 export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > BasicAttribute 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > BasicAttribute 1`] = `
+"import * as React from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
-  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
+  return <Input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
 }
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
+"import * as React from \\"react\\";
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBooleanAttribute(props) {
   return (
-    <div>
+    <View>
       {props.children}
 
       {props.type}
@@ -246,7 +245,7 @@ function MyBooleanAttribute(props) {
       <MyBooleanAttributeComponent toggle={true} />
 
       <MyBooleanAttributeComponent list={null} />
-    </div>
+    </View>
   );
 }
 
@@ -254,12 +253,12 @@ export default MyBooleanAttribute;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > BasicChildComponent 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > BasicChildComponent 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyBasicChildComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
@@ -267,13 +266,13 @@ function MyBasicChildComponent(props) {
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
 
   return (
-    <div>
+    <View>
       <MyBasicComponent id={dev} />
 
-      <div>
+      <View>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
-      </div>
-    </div>
+      </View>
+    </View>
   );
 }
 
@@ -281,10 +280,10 @@ export default MyBasicChildComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > BasicFor 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > BasicFor 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyBasicForComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -296,10 +295,10 @@ function MyBasicForComponent(props) {
   }, []);
 
   return (
-    <div>
+    <View>
       {names?.map((person) => (
-        <Fragment>
-          <input
+        <>
+          <Input
             value={name}
             onChange={(event) => {
               setName(event.target.value + \\" and \\" + person);
@@ -308,9 +307,9 @@ function MyBasicForComponent(props) {
           Hello
           {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
           Liquid!
-        </Fragment>
+        </>
       ))}
-    </div>
+    </View>
   );
 }
 
@@ -318,10 +317,10 @@ export default MyBasicForComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > BasicRef 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > BasicRef 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyBasicRefComponent(props) {
   const inputRef = useRef(null);
@@ -338,11 +337,11 @@ function MyBasicRefComponent(props) {
   }
 
   return (
-    <Fragment>
-      <div>
+    <>
+      <View>
         {props.showInput ? (
-          <Fragment>
-            <input
+          <>
+            <Input
               className=\\"input\\"
               ref={inputRef}
               value={name}
@@ -350,27 +349,27 @@ function MyBasicRefComponent(props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+            <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
-            </label>
+            </View>
 
-            <select name=\\"cars\\" id=\\"cars\\">
-              <option value=\\"supra\\">GR Supra</option>
+            <View name=\\"cars\\" id=\\"cars\\">
+              <View value=\\"supra\\">GR Supra</View>
 
-              <option value=\\"86\\">GR 86</option>
-            </select>
-          </Fragment>
+              <View value=\\"86\\">GR 86</View>
+            </View>
+          </>
         ) : null}
         Hello
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
-      </div>
+      </View>
       <style jsx>{\`
         .input {
           color: red;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -378,10 +377,10 @@ export default MyBasicRefComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > BasicRefAssignment 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useRef } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > BasicRefAssignment 1`] = `
+"import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+import { View, Button, Text } from \\"@tarojs/components\\";
 
 function MyBasicRefAssignmentComponent(props) {
   const holdValueRef = useRef(\\"Patrick\\");
@@ -392,9 +391,9 @@ function MyBasicRefAssignmentComponent(props) {
   }
 
   return (
-    <div>
-      <button onClick={(evt) => handlerClick(evt)}>Click</button>
-    </div>
+    <View>
+      <Button onClick={(evt) => handlerClick(evt)}>Click</Button>
+    </View>
   );
 }
 
@@ -402,11 +401,10 @@ export default MyBasicRefAssignmentComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef, useEffect } from \\"preact/hooks\\";
-
+exports[`Taro > jsx > Javascript Test > BasicRefPrevious 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
+import { View, Text, Button } from \\"@tarojs/components\\";
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
@@ -430,15 +428,15 @@ function MyPreviousComponent(props) {
   }, [count]);
 
   return (
-    <div>
-      <h1>
+    <View>
+      <View>
         Now:
         {count}, before:
         {prevCount.current}
-      </h1>
+      </View>
 
-      <button onClick={(event) => setCount(1)}>Increment</button>
-    </div>
+      <Button onClick={(event) => setCount(1)}>Increment</Button>
+    </View>
   );
 }
 
@@ -446,33 +444,33 @@ export default MyPreviousComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Button 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > Button 1`] = `
+"import * as React from \\"react\\";
+import { View, Text, Button } from \\"@tarojs/components\\";
 
 function Button(props) {
   return (
-    <div>
+    <View>
       {props.link ? (
-        <Fragment>
-          <a
+        <>
+          <View
             {...props.attributes}
             href={props.link}
             target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
           >
             {props.text}
-          </a>
-        </Fragment>
+          </View>
+        </>
       ) : null}
 
       {!props.link ? (
-        <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
+        <>
+          <Button type=\\"button\\" {...props.attributes}>
             {props.text}
-          </button>
-        </Fragment>
+          </Button>
+        </>
       ) : null}
-    </div>
+    </View>
   );
 }
 
@@ -480,9 +478,9 @@ export default Button;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Columns 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > Columns 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function Column(props) {
   function getColumns() {
@@ -506,38 +504,38 @@ function Column(props) {
   }
 
   return (
-    <Fragment>
-      <div className=\\"builder-columns div\\">
+    <>
+      <View className=\\"view\\">
         {props.columns?.map((column, index) => (
-          <div className=\\"builder-column div-2\\">
+          <View className=\\"view-2\\">
             {column.content}
 
             {index}
-          </div>
+          </View>
         ))}
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           display: flex;
           flex-direction: column;
           align-items: stretch;
           line-height: normal;
         }
         @media (max-width: 999px) {
-          .div {
+          .view {
             flex-direction: row;
           }
         }
         @media (max-width: 639px) {
-          .div {
+          .view {
             flex-direction: row-reverse;
           }
         }
-        .div-2 {
+        .view-2 {
           flex-grow: 1;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -545,21 +543,21 @@ export default Column;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > ContentSlotHtml 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > ContentSlotHtml 1`] = `
+"import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function ContentSlotCode(props) {
   return (
-    <div>
+    <View>
       {props.slotTesting}
 
-      <div>
-        <hr />
-      </div>
+      <View>
+        <View />
+      </View>
 
-      <div>{props.children}</div>
-    </div>
+      <View>{props.children}</View>
+    </View>
   );
 }
 
@@ -567,10 +565,10 @@ export default ContentSlotCode;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > ContentSlotJSX 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > ContentSlotJSX 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function ContentSlotJsxCode(props) {
   const [name, setName] = useState(() => \\"king\\");
@@ -586,29 +584,26 @@ function ContentSlotJsxCode(props) {
   }
 
   return (
-    <Fragment>
+    <>
       {props.slotReference ? (
-        <Fragment>
-          <div
+        <>
+          <View
             name={props.slotContent ? \\"name1\\" : \\"name2\\"}
             title={props.slotContent ? \\"title1\\" : \\"title2\\"}
             {...props.attributes}
             onClick={(event) => show()}
-            className={props.slotContent ? \`\${name}-content\` : \\"\\"}
           >
-            {showContent && props.slotContent ? (
-              <Fragment>{props.slotContent}</Fragment>
-            ) : null}
+            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
 
-            <div>
-              <hr />
-            </div>
+            <View>
+              <View />
+            </View>
 
-            <div>{props.children}</div>
-          </div>
-        </Fragment>
+            <View>{props.children}</View>
+          </View>
+        </>
       ) : null}
-    </Fragment>
+    </>
   );
 }
 
@@ -622,10 +617,10 @@ export default ContentSlotJsxCode;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > CustomCode 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > CustomCode 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function CustomCode(props) {
   const elem = useRef(null);
@@ -679,25 +674,17 @@ function CustomCode(props) {
     findAndRunScripts();
   }, []);
 
-  return (
-    <div
-      ref={elem}
-      className={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={{ __html: props.code }}
-    />
-  );
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
 
 export default CustomCode;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Embed 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > Embed 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function CustomCode(props) {
   const elem = useRef(null);
@@ -751,30 +738,22 @@ function CustomCode(props) {
     findAndRunScripts();
   }, []);
 
-  return (
-    <div
-      ref={elem}
-      className={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={{ __html: props.code }}
-    />
-  );
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
 
 export default CustomCode;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Form 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > Form 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef } from \\"react\\";
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
+import { Form, View, Text } from \\"@tarojs/components\\";
 
 function FormComponent(props) {
   const formRef = useRef(null);
@@ -972,9 +951,9 @@ function FormComponent(props) {
     }
   }
   return (
-    <Fragment>
+    <>
       {\\" \\"}
-      <form
+      <Form
         validate={props.validate}
         ref={formRef}
         action={!props.sendWithJs && props.action}
@@ -985,7 +964,7 @@ function FormComponent(props) {
       >
         {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
-          <Fragment>
+          <>
             {props.builderBlock?.children?.map((block, index) => (
               <BuilderBlockComponent
                 key={block.id}
@@ -993,59 +972,59 @@ function FormComponent(props) {
                 index={index}
               />
             ))}
-          </Fragment>
+          </>
         ) : null}{\\" \\"}
         {submissionState() === \\"error\\" ? (
-          <Fragment>
+          <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
               blocks={props.errorMessage}
             />
-          </Fragment>
+          </>
         ) : null}{\\" \\"}
         {submissionState() === \\"sending\\" ? (
-          <Fragment>
+          <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
               blocks={props.sendingMessage}
             />
-          </Fragment>
+          </>
         ) : null}{\\" \\"}
         {submissionState() === \\"error\\" && responseData ? (
-          <Fragment>
-            <pre className=\\"builder-form-error-text pre\\">
+          <>
+            <View className=\\"view\\">
               {\\" \\"}
               {JSON.stringify(responseData, null, 2)}{\\" \\"}
-            </pre>
-          </Fragment>
+            </View>
+          </>
         ) : null}{\\" \\"}
         {submissionState() === \\"success\\" ? (
-          <Fragment>
+          <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
               blocks={props.successMessage}
             />
-          </Fragment>
+          </>
         ) : null}{\\" \\"}
-      </form>{\\" \\"}
+      </Form>{\\" \\"}
       <style jsx>{\`
-        .pre {
+        .view {
           padding: 10px;
           color: red;
           text-align: center;
         }
       \`}</style>{\\" \\"}
-    </Fragment>
+    </>
   );
 }
 export default FormComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Image 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > Image 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
+import { View, Image, Text } from \\"@tarojs/components\\";
 
 function Image(props) {
   const pictureRef = useRef(null);
@@ -1104,41 +1083,37 @@ function Image(props) {
   }, []);
 
   return (
-    <Fragment>
-      <div>
-        <picture ref={pictureRef}>
+    <>
+      <View>
+        <View ref={pictureRef}>
           {!useLazyLoading() || load ? (
-            <Fragment>
-              <img
+            <>
+              <Image
+                className=\\"image\\"
                 alt={props.altText}
                 aria-role={props.altText ? \\"presentation\\" : undefined}
-                className={
-                  \\"builder-image\\" +
-                  (props._class ? \\" \\" + props._class : \\"\\") +
-                  \\" img\\"
-                }
                 src={props.image}
                 onLoad={(event) => setLoaded()}
                 srcset={props.srcset}
                 sizes={props.sizes}
               />
-            </Fragment>
+            </>
           ) : null}
 
-          <source srcset={props.srcset} />
-        </picture>
+          <View srcset={props.srcset} />
+        </View>
 
         {props.children}
-      </div>
+      </View>
       <style jsx>{\`
-        .img {
+        .image {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
           object-position: center;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -1146,10 +1121,10 @@ export default Image;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Image State 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > Image State 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Image } from \\"@tarojs/components\\";
 
 function ImgStateComponent(props) {
   const [canShow, setCanShow] = useState(() => true);
@@ -1157,13 +1132,13 @@ function ImgStateComponent(props) {
   const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
 
   return (
-    <div>
+    <View>
       {images?.map((item, itemIndex) => (
-        <Fragment>
-          <img className=\\"custom-class\\" src={item} key={itemIndex} />
-        </Fragment>
+        <>
+          <Image src={item} key={itemIndex} />
+        </>
       ))}
-    </div>
+    </View>
   );
 }
 
@@ -1171,14 +1146,14 @@ export default ImgStateComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Img 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > Img 1`] = `
+"import * as React from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
+import { Image } from \\"@tarojs/components\\";
 
 function ImgComponent(props) {
   return (
-    <img
+    <Image
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
@@ -1195,14 +1170,14 @@ export default ImgComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Input 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > Input 1`] = `
+"import * as React from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
+import { Input } from \\"@tarojs/components\\";
 
 function FormInputComponent(props) {
   return (
-    <input
+    <Input
       {...props.attributes}
       key={
         Builder.isEditing && props.defaultValue
@@ -1223,30 +1198,25 @@ export default FormInputComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > RawText 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > RawText 1`] = `
+"import * as React from \\"react\\";
+import { Text } from \\"@tarojs/components\\";
 
 function RawText(props) {
-  return (
-    <span
-      className={props.attributes?.class || props.attributes?.className}
-      dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }}
-    />
-  );
+  return <Text dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }} />;
 }
 
 export default RawText;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Section 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > Section 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function SectionComponent(props) {
   return (
-    <section
+    <View
       {...props.attributes}
       style={
         props.maxWidth && typeof props.maxWidth === \\"number\\"
@@ -1257,7 +1227,7 @@ function SectionComponent(props) {
       }
     >
       {props.children}
-    </section>
+    </View>
   );
 }
 
@@ -1265,14 +1235,14 @@ export default SectionComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Select 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > Select 1`] = `
+"import * as React from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function SelectComponent(props) {
   return (
-    <select
+    <View
       {...props.attributes}
       value={props.value}
       key={
@@ -1284,11 +1254,11 @@ function SelectComponent(props) {
       name={props.name}
     >
       {props.options?.map((option, index) => (
-        <option value={option.value} data-index={index}>
+        <View value={option.value} data-index={index}>
           {option.name || option.value}
-        </option>
+        </View>
       ))}
-    </select>
+    </View>
   );
 }
 
@@ -1296,32 +1266,30 @@ export default SelectComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > SlotDefault 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > SlotDefault 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function SlotCode(props) {
-  return <div>{props.children}</div>;
+  return <View>{props.children}</View>;
 }
 
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
+SlotCode.defaultProps = { children: <View>Default content</View> };
 
 export default SlotCode;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > SlotHtml 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > SlotHtml 1`] = `
+"import * as React from \\"react\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+import { View } from \\"@tarojs/components\\";
 
 function SlotCode(props) {
   return (
-    <div>
+    <View>
       <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
-    </div>
+    </View>
   );
 }
 
@@ -1329,16 +1297,16 @@ export default SlotCode;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > SlotJsx 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > SlotJsx 1`] = `
+"import * as React from \\"react\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+import { View } from \\"@tarojs/components\\";
 
 function SlotCode(props) {
   return (
-    <div>
+    <View>
       <ContentSlotCode slotTesting={<div>Hello</div>} />
-    </div>
+    </View>
   );
 }
 
@@ -1346,19 +1314,19 @@ export default SlotCode;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > SlotNamed 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > SlotNamed 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function SlotCode(props) {
   return (
-    <div>
+    <View>
       {props.slotTop}
 
       {props.slotLeft}
 
       {props.children}
-    </div>
+    </View>
   );
 }
 
@@ -1368,12 +1336,12 @@ export default SlotCode;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Stamped.io 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > Stamped.io 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
+import { View, Button, Text, Input, Textarea, Image } from \\"@tarojs/components\\";
 
 function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
@@ -1403,21 +1371,21 @@ function SmileReviews(props) {
   }, []);
 
   return (
-    <Fragment>
-      <div data-user={name}>
-        <button onClick={(event) => setShowReviewPrompt(true)}>
+    <>
+      <View data-user={name}>
+        <Button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
-        </button>
+        </Button>
 
         {showReviewPrompt || \\"asdf\\" ? (
-          <Fragment>
-            <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input\\" />
-            <textarea
+          <>
+            <Input placeholder=\\"Email\\" />
+            <Input placeholder=\\"Title\\" className=\\"input\\" />
+            <Textarea
               placeholder=\\"How was your experience?\\"
               className=\\"textarea\\"
             />
-            <button
+            <Button
               className=\\"button\\"
               onClick={(event) => {
                 event.preventDefault();
@@ -1425,27 +1393,27 @@ function SmileReviews(props) {
               }}
             >
               Submit
-            </button>
-          </Fragment>
+            </Button>
+          </>
         ) : null}
 
         {reviews?.map((review, index) => (
-          <div className=\\"review\\" key={review.id}>
-            <img className=\\"img\\" src={review.avatar} />
+          <View className=\\"review\\" key={review.id}>
+            <Image className=\\"image\\" src={review.avatar} />
 
-            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
+            <View>
+              <View>
                 N:
                 {index}
-              </div>
+              </View>
 
-              <div>{review.author}</div>
+              <View>{review.author}</View>
 
-              <div>{review.reviewMessage}</div>
-            </div>
-          </div>
+              <View>{review.reviewMessage}</View>
+            </View>
+          </View>
         ))}
-      </div>
+      </View>
       <style jsx>{\`
         .input {
           display: block;
@@ -1464,13 +1432,13 @@ function SmileReviews(props) {
           border-radius: 5px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .img {
+        .image {
           height: 30px;
           width: 30px;
           margin-right: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -1478,15 +1446,15 @@ export default SmileReviews;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Submit 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > Submit 1`] = `
+"import * as React from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
 
 function SubmitButton(props) {
   return (
-    <button type=\\"submit\\" {...props.attributes}>
+    <Button type=\\"submit\\" {...props.attributes}>
       {props.text}
-    </button>
+    </Button>
   );
 }
 
@@ -1494,17 +1462,17 @@ export default SubmitButton;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Text 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > Text 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
+import { View } from \\"@tarojs/components\\";
 
 function Text(props) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
-    <div
+    <View
       contentEditable={allowEditingText || undefined}
       data-name={{
         test: name || \\"any name\\",
@@ -1524,13 +1492,13 @@ export default Text;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Textarea 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > Textarea 1`] = `
+"import * as React from \\"react\\";
+import { Textarea } from \\"@tarojs/components\\";
 
 function Textarea(props) {
   return (
-    <textarea
+    <Textarea
       {...props.attributes}
       placeholder={props.placeholder}
       name={props.name}
@@ -1544,13 +1512,13 @@ export default Textarea;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Video 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > Video 1`] = `
+"import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function Video(props) {
   return (
-    <video
+    <View
       preload=\\"none\\"
       {...props.attributes}
       style={{
@@ -1577,10 +1545,10 @@ export default Video;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [name, setName] = useState(() => \\"steve\\");
@@ -1594,10 +1562,10 @@ function MyComponent(props) {
   }
 
   return (
-    <div>
+    <View>
       Hello
       {name}
-    </div>
+    </View>
   );
 }
 
@@ -1605,31 +1573,31 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > basicForwardRef 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > basicForwardRef 1`] = `
+"import * as React from \\"react\\";
+import { useState, forwardRef } from \\"react\\";
+import { View, Input } from \\"@tarojs/components\\";
 
 const MyBasicForwardRefComponent = forwardRef(
   function MyBasicForwardRefComponent(props, inputRef) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
-      <Fragment>
-        <div>
-          <input
+      <>
+        <View>
+          <Input
             className=\\"input\\"
             ref={inputRef}
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
-        </div>
+        </View>
         <style jsx>{\`
           .input {
             color: red;
           }
         \`}</style>
-      </Fragment>
+      </>
     );
   }
 );
@@ -1638,31 +1606,31 @@ export default MyBasicForwardRefComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
+"import * as React from \\"react\\";
+import { useState, forwardRef } from \\"react\\";
+import { View, Input } from \\"@tarojs/components\\";
 
 const MyBasicForwardRefComponent = forwardRef(
   function MyBasicForwardRefComponent(props, inputRef) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
-      <Fragment>
-        <div>
-          <input
+      <>
+        <View>
+          <Input
             className=\\"input\\"
             ref={inputRef}
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
-        </div>
+        </View>
         <style jsx>{\`
           .input {
             color: red;
           }
         \`}</style>
-      </Fragment>
+      </>
     );
   }
 );
@@ -1671,10 +1639,10 @@ export default MyBasicForwardRefComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicOnUpdateReturnComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -1697,10 +1665,10 @@ function MyBasicOnUpdateReturnComponent(props) {
   }, [name]);
 
   return (
-    <div>
+    <View>
       Hello!
       {name}
-    </div>
+    </View>
   );
 }
 
@@ -1708,22 +1676,22 @@ export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > class + ClassName + css 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > class + ClassName + css 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   return (
-    <Fragment>
-      <div className=\\"test2 test div\\">
+    <>
+      <View className=\\"view\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           padding: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -1731,22 +1699,22 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > class + css 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > class + css 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   return (
-    <Fragment>
-      <div className=\\"test div\\">
+    <>
+      <View className=\\"view\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           padding: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -1754,22 +1722,22 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > className + css 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > className + css 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   return (
-    <Fragment>
-      <div className=\\"test div\\">
+    <>
+      <View className=\\"view\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           padding: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -1777,20 +1745,20 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > className 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > className 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function ClassNameCode(props) {
   const [bindings, setBindings] = useState(() => \\"a binding\\");
 
   return (
-    <div>
-      <div className=\\"no binding\\">Without Binding</div>
+    <View>
+      <View>Without Binding</View>
 
-      <div className={bindings}>With binding</div>
-    </div>
+      <View>With binding</View>
+    </View>
   );
 }
 
@@ -1798,10 +1766,10 @@ export default ClassNameCode;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > classState 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > classState 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   const [classState, setClassState] = useState(() => \\"testClassName\\");
@@ -1811,16 +1779,16 @@ function MyBasicComponent(props) {
   }));
 
   return (
-    <Fragment>
-      <div className={classState + \\" div\\"} style={styleState}>
+    <>
+      <View className=\\"view\\" style={styleState}>
         Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           padding: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -1828,12 +1796,12 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > componentWithContext 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useContext } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > componentWithContext 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function ComponentWithContext(props) {
   const foo = useContext(Context1);
@@ -1853,7 +1821,7 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        <Fragment>{foo.value}</Fragment>
+        <>{foo.value}</>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -1863,12 +1831,12 @@ export default ComponentWithContext;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useContext } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function ComponentWithContext(props) {
   const foo = useContext(Context1);
@@ -1888,11 +1856,11 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        <Fragment>
+        <>
           {foo.value}
 
-          <div>other</div>
-        </Fragment>
+          <View>other</View>
+        </>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -1902,11 +1870,11 @@ export default ComponentWithContext;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > contentState 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useContext } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > contentState 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
 import BuilderContext from \\"@dummy/context.lite\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function RenderContent(props) {
   return (
@@ -1916,7 +1884,7 @@ function RenderContent(props) {
         registeredComponents: props.customComponents,
       }}
     >
-      <div>setting context</div>
+      <View>setting context</View>
     </BuilderContext.Provider>
   );
 }
@@ -1925,37 +1893,37 @@ export default RenderContent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > defaultProps 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > defaultProps 1`] = `
+"import * as React from \\"react\\";
+import { View, Text, Button } from \\"@tarojs/components\\";
 
 function Button(props) {
   return (
-    <div>
+    <View>
       {props.link ? (
-        <Fragment>
-          <a
+        <>
+          <View
             {...props.attributes}
             href={props.link}
             target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
           >
             {props.text}
-          </a>
-        </Fragment>
+          </View>
+        </>
       ) : null}
 
       {!props.link ? (
-        <Fragment>
-          <button
+        <>
+          <Button
             type=\\"button\\"
             {...props.attributes}
             onClick={(event) => props.onClick(event)}
           >
             {props.buttonText}
-          </button>
-        </Fragment>
+          </Button>
+        </>
       ) : null}
-    </div>
+    </View>
   );
 }
 
@@ -1972,37 +1940,37 @@ export default Button;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
+"import * as React from \\"react\\";
+import { View, Text, Button } from \\"@tarojs/components\\";
 
 function Button(props) {
   return (
-    <div>
+    <View>
       {props.link ? (
-        <Fragment>
-          <a
+        <>
+          <View
             {...props.attributes}
             href={props.link}
             target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
           >
             {props.text}
-          </a>
-        </Fragment>
+          </View>
+        </>
       ) : null}
 
       {!props.link ? (
-        <Fragment>
-          <button
+        <>
+          <Button
             type=\\"button\\"
             {...props.attributes}
             onClick={(event) => props.onClick(event)}
           >
             {props.text}
-          </button>
-        </Fragment>
+          </Button>
+        </>
       ) : null}
-    </div>
+    </View>
   );
 }
 
@@ -2017,21 +1985,20 @@ export default Button;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > defaultValsWithTypes 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-
+exports[`Taro > jsx > Javascript Test > defaultValsWithTypes 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
 function ComponentWithTypes(props) {
   return (
-    <div>
+    <View>
       {\\" \\"}
       Hello
       {props.name || DEFAULT_VALUES.name}
-    </div>
+    </View>
   );
 }
 
@@ -2039,27 +2006,27 @@ export default ComponentWithTypes;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > expressionState 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > expressionState 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [refToUse, setRefToUse] = useState(() =>
     !(props.componentRef instanceof Function) ? props.componentRef : null
   );
 
-  return <div>{refToUse}</div>;
+  return <View>{refToUse}</View>;
 }
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > import types 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > import types 1`] = `
+"import * as React from \\"react\\";
 import RenderBlock from \\"./builder-render-block.raw\\";
+import \\"@tarojs/components\\";
 
 function RenderContent(props) {
   function getRenderContentProps(block, index) {
@@ -2080,10 +2047,10 @@ export default RenderContent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > multipleOnUpdate 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > multipleOnUpdate 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MultipleOnUpdate(props) {
   useEffect(() => {
@@ -2093,17 +2060,17 @@ function MultipleOnUpdate(props) {
     console.log(\\"Runs on every update/rerender as well\\");
   });
 
-  return <div />;
+  return <View />;
 }
 
 export default MultipleOnUpdate;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MultipleOnUpdateWithDeps(props) {
   const [a, setA] = useState(() => \\"a\\");
@@ -2129,51 +2096,51 @@ function MultipleOnUpdateWithDeps(props) {
     }
   }, [c, d]);
 
-  return <div />;
+  return <View />;
 }
 
 export default MultipleOnUpdateWithDeps;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > multipleSpreads 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > multipleSpreads 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   const [attrs, setAttrs] = useState(() => ({
     hello: \\"world\\",
   }));
 
-  return <input {...state.attrs} {...props} />;
+  return <Input {...state.attrs} {...props} />;
 }
 
 export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > nestedShow 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > nestedShow 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function NestedShow(props) {
   return (
-    <Fragment>
+    <>
       {props.conditionA ? (
-        <Fragment>
+        <>
           {!props.conditionB ? (
-            <Fragment>
-              <div>if condition A and condition B</div>
-            </Fragment>
+            <>
+              <View>if condition A and condition B</View>
+            </>
           ) : (
-            <div>else-condition-B</div>
+            <View>else-condition-B</View>
           )}
-        </Fragment>
+        </>
       ) : (
-        <div>else-condition-A</div>
+        <View>else-condition-A</View>
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -2181,32 +2148,32 @@ export default NestedShow;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > nestedStyles 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > nestedStyles 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function NestedStyles(props) {
   return (
-    <Fragment>
-      <div className=\\"div\\">Hello world</div>
+    <>
+      <View className=\\"view\\">Hello world</View>
       <style jsx>{\`
-        .div {
+        .view {
           display: flex;
           foo: var(--bar);
         }
         @media (max-width: env(--mobile)) {
-          .div {
+          .view {
             display: block;
           }
         }
-        .div:hover {
+        .view:hover {
           display: flex;
         }
-        .div .nested-selector {
+        .view .nested-selector {
           display: grid;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -2214,10 +2181,10 @@ export default NestedStyles;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > onInit & onMount 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > onInit & onMount 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function OnInit(props) {
   useEffect(() => {
@@ -2228,18 +2195,17 @@ function OnInit(props) {
     console.log(\\"onMount\\");
   }, []);
 
-  return <div />;
+  return <View />;
 }
 
 export default OnInit;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > onInit 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
-
+exports[`Taro > jsx > Javascript Test > onInit 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
@@ -2253,10 +2219,10 @@ function OnInit(props) {
   }, []);
 
   return (
-    <div>
+    <View>
       Default name defined by parent
       {name}
-    </div>
+    </View>
   );
 }
 
@@ -2264,10 +2230,10 @@ export default OnInit;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > onMount 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > onMount 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function Comp(props) {
   useEffect(() => {
@@ -2280,34 +2246,34 @@ function Comp(props) {
     };
   }, []);
 
-  return <div />;
+  return <View />;
 }
 
 export default Comp;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > onUpdate 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > onUpdate 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function OnUpdate(props) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
 
-  return <div />;
+  return <View />;
 }
 
 export default OnUpdate;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > onUpdateWithDeps 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > onUpdateWithDeps 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function OnUpdateWithDeps(props) {
   const [a, setA] = useState(() => \\"a\\");
@@ -2318,17 +2284,16 @@ function OnUpdateWithDeps(props) {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
   }, [a, b, props.size]);
 
-  return <div />;
+  return <View />;
 }
 
 export default OnUpdateWithDeps;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-
+exports[`Taro > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
+"import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 const b = 3;
 const foo = () => {};
 export const a = 3;
@@ -2336,23 +2301,23 @@ export const bar = () => {};
 export function run<T>(value: T) {}
 
 function MyBasicComponent(props) {
-  return <div />;
+  return <View />;
 }
 
 export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > preserveTyping 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > preserveTyping 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   return (
-    <div>
+    <View>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
+    </View>
   );
 }
 
@@ -2360,20 +2325,20 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > propsDestructure 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > propsDestructure 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
-    <div>
+    <View>
       {props.children}
       {props.type}
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    </View>
   );
 }
 
@@ -2381,16 +2346,16 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > propsInterface 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > propsInterface 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   return (
-    <div>
+    <View>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
+    </View>
   );
 }
 
@@ -2398,16 +2363,16 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > propsType 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > propsType 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   return (
-    <div>
+    <View>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
+    </View>
   );
 }
 
@@ -2415,10 +2380,10 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > referencingFunInsideHook 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function OnUpdate(props) {
   function foo(params) {}
@@ -2437,17 +2402,16 @@ function OnUpdate(props) {
     });
   });
 
-  return <div />;
+  return <View />;
 }
 
 export default OnUpdate;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > renderBlock 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > renderBlock 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
@@ -2462,6 +2426,7 @@ import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import { View } from \\"@tarojs/components\\";
 
 function RenderBlock(props) {
   function component() {
@@ -2652,19 +2617,18 @@ function RenderBlock(props) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
-  const TagRef = tag();
 
   return (
-    <Fragment>
+    <>
       {shouldWrap() ? (
-        <Fragment>
+        <>
           {isEmptyHtmlElement(tag()) ? (
-            <Fragment>
-              <TagRef {...attributes()} {...actions()} />
-            </Fragment>
+            <>
+              <View {...attributes()} {...actions()} />
+            </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-            <Fragment>
+            <>
               {repeatItemData()?.map((data, index) => (
                 <RenderRepeatedBlock
                   key={index}
@@ -2672,11 +2636,11 @@ function RenderBlock(props) {
                   block={data.block}
                 />
               ))}
-            </Fragment>
+            </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
-            <Fragment>
-              <TagRef {...attributes()} {...actions()}>
+            <>
+              <View {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
                 {childrenWithoutParentComponent()?.map((child) => (
@@ -2694,14 +2658,14 @@ function RenderBlock(props) {
                     context={childrenContext()}
                   />
                 ))}
-              </TagRef>
-            </Fragment>
+              </View>
+            </>
           ) : null}
-        </Fragment>
+        </>
       ) : (
         <RenderComponentTagRef {...renderComponentProps()} />
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -2709,10 +2673,9 @@ export default RenderBlock;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > renderContentExample 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useContext, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Javascript Test > renderContentExample 1`] = `
+"import * as React from \\"react\\";
+import { useContext, useEffect } from \\"react\\";
 import {
   sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
@@ -2720,6 +2683,7 @@ import {
 } from \\"@dummy/injection-js\\";
 import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import { View } from \\"@tarojs/components\\";
 
 function RenderContent(props) {
   useEffect(() => {
@@ -2731,7 +2695,7 @@ function RenderContent(props) {
   }, [props.content]);
 
   return (
-    <Fragment>
+    <>
       <BuilderContext.Provider
         value={{
           get content() {
@@ -2743,17 +2707,20 @@ function RenderContent(props) {
           },
         }}
       >
-        <div className=\\"div\\" onClick={(event) => trackClick(props.content.id)}>
+        <View
+          className=\\"view\\"
+          onClick={(event) => trackClick(props.content.id)}
+        >
           <RenderBlocks blocks={props.content.blocks} />
-        </div>
+        </View>
       </BuilderContext.Provider>
       <style jsx>{\`
-        .div {
+        .view {
           display: flex;
           flex-direction: columns;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -2761,33 +2728,33 @@ export default RenderContent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
+"import * as React from \\"react\\";
+import { View, Text, Button } from \\"@tarojs/components\\";
 
 function Button(props) {
   return (
-    <Fragment>
+    <>
       {props.link ? (
-        <Fragment>
-          <a
+        <>
+          <View
             {...props.attributes}
             href={props.link}
             target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
           >
             {props.text}
-          </a>
-        </Fragment>
+          </View>
+        </>
       ) : null}
 
       {!props.link ? (
-        <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
+        <>
+          <Button type=\\"button\\" {...props.attributes}>
             {props.text}
-          </button>
-        </Fragment>
+          </Button>
+        </>
       ) : null}
-    </Fragment>
+    </>
   );
 }
 
@@ -2795,21 +2762,21 @@ export default Button;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > rootShow 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > rootShow 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function RenderStyles(props) {
   return (
-    <Fragment>
+    <>
       {props.foo === \\"bar\\" ? (
-        <Fragment>
-          <div>Bar</div>
-        </Fragment>
+        <>
+          <View>Bar</View>
+        </>
       ) : (
-        <div>Foo</div>
+        <View>Foo</View>
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -2817,21 +2784,21 @@ export default RenderStyles;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > self-referencing component 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > self-referencing component 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   return (
-    <div>
+    <View>
       {props.name}
 
       {props.name === \\"Batman\\" ? (
-        <Fragment>
+        <>
           <MyComponent name=\\"Bruce Wayne\\" />
-        </Fragment>
+        </>
       ) : null}
-    </div>
+    </View>
   );
 }
 
@@ -2839,25 +2806,25 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > self-referencing component with children 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > self-referencing component with children 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   return (
-    <div>
+    <View>
       {props.name}
 
       {props.children}
 
       {props.name === \\"Batman\\" ? (
-        <Fragment>
+        <>
           <MyComponent name=\\"Bruce\\">
-            <div>Wayne</div>
+            <View>Wayne</View>
           </MyComponent>
-        </Fragment>
+        </>
       ) : null}
-    </div>
+    </View>
   );
 }
 
@@ -2865,23 +2832,23 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > showWithFor 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > showWithFor 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function NestedShow(props) {
   return (
-    <Fragment>
+    <>
       {props.conditionA ? (
-        <Fragment>
+        <>
           {props.items?.map((item, idx) => (
-            <div key={idx}>{item}</div>
+            <View key={idx}>{item}</View>
           ))}
-        </Fragment>
+        </>
       ) : (
-        <div>else-condition-A</div>
+        <View>else-condition-A</View>
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -2889,46 +2856,46 @@ export default NestedShow;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > spreadAttrs 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > spreadAttrs 1`] = `
+"import * as React from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
-  return <input {...attrs} />;
+  return <Input {...attrs} />;
 }
 
 export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > spreadNestedProps 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > spreadNestedProps 1`] = `
+"import * as React from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
-  return <input {...props.nested} />;
+  return <Input {...props.nested} />;
 }
 
 export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > spreadProps 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > spreadProps 1`] = `
+"import * as React from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
-  return <input {...props} />;
+  return <Input {...props} />;
 }
 
 export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > subComponent 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > subComponent 1`] = `
+"import * as React from \\"react\\";
 import Foo from \\"./foo-sub-component.lite\\";
+import \\"@tarojs/components\\";
 
 function SubComponent(props) {
   return <Foo />;
@@ -2938,29 +2905,29 @@ export default SubComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > svgComponent 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > svgComponent 1`] = `
+"import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function SvgComponent(props) {
   return (
-    <svg
+    <View
       fill=\\"none\\"
       role=\\"img\\"
       viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
       width={42}
       height={42}
     >
-      <defs>
-        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <View>
+        <View id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
 
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
 
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
-        </filter>
-      </defs>
-    </svg>
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -2968,26 +2935,26 @@ export default SvgComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > typeDependency 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > typeDependency 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function TypeDependency(props) {
-  return <div>{props.foo}</div>;
+  return <View>{props.foo}</View>;
 }
 
 export default TypeDependency;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > use-style 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > use-style 1`] = `
+"import * as React from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   return (
-    <Fragment>
-      <button type=\\"button\\">Button</button>
+    <>
+      <Button type=\\"button\\">Button</Button>
       <style jsx>{\`
         button {
           background: blue;
@@ -2996,7 +2963,7 @@ function MyComponent(props) {
           outline: 1px solid black;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -3004,16 +2971,16 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > use-style-and-css 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > use-style-and-css 1`] = `
+"import * as React from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   return (
-    <Fragment>
-      <button type=\\"button\\" className=\\"button\\">
+    <>
+      <Button type=\\"button\\" className=\\"button\\">
         Button
-      </button>
+      </Button>
       <style jsx>{\`
         .button {
           background: blue;
@@ -3025,7 +2992,7 @@ function MyComponent(props) {
           outline: 1px solid black;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -3033,14 +3000,14 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > use-style-outside-component 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Javascript Test > use-style-outside-component 1`] = `
+"import * as React from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   return (
-    <Fragment>
-      <button type=\\"button\\">Button</button>
+    <>
+      <Button type=\\"button\\">Button</Button>
       <style jsx>{\`
         button {
           background: blue;
@@ -3049,7 +3016,7 @@ function MyComponent(props) {
           outline: 1px solid black;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -3057,19 +3024,19 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Remove Internal mitosis package 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Remove Internal mitosis package 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   return (
-    <div>
+    <View>
       Hello
       {name}! I can run in React, Qwik, Vue, Solid, or Liquid!
-    </div>
+    </View>
   );
 }
 
@@ -3077,14 +3044,15 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > AdvancedRef 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > AdvancedRef 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 export interface Props {
   showInput: boolean;
 }
+
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -3105,11 +3073,11 @@ function MyBasicRefComponent(props: Props) {
   }, [inputRef.current, inputNoArgRef.current]);
 
   return (
-    <Fragment>
-      <div>
+    <>
+      <View>
         {props.showInput ? (
-          <Fragment>
-            <input
+          <>
+            <Input
               className=\\"input\\"
               ref={inputRef}
               value={name}
@@ -3117,27 +3085,27 @@ function MyBasicRefComponent(props: Props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+            <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
-            </label>
+            </View>
 
-            <select name=\\"cars\\" id=\\"cars\\">
-              <option value=\\"supra\\">GR Supra</option>
+            <View name=\\"cars\\" id=\\"cars\\">
+              <View value=\\"supra\\">GR Supra</View>
 
-              <option value=\\"86\\">GR 86</option>
-            </select>
-          </Fragment>
+              <View value=\\"86\\">GR 86</View>
+            </View>
+          </>
         ) : null}
         Hello
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
-      </div>
+      </View>
       <style jsx>{\`
         .input {
           color: red;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -3145,15 +3113,15 @@ export default MyBasicRefComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Basic 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > Basic 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 export interface MyBasicComponentProps {
   id: string;
 }
 
+import { View, Input, Text } from \\"@tarojs/components\\";
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
@@ -3170,20 +3138,20 @@ function MyBasicComponent(props: MyBasicComponentProps) {
   const [sports, setSports] = useState(() => [\\"\\"]);
 
   return (
-    <Fragment>
-      <div className=\\"test div\\">
-        <input
+    <>
+      <View className=\\"view\\">
+        <Input
           value={DEFAULT_VALUES.name || name}
           onChange={(myEvent) => setName(myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           padding: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -3191,11 +3159,11 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Basic Context 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useContext, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > Basic Context 1`] = `
+"import * as React from \\"react\\";
+import { useState, useContext, useEffect } from \\"react\\";
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { View, Text, Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -3219,11 +3187,11 @@ function MyBasicComponent(props: any) {
 
   return (
     <Context.Provider value={createInjector()}>
-      <div>
+      <View>
         {myService.method(\\"hello\\") + name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onChange={(event) => onChange} />
-      </div>
+        <Input onChange={(event) => onChange} />
+      </View>
     </Context.Provider>
   );
 }
@@ -3232,15 +3200,16 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Basic OnMount Update 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > Basic OnMount Update 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
 
 export interface Props {
   hi: string;
   bye: string;
 }
+
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicOnMountUpdateComponent(props: Props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -3256,10 +3225,10 @@ function MyBasicOnMountUpdateComponent(props: Props) {
   }, []);
 
   return (
-    <div>
+    <View>
       Hello
       {name}
-    </div>
+    </View>
   );
 }
 
@@ -3267,10 +3236,10 @@ export default MyBasicOnMountUpdateComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Basic Outputs 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > Basic Outputs 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -3280,17 +3249,17 @@ function MyBasicOutputsComponent(props: any) {
     props.onEvent(props.message);
   }, []);
 
-  return <div />;
+  return <View />;
 }
 
 export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > Basic Outputs Meta 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -3300,38 +3269,38 @@ function MyBasicOutputsComponent(props: any) {
     props.onEvent(props.message);
   }, []);
 
-  return <div />;
+  return <View />;
 }
 
 export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > BasicAttribute 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > BasicAttribute 1`] = `
+"import * as React from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
+  return <Input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
 }
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
+"import * as React from \\"react\\";
 
 type Props = {
   children: any;
   type: string;
 };
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBooleanAttribute(props: Props) {
   return (
-    <div>
+    <View>
       {props.children}
 
       {props.type}
@@ -3341,7 +3310,7 @@ function MyBooleanAttribute(props: Props) {
       <MyBooleanAttributeComponent toggle={true} />
 
       <MyBooleanAttributeComponent list={null} />
-    </div>
+    </View>
   );
 }
 
@@ -3349,12 +3318,12 @@ export default MyBooleanAttribute;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > BasicChildComponent 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > BasicChildComponent 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyBasicChildComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
@@ -3362,13 +3331,13 @@ function MyBasicChildComponent(props: any) {
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
 
   return (
-    <div>
+    <View>
       <MyBasicComponent id={dev} />
 
-      <div>
+      <View>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
-      </div>
-    </div>
+      </View>
+    </View>
   );
 }
 
@@ -3376,10 +3345,10 @@ export default MyBasicChildComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > BasicFor 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > BasicFor 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyBasicForComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -3391,10 +3360,10 @@ function MyBasicForComponent(props: any) {
   }, []);
 
   return (
-    <div>
+    <View>
       {names?.map((person) => (
-        <Fragment>
-          <input
+        <>
+          <Input
             value={name}
             onChange={(event) => {
               setName(event.target.value + \\" and \\" + person);
@@ -3403,9 +3372,9 @@ function MyBasicForComponent(props: any) {
           Hello
           {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
           Liquid!
-        </Fragment>
+        </>
       ))}
-    </div>
+    </View>
   );
 }
 
@@ -3413,14 +3382,15 @@ export default MyBasicForComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > BasicRef 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > BasicRef 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef } from \\"react\\";
 
 export interface Props {
   showInput: boolean;
 }
+
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -3437,11 +3407,11 @@ function MyBasicRefComponent(props: Props) {
   }
 
   return (
-    <Fragment>
-      <div>
+    <>
+      <View>
         {props.showInput ? (
-          <Fragment>
-            <input
+          <>
+            <Input
               className=\\"input\\"
               ref={inputRef}
               value={name}
@@ -3449,27 +3419,27 @@ function MyBasicRefComponent(props: Props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+            <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
-            </label>
+            </View>
 
-            <select name=\\"cars\\" id=\\"cars\\">
-              <option value=\\"supra\\">GR Supra</option>
+            <View name=\\"cars\\" id=\\"cars\\">
+              <View value=\\"supra\\">GR Supra</View>
 
-              <option value=\\"86\\">GR 86</option>
-            </select>
-          </Fragment>
+              <View value=\\"86\\">GR 86</View>
+            </View>
+          </>
         ) : null}
         Hello
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
-      </div>
+      </View>
       <style jsx>{\`
         .input {
           color: red;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -3477,14 +3447,15 @@ export default MyBasicRefComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > BasicRefAssignment 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useRef } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > BasicRefAssignment 1`] = `
+"import * as React from \\"react\\";
+import { useRef } from \\"react\\";
 
 export interface Props {
   showInput: boolean;
 }
+
+import { View, Button, Text } from \\"@tarojs/components\\";
 
 function MyBasicRefAssignmentComponent(props: Props) {
   const holdValueRef = useRef(\\"Patrick\\");
@@ -3495,9 +3466,9 @@ function MyBasicRefAssignmentComponent(props: Props) {
   }
 
   return (
-    <div>
-      <button onClick={(evt) => handlerClick(evt)}>Click</button>
-    </div>
+    <View>
+      <Button onClick={(evt) => handlerClick(evt)}>Click</Button>
+    </View>
   );
 }
 
@@ -3505,15 +3476,15 @@ export default MyBasicRefAssignmentComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > BasicRefPrevious 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 export interface Props {
   showInput: boolean;
 }
 
+import { View, Text, Button } from \\"@tarojs/components\\";
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
@@ -3537,15 +3508,15 @@ function MyPreviousComponent(props: Props) {
   }, [count]);
 
   return (
-    <div>
-      <h1>
+    <View>
+      <View>
         Now:
         {count}, before:
         {prevCount.current}
-      </h1>
+      </View>
 
-      <button onClick={(event) => setCount(1)}>Increment</button>
-    </div>
+      <Button onClick={(event) => setCount(1)}>Increment</Button>
+    </View>
   );
 }
 
@@ -3553,9 +3524,8 @@ export default MyPreviousComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Button 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > Button 1`] = `
+"import * as React from \\"react\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -3564,29 +3534,31 @@ export interface ButtonProps {
   openLinkInNewTab?: boolean;
 }
 
+import { View, Text, Button } from \\"@tarojs/components\\";
+
 function Button(props: ButtonProps) {
   return (
-    <div>
+    <View>
       {props.link ? (
-        <Fragment>
-          <a
+        <>
+          <View
             {...props.attributes}
             href={props.link}
             target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
           >
             {props.text}
-          </a>
-        </Fragment>
+          </View>
+        </>
       ) : null}
 
       {!props.link ? (
-        <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
+        <>
+          <Button type=\\"button\\" {...props.attributes}>
             {props.text}
-          </button>
-        </Fragment>
+          </Button>
+        </>
       ) : null}
-    </div>
+    </View>
   );
 }
 
@@ -3594,9 +3566,8 @@ export default Button;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Columns 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > Columns 1`] = `
+"import * as React from \\"react\\";
 
 type Column = {
   content: any; // TODO: Implement this when support for dynamic CSS lands
@@ -3612,6 +3583,8 @@ export interface ColumnProps {
 
   reverseColumnsWhenStacked?: boolean;
 }
+
+import { View, Text } from \\"@tarojs/components\\";
 
 function Column(props: ColumnProps) {
   function getColumns() {
@@ -3635,38 +3608,38 @@ function Column(props: ColumnProps) {
   }
 
   return (
-    <Fragment>
-      <div className=\\"builder-columns div\\">
+    <>
+      <View className=\\"view\\">
         {props.columns?.map((column, index) => (
-          <div className=\\"builder-column div-2\\">
+          <View className=\\"view-2\\">
             {column.content}
 
             {index}
-          </div>
+          </View>
         ))}
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           display: flex;
           flex-direction: column;
           align-items: stretch;
           line-height: normal;
         }
         @media (max-width: 999px) {
-          .div {
+          .view {
             flex-direction: row;
           }
         }
         @media (max-width: 639px) {
-          .div {
+          .view {
             flex-direction: row-reverse;
           }
         }
-        .div-2 {
+        .view-2 {
           flex-grow: 1;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -3674,26 +3647,26 @@ export default Column;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > ContentSlotHtml 1`] = `
+"import * as React from \\"react\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import { View } from \\"@tarojs/components\\";
 
 function ContentSlotCode(props: Props) {
   return (
-    <div>
+    <View>
       {props.slotTesting}
 
-      <div>
-        <hr />
-      </div>
+      <View>
+        <View />
+      </View>
 
-      <div>{props.children}</div>
-    </div>
+      <View>{props.children}</View>
+    </View>
   );
 }
 
@@ -3701,14 +3674,14 @@ export default ContentSlotCode;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > ContentSlotJSX 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
 };
+import { View, Text } from \\"@tarojs/components\\";
 
 function ContentSlotJsxCode(props: Props) {
   const [name, setName] = useState(() => \\"king\\");
@@ -3724,29 +3697,26 @@ function ContentSlotJsxCode(props: Props) {
   }
 
   return (
-    <Fragment>
+    <>
       {props.slotReference ? (
-        <Fragment>
-          <div
+        <>
+          <View
             name={props.slotContent ? \\"name1\\" : \\"name2\\"}
             title={props.slotContent ? \\"title1\\" : \\"title2\\"}
             {...props.attributes}
             onClick={(event) => show()}
-            className={props.slotContent ? \`\${name}-content\` : \\"\\"}
           >
-            {showContent && props.slotContent ? (
-              <Fragment>{props.slotContent}</Fragment>
-            ) : null}
+            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
 
-            <div>
-              <hr />
-            </div>
+            <View>
+              <View />
+            </View>
 
-            <div>{props.children}</div>
-          </div>
-        </Fragment>
+            <View>{props.children}</View>
+          </View>
+        </>
       ) : null}
-    </Fragment>
+    </>
   );
 }
 
@@ -3760,15 +3730,16 @@ export default ContentSlotJsxCode;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > CustomCode 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > CustomCode 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 export interface CustomCodeProps {
   code: string;
   replaceNodes?: boolean;
 }
+
+import { View } from \\"@tarojs/components\\";
 
 function CustomCode(props: CustomCodeProps) {
   const elem = useRef<HTMLDivElement>(null);
@@ -3822,30 +3793,23 @@ function CustomCode(props: CustomCodeProps) {
     findAndRunScripts();
   }, []);
 
-  return (
-    <div
-      ref={elem}
-      className={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={{ __html: props.code }}
-    />
-  );
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
 
 export default CustomCode;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Embed 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > Embed 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 export interface CustomCodeProps {
   code: string;
   replaceNodes?: boolean;
 }
+
+import { View } from \\"@tarojs/components\\";
 
 function CustomCode(props: CustomCodeProps) {
   const elem = useRef<HTMLDivElement>(null);
@@ -3899,25 +3863,16 @@ function CustomCode(props: CustomCodeProps) {
     findAndRunScripts();
   }, []);
 
-  return (
-    <div
-      ref={elem}
-      className={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={{ __html: props.code }}
-    />
-  );
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
 
 export default CustomCode;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Form 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > Form 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef } from \\"react\\";
 
 export interface FormProps {
   attributes?: any;
@@ -3947,6 +3902,7 @@ import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
+import { Form, View, Text } from \\"@tarojs/components\\";
 
 function FormComponent(props: FormProps) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -4144,9 +4100,9 @@ function FormComponent(props: FormProps) {
     }
   }
   return (
-    <Fragment>
+    <>
       {\\" \\"}
-      <form
+      <Form
         validate={props.validate}
         ref={formRef}
         action={!props.sendWithJs && props.action}
@@ -4157,7 +4113,7 @@ function FormComponent(props: FormProps) {
       >
         {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
-          <Fragment>
+          <>
             {props.builderBlock?.children?.map((block, index) => (
               <BuilderBlockComponent
                 key={block.id}
@@ -4165,59 +4121,58 @@ function FormComponent(props: FormProps) {
                 index={index}
               />
             ))}
-          </Fragment>
+          </>
         ) : null}{\\" \\"}
         {submissionState() === \\"error\\" ? (
-          <Fragment>
+          <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
               blocks={props.errorMessage}
             />
-          </Fragment>
+          </>
         ) : null}{\\" \\"}
         {submissionState() === \\"sending\\" ? (
-          <Fragment>
+          <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
               blocks={props.sendingMessage}
             />
-          </Fragment>
+          </>
         ) : null}{\\" \\"}
         {submissionState() === \\"error\\" && responseData ? (
-          <Fragment>
-            <pre className=\\"builder-form-error-text pre\\">
+          <>
+            <View className=\\"view\\">
               {\\" \\"}
               {JSON.stringify(responseData, null, 2)}{\\" \\"}
-            </pre>
-          </Fragment>
+            </View>
+          </>
         ) : null}{\\" \\"}
         {submissionState() === \\"success\\" ? (
-          <Fragment>
+          <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
               blocks={props.successMessage}
             />
-          </Fragment>
+          </>
         ) : null}{\\" \\"}
-      </form>{\\" \\"}
+      </Form>{\\" \\"}
       <style jsx>{\`
-        .pre {
+        .view {
           padding: 10px;
           color: red;
           text-align: center;
         }
       \`}</style>{\\" \\"}
-    </Fragment>
+    </>
   );
 }
 export default FormComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Image 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useRef, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > Image 1`] = `
+"import * as React from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 // TODO: AMP Support?
 export interface ImageProps {
@@ -4237,6 +4192,8 @@ export interface ImageProps {
 
   children?: any;
 }
+
+import { View, Image, Text } from \\"@tarojs/components\\";
 
 function Image(props: ImageProps) {
   const pictureRef = useRef<HTMLElement>(null);
@@ -4295,41 +4252,37 @@ function Image(props: ImageProps) {
   }, []);
 
   return (
-    <Fragment>
-      <div>
-        <picture ref={pictureRef}>
+    <>
+      <View>
+        <View ref={pictureRef}>
           {!useLazyLoading() || load ? (
-            <Fragment>
-              <img
+            <>
+              <Image
+                className=\\"image\\"
                 alt={props.altText}
                 aria-role={props.altText ? \\"presentation\\" : undefined}
-                className={
-                  \\"builder-image\\" +
-                  (props._class ? \\" \\" + props._class : \\"\\") +
-                  \\" img\\"
-                }
                 src={props.image}
                 onLoad={(event) => setLoaded()}
                 srcset={props.srcset}
                 sizes={props.sizes}
               />
-            </Fragment>
+            </>
           ) : null}
 
-          <source srcset={props.srcset} />
-        </picture>
+          <View srcset={props.srcset} />
+        </View>
 
         {props.children}
-      </div>
+      </View>
       <style jsx>{\`
-        .img {
+        .image {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
           object-position: center;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -4337,10 +4290,10 @@ export default Image;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Image State 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > Image State 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Image } from \\"@tarojs/components\\";
 
 function ImgStateComponent(props: any) {
   const [canShow, setCanShow] = useState(() => true);
@@ -4348,13 +4301,13 @@ function ImgStateComponent(props: any) {
   const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
 
   return (
-    <div>
+    <View>
       {images?.map((item, itemIndex) => (
-        <Fragment>
-          <img className=\\"custom-class\\" src={item} key={itemIndex} />
-        </Fragment>
+        <>
+          <Image src={item} key={itemIndex} />
+        </>
       ))}
-    </div>
+    </View>
   );
 }
 
@@ -4362,9 +4315,8 @@ export default ImgStateComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Img 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > Img 1`] = `
+"import * as React from \\"react\\";
 
 export interface ImgProps {
   attributes?: any;
@@ -4384,10 +4336,11 @@ export interface ImgProps {
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
+import { Image } from \\"@tarojs/components\\";
 
 function ImgComponent(props: ImgProps) {
   return (
-    <img
+    <Image
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
@@ -4404,9 +4357,8 @@ export default ImgComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Input 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > Input 1`] = `
+"import * as React from \\"react\\";
 
 export interface FormInputProps {
   type?: string;
@@ -4419,10 +4371,11 @@ export interface FormInputProps {
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
+import { Input } from \\"@tarojs/components\\";
 
 function FormInputComponent(props: FormInputProps) {
   return (
-    <input
+    <Input
       {...props.attributes}
       key={
         Builder.isEditing && props.defaultValue
@@ -4443,31 +4396,26 @@ export default FormInputComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > RawText 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > RawText 1`] = `
+"import * as React from \\"react\\";
 
 export interface RawTextProps {
   attributes?: any;
   text?: string; // builderBlock?: any;
 }
 
+import { Text } from \\"@tarojs/components\\";
+
 function RawText(props: RawTextProps) {
-  return (
-    <span
-      className={props.attributes?.class || props.attributes?.className}
-      dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }}
-    />
-  );
+  return <Text dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }} />;
 }
 
 export default RawText;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Section 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > Section 1`] = `
+"import * as React from \\"react\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -4475,9 +4423,11 @@ export interface SectionProps {
   children?: any;
 }
 
+import { View, Text } from \\"@tarojs/components\\";
+
 function SectionComponent(props: SectionProps) {
   return (
-    <section
+    <View
       {...props.attributes}
       style={
         props.maxWidth && typeof props.maxWidth === \\"number\\"
@@ -4488,7 +4438,7 @@ function SectionComponent(props: SectionProps) {
       }
     >
       {props.children}
-    </section>
+    </View>
   );
 }
 
@@ -4496,9 +4446,8 @@ export default SectionComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Select 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > Select 1`] = `
+"import * as React from \\"react\\";
 
 export interface FormSelectProps {
   options?: {
@@ -4512,10 +4461,11 @@ export interface FormSelectProps {
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function SelectComponent(props: FormSelectProps) {
   return (
-    <select
+    <View
       {...props.attributes}
       value={props.value}
       key={
@@ -4527,11 +4477,11 @@ function SelectComponent(props: FormSelectProps) {
       name={props.name}
     >
       {props.options?.map((option, index) => (
-        <option value={option.value} data-index={index}>
+        <View value={option.value} data-index={index}>
           {option.name || option.value}
-        </option>
+        </View>
       ))}
-    </select>
+    </View>
   );
 }
 
@@ -4539,40 +4489,38 @@ export default SelectComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > SlotDefault 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > SlotDefault 1`] = `
+"import * as React from \\"react\\";
 
 type Props = {
   [key: string]: string;
 };
+import { View, Text } from \\"@tarojs/components\\";
 
 function SlotCode(props: Props) {
-  return <div>{props.children}</div>;
+  return <View>{props.children}</View>;
 }
 
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
+SlotCode.defaultProps = { children: <View>Default content</View> };
 
 export default SlotCode;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > SlotHtml 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > SlotHtml 1`] = `
+"import * as React from \\"react\\";
 
 type Props = {
   [key: string]: string;
 };
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+import { View } from \\"@tarojs/components\\";
 
 function SlotCode(props: Props) {
   return (
-    <div>
+    <View>
       <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
-    </div>
+    </View>
   );
 }
 
@@ -4580,20 +4528,20 @@ export default SlotCode;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > SlotJsx 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > SlotJsx 1`] = `
+"import * as React from \\"react\\";
 
 type Props = {
   [key: string]: string;
 };
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+import { View } from \\"@tarojs/components\\";
 
 function SlotCode(props: Props) {
   return (
-    <div>
+    <View>
       <ContentSlotCode slotTesting={<div>Hello</div>} />
-    </div>
+    </View>
   );
 }
 
@@ -4601,23 +4549,23 @@ export default SlotCode;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > SlotNamed 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > SlotNamed 1`] = `
+"import * as React from \\"react\\";
 
 type Props = {
   [key: string]: string;
 };
+import { View, Text } from \\"@tarojs/components\\";
 
 function SlotCode(props: Props) {
   return (
-    <div>
+    <View>
       {props.slotTop}
 
       {props.slotLeft}
 
       {props.children}
-    </div>
+    </View>
   );
 }
 
@@ -4627,10 +4575,9 @@ export default SlotCode;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Stamped.io 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > Stamped.io 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
 
 type SmileReviewsProps = {
   productId: string;
@@ -4638,6 +4585,7 @@ type SmileReviewsProps = {
 };
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
+import { View, Button, Text, Input, Textarea, Image } from \\"@tarojs/components\\";
 
 function SmileReviews(props: SmileReviewsProps) {
   const [reviews, setReviews] = useState(() => []);
@@ -4667,21 +4615,21 @@ function SmileReviews(props: SmileReviewsProps) {
   }, []);
 
   return (
-    <Fragment>
-      <div data-user={name}>
-        <button onClick={(event) => setShowReviewPrompt(true)}>
+    <>
+      <View data-user={name}>
+        <Button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
-        </button>
+        </Button>
 
         {showReviewPrompt || \\"asdf\\" ? (
-          <Fragment>
-            <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input\\" />
-            <textarea
+          <>
+            <Input placeholder=\\"Email\\" />
+            <Input placeholder=\\"Title\\" className=\\"input\\" />
+            <Textarea
               placeholder=\\"How was your experience?\\"
               className=\\"textarea\\"
             />
-            <button
+            <Button
               className=\\"button\\"
               onClick={(event) => {
                 event.preventDefault();
@@ -4689,27 +4637,27 @@ function SmileReviews(props: SmileReviewsProps) {
               }}
             >
               Submit
-            </button>
-          </Fragment>
+            </Button>
+          </>
         ) : null}
 
         {reviews?.map((review, index) => (
-          <div className=\\"review\\" key={review.id}>
-            <img className=\\"img\\" src={review.avatar} />
+          <View className=\\"review\\" key={review.id}>
+            <Image className=\\"image\\" src={review.avatar} />
 
-            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
+            <View>
+              <View>
                 N:
                 {index}
-              </div>
+              </View>
 
-              <div>{review.author}</div>
+              <View>{review.author}</View>
 
-              <div>{review.reviewMessage}</div>
-            </div>
-          </div>
+              <View>{review.reviewMessage}</View>
+            </View>
+          </View>
         ))}
-      </div>
+      </View>
       <style jsx>{\`
         .input {
           display: block;
@@ -4728,13 +4676,13 @@ function SmileReviews(props: SmileReviewsProps) {
           border-radius: 5px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .img {
+        .image {
           height: 30px;
           width: 30px;
           margin-right: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -4742,20 +4690,21 @@ export default SmileReviews;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Submit 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > Submit 1`] = `
+"import * as React from \\"react\\";
 
 export interface ButtonProps {
   attributes?: any;
   text?: string;
 }
 
+import { Button, View, Text } from \\"@tarojs/components\\";
+
 function SubmitButton(props: ButtonProps) {
   return (
-    <button type=\\"submit\\" {...props.attributes}>
+    <Button type=\\"submit\\" {...props.attributes}>
       {props.text}
-    </button>
+    </Button>
   );
 }
 
@@ -4763,10 +4712,9 @@ export default SubmitButton;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Text 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > Text 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 export interface TextProps {
   attributes?: any;
@@ -4777,12 +4725,13 @@ export interface TextProps {
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
+import { View } from \\"@tarojs/components\\";
 
 function Text(props: TextProps) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
-    <div
+    <View
       contentEditable={allowEditingText || undefined}
       data-name={{
         test: name || \\"any name\\",
@@ -4802,9 +4751,8 @@ export default Text;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Textarea 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > Textarea 1`] = `
+"import * as React from \\"react\\";
 
 export interface TextareaProps {
   attributes?: any;
@@ -4814,9 +4762,11 @@ export interface TextareaProps {
   placeholder?: string;
 }
 
+import { Textarea } from \\"@tarojs/components\\";
+
 function Textarea(props: TextareaProps) {
   return (
-    <textarea
+    <Textarea
       {...props.attributes}
       placeholder={props.placeholder}
       name={props.name}
@@ -4830,9 +4780,8 @@ export default Textarea;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Video 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > Video 1`] = `
+"import * as React from \\"react\\";
 
 export interface VideoProps {
   attributes?: any;
@@ -4860,9 +4809,11 @@ export interface VideoProps {
   lazyLoad?: boolean;
 }
 
+import { View } from \\"@tarojs/components\\";
+
 function Video(props: VideoProps) {
   return (
-    <video
+    <View
       preload=\\"none\\"
       {...props.attributes}
       style={{
@@ -4889,10 +4840,10 @@ export default Video;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [name, setName] = useState(() => \\"steve\\");
@@ -4906,10 +4857,10 @@ function MyComponent(props: any) {
   }
 
   return (
-    <div>
+    <View>
       Hello
       {name}
-    </div>
+    </View>
   );
 }
 
@@ -4917,36 +4868,37 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > basicForwardRef 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > basicForwardRef 1`] = `
+"import * as React from \\"react\\";
+import { useState, forwardRef } from \\"react\\";
 
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
 }
 
+import { View, Input } from \\"@tarojs/components\\";
+
 const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
   function MyBasicForwardRefComponent(props: Props, inputRef) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
-      <Fragment>
-        <div>
-          <input
+      <>
+        <View>
+          <Input
             className=\\"input\\"
             ref={inputRef}
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
-        </div>
+        </View>
         <style jsx>{\`
           .input {
             color: red;
           }
         \`}</style>
-      </Fragment>
+      </>
     );
   }
 );
@@ -4955,36 +4907,37 @@ export default MyBasicForwardRefComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
+"import * as React from \\"react\\";
+import { useState, forwardRef } from \\"react\\";
 
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
 }
 
+import { View, Input } from \\"@tarojs/components\\";
+
 const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
   function MyBasicForwardRefComponent(props: Props, inputRef) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
-      <Fragment>
-        <div>
-          <input
+      <>
+        <View>
+          <Input
             className=\\"input\\"
             ref={inputRef}
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
-        </div>
+        </View>
         <style jsx>{\`
           .input {
             color: red;
           }
         \`}</style>
-      </Fragment>
+      </>
     );
   }
 );
@@ -4993,10 +4946,10 @@ export default MyBasicForwardRefComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicOnUpdateReturnComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -5019,10 +4972,10 @@ function MyBasicOnUpdateReturnComponent(props: any) {
   }, [name]);
 
   return (
-    <div>
+    <View>
       Hello!
       {name}
-    </div>
+    </View>
   );
 }
 
@@ -5030,22 +4983,22 @@ export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > class + ClassName + css 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > class + ClassName + css 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
   return (
-    <Fragment>
-      <div className=\\"test2 test div\\">
+    <>
+      <View className=\\"view\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           padding: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -5053,22 +5006,22 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > class + css 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > class + css 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
   return (
-    <Fragment>
-      <div className=\\"test div\\">
+    <>
+      <View className=\\"view\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           padding: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -5076,22 +5029,22 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > className + css 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > className + css 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
   return (
-    <Fragment>
-      <div className=\\"test div\\">
+    <>
+      <View className=\\"view\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           padding: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -5099,25 +5052,25 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > className 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > className 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import { View, Text } from \\"@tarojs/components\\";
 
 function ClassNameCode(props: Props) {
   const [bindings, setBindings] = useState(() => \\"a binding\\");
 
   return (
-    <div>
-      <div className=\\"no binding\\">Without Binding</div>
+    <View>
+      <View>Without Binding</View>
 
-      <div className={bindings}>With binding</div>
-    </div>
+      <View>With binding</View>
+    </View>
   );
 }
 
@@ -5125,10 +5078,10 @@ export default ClassNameCode;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > classState 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > classState 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
   const [classState, setClassState] = useState(() => \\"testClassName\\");
@@ -5138,16 +5091,16 @@ function MyBasicComponent(props: any) {
   }));
 
   return (
-    <Fragment>
-      <div className={classState + \\" div\\"} style={styleState}>
+    <>
+      <View className=\\"view\\" style={styleState}>
         Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
+      </View>
       <style jsx>{\`
-        .div {
+        .view {
           padding: 10px;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -5155,10 +5108,9 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > componentWithContext 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useContext } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > componentWithContext 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
 
 export interface ComponentWithContextProps {
   content: string;
@@ -5166,6 +5118,7 @@ export interface ComponentWithContextProps {
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
@@ -5185,7 +5138,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
           },
         }}
       >
-        <Fragment>{foo.value}</Fragment>
+        <>{foo.value}</>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -5195,10 +5148,9 @@ export default ComponentWithContext;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useContext } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
 
 export interface ComponentWithContextProps {
   content: string;
@@ -5206,6 +5158,7 @@ export interface ComponentWithContextProps {
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
@@ -5225,11 +5178,11 @@ function ComponentWithContext(props: ComponentWithContextProps) {
           },
         }}
       >
-        <Fragment>
+        <>
           {foo.value}
 
-          <div>other</div>
-        </Fragment>
+          <View>other</View>
+        </>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -5239,11 +5192,11 @@ export default ComponentWithContext;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > contentState 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useContext } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > contentState 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
 import BuilderContext from \\"@dummy/context.lite\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function RenderContent(props: any) {
   return (
@@ -5253,7 +5206,7 @@ function RenderContent(props: any) {
         registeredComponents: props.customComponents,
       }}
     >
-      <div>setting context</div>
+      <View>setting context</View>
     </BuilderContext.Provider>
   );
 }
@@ -5262,9 +5215,8 @@ export default RenderContent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > defaultProps 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > defaultProps 1`] = `
+"import * as React from \\"react\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -5276,33 +5228,35 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
+import { View, Text, Button } from \\"@tarojs/components\\";
+
 function Button(props: ButtonProps) {
   return (
-    <div>
+    <View>
       {props.link ? (
-        <Fragment>
-          <a
+        <>
+          <View
             {...props.attributes}
             href={props.link}
             target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
           >
             {props.text}
-          </a>
-        </Fragment>
+          </View>
+        </>
       ) : null}
 
       {!props.link ? (
-        <Fragment>
-          <button
+        <>
+          <Button
             type=\\"button\\"
             {...props.attributes}
             onClick={(event) => props.onClick(event)}
           >
             {props.buttonText}
-          </button>
-        </Fragment>
+          </Button>
+        </>
       ) : null}
-    </div>
+    </View>
   );
 }
 
@@ -5319,9 +5273,8 @@ export default Button;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
+"import * as React from \\"react\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -5331,33 +5284,35 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
+import { View, Text, Button } from \\"@tarojs/components\\";
+
 function Button(props: ButtonProps) {
   return (
-    <div>
+    <View>
       {props.link ? (
-        <Fragment>
-          <a
+        <>
+          <View
             {...props.attributes}
             href={props.link}
             target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
           >
             {props.text}
-          </a>
-        </Fragment>
+          </View>
+        </>
       ) : null}
 
       {!props.link ? (
-        <Fragment>
-          <button
+        <>
+          <Button
             type=\\"button\\"
             {...props.attributes}
             onClick={(event) => props.onClick(event)}
           >
             {props.text}
-          </button>
-        </Fragment>
+          </Button>
+        </>
       ) : null}
-    </div>
+    </View>
   );
 }
 
@@ -5372,25 +5327,24 @@ export default Button;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > defaultValsWithTypes 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > defaultValsWithTypes 1`] = `
+"import * as React from \\"react\\";
 
 type Props = {
   name: string;
 };
-
+import { View, Text } from \\"@tarojs/components\\";
 const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
 function ComponentWithTypes(props: Props) {
   return (
-    <div>
+    <View>
       {\\" \\"}
       Hello
       {props.name || DEFAULT_VALUES.name}
-    </div>
+    </View>
   );
 }
 
@@ -5398,26 +5352,25 @@ export default ComponentWithTypes;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > expressionState 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > expressionState 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [refToUse, setRefToUse] = useState(() =>
     !(props.componentRef instanceof Function) ? props.componentRef : null
   );
 
-  return <div>{refToUse}</div>;
+  return <View>{refToUse}</View>;
 }
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > import types 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > import types 1`] = `
+"import * as React from \\"react\\";
 
 type RenderContentProps = {
   options?: GetContentOptions;
@@ -5425,6 +5378,7 @@ type RenderContentProps = {
   renderContentProps: RenderBlockProps;
 };
 import RenderBlock from \\"./builder-render-block.raw\\";
+import \\"@tarojs/components\\";
 
 function RenderContent(props: RenderContentProps) {
   function getRenderContentProps(block, index) {
@@ -5445,10 +5399,10 @@ export default RenderContent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > multipleOnUpdate 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > multipleOnUpdate 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MultipleOnUpdate(props: any) {
   useEffect(() => {
@@ -5458,17 +5412,17 @@ function MultipleOnUpdate(props: any) {
     console.log(\\"Runs on every update/rerender as well\\");
   });
 
-  return <div />;
+  return <View />;
 }
 
 export default MultipleOnUpdate;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MultipleOnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
@@ -5494,56 +5448,57 @@ function MultipleOnUpdateWithDeps(props: any) {
     }
   }, [c, d]);
 
-  return <div />;
+  return <View />;
 }
 
 export default MultipleOnUpdateWithDeps;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > multipleSpreads 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > multipleSpreads 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
   const [attrs, setAttrs] = useState(() => ({
     hello: \\"world\\",
   }));
 
-  return <input {...state.attrs} {...props} />;
+  return <Input {...state.attrs} {...props} />;
 }
 
 export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > nestedShow 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > nestedShow 1`] = `
+"import * as React from \\"react\\";
 
 interface Props {
   conditionA: boolean;
   conditionB: boolean;
 }
 
+import { View, Text } from \\"@tarojs/components\\";
+
 function NestedShow(props: Props) {
   return (
-    <Fragment>
+    <>
       {props.conditionA ? (
-        <Fragment>
+        <>
           {!props.conditionB ? (
-            <Fragment>
-              <div>if condition A and condition B</div>
-            </Fragment>
+            <>
+              <View>if condition A and condition B</View>
+            </>
           ) : (
-            <div>else-condition-B</div>
+            <View>else-condition-B</View>
           )}
-        </Fragment>
+        </>
       ) : (
-        <div>else-condition-A</div>
+        <View>else-condition-A</View>
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -5551,32 +5506,32 @@ export default NestedShow;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > nestedStyles 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > nestedStyles 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function NestedStyles(props: any) {
   return (
-    <Fragment>
-      <div className=\\"div\\">Hello world</div>
+    <>
+      <View className=\\"view\\">Hello world</View>
       <style jsx>{\`
-        .div {
+        .view {
           display: flex;
           foo: var(--bar);
         }
         @media (max-width: env(--mobile)) {
-          .div {
+          .view {
             display: block;
           }
         }
-        .div:hover {
+        .view:hover {
           display: flex;
         }
-        .div .nested-selector {
+        .view .nested-selector {
           display: grid;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -5584,10 +5539,10 @@ export default NestedStyles;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > onInit & onMount 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > onInit & onMount 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function OnInit(props: any) {
   useEffect(() => {
@@ -5598,22 +5553,21 @@ function OnInit(props: any) {
     console.log(\\"onMount\\");
   }, []);
 
-  return <div />;
+  return <View />;
 }
 
 export default OnInit;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > onInit 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > onInit 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
 
 type Props = {
   name: string;
 };
-
+import { View, Text } from \\"@tarojs/components\\";
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
@@ -5627,10 +5581,10 @@ function OnInit(props: Props) {
   }, []);
 
   return (
-    <div>
+    <View>
       Default name defined by parent
       {name}
-    </div>
+    </View>
   );
 }
 
@@ -5638,10 +5592,10 @@ export default OnInit;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > onMount 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > onMount 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function Comp(props: any) {
   useEffect(() => {
@@ -5654,38 +5608,38 @@ function Comp(props: any) {
     };
   }, []);
 
-  return <div />;
+  return <View />;
 }
 
 export default Comp;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > onUpdate 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > onUpdate 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function OnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
 
-  return <div />;
+  return <View />;
 }
 
 export default OnUpdate;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > onUpdateWithDeps 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > onUpdateWithDeps 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
 
 type Props = {
   size: string;
 };
+import { View } from \\"@tarojs/components\\";
 
 function OnUpdateWithDeps(props: Props) {
   const [a, setA] = useState(() => \\"a\\");
@@ -5696,16 +5650,15 @@ function OnUpdateWithDeps(props: Props) {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
   }, [a, b, props.size]);
 
-  return <div />;
+  return <View />;
 }
 
 export default OnUpdateWithDeps;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
+"import * as React from \\"react\\";
 
 type Types = {
   s: any[];
@@ -5717,6 +5670,7 @@ export interface MyBasicComponentProps {
   id: string;
 }
 
+import { View } from \\"@tarojs/components\\";
 const b = 3;
 const foo = () => {};
 export const a = 3;
@@ -5724,16 +5678,15 @@ export const bar = () => {};
 export function run<T>(value: T) {}
 
 function MyBasicComponent(props: MyBasicComponentProps) {
-  return <div />;
+  return <View />;
 }
 
 export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > preserveTyping 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > preserveTyping 1`] = `
+"import * as React from \\"react\\";
 
 export type A = \\"test\\";
 export interface C {
@@ -5748,12 +5701,14 @@ export interface MyBasicComponentProps {
   age?: number;
 }
 
+import { View, Text } from \\"@tarojs/components\\";
+
 function MyBasicComponent(props: MyBasicComponentProps) {
   return (
-    <div>
+    <View>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
+    </View>
   );
 }
 
@@ -5761,25 +5716,25 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > propsDestructure 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > propsDestructure 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 type Props = {
   children: any;
   type: string;
 };
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: Props) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
-    <div>
+    <View>
       {props.children}
       {props.type}
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    </View>
   );
 }
 
@@ -5787,21 +5742,22 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > propsInterface 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > propsInterface 1`] = `
+"import * as React from \\"react\\";
 
 interface Person {
   name: string;
   age?: number;
 }
 
+import { View, Text } from \\"@tarojs/components\\";
+
 function MyBasicComponent(props: Person | never) {
   return (
-    <div>
+    <View>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
+    </View>
   );
 }
 
@@ -5809,21 +5765,21 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > propsType 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > propsType 1`] = `
+"import * as React from \\"react\\";
 
 type Person = {
   name: string;
   age?: number;
 };
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: Person) {
   return (
-    <div>
+    <View>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
+    </View>
   );
 }
 
@@ -5831,10 +5787,10 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > referencingFunInsideHook 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function OnUpdate(props: any) {
   function foo(params) {}
@@ -5853,17 +5809,16 @@ function OnUpdate(props: any) {
     });
   });
 
-  return <div />;
+  return <View />;
 }
 
 export default OnUpdate;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > renderBlock 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > renderBlock 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 import type {
   BuilderContextInterface,
   RegisteredComponent,
@@ -5890,6 +5845,7 @@ import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import { View } from \\"@tarojs/components\\";
 
 function RenderBlock(props: RenderBlockProps) {
   function component() {
@@ -6080,19 +6036,18 @@ function RenderBlock(props: RenderBlockProps) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
-  const TagRef = tag();
 
   return (
-    <Fragment>
+    <>
       {shouldWrap() ? (
-        <Fragment>
+        <>
           {isEmptyHtmlElement(tag()) ? (
-            <Fragment>
-              <TagRef {...attributes()} {...actions()} />
-            </Fragment>
+            <>
+              <View {...attributes()} {...actions()} />
+            </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-            <Fragment>
+            <>
               {repeatItemData()?.map((data, index) => (
                 <RenderRepeatedBlock
                   key={index}
@@ -6100,11 +6055,11 @@ function RenderBlock(props: RenderBlockProps) {
                   block={data.block}
                 />
               ))}
-            </Fragment>
+            </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
-            <Fragment>
-              <TagRef {...attributes()} {...actions()}>
+            <>
+              <View {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
                 {childrenWithoutParentComponent()?.map((child) => (
@@ -6122,14 +6077,14 @@ function RenderBlock(props: RenderBlockProps) {
                     context={childrenContext()}
                   />
                 ))}
-              </TagRef>
-            </Fragment>
+              </View>
+            </>
           ) : null}
-        </Fragment>
+        </>
       ) : (
         <RenderComponentTagRef {...renderComponentProps()} />
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -6137,10 +6092,9 @@ export default RenderBlock;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > renderContentExample 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useContext, useEffect } from \\"preact/hooks\\";
+exports[`Taro > jsx > Typescript Test > renderContentExample 1`] = `
+"import * as React from \\"react\\";
+import { useContext, useEffect } from \\"react\\";
 
 type Props = {
   customComponents: string[];
@@ -6156,6 +6110,7 @@ import {
 } from \\"@dummy/injection-js\\";
 import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import { View } from \\"@tarojs/components\\";
 
 function RenderContent(props: Props) {
   useEffect(() => {
@@ -6167,7 +6122,7 @@ function RenderContent(props: Props) {
   }, [props.content]);
 
   return (
-    <Fragment>
+    <>
       <BuilderContext.Provider
         value={{
           get content() {
@@ -6179,17 +6134,20 @@ function RenderContent(props: Props) {
           },
         }}
       >
-        <div className=\\"div\\" onClick={(event) => trackClick(props.content.id)}>
+        <View
+          className=\\"view\\"
+          onClick={(event) => trackClick(props.content.id)}
+        >
           <RenderBlocks blocks={props.content.blocks} />
-        </div>
+        </View>
       </BuilderContext.Provider>
       <style jsx>{\`
-        .div {
+        .view {
           display: flex;
           flex-direction: columns;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -6197,9 +6155,8 @@ export default RenderContent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
+"import * as React from \\"react\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -6208,29 +6165,31 @@ export interface ButtonProps {
   openLinkInNewTab?: boolean;
 }
 
+import { View, Text, Button } from \\"@tarojs/components\\";
+
 function Button(props: ButtonProps) {
   return (
-    <Fragment>
+    <>
       {props.link ? (
-        <Fragment>
-          <a
+        <>
+          <View
             {...props.attributes}
             href={props.link}
             target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
           >
             {props.text}
-          </a>
-        </Fragment>
+          </View>
+        </>
       ) : null}
 
       {!props.link ? (
-        <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
+        <>
+          <Button type=\\"button\\" {...props.attributes}>
             {props.text}
-          </button>
-        </Fragment>
+          </Button>
+        </>
       ) : null}
-    </Fragment>
+    </>
   );
 }
 
@@ -6238,25 +6197,26 @@ export default Button;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > rootShow 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > rootShow 1`] = `
+"import * as React from \\"react\\";
 
 export interface RenderStylesProps {
   foo: string;
 }
 
+import { View, Text } from \\"@tarojs/components\\";
+
 function RenderStyles(props: RenderStylesProps) {
   return (
-    <Fragment>
+    <>
       {props.foo === \\"bar\\" ? (
-        <Fragment>
-          <div>Bar</div>
-        </Fragment>
+        <>
+          <View>Bar</View>
+        </>
       ) : (
-        <div>Foo</div>
+        <View>Foo</View>
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -6264,21 +6224,21 @@ export default RenderStyles;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > self-referencing component 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > self-referencing component 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   return (
-    <div>
+    <View>
       {props.name}
 
       {props.name === \\"Batman\\" ? (
-        <Fragment>
+        <>
           <MyComponent name=\\"Bruce Wayne\\" />
-        </Fragment>
+        </>
       ) : null}
-    </div>
+    </View>
   );
 }
 
@@ -6286,25 +6246,25 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > self-referencing component with children 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > self-referencing component with children 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   return (
-    <div>
+    <View>
       {props.name}
 
       {props.children}
 
       {props.name === \\"Batman\\" ? (
-        <Fragment>
+        <>
           <MyComponent name=\\"Bruce\\">
-            <div>Wayne</div>
+            <View>Wayne</View>
           </MyComponent>
-        </Fragment>
+        </>
       ) : null}
-    </div>
+    </View>
   );
 }
 
@@ -6312,28 +6272,29 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > showWithFor 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > showWithFor 1`] = `
+"import * as React from \\"react\\";
 
 interface Props {
   conditionA: boolean;
   items: string[];
 }
 
+import { View, Text } from \\"@tarojs/components\\";
+
 function NestedShow(props: Props) {
   return (
-    <Fragment>
+    <>
       {props.conditionA ? (
-        <Fragment>
+        <>
           {props.items?.map((item, idx) => (
-            <div key={idx}>{item}</div>
+            <View key={idx}>{item}</View>
           ))}
-        </Fragment>
+        </>
       ) : (
-        <div>else-condition-A</div>
+        <View>else-condition-A</View>
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -6341,46 +6302,46 @@ export default NestedShow;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > spreadAttrs 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > spreadAttrs 1`] = `
+"import * as React from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
-  return <input {...attrs} />;
+  return <Input {...attrs} />;
 }
 
 export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > spreadNestedProps 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > spreadNestedProps 1`] = `
+"import * as React from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
-  return <input {...props.nested} />;
+  return <Input {...props.nested} />;
 }
 
 export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > spreadProps 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > spreadProps 1`] = `
+"import * as React from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
-  return <input {...props} />;
+  return <Input {...props} />;
 }
 
 export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > subComponent 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > subComponent 1`] = `
+"import * as React from \\"react\\";
 import Foo from \\"./foo-sub-component.lite\\";
+import \\"@tarojs/components\\";
 
 function SubComponent(props: any) {
   return <Foo />;
@@ -6390,29 +6351,29 @@ export default SubComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > svgComponent 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > svgComponent 1`] = `
+"import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function SvgComponent(props: any) {
   return (
-    <svg
+    <View
       fill=\\"none\\"
       role=\\"img\\"
       viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
       width={42}
       height={42}
     >
-      <defs>
-        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <View>
+        <View id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
 
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
 
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
-        </filter>
-      </defs>
-    </svg>
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -6420,32 +6381,32 @@ export default SvgComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > typeDependency 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > typeDependency 1`] = `
+"import * as React from \\"react\\";
 import type { Foo } from \\"./foo-type\\";
 import type { Foo as Foo2 } from \\"./type-export\\";
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
 };
+import { View, Text } from \\"@tarojs/components\\";
 
 function TypeDependency(props: TypeDependencyProps) {
-  return <div>{props.foo}</div>;
+  return <View>{props.foo}</View>;
 }
 
 export default TypeDependency;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > use-style 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > use-style 1`] = `
+"import * as React from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   return (
-    <Fragment>
-      <button type=\\"button\\">Button</button>
+    <>
+      <Button type=\\"button\\">Button</Button>
       <style jsx>{\`
         button {
           background: blue;
@@ -6454,7 +6415,7 @@ function MyComponent(props: any) {
           outline: 1px solid black;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -6462,16 +6423,16 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > use-style-and-css 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > use-style-and-css 1`] = `
+"import * as React from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   return (
-    <Fragment>
-      <button type=\\"button\\" className=\\"button\\">
+    <>
+      <Button type=\\"button\\" className=\\"button\\">
         Button
-      </button>
+      </Button>
       <style jsx>{\`
         .button {
           background: blue;
@@ -6483,7 +6444,7 @@ function MyComponent(props: any) {
           outline: 1px solid black;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -6491,14 +6452,14 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > use-style-outside-component 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > jsx > Typescript Test > use-style-outside-component 1`] = `
+"import * as React from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   return (
-    <Fragment>
-      <button type=\\"button\\">Button</button>
+    <>
+      <Button type=\\"button\\">Button</Button>
       <style jsx>{\`
         button {
           background: blue;
@@ -6507,7 +6468,7 @@ function MyComponent(props: any) {
           outline: 1px solid black;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -6515,19 +6476,19 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > basic 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > basic 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   return (
-    <div>
-      <input onChange={(event) => setName(event.target.value)} value={name} />
+    <View>
+      <Input onChange={(event) => setName(event.target.value)} value={name} />
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    </View>
   );
 }
 
@@ -6535,10 +6496,10 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > bindGroup 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > bindGroup 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [tortilla, setTortilla] = useState(() => \\"Plain\\");
@@ -6546,60 +6507,60 @@ function MyComponent(props) {
   const [fillings, setFillings] = useState(() => []);
 
   return (
-    <div>
-      <input
+    <View>
+      <Input
         type=\\"radio\\"
         value=\\"Plain\\"
         checked={tortilla === \\"Plain\\"}
         onChange={(event) => setTortilla(event.target.value)}
       />
-      <input
+      <Input
         type=\\"radio\\"
         value=\\"Whole wheat\\"
         checked={tortilla === \\"Whole wheat\\"}
         onChange={(event) => setTortilla(event.target.value)}
       />
-      <input
+      <Input
         type=\\"radio\\"
         value=\\"Spinach\\"
         checked={tortilla === \\"Spinach\\"}
         onChange={(event) => setTortilla(event.target.value)}
       />
-      <br />
-      <br />
-      <input
+      <View />
+      <View />
+      <Input
         type=\\"checkbox\\"
         value=\\"Rice\\"
         checked={fillings === \\"Rice\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <input
+      <Input
         type=\\"checkbox\\"
         value=\\"Beans\\"
         checked={fillings === \\"Beans\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <input
+      <Input
         type=\\"checkbox\\"
         value=\\"Cheese\\"
         checked={fillings === \\"Cheese\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <input
+      <Input
         type=\\"checkbox\\"
         value=\\"Guac (extra)\\"
         checked={fillings === \\"Guac (extra)\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <p>
+      <View>
         Tortilla:
         {tortilla}
-      </p>
-      <p>
+      </View>
+      <View>
         Fillings:
         {fillings}
-      </p>
-    </div>
+      </View>
+    </View>
   );
 }
 
@@ -6607,36 +6568,30 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > bindProperty 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > bindProperty 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [value, setValue] = useState(() => \\"hello\\");
 
-  return <input value={value} />;
+  return <Input value={value} />;
 }
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > classDirective 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > classDirective 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [focus, setFocus] = useState(() => true);
 
-  return (
-    <input
-      className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
-        focus ? \\"focus\\" : \\"\\"
-      }\`}
-    />
-  );
+  return <Input />;
 }
 
 MyComponent.defaultProps = {};
@@ -6645,10 +6600,10 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > context 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useContext } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > context 1`] = `
+"import * as React from \\"react\\";
+import { useState, useContext } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [activeTab, setActiveTab] = useState(() => 0);
@@ -6657,7 +6612,7 @@ function MyComponent(props) {
 
   return (
     <Context.Provider value={activeTab}>
-      <div>{activeTab}</div>
+      <View>{activeTab}</View>
     </Context.Provider>
   );
 }
@@ -6666,20 +6621,20 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > each 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > each 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
 
   return (
-    <ul>
+    <View>
       {numbers?.map((num) => (
-        <li>{num}</li>
+        <View>{num}</View>
       ))}
-    </ul>
+    </View>
   );
 }
 
@@ -6687,9 +6642,9 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > eventHandlers 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > svelte > Javascript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+import { View, Button, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   function log(msg = \\"hello\\") {
@@ -6697,11 +6652,11 @@ function MyComponent(props) {
   }
 
   return (
-    <div>
-      <button onClick={(a) => log(\\"hi\\")}>Log</button>
-      <button onClick={(event) => log(event)}>Log</button>
-      <button onClick={(event) => log(event)}>Log</button>
-    </div>
+    <View>
+      <Button onClick={(a) => log(\\"hi\\")}>Log</Button>
+      <Button onClick={(event) => log(event)}>Log</Button>
+      <Button onClick={(event) => log(event)}>Log</Button>
+    </View>
   );
 }
 
@@ -6709,25 +6664,25 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > html 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > html 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  return <View dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > ifElse 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [show, setShow] = useState(() => true);
@@ -6737,13 +6692,13 @@ function MyComponent(props) {
   }
 
   return (
-    <Fragment>
+    <>
       {show ? (
-        <button onClick={(event) => toggle(event)}> Hide </button>
+        <Button onClick={(event) => toggle(event)}> Hide </Button>
       ) : (
-        <button onClick={(event) => toggle(event)}> Show </button>
+        <Button onClick={(event) => toggle(event)}> Show </Button>
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -6751,21 +6706,21 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > imports 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > imports 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 import Button from \\"./Button.lite\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [disabled, setDisabled] = useState(() => false);
 
   return (
-    <div>
+    <View>
       <Button type=\\"button\\" disabled={disabled}>
         {props.children}
       </Button>
-    </div>
+    </View>
   );
 }
 
@@ -6773,10 +6728,10 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > lifecycleHooks 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > lifecycleHooks 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   useEffect(() => {
@@ -6793,17 +6748,17 @@ function MyComponent(props) {
     };
   }, []);
 
-  return <div />;
+  return <View />;
 }
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > reactive 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > reactive 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
@@ -6813,11 +6768,11 @@ function MyComponent(props) {
   }
 
   return (
-    <div>
-      <input value={name} />
+    <View>
+      <Input value={name} />
       Lowercase:
       {lowercaseName()}
-    </div>
+    </View>
   );
 }
 
@@ -6825,10 +6780,10 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > reactiveWithFn 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [a, setA] = useState(() => 2);
@@ -6846,20 +6801,20 @@ function MyComponent(props) {
   }, [a, b]);
 
   return (
-    <div>
-      <input
+    <View>
+      <Input
         type=\\"number\\"
         onChange={(event) => setA(event.target.value)}
         value={a}
       />
-      <input
+      <Input
         type=\\"number\\"
         onChange={(event) => setB(event.target.value)}
         value={b}
       />
       Result:
       {result}
-    </div>
+    </View>
   );
 }
 
@@ -6867,36 +6822,36 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > slots 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > svelte > Javascript Test > slots 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   return (
-    <div>
+    <View>
       {props.children}
       {props.slotTest}
-    </div>
+    </View>
   );
 }
 
 MyComponent.defaultProps = {
   children: \\"default\\",
-  slotTest: <div>default</div>,
+  slotTest: <View>default</View>,
 };
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > style 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > svelte > Javascript Test > style 1`] = `
+"import * as React from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   return (
-    <Fragment>
-      <input className=\\"form-input\\" />
+    <>
+      <Input />
       <style jsx>{\`
         input {
           color: red;
@@ -6907,7 +6862,7 @@ function MyComponent(props) {
           outline: 1px solid blue;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -6915,10 +6870,10 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > textExpressions 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Javascript Test > textExpressions 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props) {
   const [a, setA] = useState(() => 5);
@@ -6926,13 +6881,13 @@ function MyComponent(props) {
   const [b, setB] = useState(() => 12);
 
   return (
-    <div>
+    <View>
       normal:
       {a + b}
-      <br />
+      <View />
       conditional
       {a > 2 ? \\"hello\\" : \\"bye\\"}
-    </div>
+    </View>
   );
 }
 
@@ -6940,19 +6895,19 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > basic 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > basic 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   return (
-    <div>
-      <input onChange={(event) => setName(event.target.value)} value={name} />
+    <View>
+      <Input onChange={(event) => setName(event.target.value)} value={name} />
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    </View>
   );
 }
 
@@ -6960,10 +6915,10 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > bindGroup 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > bindGroup 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [tortilla, setTortilla] = useState(() => \\"Plain\\");
@@ -6971,60 +6926,60 @@ function MyComponent(props: any) {
   const [fillings, setFillings] = useState(() => []);
 
   return (
-    <div>
-      <input
+    <View>
+      <Input
         type=\\"radio\\"
         value=\\"Plain\\"
         checked={tortilla === \\"Plain\\"}
         onChange={(event) => setTortilla(event.target.value)}
       />
-      <input
+      <Input
         type=\\"radio\\"
         value=\\"Whole wheat\\"
         checked={tortilla === \\"Whole wheat\\"}
         onChange={(event) => setTortilla(event.target.value)}
       />
-      <input
+      <Input
         type=\\"radio\\"
         value=\\"Spinach\\"
         checked={tortilla === \\"Spinach\\"}
         onChange={(event) => setTortilla(event.target.value)}
       />
-      <br />
-      <br />
-      <input
+      <View />
+      <View />
+      <Input
         type=\\"checkbox\\"
         value=\\"Rice\\"
         checked={fillings === \\"Rice\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <input
+      <Input
         type=\\"checkbox\\"
         value=\\"Beans\\"
         checked={fillings === \\"Beans\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <input
+      <Input
         type=\\"checkbox\\"
         value=\\"Cheese\\"
         checked={fillings === \\"Cheese\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <input
+      <Input
         type=\\"checkbox\\"
         value=\\"Guac (extra)\\"
         checked={fillings === \\"Guac (extra)\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <p>
+      <View>
         Tortilla:
         {tortilla}
-      </p>
-      <p>
+      </View>
+      <View>
         Fillings:
         {fillings}
-      </p>
-    </div>
+      </View>
+    </View>
   );
 }
 
@@ -7032,36 +6987,30 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > bindProperty 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > bindProperty 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [value, setValue] = useState(() => \\"hello\\");
 
-  return <input value={value} />;
+  return <Input value={value} />;
 }
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > classDirective 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > classDirective 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [focus, setFocus] = useState(() => true);
 
-  return (
-    <input
-      className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
-        focus ? \\"focus\\" : \\"\\"
-      }\`}
-    />
-  );
+  return <Input />;
 }
 
 MyComponent.defaultProps = {};
@@ -7070,10 +7019,10 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > context 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useContext } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > context 1`] = `
+"import * as React from \\"react\\";
+import { useState, useContext } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [activeTab, setActiveTab] = useState(() => 0);
@@ -7082,7 +7031,7 @@ function MyComponent(props: any) {
 
   return (
     <Context.Provider value={activeTab}>
-      <div>{activeTab}</div>
+      <View>{activeTab}</View>
     </Context.Provider>
   );
 }
@@ -7091,20 +7040,20 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > each 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > each 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
 
   return (
-    <ul>
+    <View>
       {numbers?.map((num) => (
-        <li>{num}</li>
+        <View>{num}</View>
       ))}
-    </ul>
+    </View>
   );
 }
 
@@ -7112,9 +7061,9 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > eventHandlers 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > svelte > Typescript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+import { View, Button, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   function log(msg = \\"hello\\") {
@@ -7122,11 +7071,11 @@ function MyComponent(props: any) {
   }
 
   return (
-    <div>
-      <button onClick={(a) => log(\\"hi\\")}>Log</button>
-      <button onClick={(event) => log(event)}>Log</button>
-      <button onClick={(event) => log(event)}>Log</button>
-    </div>
+    <View>
+      <Button onClick={(a) => log(\\"hi\\")}>Log</Button>
+      <Button onClick={(event) => log(event)}>Log</Button>
+      <Button onClick={(event) => log(event)}>Log</Button>
+    </View>
   );
 }
 
@@ -7134,25 +7083,25 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > html 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > html 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  return <View dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > ifElse 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [show, setShow] = useState(() => true);
@@ -7162,13 +7111,13 @@ function MyComponent(props: any) {
   }
 
   return (
-    <Fragment>
+    <>
       {show ? (
-        <button onClick={(event) => toggle(event)}> Hide </button>
+        <Button onClick={(event) => toggle(event)}> Hide </Button>
       ) : (
-        <button onClick={(event) => toggle(event)}> Show </button>
+        <Button onClick={(event) => toggle(event)}> Show </Button>
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -7176,21 +7125,21 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > imports 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > imports 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 import Button from \\"./Button.lite\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [disabled, setDisabled] = useState(() => false);
 
   return (
-    <div>
+    <View>
       <Button type=\\"button\\" disabled={disabled}>
         {props.children}
       </Button>
-    </div>
+    </View>
   );
 }
 
@@ -7198,10 +7147,10 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > lifecycleHooks 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > lifecycleHooks 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   useEffect(() => {
@@ -7218,17 +7167,17 @@ function MyComponent(props: any) {
     };
   }, []);
 
-  return <div />;
+  return <View />;
 }
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > reactive 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > reactive 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
@@ -7238,11 +7187,11 @@ function MyComponent(props: any) {
   }
 
   return (
-    <div>
-      <input value={name} />
+    <View>
+      <Input value={name} />
       Lowercase:
       {lowercaseName()}
-    </div>
+    </View>
   );
 }
 
@@ -7250,10 +7199,10 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > reactiveWithFn 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [a, setA] = useState(() => 2);
@@ -7271,20 +7220,20 @@ function MyComponent(props: any) {
   }, [a, b]);
 
   return (
-    <div>
-      <input
+    <View>
+      <Input
         type=\\"number\\"
         onChange={(event) => setA(event.target.value)}
         value={a}
       />
-      <input
+      <Input
         type=\\"number\\"
         onChange={(event) => setB(event.target.value)}
         value={b}
       />
       Result:
       {result}
-    </div>
+    </View>
   );
 }
 
@@ -7292,36 +7241,36 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > slots 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > svelte > Typescript Test > slots 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   return (
-    <div>
+    <View>
       {props.children}
       {props.slotTest}
-    </div>
+    </View>
   );
 }
 
 MyComponent.defaultProps = {
   children: \\"default\\",
-  slotTest: <div>default</div>,
+  slotTest: <View>default</View>,
 };
 
 export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > style 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
+exports[`Taro > svelte > Typescript Test > style 1`] = `
+"import * as React from \\"react\\";
+import { Input } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   return (
-    <Fragment>
-      <input className=\\"form-input\\" />
+    <>
+      <Input />
       <style jsx>{\`
         input {
           color: red;
@@ -7332,7 +7281,7 @@ function MyComponent(props: any) {
           outline: 1px solid blue;
         }
       \`}</style>
-    </Fragment>
+    </>
   );
 }
 
@@ -7340,10 +7289,10 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > textExpressions 1`] = `
-"/** @jsx h */
-import { h, Fragment } from \\"preact\\";
-import { useState } from \\"preact/hooks\\";
+exports[`Taro > svelte > Typescript Test > textExpressions 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
   const [a, setA] = useState(() => 5);
@@ -7351,13 +7300,13 @@ function MyComponent(props: any) {
   const [b, setB] = useState(() => 12);
 
   return (
-    <div>
+    <View>
       normal:
       {a + b}
-      <br />
+      <View />
       conditional
       {a > 2 ? \\"hello\\" : \\"bye\\"}
-    </div>
+    </View>
   );
 }
 

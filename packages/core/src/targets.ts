@@ -21,6 +21,7 @@ import { componentToQwik as qwik } from './generators/qwik';
 import { componentToMarko as marko } from './generators/marko';
 import { componentToLit as lit } from './generators/lit';
 import { componentToRsc as rsc } from './generators/rsc';
+import { componentToTaro as taro } from './generators/taro';
 
 export const builder = componentToBuilder;
 
@@ -47,4 +48,5 @@ export const targets = {
   preact,
   lit,
   rsc,
+  taro,
 } as const;

@@ -12,6 +12,7 @@
   - [For](#for)
   - [Children](#children)
   - [Slot](#slot)
+  - [Default Slot content](#default-slot-content)
 
 ## At a glance
 
@@ -167,11 +168,26 @@ Control flow in Builder is static like [Solid](https://github.com/ryansolid/soli
 
 ### Show
 
-Use `<Show>` for conditional logic. It takes a singular `when` prop for a condition to match for. When the condition is truthy, the children will render, otherwise they will not
+```jsx
+export declare function Show<T>(props: {
+  when: T | undefined | null | false;
+  else?: JSX.Element;
+  children?: JSX.Element | null;
+}): any;
+```
+
+Use `<Show>` for conditional logic. It takes a singular `when` prop for a condition to match for. When the condition is truthy, the children will render, the `else` otherwise they will not.
 
 ```jsx
 export default function MyComponent(props) {
-  return <Show when={props.showContents}>Hello, I may or may not show!</Show>;
+  return (
+    <>
+      <Show when={props.showContents} else={<span {...props.attributes}>{props.text}</span>}>
+        Hello, I may or may not show!
+      </Show>
+      ;
+    </>
+  );
 }
 ```
 
@@ -342,7 +358,7 @@ export default function Layout(props) {
 
 </details>
 
-## Default Slot content
+### Default Slot content
 
 ```jsx
 import { Slot } from '@builder.io/mitosis';
