@@ -593,9 +593,16 @@ export default {
 
 exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "<template>
-  <div>
-    <template v-if=\\"$slots.testing\\">
-      <div><slot name=\\"testing\\" /></div>
+  <div
+    v-if=\\"$slots.reference\\"
+    :name=\\"$slots.content ? 'name1' : 'name2'\\"
+    :title=\\"$slots.content ? 'title1' : 'title2'\\"
+    @click=\\"show()\\"
+    :class=\\"_classStringToObject($slots.content ? \`\${name}-content\` : '')\\"
+    v-bind=\\"attributes\\"
+  >
+    <template v-if=\\"showContent && $slots.content\\">
+      <slot name=\\"content\\">{{ content }}</slot>
     </template>
 
     <div>
@@ -609,7 +616,34 @@ exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
 export default {
   name: \\"content-slot-jsx-code\\",
 
-  props: [],
+  props: { attributes: { default: undefined }, content: { default: \\"\\" } },
+
+  data() {
+    return { name: \\"king\\", showContent: false };
+  },
+
+  computed: {
+    cls() {
+      return this.$slots.content ? \`\${this.name}-content\` : \\"\\";
+    },
+  },
+
+  methods: {
+    show() {
+      this.$slots.content ? 1 : \\"\\";
+    },
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
 };
 </script>"
 `;
@@ -3774,9 +3808,16 @@ export default {
 
 exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "<template>
-  <div>
-    <template v-if=\\"$slots.testing\\">
-      <div><slot name=\\"testing\\" /></div>
+  <div
+    v-if=\\"$slots.reference\\"
+    :name=\\"$slots.content ? 'name1' : 'name2'\\"
+    :title=\\"$slots.content ? 'title1' : 'title2'\\"
+    @click=\\"show()\\"
+    :class=\\"_classStringToObject($slots.content ? \`\${name}-content\` : '')\\"
+    v-bind=\\"attributes\\"
+  >
+    <template v-if=\\"showContent && $slots.content\\">
+      <slot name=\\"content\\">{{ content }}</slot>
     </template>
 
     <div>
@@ -3794,7 +3835,34 @@ type Props = {
 export default {
   name: \\"content-slot-jsx-code\\",
 
-  props: [],
+  props: { attributes: { default: undefined }, content: { default: \\"\\" } },
+
+  data() {
+    return { name: \\"king\\", showContent: false };
+  },
+
+  computed: {
+    cls() {
+      return this.$slots.content ? \`\${this.name}-content\` : \\"\\";
+    },
+  },
+
+  methods: {
+    show() {
+      this.$slots.content ? 1 : \\"\\";
+    },
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
 };
 </script>"
 `;

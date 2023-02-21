@@ -1187,19 +1187,39 @@ export default ContentSlotCode;
 `;
 
 exports[`Solid > jsx > Javascript Test > ContentSlotJSX 1`] = `
-"import { Show } from \\"solid-js\\";
+"import { Show, createSignal } from \\"solid-js\\";
 
 function ContentSlotJsxCode(props) {
+  const [name, setName] = createSignal(\\"king\\");
+
+  const [showContent, setShowContent] = createSignal(false);
+
+  function cls() {
+    return props.slotContent ? \`\${name()}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <div>
-      <Show when={props.slotTesting}>
-        <div>{props.slotTesting}</div>
-      </Show>
-      <div>
-        <hr />
+    <Show when={props.slotReference}>
+      <div
+        class={props.slotContent ? \`\${name()}-content\` : \\"\\"}
+        name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+        title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+        {...props.attributes}
+        onClick={(event) => show()}
+      >
+        <Show when={showContent() && props.slotContent}>
+          <Slot name=\\"content\\">{props.content}</Slot>
+        </Show>
+        <div>
+          <hr />
+        </div>
+        <div>{props.children}</div>
       </div>
-      <div>{props.children}</div>
-    </div>
+    </Show>
   );
 }
 
@@ -1208,22 +1228,42 @@ export default ContentSlotJsxCode;
 `;
 
 exports[`Solid > jsx > Javascript Test > ContentSlotJSX 2`] = `
-"import { Show } from \\"solid-js\\";
+"import { Show, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
 
 function ContentSlotJsxCode(props) {
+  const [name, setName] = createSignal(\\"king\\");
+
+  const [showContent, setShowContent] = createSignal(false);
+
+  function cls() {
+    return props.slotContent ? \`\${name()}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
     <>
-      <div>
-        <Show when={props.slotTesting}>
-          <div>{props.slotTesting}</div>
-        </Show>
-        <div>
-          <hr />
+      <Show when={props.slotReference}>
+        <div
+          class={props.slotContent ? \`\${name()}-content\` : \\"\\"}
+          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+          {...props.attributes}
+          onClick={(event) => show()}
+        >
+          <Show when={showContent() && props.slotContent}>
+            <Slot name=\\"content\\">{props.content}</Slot>
+          </Show>
+          <div>
+            <hr />
+          </div>
+          <div>{props.children}</div>
         </div>
-        <div>{props.children}</div>
-      </div>
+      </Show>
     </>
   );
 }
@@ -7256,23 +7296,43 @@ export default ContentSlotCode;
 `;
 
 exports[`Solid > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"import { Show } from \\"solid-js\\";
+"import { Show, createSignal } from \\"solid-js\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
 };
 
 function ContentSlotJsxCode(props: Props) {
+  const [name, setName] = createSignal(\\"king\\");
+
+  const [showContent, setShowContent] = createSignal(false);
+
+  function cls() {
+    return props.slotContent ? \`\${name()}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <div>
-      <Show when={props.slotTesting}>
-        <div>{props.slotTesting}</div>
-      </Show>
-      <div>
-        <hr />
+    <Show when={props.slotReference}>
+      <div
+        class={props.slotContent ? \`\${name()}-content\` : \\"\\"}
+        name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+        title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+        {...props.attributes}
+        onClick={(event) => show()}
+      >
+        <Show when={showContent() && props.slotContent}>
+          <Slot name=\\"content\\">{props.content}</Slot>
+        </Show>
+        <div>
+          <hr />
+        </div>
+        <div>{props.children}</div>
       </div>
-      <div>{props.children}</div>
-    </div>
+    </Show>
   );
 }
 
@@ -7281,7 +7341,7 @@ export default ContentSlotJsxCode;
 `;
 
 exports[`Solid > jsx > Typescript Test > ContentSlotJSX 2`] = `
-"import { Show } from \\"solid-js\\";
+"import { Show, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
 type Props = {
@@ -7289,17 +7349,37 @@ type Props = {
 };
 
 function ContentSlotJsxCode(props: Props) {
+  const [name, setName] = createSignal(\\"king\\");
+
+  const [showContent, setShowContent] = createSignal(false);
+
+  function cls() {
+    return props.slotContent ? \`\${name()}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
     <>
-      <div>
-        <Show when={props.slotTesting}>
-          <div>{props.slotTesting}</div>
-        </Show>
-        <div>
-          <hr />
+      <Show when={props.slotReference}>
+        <div
+          class={props.slotContent ? \`\${name()}-content\` : \\"\\"}
+          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+          {...props.attributes}
+          onClick={(event) => show()}
+        >
+          <Show when={showContent() && props.slotContent}>
+            <Slot name=\\"content\\">{props.content}</Slot>
+          </Show>
+          <div>
+            <hr />
+          </div>
+          <div>{props.children}</div>
         </div>
-        <div>{props.children}</div>
-      </div>
+      </Show>
     </>
   );
 }

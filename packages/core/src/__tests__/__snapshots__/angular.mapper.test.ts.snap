@@ -841,24 +841,48 @@ import { Component, Input } from \\"@angular/core\\";
 type Props = {
   [key: string]: string | JSX.Element;
 };
+const defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: undefined,
+};
 
 @Component({
   selector: \\"content-slot-jsx-code, ContentSlotJsxCode\\",
   template: \`
-    <div>
-      <ng-container *ngIf=\\"slotTesting\\">
-        <div><ng-content select=\\"[testing]\\"></ng-content></div>
-      </ng-container>
+    <ng-container *ngIf=\\"slotReference\\">
+      <div
+        [attr.name]=\\"slotContent ? 'name1' : 'name2'\\"
+        [attr.title]=\\"slotContent ? 'title1' : 'title2'\\"
+        (click)=\\"show()\\"
+        [class]=\\"slotContent ? \\\\\`\\\\\${name}-content\\\\\` : ''\\"
+      >
+        <ng-container *ngIf=\\"showContent && slotContent\\">
+          <ng-content select=\\"[content]\\">{{content}}</ng-content>
+        </ng-container>
 
-      <div>
-        <hr />
+        <div>
+          <hr />
+        </div>
+
+        <div><ng-content></ng-content></div>
       </div>
-
-      <div><ng-content></ng-content></div>
-    </div>
+    </ng-container>
   \`,
 })
-export class ContentSlotJsxCode {}
+export class ContentSlotJsxCode {
+  @Input() attributes: Props[\\"attributes\\"];
+  @Input() content: Props[\\"content\\"] = defaultProps[\\"content\\"];
+
+  name = \\"king\\";
+  showContent = false;
+  get cls() {
+    return this.slotContent ? \`\${this.name}-content\` : \\"\\";
+  }
+  show() {
+    this.slotContent ? 1 : \\"\\";
+  }
+}
 
 @NgModule({
   declarations: [ContentSlotJsxCode],
@@ -5262,24 +5286,48 @@ import { Component, Input } from \\"@angular/core\\";
 type Props = {
   [key: string]: string | JSX.Element;
 };
+const defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: undefined,
+};
 
 @Component({
   selector: \\"content-slot-jsx-code, ContentSlotJsxCode\\",
   template: \`
-    <div>
-      <ng-container *ngIf=\\"slotTesting\\">
-        <div><ng-content select=\\"[testing]\\"></ng-content></div>
-      </ng-container>
+    <ng-container *ngIf=\\"slotReference\\">
+      <div
+        [attr.name]=\\"slotContent ? 'name1' : 'name2'\\"
+        [attr.title]=\\"slotContent ? 'title1' : 'title2'\\"
+        (click)=\\"show()\\"
+        [class]=\\"slotContent ? \\\\\`\\\\\${name}-content\\\\\` : ''\\"
+      >
+        <ng-container *ngIf=\\"showContent && slotContent\\">
+          <ng-content select=\\"[content]\\">{{content}}</ng-content>
+        </ng-container>
 
-      <div>
-        <hr />
+        <div>
+          <hr />
+        </div>
+
+        <div><ng-content></ng-content></div>
       </div>
-
-      <div><ng-content></ng-content></div>
-    </div>
+    </ng-container>
   \`,
 })
-export class ContentSlotJsxCode {}
+export class ContentSlotJsxCode {
+  @Input() attributes: Props[\\"attributes\\"];
+  @Input() content: Props[\\"content\\"] = defaultProps[\\"content\\"];
+
+  name = \\"king\\";
+  showContent = false;
+  get cls() {
+    return this.slotContent ? \`\${this.name}-content\` : \\"\\";
+  }
+  show() {
+    this.slotContent ? 1 : \\"\\";
+  }
+}
 
 @NgModule({
   declarations: [ContentSlotJsxCode],

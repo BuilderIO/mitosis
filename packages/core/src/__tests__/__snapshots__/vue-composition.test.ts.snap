@@ -486,20 +486,55 @@ exports[`Vue > jsx > Javascript Test > ContentSlotHtml 1`] = `
 
 exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "<template>
-  <div>
-    <template v-if=\\"$slots.testing\\">
-      <div><slot name=\\"testing\\" /></div>
-    </template>
+  <template v-if=\\"$slots.reference\\">
+    <div
+      :name=\\"$slots.content ? 'name1' : 'name2'\\"
+      :title=\\"$slots.content ? 'title1' : 'title2'\\"
+      @click=\\"show()\\"
+      :class=\\"_classStringToObject($slots.content ? \`\${name}-content\` : '')\\"
+      v-bind=\\"attributes\\"
+    >
+      <template v-if=\\"showContent && $slots.content\\">
+        <slot name=\\"content\\">{{ content }}</slot>
+      </template>
 
-    <div>
-      <hr />
+      <div>
+        <hr />
+      </div>
+      <div><slot /></div>
     </div>
-    <div><slot /></div>
-  </div>
+  </template>
 </template>
 
 <script setup>
-const props = defineProps([\\"children\\"]);
+import { computed, ref } from \\"vue\\";
+
+const props = withDefaults(defineProps(), {
+  attributes: undefined,
+  content: \\"\\",
+  children: undefined,
+});
+const name = ref(\\"king\\");
+const showContent = ref(false);
+
+const cls = computed(() => {
+  return $slots.content ? \`\${name.value}-content\` : \\"\\";
+});
+
+function show() {
+  $slots.content ? 1 : \\"\\";
+}
+function _classStringToObject(str) {
+  const obj = {};
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
+  const classNames = str.trim().split(/\\\\s+/);
+  for (const name of classNames) {
+    obj[name] = true;
+  }
+  return obj;
+}
 </script>"
 `;
 
@@ -3265,24 +3300,58 @@ type Props = {
 
 exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "<template>
-  <div>
-    <template v-if=\\"$slots.testing\\">
-      <div><slot name=\\"testing\\" /></div>
-    </template>
+  <template v-if=\\"$slots.reference\\">
+    <div
+      :name=\\"$slots.content ? 'name1' : 'name2'\\"
+      :title=\\"$slots.content ? 'title1' : 'title2'\\"
+      @click=\\"show()\\"
+      :class=\\"_classStringToObject($slots.content ? \`\${name}-content\` : '')\\"
+      v-bind=\\"attributes\\"
+    >
+      <template v-if=\\"showContent && $slots.content\\">
+        <slot name=\\"content\\">{{ content }}</slot>
+      </template>
 
-    <div>
-      <hr />
+      <div>
+        <hr />
+      </div>
+      <div><slot /></div>
     </div>
-    <div><slot /></div>
-  </div>
+  </template>
 </template>
 
 <script setup lang=\\"ts\\">
+import { computed, ref } from \\"vue\\";
 type Props = {
   [key: string]: string | JSX.Element;
 };
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  attributes: undefined,
+  content: \\"\\",
+  children: undefined,
+});
+const name = ref(\\"king\\");
+const showContent = ref(false);
+
+const cls = computed(() => {
+  return $slots.content ? \`\${name.value}-content\` : \\"\\";
+});
+
+function show() {
+  $slots.content ? 1 : \\"\\";
+}
+function _classStringToObject(str) {
+  const obj = {};
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
+  const classNames = str.trim().split(/\\\\s+/);
+  for (const name of classNames) {
+    obj[name] = true;
+  }
+  return obj;
+}
 </script>"
 `;
 

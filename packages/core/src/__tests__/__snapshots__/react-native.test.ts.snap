@@ -639,28 +639,52 @@ import {
   Image,
   Text,
 } from \\"react-native\\";
+import { useState } from \\"react\\";
 
 export default function ContentSlotJsxCode(props) {
+  const [name, setName] = useState(() => \\"king\\");
+
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <View>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <View>
-            <Text>{props.slotTesting}</Text>
+          <View
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+          >
+            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+
+            <View>
+              <View />
+            </View>
+
+            <View>
+              <Text>{props.children}</Text>
+            </View>
           </View>
         </>
       ) : null}
-
-      <View>
-        <View />
-      </View>
-
-      <View>
-        <Text>{props.children}</Text>
-      </View>
-    </View>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: <Text>{props.content}</Text>,
+};
 "
 `;
 
@@ -4088,32 +4112,56 @@ import {
   Image,
   Text,
 } from \\"react-native\\";
+import { useState } from \\"react\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
 };
 
 export default function ContentSlotJsxCode(props: Props) {
+  const [name, setName] = useState(() => \\"king\\");
+
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <View>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <View>
-            <Text>{props.slotTesting}</Text>
+          <View
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+          >
+            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+
+            <View>
+              <View />
+            </View>
+
+            <View>
+              <Text>{props.children}</Text>
+            </View>
           </View>
         </>
       ) : null}
-
-      <View>
-        <View />
-      </View>
-
-      <View>
-        <Text>{props.children}</Text>
-      </View>
-    </View>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: <Text>{props.content}</Text>,
+};
 "
 `;
 

@@ -465,22 +465,48 @@ exports[`RSC > jsx > Javascript Test > ContentSlotJSX 1`] = `
 export default function ContentSlotJsxCode(props) {
   const _context = { ...props[\\"_context\\"] };
 
+  const state = {
+    name: \\"king\\",
+    showContent: false,
+    get cls() {
+      return props.slotContent ? \`\${state.name}-content\` : \\"\\";
+    },
+    show() {
+      props.slotContent ? 1 : \\"\\";
+    },
+  };
+
   return (
-    <div>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <div>{props.slotTesting}</div>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            className={props.slotContent ? \`\${state.name}-content\` : \\"\\"}
+          >
+            {state.showContent && props.slotContent ? (
+              <>{props.slotContent}</>
+            ) : null}
+
+            <div>
+              <hr />
+            </div>
+
+            <div>{props.children}</div>
+          </div>
         </>
       ) : null}
-
-      <div>
-        <hr />
-      </div>
-
-      <div>{props.children}</div>
-    </div>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: \\"{props.content}\\",
+};
 "
 `;
 
@@ -3149,22 +3175,48 @@ type Props = {
 export default function ContentSlotJsxCode(props: Props) {
   const _context = { ...props[\\"_context\\"] };
 
+  const state = {
+    name: \\"king\\",
+    showContent: false,
+    get cls() {
+      return props.slotContent ? \`\${state.name}-content\` : \\"\\";
+    },
+    show() {
+      props.slotContent ? 1 : \\"\\";
+    },
+  };
+
   return (
-    <div>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <div>{props.slotTesting}</div>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            className={props.slotContent ? \`\${state.name}-content\` : \\"\\"}
+          >
+            {state.showContent && props.slotContent ? (
+              <>{props.slotContent}</>
+            ) : null}
+
+            <div>
+              <hr />
+            </div>
+
+            <div>{props.children}</div>
+          </div>
         </>
       ) : null}
-
-      <div>
-        <hr />
-      </div>
-
-      <div>{props.children}</div>
-    </div>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: \\"{props.content}\\",
+};
 "
 `;
 
