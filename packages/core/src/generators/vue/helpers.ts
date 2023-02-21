@@ -146,6 +146,15 @@ function prefixMethodsWithThis(input: string, component: MitosisComponent, optio
   }
 }
 
+function optionsApiStateAndPropsReplace(name: string, thisPrefix: string) {
+  if (name === 'children' || name.startsWith('children.')) {
+    return `${thisPrefix}.$slots.default`;
+  }
+  return isSlotProperty(name)
+    ? replaceSlotsInString(name, (x) => `${thisPrefix}.$slots.${x}`)
+    : `${thisPrefix}.${name}`;
+}
+
 type ProcessBinding = {
   code: string;
   options: ToVueOptions;
@@ -165,25 +174,35 @@ export const processBinding = ({
 }: ProcessBinding): string => {
   try {
     return pipe(
+      // processed twice, once for props and once for state
       stripStateAndPropsRefs(code, {
-        includeState: true,
-        // we don't want to process `props` in the Composition API because it has a `props` ref,
-        // therefore we can keep pointing to `props.${value}`
-        includeProps: options.api === 'options',
+        includeState: false,
+        includeProps: true,
         replaceWith: (name) => {
           switch (options.api) {
+            // keep pointing to `props.${value}`
             case 'composition':
-              return isSlotProperty(name) ? replaceSlotsInString(name, (x) => `slots.${x}`) : name;
-            case 'options':
-              if (name === 'children' || name.startsWith('children.')) {
-                return `${thisPrefix}.$slots.default`;
-              }
               return isSlotProperty(name)
-                ? replaceSlotsInString(name, (x) => `${thisPrefix}.$slots.${x}`)
-                : `${thisPrefix}.${name}`;
+                ? replaceSlotsInString(name, (x) => `$slots.${x}`) // here must use `$slots` instead of `slots`
+                : `props.${name}`;
+            case 'options':
+              return optionsApiStateAndPropsReplace(name, thisPrefix);
           }
         },
       }),
+      (code) =>
+        stripStateAndPropsRefs(code, {
+          includeState: true,
+          includeProps: false,
+          replaceWith: (name) => {
+            switch (options.api) {
+              case 'composition':
+                return name;
+              case 'options':
+                return optionsApiStateAndPropsReplace(name, thisPrefix);
+            }
+          },
+        }),
       (x) => {
         return pipe(
           x,
