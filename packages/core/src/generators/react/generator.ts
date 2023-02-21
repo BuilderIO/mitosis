@@ -17,7 +17,6 @@ import { mapRefs } from '../../helpers/map-refs';
 import { processHttpRequests } from '../../helpers/process-http-requests';
 import { processTagReferences } from '../../helpers/process-tag-references';
 import { renderPreComponent } from '../../helpers/render-imports';
-import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import {
   runPostCodePlugins,
@@ -37,6 +36,8 @@ import { closeFrag, openFrag, processBinding, wrapInFragment } from './helpers';
 import hash from 'hash-sum';
 import { createSingleBinding } from '../../helpers/bindings';
 import { blockToReact } from './blocks';
+import { mergeOptions } from '../../helpers/merge-options';
+import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 
 export const contextPropDrillingKey = '_context';
 
@@ -148,22 +149,23 @@ type ReactExports =
 const DEFAULT_OPTIONS: ToReactOptions = {
   stateType: 'useState',
   stylesType: 'styled-jsx',
+  type: 'dom',
 };
 
-export const componentToPreact: TranspilerGenerator<ToReactOptions> = (reactOptions = {}) =>
+export const componentToPreact: TranspilerGenerator<Partial<ToReactOptions>> = (
+  reactOptions = {},
+) =>
   componentToReact({
     ...reactOptions,
     preact: true,
   });
 
-export const componentToReact: TranspilerGenerator<ToReactOptions> =
+export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
   (reactOptions = {}) =>
   ({ component }) => {
     let json = fastClone(component);
-    const options: ToReactOptions = {
-      ...DEFAULT_OPTIONS,
-      ...reactOptions,
-    };
+    const options: ToReactOptions = mergeOptions(DEFAULT_OPTIONS, reactOptions);
+
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
@@ -201,7 +203,7 @@ export const componentToReact: TranspilerGenerator<ToReactOptions> =
 
 // TODO: import target components when they are required
 const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): string => {
-  const { preact, type, plugins } = options;
+  const { preact, type } = options;
   if (preact) {
     return `
     /** @jsx h */
@@ -223,6 +225,19 @@ const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): stri
   return "import * as React from 'react';";
 };
 
+const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
+  if (!json.defaultProps) return '';
+  const defaultPropsString = Object.keys(json.defaultProps)
+    .map((prop) => {
+      const value = json.defaultProps!.hasOwnProperty(prop)
+        ? json.defaultProps![prop]?.code
+        : 'undefined';
+      return `${prop}: ${value}`;
+    })
+    .join(',');
+  return `${json.name}.defaultProps = {${defaultPropsString}};`;
+};
+
 const _componentToReact = (
   json: MitosisComponent,
   options: ToReactOptions,
@@ -233,9 +248,16 @@ const _componentToReact = (
   processTagReferences(json);
   const contextStr = provideContext(json, options);
   const componentHasStyles = hasCss(json);
+  if (json.name === 'Column' && options.type === 'native') {
+    console.log('componentHasStyles', componentHasStyles);
+  }
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
     updateStateSetters(json, options);
+  }
+
+  if (!json.name) {
+    json.name = 'MyComponent';
   }
 
   // const domRefs = getRefs(json);
@@ -251,40 +273,41 @@ const _componentToReact = (
     options.forwardRef = meta || forwardRef;
   }
   const forwardRefType =
-    json.propsTypeRef && forwardRef && json.propsTypeRef !== 'any'
-      ? `${json.propsTypeRef}["${forwardRef}"]`
-      : undefined;
+    options.typescript && json.propsTypeRef && forwardRef && json.propsTypeRef !== 'any'
+      ? `<${json.propsTypeRef}["${forwardRef}"]>`
+      : '';
 
-  const stylesType = options.stylesType || 'emotion';
-  const stateType = options.stateType || 'mobx';
-  if (stateType === 'builder') {
+  if (options.stateType === 'builder') {
     // Always use state if we are generate Builder react code
     hasState = true;
   }
 
-  const useStateCode = stateType === 'useState' && getUseStateCode(json, options);
+  const useStateCode = options.stateType === 'useState' ? getUseStateCode(json, options) : '';
   if (options.plugins) {
     json = runPostJsonPlugins(json, options.plugins);
   }
 
   const css =
-    stylesType === 'styled-jsx'
+    options.stylesType === 'styled-jsx'
       ? collectCss(json)
-      : stylesType === 'style-tag'
+      : options.stylesType === 'style-tag'
       ? collectCss(json, {
           prefix: hash(json),
         })
       : null;
 
   const styledComponentsCode =
-    stylesType === 'styled-components' && componentHasStyles && collectStyledComponents(json);
+    (options.stylesType === 'styled-components' &&
+      componentHasStyles &&
+      collectStyledComponents(json)) ||
+    '';
 
   if (options.format !== 'lite') {
     stripMetaProperties(json);
   }
 
   const reactLibImports: Set<ReactExports> = new Set();
-  if (useStateCode && useStateCode.includes('useState')) {
+  if (useStateCode.includes('useState')) {
     reactLibImports.add('useState');
   }
   if (hasContext(json) && options.contextType !== 'prop-drill') {
@@ -307,30 +330,113 @@ const _componentToReact = (
 
   const wrap =
     wrapInFragment(json) ||
-    (componentHasStyles && (stylesType === 'styled-jsx' || stylesType === 'style-tag')) ||
+    (componentHasStyles &&
+      (options.stylesType === 'styled-jsx' || options.stylesType === 'style-tag')) ||
     isRootSpecialNode(json);
 
   const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
-  const nativeStyles =
-    stylesType === 'react-native' && componentHasStyles && collectReactNativeStyles(json);
+
+  // NOTE: `collectReactNativeStyles` must run before style generation in the component generation body, as it has
+  // side effects that delete styles bindings from the JSON.
+  const reactNativeStyles =
+    options.stylesType === 'react-native' && componentHasStyles
+      ? collectReactNativeStyles(json)
+      : undefined;
 
   const propType = json.propsTypeRef || 'any';
-  const propsArgs = `props${options.typescript ? `:${propType}` : ''}`;
+  const componentArgs = [`props${options.typescript ? `:${propType}` : ''}`, options.forwardRef]
+    .filter(Boolean)
+    .join(',');
 
-  const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
-    if (!json.defaultProps) return '';
-    const defalutPropsString = Object.keys(json.defaultProps)
-      .map((prop) => {
-        const value = json.defaultProps!.hasOwnProperty(prop)
-          ? json.defaultProps![prop]?.code
-          : 'undefined';
-        return `${prop}: ${value}`;
-      })
-      .join(',');
-    return `${json.name || 'MyComponent'}.defaultProps = {${defalutPropsString}};`;
-  };
+  const componentBody = dedent`
+    ${
+      options.contextType === 'prop-drill'
+        ? `const ${contextPropDrillingKey} = { ...props['${contextPropDrillingKey}'] };`
+        : ''
+    }
+    ${hasStateArgument ? '' : refsString}
+    ${
+      hasState
+        ? options.stateType === 'mobx'
+          ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(json)}));`
+          : options.stateType === 'useState'
+          ? useStateCode
+          : options.stateType === 'solid'
+          ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
+          : options.stateType === 'builder'
+          ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
+          : options.stateType === 'variables'
+          ? `const state = ${getStateObjectStringFromComponent(json)};`
+          : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
+        : ''
+    }
+    ${hasStateArgument ? refsString : ''}
+    ${getContextString(json, options)}
+    ${getInitCode(json, options)}
+    ${contextStr || ''}
 
-  let str = dedent`
+    ${
+      json.hooks.onInit?.code
+        ? `
+        useEffect(() => {
+          ${processHookCode({
+            str: json.hooks.onInit.code,
+            options,
+          })}
+        }, [])
+        `
+        : ''
+    }
+    ${
+      json.hooks.onMount?.code
+        ? `useEffect(() => {
+          ${processHookCode({
+            str: json.hooks.onMount.code,
+            options,
+          })}
+        }, [])`
+        : ''
+    }
+
+    ${
+      json.hooks.onUpdate
+        ?.map(
+          (hook) => `useEffect(() => {
+          ${processHookCode({ str: hook.code, options })}
+        },
+        ${hook.deps ? processHookCode({ str: hook.deps, options }) : ''})`,
+        )
+        .join(';') ?? ''
+    }
+
+    ${
+      json.hooks.onUnMount?.code
+        ? `useEffect(() => {
+          return () => {
+            ${processHookCode({
+              str: json.hooks.onUnMount.code,
+              options,
+            })}
+          }
+        }, [])`
+        : ''
+    }
+
+    return (
+      ${wrap ? openFrag(options) : ''}
+      ${json.children.map((item) => blockToReact(item, options, json, [])).join('\n')}
+      ${
+        componentHasStyles && options.stylesType === 'styled-jsx'
+          ? `<style jsx>{\`${css}\`}</style>`
+          : componentHasStyles && options.stylesType === 'style-tag'
+          ? `<style>{\`${css}\`}</style>`
+          : ''
+      }
+      ${wrap ? closeFrag(options) : ''}
+    );
+  `;
+
+  const str = dedent`
   ${getDefaultImport(json, options)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${
@@ -341,15 +447,19 @@ const _componentToReact = (
       : ''
   }
   ${
-    componentHasStyles && stylesType === 'emotion' && options.format !== 'lite'
+    componentHasStyles && options.stylesType === 'emotion' && options.format !== 'lite'
       ? `/** @jsx jsx */
     import { jsx } from '@emotion/react'`.trim()
       : ''
   }
-    ${hasState && stateType === 'valtio' ? `import { useLocalProxy } from 'valtio/utils';` : ''}
-    ${hasState && stateType === 'solid' ? `import { useMutable } from 'react-solid-state';` : ''}
     ${
-      stateType === 'mobx' && hasState
+      !hasState
+        ? ''
+        : options.stateType === 'valtio'
+        ? `import { useLocalProxy } from 'valtio/utils';`
+        : options.stateType === 'solid'
+        ? `import { useMutable } from 'react-solid-state';`
+        : options.stateType === 'mobx'
         ? `import { useLocalObservable, observer } from 'mobx-react-lite';`
         : ''
     }
@@ -358,127 +468,33 @@ const _componentToReact = (
       component: json,
       target: options.type === 'native' ? 'reactNative' : 'react',
     })}
-    ${stateType === 'mobx' && isForwardRef ? `const ${json.name || 'MyComponent'} = ` : ``}${
-    isSubComponent || stateType === 'mobx' ? '' : 'export default '
-  }${
-    isForwardRef
-      ? `forwardRef${forwardRefType && options.typescript ? `<${forwardRefType}>` : ''}(`
-      : ''
-  }function ${json.name || 'MyComponent'}(${propsArgs}${
-    isForwardRef ? `, ${options.forwardRef}` : ''
-  }) {
-    ${
-      options.contextType === 'prop-drill'
-        ? `const ${contextPropDrillingKey} = { ...props['${contextPropDrillingKey}'] };`
-        : ''
-    }
-    ${hasStateArgument ? '' : refsString}
-      ${
-        hasState
-          ? stateType === 'mobx'
-            ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(
-                json,
-              )}));`
-            : stateType === 'useState'
-            ? useStateCode
-            : stateType === 'solid'
-            ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
-            : stateType === 'builder'
-            ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
-            : stateType === 'variables'
-            ? `const state = ${getStateObjectStringFromComponent(json)};`
-            : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
-          : ''
-      }
-      ${hasStateArgument ? refsString : ''}
-      ${getContextString(json, options)}
-      ${getInitCode(json, options)}
-      ${contextStr || ''}
-
-      ${
-        json.hooks.onInit?.code
-          ? `
-          useEffect(() => {
-            ${processHookCode({
-              str: json.hooks.onInit.code,
-              options,
-            })}
-          }, [])
-          `
-          : ''
-      }
-      ${
-        json.hooks.onMount?.code
-          ? `useEffect(() => {
-            ${processHookCode({
-              str: json.hooks.onMount.code,
-              options,
-            })}
-          }, [])`
-          : ''
-      }
-
-      ${
-        json.hooks.onUpdate
-          ?.map(
-            (hook) => `useEffect(() => {
-            ${processHookCode({ str: hook.code, options })}
-          },
-          ${hook.deps ? processHookCode({ str: hook.deps, options }) : ''})`,
-          )
-          .join(';') ?? ''
-      }
-
-      ${
-        json.hooks.onUnMount?.code
-          ? `useEffect(() => {
-            return () => {
-              ${processHookCode({
-                str: json.hooks.onUnMount.code,
-                options,
-              })}
-            }
-          }, [])`
-          : ''
-      }
-
-      return (
-        ${wrap ? openFrag(options) : ''}
-        ${json.children.map((item) => blockToReact(item, options, json, [])).join('\n')}
-        ${
-          componentHasStyles && stylesType === 'styled-jsx'
-            ? `<style jsx>{\`${css}\`}</style>`
-            : componentHasStyles && stylesType === 'style-tag'
-            ? `<style>{\`${css}\`}</style>`
-            : ''
-        }
-        ${wrap ? closeFrag(options) : ''}
-      );
-    }${isForwardRef ? ')' : ''}
+    ${isForwardRef ? `const ${json.name} = forwardRef${forwardRefType}(` : ''}function ${
+    json.name
+  }(${componentArgs}) {
+    ${componentBody}
+  }${isForwardRef ? ')' : ''}
 
     ${getPropsDefinition({ json })}
 
     ${
-      !nativeStyles
-        ? ''
-        : `
-      const styles = StyleSheet.create(${json5.stringify(nativeStyles)});
-    `
+      reactNativeStyles
+        ? `const styles = StyleSheet.create(${json5.stringify(reactNativeStyles)});`
+        : ''
     }
 
-    ${styledComponentsCode ? styledComponentsCode : ''}
+    ${styledComponentsCode ?? ''}
     ${
-      stateType === 'mobx'
+      isSubComponent
+        ? ''
+        : options.stateType === 'mobx'
         ? `
-      const observed${json.name || 'MyComponent'} = observer(${json.name || 'MyComponent'});
-      export default observed${json.name || 'MyComponent'};
+      const observed${json.name} = observer(${json.name});
+      export default observed${json.name};
     `
-        : ''
+        : `export default ${json.name};`
     }
 
   `;
 
-  str = stripNewlinesInStrings(str);
-
-  return str;
+  return stripNewlinesInStrings(str);
 };

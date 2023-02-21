@@ -41,6 +41,7 @@ export const blockToMitosis = (
         format: 'lite',
         stateType: 'useState',
         stylesType: 'emotion',
+        type: 'dom',
         prettier: options.prettier,
       },
       component,
