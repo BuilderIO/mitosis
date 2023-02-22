@@ -222,6 +222,9 @@ export const blockToReact = (
       } else {
         str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
       }
+    } else if (key === 'style' && options.type === 'native' && json.name === 'ScrollView') {
+      // React Native's ScrollView has a different prop for styles: `contentContainerStyle`
+      str += ` contentContainerStyle={${useBindingValue}} `;
     } else {
       if (isValidAttributeName(key)) {
         str += ` ${key}={${useBindingValue}} `;
