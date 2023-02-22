@@ -7,11 +7,10 @@ import { ToVueOptions } from './types';
 import { pipe } from 'fp-ts/lib/function';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
-import { pickBy, size } from 'lodash';
+import { pickBy } from 'lodash';
 import { stripGetter } from '../../helpers/patterns';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { isSlotProperty, replaceSlotsInString } from '../../helpers/slots';
-import { getProps } from '../../helpers/get-props';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 
 export const addPropertiesToJson =
@@ -182,8 +181,11 @@ export const processBinding = ({
           switch (options.api) {
             // keep pointing to `props.${value}`
             case 'composition':
+              if (name === 'children' || name.startsWith('children.')) {
+                return `useSlots().default`;
+              }
               return isSlotProperty(name)
-                ? replaceSlotsInString(name, (x) => `$slots.${x}`) // here must use `$slots` instead of `slots`
+                ? replaceSlotsInString(name, (x) => `useSlots().${x}`)
                 : `props.${name}`;
             case 'options':
               return optionsApiStateAndPropsReplace(name, thisPrefix);
@@ -243,6 +245,3 @@ export const getContextKey = (context: ContextGetInfo | ContextSetInfo) => {
   const key = isStrName ? context.name : `${context.name}.key`;
   return key;
 };
-
-export const hasSlotProps = (component: MitosisComponent) =>
-  size(Array.from(getProps(component)).filter((prop) => isSlotProperty(prop)));

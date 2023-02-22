@@ -3,7 +3,7 @@ import json5 from 'json5';
 import { pickBy } from 'lodash';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
-import { getContextKey, getContextValue, hasSlotProps } from './helpers';
+import { getContextKey, getContextValue } from './helpers';
 import { ToVueOptions } from './types';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { processBinding } from './helpers';
@@ -80,8 +80,6 @@ export function generateCompositionApiScript(
   let str = dedent`
     ${props.length ? getCompositionPropDefinition({ component, props, options }) : ''}
     ${refs}
-
-    ${hasSlotProps(component) ? 'const $slots = useSlots()' : ''}
 
     ${Object.entries(component.context.get)
       ?.map(([key, context]) => {

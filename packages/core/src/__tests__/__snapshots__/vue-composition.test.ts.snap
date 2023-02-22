@@ -481,7 +481,11 @@ exports[`Vue > jsx > Javascript Test > ContentSlotHtml 1`] = `
       <slot />
     </div>
   </div>
-</template>"
+</template>
+
+<script setup>
+import { useSlots } from \\"vue\\";
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
@@ -507,22 +511,24 @@ exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
 </template>
 
 <script setup>
-import { computed, ref } from \\"vue\\";
+import { computed, ref, useSlots } from \\"vue\\";
 
 const props = withDefaults(defineProps(), {
+  children: undefined,
   attributes: undefined,
   content: \\"\\",
-  children: undefined,
 });
 const name = ref(\\"king\\");
 const showContent = ref(false);
 
 const cls = computed(() => {
-  return $slots.content ? \`\${name.value}-content\` : \\"\\";
+  return useSlots().content && useSlots().default
+    ? \`\${name.value}-content\`
+    : \\"\\";
 });
 
 function show() {
-  $slots.content ? 1 : \\"\\";
+  useSlots().content ? 1 : \\"\\";
 }
 function _classStringToObject(str) {
   const obj = {};
@@ -3291,6 +3297,7 @@ exports[`Vue > jsx > Typescript Test > ContentSlotHtml 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
+import { useSlots } from \\"vue\\";
 type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
@@ -3321,25 +3328,27 @@ exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import { computed, ref } from \\"vue\\";
+import { computed, ref, useSlots } from \\"vue\\";
 type Props = {
   [key: string]: string | JSX.Element;
 };
 
 const props = withDefaults(defineProps<Props>(), {
+  children: undefined,
   attributes: undefined,
   content: \\"\\",
-  children: undefined,
 });
 const name = ref(\\"king\\");
 const showContent = ref(false);
 
 const cls = computed(() => {
-  return $slots.content ? \`\${name.value}-content\` : \\"\\";
+  return useSlots().content && useSlots().default
+    ? \`\${name.value}-content\`
+    : \\"\\";
 });
 
 function show() {
-  $slots.content ? 1 : \\"\\";
+  useSlots().content ? 1 : \\"\\";
 }
 function _classStringToObject(str) {
   const obj = {};

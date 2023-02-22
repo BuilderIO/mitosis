@@ -22,12 +22,7 @@ import { TranspilerGenerator } from '../../types/transpiler';
 import { pipe } from 'fp-ts/lib/function';
 import { isSlotProperty } from '../../helpers/slots';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
-import {
-  getOnUpdateHookName,
-  processBinding,
-  renameMitosisComponentsToKebabCase,
-  hasSlotProps,
-} from './helpers';
+import { getOnUpdateHookName, processBinding, renameMitosisComponentsToKebabCase } from './helpers';
 import { ToVueOptions, VueOptsWithoutVersion } from './types';
 import { generateOptionsApiScript } from './optionsApi';
 import { generateCompositionApiScript } from './compositionApi';
@@ -159,7 +154,9 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     }
 
     // need to run this before we process the component's code
-    const elementProps = Array.from(getProps(component)).filter((prop) => !isSlotProperty(prop));
+    const props = Array.from(getProps(component));
+    const elementProps = props.filter((prop) => !isSlotProperty(prop));
+    const slotsProps = props.filter((prop) => isSlotProperty(prop));
 
     component = runPostJsonPlugins(component, options.plugins);
 
@@ -196,7 +193,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
       size(
         Object.keys(component.state).filter((key) => component.state[key]?.type === 'property'),
       ) && vueImports.push('ref');
-      hasSlotProps(component) && vueImports.push('useSlots');
+      size(slotsProps) && vueImports.push('useSlots');
     }
 
     const tsLangAttribute = options.typescript ? `lang='ts'` : '';

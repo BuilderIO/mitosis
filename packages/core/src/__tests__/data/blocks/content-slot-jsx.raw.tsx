@@ -17,7 +17,7 @@ export default function ContentSlotJsxCode(props: Props) {
     showContent: false,
 
     get cls() {
-      return props.slotContent ? `${state.name}-content` : '';
+      return props.slotContent && props.children ? `${state.name}-content` : '';
     },
 
     show() {
