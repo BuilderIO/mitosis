@@ -22,7 +22,12 @@ import { TranspilerGenerator } from '../../types/transpiler';
 import { pipe } from 'fp-ts/lib/function';
 import { isSlotProperty } from '../../helpers/slots';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
-import { getOnUpdateHookName, processBinding, renameMitosisComponentsToKebabCase, hasSlotProps } from './helpers';
+import {
+  getOnUpdateHookName,
+  processBinding,
+  renameMitosisComponentsToKebabCase,
+  hasSlotProps,
+} from './helpers';
 import { ToVueOptions, VueOptsWithoutVersion } from './types';
 import { generateOptionsApiScript } from './optionsApi';
 import { generateCompositionApiScript } from './compositionApi';
