@@ -113,7 +113,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'state':
               return (code) => processBinding({ code, options, json: component });
             case 'bindings':
-              return (c) => stripStateAndPropsRefs(c);
+              return (code) => processBinding({ code, options, json: component, codeType });
             case 'hooks-deps':
               return (c) => stripStateAndPropsRefs(c, { includeProps: false });
             case 'properties':
@@ -124,7 +124,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'hooks':
               return (code) => processBinding({ code, options, json: component });
             case 'bindings':
-              return (c) => stripStateAndPropsRefs(c);
+              return (code) => processBinding({ code, options, json: component, codeType });
             case 'properties':
             case 'hooks-deps':
               return (c) => c;

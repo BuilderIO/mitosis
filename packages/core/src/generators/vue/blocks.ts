@@ -5,7 +5,7 @@ import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { replaceSlotsInString, stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
+import { stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisNode, ForNode, Binding, SpreadType } from '../../types/mitosis-node';
 import {
@@ -80,10 +80,7 @@ const NODE_MAPPERS: {
       : '';
   },
   Show(json, options, scope) {
-    const ifValue = replaceSlotsInString(
-      json.bindings.when?.code || '',
-      (slotName) => `$slots.${slotName}`,
-    );
+    const ifValue = json.bindings.when?.code || '';
 
     const defaultShowTemplate = `
     <template ${SPECIAL_PROPERTIES.V_IF}="${encodeQuotes(ifValue)}">
@@ -288,26 +285,27 @@ const NODE_MAPPERS: {
 const stringifyBinding =
   (node: MitosisNode) =>
   ([key, value]: [string, Binding]) => {
-    const bindingValue = replaceSlotsInString(value.code || '', (slotName) => `$slots.${slotName}`);
-
     if (value.type === 'spread') {
       return ''; // we handle this after
     } else if (key === 'class') {
-      return `:class="_classStringToObject(${bindingValue})"`;
+      return `:class="_classStringToObject(${value?.code})"`;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
     } else {
+      // TODO: proper babel transform to replace. Util for this
+      const useValue = value?.code || '';
+
       if (key.startsWith('on')) {
         const { arguments: cusArgs = ['event'] } = value!;
         let event = key.replace('on', '').toLowerCase();
         if (event === 'change' && node.name === 'input') {
           event = 'input';
         }
-        const isAssignmentExpression = bindingValue.includes('=');
+        const isAssignmentExpression = useValue.includes('=');
 
         const eventHandlerValue = pipe(
           replaceIdentifiers({
-            code: bindingValue,
+            code: useValue,
             from: cusArgs[0],
             to: '$event',
           }),
@@ -320,11 +318,11 @@ const stringifyBinding =
 
         return `${eventHandlerKey}="${eventHandlerValue}"`;
       } else if (key === 'ref') {
-        return `ref="${encodeQuotes(bindingValue)}"`;
+        return `ref="${encodeQuotes(useValue)}"`;
       } else if (BINDING_MAPPERS[key]) {
-        return `${BINDING_MAPPERS[key]}="${encodeQuotes(bindingValue.replace(/"/g, "\\'"))}"`;
+        return `${BINDING_MAPPERS[key]}="${encodeQuotes(useValue.replace(/"/g, "\\'"))}"`;
       } else {
-        return `:${key}="${encodeQuotes(bindingValue)}"`;
+        return `:${key}="${encodeQuotes(useValue)}"`;
       }
     }
   };

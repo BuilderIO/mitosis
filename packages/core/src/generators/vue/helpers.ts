@@ -145,7 +145,13 @@ function prefixMethodsWithThis(input: string, component: MitosisComponent, optio
   }
 }
 
-function optionsApiStateAndPropsReplace(name: string, thisPrefix: string) {
+function optionsApiStateAndPropsReplace(name: string, thisPrefix: string, codeType: ProcessBinding['codeType']) {
+  if (codeType === 'bindings') {
+    return isSlotProperty(name)
+    ? replaceSlotsInString(name, (x) => `$slots.${x}`)
+    : name;
+  }
+
   if (name === 'children' || name.startsWith('children.')) {
     return `${thisPrefix}.$slots.default`;
   }
@@ -160,6 +166,7 @@ type ProcessBinding = {
   json: MitosisComponent;
   preserveGetter?: boolean;
   thisPrefix?: 'this' | '_this';
+  codeType?: 'state' | 'hooks' | 'bindings' | 'hooks-deps' | 'properties'
 };
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
@@ -170,6 +177,7 @@ export const processBinding = ({
   json,
   preserveGetter = false,
   thisPrefix = 'this',
+  codeType,
 }: ProcessBinding): string => {
   try {
     return pipe(
@@ -181,6 +189,12 @@ export const processBinding = ({
           switch (options.api) {
             // keep pointing to `props.${value}`
             case 'composition':
+              if (codeType === 'bindings') {
+                return isSlotProperty(name)
+                ? replaceSlotsInString(name, (x) => `$slots.${x}`)
+                : name;
+              }
+
               if (name === 'children' || name.startsWith('children.')) {
                 return `useSlots().default`;
               }
@@ -188,7 +202,7 @@ export const processBinding = ({
                 ? replaceSlotsInString(name, (x) => `useSlots().${x}`)
                 : `props.${name}`;
             case 'options':
-              return optionsApiStateAndPropsReplace(name, thisPrefix);
+              return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
           }
         },
       }),
@@ -201,14 +215,15 @@ export const processBinding = ({
               case 'composition':
                 return name;
               case 'options':
-                return optionsApiStateAndPropsReplace(name, thisPrefix);
+                return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
             }
           },
         }),
       (x) => {
         return pipe(
           x,
-          (code) => processRefs({ input: code, component: json, options, thisPrefix }),
+          // bindings does not need process refs
+          (code) => codeType === 'bindings' ? code : processRefs({ input: code, component: json, options, thisPrefix }),
           (code) => prefixMethodsWithThis(code, json, options),
           (code) => (preserveGetter === false ? stripGetter(code) : code),
         );
