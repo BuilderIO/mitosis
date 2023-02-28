@@ -163,8 +163,12 @@ export const blockToReact = (
     return text;
   }
   if (json.bindings._text?.code) {
-    const processed = processBinding(json.bindings._text.code as string, options);
-    if (options.type === 'native' && !isChildren({ node: json }) && !isSlotProperty(processed)) {
+    const processed = processBinding(json.bindings._text.code, options);
+    if (
+      options.type === 'native' &&
+      !isChildren({ node: json }) &&
+      !isSlotProperty(json.bindings._text.code.split('.')[1] || '')
+    ) {
       return `<Text>{${processed}}</Text>`;
     }
     return `{${processed}}`;
