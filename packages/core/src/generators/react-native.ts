@@ -11,6 +11,7 @@ import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
 import { Dictionary } from '../helpers/typescript';
 import { mergeOptions } from '../helpers/merge-options';
+import isChildren from '../helpers/is-children';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType: 'emotion' | 'react-native';
@@ -82,11 +83,14 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
           // TODO: handle TextInput, Image, etc
-          if (node.name.toLowerCase() === node.name) {
+          if (isChildren({ node })) {
+            node.name = '';
+          } else if (node.name.toLowerCase() === node.name) {
             node.name = 'View';
-          }
-
-          if (node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length) {
+          } else if (
+            node.properties._text?.trim().length ||
+            node.bindings._text?.code?.trim()?.length
+          ) {
             node.name = 'Text';
           }
 

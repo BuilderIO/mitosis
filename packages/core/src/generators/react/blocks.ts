@@ -1,4 +1,6 @@
 import { camelCase, upperFirst } from 'lodash';
+import isChildren from '../../helpers/is-children';
+import { isSlotProperty } from '../../helpers/slots';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
 import { getForArguments } from '../../helpers/nodes/for';
@@ -161,8 +163,12 @@ export const blockToReact = (
     return text;
   }
   if (json.bindings._text?.code) {
-    const processed = processBinding(json.bindings._text.code as string, options);
-    if (options.type === 'native') {
+    const processed = processBinding(json.bindings._text.code, options);
+    if (
+      options.type === 'native' &&
+      !isChildren({ node: json }) &&
+      !isSlotProperty(json.bindings._text.code.split('.')[1] || '')
+    ) {
       return `<Text>{${processed}}</Text>`;
     }
     return `{${processed}}`;
