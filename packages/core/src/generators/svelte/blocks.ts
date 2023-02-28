@@ -48,13 +48,8 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
 `;
   },
   Show: ({ json, options, parentComponent }) => {
-    const code = replaceSlotsInString(
-      json.bindings.when?.code || '',
-      (slotName) => `$$slots.${slotName}`,
-    );
-
     return `
-{#if ${code} }
+{#if ${json.bindings.when?.code} }
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 
   ${
@@ -156,16 +151,15 @@ const stringifyBinding =
     }
 
     const { code, arguments: cusArgs = ['event'], type } = binding;
-    const bindingCode = replaceSlotsInString(code || '', (slotName) => `$$slots.${slotName}`);
 
     if (type === 'spread') {
-      const spreadValue = key === 'props' ? '$$props' : bindingCode;
+      const spreadValue = key === 'props' ? '$$props' : code;
       return ` {...${spreadValue}} `;
     } else if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
 
-      const valueWithoutBlock = removeSurroundingBlock(bindingCode);
+      const valueWithoutBlock = removeSurroundingBlock(code);
 
       if (valueWithoutBlock === key) {
         return ` on:${event}={${valueWithoutBlock}} `;
@@ -173,9 +167,9 @@ const stringifyBinding =
         return ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
       }
     } else if (key === 'ref') {
-      return ` bind:this={${bindingCode}} `;
+      return ` bind:this={${code}} `;
     } else {
-      return ` ${key}={${bindingCode}} `;
+      return ` ${key}={${code}} `;
     }
   };
 

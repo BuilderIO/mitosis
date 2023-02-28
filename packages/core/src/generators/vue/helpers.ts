@@ -145,11 +145,13 @@ function prefixMethodsWithThis(input: string, component: MitosisComponent, optio
   }
 }
 
-function optionsApiStateAndPropsReplace(name: string, thisPrefix: string, codeType: ProcessBinding['codeType']) {
+function optionsApiStateAndPropsReplace(
+  name: string,
+  thisPrefix: string,
+  codeType: ProcessBinding['codeType'],
+) {
   if (codeType === 'bindings') {
-    return isSlotProperty(name)
-    ? replaceSlotsInString(name, (x) => `$slots.${x}`)
-    : name;
+    return isSlotProperty(name) ? replaceSlotsInString(name, (x) => `$slots.${x}`) : name;
   }
 
   if (name === 'children' || name.startsWith('children.')) {
@@ -166,7 +168,7 @@ type ProcessBinding = {
   json: MitosisComponent;
   preserveGetter?: boolean;
   thisPrefix?: 'this' | '_this';
-  codeType?: 'state' | 'hooks' | 'bindings' | 'hooks-deps' | 'properties'
+  codeType?: 'state' | 'hooks' | 'bindings' | 'hooks-deps' | 'properties';
 };
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
@@ -191,8 +193,8 @@ export const processBinding = ({
             case 'composition':
               if (codeType === 'bindings') {
                 return isSlotProperty(name)
-                ? replaceSlotsInString(name, (x) => `$slots.${x}`)
-                : name;
+                  ? replaceSlotsInString(name, (x) => `$slots.${x}`)
+                  : name;
               }
 
               if (name === 'children' || name.startsWith('children.')) {
@@ -222,9 +224,15 @@ export const processBinding = ({
       (x) => {
         return pipe(
           x,
-          // bindings does not need process refs
-          (code) => codeType === 'bindings' ? code : processRefs({ input: code, component: json, options, thisPrefix }),
-          (code) => prefixMethodsWithThis(code, json, options),
+          // bindings does not need process refs and prefix this
+          (code) =>
+            codeType === 'bindings'
+              ? code
+              : processRefs({ input: code, component: json, options, thisPrefix }),
+          (code) =>
+            codeType === 'bindings'
+              ? code
+              : prefixMethodsWithThis(code, json, options),
           (code) => (preserveGetter === false ? stripGetter(code) : code),
         );
       },
