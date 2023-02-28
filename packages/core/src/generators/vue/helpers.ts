@@ -10,6 +10,7 @@ import { types } from '@babel/core';
 import { pickBy } from 'lodash';
 import { stripGetter } from '../../helpers/patterns';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { isSlotProperty, replaceSlotsInString } from '../../helpers/slots';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 
 export const addPropertiesToJson =
@@ -144,12 +145,30 @@ function prefixMethodsWithThis(input: string, component: MitosisComponent, optio
   }
 }
 
+function optionsApiStateAndPropsReplace(
+  name: string,
+  thisPrefix: string,
+  codeType: ProcessBinding['codeType'],
+) {
+  if (codeType === 'bindings') {
+    return isSlotProperty(name) ? replaceSlotsInString(name, (x) => `$slots.${x}`) : name;
+  }
+
+  if (name === 'children' || name.startsWith('children.')) {
+    return `${thisPrefix}.$slots.default`;
+  }
+  return isSlotProperty(name)
+    ? replaceSlotsInString(name, (x) => `${thisPrefix}.$slots.${x}`)
+    : `${thisPrefix}.${name}`;
+}
+
 type ProcessBinding = {
   code: string;
   options: ToVueOptions;
   json: MitosisComponent;
   preserveGetter?: boolean;
   thisPrefix?: 'this' | '_this';
+  codeType?: 'state' | 'hooks' | 'bindings' | 'hooks-deps' | 'properties';
 };
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
@@ -160,31 +179,57 @@ export const processBinding = ({
   json,
   preserveGetter = false,
   thisPrefix = 'this',
+  codeType,
 }: ProcessBinding): string => {
   try {
     return pipe(
+      // processed twice, once for props and once for state
       stripStateAndPropsRefs(code, {
-        includeState: true,
-        // we don't want to process `props` in the Composition API because it has a `props` ref,
-        // therefore we can keep pointing to `props.${value}`
-        includeProps: options.api === 'options',
+        includeState: false,
+        includeProps: true,
         replaceWith: (name) => {
           switch (options.api) {
+            // keep pointing to `props.${value}`
             case 'composition':
-              return name;
-            case 'options':
-              if (name === 'children' || name.startsWith('children.')) {
-                return '${thisPrefix}.$slots.default';
+              if (codeType === 'bindings') {
+                return isSlotProperty(name)
+                  ? replaceSlotsInString(name, (x) => `$slots.${x}`)
+                  : name;
               }
-              return `${thisPrefix}.${name}`;
+
+              if (name === 'children' || name.startsWith('children.')) {
+                return `useSlots().default`;
+              }
+              return isSlotProperty(name)
+                ? replaceSlotsInString(name, (x) => `useSlots().${x}`)
+                : `props.${name}`;
+            case 'options':
+              return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
           }
         },
       }),
+      (code) =>
+        stripStateAndPropsRefs(code, {
+          includeState: true,
+          includeProps: false,
+          replaceWith: (name) => {
+            switch (options.api) {
+              case 'composition':
+                return name;
+              case 'options':
+                return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
+            }
+          },
+        }),
       (x) => {
         return pipe(
           x,
-          (code) => processRefs({ input: code, component: json, options, thisPrefix }),
-          (code) => prefixMethodsWithThis(code, json, options),
+          // bindings does not need process refs and prefix this
+          (code) =>
+            codeType === 'bindings'
+              ? code
+              : processRefs({ input: code, component: json, options, thisPrefix }),
+          (code) => (codeType === 'bindings' ? code : prefixMethodsWithThis(code, json, options)),
           (code) => (preserveGetter === false ? stripGetter(code) : code),
         );
       },

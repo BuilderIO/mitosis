@@ -2846,7 +2846,12 @@ exports[`Parse JSX > ContentSlotJSX 1`] = `
   "children": [
     {
       "@type": "@builder.io/mitosis/node",
-      "bindings": {},
+      "bindings": {
+        "when": {
+          "code": "props.slotReference",
+          "type": "single",
+        },
+      },
       "children": [
         {
           "@type": "@builder.io/mitosis/node",
@@ -2863,12 +2868,161 @@ exports[`Parse JSX > ContentSlotJSX 1`] = `
         {
           "@type": "@builder.io/mitosis/node",
           "bindings": {
-            "when": {
-              "code": "props.slotTesting",
+            "class": {
+              "code": "props.slotContent ? \`\${state.name}-content\` : ''",
+              "type": "single",
+            },
+            "name": {
+              "code": "props.slotContent ? 'name1' : 'name2'",
+              "type": "single",
+            },
+            "onClick": {
+              "code": "state.show()",
+              "type": "single",
+            },
+            "props.attributes": {
+              "code": "props.attributes",
+              "spreadType": "normal",
+              "type": "spread",
+            },
+            "title": {
+              "code": "props.slotContent ? 'title1' : 'title2'",
               "type": "single",
             },
           },
           "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+        ",
+              },
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {
+                "when": {
+                  "code": "state.showContent && props.slotContent",
+                  "type": "single",
+                },
+              },
+              "children": [
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {},
+                  "children": [],
+                  "meta": {},
+                  "name": "div",
+                  "properties": {
+                    "_text": "
+          ",
+                  },
+                  "scope": {},
+                },
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {},
+                  "children": [
+                    {
+                      "@type": "@builder.io/mitosis/node",
+                      "bindings": {
+                        "_text": {
+                          "code": "props.content",
+                          "type": "single",
+                        },
+                      },
+                      "children": [],
+                      "meta": {},
+                      "name": "div",
+                      "properties": {},
+                      "scope": {},
+                    },
+                  ],
+                  "meta": {},
+                  "name": "Slot",
+                  "properties": {
+                    "name": "content",
+                  },
+                  "scope": {},
+                },
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {},
+                  "children": [],
+                  "meta": {},
+                  "name": "div",
+                  "properties": {
+                    "_text": "
+        ",
+                  },
+                  "scope": {},
+                },
+              ],
+              "meta": {},
+              "name": "Show",
+              "properties": {},
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+        ",
+              },
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {},
+                  "children": [],
+                  "meta": {},
+                  "name": "div",
+                  "properties": {
+                    "_text": "
+          ",
+                  },
+                  "scope": {},
+                },
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {},
+                  "children": [],
+                  "meta": {},
+                  "name": "hr",
+                  "properties": {},
+                  "scope": {},
+                },
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {},
+                  "children": [],
+                  "meta": {},
+                  "name": "div",
+                  "properties": {
+                    "_text": "
+        ",
+                  },
+                  "scope": {},
+                },
+              ],
+              "meta": {},
+              "name": "div",
+              "properties": {},
+              "scope": {},
+            },
             {
               "@type": "@builder.io/mitosis/node",
               "bindings": {},
@@ -2889,7 +3043,7 @@ exports[`Parse JSX > ContentSlotJSX 1`] = `
                   "@type": "@builder.io/mitosis/node",
                   "bindings": {
                     "_text": {
-                      "code": "props.slotTesting",
+                      "code": "props.children",
                       "type": "single",
                     },
                   },
@@ -2919,97 +3073,6 @@ exports[`Parse JSX > ContentSlotJSX 1`] = `
             },
           ],
           "meta": {},
-          "name": "Show",
-          "properties": {},
-          "scope": {},
-        },
-        {
-          "@type": "@builder.io/mitosis/node",
-          "bindings": {},
-          "children": [],
-          "meta": {},
-          "name": "div",
-          "properties": {
-            "_text": "
-      ",
-          },
-          "scope": {},
-        },
-        {
-          "@type": "@builder.io/mitosis/node",
-          "bindings": {},
-          "children": [
-            {
-              "@type": "@builder.io/mitosis/node",
-              "bindings": {},
-              "children": [],
-              "meta": {},
-              "name": "div",
-              "properties": {
-                "_text": "
-        ",
-              },
-              "scope": {},
-            },
-            {
-              "@type": "@builder.io/mitosis/node",
-              "bindings": {},
-              "children": [],
-              "meta": {},
-              "name": "hr",
-              "properties": {},
-              "scope": {},
-            },
-            {
-              "@type": "@builder.io/mitosis/node",
-              "bindings": {},
-              "children": [],
-              "meta": {},
-              "name": "div",
-              "properties": {
-                "_text": "
-      ",
-              },
-              "scope": {},
-            },
-          ],
-          "meta": {},
-          "name": "div",
-          "properties": {},
-          "scope": {},
-        },
-        {
-          "@type": "@builder.io/mitosis/node",
-          "bindings": {},
-          "children": [],
-          "meta": {},
-          "name": "div",
-          "properties": {
-            "_text": "
-      ",
-          },
-          "scope": {},
-        },
-        {
-          "@type": "@builder.io/mitosis/node",
-          "bindings": {},
-          "children": [
-            {
-              "@type": "@builder.io/mitosis/node",
-              "bindings": {
-                "_text": {
-                  "code": "props.children",
-                  "type": "single",
-                },
-              },
-              "children": [],
-              "meta": {},
-              "name": "div",
-              "properties": {},
-              "scope": {},
-            },
-          ],
-          "meta": {},
           "name": "div",
           "properties": {},
           "scope": {},
@@ -3028,7 +3091,7 @@ exports[`Parse JSX > ContentSlotJSX 1`] = `
         },
       ],
       "meta": {},
-      "name": "div",
+      "name": "Show",
       "properties": {},
       "scope": {},
     },
@@ -3036,6 +3099,20 @@ exports[`Parse JSX > ContentSlotJSX 1`] = `
   "context": {
     "get": {},
     "set": {},
+  },
+  "defaultProps": {
+    "content": {
+      "code": "''",
+      "type": "property",
+    },
+    "slotContent": {
+      "code": "undefined",
+      "type": "property",
+    },
+    "slotReference": {
+      "code": "undefined",
+      "type": "property",
+    },
   },
   "exports": {},
   "hooks": {},
@@ -3045,7 +3122,28 @@ exports[`Parse JSX > ContentSlotJSX 1`] = `
   "name": "ContentSlotJsxCode",
   "propsTypeRef": "Props",
   "refs": {},
-  "state": {},
+  "state": {
+    "cls": {
+      "code": "get cls() {
+  return props.slotContent && props.children ? \`\${state.name}-content\` : '';
+}",
+      "type": "getter",
+    },
+    "name": {
+      "code": "'king'",
+      "type": "property",
+    },
+    "show": {
+      "code": "show() {
+  props.slotContent ? 1 : '';
+}",
+      "type": "method",
+    },
+    "showContent": {
+      "code": "false",
+      "type": "property",
+    },
+  },
   "subComponents": [],
   "types": [
     "type Props = {

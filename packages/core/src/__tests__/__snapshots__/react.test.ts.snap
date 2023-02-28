@@ -553,24 +553,51 @@ export default ContentSlotCode;
 
 exports[`React > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 function ContentSlotJsxCode(props) {
+  const [name, setName] = useState(() => \\"king\\");
+
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <div>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <div>{props.slotTesting}</div>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={props.slotContent ? \`\${name}-content\` : \\"\\"}
+          >
+            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+
+            <div>
+              <hr />
+            </div>
+
+            <div>{props.children}</div>
+          </div>
         </>
       ) : null}
-
-      <div>
-        <hr />
-      </div>
-
-      <div>{props.children}</div>
-    </div>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: \\"{props.content}\\",
+};
 
 export default ContentSlotJsxCode;
 "
@@ -3572,28 +3599,55 @@ export default ContentSlotCode;
 
 exports[`React > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
 };
 
 function ContentSlotJsxCode(props: Props) {
+  const [name, setName] = useState(() => \\"king\\");
+
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <div>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <div>{props.slotTesting}</div>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={props.slotContent ? \`\${name}-content\` : \\"\\"}
+          >
+            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+
+            <div>
+              <hr />
+            </div>
+
+            <div>{props.children}</div>
+          </div>
         </>
       ) : null}
-
-      <div>
-        <hr />
-      </div>
-
-      <div>{props.children}</div>
-    </div>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: \\"{props.content}\\",
+};
 
 export default ContentSlotJsxCode;
 "

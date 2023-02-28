@@ -3426,17 +3426,39 @@ class ContentSlotJsxCode extends HTMLElement {
     super();
     const self = this;
 
-    this.state = {};
+    this.state = {
+      name: \\"king\\",
+      showContent: false,
+      get cls() {
+        return self.props.slotContent && self.props.children
+          ? \`\${self.state.name}-content\`
+          : \\"\\";
+      },
+      show() {
+        self.props.slotContent ? 1 : \\"\\";
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
 
-    this.componentProps = [\\"slotTesting\\", \\"children\\"];
+    this.componentProps = [
+      \\"slotContent\\",
+      \\"children\\",
+      \\"slotReference\\",
+      \\"attributes\\",
+      \\"content\\",
+    ];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
     this.pendingUpdate = false;
+
+    // Event handler for 'click' event on div-content-slot-jsx-code-1
+    this.onDivContentSlotJsxCode1Click = (event) => {
+      this.state.show();
+    };
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -3464,21 +3486,23 @@ class ContentSlotJsxCode extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <div>
-        <template data-el=\\"show-content-slot-jsx-code\\">
+      <template data-el=\\"show-content-slot-jsx-code\\">
+        <div data-el=\\"div-content-slot-jsx-code-1\\">
+          <template data-el=\\"show-content-slot-jsx-code-2\\">
+            <slot name=\\"content\\">
+              <template data-el=\\"div-content-slot-jsx-code-2\\">
+                <!-- props.content -->
+              </template>
+            </slot>
+          </template>
+      
           <div>
-            <template data-el=\\"div-content-slot-jsx-code-1\\">
-              <!-- props.slotTesting -->
-            </template>
+            <hr />
           </div>
-        </template>
       
-        <div>
-          <hr />
+          <div><slot></slot></div>
         </div>
-      
-        <div><slot></slot></div>
-      </div>\`;
+      </template>\`;
     this.pendingUpdate = true;
 
     this.render();
@@ -3531,7 +3555,7 @@ class ContentSlotJsxCode extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-el='show-content-slot-jsx-code']\\")
       .forEach((el) => {
-        const whenCondition = this.props.slotTesting;
+        const whenCondition = this.props.slotReference;
 
         if (whenCondition) {
           this.showContent(el);
@@ -3541,7 +3565,29 @@ class ContentSlotJsxCode extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-el='div-content-slot-jsx-code-1']\\")
       .forEach((el) => {
-        this.renderTextNode(el, this.props.slotTesting);
+        el.setAttribute(\\"name\\", this.props.slotContent ? \\"name1\\" : \\"name2\\");
+        el.setAttribute(\\"title\\", this.props.slotContent ? \\"title1\\" : \\"title2\\");
+        el.removeEventListener(\\"click\\", this.onDivContentSlotJsxCode1Click);
+        el.addEventListener(\\"click\\", this.onDivContentSlotJsxCode1Click);
+        el.className = this.props.slotContent
+          ? \`\${this.state.name}-content\`
+          : \\"\\";
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='show-content-slot-jsx-code-2']\\")
+      .forEach((el) => {
+        const whenCondition = this.state.showContent && this.props.slotContent;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='div-content-slot-jsx-code-2']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.props.content);
       });
   }
 
@@ -15881,17 +15927,39 @@ class ContentSlotJsxCode extends HTMLElement {
     super();
     const self = this;
 
-    this.state = {};
+    this.state = {
+      name: \\"king\\",
+      showContent: false,
+      get cls() {
+        return self.props.slotContent && self.props.children
+          ? \`\${self.state.name}-content\`
+          : \\"\\";
+      },
+      show() {
+        self.props.slotContent ? 1 : \\"\\";
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
 
-    this.componentProps = [\\"slotTesting\\", \\"children\\"];
+    this.componentProps = [
+      \\"slotContent\\",
+      \\"children\\",
+      \\"slotReference\\",
+      \\"attributes\\",
+      \\"content\\",
+    ];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
     this.pendingUpdate = false;
+
+    // Event handler for 'click' event on div-content-slot-jsx-code-1
+    this.onDivContentSlotJsxCode1Click = (event) => {
+      this.state.show();
+    };
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -15919,21 +15987,23 @@ class ContentSlotJsxCode extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <div>
-        <template data-el=\\"show-content-slot-jsx-code\\">
+      <template data-el=\\"show-content-slot-jsx-code\\">
+        <div data-el=\\"div-content-slot-jsx-code-1\\">
+          <template data-el=\\"show-content-slot-jsx-code-2\\">
+            <slot name=\\"content\\">
+              <template data-el=\\"div-content-slot-jsx-code-2\\">
+                <!-- props.content -->
+              </template>
+            </slot>
+          </template>
+      
           <div>
-            <template data-el=\\"div-content-slot-jsx-code-1\\">
-              <!-- props.slotTesting -->
-            </template>
+            <hr />
           </div>
-        </template>
       
-        <div>
-          <hr />
+          <div><slot></slot></div>
         </div>
-      
-        <div><slot></slot></div>
-      </div>\`;
+      </template>\`;
     this.pendingUpdate = true;
 
     this.render();
@@ -15986,7 +16056,7 @@ class ContentSlotJsxCode extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-el='show-content-slot-jsx-code']\\")
       .forEach((el) => {
-        const whenCondition = this.props.slotTesting;
+        const whenCondition = this.props.slotReference;
 
         if (whenCondition) {
           this.showContent(el);
@@ -15996,7 +16066,29 @@ class ContentSlotJsxCode extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-el='div-content-slot-jsx-code-1']\\")
       .forEach((el) => {
-        this.renderTextNode(el, this.props.slotTesting);
+        el.setAttribute(\\"name\\", this.props.slotContent ? \\"name1\\" : \\"name2\\");
+        el.setAttribute(\\"title\\", this.props.slotContent ? \\"title1\\" : \\"title2\\");
+        el.removeEventListener(\\"click\\", this.onDivContentSlotJsxCode1Click);
+        el.addEventListener(\\"click\\", this.onDivContentSlotJsxCode1Click);
+        el.className = this.props.slotContent
+          ? \`\${this.state.name}-content\`
+          : \\"\\";
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='show-content-slot-jsx-code-2']\\")
+      .forEach((el) => {
+        const whenCondition = this.state.showContent && this.props.slotContent;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='div-content-slot-jsx-code-2']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.props.content);
       });
   }
 

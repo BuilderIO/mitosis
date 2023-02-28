@@ -479,20 +479,41 @@ exports[`Alpine.js > jsx > Javascript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > ContentSlotJSX 1`] = `
-"<div x-data=\\"contentSlotJsxCode()\\">
-  <template x-if=\\"slotTesting\\">
-    <div><span x-html=\\"slotTesting\\"></span></div>
-  </template>
+"<template x-if=\\"slotReference\\">
+  <div
+    x-bind:name=\\"slotContent ? 'name1' : 'name2'\\"
+    x-bind:title=\\"slotContent ? 'title1' : 'title2'\\"
+    x-bind=\\"attributes\\"
+    x-on:click=\\"show()\\"
+    x-bind:class=\\"slotContent ? \`\${name}-content\` : ''\\"
+  >
+    <template x-if=\\"showContent && slotContent\\">
+      <slot name=\\"content\\"><span x-html=\\"content\\"></span></slot>
+    </template>
 
-  <div>
-    <hr />
+    <div>
+      <hr />
+    </div>
+
+    <div><span x-html=\\"children\\"></span></div>
   </div>
-
-  <div><span x-html=\\"children\\"></span></div>
-</div>
+</template>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
-    Alpine.data(\\"contentSlotJsxCode\\", () => ({}));
+    Alpine.data(\\"contentSlotJsxCode\\", () => ({
+      name: \\"king\\",
+      showContent: false,
+
+      get cls() {
+        return props.slotContent && props.children
+          ? \`\${this.name}-content\`
+          : \\"\\";
+      },
+
+      show() {
+        props.slotContent ? 1 : \\"\\";
+      },
+    }));
   });
 </script>
 "
@@ -2946,20 +2967,41 @@ exports[`Alpine.js > jsx > Typescript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"<div x-data=\\"contentSlotJsxCode()\\">
-  <template x-if=\\"slotTesting\\">
-    <div><span x-html=\\"slotTesting\\"></span></div>
-  </template>
+"<template x-if=\\"slotReference\\">
+  <div
+    x-bind:name=\\"slotContent ? 'name1' : 'name2'\\"
+    x-bind:title=\\"slotContent ? 'title1' : 'title2'\\"
+    x-bind=\\"attributes\\"
+    x-on:click=\\"show()\\"
+    x-bind:class=\\"slotContent ? \`\${name}-content\` : ''\\"
+  >
+    <template x-if=\\"showContent && slotContent\\">
+      <slot name=\\"content\\"><span x-html=\\"content\\"></span></slot>
+    </template>
 
-  <div>
-    <hr />
+    <div>
+      <hr />
+    </div>
+
+    <div><span x-html=\\"children\\"></span></div>
   </div>
-
-  <div><span x-html=\\"children\\"></span></div>
-</div>
+</template>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
-    Alpine.data(\\"contentSlotJsxCode\\", () => ({}));
+    Alpine.data(\\"contentSlotJsxCode\\", () => ({
+      name: \\"king\\",
+      showContent: false,
+
+      get cls() {
+        return props.slotContent && props.children
+          ? \`\${this.name}-content\`
+          : \\"\\";
+      },
+
+      show() {
+        props.slotContent ? 1 : \\"\\";
+      },
+    }));
   });
 </script>
 "
