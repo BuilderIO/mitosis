@@ -83,13 +83,14 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
           // TODO: handle TextInput, Image, etc
-          if (node.name.toLowerCase() === node.name) {
+          if (isChildren({ node })) {
+            node.name = '';
+          } else if (node.name.toLowerCase() === node.name) {
             node.name = 'View';
-          }
-
-          const hasText =
-            node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length;
-          if (hasText && !isChildren({ node })) {
+          } else if (
+            node.properties._text?.trim().length ||
+            node.bindings._text?.code?.trim()?.length
+          ) {
             node.name = 'Text';
           }
 
