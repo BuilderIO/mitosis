@@ -11,7 +11,7 @@ import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
 import { Dictionary } from '../helpers/typescript';
 import { mergeOptions } from '../helpers/merge-options';
-import isChildren from 'src/helpers/is-children';
+import isChildren from '../helpers/is-children';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType: 'emotion' | 'react-native';
