@@ -4,13 +4,20 @@ import { BaseNode, Binding, ForNode, MitosisNode } from '../../types/mitosis-nod
 
 import isChildren from '../../helpers/is-children';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { isSlotProperty, replaceSlotsInString, stripSlotPrefix } from '../../helpers/slots';
+import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { getForArguments } from '../../helpers/nodes/for';
 import { ToSvelteOptions } from './types';
 import { stripStateAndProps } from './helpers';
 import { createSingleBinding } from '../../helpers/bindings';
+
+/**
+ * blockToSvelte executed after stripStateAndProps,
+ * when stripStateAndProps is executed,
+ * SLOT_PREFIX from `slot` change to `$$slots.`
+ */
+const SLOT_PREFIX = '$$slots.';
 
 const mappers: {
   For: BlockToSvelte<ForNode>;
@@ -90,7 +97,10 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
       `;
     }
 
-    return `<slot name="${stripSlotPrefix(slotName).toLowerCase()}">${renderChildren()}</slot>`;
+    return `<slot name="${stripSlotPrefix(
+      slotName,
+      SLOT_PREFIX,
+    ).toLowerCase()}">${renderChildren()}</slot>`;
   },
 };
 
@@ -195,8 +205,8 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   const textCode = json.bindings._text?.code;
 
   if (textCode) {
-    if (isSlotProperty(textCode)) {
-      return `<slot name="${stripSlotPrefix(textCode).toLowerCase()}"/>`;
+    if (isSlotProperty(textCode, SLOT_PREFIX)) {
+      return `<slot name="${stripSlotPrefix(textCode, SLOT_PREFIX).toLowerCase()}"/>`;
     }
     return `{${textCode}}`;
   }

@@ -27,6 +27,13 @@ const SPECIAL_PROPERTIES = {
   V_BIND: 'v-bind',
 } as const;
 
+/**
+ * blockToVue executed after processBinding,
+ * when processBinding is executed,
+ * SLOT_PREFIX from `slot` change to `$slots.`
+ */
+const SLOT_PREFIX = '$slots.';
+
 type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) => string;
 
 interface Scope {
@@ -278,7 +285,10 @@ const NODE_MAPPERS: {
       `;
     }
 
-    return `<slot name="${stripSlotPrefix(slotName).toLowerCase()}">${renderChildren()}</slot>`;
+    return `<slot name="${stripSlotPrefix(
+      slotName,
+      SLOT_PREFIX,
+    ).toLowerCase()}">${renderChildren()}</slot>`;
   },
 };
 
@@ -393,8 +403,8 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   const textCode = node.bindings._text?.code;
   if (textCode) {
-    if (isSlotProperty(textCode)) {
-      return `<slot name="${stripSlotPrefix(textCode).toLowerCase()}"/>`;
+    if (isSlotProperty(textCode, SLOT_PREFIX)) {
+      return `<slot name="${stripSlotPrefix(textCode, SLOT_PREFIX).toLowerCase()}"/>`;
     }
     return `{{${textCode}}}`;
   }

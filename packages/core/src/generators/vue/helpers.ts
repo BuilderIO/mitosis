@@ -229,10 +229,7 @@ export const processBinding = ({
             codeType === 'bindings'
               ? code
               : processRefs({ input: code, component: json, options, thisPrefix }),
-          (code) =>
-            codeType === 'bindings'
-              ? code
-              : prefixMethodsWithThis(code, json, options),
+          (code) => (codeType === 'bindings' ? code : prefixMethodsWithThis(code, json, options)),
           (code) => (preserveGetter === false ? stripGetter(code) : code),
         );
       },
