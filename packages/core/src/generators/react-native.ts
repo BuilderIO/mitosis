@@ -11,6 +11,7 @@ import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
 import { Dictionary } from '../helpers/typescript';
 import { mergeOptions } from '../helpers/merge-options';
+import isChildren from 'src/helpers/is-children';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType: 'emotion' | 'react-native';
@@ -86,7 +87,9 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
             node.name = 'View';
           }
 
-          if (node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length) {
+          const hasText =
+            node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length;
+          if (hasText && !isChildren({ node })) {
             node.name = 'Text';
           }
 
