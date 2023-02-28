@@ -209,17 +209,6 @@ const SLOTS_TESTS: Tests = {
   classState,
 };
 
-// keep for now, remove in future
-const SLOTS_SVELTE_TESTS: Tests = {
-  ContentSlotJSX: contentSlotJsx,
-  ContentSlotHtml: contentSlotHtml,
-  SlotDefault: slotDefault,
-  // SlotJsx: slotJsx,
-  SlotHtml: slotHtml,
-  SlotNamed: slotNamed,
-  classState,
-};
-
 const MULTI_ON_UPDATE_TESTS: Tests = {
   multipleOnUpdate: multipleOnUpdate,
   multipleOnUpdateWithDeps: multipleOnUpdateWithDeps,
@@ -381,7 +370,7 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   svelte: [
     CONTEXT_TEST,
     BASIC_TESTS,
-    SLOTS_SVELTE_TESTS,
+    SLOTS_TESTS,
     SHOW_TESTS,
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
