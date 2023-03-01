@@ -207,7 +207,8 @@ export function parseElement(json: SveltosisComponent, node: TemplateNode) {
 
           if (name !== 'ref' && name !== 'group' && name !== 'this') {
             const onChangeCode = `${binding} = event.target.value`;
-            mitosisNode.bindings['onChange'] = createSingleBinding({
+            const binding = ['input', 'textarea'].indexOf(mitosisNode.name) > -1 ? 'onInput' : 'onChange';
+            mitosisNode.bindings[binding] = createSingleBinding({
               code: onChangeCode,
               arguments: ['event'],
             });
