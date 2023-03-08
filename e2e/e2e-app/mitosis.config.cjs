@@ -28,5 +28,6 @@ module.exports = {
     vue2: vueConfig,
     vue3: { ...vueConfig, api: 'composition' },
     qwik: { typescript: true },
+    svelte: { typescript: true },
   },
 };
