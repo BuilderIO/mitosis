@@ -321,7 +321,7 @@ export class SrcBuilder {
         let key = lastProperty(rawKey);
         if (isEvent(key)) {
           key = key + '$';
-          binding = `(event)=>${binding}`;
+          binding = `${this.file.import(this.file.qwikModule, '$')}((event)=>${binding})`;
         } else if (!binding && rawKey in props) {
           binding = quote(props[rawKey]);
         } else if (binding != null && binding === props[key]) {
