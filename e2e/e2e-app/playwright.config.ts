@@ -7,7 +7,7 @@ export const targets = [
   // { packageName: 'e2e-alpine' },
   // { packageName: 'e2e-angular' },
   { packageName: 'e2e-qwik' },
-  // { packageName: 'e2e-react' },
+  { packageName: 'e2e-react' },
   // { packageName: 'e2e-solid' },
   // { packageName: 'e2e-svelte' },
   // { packageName: 'e2e-vue2' },
@@ -91,7 +91,7 @@ const testConfig: PlaywrightTestConfig = {
   // outputDir: 'test-results/',
 
   webServer: targets.map(({ packageName, port }) => ({
-    command: `yarn workspace @builder.io/${packageName} run start --port=${port}`,
+    command: `yarn workspace @builder.io/${packageName} run serve --port=${port}`,
     port: port,
     reuseExistingServer: false,
   })),
