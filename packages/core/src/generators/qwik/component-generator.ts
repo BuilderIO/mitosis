@@ -36,15 +36,13 @@ type StateInit = [
   ...string[],
 ];
 
+type PropertyName = string;
+type StateValue = any;
+
 /**
  * Map of getters that need to be rewritten to function invocations.
  */
-type StateValues = Record<
-  /// property name
-  string,
-  /// State value
-  any
->;
+type StateValues = Record<PropertyName, StateValue>;
 
 export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
   (userOptions = {}) =>
