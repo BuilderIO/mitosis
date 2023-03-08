@@ -1,1 +1,1 @@
-export { default as Homepage } from './homepage.lite';
+export { default as E2eApp } from './homepage.lite';
