@@ -2,7 +2,7 @@
   "name": "@builder.io/mitosis-repo",
   "workspaces": [
     "packages/*",
-    "e2e/*",
+    "e2e/**/*",
     "examples/**/*"
   ],
   "private": true,
@@ -21,7 +21,7 @@
     "ci:build:eslint-plugin": "yarn run build:eslint-plugin",
     "ci:lint": "yarn run lint:prettier && yarn run lint:eslint",
     "ci:test": "yarn workspaces foreach run test --passWithNoTests",
-    "ci:e2e-prep": "playwright install chromium --with-deps",
+    "ci:e2e-prep": "yarn workspace @builder.io/e2e-app run install:playwright",
     "ci:e2e": "yarn workspace @builder.io/e2e-app run e2e",
     "ci": "run-s \"ci:*\"",
     "commit": "git-cz",
@@ -43,7 +43,6 @@
   "devDependencies": {
     "@babel/preset-env": "^7.6.0",
     "@nrwl/nx-cloud": "15.0.2",
-    "@playwright/test": "1.24.0",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
     "commitizen": "^3.0.2",

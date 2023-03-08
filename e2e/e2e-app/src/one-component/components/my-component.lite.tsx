@@ -12,7 +12,7 @@ export default function MyComponent(props: any) {
     list: ['hello', 'world'],
     newItemName: 'New item',
 
-    setItemName(event: Event) {
+    setItemName(event: any) {
       state.newItemName = (event.target as any).value;
     },
 

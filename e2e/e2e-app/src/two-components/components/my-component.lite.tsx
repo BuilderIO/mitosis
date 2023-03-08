@@ -2,7 +2,6 @@ import { useStore, useMetadata } from '@builder.io/mitosis';
 
 import ItemList from './item-list.lite';
 
-// eslint-disable-next-line @builder.io/mitosis/only-default-function-and-imports
 useMetadata({
   qwik: {
     mutable: ['state.list'],
@@ -21,7 +20,7 @@ export default function MyComponent(props: any) {
     list: ['hello', 'world'],
     newItemName: 'New item',
 
-    setItemName(event: Event) {
+    setItemName(event: any) {
       state.newItemName = (event.target as any).value;
     },
 
