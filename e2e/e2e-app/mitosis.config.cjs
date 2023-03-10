@@ -15,10 +15,6 @@ const getTargetPath = ({ target }) => {
     case 'vue':
     case 'vue3':
       return 'vue/packages/_vue3';
-    case 'rsc':
-      return 'react/packages/rsc';
-    case 'react':
-      return 'react/packages/react';
     default:
       return kebabCase(target);
   }
