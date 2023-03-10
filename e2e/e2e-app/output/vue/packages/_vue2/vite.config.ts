@@ -8,8 +8,6 @@ export default defineConfig({
   plugins: [
     vue(),
     dts({ insertTypesEntry: true }),
-    // https://stackoverflow.com/a/72572426
-    // libCss(),
   ],
   build: {
     lib: {
