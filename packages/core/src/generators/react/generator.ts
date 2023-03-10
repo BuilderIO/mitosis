@@ -162,7 +162,7 @@ export const componentToPreact: TranspilerGenerator<Partial<ToReactOptions>> = (
 
 export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
   (reactOptions = {}) =>
-  ({ component }) => {
+  ({ component, path }) => {
     let json = fastClone(component);
     const options: ToReactOptions = mergeOptions(DEFAULT_OPTIONS, reactOptions);
 
@@ -191,7 +191,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
           // Remove spaces between imports
           .replace(/;\n\nimport\s/g, ';\nimport ');
       } catch (err) {
-        console.error('Format error for file:', str, JSON.stringify(json, null, 2));
+        console.error('Format error for file:');
         throw err;
       }
     }
