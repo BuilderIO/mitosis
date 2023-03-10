@@ -2,7 +2,7 @@ type Props = {
   name: string;
 };
 
-export const DEFAULT_VALUES: Props = {
+const DEFAULT_VALUES: Props = {
   name: 'Sami',
 };
 

@@ -126,11 +126,11 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
   };
 
 function emitExports(file: File, component: MitosisComponent) {
-  component.exports &&
-    Object.keys(component.exports).forEach((key) => {
-      const exportObj = component.exports![key]!;
-      file.src.emit(exportObj.code);
-    });
+  Object.keys(component.exports || {}).forEach((key) => {
+    const exportObj = component.exports![key]!;
+    const code = exportObj.code.startsWith('export ') ? exportObj.code : `export ${exportObj.code}`;
+    file.src.emit(code);
+  });
 }
 
 function emitTagNameHack(file: File, component: MitosisComponent, metadataValue: unknown) {

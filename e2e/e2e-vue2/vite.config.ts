@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
-import { createVuePlugin } from 'vite-plugin-vue2';
-import ViteComponents from 'vite-plugin-components';
+import vue from '@vitejs/plugin-vue2';
+import Components from 'unplugin-vue-components/vite';
+
 import { resolve } from 'path';
 
 const config = defineConfig({
@@ -14,7 +15,7 @@ const config = defineConfig({
     minify: true,
   },
 
-  plugins: [createVuePlugin({}), ViteComponents({ transformer: 'vue2' })],
+  plugins: [vue(), Components()],
 
   server: {
     port: 8080,

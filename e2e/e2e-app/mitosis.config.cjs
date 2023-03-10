@@ -1,3 +1,28 @@
+/**
+ * @param {string} string
+ */
+const kebabCase = (string) => string.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+
+/**
+ * @type {MitosisConfig['getTargetPath']}
+ */
+const getTargetPath = ({ target }) => {
+  switch (target) {
+    // we have to workaround a name collision, where the folder can't have the name of the `exports` property in package.json.
+    // crazy, crazy stuff.
+    case 'vue2':
+      return 'vue/packages/_vue2';
+    case 'vue':
+    case 'vue3':
+      return 'vue/packages/_vue3';
+    case 'rsc':
+      return 'react/packages/rsc';
+    case 'react':
+      return 'react/packages/react';
+    default:
+      return kebabCase(target);
+  }
+};
 const vueConfig = {
   transpiler: { format: 'esm' },
   asyncComponentImports: true,
@@ -30,4 +55,5 @@ module.exports = {
     qwik: { typescript: true },
     svelte: { typescript: true },
   },
+  getTargetPath,
 };
