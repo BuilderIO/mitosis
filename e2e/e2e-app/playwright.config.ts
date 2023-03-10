@@ -10,8 +10,8 @@ export const targets = [
   { packageName: 'e2e-react' },
   { packageName: 'e2e-solid' },
   { packageName: 'e2e-svelte' },
-  // { packageName: 'e2e-vue2' },
-  // { packageName: 'e2e-vue3' },
+  { packageName: 'e2e-vue2' },
+  { packageName: 'e2e-vue3' },
 ].map(({ packageName }, i) => {
   const port = 1234 + i;
 
