@@ -540,6 +540,7 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                   try {
                     expect(getOutput()).toMatchSnapshot();
                   } catch (error) {
+                    console.error('Falling back to error snapshot due to: ', error);
                     expect(getOutput).toThrowErrorMatchingSnapshot();
                   }
                 });
