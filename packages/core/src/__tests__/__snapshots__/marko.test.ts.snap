@@ -487,17 +487,37 @@ exports[`Marko > jsx > Javascript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > ContentSlotJSX 1`] = `
-"class {}
+"class {
+  get cls() {
+    return this.input.slotContent && this.input.children
+      ? \`\${this.state.name}-content\`
+      : \\"\\";
+  }
+  show() {
+    this.input.slotContent ? 1 : \\"\\";
+  }
 
-<div>
-  <if(input.slotTesting)> <div>\${input.slotTesting}</div></if>
+  onCreate(input) {
+    this.state = { name: \\"king\\", showContent: false };
+  }
+}
 
-  <div>
-    <hr />
-  </div>
+<if(input.slotReference)>
+  <div
+    name=(input.slotContent ? 'name1' : 'name2')
+    title=(input.slotContent ? 'title1' : 'title2')  ...(props.attributes)
+    on-click(event => component.show())
+    class=(input.slotContent ? \`\${state.name}-content\` : '')
+  >
+    <if(state.showContent && input.slotContent)>
+      <slot name=\\"content\\">\${input.content}</slot></if>
 
-  <div>\${input.children}</div>
-</div>"
+    <div>
+      <hr />
+    </div>
+
+    <div>\${input.children}</div>
+  </div></if>"
 `;
 
 exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
@@ -2677,17 +2697,37 @@ exports[`Marko > jsx > Typescript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"class {}
+"class {
+  get cls() {
+    return this.input.slotContent && this.input.children
+      ? \`\${this.state.name}-content\`
+      : \\"\\";
+  }
+  show() {
+    this.input.slotContent ? 1 : \\"\\";
+  }
 
-<div>
-  <if(input.slotTesting)> <div>\${input.slotTesting}</div></if>
+  onCreate(input) {
+    this.state = { name: \\"king\\", showContent: false };
+  }
+}
 
-  <div>
-    <hr />
-  </div>
+<if(input.slotReference)>
+  <div
+    name=(input.slotContent ? 'name1' : 'name2')
+    title=(input.slotContent ? 'title1' : 'title2')  ...(props.attributes)
+    on-click(event => component.show())
+    class=(input.slotContent ? \`\${state.name}-content\` : '')
+  >
+    <if(state.showContent && input.slotContent)>
+      <slot name=\\"content\\">\${input.content}</slot></if>
 
-  <div>\${input.children}</div>
-</div>"
+    <div>
+      <hr />
+    </div>
+
+    <div>\${input.children}</div>
+  </div></if>"
 `;
 
 exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `

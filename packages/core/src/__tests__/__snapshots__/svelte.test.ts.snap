@@ -447,6 +447,55 @@ exports[`Svelte > jsx > Javascript Test > Columns 1`] = `
 </style>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > ContentSlotHtml 1`] = `
+"<div>
+  <slot name=\\"testing\\" />
+  <div>
+    <hr />
+  </div>
+  <div>
+    <slot />
+  </div>
+</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > ContentSlotJSX 1`] = `
+"<script>
+  export let attributes;
+  export let content = \\"\\";
+
+  function show() {
+    $$slots.content ? 1 : \\"\\";
+  }
+  $: cls = () => {
+    return $$slots.content && $$slots.default ? \`\${name}-content\` : \\"\\";
+  };
+
+  let name = \\"king\\";
+  let showContent = false;
+</script>
+
+{#if $$slots.reference}
+  <div
+    name={$$slots.content ? \\"name1\\" : \\"name2\\"}
+    title={$$slots.content ? \\"title1\\" : \\"title2\\"}
+    {...attributes}
+    on:click={(event) => {
+      show();
+    }}
+    class={$$slots.content ? \`\${name}-content\` : \\"\\"}
+  >
+    {#if showContent && $$slots.content}
+      <slot name=\\"content\\">{content}</slot>
+    {/if}
+    <div>
+      <hr />
+    </div>
+    <div><slot /></div>
+  </div>
+{/if}"
+`;
+
 exports[`Svelte > jsx > Javascript Test > CustomCode 1`] = `
 "<script>
   import { onMount } from \\"svelte\\";
@@ -1139,6 +1188,74 @@ exports[`Svelte > jsx > Javascript Test > Select 1`] = `
 </select>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > SlotDefault 1`] = `
+"<div>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > SlotHtml 1`] = `
+"<script>
+  import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+</script>
+
+<div>
+  <ContentSlotCode>
+    <span #testing>
+      <div>Hello</div>
+    </span>
+  </ContentSlotCode>
+</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > SlotJsx 1`] = `
+"<script >
+  
+  
+
+  
+import ContentSlotCode from './content-slot-jsx.raw';
+
+
+
+
+  
+  
+  
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+</script>
+
+<div >
+  <ContentSlotCode  slotTesting={<div>Hello</div>} ></ContentSlotCode>
+</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > SlotNamed 1`] = `
+"<div>
+  <slot name=\\"top\\" />
+  <slot name=\\"left\\">Default left</slot>
+  <slot>Default Child</slot>
+</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
 "<script>
   import { onMount } from \\"svelte\\";
@@ -1445,6 +1562,35 @@ exports[`Svelte > jsx > Javascript Test > className 1`] = `
 
   <div class={bindings}>With binding</div>
 </div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > classState 1`] = `
+"<script>
+  function mitosis_styling(node, vars) {
+    Object.entries(vars || {}).forEach(([p, v]) => {
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
+    });
+  }
+
+  let classState = \\"testClassName\\";
+  let styleState = {
+    color: \\"red\\",
+  };
+</script>
+
+<div use:mitosis_styling={styleState} class={classState + \\" div\\"}>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > componentWithContext 1`] = `
@@ -2861,6 +3007,71 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
 </style>"
 `;
 
+exports[`Svelte > jsx > Typescript Test > ContentSlotHtml 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string | JSX.Element;
+    slotTesting: JSX.Element;
+  };
+</script>
+
+<script lang=\\"ts\\">
+</script>
+
+<div>
+  <slot name=\\"testing\\" />
+  <div>
+    <hr />
+  </div>
+  <div>
+    <slot />
+  </div>
+</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > ContentSlotJSX 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string | JSX.Element;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  export let attributes: Props[\\"attributes\\"];
+  export let content: Props[\\"content\\"] = \\"\\";
+
+  function show() {
+    $$slots.content ? 1 : \\"\\";
+  }
+  $: cls = () => {
+    return $$slots.content && $$slots.default ? \`\${name}-content\` : \\"\\";
+  };
+
+  let name = \\"king\\";
+  let showContent = false;
+</script>
+
+{#if $$slots.reference}
+  <div
+    name={$$slots.content ? \\"name1\\" : \\"name2\\"}
+    title={$$slots.content ? \\"title1\\" : \\"title2\\"}
+    {...attributes}
+    on:click={(event) => {
+      show();
+    }}
+    class={$$slots.content ? \`\${name}-content\` : \\"\\"}
+  >
+    {#if showContent && $$slots.content}
+      <slot name=\\"content\\">{content}</slot>
+    {/if}
+    <div>
+      <hr />
+    </div>
+    <div><slot /></div>
+  </div>
+{/if}"
+`;
+
 exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   export interface CustomCodeProps {
@@ -3682,6 +3893,107 @@ exports[`Svelte > jsx > Typescript Test > Select 1`] = `
 </select>"
 `;
 
+exports[`Svelte > jsx > Typescript Test > SlotDefault 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+</script>
+
+<div>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > SlotHtml 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+</script>
+
+<div>
+  <ContentSlotCode>
+    <span #testing>
+      <div>Hello</div>
+    </span>
+  </ContentSlotCode>
+</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > SlotJsx 1`] = `
+"<script context='module' lang='ts'>
+      type Props = {
+[key: string]: string;
+};
+
+    </script>
+    
+
+    
+<script lang='ts'>
+  
+  
+
+  
+import ContentSlotCode from './content-slot-jsx.raw';
+
+
+
+
+  
+  
+  
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+</script>
+
+<div >
+  <ContentSlotCode  slotTesting={<div>Hello</div>} ></ContentSlotCode>
+</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > SlotNamed 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+</script>
+
+<div>
+  <slot name=\\"top\\" />
+  <slot name=\\"left\\">Default left</slot>
+  <slot>Default Child</slot>
+</div>"
+`;
+
 exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   type SmileReviewsProps = {
@@ -4080,6 +4392,35 @@ exports[`Svelte > jsx > Typescript Test > className 1`] = `
 
   <div class={bindings}>With binding</div>
 </div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > classState 1`] = `
+"<script lang=\\"ts\\">
+  function mitosis_styling(node, vars) {
+    Object.entries(vars || {}).forEach(([p, v]) => {
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
+    });
+  }
+
+  let classState = \\"testClassName\\";
+  let styleState = {
+    color: \\"red\\",
+  };
+</script>
+
+<div use:mitosis_styling={styleState} class={classState + \\" div\\"}>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `

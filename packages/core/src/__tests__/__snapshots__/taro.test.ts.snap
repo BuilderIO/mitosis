@@ -567,25 +567,51 @@ export default ContentSlotCode;
 
 exports[`Taro > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "import * as React from \\"react\\";
+import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function ContentSlotJsxCode(props) {
+  const [name, setName] = useState(() => \\"king\\");
+
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <View>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <View>{props.slotTesting}</View>
+          <View
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+          >
+            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+
+            <View>
+              <View />
+            </View>
+
+            <View>{props.children}</View>
+          </View>
         </>
       ) : null}
-
-      <View>
-        <View />
-      </View>
-
-      <View>{props.children}</View>
-    </View>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: \\"{props.content}\\",
+};
 
 export default ContentSlotJsxCode;
 "
@@ -3650,6 +3676,7 @@ export default ContentSlotCode;
 
 exports[`Taro > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -3657,22 +3684,47 @@ type Props = {
 import { View, Text } from \\"@tarojs/components\\";
 
 function ContentSlotJsxCode(props: Props) {
+  const [name, setName] = useState(() => \\"king\\");
+
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <View>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <View>{props.slotTesting}</View>
+          <View
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+          >
+            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+
+            <View>
+              <View />
+            </View>
+
+            <View>{props.children}</View>
+          </View>
         </>
       ) : null}
-
-      <View>
-        <View />
-      </View>
-
-      <View>{props.children}</View>
-    </View>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: \\"{props.content}\\",
+};
 
 export default ContentSlotJsxCode;
 "

@@ -1513,22 +1513,35 @@ exports[`Html > jsx > Javascript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Html > jsx > Javascript Test > ContentSlotJSX 1`] = `
-"<div>
-  <template data-el=\\"show\\">
+"<template data-el=\\"show\\">
+  <div data-el=\\"div-1\\">
+    <template data-el=\\"show-2\\">
+      <slot name=\\"content\\">
+        <template data-el=\\"div-2\\"><!-- props.content --></template>
+      </slot>
+    </template>
+
     <div>
-      <template data-el=\\"div-1\\"><!-- props.slotTesting --></template>
+      <hr />
     </div>
-  </template>
 
-  <div>
-    <hr />
+    <div><slot></slot></div>
   </div>
-
-  <div><slot></slot></div>
-</div>
+</template>
 <script>
   (() => {
-    const state = {};
+    const state = {
+      name: \\"king\\",
+      showContent: false,
+      get cls() {
+        return props.slotContent && props.children
+          ? \`\${state.name}-content\`
+          : \\"\\";
+      },
+      show() {
+        props.slotContent ? 1 : \\"\\";
+      },
+    };
     let props = {};
     let context = null;
     let nodesToDestroy = [];
@@ -1550,19 +1563,42 @@ exports[`Html > jsx > Javascript Test > ContentSlotJSX 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
-        const whenCondition = props.slotTesting;
+        const whenCondition = props.slotReference;
         if (whenCondition) {
           showContent(el);
         }
       });
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
-        renderTextNode(el, props.slotTesting);
+        el.setAttribute(\\"name\\", props.slotContent ? \\"name1\\" : \\"name2\\");
+
+        el.setAttribute(\\"title\\", props.slotContent ? \\"title1\\" : \\"title2\\");
+
+        el.removeEventListener(\\"click\\", onDiv1Click);
+        el.addEventListener(\\"click\\", onDiv1Click);
+
+        el.className = props.slotContent ? \`\${state.name}-content\` : \\"\\";
+      });
+
+      document.querySelectorAll(\\"[data-el='show-2']\\").forEach((el) => {
+        const whenCondition = state.showContent && props.slotContent;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, props.content);
       });
 
       destroyAnyNodes();
 
       pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on div-1
+    function onDiv1Click(event) {
+      state.show();
     }
 
     // Update with initial state on first load
@@ -7203,22 +7239,35 @@ exports[`Html > jsx > Typescript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Html > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"<div>
-  <template data-el=\\"show\\">
+"<template data-el=\\"show\\">
+  <div data-el=\\"div-1\\">
+    <template data-el=\\"show-2\\">
+      <slot name=\\"content\\">
+        <template data-el=\\"div-2\\"><!-- props.content --></template>
+      </slot>
+    </template>
+
     <div>
-      <template data-el=\\"div-1\\"><!-- props.slotTesting --></template>
+      <hr />
     </div>
-  </template>
 
-  <div>
-    <hr />
+    <div><slot></slot></div>
   </div>
-
-  <div><slot></slot></div>
-</div>
+</template>
 <script>
   (() => {
-    const state = {};
+    const state = {
+      name: \\"king\\",
+      showContent: false,
+      get cls() {
+        return props.slotContent && props.children
+          ? \`\${state.name}-content\`
+          : \\"\\";
+      },
+      show() {
+        props.slotContent ? 1 : \\"\\";
+      },
+    };
     let props = {};
     let context = null;
     let nodesToDestroy = [];
@@ -7240,19 +7289,42 @@ exports[`Html > jsx > Typescript Test > ContentSlotJSX 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
-        const whenCondition = props.slotTesting;
+        const whenCondition = props.slotReference;
         if (whenCondition) {
           showContent(el);
         }
       });
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
-        renderTextNode(el, props.slotTesting);
+        el.setAttribute(\\"name\\", props.slotContent ? \\"name1\\" : \\"name2\\");
+
+        el.setAttribute(\\"title\\", props.slotContent ? \\"title1\\" : \\"title2\\");
+
+        el.removeEventListener(\\"click\\", onDiv1Click);
+        el.addEventListener(\\"click\\", onDiv1Click);
+
+        el.className = props.slotContent ? \`\${state.name}-content\` : \\"\\";
+      });
+
+      document.querySelectorAll(\\"[data-el='show-2']\\").forEach((el) => {
+        const whenCondition = state.showContent && props.slotContent;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, props.content);
       });
 
       destroyAnyNodes();
 
       pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on div-1
+    function onDiv1Click(event) {
+      state.show();
     }
 
     // Update with initial state on first load

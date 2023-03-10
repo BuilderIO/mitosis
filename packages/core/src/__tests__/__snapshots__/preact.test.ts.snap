@@ -570,24 +570,53 @@ export default ContentSlotCode;
 exports[`Preact > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 function ContentSlotJsxCode(props) {
+  const [name, setName] = useState(() => \\"king\\");
+
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <div>
-      {props.slotTesting ? (
+    <Fragment>
+      {props.slotReference ? (
         <Fragment>
-          <div>{props.slotTesting}</div>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={props.slotContent ? \`\${name}-content\` : \\"\\"}
+          >
+            {showContent && props.slotContent ? (
+              <Fragment>{props.slotContent}</Fragment>
+            ) : null}
+
+            <div>
+              <hr />
+            </div>
+
+            <div>{props.children}</div>
+          </div>
         </Fragment>
       ) : null}
-
-      <div>
-        <hr />
-      </div>
-
-      <div>{props.children}</div>
-    </div>
+    </Fragment>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: \\"{props.content}\\",
+};
 
 export default ContentSlotJsxCode;
 "
@@ -3675,28 +3704,57 @@ export default ContentSlotCode;
 exports[`Preact > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
 };
 
 function ContentSlotJsxCode(props: Props) {
+  const [name, setName] = useState(() => \\"king\\");
+
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <div>
-      {props.slotTesting ? (
+    <Fragment>
+      {props.slotReference ? (
         <Fragment>
-          <div>{props.slotTesting}</div>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={props.slotContent ? \`\${name}-content\` : \\"\\"}
+          >
+            {showContent && props.slotContent ? (
+              <Fragment>{props.slotContent}</Fragment>
+            ) : null}
+
+            <div>
+              <hr />
+            </div>
+
+            <div>{props.children}</div>
+          </div>
         </Fragment>
       ) : null}
-
-      <div>
-        <hr />
-      </div>
-
-      <div>{props.children}</div>
-    </div>
+    </Fragment>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: \\"{props.content}\\",
+};
 
 export default ContentSlotJsxCode;
 "

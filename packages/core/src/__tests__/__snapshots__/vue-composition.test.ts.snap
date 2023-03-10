@@ -481,25 +481,66 @@ exports[`Vue > jsx > Javascript Test > ContentSlotHtml 1`] = `
       <slot />
     </div>
   </div>
-</template>"
+</template>
+
+<script setup>
+import { useSlots } from \\"vue\\";
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "<template>
-  <div>
-    <template v-if=\\"$slots.testing\\">
-      <div><slot name=\\"testing\\" /></div>
-    </template>
+  <template v-if=\\"$slots.reference\\">
+    <div
+      :name=\\"$slots.content ? 'name1' : 'name2'\\"
+      :title=\\"$slots.content ? 'title1' : 'title2'\\"
+      @click=\\"show()\\"
+      :class=\\"_classStringToObject($slots.content ? \`\${name}-content\` : '')\\"
+      v-bind=\\"attributes\\"
+    >
+      <template v-if=\\"showContent && $slots.content\\">
+        <slot name=\\"content\\">{{ content }}</slot>
+      </template>
 
-    <div>
-      <hr />
+      <div>
+        <hr />
+      </div>
+      <div><slot /></div>
     </div>
-    <div><slot /></div>
-  </div>
+  </template>
 </template>
 
 <script setup>
-const props = defineProps([\\"children\\"]);
+import { computed, ref, useSlots } from \\"vue\\";
+
+const props = withDefaults(defineProps(), {
+  children: undefined,
+  attributes: undefined,
+  content: \\"\\",
+});
+const name = ref(\\"king\\");
+const showContent = ref(false);
+
+const cls = computed(() => {
+  return useSlots().content && useSlots().default
+    ? \`\${name.value}-content\`
+    : \\"\\";
+});
+
+function show() {
+  useSlots().content ? 1 : \\"\\";
+}
+function _classStringToObject(str) {
+  const obj = {};
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
+  const classNames = str.trim().split(/\\\\s+/);
+  for (const name of classNames) {
+    obj[name] = true;
+  }
+  return obj;
+}
 </script>"
 `;
 
@@ -3256,6 +3297,7 @@ exports[`Vue > jsx > Typescript Test > ContentSlotHtml 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
+import { useSlots } from \\"vue\\";
 type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
@@ -3265,24 +3307,60 @@ type Props = {
 
 exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "<template>
-  <div>
-    <template v-if=\\"$slots.testing\\">
-      <div><slot name=\\"testing\\" /></div>
-    </template>
+  <template v-if=\\"$slots.reference\\">
+    <div
+      :name=\\"$slots.content ? 'name1' : 'name2'\\"
+      :title=\\"$slots.content ? 'title1' : 'title2'\\"
+      @click=\\"show()\\"
+      :class=\\"_classStringToObject($slots.content ? \`\${name}-content\` : '')\\"
+      v-bind=\\"attributes\\"
+    >
+      <template v-if=\\"showContent && $slots.content\\">
+        <slot name=\\"content\\">{{ content }}</slot>
+      </template>
 
-    <div>
-      <hr />
+      <div>
+        <hr />
+      </div>
+      <div><slot /></div>
     </div>
-    <div><slot /></div>
-  </div>
+  </template>
 </template>
 
 <script setup lang=\\"ts\\">
+import { computed, ref, useSlots } from \\"vue\\";
 type Props = {
   [key: string]: string | JSX.Element;
 };
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  children: undefined,
+  attributes: undefined,
+  content: \\"\\",
+});
+const name = ref(\\"king\\");
+const showContent = ref(false);
+
+const cls = computed(() => {
+  return useSlots().content && useSlots().default
+    ? \`\${name.value}-content\`
+    : \\"\\";
+});
+
+function show() {
+  useSlots().content ? 1 : \\"\\";
+}
+function _classStringToObject(str) {
+  const obj = {};
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
+  const classNames = str.trim().split(/\\\\s+/);
+  for (const name of classNames) {
+    obj[name] = true;
+  }
+  return obj;
+}
 </script>"
 `;
 

@@ -113,7 +113,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'state':
               return (code) => processBinding({ code, options, json: component });
             case 'bindings':
-              return (c) => stripStateAndPropsRefs(c);
+              return (code) => processBinding({ code, options, json: component, codeType });
             case 'hooks-deps':
               return (c) => stripStateAndPropsRefs(c, { includeProps: false });
             case 'properties':
@@ -124,7 +124,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'hooks':
               return (code) => processBinding({ code, options, json: component });
             case 'bindings':
-              return (c) => stripStateAndPropsRefs(c);
+              return (code) => processBinding({ code, options, json: component, codeType });
             case 'properties':
             case 'hooks-deps':
               return (c) => c;
@@ -154,7 +154,9 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     }
 
     // need to run this before we process the component's code
-    const elementProps = Array.from(getProps(component)).filter((prop) => !isSlotProperty(prop));
+    const props = Array.from(getProps(component));
+    const elementProps = props.filter((prop) => !isSlotProperty(prop));
+    const slotsProps = props.filter((prop) => isSlotProperty(prop));
 
     component = runPostJsonPlugins(component, options.plugins);
 
@@ -191,6 +193,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
       size(
         Object.keys(component.state).filter((key) => component.state[key]?.type === 'property'),
       ) && vueImports.push('ref');
+      size(slotsProps) && vueImports.push('useSlots');
     }
 
     const tsLangAttribute = options.typescript ? `lang='ts'` : '';
