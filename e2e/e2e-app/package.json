@@ -2,33 +2,20 @@
   "name": "@builder.io/e2e-app",
   "description": "App for verifying Mitosis works, including Playwright specification",
   "private": true,
-  "version": "0.0.1",
+  "type": "module",
   "scripts": {
-    "mitosis-alpine": "mitosis build alpine",
-    "mitosis-angular": "mitosis build angular",
-    "mitosis-builder": "echo NOT SUPPORTED YET mitosis build builder",
-    "mitosis-customElement": "mitosis build customElement",
-    "mitosis-html": "mitosis build html",
-    "mitosis-liquid": "echo NOT SUPPORTED YET mitosis build liquid",
-    "mitosis-qwik": "mitosis build qwik",
-    "mitosis-react": "mitosis build react",
-    "mitosis-reactNative": "mitosis build reactNative",
-    "mitosis-solid": "mitosis build solid",
-    "mitosis-svelte": "mitosis build svelte",
-    "mitosis-swift": "mitosis build swift",
-    "mitosis-template": "echo NOT SUPPORTED YET mitosis build template",
-    "mitosis-vue2": "mitosis build vue2",
-    "mitosis-vue3": "mitosis build vue3",
-    "mitosis-webcomponent": "mitosis build webcomponent",
-    "run-mitosis-separately": "concurrently \"npm:mitosis-*\" --max-processes 3 --group || echo continuing",
-    "run-mitosis-all": "mitosis build",
-    "e2e": "ts-node --project tsconfig.node.json e2e",
-    "playwright": "../../node_modules/.bin/playwright test",
-    "report": "../../node_modules/.bin/playwright show-report"
+    "start": "watch 'yarn build' ./src",
+    "build": "mitosis build",
+    "e2e-old": "ts-node --project tsconfig.node.json e2e",
+    "e2e": "playwright test",
+    "install:playwright": "playwright install chromium --with-deps",
+    "report": "playwright show-report"
   },
   "dependencies": {
     "@builder.io/mitosis": "workspace:*",
-    "@builder.io/mitosis-cli": "workspace:*"
+    "@builder.io/mitosis-cli": "workspace:*",
+    "@playwright/test": "^1.31.2",
+    "watch": "^1.0.2"
   },
   "devDependencies": {
     "@builder.io/qwik": "0.10.0",
@@ -51,20 +38,7 @@
     "vue": "^2.6.12"
   },
   "exports": {
-    "./alpine/*": "./output/alpine/alpine/src/*",
-    "./angular/*": "./output/angular/angular/src/*",
-    "./builder/*": "./output/builder/builder/src/*",
-    "./customElement/*": "./output/customElement/customElement/src/*",
-    "./html/*": "./output/html/html/src/*",
-    "./liquid/*": "./output/liquid/liquid/src/*",
-    "./qwik": "./output/qwik/qwik/src/index.js",
-    "./react": "./output/react/react/src/index.js",
-    "./reactNative/*": "./output/reactNative/reactNative/src/*",
-    "./solid": "./output/solid/solid/src/index.js",
-    "./svelte/*": "./output/svelte/svelte/src/*",
-    "./swift/*": "./output/swift/swift/src/*",
-    "./template/*": "./output/template/template/src/*",
-    "./vue2": "./output/vue2/vue/vue2/src/index.js",
-    "./shared.config": "./shared.config.ts"
+    "./svelte": "./output/svelte/src/homepage.svelte",
+    "./*": "./output/*/src/index.ts"
   }
 }

@@ -1,23 +1,41 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 
 export const targets = [
-  { packageName: 'e2e-alpine', port: 7508 },
-  { packageName: 'e2e-angular', port: 7506 },
-  { packageName: 'e2e-qwik', port: 7507 },
-  { packageName: 'e2e-react', port: 7502 },
-  { packageName: 'e2e-solid', port: 7501 },
-  { packageName: 'e2e-svelte', port: 7504 },
-  { packageName: 'e2e-vue2', port: 7505 },
-  { packageName: 'e2e-vue3', port: 7503 },
-];
+  // { packageName: 'e2e-alpine' },
+  // { packageName: 'e2e-angular' },
+  { packageName: 'e2e-qwik' },
+  { packageName: 'e2e-react' },
+  { packageName: 'e2e-solid' },
+  { packageName: 'e2e-svelte' },
+  { packageName: 'e2e-vue2' },
+  { packageName: 'e2e-vue3' },
+].map(({ packageName }, i) => {
+  const port = 1234 + i;
+
+  return {
+    port,
+    packageName,
+  };
+});
+
+const getDirName = () => {
+  try {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    return __dirname;
+  } catch (error) {
+    return '.';
+  }
+};
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-
 const testConfig: PlaywrightTestConfig = {
-  testDir: __dirname + '/tests',
+  testDir: getDirName() + '/tests',
 
   /* Maximum time one test can run for. */
   timeout: 20 * 1000,
@@ -50,28 +68,31 @@ const testConfig: PlaywrightTestConfig = {
     actionTimeout: 3 * 1000,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: 'on',
 
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: `http://localhost`,
   },
 
   /* Configure projects for major browsers */
-  projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-      },
+  projects: targets.map(({ packageName, port }) => ({
+    name: packageName,
+    use: {
+      ...devices['Desktop Chrome'],
+      baseURL: `http://localhost:${port}`,
+      /**
+       * This provides the package name to the test as a variable to check which exact server the test is running.
+       */
+      packageName,
     },
-  ],
+  })),
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
   // outputDir: 'test-results/',
 
-  webServer: targets.map((t) => ({
-    command: `yarn workspace @builder.io/${t.packageName} run serve --port ${t.port}`,
-    port: t.port,
+  webServer: targets.map(({ packageName, port }) => ({
+    command: `yarn workspace @builder.io/${packageName} run serve --port=${port}`,
+    port: port,
     reuseExistingServer: false,
   })),
 };

@@ -1,0 +1,35 @@
+{
+  "name": "@e2e-app/qwik",
+  "type": "module",
+  "private": true,
+  "main": "./lib/index.qwik.cjs",
+  "module": "./lib/index.qwik.mjs",
+  "qwik": "./lib/index.qwik.mjs",
+  "types": "./types/index.d.ts",
+  "files": [
+    "README.md",
+    "package.json",
+    "types",
+    "lib"
+  ],
+  "exports": {
+    ".": {
+      "import": "./lib/index.qwik.mjs",
+      "require": "./lib/index.qwik.cjs"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc && vite build --mode lib",
+    "release:patch": "yarn run build && npm version patch && npm publish",
+    "release:minor": "yarn run build && npm version minor && npm publish",
+    "release:dev": "yarn run build && npm version prerelease && npm publish --tag dev"
+  },
+  "devDependencies": {
+    "@builder.io/e2e-app": "workspace:*",
+    "@builder.io/qwik": "^0.16.2",
+    "@types/node": "latest",
+    "typescript": "^4",
+    "vite": "^3.0.4"
+  }
+}

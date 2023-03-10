@@ -36,15 +36,13 @@ type StateInit = [
   ...string[],
 ];
 
+type PropertyName = string;
+type StateValue = any;
+
 /**
  * Map of getters that need to be rewritten to function invocations.
  */
-type StateValues = Record<
-  /// property name
-  string,
-  /// State value
-  any
->;
+type StateValues = Record<PropertyName, StateValue>;
 
 export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
   (userOptions = {}) =>
@@ -128,11 +126,11 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
   };
 
 function emitExports(file: File, component: MitosisComponent) {
-  component.exports &&
-    Object.keys(component.exports).forEach((key) => {
-      const exportObj = component.exports![key]!;
-      file.src.emit(exportObj.code);
-    });
+  Object.keys(component.exports || {}).forEach((key) => {
+    const exportObj = component.exports![key]!;
+    const code = exportObj.code.startsWith('export ') ? exportObj.code : `export ${exportObj.code}`;
+    file.src.emit(code);
+  });
 }
 
 function emitTagNameHack(file: File, component: MitosisComponent, metadataValue: unknown) {
