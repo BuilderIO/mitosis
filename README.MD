@@ -48,6 +48,7 @@ npm install @builder.io/mitosis-cli @builder.io/mitosis
 ### Setup `mitosis.config.js`
 
 ```js
+/** @type {import('@builder.io/mitosis').MitosisConfig} */
 module.exports = {
   files: 'src/**',
   targets: ['vue3', 'solid', 'svelte', 'react'],
