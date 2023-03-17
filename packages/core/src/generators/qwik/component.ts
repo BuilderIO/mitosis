@@ -148,12 +148,18 @@ export function addComponent(
 
 function generateStyles(fromFile: File, dstFile: File, symbol: string, scoped: boolean): EmitFn {
   return function (this: SrcBuilder) {
+    if (this.file.options.isPretty) {
+      this.emit('\n\n');
+    }
     this.emit(
       invoke(fromFile.import(fromFile.qwikModule, scoped ? 'useStylesScopedQrl' : 'useStylesQrl'), [
         generateQrl(fromFile, dstFile, symbol),
       ]),
       ';',
     );
+    if (this.file.options.isPretty) {
+      this.emit('\n\n');
+    }
   };
 }
 

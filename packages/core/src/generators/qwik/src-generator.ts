@@ -1,4 +1,5 @@
 import { format } from 'prettier/standalone';
+import { selfClosingTags } from '../../parsers/jsx';
 import { convertExportDefaultToReturn } from '../../parsers/builder';
 import { stableJSONserialize } from './stable-serialize';
 export interface SrcBuilderOptions {
@@ -53,6 +54,9 @@ export class File {
   }
 
   exportDefault(symbolName: any) {
+    if (this.options.isPretty) {
+      this.src.emit('\n\n');
+    }
     if (this.options.isModule) {
       this.src.emit('export default ', symbolName, ';');
     } else {
@@ -162,6 +166,9 @@ export class SrcBuilder {
           }
         });
       });
+    }
+    if (this.file.options.isPretty) {
+      this.emit('\n\n');
     }
     return this;
   }
@@ -342,7 +349,9 @@ export class SrcBuilder {
       }
     }
     if (this.isJSX) {
-      this.emit('>');
+      if (!this.isSelfClosingTag(symbol)) {
+        this.emit('>');
+      }
     } else {
       this.emit('},');
     }
@@ -366,9 +375,17 @@ export class SrcBuilder {
     }
   }
 
+  isSelfClosingTag(symbol: Symbol | string) {
+    return selfClosingTags.has(String(symbol));
+  }
+
   jsxEnd(symbol: Symbol | string) {
     if (this.isJSX) {
-      this.emit('</', symbol, '>');
+      if (this.isSelfClosingTag(symbol)) {
+        this.emit(' />');
+      } else {
+        this.emit('</', symbol, '>');
+      }
     } else {
       this.emit('),');
     }
