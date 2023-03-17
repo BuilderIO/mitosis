@@ -88,6 +88,7 @@ export class File {
             require('prettier/parser-postcss'),
             require('prettier/parser-html'),
             require('prettier/parser-babel'),
+            require('prettier-plugin-organize-imports'),
           ],
           htmlWhitespaceSensitivity: 'ignore',
         });
@@ -328,7 +329,13 @@ export class SrcBuilder {
         let key = lastProperty(rawKey);
         if (isEvent(key)) {
           key = key + '$';
-          binding = `${this.file.import(this.file.qwikModule, '$').localName}((event)=>${binding})`;
+          if (this.file.options.isJSX) {
+            binding = `(event)=>${binding}`;
+          } else {
+            binding = `${
+              this.file.import(this.file.qwikModule, '$').localName
+            }((event)=>${binding})`;
+          }
         } else if (!binding && rawKey in props) {
           binding = quote(props[rawKey]);
         } else if (binding != null && binding === props[key]) {
