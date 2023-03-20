@@ -488,8 +488,7 @@ export default function Fiddle() {
             ...commonOptions,
           })({ component: json }),
 
-          qwik: componentToQwik({ plugins, ...commonOptions })({ component: json })
-            .trim(),
+          qwik: componentToQwik({ plugins, ...commonOptions })({ component: json }).trim(),
 
           vue: componentToVue3({
             plugins,
