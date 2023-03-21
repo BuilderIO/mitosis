@@ -64,7 +64,10 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
     const componentName = camelCase(item.name || 'view');
     const index = (componentIndexes[componentName] = (componentIndexes[componentName] || 0) + 1);
     const className = `${componentName}${index}`;
-    item.bindings.style = createSingleBinding({ code: `styles.${className}` });
+    const styleSheetName = `styles.${className}`;
+    item.bindings.style = createSingleBinding({
+      code: item.bindings.style?.code.replace(/}$/, `, ...${styleSheetName} }`) || styleSheetName,
+    });
 
     styleMap[className] = value;
   });
