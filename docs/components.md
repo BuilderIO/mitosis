@@ -164,7 +164,7 @@ export default function MyComponent() {
 
 ## Control flow
 
-Control flow in Builder is static like [Solid](https://github.com/ryansolid/solid). Instead of using freeform javascript like in React, you must use control flow components like `<Show>` and `<For>`
+Control flow in Builder is static like [Solid](https://github.com/ryansolid/solid). Instead of using freeform javascript like in React, you can use control flow components like `<Show>` and `<For>`. However, you can use normal conditional statements with `{condition && doIfTrue}` and normal for statements with `{for of}`
 
 ### Show
 
