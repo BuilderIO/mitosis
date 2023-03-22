@@ -7,7 +7,7 @@ import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
 import { componentToReact } from './react';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { Plugin } from '..';
+import { MitosisNode, Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
 import { Dictionary } from '../helpers/typescript';
 import { mergeOptions } from '../helpers/merge-options';
@@ -22,54 +22,76 @@ const stylePropertiesThatMustBeNumber = new Set(['lineHeight']);
 
 const MEDIA_QUERY_KEY_REGEX = /^@media.*/;
 
+const sanitizeStyle = (obj: any) => (key: string, value: string) => {
+  const propertyValue = obj[key];
+
+  if (key.match(MEDIA_QUERY_KEY_REGEX)) {
+    console.warn('Unsupported: skipping media queries for react-native: ', key, propertyValue);
+    delete obj[key];
+    return;
+  }
+
+  if (stylePropertiesThatMustBeNumber.has(key) && typeof propertyValue !== 'number') {
+    console.warn(`Style key ${key} must be a number, but had value \`${propertyValue}\``);
+    delete obj[key];
+    return;
+  }
+
+  // convert strings to number if applicable
+  if (typeof propertyValue === 'string' && propertyValue.match(/^\d/)) {
+    const newValue = parseFloat(propertyValue);
+    if (!isNaN(newValue)) {
+      obj[key] = newValue;
+    }
+  }
+};
+
 export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap => {
   const styleMap: ClassStyleMap = {};
 
   const componentIndexes: Dictionary<number | undefined> = {};
-
-  traverse(json).forEach(function (item) {
-    if (!isMitosisNode(item) || typeof item.bindings.css?.code !== 'string') {
-      return;
-    }
-    const value = json5.parse(item.bindings.css.code);
-    delete item.bindings.css;
-    if (!size(value)) {
-      return;
-    }
-
-    // Style properties like `"20px"` need to be numbers like `20` for react native
-    for (const key in value) {
-      const propertyValue = value[key];
-
-      if (key.match(MEDIA_QUERY_KEY_REGEX)) {
-        console.warn('Unsupported: skipping media queries for react-native: ', key, propertyValue);
-        delete value[key];
-        continue;
-      }
-
-      if (stylePropertiesThatMustBeNumber.has(key) && typeof propertyValue !== 'number') {
-        console.warn(`Style key ${key} must be a number, but had value \`${propertyValue}\``);
-        delete value[key];
-        continue;
-      }
-
-      // convert strings to number if applicable
-      if (typeof propertyValue === 'string' && propertyValue.match(/^\d/)) {
-        const newValue = parseFloat(propertyValue);
-        if (!isNaN(newValue)) {
-          value[key] = newValue;
-        }
-      }
-    }
+  const getStyleSheetName = (item: MitosisNode) => {
     const componentName = camelCase(item.name || 'view');
+    // If we have already seen this component name, we will increment the index. Otherwise, we will set the index to 1.
     const index = (componentIndexes[componentName] = (componentIndexes[componentName] || 0) + 1);
-    const className = `${componentName}${index}`;
-    const styleSheetName = `styles.${className}`;
+    return `${componentName}${index}`;
+  };
+  traverse(json).forEach(function (item) {
+    if (!isMitosisNode(item)) {
+      return;
+    }
+    const cssValue = json5.parse(item.bindings.css?.code || '{}');
+    delete item.bindings.css;
+
+    const styleValue = json5.parse(item.bindings.style?.code || '{}');
+
+    if (!size(cssValue)) {
+      // Style properties like `"20px"` need to be numbers like `20` for react native
+      for (const key in cssValue) {
+        sanitizeStyle(cssValue)(key, cssValue[key]);
+      }
+    }
+
+    if (!size(styleValue)) {
+      // Style properties like `"20px"` need to be numbers like `20` for react native
+      for (const key in styleValue) {
+        sanitizeStyle(styleValue)(key, styleValue[key]);
+      }
+    }
+
+    if (!size(cssValue)) {
+      return;
+    }
+
+    const styleSheetName = getStyleSheetName(item);
+    const styleSheetAccess = `styles.${styleSheetName}`;
+
     item.bindings.style = createSingleBinding({
-      code: item.bindings.style?.code.replace(/}$/, `, ...${styleSheetName} }`) || styleSheetName,
+      code:
+        item.bindings.style?.code.replace(/}$/, `, ...${styleSheetAccess} }`) || styleSheetAccess,
     });
 
-    styleMap[className] = value;
+    styleMap[styleSheetName] = cssValue;
   });
 
   return styleMap;
