@@ -63,8 +63,6 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
     const cssValue = json5.parse(item.bindings.css?.code || '{}');
     delete item.bindings.css;
 
-    const styleValue = json5.parse(item.bindings.style?.code || '{}');
-
     if (size(cssValue)) {
       // Style properties like `"20px"` need to be numbers like `20` for react native
       for (const key in cssValue) {
@@ -72,14 +70,17 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
       }
     }
 
-    if (size(styleValue)) {
-      // Style properties like `"20px"` need to be numbers like `20` for react native
-      for (const key in styleValue) {
-        sanitizeStyle(styleValue)(key, styleValue[key]);
-      }
+    try {
+      const styleValue = json5.parse(item.bindings.style?.code || '{}');
+      if (size(styleValue)) {
+        // Style properties like `"20px"` need to be numbers like `20` for react native
+        for (const key in styleValue) {
+          sanitizeStyle(styleValue)(key, styleValue[key]);
+        }
 
-      item.bindings.style!.code = json5.stringify(styleValue);
-    }
+        item.bindings.style!.code = json5.stringify(styleValue);
+      }
+    } catch (e) {}
 
     if (!size(cssValue)) {
       return;
