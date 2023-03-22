@@ -1,8 +1,6 @@
 const propertiesThatMustBeNumber = new Set(['lineHeight']);
 const displayValues = new Set(['flex', 'none']);
 
-const SHOW_WARNINGS = false;
-
 type Styles = Record<string, string | number>;
 
 const normalizeNumber = (value: number): number | undefined => {
@@ -21,18 +19,14 @@ export const sanitizeReactNativeBlockStyles = (styles: Styles): Styles => {
     const propertyValue = styles[key];
 
     if (key === 'display' && !displayValues.has(propertyValue as string)) {
-      if (SHOW_WARNINGS) {
-        console.warn(
-          `Style value for key "display" must be "flex" or "none" but had ${propertyValue}`,
-        );
-      }
+      console.warn(
+        `Style value for key "display" must be "flex" or "none" but had ${propertyValue}`,
+      );
       return acc;
     }
 
     if (propertiesThatMustBeNumber.has(key) && typeof propertyValue !== 'number') {
-      if (SHOW_WARNINGS) {
-        console.warn(`Style key ${key} must be a number, but had value \`${styles[key]}\``);
-      }
+      console.warn(`Style key ${key} must be a number, but had value \`${styles[key]}\``);
       return acc;
     }
 
