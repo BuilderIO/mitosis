@@ -13,7 +13,7 @@ import { MitosisComponent } from '../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { blockToReact, componentToReact } from './react';
 import { checkHasState } from '../helpers/state';
-import { isRootTextNode } from 'src/helpers/is-root-text-node';
+import { isRootTextNode } from '../helpers/is-root-text-node';
 
 export interface ToMitosisOptions extends BaseTranspilerOptions {
   format: 'react' | 'legacy';

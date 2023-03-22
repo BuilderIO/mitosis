@@ -32,7 +32,7 @@ import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { hasGetContext } from '../helpers/context';
 import { blockToSolid } from './blocks';
 import { createSingleBinding } from '../../helpers/bindings';
-import { isRootTextNode } from 'src/helpers/is-root-text-node';
+import { isRootTextNode } from '../../helpers/is-root-text-node';
 
 // Transform <foo.bar key={value} /> to <Dynamic compnent={foo.bar} key={value} />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {

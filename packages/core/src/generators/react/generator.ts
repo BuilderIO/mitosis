@@ -38,7 +38,7 @@ import { createSingleBinding } from '../../helpers/bindings';
 import { blockToReact } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
-import { isRootTextNode } from 'src/helpers/is-root-text-node';
+import { isRootTextNode } from '../../helpers/is-root-text-node';
 
 export const contextPropDrillingKey = '_context';
 
