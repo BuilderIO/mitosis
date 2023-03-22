@@ -1,17 +1,18 @@
 import json5 from 'json5';
 import { camelCase, size } from 'lodash';
-import { fastClone } from '../helpers/fast-clone';
+import { fastClone } from '../../helpers/fast-clone';
 import traverse from 'traverse';
-import { ClassStyleMap } from '../helpers/styles/helpers';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { MitosisComponent } from '../types/mitosis-component';
-import { componentToReact } from './react';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { MitosisNode, Plugin } from '..';
-import { createSingleBinding } from '../helpers/bindings';
-import { Dictionary } from '../helpers/typescript';
-import { mergeOptions } from '../helpers/merge-options';
-import isChildren from '../helpers/is-children';
+import { ClassStyleMap } from '../../helpers/styles/helpers';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { componentToReact } from '../react';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
+import { MitosisNode, Plugin } from '../..';
+import { createSingleBinding } from '../../helpers/bindings';
+import { Dictionary } from '../../helpers/typescript';
+import { mergeOptions } from '../../helpers/merge-options';
+import isChildren from '../../helpers/is-children';
+import { sanitizeReactNativeBlockStyles } from './sanitize-react-native-block-styles';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType: 'emotion' | 'react-native';
@@ -30,20 +31,6 @@ const sanitizeStyle = (obj: any) => (key: string, value: string) => {
     delete obj[key];
     return;
   }
-
-  if (stylePropertiesThatMustBeNumber.has(key) && typeof propertyValue !== 'number') {
-    console.warn(`Style key ${key} must be a number, but had value \`${propertyValue}\``);
-    delete obj[key];
-    return;
-  }
-
-  // convert strings to number if applicable
-  if (typeof propertyValue === 'string' && propertyValue.match(/^\d/)) {
-    const newValue = parseFloat(propertyValue);
-    if (!isNaN(newValue)) {
-      obj[key] = newValue;
-    }
-  }
 };
 
 export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap => {
@@ -60,22 +47,24 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
     if (!isMitosisNode(item)) {
       return;
     }
-    const cssValue = json5.parse(item.bindings.css?.code || '{}');
+    let cssValue = json5.parse(item.bindings.css?.code || '{}');
     delete item.bindings.css;
 
     if (size(cssValue)) {
       // Style properties like `"20px"` need to be numbers like `20` for react native
       for (const key in cssValue) {
         sanitizeStyle(cssValue)(key, cssValue[key]);
+        cssValue = sanitizeReactNativeBlockStyles(cssValue);
       }
     }
 
     try {
-      const styleValue = json5.parse(item.bindings.style?.code || '{}');
+      let styleValue = json5.parse(item.bindings.style?.code || '{}');
       if (size(styleValue)) {
         // Style properties like `"20px"` need to be numbers like `20` for react native
         for (const key in styleValue) {
           sanitizeStyle(styleValue)(key, styleValue[key]);
+          styleValue = sanitizeReactNativeBlockStyles(styleValue);
         }
 
         item.bindings.style!.code = json5.stringify(styleValue);
