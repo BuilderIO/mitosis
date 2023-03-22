@@ -13,6 +13,7 @@ import { MitosisComponent } from '../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { blockToReact, componentToReact } from './react';
 import { checkHasState } from '../helpers/state';
+import { isRootTextNode } from 'src/helpers/is-root-text-node';
 
 export interface ToMitosisOptions extends BaseTranspilerOptions {
   format: 'react' | 'legacy';
@@ -156,7 +157,7 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
       return `${refName}${domRefs.has(refName) ? `.current` : ''}`;
     });
 
-    const addWrapper = json.children.length !== 1;
+    const addWrapper = json.children.length !== 1 || isRootTextNode(json);
 
     const components = Array.from(getComponents(json));
 
