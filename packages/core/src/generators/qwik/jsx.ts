@@ -30,7 +30,9 @@ export function renderJSXNodes(
     if (children.length == 0) return;
     if (root) this.emit('(');
     const needsFragment =
-      root && (children.length > 1 || (children.length && isInlinedDirective(children[0])));
+      root &&
+      (children.length > 1 ||
+        (children.length && (isInlinedDirective(children[0]) || isTextNode(children[0]))));
     file.import(file.qwikModule, 'h');
     const fragmentSymbol = file.import(file.qwikModule, 'Fragment');
     if (needsFragment) {
