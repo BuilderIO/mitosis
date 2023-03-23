@@ -38,13 +38,13 @@ import { createSingleBinding } from '../../helpers/bindings';
 import { blockToReact } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
+import { isRootTextNode } from '../../helpers/is-root-text-node';
 
 export const contextPropDrillingKey = '_context';
 
 /**
  * If the root Mitosis component only has 1 child, and it is a `Show`/`For` node, then we need to wrap it in a fragment.
  * Otherwise, we end up with invalid React render code.
- *
  */
 const isRootSpecialNode = (json: MitosisComponent) =>
   json.children.length === 1 && ['Show', 'For'].includes(json.children[0].name);
@@ -327,6 +327,7 @@ const _componentToReact = (
 
   const wrap =
     wrapInFragment(json) ||
+    isRootTextNode(json) ||
     (componentHasStyles &&
       (options.stylesType === 'styled-jsx' || options.stylesType === 'style-tag')) ||
     isRootSpecialNode(json);

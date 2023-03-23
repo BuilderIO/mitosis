@@ -62,6 +62,7 @@ const command: GluegunCommand = {
       stylesType: opts.styles,
       stateType: opts.state,
       type: opts.type,
+      api: opts.api,
       cssNamespace: opts.cssNamespace,
     } as any as Partial<{ [K in AllGeneratorOptionKeys]: any }>;
 
