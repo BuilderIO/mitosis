@@ -1,6 +1,8 @@
+import type { MethodMap } from './state';
+
 export function convertMethodToFunction(
   code: string,
-  properties: Record<string, 'method' | 'getter'>,
+  properties: MethodMap,
   lexicalArgs: string[],
 ): string {
   const out: string[] = [];

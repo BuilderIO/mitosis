@@ -1,7 +1,8 @@
+import { MethodMap } from 'src/generators/qwik/component-generator';
 import { convertMethodToFunction } from '../../generators/qwik/helpers/convert-method-to-function';
 
 describe('convertMethodToFunction', () => {
-  const methodMap: Record<string, 'method' | 'getter'> = {
+  const methodMap: MethodMap = {
     methodA: 'method',
     getterB: 'getter',
     getCssFromFont: 'method',
