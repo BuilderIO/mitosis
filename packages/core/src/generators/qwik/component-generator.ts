@@ -5,8 +5,8 @@ import { collectCss } from '../../helpers/styles/collect-css';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { checkHasState } from '../../helpers/state';
-import { addPreventDefault } from './add-prevent-default';
-import { convertMethodToFunction } from './convert-method-to-function';
+import { addPreventDefault } from './helpers/add-prevent-default';
+import { convertMethodToFunction } from './helpers/convert-method-to-function';
 import { renderJSXNodes } from './jsx';
 import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 import {
@@ -17,8 +17,8 @@ import {
   runPreJsonPlugins,
 } from '../../modules/plugins';
 import traverse from 'traverse';
-import { stableInject } from './stable-inject';
-import { mergeOptions } from 'src/helpers/merge-options';
+import { stableInject } from './helpers/stable-inject';
+import { mergeOptions } from '../../helpers/merge-options';
 
 Error.stackTraceLimit = 9999;
 

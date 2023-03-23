@@ -1,7 +1,7 @@
 import { format } from 'prettier/standalone';
 import { selfClosingTags } from '../../parsers/jsx';
 import { convertExportDefaultToReturn } from '../../parsers/builder';
-import { stableJSONserialize } from './stable-serialize';
+import { stableJSONserialize } from './helpers/stable-serialize';
 export interface SrcBuilderOptions {
   isPretty: boolean;
   isTypeScript: boolean;

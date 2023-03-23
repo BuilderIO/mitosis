@@ -1,4 +1,4 @@
-import { convertMethodToFunction } from '../../generators/qwik/convert-method-to-function';
+import { convertMethodToFunction } from '../../generators/qwik/helpers/convert-method-to-function';
 
 describe('convertMethodToFunction', () => {
   const methodMap: Record<string, 'method' | 'getter'> = {

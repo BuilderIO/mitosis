@@ -1,10 +1,10 @@
-import { MitosisNode } from '../../types/mitosis-node';
-import { renderUseLexicalScope } from './component';
-import { arrowFnBlock, EmitFn, File, SrcBuilder } from './src-generator';
+import { MitosisNode } from '../../../types/mitosis-node';
+import { renderUseLexicalScope } from '../component';
+import { arrowFnBlock, EmitFn, File, SrcBuilder } from '../src-generator';
 
 const IIF_START = '(() => {';
 const IIF_END = '})()';
-export function extractJSBlock(binding: any): string | null {
+function extractJSBlock(binding: any): string | null {
   if (typeof binding == 'string') {
     if (
       binding.startsWith('{') &&
