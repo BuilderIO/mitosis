@@ -10,6 +10,7 @@ import { convertMethodToFunction } from './convert-method-to-function';
 import { renderJSXNodes } from './jsx';
 import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 import {
+  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -17,10 +18,9 @@ import {
 } from '../../modules/plugins';
 import traverse from 'traverse';
 import { stableInject } from './stable-inject';
+import { mergeOptions } from 'src/helpers/merge-options';
 
 Error.stackTraceLimit = 9999;
-
-// TODO(misko): styles are not processed.
 
 const DEBUG = false;
 
@@ -38,26 +38,41 @@ type StateInit = [
 ];
 
 type PropertyName = string;
-type StateValue = any;
+type StateValue = string;
 
 /**
  * Map of getters that need to be rewritten to function invocations.
  */
 type StateValues = Record<PropertyName, StateValue>;
 
+const PLUGINS: Plugin[] = [
+  () => ({
+    json: {
+      post: (json) => {
+        addPreventDefault(json);
+
+        return json;
+      },
+    },
+  }),
+];
+
+const DEFAULT_OPTIONS: ToQwikOptions = {
+  plugins: PLUGINS,
+};
+
 export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
   (userOptions = {}) =>
   ({ component: _component, path }): string => {
     // Make a copy we can safely mutate, similar to babel's toolchain
     let component = fastClone(_component);
-    if (userOptions.plugins) {
-      component = runPreJsonPlugins(component, userOptions.plugins);
-    }
-    addPreventDefault(component);
-    if (userOptions.plugins) {
-      component = runPostJsonPlugins(component, userOptions.plugins);
-    }
-    const isTypeScript = !!userOptions.typescript;
+
+    const options = mergeOptions(DEFAULT_OPTIONS, userOptions);
+
+    component = runPreJsonPlugins(component, options.plugins);
+    component = runPostJsonPlugins(component, options.plugins);
+
+    const isTypeScript = !!options.typescript;
     const file = new File(
       component.name + (isTypeScript ? '.ts' : '.js'),
       {
@@ -77,11 +92,15 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       const metadata: Record<string, any> = component.meta.useMetadata || ({} as any);
       const isLightComponent: boolean = metadata?.qwik?.component?.isLight || false;
       const mutable: string[] = metadata?.qwik?.mutable || [];
-      const imports: Record<string, string> | undefined = metadata?.qwik?.imports;
-      imports && Object.keys(imports).forEach((key) => file.import(imports[key], key));
+
+      const imports: Record<string, string> = metadata?.qwik?.imports || {};
+      Object.keys(imports).forEach((key) => file.import(imports[key], key));
+
       const state: StateInit = emitStateMethodsAndRewriteBindings(file, component, metadata);
-      let hasState = checkHasState(component);
+      const hasState = checkHasState(component);
+
       let css: string | null = null;
+
       const componentFn = arrowFnBlock(
         ['props'],
         [
@@ -115,9 +134,9 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       emitStyles(file, css);
       DEBUG && file.exportConst('COMPONENT', JSON.stringify(component));
       let sourceFile = file.toString();
-      if (userOptions.plugins) {
-        sourceFile = runPreCodePlugins(sourceFile, userOptions.plugins);
-        sourceFile = runPostCodePlugins(sourceFile, userOptions.plugins);
+      if (options.plugins) {
+        sourceFile = runPreCodePlugins(sourceFile, options.plugins);
+        sourceFile = runPostCodePlugins(sourceFile, options.plugins);
       }
       return sourceFile;
     } catch (e) {
@@ -276,29 +295,31 @@ function emitUseStyles(file: File, component: MitosisComponent): string {
 }
 
 function emitStyles(file: File, css: string | null) {
-  if (css) {
-    if (file.options.isPretty) {
-      file.src.emit('\n\n');
-      try {
-        css = format(css, {
-          parser: 'css',
-          plugins: [
-            // To support running in browsers
-            require('prettier/parser-postcss'),
-          ],
-        });
-      } catch (e) {
-        throw new Error(
-          e +
-            '\n' +
-            '========================================================================\n' +
-            css +
-            '\n\n========================================================================',
-        );
-      }
-    }
-    file.exportConst('STYLES', '`\n' + css.replace(/`/g, '\\`') + '`\n');
+  if (!css) {
+    return;
   }
+
+  if (file.options.isPretty) {
+    file.src.emit('\n\n');
+    try {
+      css = format(css, {
+        parser: 'css',
+        plugins: [
+          // To support running in browsers
+          require('prettier/parser-postcss'),
+        ],
+      });
+    } catch (e) {
+      throw new Error(
+        e +
+          '\n' +
+          '========================================================================\n' +
+          css +
+          '\n\n========================================================================',
+      );
+    }
+  }
+  file.exportConst('STYLES', '`\n' + css.replace(/`/g, '\\`') + '`\n');
 }
 
 /**

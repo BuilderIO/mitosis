@@ -115,8 +115,6 @@ function removeExt(filename: string): string {
   return indx == -1 ? filename : filename.substr(0, indx);
 }
 
-const spaces: string[] = [''];
-
 export class SrcBuilder {
   file: File;
   isTypeScript: boolean;
@@ -483,13 +481,6 @@ function ignoreKey(key: string): boolean {
     key == '' ||
     key.indexOf('.') !== -1
   );
-}
-
-export class Block {
-  imports: Imports;
-  constructor(imports: Imports) {
-    this.imports = imports;
-  }
 }
 
 function possiblyQuotePropertyName(key: string): any {
