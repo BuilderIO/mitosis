@@ -9,7 +9,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import dedent from 'dedent';
+import { dedent } from '../helpers/dedent';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 

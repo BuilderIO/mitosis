@@ -1,6 +1,6 @@
-import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../../helpers/styles/collect-css';
+import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
 import { mapRefs } from '../../helpers/map-refs';
 import { renderPreComponent } from '../../helpers/render-imports';

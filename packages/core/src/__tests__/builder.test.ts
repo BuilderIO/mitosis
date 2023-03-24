@@ -1,4 +1,3 @@
-import dedent from 'dedent';
 import { componentToBuilder } from '../generators/builder';
 import { componentToMitosis } from '../generators/mitosis';
 import { componentToHtml } from '../generators/html';
@@ -6,6 +5,7 @@ import { builderContentToMitosisComponent, extractStateHook } from '../parsers/b
 import { parseJsx } from '../parsers/jsx';
 import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
 import { componentToReact, ToMitosisOptions } from '..';
+import { dedent } from '../helpers/dedent';
 
 import stamped from './data/blocks/stamped-io.raw.tsx?raw';
 import customCode from './data/blocks/custom-code.raw.tsx?raw';
