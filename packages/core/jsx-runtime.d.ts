@@ -1652,6 +1652,7 @@ export declare namespace JSX {
     y?: number | string;
     width?: number | string;
     height?: number | string;
+    fill?: number | string;
   }
 
   interface ViewSVGAttributes<T>
