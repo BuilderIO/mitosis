@@ -429,7 +429,7 @@ const DEFAULT_VALUES = {
   color: 'blue',
 };
 export default function MyComponent(props) {
-  return <div>{props.color || DEFAULT_VALUES.color}</div>;
+  return <div>{props.color ?? DEFAULT_VALUES.color}</div>;
 }
 ```
 
@@ -440,7 +440,7 @@ const DEFAULT_VALUES = {
   color: 'blue',
 };
 export default function MyComponent(props) {
-  return <div>{props.color || DEFAULT_VALUES.color}</div>;
+  return <div>{props.color ?? DEFAULT_VALUES.color}</div>;
 }
 ```
 
