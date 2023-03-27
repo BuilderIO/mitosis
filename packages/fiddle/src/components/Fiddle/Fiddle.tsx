@@ -282,7 +282,7 @@ export default function Fiddle() {
       }
       mitosisCore().then((mitosis) => {
         const jsxJson = mitosis.builderContentToMitosisComponent(builderJson);
-        state.code = mitosis.componentToMitosis()({ component: jsxJson });
+        state.code = mitosis.componentToMitosis()({ component: jsxJson })[0].content;
         state.pendingBuilderChange = null;
       });
     },
@@ -342,6 +342,8 @@ export default function Fiddle() {
             vueVersion: state.options.vueVersion,
           })
         )({ component: json, path: '' });
+
+        state.output = output[0].content;
 
         const { componentToBuilder } = await mitosisCore();
         const newBuilderData = await componentToBuilder()({ component: json });

@@ -224,5 +224,5 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     if (options.plugins) {
       str = runPostCodePlugins(str, options.plugins);
     }
-    return str;
+    return [{ content: str, type: 'component' }];
   };

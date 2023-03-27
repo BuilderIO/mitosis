@@ -361,5 +361,5 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     str = runPostCodePlugins(str, options.plugins);
 
-    return str;
+    return [{ content: str, type: 'component' }];
   };

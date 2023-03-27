@@ -863,7 +863,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
     if (options.plugins) {
       str = runPostCodePlugins(str, options.plugins);
     }
-    return str;
+    return [{ content: str, type: 'component' }];
   };
 
 // TODO: props support via custom elements
@@ -1514,5 +1514,5 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
       str = runPostCodePlugins(str, options.plugins);
     }
 
-    return str;
+    return [{ content: str, type: 'component' }];
   };

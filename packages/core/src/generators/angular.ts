@@ -25,7 +25,12 @@ import { getPropFunctions } from '../helpers/get-prop-functions';
 import { isString, kebabCase, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
+import {
+  BaseTranspilerOptions,
+  GeneratorOutput,
+  Transpiler,
+  TranspilerGenerator,
+} from '../types/transpiler';
 import { indent } from '../helpers/indent';
 import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
 import { getCustomImports } from '../helpers/get-custom-imports';
@@ -580,7 +585,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       str = runPostCodePlugins(str, options.plugins);
     }
 
-    return str;
+    return [{ content: str, type: 'component' }];
   };
 
 const tryFormat = (str: string, parser: string) => {

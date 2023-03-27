@@ -273,7 +273,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     }
     str = str.replace(/<script(.*)>\n?<\/script>/g, '').trim();
 
-    return str;
+    return [{ content: str, type: 'component' }];
   };
 
 export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>

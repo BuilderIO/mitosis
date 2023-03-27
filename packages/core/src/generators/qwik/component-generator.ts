@@ -47,7 +47,7 @@ type StateValues = Record<PropertyName, StateValue>;
 
 export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
   (userOptions = {}) =>
-  ({ component: _component, path }): string => {
+  ({ component: _component, path }) => {
     // Make a copy we can safely mutate, similar to babel's toolchain
     let component = fastClone(_component);
     if (userOptions.plugins) {
@@ -119,10 +119,10 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
         sourceFile = runPreCodePlugins(sourceFile, userOptions.plugins);
         sourceFile = runPostCodePlugins(sourceFile, userOptions.plugins);
       }
-      return sourceFile;
+      return [{ content: sourceFile, type: 'component' }];
     } catch (e) {
       console.error(e);
-      return (e as Error).stack || String(e);
+      return [{ content: (e as Error).stack || String(e), type: 'component' }];
     }
   };
 

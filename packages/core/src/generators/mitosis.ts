@@ -218,5 +218,5 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
         throw err;
       }
     }
-    return str;
+    return [{ content: str, type: 'component' }];
   };
