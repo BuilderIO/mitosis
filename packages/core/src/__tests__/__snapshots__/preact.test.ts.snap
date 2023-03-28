@@ -297,7 +297,7 @@ function MyBasicForComponent(props) {
 
   return (
     <div>
-      {names?.map((person) => (
+      {(names || []).map((person) => (
         <Fragment>
           <input
             value={name}
@@ -508,7 +508,7 @@ function Column(props) {
   return (
     <Fragment>
       <div className=\\"builder-columns div\\">
-        {props.columns?.map((column, index) => (
+        {(props.columns || []).map((column, index) => (
           <div className=\\"builder-column div-2\\">
             {column.content}
 
@@ -986,7 +986,7 @@ function FormComponent(props) {
         {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <Fragment>
-            {props.builderBlock?.children?.map((block, index) => (
+            {(props.builderBlock?.children || []).map((block, index) => (
               <BuilderBlockComponent
                 key={block.id}
                 block={block}
@@ -1158,7 +1158,7 @@ function ImgStateComponent(props) {
 
   return (
     <div>
-      {images?.map((item, itemIndex) => (
+      {(images || []).map((item, itemIndex) => (
         <Fragment>
           <img className=\\"custom-class\\" src={item} key={itemIndex} />
         </Fragment>
@@ -1283,7 +1283,7 @@ function SelectComponent(props) {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {props.options?.map((option, index) => (
+      {(props.options || []).map((option, index) => (
         <option value={option.value} data-index={index}>
           {option.name || option.value}
         </option>
@@ -1429,7 +1429,7 @@ function SmileReviews(props) {
           </Fragment>
         ) : null}
 
-        {reviews?.map((review, index) => (
+        {(reviews || []).map((review, index) => (
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
 
@@ -2665,7 +2665,7 @@ function RenderBlock(props) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <Fragment>
-              {repeatItemData()?.map((data, index) => (
+              {(repeatItemData() || []).map((data, index) => (
                 <RenderRepeatedBlock
                   key={index}
                   repeatContext={data.context}
@@ -2679,7 +2679,7 @@ function RenderBlock(props) {
               <TagRef {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
-                {childrenWithoutParentComponent()?.map((child) => (
+                {(childrenWithoutParentComponent() || []).map((child) => (
                   <RenderBlock
                     key={\\"render-block-\\" + child.id}
                     block={child}
@@ -2687,7 +2687,7 @@ function RenderBlock(props) {
                   />
                 ))}
 
-                {childrenWithoutParentComponent()?.map((child) => (
+                {(childrenWithoutParentComponent() || []).map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
                     block={child}
@@ -2874,7 +2874,7 @@ function NestedShow(props) {
     <Fragment>
       {props.conditionA ? (
         <Fragment>
-          {props.items?.map((item, idx) => (
+          {(props.items || []).map((item, idx) => (
             <div key={idx}>{item}</div>
           ))}
         </Fragment>
@@ -3420,7 +3420,7 @@ function MyBasicForComponent(props: any) {
 
   return (
     <div>
-      {names?.map((person) => (
+      {(names || []).map((person) => (
         <Fragment>
           <input
             value={name}
@@ -3665,7 +3665,7 @@ function Column(props: ColumnProps) {
   return (
     <Fragment>
       <div className=\\"builder-columns div\\">
-        {props.columns?.map((column, index) => (
+        {(props.columns || []).map((column, index) => (
           <div className=\\"builder-column div-2\\">
             {column.content}
 
@@ -4186,7 +4186,7 @@ function FormComponent(props: FormProps) {
         {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <Fragment>
-            {props.builderBlock?.children?.map((block, index) => (
+            {(props.builderBlock?.children || []).map((block, index) => (
               <BuilderBlockComponent
                 key={block.id}
                 block={block}
@@ -4377,7 +4377,7 @@ function ImgStateComponent(props: any) {
 
   return (
     <div>
-      {images?.map((item, itemIndex) => (
+      {(images || []).map((item, itemIndex) => (
         <Fragment>
           <img className=\\"custom-class\\" src={item} key={itemIndex} />
         </Fragment>
@@ -4554,7 +4554,7 @@ function SelectComponent(props: FormSelectProps) {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {props.options?.map((option, index) => (
+      {(props.options || []).map((option, index) => (
         <option value={option.value} data-index={index}>
           {option.name || option.value}
         </option>
@@ -4721,7 +4721,7 @@ function SmileReviews(props: SmileReviewsProps) {
           </Fragment>
         ) : null}
 
-        {reviews?.map((review, index) => (
+        {(reviews || []).map((review, index) => (
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
 
@@ -6121,7 +6121,7 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <Fragment>
-              {repeatItemData()?.map((data, index) => (
+              {(repeatItemData() || []).map((data, index) => (
                 <RenderRepeatedBlock
                   key={index}
                   repeatContext={data.context}
@@ -6135,7 +6135,7 @@ function RenderBlock(props: RenderBlockProps) {
               <TagRef {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
-                {childrenWithoutParentComponent()?.map((child) => (
+                {(childrenWithoutParentComponent() || []).map((child) => (
                   <RenderBlock
                     key={\\"render-block-\\" + child.id}
                     block={child}
@@ -6143,7 +6143,7 @@ function RenderBlock(props: RenderBlockProps) {
                   />
                 ))}
 
-                {childrenWithoutParentComponent()?.map((child) => (
+                {(childrenWithoutParentComponent() || []).map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
                     block={child}
@@ -6354,7 +6354,7 @@ function NestedShow(props: Props) {
     <Fragment>
       {props.conditionA ? (
         <Fragment>
-          {props.items?.map((item, idx) => (
+          {(props.items || []).map((item, idx) => (
             <div key={idx}>{item}</div>
           ))}
         </Fragment>
@@ -6732,7 +6732,7 @@ function MyComponent(props) {
 
   return (
     <ul>
-      {numbers?.map((num) => (
+      {(numbers || []).map((num) => (
         <li>{num}</li>
       ))}
     </ul>
@@ -7157,7 +7157,7 @@ function MyComponent(props: any) {
 
   return (
     <ul>
-      {numbers?.map((num) => (
+      {(numbers || []).map((num) => (
         <li>{num}</li>
       ))}
     </ul>

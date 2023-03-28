@@ -253,7 +253,7 @@ function MyBasicForComponent(props) {
 
   return (
     <div>
-      {state.names?.map((person) => (
+      {(state.names || []).map((person) => (
         <>
           <input value={state.name} />
           Hello
@@ -444,7 +444,7 @@ function Column(props) {
   return (
     <>
       <div className=\\"builder-columns div-033a66b8\\">
-        {props.columns?.map((column, index) => (
+        {(props.columns || []).map((column, index) => (
           <div className=\\"builder-column div-033a66b8-2\\">
             {column.content}
 
@@ -894,7 +894,7 @@ function FormComponent(props) {
         {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <>
-            {props.builderBlock?.children?.map((block, index) => (
+            {(props.builderBlock?.children || []).map((block, index) => (
               <BuilderBlockComponent
                 key={block.id}
                 block={block}
@@ -1023,7 +1023,7 @@ function ImgStateComponent(props) {
 
   return (
     <div>
-      {state.images?.map((item, itemIndex) => (
+      {(state.images || []).map((item, itemIndex) => (
         <>
           <img className=\\"custom-class\\" src={item} key={itemIndex} />
         </>
@@ -1153,7 +1153,7 @@ function SelectComponent(props) {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {props.options?.map((option, index) => (
+      {(props.options || []).map((option, index) => (
         <option value={option.value} data-index={index}>
           {option.name || option.value}
         </option>
@@ -1276,7 +1276,7 @@ function SmileReviews(props) {
           </>
         ) : null}
 
-        {state.reviews?.map((review, index) => (
+        {(state.reviews || []).map((review, index) => (
           <div className=\\"review-000d4b30\\" key={review.id}>
             <img className=\\"img-000d4b30\\" src={review.avatar} />
 
@@ -2390,7 +2390,7 @@ function RenderBlock(props) {
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
             <>
-              {state.repeatItemData?.map((data, index) => (
+              {(state.repeatItemData || []).map((data, index) => (
                 <RenderRepeatedBlock
                   key={index}
                   repeatContext={data.context}
@@ -2408,7 +2408,7 @@ function RenderBlock(props) {
                   _context={_context}
                 />
 
-                {state.childrenWithoutParentComponent?.map((child) => (
+                {(state.childrenWithoutParentComponent || []).map((child) => (
                   <RenderBlock
                     key={\\"render-block-\\" + child.id}
                     block={child}
@@ -2417,7 +2417,7 @@ function RenderBlock(props) {
                   />
                 ))}
 
-                {state.childrenWithoutParentComponent?.map((child) => (
+                {(state.childrenWithoutParentComponent || []).map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
                     block={child}
@@ -2600,7 +2600,7 @@ function NestedShow(props) {
     <>
       {props.conditionA ? (
         <>
-          {props.items?.map((item, idx) => (
+          {(props.items || []).map((item, idx) => (
             <div key={idx}>{item}</div>
           ))}
         </>
@@ -3120,7 +3120,7 @@ function MyBasicForComponent(props: any) {
 
   return (
     <div>
-      {state.names?.map((person) => (
+      {(state.names || []).map((person) => (
         <>
           <input value={state.name} />
           Hello
@@ -3345,7 +3345,7 @@ function Column(props: ColumnProps) {
   return (
     <>
       <div className=\\"builder-columns div-033a66b8\\">
-        {props.columns?.map((column, index) => (
+        {(props.columns || []).map((column, index) => (
           <div className=\\"builder-column div-033a66b8-2\\">
             {column.content}
 
@@ -3838,7 +3838,7 @@ function FormComponent(props: FormProps) {
         {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <>
-            {props.builderBlock?.children?.map((block, index) => (
+            {(props.builderBlock?.children || []).map((block, index) => (
               <BuilderBlockComponent
                 key={block.id}
                 block={block}
@@ -3986,7 +3986,7 @@ function ImgStateComponent(props: any) {
 
   return (
     <div>
-      {state.images?.map((item, itemIndex) => (
+      {(state.images || []).map((item, itemIndex) => (
         <>
           <img className=\\"custom-class\\" src={item} key={itemIndex} />
         </>
@@ -4168,7 +4168,7 @@ function SelectComponent(props: FormSelectProps) {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {props.options?.map((option, index) => (
+      {(props.options || []).map((option, index) => (
         <option value={option.value} data-index={index}>
           {option.name || option.value}
         </option>
@@ -4312,7 +4312,7 @@ function SmileReviews(props: SmileReviewsProps) {
           </>
         ) : null}
 
-        {state.reviews?.map((review, index) => (
+        {(state.reviews || []).map((review, index) => (
           <div className=\\"review-000d4b30\\" key={review.id}>
             <img className=\\"img-000d4b30\\" src={review.avatar} />
 
@@ -5590,7 +5590,7 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
             <>
-              {state.repeatItemData?.map((data, index) => (
+              {(state.repeatItemData || []).map((data, index) => (
                 <RenderRepeatedBlock
                   key={index}
                   repeatContext={data.context}
@@ -5608,7 +5608,7 @@ function RenderBlock(props: RenderBlockProps) {
                   _context={_context}
                 />
 
-                {state.childrenWithoutParentComponent?.map((child) => (
+                {(state.childrenWithoutParentComponent || []).map((child) => (
                   <RenderBlock
                     key={\\"render-block-\\" + child.id}
                     block={child}
@@ -5617,7 +5617,7 @@ function RenderBlock(props: RenderBlockProps) {
                   />
                 ))}
 
-                {state.childrenWithoutParentComponent?.map((child) => (
+                {(state.childrenWithoutParentComponent || []).map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
                     block={child}
@@ -5824,7 +5824,7 @@ function NestedShow(props: Props) {
     <>
       {props.conditionA ? (
         <>
-          {props.items?.map((item, idx) => (
+          {(props.items || []).map((item, idx) => (
             <div key={idx}>{item}</div>
           ))}
         </>
@@ -6193,7 +6193,7 @@ function MyComponent(props) {
 
   return (
     <ul>
-      {state.numbers?.map((num) => (
+      {(state.numbers || []).map((num) => (
         <li>{num}</li>
       ))}
     </ul>
@@ -6557,7 +6557,7 @@ function MyComponent(props: any) {
 
   return (
     <ul>
-      {state.numbers?.map((num) => (
+      {(state.numbers || []).map((num) => (
         <li>{num}</li>
       ))}
     </ul>
