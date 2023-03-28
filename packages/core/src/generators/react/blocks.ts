@@ -94,10 +94,10 @@ const NODE_MAPPERS: {
     const json = _json as ForNode;
     const wrap = wrapInFragment(json);
     const forArguments = getForArguments(json).join(', ');
-    return `{${processBinding(
+    return `{(${processBinding(
       json.bindings.each?.code as string,
       options,
-    )}?.map((${forArguments}) => (
+    )} || []).map((${forArguments}) => (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options, component))
