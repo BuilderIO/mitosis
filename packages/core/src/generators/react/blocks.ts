@@ -94,10 +94,10 @@ const NODE_MAPPERS: {
     const json = _json as ForNode;
     const wrap = wrapInFragment(json);
     const forArguments = getForArguments(json).join(', ');
-    return `{(${processBinding(
+    return `{${processBinding(
       json.bindings.each?.code as string,
       options,
-    )} || []).map((${forArguments}) => (
+    )}?.map((${forArguments}) => (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options, component))
@@ -106,12 +106,13 @@ const NODE_MAPPERS: {
   },
   Show(json, options, component) {
     const wrap = wrapInFragment(json);
+    const wrapElse = json.meta.else; // if a value is present, wrap it in a fragment
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options, component))
       .join('\n')}${wrap ? closeFrag(options) : ''}
-    ) : ${!json.meta.else ? 'null' : blockToReact(json.meta.else as any, options, component)}}`;
+    ) : ${!json.meta.else ? 'null' : (wrapElse ? openFrag(options) : '') + blockToReact(json.meta.else as any, options, component) + (wrapElse ? closeFrag(options) : '')}}`;
   },
 };
 
