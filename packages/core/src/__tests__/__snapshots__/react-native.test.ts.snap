@@ -361,7 +361,7 @@ function MyBasicForComponent(props) {
 
   return (
     <View>
-      {(names || []).map((person) => (
+      {names?.map((person) => (
         <>
           <View
             value={name}
@@ -612,7 +612,7 @@ function Column(props) {
 
   return (
     <View style={styles.view1}>
-      {(props.columns || []).map((column, index) => (
+      {props.columns?.map((column, index) => (
         <View style={styles.view2}>
           <Text>{column.content}</Text>
 
@@ -1087,7 +1087,7 @@ function FormComponent(props) {
       {\\" \\"}
       {props.builderBlock && props.builderBlock.children ? (
         <>
-          {(props.builderBlock?.children || []).map((block, index) => (
+          {props.builderBlock?.children?.map((block, index) => (
             <BuilderBlockComponent key={block.id} block={block} index={index} />
           ))}
         </>
@@ -1256,7 +1256,7 @@ function ImgStateComponent(props) {
 
   return (
     <View>
-      {(images || []).map((item, itemIndex) => (
+      {images?.map((item, itemIndex) => (
         <>
           <View src={item} key={itemIndex} />
         </>
@@ -1411,7 +1411,7 @@ function SelectComponent(props) {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {(props.options || []).map((option, index) => (
+      {props.options?.map((option, index) => (
         <View value={option.value} data-index={index}>
           <Text>{option.name || option.value}</Text>
         </View>
@@ -1594,7 +1594,7 @@ function SmileReviews(props) {
         </>
       ) : null}
 
-      {(reviews || []).map((review, index) => (
+      {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
           <View src={review.avatar} style={styles.view2} />
 
@@ -2483,15 +2483,19 @@ function NestedShow(props) {
               </View>
             </>
           ) : (
-            <View>
-              <Text>else-condition-B</Text>
-            </View>
+            <>
+              <View>
+                <Text>else-condition-B</Text>
+              </View>
+            </>
           )}
         </>
       ) : (
-        <View>
-          <Text>else-condition-A</Text>
-        </View>
+        <>
+          <View>
+            <Text>else-condition-A</Text>
+          </View>
+        </>
       )}
     </>
   );
@@ -3068,7 +3072,7 @@ function RenderBlock(props) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <>
-              {(repeatItemData() || []).map((data, index) => (
+              {repeatItemData()?.map((data, index) => (
                 <RenderRepeatedBlock
                   key={index}
                   repeatContext={data.context}
@@ -3082,7 +3086,7 @@ function RenderBlock(props) {
               <View {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
-                {(childrenWithoutParentComponent() || []).map((child) => (
+                {childrenWithoutParentComponent()?.map((child) => (
                   <RenderBlock
                     key={\\"render-block-\\" + child.id}
                     block={child}
@@ -3090,7 +3094,7 @@ function RenderBlock(props) {
                   />
                 ))}
 
-                {(childrenWithoutParentComponent() || []).map((child) => (
+                {childrenWithoutParentComponent()?.map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
                     block={child}
@@ -3102,7 +3106,9 @@ function RenderBlock(props) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -3232,9 +3238,11 @@ function RenderStyles(props) {
           </View>
         </>
       ) : (
-        <View>
-          <Text>Foo</Text>
-        </View>
+        <>
+          <View>
+            <Text>Foo</Text>
+          </View>
+        </>
       )}
     </>
   );
@@ -3324,16 +3332,18 @@ function NestedShow(props) {
     <>
       {props.conditionA ? (
         <>
-          {(props.items || []).map((item, idx) => (
+          {props.items?.map((item, idx) => (
             <View key={idx}>
               <Text>{item}</Text>
             </View>
           ))}
         </>
       ) : (
-        <View>
-          <Text>else-condition-A</Text>
-        </View>
+        <>
+          <View>
+            <Text>else-condition-A</Text>
+          </View>
+        </>
       )}
     </>
   );
@@ -3994,7 +4004,7 @@ function MyBasicForComponent(props: any) {
 
   return (
     <View>
-      {(names || []).map((person) => (
+      {names?.map((person) => (
         <>
           <View
             value={name}
@@ -4279,7 +4289,7 @@ function Column(props: ColumnProps) {
 
   return (
     <View style={styles.view1}>
-      {(props.columns || []).map((column, index) => (
+      {props.columns?.map((column, index) => (
         <View style={styles.view2}>
           <Text>{column.content}</Text>
 
@@ -4797,7 +4807,7 @@ function FormComponent(props: FormProps) {
       {\\" \\"}
       {props.builderBlock && props.builderBlock.children ? (
         <>
-          {(props.builderBlock?.children || []).map((block, index) => (
+          {props.builderBlock?.children?.map((block, index) => (
             <BuilderBlockComponent key={block.id} block={block} index={index} />
           ))}
         </>
@@ -4985,7 +4995,7 @@ function ImgStateComponent(props: any) {
 
   return (
     <View>
-      {(images || []).map((item, itemIndex) => (
+      {images?.map((item, itemIndex) => (
         <>
           <View src={item} key={itemIndex} />
         </>
@@ -5192,7 +5202,7 @@ function SelectComponent(props: FormSelectProps) {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {(props.options || []).map((option, index) => (
+      {props.options?.map((option, index) => (
         <View value={option.value} data-index={index}>
           <Text>{option.name || option.value}</Text>
         </View>
@@ -5396,7 +5406,7 @@ function SmileReviews(props: SmileReviewsProps) {
         </>
       ) : null}
 
-      {(reviews || []).map((review, index) => (
+      {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
           <View src={review.avatar} style={styles.view2} />
 
@@ -6391,15 +6401,19 @@ function NestedShow(props: Props) {
               </View>
             </>
           ) : (
-            <View>
-              <Text>else-condition-B</Text>
-            </View>
+            <>
+              <View>
+                <Text>else-condition-B</Text>
+              </View>
+            </>
           )}
         </>
       ) : (
-        <View>
-          <Text>else-condition-A</Text>
-        </View>
+        <>
+          <View>
+            <Text>else-condition-A</Text>
+          </View>
+        </>
       )}
     </>
   );
@@ -7034,7 +7048,7 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <>
-              {(repeatItemData() || []).map((data, index) => (
+              {repeatItemData()?.map((data, index) => (
                 <RenderRepeatedBlock
                   key={index}
                   repeatContext={data.context}
@@ -7048,7 +7062,7 @@ function RenderBlock(props: RenderBlockProps) {
               <View {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
-                {(childrenWithoutParentComponent() || []).map((child) => (
+                {childrenWithoutParentComponent()?.map((child) => (
                   <RenderBlock
                     key={\\"render-block-\\" + child.id}
                     block={child}
@@ -7056,7 +7070,7 @@ function RenderBlock(props: RenderBlockProps) {
                   />
                 ))}
 
-                {(childrenWithoutParentComponent() || []).map((child) => (
+                {childrenWithoutParentComponent()?.map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
                     block={child}
@@ -7068,7 +7082,9 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -7217,9 +7233,11 @@ function RenderStyles(props: RenderStylesProps) {
           </View>
         </>
       ) : (
-        <View>
-          <Text>Foo</Text>
-        </View>
+        <>
+          <View>
+            <Text>Foo</Text>
+          </View>
+        </>
       )}
     </>
   );
@@ -7314,16 +7332,18 @@ function NestedShow(props: Props) {
     <>
       {props.conditionA ? (
         <>
-          {(props.items || []).map((item, idx) => (
+          {props.items?.map((item, idx) => (
             <View key={idx}>
               <Text>{item}</Text>
             </View>
           ))}
         </>
       ) : (
-        <View>
-          <Text>else-condition-A</Text>
-        </View>
+        <>
+          <View>
+            <Text>else-condition-A</Text>
+          </View>
+        </>
       )}
     </>
   );
@@ -7782,7 +7802,7 @@ function MyComponent(props) {
 
   return (
     <View>
-      {(numbers || []).map((num) => (
+      {numbers?.map((num) => (
         <View>
           <Text>{num}</Text>
         </View>
@@ -7878,9 +7898,11 @@ function MyComponent(props) {
           <Text> Hide </Text>
         </View>
       ) : (
-        <View onClick={(event) => toggle(event)}>
-          <Text> Show </Text>
-        </View>
+        <>
+          <View onClick={(event) => toggle(event)}>
+            <Text> Show </Text>
+          </View>
+        </>
       )}
     </>
   );
@@ -8319,7 +8341,7 @@ function MyComponent(props: any) {
 
   return (
     <View>
-      {(numbers || []).map((num) => (
+      {numbers?.map((num) => (
         <View>
           <Text>{num}</Text>
         </View>
@@ -8415,9 +8437,11 @@ function MyComponent(props: any) {
           <Text> Hide </Text>
         </View>
       ) : (
-        <View onClick={(event) => toggle(event)}>
-          <Text> Show </Text>
-        </View>
+        <>
+          <View onClick={(event) => toggle(event)}>
+            <Text> Show </Text>
+          </View>
+        </>
       )}
     </>
   );

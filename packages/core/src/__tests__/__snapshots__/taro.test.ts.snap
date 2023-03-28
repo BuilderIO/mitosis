@@ -296,7 +296,7 @@ function MyBasicForComponent(props) {
 
   return (
     <View>
-      {(names || []).map((person) => (
+      {names?.map((person) => (
         <>
           <Input
             value={name}
@@ -506,7 +506,7 @@ function Column(props) {
   return (
     <>
       <View className=\\"view\\">
-        {(props.columns || []).map((column, index) => (
+        {props.columns?.map((column, index) => (
           <View className=\\"view-2\\">
             {column.content}
 
@@ -965,7 +965,7 @@ function FormComponent(props) {
         {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <>
-            {(props.builderBlock?.children || []).map((block, index) => (
+            {props.builderBlock?.children?.map((block, index) => (
               <BuilderBlockComponent
                 key={block.id}
                 block={block}
@@ -1133,7 +1133,7 @@ function ImgStateComponent(props) {
 
   return (
     <View>
-      {(images || []).map((item, itemIndex) => (
+      {images?.map((item, itemIndex) => (
         <>
           <Image src={item} key={itemIndex} />
         </>
@@ -1253,7 +1253,7 @@ function SelectComponent(props) {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {(props.options || []).map((option, index) => (
+      {props.options?.map((option, index) => (
         <View value={option.value} data-index={index}>
           {option.name || option.value}
         </View>
@@ -1397,7 +1397,7 @@ function SmileReviews(props) {
           </>
         ) : null}
 
-        {(reviews || []).map((review, index) => (
+        {reviews?.map((review, index) => (
           <View className=\\"review\\" key={review.id}>
             <Image className=\\"image\\" src={review.avatar} />
 
@@ -2134,11 +2134,15 @@ function NestedShow(props) {
               <View>if condition A and condition B</View>
             </>
           ) : (
-            <View>else-condition-B</View>
+            <>
+              <View>else-condition-B</View>
+            </>
           )}
         </>
       ) : (
-        <View>else-condition-A</View>
+        <>
+          <View>else-condition-A</View>
+        </>
       )}
     </>
   );
@@ -2629,7 +2633,7 @@ function RenderBlock(props) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <>
-              {(repeatItemData() || []).map((data, index) => (
+              {repeatItemData()?.map((data, index) => (
                 <RenderRepeatedBlock
                   key={index}
                   repeatContext={data.context}
@@ -2643,7 +2647,7 @@ function RenderBlock(props) {
               <View {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
-                {(childrenWithoutParentComponent() || []).map((child) => (
+                {childrenWithoutParentComponent()?.map((child) => (
                   <RenderBlock
                     key={\\"render-block-\\" + child.id}
                     block={child}
@@ -2651,7 +2655,7 @@ function RenderBlock(props) {
                   />
                 ))}
 
-                {(childrenWithoutParentComponent() || []).map((child) => (
+                {childrenWithoutParentComponent()?.map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
                     block={child}
@@ -2663,7 +2667,9 @@ function RenderBlock(props) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -2774,7 +2780,9 @@ function RenderStyles(props) {
           <View>Bar</View>
         </>
       ) : (
-        <View>Foo</View>
+        <>
+          <View>Foo</View>
+        </>
       )}
     </>
   );
@@ -2841,12 +2849,14 @@ function NestedShow(props) {
     <>
       {props.conditionA ? (
         <>
-          {(props.items || []).map((item, idx) => (
+          {props.items?.map((item, idx) => (
             <View key={idx}>{item}</View>
           ))}
         </>
       ) : (
-        <View>else-condition-A</View>
+        <>
+          <View>else-condition-A</View>
+        </>
       )}
     </>
   );
@@ -3389,7 +3399,7 @@ function MyBasicForComponent(props: any) {
 
   return (
     <View>
-      {(names || []).map((person) => (
+      {names?.map((person) => (
         <>
           <Input
             value={name}
@@ -3638,7 +3648,7 @@ function Column(props: ColumnProps) {
   return (
     <>
       <View className=\\"view\\">
-        {(props.columns || []).map((column, index) => (
+        {props.columns?.map((column, index) => (
           <View className=\\"view-2\\">
             {column.content}
 
@@ -4142,7 +4152,7 @@ function FormComponent(props: FormProps) {
         {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <>
-            {(props.builderBlock?.children || []).map((block, index) => (
+            {props.builderBlock?.children?.map((block, index) => (
               <BuilderBlockComponent
                 key={block.id}
                 block={block}
@@ -4330,7 +4340,7 @@ function ImgStateComponent(props: any) {
 
   return (
     <View>
-      {(images || []).map((item, itemIndex) => (
+      {images?.map((item, itemIndex) => (
         <>
           <Image src={item} key={itemIndex} />
         </>
@@ -4504,7 +4514,7 @@ function SelectComponent(props: FormSelectProps) {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {(props.options || []).map((option, index) => (
+      {props.options?.map((option, index) => (
         <View value={option.value} data-index={index}>
           {option.name || option.value}
         </View>
@@ -4669,7 +4679,7 @@ function SmileReviews(props: SmileReviewsProps) {
           </>
         ) : null}
 
-        {(reviews || []).map((review, index) => (
+        {reviews?.map((review, index) => (
           <View className=\\"review\\" key={review.id}>
             <Image className=\\"image\\" src={review.avatar} />
 
@@ -5520,11 +5530,15 @@ function NestedShow(props: Props) {
               <View>if condition A and condition B</View>
             </>
           ) : (
-            <View>else-condition-B</View>
+            <>
+              <View>else-condition-B</View>
+            </>
           )}
         </>
       ) : (
-        <View>else-condition-A</View>
+        <>
+          <View>else-condition-A</View>
+        </>
       )}
     </>
   );
@@ -6076,7 +6090,7 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <>
-              {(repeatItemData() || []).map((data, index) => (
+              {repeatItemData()?.map((data, index) => (
                 <RenderRepeatedBlock
                   key={index}
                   repeatContext={data.context}
@@ -6090,7 +6104,7 @@ function RenderBlock(props: RenderBlockProps) {
               <View {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
-                {(childrenWithoutParentComponent() || []).map((child) => (
+                {childrenWithoutParentComponent()?.map((child) => (
                   <RenderBlock
                     key={\\"render-block-\\" + child.id}
                     block={child}
@@ -6098,7 +6112,7 @@ function RenderBlock(props: RenderBlockProps) {
                   />
                 ))}
 
-                {(childrenWithoutParentComponent() || []).map((child) => (
+                {childrenWithoutParentComponent()?.map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
                     block={child}
@@ -6110,7 +6124,9 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -6242,7 +6258,9 @@ function RenderStyles(props: RenderStylesProps) {
           <View>Bar</View>
         </>
       ) : (
-        <View>Foo</View>
+        <>
+          <View>Foo</View>
+        </>
       )}
     </>
   );
@@ -6315,12 +6333,14 @@ function NestedShow(props: Props) {
     <>
       {props.conditionA ? (
         <>
-          {(props.items || []).map((item, idx) => (
+          {props.items?.map((item, idx) => (
             <View key={idx}>{item}</View>
           ))}
         </>
       ) : (
-        <View>else-condition-A</View>
+        <>
+          <View>else-condition-A</View>
+        </>
       )}
     </>
   );
@@ -6687,7 +6707,7 @@ function MyComponent(props) {
 
   return (
     <View>
-      {(numbers || []).map((num) => (
+      {numbers?.map((num) => (
         <View>{num}</View>
       ))}
     </View>
@@ -6752,7 +6772,9 @@ function MyComponent(props) {
       {show ? (
         <Button onClick={(event) => toggle(event)}> Hide </Button>
       ) : (
-        <Button onClick={(event) => toggle(event)}> Show </Button>
+        <>
+          <Button onClick={(event) => toggle(event)}> Show </Button>
+        </>
       )}
     </>
   );
@@ -7106,7 +7128,7 @@ function MyComponent(props: any) {
 
   return (
     <View>
-      {(numbers || []).map((num) => (
+      {numbers?.map((num) => (
         <View>{num}</View>
       ))}
     </View>
@@ -7171,7 +7193,9 @@ function MyComponent(props: any) {
       {show ? (
         <Button onClick={(event) => toggle(event)}> Hide </Button>
       ) : (
-        <Button onClick={(event) => toggle(event)}> Show </Button>
+        <>
+          <Button onClick={(event) => toggle(event)}> Show </Button>
+        </>
       )}
     </>
   );
