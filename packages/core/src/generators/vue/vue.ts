@@ -117,6 +117,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'hooks-deps':
               return (c) => stripStateAndPropsRefs(c, { includeProps: false });
             case 'properties':
+            case 'dynamic-jsx-elements':
               return (c) => c;
           }
         } else {
@@ -126,6 +127,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'bindings':
               return (code) => processBinding({ code, options, json: component, codeType });
             case 'properties':
+            case 'dynamic-jsx-elements':
             case 'hooks-deps':
               return (c) => c;
             case 'state':

@@ -4,7 +4,14 @@ import { MitosisNode } from '../../types/mitosis-node';
 import { checkIsDefined } from '../nullable';
 import { traverseNodes } from '../traverse-nodes';
 
-type CodeType = 'hooks' | 'hooks-deps' | 'bindings' | 'properties' | 'state';
+type CodeType =
+  | 'hooks'
+  | 'hooks-deps'
+  | 'bindings'
+  | 'properties'
+  | 'state'
+  // this is for when we write dynamic JSX elements like `<state.foo>Hello</state.foo>` in Mitosis
+  | 'dynamic-jsx-elements';
 
 declare function codeProcessor(
   codeType: CodeType,
@@ -14,9 +21,9 @@ declare function codeProcessor(
 type CodeProcessor = typeof codeProcessor;
 
 /**
- * Process code in bindings and properties of a node
+ * Process code in each node.
  */
-const preProcessBlockCode = ({
+const preProcessNodeCode = ({
   json,
   codeProcessor,
   parentComponent,
@@ -40,6 +47,8 @@ const preProcessBlockCode = ({
       value.code = bindingsProcessor(value.code);
     }
   }
+
+  codeProcessor('dynamic-jsx-elements', parentComponent)(json.name);
 };
 
 /**
@@ -83,7 +92,7 @@ export const CODE_PROCESSOR_PLUGIN =
         }
 
         traverseNodes(json, (node) => {
-          preProcessBlockCode({ json: node, codeProcessor, parentComponent: json });
+          preProcessNodeCode({ json: node, codeProcessor, parentComponent: json });
         });
       },
     },

@@ -44,6 +44,7 @@ const PLUGINS: Plugin[] = [
       case 'hooks':
       case 'hooks-deps':
       case 'properties':
+      case 'dynamic-jsx-elements':
         return (value) =>
           // update signal getters to have `.value`
           stripStateAndPropsRefs(value, {
