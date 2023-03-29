@@ -25,7 +25,6 @@ import {
   StateInit,
 } from './helpers/state';
 import { convertTypeScriptToJS } from './helpers/transform-code';
-import { replaceGetterWithFunction } from '../../helpers/patterns';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 
@@ -48,7 +47,6 @@ const PLUGINS: Plugin[] = [
   CODE_PROCESSOR_PLUGIN((codeType, json) => {
     switch (codeType) {
       case 'state':
-        return (c) => c;
       case 'bindings':
       case 'hooks':
       case 'hooks-deps':
@@ -369,8 +367,7 @@ function emitUseComputed(file: File, component: MitosisComponent) {
       case 'getter':
         file.src.const(`
           ${key} = ${file.import(file.qwikModule, 'useComputed$').localName}(() => {
-            ${replaceGetterWithFunction(stateValue.code)}
-            ${key}();
+            ${extractGetterBody(stateValue.code)}
           })
         `);
         continue;

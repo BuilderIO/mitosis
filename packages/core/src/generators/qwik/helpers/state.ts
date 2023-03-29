@@ -56,13 +56,10 @@ function emitStateMethods(
 
     switch (stateValue?.type) {
       case 'method':
-      case 'getter':
       case 'function':
         let code = stateValue.code;
         let prefixIdx = 0;
-        if (stateValue.type === 'getter') {
-          prefixIdx += 'get '.length;
-        } else if (stateValue.type === 'function') {
+        if (stateValue.type === 'function') {
           prefixIdx += 'function '.length;
         }
         code = code.substring(prefixIdx);
@@ -71,9 +68,6 @@ function emitStateMethods(
           `(${lexicalArgs.join(',')},`,
         );
         const functionName = code.split(/\(/)[0];
-        if (stateValue.type === 'getter') {
-          stateInit.push(`state.${key}=${functionName}(${lexicalArgs.join(',')})`);
-        }
         if (!file.options.isTypeScript) {
           // Erase type information
           code = convertTypeScriptToJS(code);
