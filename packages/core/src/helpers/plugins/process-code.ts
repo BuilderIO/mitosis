@@ -48,7 +48,7 @@ const preProcessNodeCode = ({
     }
   }
 
-  codeProcessor('dynamic-jsx-elements', parentComponent)(json.name);
+  json.name = codeProcessor('dynamic-jsx-elements', parentComponent)(json.name);
 };
 
 /**
