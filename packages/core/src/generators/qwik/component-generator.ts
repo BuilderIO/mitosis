@@ -25,9 +25,9 @@ import {
   StateInit,
 } from './helpers/state';
 import { convertTypeScriptToJS } from './helpers/transform-code';
-import { replaceGetterWithFunction } from 'src/helpers/patterns';
-import { CODE_PROCESSOR_PLUGIN } from 'src/helpers/plugins/process-code';
-import { stripStateAndPropsRefs } from 'src/helpers/strip-state-and-props-refs';
+import { replaceGetterWithFunction } from '../../helpers/patterns';
+import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 
 Error.stackTraceLimit = 9999;
 

@@ -1,4 +1,4 @@
-import { MethodMap } from 'src/generators/qwik/component-generator';
+import { MethodMap } from '../../generators/qwik/helpers/state';
 import { convertMethodToFunction } from '../../generators/qwik/helpers/convert-method-to-function';
 
 describe('convertMethodToFunction', () => {
