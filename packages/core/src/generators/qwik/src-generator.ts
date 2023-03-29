@@ -1,7 +1,7 @@
 import { format } from 'prettier/standalone';
 import { selfClosingTags } from '../../parsers/jsx';
 import { convertExportDefaultToReturn } from '../../parsers/builder';
-import { stableJSONserialize } from './stable-serialize';
+import { stableJSONserialize } from './helpers/stable-serialize';
 export interface SrcBuilderOptions {
   isPretty: boolean;
   isTypeScript: boolean;
@@ -114,8 +114,6 @@ function removeExt(filename: string): string {
   const indx = filename.lastIndexOf('.');
   return indx == -1 ? filename : filename.substr(0, indx);
 }
-
-const spaces: string[] = [''];
 
 export class SrcBuilder {
   file: File;
@@ -483,13 +481,6 @@ function ignoreKey(key: string): boolean {
     key == '' ||
     key.indexOf('.') !== -1
   );
-}
-
-export class Block {
-  imports: Imports;
-  constructor(imports: Imports) {
-    this.imports = imports;
-  }
 }
 
 function possiblyQuotePropertyName(key: string): any {

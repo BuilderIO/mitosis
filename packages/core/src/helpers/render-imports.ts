@@ -42,6 +42,7 @@ const getFileExtensionForTarget = (target: Target): string => {
     // these `.lite` extensions are handled in the `transpile` step of the CLI.
     // TO-DO: consolidate file-extension renaming to this file, and remove `.lite` replaces from the CLI `transpile`. (outdated) ?
     // Bit team wanted to make sure React and Angular behaved the same in regards to imports - ALU 10/05/22
+    case 'qwik':
     default:
       return '.lite';
   }

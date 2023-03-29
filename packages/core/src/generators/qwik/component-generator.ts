@@ -1,63 +1,65 @@
 import { format } from 'prettier/standalone';
-import { babelTransformExpression } from '../../helpers/babel-transform';
 import { fastClone } from '../../helpers/fast-clone';
 import { collectCss } from '../../helpers/styles/collect-css';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { checkHasState } from '../../helpers/state';
-import { addPreventDefault } from './add-prevent-default';
-import { convertMethodToFunction } from './convert-method-to-function';
+import { addPreventDefault } from './helpers/add-prevent-default';
+import { convertMethodToFunction } from './helpers/convert-method-to-function';
 import { renderJSXNodes } from './jsx';
 import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 import {
+  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import traverse from 'traverse';
-import { stableInject } from './stable-inject';
+import { stableInject } from './helpers/stable-inject';
+import { mergeOptions } from '../../helpers/merge-options';
+import {
+  emitStateMethodsAndRewriteBindings,
+  emitUseStore,
+  getLexicalScopeVars,
+  getStateMethodsAndGetters,
+  StateInit,
+} from './helpers/state';
+import { convertTypeScriptToJS } from './helpers/transform-code';
 
 Error.stackTraceLimit = 9999;
-
-// TODO(misko): styles are not processed.
 
 const DEBUG = false;
 
 export interface ToQwikOptions extends BaseTranspilerOptions {}
 
-/**
- * Stores getters and initialization map.
- */
-type StateInit = [
-  StateValues,
-  /**
-   * Set of state initializers.
-   */
-  ...string[],
+const PLUGINS: Plugin[] = [
+  () => ({
+    json: {
+      post: (json) => {
+        addPreventDefault(json);
+
+        return json;
+      },
+    },
+  }),
 ];
 
-type PropertyName = string;
-type StateValue = any;
-
-/**
- * Map of getters that need to be rewritten to function invocations.
- */
-type StateValues = Record<PropertyName, StateValue>;
+const DEFAULT_OPTIONS: ToQwikOptions = {
+  plugins: PLUGINS,
+};
 
 export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
   (userOptions = {}) =>
   ({ component: _component, path }): string => {
     // Make a copy we can safely mutate, similar to babel's toolchain
     let component = fastClone(_component);
-    if (userOptions.plugins) {
-      component = runPreJsonPlugins(component, userOptions.plugins);
-    }
-    addPreventDefault(component);
-    if (userOptions.plugins) {
-      component = runPostJsonPlugins(component, userOptions.plugins);
-    }
-    const isTypeScript = !!userOptions.typescript;
+
+    const options = mergeOptions(DEFAULT_OPTIONS, userOptions);
+
+    component = runPreJsonPlugins(component, options.plugins);
+    component = runPostJsonPlugins(component, options.plugins);
+
+    const isTypeScript = !!options.typescript;
     const file = new File(
       component.name + (isTypeScript ? '.ts' : '.js'),
       {
@@ -77,11 +79,15 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       const metadata: Record<string, any> = component.meta.useMetadata || ({} as any);
       const isLightComponent: boolean = metadata?.qwik?.component?.isLight || false;
       const mutable: string[] = metadata?.qwik?.mutable || [];
-      const imports: Record<string, string> | undefined = metadata?.qwik?.imports;
-      imports && Object.keys(imports).forEach((key) => file.import(imports[key], key));
+
+      const imports: Record<string, string> = metadata?.qwik?.imports || {};
+      Object.keys(imports).forEach((key) => file.import(imports[key], key));
+
       const state: StateInit = emitStateMethodsAndRewriteBindings(file, component, metadata);
-      let hasState = checkHasState(component);
+      const hasState = checkHasState(component);
+
       let css: string | null = null;
+
       const componentFn = arrowFnBlock(
         ['props'],
         [
@@ -115,10 +121,8 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       emitStyles(file, css);
       DEBUG && file.exportConst('COMPONENT', JSON.stringify(component));
       let sourceFile = file.toString();
-      if (userOptions.plugins) {
-        sourceFile = runPreCodePlugins(sourceFile, userOptions.plugins);
-        sourceFile = runPostCodePlugins(sourceFile, userOptions.plugins);
-      }
+      sourceFile = runPreCodePlugins(sourceFile, options.plugins);
+      sourceFile = runPostCodePlugins(sourceFile, options.plugins);
       return sourceFile;
     } catch (e) {
       console.error(e);
@@ -276,97 +280,37 @@ function emitUseStyles(file: File, component: MitosisComponent): string {
 }
 
 function emitStyles(file: File, css: string | null) {
-  if (css) {
-    if (file.options.isPretty) {
-      file.src.emit('\n\n');
-      try {
-        css = format(css, {
-          parser: 'css',
-          plugins: [
-            // To support running in browsers
-            require('prettier/parser-postcss'),
-          ],
-        });
-      } catch (e) {
-        throw new Error(
-          e +
-            '\n' +
-            '========================================================================\n' +
-            css +
-            '\n\n========================================================================',
-        );
-      }
-    }
-    file.exportConst('STYLES', '`\n' + css.replace(/`/g, '\\`') + '`\n');
+  if (!css) {
+    return;
   }
-}
 
-/**
- * @param file
- * @param stateInit
- */
-function emitUseStore(file: File, stateInit: StateInit) {
-  const state = stateInit[0];
-  const hasState = state && Object.keys(state).length > 0;
-  if (hasState) {
-    file.src.emit('const state=', file.import(file.qwikModule, 'useStore').localName);
-    if (file.options.isTypeScript) {
-      file.src.emit('<any>');
+  if (file.options.isPretty) {
+    file.src.emit('\n\n');
+    try {
+      css = format(css, {
+        parser: 'css',
+        plugins: [
+          // To support running in browsers
+          require('prettier/parser-postcss'),
+        ],
+      });
+    } catch (e) {
+      throw new Error(
+        e +
+          '\n' +
+          '========================================================================\n' +
+          css +
+          '\n\n========================================================================',
+      );
     }
-    file.src.emit('(');
-    file.src.emit(stableInject(state));
-    file.src.emit(');');
-  } else {
-    // TODO hack for now so that `state` variable is defined, even though it is never read.
-    file.src.emit('const state' + (file.options.isTypeScript ? ': any' : '') + ' = {};');
   }
+  file.exportConst('STYLES', '`\n' + css.replace(/`/g, '\\`') + '`\n');
 }
 
 function emitTypes(file: File, component: MitosisComponent) {
   if (file.options.isTypeScript) {
     component.types?.forEach((t) => file.src.emit(t, '\n'));
   }
-}
-
-function emitStateMethodsAndRewriteBindings(
-  file: File,
-  component: MitosisComponent,
-  metadata: Record<string, any>,
-): StateInit {
-  const lexicalArgs = getLexicalScopeVars(component);
-  const state: StateInit = emitStateMethods(file, component.state, lexicalArgs);
-  const methodMap = getStateMethodsAndGetters(component.state);
-  rewriteCodeExpr(component, methodMap, lexicalArgs, metadata.qwik?.replace);
-  return state;
-}
-
-const checkIsObjectWithCodeBlock = (obj: any): obj is { code: string } => {
-  return typeof obj == 'object' && obj?.code && typeof obj.code === 'string';
-};
-
-function rewriteCodeExpr(
-  component: MitosisComponent,
-  methodMap: Record<string, 'method' | 'getter'>,
-  lexicalArgs: string[],
-  replace: Record<string, string> | undefined = {},
-) {
-  traverse(component).forEach(function (item) {
-    if (!checkIsObjectWithCodeBlock(item)) {
-      return;
-    }
-
-    let code = convertMethodToFunction(item.code, methodMap, lexicalArgs);
-
-    Object.keys(replace).forEach((key) => {
-      code = code.replace(key, replace[key]);
-    });
-
-    item.code = code;
-  });
-}
-
-function getLexicalScopeVars(component: MitosisComponent) {
-  return ['props', 'state', ...Object.keys(component.refs), ...Object.keys(component.context.get)];
 }
 
 function emitImports(file: File, component: MitosisComponent) {
@@ -380,73 +324,8 @@ function emitImports(file: File, component: MitosisComponent) {
   });
 }
 
-function emitStateMethods(
-  file: File,
-  componentState: MitosisComponent['state'],
-  lexicalArgs: string[],
-): StateInit {
-  const stateValues: StateValues = {};
-  const stateInit: StateInit = [stateValues];
-  const methodMap = getStateMethodsAndGetters(componentState);
-  for (const key in componentState) {
-    const stateValue = componentState[key];
-
-    switch (stateValue?.type) {
-      case 'method':
-      case 'getter':
-      case 'function':
-        let code = stateValue.code;
-        let prefixIdx = 0;
-        if (stateValue.type === 'getter') {
-          prefixIdx += 'get '.length;
-        } else if (stateValue.type === 'function') {
-          prefixIdx += 'function '.length;
-        }
-        code = code.substring(prefixIdx);
-        code = convertMethodToFunction(code, methodMap, lexicalArgs).replace(
-          '(',
-          `(${lexicalArgs.join(',')},`,
-        );
-        const functionName = code.split(/\(/)[0];
-        if (stateValue.type === 'getter') {
-          stateInit.push(`state.${key}=${functionName}(${lexicalArgs.join(',')})`);
-        }
-        if (!file.options.isTypeScript) {
-          // Erase type information
-          code = convertTypeScriptToJS(code);
-        }
-        file.exportConst(functionName, 'function ' + code, true);
-
-        continue;
-
-      case 'property':
-        stateValues[key] = stateValue.code;
-        continue;
-    }
-  }
-
-  return stateInit;
-}
-
-function convertTypeScriptToJS(code: string): string {
-  return babelTransformExpression(code, {});
-}
-
 function extractGetterBody(code: string): string {
   const start = code.indexOf('{');
   const end = code.lastIndexOf('}');
   return code.substring(start + 1, end).trim();
-}
-
-function getStateMethodsAndGetters(
-  state: MitosisComponent['state'],
-): Record<string, 'method' | 'getter'> {
-  const methodMap: Record<string, 'method' | 'getter'> = {};
-  Object.keys(state).forEach((key) => {
-    const stateVal = state[key];
-    if (stateVal?.type === 'getter' || stateVal?.type === 'method') {
-      methodMap[key] = stateVal.type;
-    }
-  });
-  return methodMap;
 }
