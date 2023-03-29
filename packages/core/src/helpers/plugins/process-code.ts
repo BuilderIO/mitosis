@@ -8,6 +8,7 @@ type CodeType = 'hooks' | 'hooks-deps' | 'bindings' | 'properties' | 'state';
 
 declare function codeProcessor(
   codeType: CodeType,
+  json: MitosisComponent,
 ): (code: string, hookType?: keyof MitosisComponent['hooks']) => string;
 
 type CodeProcessor = typeof codeProcessor;
@@ -18,9 +19,11 @@ type CodeProcessor = typeof codeProcessor;
 const preProcessBlockCode = ({
   json,
   codeProcessor,
+  parentComponent,
 }: {
   json: MitosisNode;
   codeProcessor: CodeProcessor;
+  parentComponent: MitosisComponent;
 }) => {
   // const propertiesProcessor = codeProcessor('properties');
   // for (const key in json.properties) {
@@ -30,7 +33,7 @@ const preProcessBlockCode = ({
   //   }
   // }
 
-  const bindingsProcessor = codeProcessor('bindings');
+  const bindingsProcessor = codeProcessor('bindings', parentComponent);
   for (const key in json.bindings) {
     const value = json.bindings[key];
     if (value?.code) {
@@ -46,11 +49,11 @@ export const CODE_PROCESSOR_PLUGIN =
   (codeProcessor: CodeProcessor): Plugin =>
   () => ({
     json: {
-      post: (json: MitosisComponent) => {
+      post: (json) => {
         function processHook(key: keyof typeof json.hooks, hook: extendedHook) {
-          hook.code = codeProcessor('hooks')(hook.code, key);
+          hook.code = codeProcessor('hooks', json)(hook.code, key);
           if (hook.deps) {
-            hook.deps = codeProcessor('hooks-deps')(hook.deps);
+            hook.deps = codeProcessor('hooks-deps', json)(hook.deps);
           }
         }
 
@@ -75,12 +78,12 @@ export const CODE_PROCESSOR_PLUGIN =
         for (const key in json.state) {
           const state = json.state[key];
           if (state) {
-            state.code = codeProcessor('state')(state.code);
+            state.code = codeProcessor('state', json)(state.code);
           }
         }
 
         traverseNodes(json, (node) => {
-          preProcessBlockCode({ json: node, codeProcessor });
+          preProcessBlockCode({ json: node, codeProcessor, parentComponent: json });
         });
       },
     },

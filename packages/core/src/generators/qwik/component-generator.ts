@@ -25,6 +25,9 @@ import {
   StateInit,
 } from './helpers/state';
 import { convertTypeScriptToJS } from './helpers/transform-code';
+import { replaceGetterWithFunction } from 'src/helpers/patterns';
+import { CODE_PROCESSOR_PLUGIN } from 'src/helpers/plugins/process-code';
+import { stripStateAndPropsRefs } from 'src/helpers/strip-state-and-props-refs';
 
 Error.stackTraceLimit = 9999;
 
@@ -41,6 +44,35 @@ const PLUGINS: Plugin[] = [
         return json;
       },
     },
+  }),
+  CODE_PROCESSOR_PLUGIN((codeType, json) => {
+    switch (codeType) {
+      case 'state':
+        return (c) => c;
+      case 'bindings':
+      case 'hooks':
+      case 'hooks-deps':
+      case 'properties':
+        return (value) =>
+          // update signal getters to have `.value`
+          stripStateAndPropsRefs(value, {
+            includeState: true,
+            includeProps: false,
+            replaceWith: (name): string => {
+              const state = json.state[name];
+              switch (state?.type) {
+                case 'getter':
+                  return `${name}.value`;
+
+                case 'function':
+                case 'method':
+                case 'property':
+                case undefined:
+                  return `state.${name}`;
+              }
+            },
+          });
+    }
   }),
 ];
 
@@ -96,6 +128,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
             emitUseContext(file, component);
             emitUseRef(file, component);
             hasState && emitUseStore(file, state);
+            emitUseComputed(file, component);
             emitUseContextProvider(file, component);
             emitUseClientEffect(file, component);
             emitUseMount(file, component);
@@ -328,4 +361,19 @@ function extractGetterBody(code: string): string {
   const start = code.indexOf('{');
   const end = code.lastIndexOf('}');
   return code.substring(start + 1, end).trim();
+}
+
+function emitUseComputed(file: File, component: MitosisComponent) {
+  for (const [key, stateValue] of Object.entries(component.state)) {
+    switch (stateValue?.type) {
+      case 'getter':
+        file.src.const(`
+          ${key} = ${file.import(file.qwikModule, 'useComputed$').localName}(() => {
+            ${replaceGetterWithFunction(stateValue.code)}
+            ${key}();
+          })
+        `);
+        continue;
+    }
+  }
 }

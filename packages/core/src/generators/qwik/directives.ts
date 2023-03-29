@@ -147,7 +147,7 @@ export function Image(props: ImageProps) {
   }
 }
 
-export function __passThroughProps__(
+function __passThroughProps__(
   dstProps: Record<string, any>,
   srcProps: Record<string, any>,
 ): Record<string, any> {
@@ -162,7 +162,7 @@ export function __passThroughProps__(
   return dstProps;
 }
 
-export function CoreButton(props: {
+function CoreButton(props: {
   text?: string;
   link?: string;
   class?: string;

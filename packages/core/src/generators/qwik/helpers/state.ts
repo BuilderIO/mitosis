@@ -54,7 +54,6 @@ function emitStateMethods(
   for (const key in componentState) {
     const stateValue = componentState[key];
 
-    console.log(componentState);
     switch (stateValue?.type) {
       case 'method':
       case 'getter':
@@ -80,7 +79,6 @@ function emitStateMethods(
           code = convertTypeScriptToJS(code);
         }
         file.exportConst(functionName, 'function ' + code, true);
-        console.log(functionName, 'function ' + code);
         continue;
 
       case 'property':
