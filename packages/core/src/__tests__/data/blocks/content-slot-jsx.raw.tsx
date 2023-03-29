@@ -31,7 +31,7 @@ export default function ContentSlotJsxCode(props: Props) {
         name={props.slotContent ? 'name1' : 'name2'}
         title={props.slotContent ? 'title1' : 'title2'}
         {...props.attributes}
-        className={props.slotContent ? `${state.name}-content` : ''}
+        className={state.cls}
         onClick={() => state.show()}
       >
         <Show when={state.showContent && props.slotContent}>
