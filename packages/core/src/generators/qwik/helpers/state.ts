@@ -1,4 +1,4 @@
-import { MitosisComponent } from 'src/types/mitosis-component';
+import { MitosisComponent } from '../../../types/mitosis-component';
 import traverse from 'traverse';
 import { File } from '../src-generator';
 import { convertMethodToFunction } from './convert-method-to-function';
