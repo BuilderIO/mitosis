@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('e2e', () => {
   test('todo list add', async ({ page }) => {
@@ -28,10 +28,10 @@ test.describe('e2e', () => {
     // await expect(page.locator('li')).toHaveCount(3);
   });
   test('show-for component test', async ({ page }) => {
-    await page.goto('/show-for/');
+    await page.goto('/show-for-component/');
 
-    await page.locator('text=number : 1')
-    await page.locator('text=number : 2')
-    await page.locator('text=number : 3')
+    await expect(page.locator('text=number : 1')).toBeVisible();
+    await expect(page.locator('text=number : 2')).toBeVisible();
+    await expect(page.locator('text=number : 3')).toBeVisible();
   });
 });
