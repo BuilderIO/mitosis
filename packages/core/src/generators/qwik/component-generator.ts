@@ -5,7 +5,6 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { checkHasState } from '../../helpers/state';
 import { addPreventDefault } from './helpers/add-prevent-default';
-import { convertMethodToFunction } from './helpers/convert-method-to-function';
 import { renderJSXNodes } from './jsx';
 import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 import {
@@ -17,13 +16,7 @@ import {
 } from '../../modules/plugins';
 import { stableInject } from './helpers/stable-inject';
 import { mergeOptions } from '../../helpers/merge-options';
-import {
-  emitStateMethodsAndRewriteBindings,
-  emitUseStore,
-  getLexicalScopeVars,
-  getStateMethodsAndGetters,
-  StateInit,
-} from './helpers/state';
+import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
 import { convertTypeScriptToJS } from './helpers/transform-code';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
@@ -133,8 +126,6 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
             emitUseTask(file, component);
             emitUseCleanup(file, component);
 
-            emitTagNameHack(file, component, component.meta.useMetadata?.elementTag);
-            emitTagNameHack(file, component, component.meta.useMetadata?.componentElementTag);
             emitJSX(file, component, mutable);
           },
         ],
@@ -167,21 +158,6 @@ function emitExports(file: File, component: MitosisComponent) {
     const code = exportObj.code.startsWith('export ') ? exportObj.code : `export ${exportObj.code}`;
     file.src.emit(code);
   });
-}
-
-function emitTagNameHack(file: File, component: MitosisComponent, metadataValue: unknown) {
-  if (typeof metadataValue === 'string' && metadataValue) {
-    file.src.emit(
-      metadataValue,
-      '=',
-      convertMethodToFunction(
-        metadataValue,
-        getStateMethodsAndGetters(component.state),
-        getLexicalScopeVars(component),
-      ),
-      ';',
-    );
-  }
 }
 
 function emitUseClientEffect(file: File, component: MitosisComponent) {
