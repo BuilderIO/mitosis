@@ -470,11 +470,20 @@ export const runTestsForJsx = () => {
     expect(component).toMatchSnapshot();
   });
 
-  JSX_TESTS.forEach((tests) => {
-    Object.keys(tests).forEach((key) => {
-      test(key, async () => {
-        const component = parseJsx(await tests[key]);
-        expect(component).toMatchSnapshot();
+  const configurations: Array<Parameters<typeof parseJsx>[1] & { testName: string }> = [
+    { typescript: true, testName: 'Typescript' },
+    { typescript: false, testName: 'Javascript' },
+  ];
+
+  configurations.forEach((config) => {
+    describe(config.testName, () => {
+      JSX_TESTS.forEach((tests) => {
+        Object.keys(tests).forEach((key) => {
+          test(key, async () => {
+            const component = parseJsx(await tests[key]);
+            expect(component).toMatchSnapshot();
+          });
+        });
       });
     });
   });
