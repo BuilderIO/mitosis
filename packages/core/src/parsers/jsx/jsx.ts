@@ -20,8 +20,11 @@ import { componentFunctionToJson } from './function-parser';
 
 import jsxPlugin from '@babel/plugin-syntax-jsx';
 import tsPreset from '@babel/preset-typescript';
+import tsPlugin from '@babel/plugin-syntax-typescript';
 
 const { types } = babel;
+
+const typescriptBabelPreset = [tsPreset, { isTSX: true, allExtensions: true }];
 
 const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
   path.traverse({
@@ -53,21 +56,9 @@ export function parseJsx(
     configFile: false,
     babelrc: false,
     comments: false,
-    presets: [
-      [
-        tsPreset,
-        {
-          isTSX: true,
-          allExtensions: true,
-          // If left to its default `false`, then this will strip away:
-          // - unused JS imports
-          // - types imports within regular JS import syntax
-          // When outputting to TS, we must set it to `true` to preserve these imports.
-          onlyRemoveTypeImports: options.typescript,
-        },
-      ],
-    ],
+    presets: !options.typescript ? [typescriptBabelPreset] : undefined,
     plugins: [
+      tsPlugin,
       jsxPlugin,
       (): babel.PluginObj<Context> => ({
         visitor: {
