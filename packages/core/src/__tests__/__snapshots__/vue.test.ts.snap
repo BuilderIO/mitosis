@@ -3210,6 +3210,10 @@ exports[`Vue > jsx > Typescript Test > AdvancedRef 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface Props {
+  showInput: boolean;
+}
+
 export default {
   name: \\"my-basic-ref-component\\",
 
@@ -3268,6 +3272,10 @@ exports[`Vue > jsx > Typescript Test > Basic 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface MyBasicComponentProps {
+  id: string;
+}
+
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
@@ -3374,6 +3382,11 @@ exports[`Vue > jsx > Typescript Test > Basic OnMount Update 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface Props {
+  hi: string;
+  bye: string;
+}
+
 export default {
   name: \\"my-basic-on-mount-update-component\\",
 
@@ -3468,6 +3481,11 @@ exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  children: any;
+  type: string;
+};
+
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
 export default {
@@ -3563,6 +3581,10 @@ exports[`Vue > jsx > Typescript Test > BasicRef 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface Props {
+  showInput: boolean;
+}
+
 export default {
   name: \\"my-basic-ref-component\\",
 
@@ -3599,11 +3621,15 @@ exports[`Vue > jsx > Typescript Test > BasicRefAssignment 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface Props {
+  showInput: boolean;
+}
+
 export default {
   name: \\"my-basic-ref-assignment-component\\",
 
   methods: {
-    handlerClick: function handlerClick(event) {
+    handlerClick: function handlerClick(event: Event) {
       event.preventDefault();
       console.log(\\"current value\\", this.$refs.holdValueRef);
       this.$refs.holdValueRef = this.$refs.holdValueRef + \\"JS\\";
@@ -3622,10 +3648,14 @@ exports[`Vue > jsx > Typescript Test > BasicRefPrevious 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export function usePrevious(value) {
+export interface Props {
+  showInput: boolean;
+}
+
+export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null); // Store current value in ref
+  let ref = useRef<T>(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -3684,6 +3714,13 @@ exports[`Vue > jsx > Typescript Test > Button 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
 export default {
   name: \\"button\\",
 
@@ -3706,6 +3743,21 @@ exports[`Vue > jsx > Typescript Test > Columns 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
+  width?: number;
+};
+export interface ColumnProps {
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
+  reverseColumnsWhenStacked?: boolean;
+}
+
 export default {
   name: \\"column\\",
 
@@ -3718,11 +3770,11 @@ export default {
     getGutterSize() {
       return typeof this.space === \\"number\\" ? this.space || 0 : 20;
     },
-    getWidth(index) {
+    getWidth(index: number) {
       const columns = this.getColumns();
       return (columns[index] && columns[index].width) || 100 / columns.length;
     },
-    getColumnCssWidth(index) {
+    getColumnCssWidth(index: number) {
       const columns = this.getColumns();
       const gutterSize = this.getGutterSize();
       const subtractWidth =
@@ -3770,6 +3822,13 @@ exports[`Vue > jsx > Typescript Test > ContentSlotHtml 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+import { JSX } from \\"../../../../jsx-runtime\\";
+
 export default {
   name: \\"content-slot-code\\",
 };
@@ -3798,6 +3857,12 @@ exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  [key: string]: string | JSX.Element;
+};
+
+import { JSX } from \\"../../../../jsx-runtime\\";
+
 export default {
   name: \\"content-slot-jsx-code\\",
 
@@ -3849,6 +3914,11 @@ exports[`Vue > jsx > Typescript Test > CustomCode 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
 export default {
   name: \\"custom-code\\",
 
@@ -3934,6 +4004,11 @@ exports[`Vue > jsx > Typescript Test > Embed 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
 export default {
   name: \\"custom-code\\",
 
@@ -4028,14 +4103,14 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
     <template v-if=\\"submissionState === 'error'\\">
       <builder-blocks
         dataPath=\\"errorMessage\\"
-        :blocks=\\"errorMessage\\"
+        :blocks=\\"errorMessage!\\"
       ></builder-blocks>
     </template>
 
     <template v-if=\\"submissionState === 'sending'\\">
       <builder-blocks
         dataPath=\\"sendingMessage\\"
-        :blocks=\\"sendingMessage\\"
+        :blocks=\\"sendingMessage!\\"
       ></builder-blocks>
     </template>
 
@@ -4048,15 +4123,39 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
     <template v-if=\\"submissionState === 'success'\\">
       <builder-blocks
         dataPath=\\"successMessage\\"
-        :blocks=\\"successMessage\\"
+        :blocks=\\"successMessage!\\"
       ></builder-blocks>
     </template>
   </form>
 </template>
 
 <script lang=\\"ts\\">
+export interface FormProps {
+  attributes?: any;
+  name?: string;
+  action?: string;
+  validate?: boolean;
+  method?: string;
+  builderBlock?: BuilderElement;
+  sendSubmissionsTo?: string;
+  sendSubmissionsToEmail?: string;
+  sendWithJs?: boolean;
+  contentType?: string;
+  customHeaders?: {
+    [key: string]: string;
+  };
+  successUrl?: string;
+  previewState?: FormState;
+  successMessage?: BuilderElement[];
+  errorMessage?: BuilderElement[];
+  sendingMessage?: BuilderElement[];
+  resetFormOnSubmit?: boolean;
+  errorMessagePath?: string;
+}
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
+
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -4104,7 +4203,11 @@ export default {
   },
 
   methods: {
-    onSubmit(event) {
+    onSubmit(
+      event: Event & {
+        currentTarget: HTMLFormElement;
+      }
+    ) {
       const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
       if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -4118,16 +4221,19 @@ export default {
         event.preventDefault();
         const el = event.currentTarget;
         const headers = this.customHeaders || {};
-        let body;
+        let body: any;
         const formData = new FormData(el); // TODO: maybe support null
 
-        const formPairs = Array.from(
+        const formPairs: {
+          key: string;
+          value: File | boolean | number | string | FileList;
+        }[] = Array.from(
           event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
         )
-          .filter((el) => !!el.name)
+          .filter((el) => !!(el as HTMLInputElement).name)
           .map((el) => {
-            let value;
-            const key = el.name;
+            let value: any;
+            const key = (el as HTMLImageElement).name;
 
             if (el instanceof HTMLInputElement) {
               if (el.type === \\"radio\\") {
@@ -4153,7 +4259,7 @@ export default {
                 value = el.value;
               }
             } else {
-              value = el.value;
+              value = (el as HTMLInputElement).value;
             }
 
             return {
@@ -4220,7 +4326,7 @@ export default {
           this.sendSubmissionsToEmail || \\"\\"
         )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
         fetch(
-          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
           /* TODO: throw error if no action URL */
           {
             body,
@@ -4357,6 +4463,25 @@ exports[`Vue > jsx > Typescript Test > Image 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+// TODO: AMP Support?
+export interface ImageProps {
+  _class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}
+
 export default {
   name: \\"image\\",
 
@@ -4469,6 +4594,23 @@ exports[`Vue > jsx > Typescript Test > Img 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
@@ -4500,6 +4642,16 @@ exports[`Vue > jsx > Typescript Test > Input 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
@@ -4527,6 +4679,11 @@ exports[`Vue > jsx > Typescript Test > RawText 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface RawTextProps {
+  attributes?: any;
+  text?: string; // builderBlock?: any;
+}
+
 export default {
   name: \\"raw-text\\",
 
@@ -4566,6 +4723,12 @@ exports[`Vue > jsx > Typescript Test > Section 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
 export default {
   name: \\"section-component\\",
 
@@ -4590,6 +4753,12 @@ exports[`Vue > jsx > Typescript Test > Section 2`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
 export default {
   name: \\"section-state-component\\",
 
@@ -4623,6 +4792,17 @@ exports[`Vue > jsx > Typescript Test > Select 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface FormSelectProps {
+  options?: {
+    name?: string;
+    value: string;
+  }[];
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
@@ -4643,6 +4823,10 @@ exports[`Vue > jsx > Typescript Test > SlotDefault 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  [key: string]: string;
+};
+
 export default {
   name: \\"slot-code\\",
 };
@@ -4661,6 +4845,10 @@ exports[`Vue > jsx > Typescript Test > SlotHtml 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  [key: string]: string;
+};
+
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
@@ -4678,6 +4866,10 @@ exports[`Vue > jsx > Typescript Test > SlotJsx 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  [key: string]: string;
+};
+
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
@@ -4697,6 +4889,10 @@ exports[`Vue > jsx > Typescript Test > SlotNamed 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  [key: string]: string;
+};
+
 export default {
   name: \\"slot-code\\",
 };
@@ -4745,6 +4941,11 @@ exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
+
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
@@ -4825,6 +5026,11 @@ exports[`Vue > jsx > Typescript Test > Submit 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+}
+
 export default {
   name: \\"submit-button\\",
 
@@ -4845,6 +5051,14 @@ exports[`Vue > jsx > Typescript Test > Text 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
@@ -4871,6 +5085,14 @@ exports[`Vue > jsx > Typescript Test > Textarea 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface TextareaProps {
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  placeholder?: string;
+}
+
 export default {
   name: \\"textarea\\",
 
@@ -4904,6 +5126,32 @@ exports[`Vue > jsx > Typescript Test > Video 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface VideoProps {
+  attributes?: any;
+  video?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  playsInline?: boolean;
+  aspectRatio?: number;
+  width?: number;
+  height?: number;
+  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+  position?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+  posterImage?: string;
+  lazyLoad?: boolean;
+}
+
 export default {
   name: \\"video\\",
 
@@ -4960,6 +5208,11 @@ exports[`Vue > jsx > Typescript Test > basicForwardRef 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
 export default {
   name: \\"my-basic-forward-ref-component\\",
 
@@ -4991,6 +5244,11 @@ exports[`Vue > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
 export default {
   name: \\"my-basic-forward-ref-component\\",
 
@@ -5121,6 +5379,13 @@ exports[`Vue > jsx > Typescript Test > className 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+import { JSX } from \\"../../../../jsx-runtime\\";
+
 export default {
   name: \\"class-name-code\\",
 
@@ -5194,6 +5459,10 @@ exports[`Vue > jsx > Typescript Test > componentWithContext 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface ComponentWithContextProps {
+  content: string;
+}
+
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
@@ -5271,6 +5540,16 @@ exports[`Vue > jsx > Typescript Test > defaultProps 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  buttonText?: string; // no default value
+
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick?: () => void;
+}
+
 export default {
   name: \\"button\\",
 
@@ -5312,6 +5591,14 @@ exports[`Vue > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick: () => void;
+}
+
 export default {
   name: \\"button\\",
 
@@ -5332,7 +5619,11 @@ exports[`Vue > jsx > Typescript Test > defaultValsWithTypes 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-const DEFAULT_VALUES = {
+type Props = {
+  name: string;
+};
+
+const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
@@ -5378,7 +5669,14 @@ exports[`Vue > jsx > Typescript Test > import types 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-import RenderBlock from \\"./builder-render-block.raw\\";
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 export default {
   name: \\"render-content\\",
@@ -5498,6 +5796,11 @@ exports[`Vue > jsx > Typescript Test > nestedShow 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
 export default {
   name: \\"nested-show\\",
 
@@ -5561,6 +5864,10 @@ exports[`Vue > jsx > Typescript Test > onInit 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  name: string;
+};
+
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
@@ -5624,6 +5931,10 @@ exports[`Vue > jsx > Typescript Test > onUpdateWithDeps 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  size: string;
+};
+
 export default {
   name: \\"on-update-with-deps\\",
 
@@ -5666,11 +5977,21 @@ exports[`Vue > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Types = {
+  s: any[];
+};
+interface IPost {
+  len: number;
+}
+export interface MyBasicComponentProps {
+  id: string;
+}
+
 const b = 3;
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run(value) {}
+export function run<T>(value: T) {}
 
 export default {
   name: \\"my-basic-component\\",
@@ -5684,6 +6005,19 @@ exports[`Vue > jsx > Typescript Test > preserveTyping 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export type A = \\"test\\";
+export interface C {
+  n: \\"test\\";
+}
+type B = \\"test2\\";
+interface D {
+  n: \\"test\\";
+}
+export interface MyBasicComponentProps {
+  name: string;
+  age?: number;
+}
+
 export default {
   name: \\"my-basic-component\\",
 
@@ -5701,6 +6035,11 @@ exports[`Vue > jsx > Typescript Test > propsDestructure 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  children: any;
+  type: string;
+};
+
 export default {
   name: \\"my-basic-component\\",
 
@@ -5719,6 +6058,11 @@ exports[`Vue > jsx > Typescript Test > propsInterface 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+interface Person {
+  name: string;
+  age?: number;
+}
+
 export default {
   name: \\"my-basic-component\\",
 
@@ -5733,6 +6077,11 @@ exports[`Vue > jsx > Typescript Test > propsType 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Person = {
+  name: string;
+  age?: number;
+};
+
 export default {
   name: \\"my-basic-component\\",
 
@@ -5809,14 +6158,35 @@ exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
+import type { RenderComponentProps } from \\"./render-component\\";
+import type { RepeatData } from \\"./types.js\\";
+export type RenderBlockProps = {
+  block: BuilderBlock;
+  context: BuilderContextInterface;
+};
+
+import {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { BuilderBlock } from \\"../../types/builder-block.js\\";
+import { Nullable } from \\"../../types/typescript.js\\";
 import { evaluate } from \\"../../functions/evaluate.js\\";
 import BlockStyles from \\"./block-styles.vue\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import { RenderComponentProps } from \\"./render-component\\";
+import { RepeatData } from \\"./types.js\\";
 import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
 import { TARGET } from \\"../../constants/target.js\\";
 import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
@@ -5964,7 +6334,7 @@ export default {
       const collectionName = repeat.collection.split(\\".\\").pop();
       const itemNameToUse =
         repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-      const repeatArray = itemsArray.map((item, index) => ({
+      const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
         context: {
           ...this.context,
           state: {
@@ -6024,6 +6394,14 @@ exports[`Vue > jsx > Typescript Test > renderContentExample 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+
 import {
   sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
@@ -6095,6 +6473,10 @@ exports[`Vue > jsx > Typescript Test > rootShow 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface RenderStylesProps {
+  foo: string;
+}
+
 export default {
   name: \\"render-styles\\",
 
@@ -6155,6 +6537,11 @@ exports[`Vue > jsx > Typescript Test > showWithFor 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+interface Props {
+  conditionA: boolean;
+  items: string[];
+}
+
 export default {
   name: \\"nested-show\\",
 
@@ -6280,6 +6667,16 @@ exports[`Vue > jsx > Typescript Test > typeDependency 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+  foo2: Foo2;
+};
+
+import { Foo } from \\"./foo-type\\";
+import { Foo as Foo2 } from \\"./type-export\\";
+
 export default {
   name: \\"type-dependency\\",
 

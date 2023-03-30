@@ -2514,8 +2514,14 @@ exports[`Svelte > jsx > Remove Internal mitosis package 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
-"<script lang=\\"ts\\">
-  export let showInput;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface Props {
+    showInput: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let showInput: Props[\\"showInput\\"];
 
   function onBlur() {
     // Maintain focus
@@ -2567,7 +2573,13 @@ exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Basic 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface MyBasicComponentProps {
+    id: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
   export const DEFAULT_VALUES = {
     name: \\"Steve\\",
   };
@@ -2655,11 +2667,18 @@ exports[`Svelte > jsx > Typescript Test > Basic Context 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Basic OnMount Update 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface Props {
+    hi: string;
+    bye: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
-  export let hi;
-  export let bye;
+  export let hi: Props[\\"hi\\"];
+  export let bye: Props[\\"bye\\"];
 
   let name = \\"PatrickJS\\";
   let names = [\\"Steve\\", \\"PatrickJS\\"];
@@ -2719,10 +2738,17 @@ exports[`Svelte > jsx > Typescript Test > BasicAttribute 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    children: any;
+    type: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
   import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-  export let type;
+  export let type: Props[\\"type\\"];
 </script>
 
 <div>
@@ -2780,8 +2806,14 @@ exports[`Svelte > jsx > Typescript Test > BasicFor 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicRef 1`] = `
-"<script lang=\\"ts\\">
-  export let showInput;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface Props {
+    showInput: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let showInput: Props[\\"showInput\\"];
 
   function onBlur() {
     // Maintain focus
@@ -2828,8 +2860,14 @@ exports[`Svelte > jsx > Typescript Test > BasicRef 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicRefAssignment 1`] = `
-"<script lang=\\"ts\\">
-  function handlerClick(event) {
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface Props {
+    showInput: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -2846,11 +2884,17 @@ exports[`Svelte > jsx > Typescript Test > BasicRefAssignment 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"<script lang=\\"ts\\">
-  export function usePrevious(value) {
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface Props {
+    showInput: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export function usePrevious<T>(value: T) {
     // The ref object is a generic container whose current property is mutable ...
     // ... and can hold any value, similar to an instance property on a class
-    let ref = useRef(null); // Store current value in ref
+    let ref = useRef<T>(null); // Store current value in ref
 
     onUpdate(() => {
       ref = value;
@@ -2881,11 +2925,20 @@ exports[`Svelte > jsx > Typescript Test > BasicRefPrevious 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Button 1`] = `
-"<script lang=\\"ts\\">
-  export let link;
-  export let attributes;
-  export let openLinkInNewTab;
-  export let text;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ButtonProps {
+    attributes?: any;
+    text?: string;
+    link?: string;
+    openLinkInNewTab?: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let link: ButtonProps[\\"link\\"];
+  export let attributes: ButtonProps[\\"attributes\\"];
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
+  export let text: ButtonProps[\\"text\\"];
 </script>
 
 <div>
@@ -2908,9 +2961,27 @@ exports[`Svelte > jsx > Typescript Test > Button 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
-"<script lang=\\"ts\\">
-  export let columns;
-  export let space;
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Column = {
+    content: any; // TODO: Implement this when support for dynamic CSS lands
+
+    width?: number;
+  };
+
+  export interface ColumnProps {
+    columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+
+    space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+    stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
+    reverseColumnsWhenStacked?: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let columns: ColumnProps[\\"columns\\"];
+  export let space: ColumnProps[\\"space\\"];
 
   function getColumns() {
     return columns || [];
@@ -2920,12 +2991,12 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
     return typeof space === \\"number\\" ? space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -2966,7 +3037,15 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string | JSX.Element;
+    slotTesting: JSX.Element;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import { JSX } from \\"../../../../jsx-runtime\\";
 </script>
 
 <div>
@@ -2981,9 +3060,17 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"<script lang=\\"ts\\">
-  export let attributes;
-  export let content = \\"\\";
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string | JSX.Element;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import { JSX } from \\"../../../../jsx-runtime\\";
+
+  export let attributes: Props[\\"attributes\\"];
+  export let content: Props[\\"content\\"] = \\"\\";
 
   function show() {
     $$slots.content ? 1 : \\"\\";
@@ -3018,11 +3105,18 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotJSX 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface CustomCodeProps {
+    code: string;
+    replaceNodes?: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
-  export let replaceNodes;
-  export let code;
+  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
+  export let code: CustomCodeProps[\\"code\\"];
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -3085,11 +3179,18 @@ exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface CustomCodeProps {
+    code: string;
+    replaceNodes?: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
-  export let replaceNodes;
-  export let code;
+  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
+  export let code: CustomCodeProps[\\"code\\"];
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -3152,311 +3253,402 @@ exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Form 1`] = `
-"<script lang=\\"ts\\">
-  import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-  import { Builder, builder } from \\"@builder.io/sdk\\";
-  import { BuilderBlocks } from \\"@fake\\";
-  import { set } from \\"@fake\\";
-  import { get } from \\"@fake\\";
+"<script context='module' lang='ts'>
+      export interface FormProps {
+attributes?: any;
+name?: string;
+action?: string;
+validate?: boolean;
+method?: string;
+builderBlock?: BuilderElement;
+sendSubmissionsTo?: string;
+sendSubmissionsToEmail?: string;
+sendWithJs?: boolean;
+contentType?: string;
+customHeaders?: {
+  [key: string]: string;
+};
+successUrl?: string;
+previewState?: FormState;
+successMessage?: BuilderElement[];
+errorMessage?: BuilderElement[];
+sendingMessage?: BuilderElement[];
+resetFormOnSubmit?: boolean;
+errorMessagePath?: string;
+}
 
-  export let previewState;
-  export let sendWithJs;
-  export let sendSubmissionsTo;
-  export let action;
-  export let customHeaders;
-  export let contentType;
-  export let sendSubmissionsToEmail;
-  export let name;
-  export let method;
-  export let errorMessagePath;
-  export let resetFormOnSubmit;
-  export let successUrl;
-  export let validate;
-  export let attributes;
-  export let builderBlock;
-  export let errorMessage;
-  export let sendingMessage;
-  export let successMessage;
+export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error';
 
-  function onSubmit(event) {
-    const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
+    </script>
+    
 
-    if (sendSubmissionsTo === \\"zapier\\") {
-      event.preventDefault();
-    } else if (sendWithJs) {
-      if (!(action || sendSubmissionsTo === \\"email\\")) {
-        event.preventDefault();
-        return;
-      }
+    
+<script lang='ts'>
+    
+    
 
-      event.preventDefault();
-      const el = event.currentTarget;
-      const headers = customHeaders || {};
-      let body;
-      const formData = new FormData(el); // TODO: maybe support null
+    
+  import { BuilderBlock as BuilderBlockComponent } from '@fake';
+import { BuilderElement, Builder, builder } from '@builder.io/sdk';
+import { BuilderBlocks } from '@fake';
+import { set } from '@fake';
+import { get } from '@fake';
+  
+  
 
-      const formPairs = Array.from(
-        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-      )
-        .filter((el) => !!el.name)
-        .map((el) => {
-          let value;
-          const key = el.name;
 
-          if (el instanceof HTMLInputElement) {
-            if (el.type === \\"radio\\") {
-              if (el.checked) {
-                value = el.name;
-                return {
-                  key,
-                  value,
-                };
-              }
-            } else if (el.type === \\"checkbox\\") {
-              value = el.checked;
-            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-              const num = el.valueAsNumber;
+    
+    export let previewState: FormProps['previewState'];
+export let sendWithJs: FormProps['sendWithJs'];
+export let sendSubmissionsTo: FormProps['sendSubmissionsTo'];
+export let action: FormProps['action'];
+export let customHeaders: FormProps['customHeaders'];
+export let contentType: FormProps['contentType'];
+export let sendSubmissionsToEmail: FormProps['sendSubmissionsToEmail'];
+export let name: FormProps['name'];
+export let method: FormProps['method'];
+export let errorMessagePath: FormProps['errorMessagePath'];
+export let resetFormOnSubmit: FormProps['resetFormOnSubmit'];
+export let successUrl: FormProps['successUrl'];
+export let validate: FormProps['validate'];
+export let attributes: FormProps['attributes'];
+export let builderBlock: FormProps['builderBlock'];
+export let errorMessage: FormProps['errorMessage'];
+export let sendingMessage: FormProps['sendingMessage'];
+export let successMessage: FormProps['successMessage'];
+    
+    
 
-              if (!isNaN(num)) {
-                value = num;
-              }
-            } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
-              value = el.files;
-            } else {
-              value = el.value;
-            }
-          } else {
-            value = el.value;
-          }
+    function onSubmit(event: Event & {
+currentTarget: HTMLFormElement;
+}) {
+const sendWithJs = sendWithJs || sendSubmissionsTo === 'email';
 
+if (sendSubmissionsTo === 'zapier') {
+  event.preventDefault();
+} else if (sendWithJs) {
+  if (!(action || sendSubmissionsTo === 'email')) {
+    event.preventDefault();
+    return;
+  }
+
+  event.preventDefault();
+  const el = event.currentTarget;
+  const headers = customHeaders || {};
+  let body: any;
+  const formData = new FormData(el); // TODO: maybe support null
+
+  const formPairs: {
+    key: string;
+    value: File | boolean | number | string | FileList;
+  }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!(el as HTMLInputElement).name).map(el => {
+    let value: any;
+    const key = (el as HTMLImageElement).name;
+
+    if (el instanceof HTMLInputElement) {
+      if (el.type === 'radio') {
+        if (el.checked) {
+          value = el.name;
           return {
             key,
-            value,
+            value
           };
-        });
-      let contentType = contentType;
-
-      if (sendSubmissionsTo === \\"email\\") {
-        contentType = \\"multipart/form-data\\";
-      }
-
-      Array.from(formPairs).forEach(({ value }) => {
-        if (
-          value instanceof File ||
-          (Array.isArray(value) && value[0] instanceof File) ||
-          value instanceof FileList
-        ) {
-          contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
+      } else if (el.type === 'checkbox') {
+        value = el.checked;
+      } else if (el.type === 'number' || el.type === 'range') {
+        const num = el.valueAsNumber;
 
-      if (contentType !== \\"application/json\\") {
-        body = formData;
+        if (!isNaN(num)) {
+          value = num;
+        }
+      } else if (el.type === 'file') {
+        // TODO: one vs multiple files
+        value = el.files;
       } else {
-        // Json
-        const json = {};
-        Array.from(formPairs).forEach(({ value, key }) => {
-          set(json, key, value);
-        });
-        body = JSON.stringify(json);
+        value = el.value;
       }
+    } else {
+      value = (el as HTMLInputElement).value;
+    }
 
-      if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && action?.includes(\\"zapier.com\\"))
-        ) {
-          headers[\\"content-type\\"] = contentType;
+    return {
+      key,
+      value
+    };
+  });
+  let contentType = contentType;
+
+  if (sendSubmissionsTo === 'email') {
+    contentType = 'multipart/form-data';
+  }
+
+  Array.from(formPairs).forEach(({
+    value
+  }) => {
+    if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
+      contentType = 'multipart/form-data';
+    }
+  }); // TODO: send as urlEncoded or multipart by default
+  // because of ease of use and reliability in browser API
+  // for encoding the form?
+
+  if (contentType !== 'application/json') {
+    body = formData;
+  } else {
+    // Json
+    const json = {};
+    Array.from(formPairs).forEach(({
+      value,
+      key
+    }) => {
+      set(json, key, value);
+    });
+    body = JSON.stringify(json);
+  }
+
+  if (contentType && contentType !== 'multipart/form-data') {
+    if (
+    /* Zapier doesn't allow content-type header to be sent from browsers */
+    !(sendWithJs && action?.includes('zapier.com'))) {
+      headers['content-type'] = contentType;
+    }
+  }
+
+  const presubmitEvent = new CustomEvent('presubmit', {
+    detail: {
+      body
+    }
+  });
+
+  if (formRef) {
+    formRef.dispatchEvent(presubmitEvent);
+
+    if (presubmitEvent.defaultPrevented) {
+      return;
+    }
+  }
+
+  formState = 'sending';
+  const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(name || '')}\`;
+  fetch(sendSubmissionsTo === 'email' ? formUrl : action!
+  /* TODO: throw error if no action URL */
+  , {
+    body,
+    headers,
+    method: method || 'post'
+  }).then(async res => {
+    let body;
+    const contentType = res.headers.get('content-type');
+
+    if (contentType && contentType.indexOf('application/json') !== -1) {
+      body = await res.json();
+    } else {
+      body = await res.text();
+    }
+
+    if (!res.ok && errorMessagePath) {
+      /* TODO: allow supplying an error formatter function */
+      let message = get(body, errorMessagePath);
+
+      if (message) {
+        if (typeof message !== 'string') {
+          /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+          message = JSON.stringify(message);
         }
-      }
 
-      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+        formErrorMessage = message;
+      }
+    }
+
+    responseData = body;
+    formState = res.ok ? 'success' : 'error';
+
+    if (res.ok) {
+      const submitSuccessEvent = new CustomEvent('submit:success', {
         detail: {
-          body,
-        },
+          res,
+          body
+        }
       });
 
       if (formRef) {
-        formRef.dispatchEvent(presubmitEvent);
+        formRef.dispatchEvent(submitSuccessEvent);
 
-        if (presubmitEvent.defaultPrevented) {
+        if (submitSuccessEvent.defaultPrevented) {
           return;
         }
+        /* TODO: option to turn this on/off? */
+
+
+        if (resetFormOnSubmit !== false) {
+          formRef.reset();
+        }
       }
+      /* TODO: client side route event first that can be preventDefaulted */
 
-      formState = \\"sending\\";
-      const formUrl = \`\${
-        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-        sendSubmissionsToEmail || \\"\\"
-      )}&name=\${encodeURIComponent(name || \\"\\")}\`;
-      fetch(
-        sendSubmissionsTo === \\"email\\" ? formUrl : action,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: method || \\"post\\",
-        }
-      ).then(
-        async (res) => {
-          let body;
-          const contentType = res.headers.get(\\"content-type\\");
 
-          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-            body = await res.json();
-          } else {
-            body = await res.text();
-          }
-
-          if (!res.ok && errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
-            let message = get(body, errorMessagePath);
-
-            if (message) {
-              if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
-                message = JSON.stringify(message);
-              }
-
-              formErrorMessage = message;
-            }
-          }
-
-          responseData = body;
-          formState = res.ok ? \\"success\\" : \\"error\\";
-
-          if (res.ok) {
-            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-              detail: {
-                res,
-                body,
-              },
-            });
-
-            if (formRef) {
-              formRef.dispatchEvent(submitSuccessEvent);
-
-              if (submitSuccessEvent.defaultPrevented) {
-                return;
-              }
-              /* TODO: option to turn this on/off? */
-
-              if (resetFormOnSubmit !== false) {
-                formRef.reset();
-              }
-            }
-            /* TODO: client side route event first that can be preventDefaulted */
-
-            if (successUrl) {
-              if (formRef) {
-                const event = new CustomEvent(\\"route\\", {
-                  detail: {
-                    url: successUrl,
-                  },
-                });
-                formRef.dispatchEvent(event);
-
-                if (!event.defaultPrevented) {
-                  location.href = successUrl;
-                }
-              } else {
-                location.href = successUrl;
-              }
-            }
-          }
-        },
-        (err) => {
-          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+      if (successUrl) {
+        if (formRef) {
+          const event = new CustomEvent('route', {
             detail: {
-              error: err,
-            },
-          });
-
-          if (formRef) {
-            formRef.dispatchEvent(submitErrorEvent);
-
-            if (submitErrorEvent.defaultPrevented) {
-              return;
+              url: successUrl
             }
+          });
+          formRef.dispatchEvent(event);
+
+          if (!event.defaultPrevented) {
+            location.href = successUrl;
           }
-
-          responseData = err;
-          formState = \\"error\\";
+        } else {
+          location.href = successUrl;
         }
-      );
+      }
     }
-  }
-  $: submissionState = () => {
-    return (Builder.isEditing && previewState) || formState;
-  };
+  }, err => {
+    const submitErrorEvent = new CustomEvent('submit:error', {
+      detail: {
+        error: err
+      }
+    });
 
-  let formRef;
+    if (formRef) {
+      formRef.dispatchEvent(submitErrorEvent);
 
-  let formState = \\"unsubmitted\\";
-  let responseData = null;
-  let formErrorMessage = \\"\\";
-</script>
+      if (submitErrorEvent.defaultPrevented) {
+        return;
+      }
+    }
 
-<form
-  {validate}
-  bind:this={formRef}
-  action={!sendWithJs && action}
-  {method}
-  {name}
-  on:submit={(event) => {
-    onSubmit(event);
-  }}
-  {...attributes}
->
-  {#if builderBlock && builderBlock.children}
-    {#each builderBlock?.children as block, index (block.id)}
-      <BuilderBlockComponent {block} {index} />
-    {/each}
-  {/if}
+    responseData = err;
+    formState = 'error';
+  });
+}
+}
+    $: submissionState = () => {
+return Builder.isEditing && previewState || formState;
+};
 
-  {#if submissionState() === \\"error\\"}
-    <BuilderBlocks dataPath=\\"errorMessage\\" blocks={errorMessage} />
-  {/if}
+    let formRef
 
-  {#if submissionState() === \\"sending\\"}
-    <BuilderBlocks dataPath=\\"sendingMessage\\" blocks={sendingMessage} />
-  {/if}
+    let formState = 'unsubmitted';
+let responseData = null;
+let formErrorMessage = '';
+    
 
-  {#if submissionState() === \\"error\\" && responseData}
-    <pre class=\\"builder-form-error-text pre\\">
+    
+
+    
+
+    
+
+    
+  </script>
+
+  <form  validate={validate}  bind:this={formRef}  action={!sendWithJs && action}  method={method}  name={name}  on:submit=\\"{event => {onSubmit(event)}}\\"  {...attributes} >
+    
+{#if builderBlock && builderBlock.children }
+
+      
+
+{#each builderBlock?.children as block, index (block.id)}
+<BuilderBlockComponent  block={block}  index={index} ></BuilderBlockComponent>
+{/each}
+
+
+    
+
+
+{/if}
+
+    
+{#if submissionState() === 'error' }
+
+      
+<BuilderBlocks  dataPath=\\"errorMessage\\"  blocks={errorMessage!} ></BuilderBlocks>
+
+    
+
+
+{/if}
+
+    
+{#if submissionState() === 'sending' }
+
+      
+<BuilderBlocks  dataPath=\\"sendingMessage\\"  blocks={sendingMessage!} ></BuilderBlocks>
+
+    
+
+
+{/if}
+
+    
+{#if submissionState() === 'error' && responseData }
+
+      
+<pre  class=\\"builder-form-error-text pre\\" >
         {JSON.stringify(responseData, null, 2)}
       </pre>
-  {/if}
 
-  {#if submissionState() === \\"success\\"}
-    <BuilderBlocks dataPath=\\"successMessage\\" blocks={successMessage} />
-  {/if}
-</form>
+    
 
-<style>
-  .pre {
-    padding: 10px;
-    color: red;
-    text-align: center;
-  }
-</style>"
+
+{/if}
+
+    
+{#if submissionState() === 'success' }
+
+      
+<BuilderBlocks  dataPath=\\"successMessage\\"  blocks={successMessage!} ></BuilderBlocks>
+
+    
+
+
+{/if}
+  </form>
+
+  <style>
+    .pre {
+padding: 10px;
+color: red;
+text-align: center;
+}
+  </style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Image 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  // TODO: AMP Support?
+  export interface ImageProps {
+    _class?: string;
+    image: string;
+    sizes?: string;
+    lazy?: boolean;
+    height?: number;
+    width?: number;
+    altText?: string;
+    backgroundSize?: string;
+    backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+    srcset?: string; // TODO: Implement support for custom aspect ratios
+
+    aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+    children?: any;
+  }
+</script>
+
+<script lang=\\"ts\\">
   import { onDestroy, onMount } from \\"svelte\\";
 
-  export let lazy;
-  export let altText;
-  export let _class;
-  export let image;
-  export let srcset;
-  export let sizes;
+  export let lazy: ImageProps[\\"lazy\\"];
+  export let altText: ImageProps[\\"altText\\"];
+  export let _class: ImageProps[\\"_class\\"];
+  export let image: ImageProps[\\"image\\"];
+  export let srcset: ImageProps[\\"srcset\\"];
+  export let sizes: ImageProps[\\"sizes\\"];
 
   function setLoaded() {
     imageLoaded = true;
@@ -3555,14 +3747,33 @@ exports[`Svelte > jsx > Typescript Test > Image State 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Img 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ImgProps {
+    attributes?: any;
+    imgSrc?: string;
+    altText?: string;
+    backgroundSize?: \\"cover\\" | \\"contain\\";
+    backgroundPosition?:
+      | \\"center\\"
+      | \\"top\\"
+      | \\"left\\"
+      | \\"right\\"
+      | \\"bottom\\"
+      | \\"top left\\"
+      | \\"top right\\"
+      | \\"bottom left\\"
+      | \\"bottom right\\";
+  }
+</script>
+
+<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let backgroundSize;
-  export let backgroundPosition;
-  export let attributes;
-  export let imgSrc;
-  export let altText;
+  export let backgroundSize: ImgProps[\\"backgroundSize\\"];
+  export let backgroundPosition: ImgProps[\\"backgroundPosition\\"];
+  export let attributes: ImgProps[\\"attributes\\"];
+  export let imgSrc: ImgProps[\\"imgSrc\\"];
+  export let altText: ImgProps[\\"altText\\"];
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -3588,16 +3799,28 @@ exports[`Svelte > jsx > Typescript Test > Img 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Input 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface FormInputProps {
+    type?: string;
+    attributes?: any;
+    name?: string;
+    value?: string;
+    placeholder?: string;
+    defaultValue?: string;
+    required?: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let attributes;
-  export let defaultValue;
-  export let placeholder;
-  export let type;
-  export let name;
-  export let value;
-  export let required;
+  export let attributes: FormInputProps[\\"attributes\\"];
+  export let defaultValue: FormInputProps[\\"defaultValue\\"];
+  export let placeholder: FormInputProps[\\"placeholder\\"];
+  export let type: FormInputProps[\\"type\\"];
+  export let name: FormInputProps[\\"name\\"];
+  export let value: FormInputProps[\\"value\\"];
+  export let required: FormInputProps[\\"required\\"];
 </script>
 
 <input
@@ -3613,9 +3836,16 @@ exports[`Svelte > jsx > Typescript Test > Input 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > RawText 1`] = `
-"<script lang=\\"ts\\">
-  export let attributes;
-  export let text;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface RawTextProps {
+    attributes?: any;
+    text?: string; // builderBlock?: any;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let attributes: RawTextProps[\\"attributes\\"];
+  export let text: RawTextProps[\\"text\\"];
 </script>
 
 <span class={attributes?.class || attributes?.className}
@@ -3624,9 +3854,17 @@ exports[`Svelte > jsx > Typescript Test > RawText 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Section 1`] = `
-"<script lang=\\"ts\\">
-  export let attributes;
-  export let maxWidth;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface SectionProps {
+    maxWidth?: number;
+    attributes?: any;
+    children?: any;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let attributes: SectionProps[\\"attributes\\"];
+  export let maxWidth: SectionProps[\\"maxWidth\\"];
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -3652,8 +3890,16 @@ exports[`Svelte > jsx > Typescript Test > Section 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Section 2`] = `
-"<script lang=\\"ts\\">
-  export let attributes;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface SectionProps {
+    maxWidth?: number;
+    attributes?: any;
+    children?: any;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let attributes: SectionProps[\\"attributes\\"];
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -3684,14 +3930,27 @@ exports[`Svelte > jsx > Typescript Test > Section 2`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Select 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface FormSelectProps {
+    options?: {
+      name?: string;
+      value: string;
+    }[];
+    attributes?: any;
+    name?: string;
+    value?: string;
+    defaultValue?: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let attributes;
-  export let value;
-  export let defaultValue;
-  export let name;
-  export let options;
+  export let attributes: FormSelectProps[\\"attributes\\"];
+  export let value: FormSelectProps[\\"value\\"];
+  export let defaultValue: FormSelectProps[\\"defaultValue\\"];
+  export let name: FormSelectProps[\\"name\\"];
+  export let options: FormSelectProps[\\"options\\"];
 </script>
 
 <select
@@ -3710,7 +3969,13 @@ exports[`Svelte > jsx > Typescript Test > Select 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotDefault 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
 </script>
 
 <div>
@@ -3721,7 +3986,13 @@ exports[`Svelte > jsx > Typescript Test > SlotDefault 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotHtml 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
   import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 </script>
 
@@ -3735,7 +4006,16 @@ exports[`Svelte > jsx > Typescript Test > SlotHtml 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotJsx 1`] = `
-"<script lang='ts'>
+"<script context='module' lang='ts'>
+      type Props = {
+[key: string]: string;
+};
+
+    </script>
+    
+
+    
+<script lang='ts'>
   
   
 
@@ -3773,7 +4053,13 @@ import ContentSlotCode from './content-slot-jsx.raw';
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotNamed 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
 </script>
 
 <div>
@@ -3784,14 +4070,21 @@ exports[`Svelte > jsx > Typescript Test > SlotNamed 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  type SmileReviewsProps = {
+    productId: string;
+    apiKey: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   import { kebabCase } from \\"lodash\\";
   import { snakeCase } from \\"lodash\\";
 
-  export let apiKey;
-  export let productId;
+  export let apiKey: SmileReviewsProps[\\"apiKey\\"];
+  export let productId: SmileReviewsProps[\\"productId\\"];
 
   function kebabCaseValue() {
     return kebabCase(\\"testThat\\");
@@ -3882,9 +4175,16 @@ exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Submit 1`] = `
-"<script lang=\\"ts\\">
-  export let attributes;
-  export let text;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ButtonProps {
+    attributes?: any;
+    text?: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let attributes: ButtonProps[\\"attributes\\"];
+  export let text: ButtonProps[\\"text\\"];
 </script>
 
 <button type=\\"submit\\" {...attributes}>
@@ -3893,11 +4193,21 @@ exports[`Svelte > jsx > Typescript Test > Submit 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Text 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface TextProps {
+    attributes?: any;
+    rtlMode: boolean;
+    text?: string;
+    content?: string;
+    builderBlock?: any;
+  }
+</script>
+
+<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let text;
-  export let content;
+  export let text: TextProps[\\"text\\"];
+  export let content: TextProps[\\"content\\"];
 
   let name = \\"Decadef20\\";
 </script>
@@ -3913,28 +4223,66 @@ exports[`Svelte > jsx > Typescript Test > Text 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Textarea 1`] = `
-"<script lang=\\"ts\\">
-  export let attributes;
-  export let placeholder;
-  export let name;
-  export let value;
-  export let defaultValue;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface TextareaProps {
+    attributes?: any;
+    name?: string;
+    value?: string;
+    defaultValue?: string;
+    placeholder?: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let attributes: TextareaProps[\\"attributes\\"];
+  export let placeholder: TextareaProps[\\"placeholder\\"];
+  export let name: TextareaProps[\\"name\\"];
+  export let value: TextareaProps[\\"value\\"];
+  export let defaultValue: TextareaProps[\\"defaultValue\\"];
 </script>
 
 <textarea {...attributes} {placeholder} {name} {value} {defaultValue} />"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Video 1`] = `
-"<script lang=\\"ts\\">
-  export let attributes;
-  export let fit;
-  export let position;
-  export let video;
-  export let posterImage;
-  export let autoPlay;
-  export let muted;
-  export let controls;
-  export let loop;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface VideoProps {
+    attributes?: any;
+    video?: string;
+    autoPlay?: boolean;
+    controls?: boolean;
+    muted?: boolean;
+    loop?: boolean;
+    playsInline?: boolean;
+    aspectRatio?: number;
+    width?: number;
+    height?: number;
+    fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+    position?:
+      | \\"center\\"
+      | \\"top\\"
+      | \\"left\\"
+      | \\"right\\"
+      | \\"bottom\\"
+      | \\"top left\\"
+      | \\"top right\\"
+      | \\"bottom left\\"
+      | \\"bottom right\\";
+    posterImage?: string;
+    lazyLoad?: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let attributes: VideoProps[\\"attributes\\"];
+  export let fit: VideoProps[\\"fit\\"];
+  export let position: VideoProps[\\"position\\"];
+  export let video: VideoProps[\\"video\\"];
+  export let posterImage: VideoProps[\\"posterImage\\"];
+  export let autoPlay: VideoProps[\\"autoPlay\\"];
+  export let muted: VideoProps[\\"muted\\"];
+  export let controls: VideoProps[\\"controls\\"];
+  export let loop: VideoProps[\\"loop\\"];
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -3986,8 +4334,15 @@ exports[`Svelte > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
-"<script lang=\\"ts\\">
-  export let inputRef;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface Props {
+    showInput: boolean;
+    inputRef: HTMLInputElement;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let inputRef: Props[\\"inputRef\\"];
 
   let name = \\"PatrickJS\\";
 </script>
@@ -4004,8 +4359,15 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"<script lang=\\"ts\\">
-  export let inputRef;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface Props {
+    showInput: boolean;
+    inputRef: HTMLInputElement;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let inputRef: Props[\\"inputRef\\"];
 
   let name = \\"PatrickJS\\";
 </script>
@@ -4089,7 +4451,16 @@ exports[`Svelte > jsx > Typescript Test > className + css 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > className 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string | JSX.Element;
+    slotTesting: JSX.Element;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import { JSX } from \\"../../../../jsx-runtime\\";
+
   let bindings = \\"a binding\\";
 </script>
 
@@ -4130,13 +4501,19 @@ exports[`Svelte > jsx > Typescript Test > classState 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ComponentWithContextProps {
+    content: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
   import { getContext, setContext } from \\"svelte\\";
 
   import Context1 from \\"@dummy/1\\";
   import Context2 from \\"@dummy/2\\";
 
-  export let content;
+  export let content: ComponentWithContextProps[\\"content\\"];
 
   let foo = getContext(Context1.key);
 
@@ -4156,13 +4533,19 @@ exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ComponentWithContextProps {
+    content: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
   import { getContext, setContext } from \\"svelte\\";
 
   import Context1 from \\"@dummy/1\\";
   import Context2 from \\"@dummy/2\\";
 
-  export let content;
+  export let content: ComponentWithContextProps[\\"content\\"];
 
   let foo = getContext(Context1.key);
 
@@ -4202,15 +4585,27 @@ exports[`Svelte > jsx > Typescript Test > contentState 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
-"<script lang=\\"ts\\">
-  export let link = \\"https://builder.io/\\";
-  export let attributes;
-  export let openLinkInNewTab = false;
-  export let text = \\"default text\\";
-  export let onClick = () => {
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ButtonProps {
+    attributes?: any;
+    text?: string;
+    buttonText?: string; // no default value
+
+    link?: string;
+    openLinkInNewTab?: boolean;
+    onClick?: () => void;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let link: ButtonProps[\\"link\\"] = \\"https://builder.io/\\";
+  export let attributes: ButtonProps[\\"attributes\\"];
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
+  export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+  export let onClick: ButtonProps[\\"onClick\\"] = () => {
     console.log(\\"hi\\");
   };
-  export let buttonText;
+  export let buttonText: ButtonProps[\\"buttonText\\"];
 </script>
 
 <div>
@@ -4239,12 +4634,22 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
-"<script lang=\\"ts\\">
-  export let link = \\"https://builder.io/\\";
-  export let attributes;
-  export let openLinkInNewTab = false;
-  export let text = \\"default text\\";
-  export let onClick = () => {};
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ButtonProps {
+    attributes?: any;
+    text?: string;
+    link?: string;
+    openLinkInNewTab?: boolean;
+    onClick: () => void;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let link: ButtonProps[\\"link\\"] = \\"https://builder.io/\\";
+  export let attributes: ButtonProps[\\"attributes\\"];
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
+  export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+  export let onClick: ButtonProps[\\"onClick\\"] = () => {};
 </script>
 
 <div>
@@ -4273,12 +4678,18 @@ exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > defaultValsWithTypes 1`] = `
-"<script lang=\\"ts\\">
-  const DEFAULT_VALUES = {
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    name: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  const DEFAULT_VALUES: Props = {
     name: \\"Sami\\",
   };
 
-  export let name;
+  export let name: Props[\\"name\\"];
 </script>
 
 <div>Hello {name || DEFAULT_VALUES.name}</div>"
@@ -4295,10 +4706,19 @@ exports[`Svelte > jsx > Typescript Test > expressionState 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > import types 1`] = `
-"<script lang=\\"ts\\">
-  import RenderBlock from \\"./builder-render-block.raw\\";
+"<script context=\\"module\\" lang=\\"ts\\">
+  type RenderContentProps = {
+    options?: GetContentOptions;
+    content: BuilderContent;
+    renderContentProps: RenderBlockProps;
+  };
+</script>
 
-  export let renderContentProps;
+<script lang=\\"ts\\">
+  import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+  import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+  export let renderContentProps: RenderContentProps[\\"renderContentProps\\"];
 
   function getRenderContentProps(block, index) {
     return {
@@ -4365,9 +4785,16 @@ exports[`Svelte > jsx > Typescript Test > multipleSpreads 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > nestedShow 1`] = `
-"<script lang=\\"ts\\">
-  export let conditionA;
-  export let conditionB;
+"<script context=\\"module\\" lang=\\"ts\\">
+  interface Props {
+    conditionA: boolean;
+    conditionB: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let conditionA: Props[\\"conditionA\\"];
+  export let conditionB: Props[\\"conditionB\\"];
 </script>
 
 {#if conditionA}
@@ -4421,12 +4848,18 @@ exports[`Svelte > jsx > Typescript Test > onInit & onMount 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > onInit 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    name: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
   export const defaultValues = {
     name: \\"PatrickJS\\",
   };
 
-  export let name;
+  export let name: Props[\\"name\\"];
 
   let name = \\"\\";
   name = defaultValues.name || name;
@@ -4465,8 +4898,14 @@ exports[`Svelte > jsx > Typescript Test > onUpdate 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > onUpdateWithDeps 1`] = `
-"<script lang=\\"ts\\">
-  export let size;
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    size: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  export let size: Props[\\"size\\"];
 
   let a = \\"a\\";
   let b = \\"b\\";
@@ -4481,28 +4920,68 @@ exports[`Svelte > jsx > Typescript Test > onUpdateWithDeps 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Types = {
+    s: any[];
+  };
+
+  interface IPost {
+    len: number;
+  }
+
+  export interface MyBasicComponentProps {
+    id: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
   const b = 3;
   const foo = () => {};
   export const a = 3;
   export const bar = () => {};
-  export function run(value) {}
+  export function run<T>(value: T) {}
 </script>
 
 <div />"
 `;
 
 exports[`Svelte > jsx > Typescript Test > preserveTyping 1`] = `
-"<script lang=\\"ts\\">
-  export let name;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export type A = \\"test\\";
+
+  export interface C {
+    n: \\"test\\";
+  }
+
+  type B = \\"test2\\";
+
+  interface D {
+    n: \\"test\\";
+  }
+
+  export interface MyBasicComponentProps {
+    name: string;
+    age?: number;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let name: MyBasicComponentProps[\\"name\\"];
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > propsDestructure 1`] = `
-"<script lang=\\"ts\\">
-  export let type;
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    children: any;
+    type: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  export let type: Props[\\"type\\"];
 
   let name = \\"Decadef20\\";
 </script>
@@ -4515,16 +4994,30 @@ exports[`Svelte > jsx > Typescript Test > propsDestructure 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > propsInterface 1`] = `
-"<script lang=\\"ts\\">
-  export let name;
+"<script context=\\"module\\" lang=\\"ts\\">
+  interface Person {
+    name: string;
+    age?: number;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let name: Person[\\"name\\"];
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > propsType 1`] = `
-"<script lang=\\"ts\\">
-  export let name;
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Person = {
+    name: string;
+    age?: number;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  export let name: Person[\\"name\\"];
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
@@ -4555,15 +5048,43 @@ exports[`Svelte > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  import type {
+    BuilderContextInterface,
+    RegisteredComponent,
+  } from \\"../../context/types.js\\";
+
+  import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+
+  import type { Nullable } from \\"../../types/typescript.js\\";
+
+  import type { RenderComponentProps } from \\"./render-component\\";
+
+  import type { RepeatData } from \\"./types.js\\";
+
+  export type RenderBlockProps = {
+    block: BuilderBlock;
+    context: BuilderContextInterface;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import {
+    BuilderContextInterface,
+    RegisteredComponent,
+  } from \\"../../context/types.js\\";
   import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
   import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
   import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
   import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
   import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+  import { BuilderBlock } from \\"../../types/builder-block.js\\";
+  import { Nullable } from \\"../../types/typescript.js\\";
   import { evaluate } from \\"../../functions/evaluate.js\\";
   import BlockStyles from \\"./block-styles.svelte\\";
   import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+  import { RenderComponentProps } from \\"./render-component\\";
+  import { RepeatData } from \\"./types.js\\";
   import RenderRepeatedBlock from \\"./render-repeated-block.svelte\\";
   import { TARGET } from \\"../../constants/target.js\\";
   import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
@@ -4571,8 +5092,8 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
   import RenderComponent from \\"./render-component.svelte\\";
   import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 
-  export let block;
-  export let context;
+  export let block: RenderBlockProps[\\"block\\"];
+  export let context: RenderBlockProps[\\"context\\"];
 
   $: component = () => {
     const componentName = getProcessedBlock({
@@ -4708,7 +5229,7 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...context,
         state: {
@@ -4793,7 +5314,17 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    customComponents: string[];
+    content: {
+      blocks: any[];
+      id: string;
+    };
+  };
+</script>
+
+<script lang=\\"ts\\">
   import { onMount, setContext } from \\"svelte\\";
 
   import {
@@ -4804,8 +5335,8 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
   import BuilderContext from \\"@dummy/context.svelte\\";
   import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-  export let content;
-  export let customComponents;
+  export let content: Props[\\"content\\"];
+  export let customComponents: Props[\\"customComponents\\"];
 
   onMount(() => {
     sendComponentsToVisualEditor(customComponents);
@@ -4845,11 +5376,20 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
-"<script lang=\\"ts\\">
-  export let link;
-  export let attributes;
-  export let openLinkInNewTab;
-  export let text;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ButtonProps {
+    attributes?: any;
+    text?: string;
+    link?: string;
+    openLinkInNewTab?: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let link: ButtonProps[\\"link\\"];
+  export let attributes: ButtonProps[\\"attributes\\"];
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
+  export let text: ButtonProps[\\"text\\"];
 </script>
 
 {#if link}
@@ -4870,8 +5410,14 @@ exports[`Svelte > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > rootShow 1`] = `
-"<script lang=\\"ts\\">
-  export let foo;
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface RenderStylesProps {
+    foo: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let foo: RenderStylesProps[\\"foo\\"];
 </script>
 
 {#if foo === \\"bar\\"}
@@ -4913,9 +5459,16 @@ exports[`Svelte > jsx > Typescript Test > self-referencing component with childr
 `;
 
 exports[`Svelte > jsx > Typescript Test > showWithFor 1`] = `
-"<script lang=\\"ts\\">
-  export let conditionA;
-  export let items;
+"<script context=\\"module\\" lang=\\"ts\\">
+  interface Props {
+    conditionA: boolean;
+    items: string[];
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let conditionA: Props[\\"conditionA\\"];
+  export let items: Props[\\"items\\"];
 </script>
 
 {#if conditionA}
@@ -5008,8 +5561,22 @@ exports[`Svelte > jsx > Typescript Test > svgComponent 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > typeDependency 1`] = `
-"<script lang=\\"ts\\">
-  export let foo;
+"<script context=\\"module\\" lang=\\"ts\\">
+  import type { Foo } from \\"./foo-type\\";
+
+  import type { Foo as Foo2 } from \\"./type-export\\";
+
+  export type TypeDependencyProps = {
+    foo: Foo;
+    foo2: Foo2;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import { Foo } from \\"./foo-type\\";
+  import { Foo as Foo2 } from \\"./type-export\\";
+
+  export let foo: TypeDependencyProps[\\"foo\\"];
 </script>
 
 <div>{foo}</div>"

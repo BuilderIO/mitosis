@@ -12648,7 +12648,11 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > AdvancedRef 1`] = `
-"/**
+"export interface Props {
+  showInput: boolean;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-ref-component></my-basic-ref-component>
@@ -12917,7 +12921,11 @@ customElements.define(\\"my-basic-ref-component\\", MyBasicRefComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Basic 1`] = `
-"export const DEFAULT_VALUES = {
+"export interface MyBasicComponentProps {
+  id: string;
+}
+
+export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
@@ -13533,7 +13541,12 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Basic OnMount Update 1`] = `
-"/**
+"export interface Props {
+  hi: string;
+  bye: string;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-on-mount-update-component></my-basic-on-mount-update-component>
@@ -14014,7 +14027,12 @@ customElements.define(\\"my-component\\", MyComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
-"import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+"type Props = {
+  children: any;
+  type: string;
+};
+
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
 /**
  * Usage:
@@ -14566,7 +14584,11 @@ customElements.define(\\"my-basic-for-component\\", MyBasicForComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > BasicRef 1`] = `
-"/**
+"export interface Props {
+  showInput: boolean;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-ref-component></my-basic-ref-component>
@@ -14823,7 +14845,11 @@ customElements.define(\\"my-basic-ref-component\\", MyBasicRefComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > BasicRefAssignment 1`] = `
-"/**
+"export interface Props {
+  showInput: boolean;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-ref-assignment-component></my-basic-ref-assignment-component>
@@ -14839,7 +14865,7 @@ class MyBasicRefAssignmentComponent extends HTMLElement {
     const self = this;
 
     this.state = {
-      handlerClick: function handlerClick(event) {
+      handlerClick: function handlerClick(event: Event) {
         event.preventDefault();
         console.log(\\"current value\\", self._holdValueRef);
         self._holdValueRef = self._holdValueRef + \\"JS\\";
@@ -14944,10 +14970,14 @@ customElements.define(
 `;
 
 exports[`webcomponent > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"export function usePrevious(value) {
+"export interface Props {
+  showInput: boolean;
+}
+
+export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null); // Store current value in ref
+  let ref = useRef<T>(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -15097,7 +15127,14 @@ customElements.define(\\"my-previous-component\\", MyPreviousComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Button 1`] = `
-"/**
+"export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+/**
  * Usage:
  *
  *  <button></button>
@@ -15264,7 +15301,22 @@ customElements.define(\\"button\\", Button);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Columns 1`] = `
-"/**
+"type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
+  width?: number;
+};
+export interface ColumnProps {
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
+  reverseColumnsWhenStacked?: boolean;
+}
+
+/**
  * Usage:
  *
  *  <column></column>
@@ -15288,11 +15340,11 @@ class Column extends HTMLElement {
           ? self.props.space || 0
           : 20;
       },
-      getWidth(index) {
+      getWidth(index: number) {
         const columns = self.state.getColumns();
         return (columns[index] && columns[index].width) || 100 / columns.length;
       },
-      getColumnCssWidth(index) {
+      getColumnCssWidth(index: number) {
         const columns = self.state.getColumns();
         const gutterSize = self.state.getGutterSize();
         const subtractWidth =
@@ -15484,7 +15536,14 @@ customElements.define(\\"column\\", Column);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"/**
+"type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+import { JSX } from \\"../../../../jsx-runtime\\";
+
+/**
  * Usage:
  *
  *  <content-slot-code></content-slot-code>
@@ -15603,7 +15662,13 @@ customElements.define(\\"content-slot-code\\", ContentSlotCode);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"/**
+"type Props = {
+  [key: string]: string | JSX.Element;
+};
+
+import { JSX } from \\"../../../../jsx-runtime\\";
+
+/**
  * Usage:
  *
  *  <content-slot-jsx-code></content-slot-jsx-code>
@@ -15802,7 +15867,12 @@ customElements.define(\\"content-slot-jsx-code\\", ContentSlotJsxCode);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > CustomCode 1`] = `
-"/**
+"export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+/**
  * Usage:
  *
  *  <custom-code></custom-code>
@@ -15965,7 +16035,12 @@ customElements.define(\\"custom-code\\", CustomCode);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Embed 1`] = `
-"/**
+"export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+/**
  * Usage:
  *
  *  <custom-code></custom-code>
@@ -16128,7 +16203,26 @@ customElements.define(\\"custom-code\\", CustomCode);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Image 1`] = `
-"/**
+"// TODO: AMP Support?
+export interface ImageProps {
+  _class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}
+
+/**
  * Usage:
  *
  *  <image></image>
@@ -16529,7 +16623,24 @@ customElements.define(\\"img-state-component\\", ImgStateComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Img 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 /**
  * Usage:
@@ -16652,7 +16763,17 @@ customElements.define(\\"img-component\\", ImgComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Input 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 /**
  * Usage:
@@ -16820,7 +16941,12 @@ customElements.define(\\"form-input-component\\", FormInputComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > RawText 1`] = `
-"/**
+"export interface RawTextProps {
+  attributes?: any;
+  text?: string; // builderBlock?: any;
+}
+
+/**
  * Usage:
  *
  *  <raw-text></raw-text>
@@ -16929,7 +17055,13 @@ customElements.define(\\"raw-text\\", RawText);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Section 1`] = `
-"/**
+"export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+/**
  * Usage:
  *
  *  <section-component></section-component>
@@ -17047,7 +17179,13 @@ customElements.define(\\"section-component\\", SectionComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Section 2`] = `
-"/**
+"export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+/**
  * Usage:
  *
  *  <section-state-component></section-state-component>
@@ -17255,7 +17393,18 @@ customElements.define(\\"section-state-component\\", SectionStateComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Select 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface FormSelectProps {
+  options?: {
+    name?: string;
+    value: string;
+  }[];
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 /**
  * Usage:
@@ -17502,7 +17651,11 @@ customElements.define(\\"select-component\\", SelectComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > SlotDefault 1`] = `
-"/**
+"type Props = {
+  [key: string]: string;
+};
+
+/**
  * Usage:
  *
  *  <slot-code></slot-code>
@@ -17594,7 +17747,11 @@ customElements.define(\\"slot-code\\", SlotCode);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > SlotHtml 1`] = `
-"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+"type Props = {
+  [key: string]: string;
+};
+
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 /**
  * Usage:
@@ -17692,7 +17849,11 @@ customElements.define(\\"slot-code\\", SlotCode);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > SlotJsx 1`] = `
-"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+"type Props = {
+  [key: string]: string;
+};
+
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 /**
  * Usage:
@@ -17802,7 +17963,11 @@ customElements.define(\\"slot-code\\", SlotCode);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > SlotNamed 1`] = `
-"/**
+"type Props = {
+  [key: string]: string;
+};
+
+/**
  * Usage:
  *
  *  <slot-code></slot-code>
@@ -17896,7 +18061,12 @@ customElements.define(\\"slot-code\\", SlotCode);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Stamped.io 1`] = `
-"import { kebabCase } from \\"lodash\\";
+"type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
+
+import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
 /**
@@ -18299,7 +18469,12 @@ customElements.define(\\"smile-reviews\\", SmileReviews);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Submit 1`] = `
-"/**
+"export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+}
+
+/**
  * Usage:
  *
  *  <submit-button></submit-button>
@@ -18410,7 +18585,15 @@ customElements.define(\\"submit-button\\", SubmitButton);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Text 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 /**
  * Usage:
@@ -18527,7 +18710,15 @@ customElements.define(\\"text\\", Text);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Textarea 1`] = `
-"/**
+"export interface TextareaProps {
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  placeholder?: string;
+}
+
+/**
  * Usage:
  *
  *  <textarea></textarea>
@@ -18685,7 +18876,33 @@ customElements.define(\\"textarea\\", Textarea);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > Video 1`] = `
-"/**
+"export interface VideoProps {
+  attributes?: any;
+  video?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  playsInline?: boolean;
+  aspectRatio?: number;
+  width?: number;
+  height?: number;
+  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+  position?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+  posterImage?: string;
+  lazyLoad?: boolean;
+}
+
+/**
  * Usage:
  *
  *  <video></video>
@@ -18924,7 +19141,12 @@ customElements.define(\\"my-component\\", MyComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > basicForwardRef 1`] = `
-"/**
+"export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-forward-ref-component></my-basic-forward-ref-component>
@@ -19083,7 +19305,12 @@ customElements.define(
 `;
 
 exports[`webcomponent > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"/**
+"export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-forward-ref-component></my-basic-forward-ref-component>
@@ -19650,7 +19877,14 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > className 1`] = `
-"/**
+"type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+import { JSX } from \\"../../../../jsx-runtime\\";
+
+/**
  * Usage:
  *
  *  <class-name-code></class-name-code>
@@ -19855,7 +20089,11 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > componentWithContext 1`] = `
-"import Context1 from \\"@dummy/1\\";
+"export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
 /**
@@ -19984,7 +20222,11 @@ customElements.define(\\"component-with-context\\", ComponentWithContext);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
-"import Context1 from \\"@dummy/1\\";
+"export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
 /**
@@ -20220,7 +20462,17 @@ customElements.define(\\"render-content\\", RenderContent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > defaultProps 1`] = `
-"/**
+"export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  buttonText?: string; // no default value
+
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick?: () => void;
+}
+
+/**
  * Usage:
  *
  *  <button></button>
@@ -20404,7 +20656,15 @@ customElements.define(\\"button\\", Button);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
-"/**
+"export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick: () => void;
+}
+
+/**
  * Usage:
  *
  *  <button></button>
@@ -20587,7 +20847,11 @@ customElements.define(\\"button\\", Button);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > defaultValsWithTypes 1`] = `
-"const DEFAULT_VALUES = {
+"type Props = {
+  name: string;
+};
+
+const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
@@ -20820,7 +21084,14 @@ customElements.define(\\"my-component\\", MyComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > import types 1`] = `
-"import RenderBlock from \\"./builder-render-block.raw\\";
+"type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 /**
  * Usage:
@@ -21279,7 +21550,12 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > nestedShow 1`] = `
-"/**
+"interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+/**
  * Usage:
  *
  *  <nested-show></nested-show>
@@ -21631,7 +21907,11 @@ customElements.define(\\"on-init\\", OnInit);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > onInit 1`] = `
-"export const defaultValues = {
+"type Props = {
+  name: string;
+};
+
+export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
@@ -21947,7 +22227,11 @@ customElements.define(\\"on-update\\", OnUpdate);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > onUpdateWithDeps 1`] = `
-"/**
+"type Props = {
+  size: string;
+};
+
+/**
  * Usage:
  *
  *  <on-update-with-deps></on-update-with-deps>
@@ -22067,11 +22351,21 @@ customElements.define(\\"on-update-with-deps\\", OnUpdateWithDeps);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
-"const b = 3;
+"type Types = {
+  s: any[];
+};
+interface IPost {
+  len: number;
+}
+export interface MyBasicComponentProps {
+  id: string;
+}
+
+const b = 3;
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run(value) {}
+export function run<T>(value: T) {}
 
 /**
  * Usage:
@@ -22161,7 +22455,20 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > preserveTyping 1`] = `
-"/**
+"export type A = \\"test\\";
+export interface C {
+  n: \\"test\\";
+}
+type B = \\"test2\\";
+interface D {
+  n: \\"test\\";
+}
+export interface MyBasicComponentProps {
+  name: string;
+  age?: number;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-component></my-basic-component>
@@ -22273,7 +22580,12 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > propsDestructure 1`] = `
-"/**
+"type Props = {
+  children: any;
+  type: string;
+};
+
+/**
  * Usage:
  *
  *  <my-basic-component></my-basic-component>
@@ -22388,7 +22700,12 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > propsInterface 1`] = `
-"/**
+"interface Person {
+  name: string;
+  age?: number;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-component></my-basic-component>
@@ -22500,7 +22817,12 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > propsType 1`] = `
-"/**
+"type Person = {
+  name: string;
+  age?: number;
+};
+
+/**
  * Usage:
  *
  *  <my-basic-component></my-basic-component>
@@ -22726,7 +23048,15 @@ exports[`webcomponent > jsx > Typescript Test > renderBlock 1`] = `
 `;
 
 exports[`webcomponent > jsx > Typescript Test > renderContentExample 1`] = `
-"import {
+"type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+
+import {
   sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
   trackClick,
@@ -22890,7 +23220,14 @@ customElements.define(\\"render-content\\", RenderContent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
-"/**
+"export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+/**
  * Usage:
  *
  *  <button></button>
@@ -23055,7 +23392,11 @@ customElements.define(\\"button\\", Button);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > rootShow 1`] = `
-"/**
+"export interface RenderStylesProps {
+  foo: string;
+}
+
+/**
  * Usage:
  *
  *  <render-styles></render-styles>
@@ -23484,7 +23825,12 @@ customElements.define(\\"my-component\\", MyComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > showWithFor 1`] = `
-"/**
+"interface Props {
+  conditionA: boolean;
+  items: string[];
+}
+
+/**
  * Usage:
  *
  *  <nested-show></nested-show>
@@ -24406,7 +24752,17 @@ customElements.define(\\"svg-component\\", SvgComponent);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > typeDependency 1`] = `
-"/**
+"import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+  foo2: Foo2;
+};
+
+import { Foo } from \\"./foo-type\\";
+import { Foo as Foo2 } from \\"./type-export\\";
+
+/**
  * Usage:
  *
  *  <type-dependency></type-dependency>

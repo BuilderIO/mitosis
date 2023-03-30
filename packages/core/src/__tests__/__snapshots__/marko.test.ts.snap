@@ -2313,14 +2313,14 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-e00625fe {
+  .input-790d468a {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-e00625fe\\"
+      class=\\"input-790d468a\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -2357,11 +2357,11 @@ class {
 }
 
 style { 
-  .div-485004b9 {
+  .div-48c79144 {
     padding: 10px;
   }
 }
-<div class=\\"test div-485004b9\\">
+<div class=\\"test div-48c79144\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -2559,14 +2559,14 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-e7166f56 {
+  .input-cbb647ea {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-e7166f56\\"
+      class=\\"input-cbb647ea\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -2589,7 +2589,7 @@ style {
 
 exports[`Marko > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "class {
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", this.holdValueRef);
     this.holdValueRef = this.holdValueRef + \\"JS\\";
@@ -2602,10 +2602,10 @@ exports[`Marko > jsx > Typescript Test > BasicRefAssignment 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"export function usePrevious(value) {
+"export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null); // Store current value in ref
+  let ref = useRef<T>(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -2658,11 +2658,11 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
   getGutterSize() {
     return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -2671,35 +2671,37 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
 }
 
 style { 
-  .div-1737bee5 {
+  .div-f5d75200 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-1737bee5 {
+    .div-f5d75200 {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-1737bee5 {
+    .div-f5d75200 {
       flex-direction: row-reverse;
     }
   }
-  .div-1737bee5-2 {
+  .div-f5d75200-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-1737bee5\\">
+<div class=\\"builder-columns div-f5d75200\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-1737bee5-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-f5d75200-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"class {}
+"import { JSX } from \\"../../../../jsx-runtime\\";
+
+class {}
 
 <div>
   <slot name=(input.slotTesting)></slot>
@@ -2715,7 +2717,9 @@ exports[`Marko > jsx > Typescript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"class {
+"import { JSX } from \\"../../../../jsx-runtime\\";
+
+class {
   get cls() {
     return this.input.slotContent && this.input.children
       ? \`\${this.state.name}-content\`
@@ -2880,7 +2884,7 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
 
 exports[`Marko > jsx > Typescript Test > Form 1`] = `
 "import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -2891,7 +2895,11 @@ class {
       (Builder.isEditing && this.input.previewState) || this.state.formState
     );
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs =
       this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
 
@@ -2906,16 +2914,19 @@ class {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.input.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -2941,7 +2952,7 @@ class {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -3008,7 +3019,7 @@ class {
         this.input.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
-        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
+        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -3120,7 +3131,7 @@ class {
 }
 
 style { 
-  .pre-ac3abc3e {
+  .pre-e91d89fc {
     padding: 10px;
     color: red;
     text-align: center;
@@ -3145,17 +3156,17 @@ style {
   <if(component.submissionState === 'error')>
     <BuilderBlocks
       dataPath=\\"errorMessage\\"
-      blocks=(input.errorMessage)
+      blocks=(input.errorMessage!)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'sending')>
     <BuilderBlocks
       dataPath=\\"sendingMessage\\"
-      blocks=(input.sendingMessage)
+      blocks=(input.sendingMessage!)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-ac3abc3e\\">
+    <pre class=\\"builder-form-error-text pre-e91d89fc\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -3165,7 +3176,7 @@ style {
   <if(component.submissionState === 'success')>
     <BuilderBlocks
       dataPath=\\"successMessage\\"
-      blocks=(input.successMessage)
+      blocks=(input.successMessage!)
     ></BuilderBlocks></if>
 </form>"
 `;
@@ -3225,7 +3236,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 }
 
 style { 
-  .img-1cf63efe {
+  .img-45432c52 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -3238,7 +3249,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-1cf63efe')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-45432c52')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -3433,16 +3444,16 @@ class {
 }
 
 style { 
-  .input-39aef911 {
+  .input-c3470f28 {
     display: block;
   }
-  .textarea-39aef911 {
+  .textarea-c3470f28 {
     display: block;
   }
-  .button-39aef911 {
+  .button-c3470f28 {
     display: block;
   }
-  .review-39aef911 {
+  .review-c3470f28 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -3450,7 +3461,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-39aef911 {
+  .img-c3470f28 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -3463,13 +3474,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-39aef911\\" />
+    <input placeholder=\\"Title\\" class=\\"input-c3470f28\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-39aef911\\"
+      class=\\"textarea-c3470f28\\"
     ></textarea>
     <button
-      class=\\"button-39aef911\\"
+      class=\\"button-c3470f28\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -3479,8 +3490,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-39aef911\\" key=(review.id)>
-      <img class=\\"img-39aef911\\" src=(review.avatar) />
+    <div class=\\"review-c3470f28\\" key=(review.id)>
+      <img class=\\"img-c3470f28\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -3587,13 +3598,13 @@ exports[`Marko > jsx > Typescript Test > basicForwardRef 1`] = `
 }
 
 style { 
-  .input-7c942903 {
+  .input-014e706f {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-7c942903\\"
+    class=\\"input-014e706f\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -3613,13 +3624,13 @@ exports[`Marko > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 }
 
 style { 
-  .input-f79b9d34 {
+  .input-53a59b24 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-f79b9d34\\"
+    class=\\"input-53a59b24\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -3694,7 +3705,9 @@ style {
 `;
 
 exports[`Marko > jsx > Typescript Test > className 1`] = `
-"class {
+"import { JSX } from \\"../../../../jsx-runtime\\";
+
+class {
   onCreate() {
     this.state = { bindings: \\"a binding\\" };
   }
@@ -3806,7 +3819,7 @@ exports[`Marko > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > defaultValsWithTypes 1`] = `
-"const DEFAULT_VALUES = {
+"const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
@@ -3830,7 +3843,8 @@ exports[`Marko > jsx > Typescript Test > expressionState 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > import types 1`] = `
-"import RenderBlock from \\"./builder-render-block.raw\\";
+"import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 class {
   getRenderContentProps(block, index) {
@@ -4000,7 +4014,7 @@ exports[`Marko > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run(value) {}
+export function run<T>(value: T) {}
 
 class {}
 
@@ -4059,14 +4073,22 @@ exports[`Marko > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > renderBlock 1`] = `
-"import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+"import {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { BuilderBlock } from \\"../../types/builder-block.js\\";
+import { Nullable } from \\"../../types/typescript.js\\";
 import { evaluate } from \\"../../functions/evaluate.js\\";
 import BlockStyles from \\"./block-styles.marko\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import { RenderComponentProps } from \\"./render-component\\";
+import { RepeatData } from \\"./types.js\\";
 import RenderRepeatedBlock from \\"./render-repeated-block.marko\\";
 import { TARGET } from \\"../../constants/target.js\\";
 import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
@@ -4200,7 +4222,7 @@ class {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.input.context,
         state: {
@@ -4312,12 +4334,12 @@ class {
 }
 
 style { 
-  .div-5ac3500e {
+  .div-c8eb54c0 {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-5ac3500e\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-c8eb54c0\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -4452,7 +4474,10 @@ exports[`Marko > jsx > Typescript Test > svgComponent 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > typeDependency 1`] = `
-"class {}
+"import { Foo } from \\"./foo-type\\";
+import { Foo as Foo2 } from \\"./type-export\\";
+
+class {}
 
 <div>\${input.foo}</div>"
 `;
