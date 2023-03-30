@@ -138,14 +138,14 @@ export function parseJsx(
               babel.types.isTSInterfaceDeclaration(node.declaration) ||
               babel.types.isTSTypeAliasDeclaration(node.declaration)
             ) {
-              collectTypes(path.node, context);
+              collectTypes(path, context);
             }
           },
           TSTypeAliasDeclaration(path, context) {
-            collectTypes(path.node, context);
+            collectTypes(path, context);
           },
           TSInterfaceDeclaration(path, context) {
-            collectTypes(path.node, context);
+            collectTypes(path, context);
           },
         },
       }),
