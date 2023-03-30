@@ -18,8 +18,8 @@ import { handleImportDeclaration } from './imports';
 import { jsxElementToJson } from './element-parser';
 import { componentFunctionToJson } from './function-parser';
 
-const jsxPlugin = require('@babel/plugin-syntax-jsx');
-const tsPreset = require('@babel/preset-typescript');
+import jsxPlugin from '@babel/plugin-syntax-jsx';
+import tsPreset from '@babel/preset-typescript';
 
 const { types } = babel;
 

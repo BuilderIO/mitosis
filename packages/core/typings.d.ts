@@ -4,3 +4,9 @@ declare module '@dummy*';
 // This is for vite raw asset handling suffix
 // https://vitejs.dev/guide/assets.html#importing-asset-as-string
 declare module '*?raw';
+
+declare module '@babel/plugin-syntax-jsx';
+declare module '@babel/plugin-syntax-decorators';
+declare module '@babel/plugin-syntax-typescript';
+declare module '@babel/plugin-syntax-typescript';
+declare module '@babel/preset-typescript';

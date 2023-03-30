@@ -1,7 +1,7 @@
 import * as babel from '@babel/core';
-const jsxPlugin = require('@babel/plugin-syntax-jsx');
-const tsPreset = require('@babel/preset-typescript');
-const decorators = require('@babel/plugin-syntax-decorators');
+import jsxPlugin from '@babel/plugin-syntax-jsx';
+import tsPlugin from '@babel/plugin-syntax-typescript';
+import decorators from '@babel/plugin-syntax-decorators';
 import type { Visitor } from '@babel/traverse';
 import { pipe } from 'fp-ts/lib/function';
 import { checkIsGetter } from './patterns';
@@ -64,9 +64,15 @@ export const babelTransform = <VisitorContextType = any>(
     sourceFileName: 'file.tsx',
     configFile: false,
     babelrc: false,
-    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
+    // TO-DO: keep doing this if `typescript: true`
+    // presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     parserOpts: { allowReturnOutsideFunction: true },
-    plugins: [[decorators, { legacy: true }], jsxPlugin, ...(visitor ? [() => ({ visitor })] : [])],
+    plugins: [
+      [tsPlugin, { isTSX: true }],
+      [decorators, { legacy: true }],
+      jsxPlugin,
+      ...(visitor ? [() => ({ visitor })] : []),
+    ],
   });
 };
 export const babelTransformCode = <VisitorContextType = any>(
