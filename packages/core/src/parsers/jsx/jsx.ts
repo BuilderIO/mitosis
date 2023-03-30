@@ -18,7 +18,6 @@ import { handleImportDeclaration } from './imports';
 import { jsxElementToJson } from './element-parser';
 import { componentFunctionToJson } from './function-parser';
 
-import jsxPlugin from '@babel/plugin-syntax-jsx';
 import tsPreset from '@babel/preset-typescript';
 import tsPlugin from '@babel/plugin-syntax-typescript';
 
@@ -52,14 +51,21 @@ export function parseJsx(
     ..._options,
   };
 
-  const output = babel.transform(jsx, {
+  const jsxToUse = options.typescript
+    ? jsx
+    : // strip typescript types by running through babel's TS preset.
+      (babel.transform(jsx, {
+        configFile: false,
+        babelrc: false,
+        presets: [typescriptBabelPreset],
+      })?.code as string);
+
+  const output = babel.transform(jsxToUse, {
     configFile: false,
     babelrc: false,
     comments: false,
-    presets: !options.typescript ? [typescriptBabelPreset] : undefined,
     plugins: [
-      tsPlugin,
-      jsxPlugin,
+      [tsPlugin, { isTSX: true }],
       (): babel.PluginObj<Context> => ({
         visitor: {
           JSXExpressionContainer(path, context) {

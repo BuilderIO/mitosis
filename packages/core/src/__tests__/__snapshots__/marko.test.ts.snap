@@ -85,14 +85,14 @@ exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-790d468a {
+  .input-e00625fe {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-790d468a\\"
+      class=\\"input-e00625fe\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -129,11 +129,11 @@ class {
 }
 
 style { 
-  .div-48c79144 {
+  .div-485004b9 {
     padding: 10px;
   }
 }
-<div class=\\"test div-48c79144\\">
+<div class=\\"test div-485004b9\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -331,14 +331,14 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-cbb647ea {
+  .input-e7166f56 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-cbb647ea\\"
+      class=\\"input-e7166f56\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -361,7 +361,7 @@ style {
 
 exports[`Marko > jsx > Javascript Test > BasicRefAssignment 1`] = `
 "class {
-  handlerClick = function handlerClick(event: Event) {
+  handlerClick = function handlerClick(event) {
     event.preventDefault();
     console.log(\\"current value\\", this.holdValueRef);
     this.holdValueRef = this.holdValueRef + \\"JS\\";
@@ -374,10 +374,10 @@ exports[`Marko > jsx > Javascript Test > BasicRefAssignment 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"export function usePrevious<T>(value: T) {
+"export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -430,11 +430,11 @@ exports[`Marko > jsx > Javascript Test > Columns 1`] = `
   getGutterSize() {
     return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -443,29 +443,29 @@ exports[`Marko > jsx > Javascript Test > Columns 1`] = `
 }
 
 style { 
-  .div-f5d75200 {
+  .div-1737bee5 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-f5d75200 {
+    .div-1737bee5 {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-f5d75200 {
+    .div-1737bee5 {
       flex-direction: row-reverse;
     }
   }
-  .div-f5d75200-2 {
+  .div-1737bee5-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-f5d75200\\">
+<div class=\\"builder-columns div-1737bee5\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-f5d75200-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-1737bee5-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -663,11 +663,7 @@ class {
       (Builder.isEditing && this.input.previewState) || this.state.formState
     );
   }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
+  onSubmit(event) {
     const sendWithJs =
       this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
 
@@ -682,19 +678,16 @@ class {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.input.customHeaders || {};
-      let body: any;
+      let body;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
+      const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!(el as HTMLInputElement).name)
+        .filter((el) => !!el.name)
         .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
+          let value;
+          const key = el.name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -720,7 +713,7 @@ class {
               value = el.value;
             }
           } else {
-            value = (el as HTMLInputElement).value;
+            value = el.value;
           }
 
           return {
@@ -787,7 +780,7 @@ class {
         this.input.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
-        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action!,
+        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -899,7 +892,7 @@ class {
 }
 
 style { 
-  .pre-0dc9e2e8 {
+  .pre-ac3abc3e {
     padding: 10px;
     color: red;
     text-align: center;
@@ -924,17 +917,17 @@ style {
   <if(component.submissionState === 'error')>
     <BuilderBlocks
       dataPath=\\"errorMessage\\"
-      blocks=(input.errorMessage!)
+      blocks=(input.errorMessage)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'sending')>
     <BuilderBlocks
       dataPath=\\"sendingMessage\\"
-      blocks=(input.sendingMessage!)
+      blocks=(input.sendingMessage)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-0dc9e2e8\\">
+    <pre class=\\"builder-form-error-text pre-ac3abc3e\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -944,7 +937,7 @@ style {
   <if(component.submissionState === 'success')>
     <BuilderBlocks
       dataPath=\\"successMessage\\"
-      blocks=(input.successMessage!)
+      blocks=(input.successMessage)
     ></BuilderBlocks></if>
 </form>"
 `;
@@ -1004,7 +997,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
 }
 
 style { 
-  .img-45432c52 {
+  .img-1cf63efe {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -1017,7 +1010,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-45432c52')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-1cf63efe')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -1212,16 +1205,16 @@ class {
 }
 
 style { 
-  .input-c3470f28 {
+  .input-39aef911 {
     display: block;
   }
-  .textarea-c3470f28 {
+  .textarea-39aef911 {
     display: block;
   }
-  .button-c3470f28 {
+  .button-39aef911 {
     display: block;
   }
-  .review-c3470f28 {
+  .review-39aef911 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -1229,7 +1222,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-c3470f28 {
+  .img-39aef911 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -1242,13 +1235,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-c3470f28\\" />
+    <input placeholder=\\"Title\\" class=\\"input-39aef911\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-c3470f28\\"
+      class=\\"textarea-39aef911\\"
     ></textarea>
     <button
-      class=\\"button-c3470f28\\"
+      class=\\"button-39aef911\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -1258,8 +1251,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-c3470f28\\" key=(review.id)>
-      <img class=\\"img-c3470f28\\" src=(review.avatar) />
+    <div class=\\"review-39aef911\\" key=(review.id)>
+      <img class=\\"img-39aef911\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -1366,13 +1359,13 @@ exports[`Marko > jsx > Javascript Test > basicForwardRef 1`] = `
 }
 
 style { 
-  .input-014e706f {
+  .input-7c942903 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-014e706f\\"
+    class=\\"input-7c942903\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -1392,13 +1385,13 @@ exports[`Marko > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 }
 
 style { 
-  .input-53a59b24 {
+  .input-f79b9d34 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-53a59b24\\"
+    class=\\"input-f79b9d34\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -1585,7 +1578,7 @@ exports[`Marko > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > defaultValsWithTypes 1`] = `
-"const DEFAULT_VALUES: Props = {
+"const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
@@ -1779,7 +1772,7 @@ exports[`Marko > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
 class {}
 
@@ -1979,7 +1972,7 @@ class {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+    const repeatArray = itemsArray.map((item, index) => ({
       context: {
         ...this.input.context,
         state: {
@@ -2091,12 +2084,12 @@ class {
 }
 
 style { 
-  .div-c8eb54c0 {
+  .div-5ac3500e {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-c8eb54c0\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-5ac3500e\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -2320,14 +2313,14 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-790d468a {
+  .input-e00625fe {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-790d468a\\"
+      class=\\"input-e00625fe\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -2364,11 +2357,11 @@ class {
 }
 
 style { 
-  .div-48c79144 {
+  .div-485004b9 {
     padding: 10px;
   }
 }
-<div class=\\"test div-48c79144\\">
+<div class=\\"test div-485004b9\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -2566,14 +2559,14 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-cbb647ea {
+  .input-e7166f56 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-cbb647ea\\"
+      class=\\"input-e7166f56\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -2596,7 +2589,7 @@ style {
 
 exports[`Marko > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "class {
-  handlerClick = function handlerClick(event: Event) {
+  handlerClick = function handlerClick(event) {
     event.preventDefault();
     console.log(\\"current value\\", this.holdValueRef);
     this.holdValueRef = this.holdValueRef + \\"JS\\";
@@ -2609,10 +2602,10 @@ exports[`Marko > jsx > Typescript Test > BasicRefAssignment 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"export function usePrevious<T>(value: T) {
+"export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -2665,11 +2658,11 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
   getGutterSize() {
     return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -2678,29 +2671,29 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
 }
 
 style { 
-  .div-f5d75200 {
+  .div-1737bee5 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-f5d75200 {
+    .div-1737bee5 {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-f5d75200 {
+    .div-1737bee5 {
       flex-direction: row-reverse;
     }
   }
-  .div-f5d75200-2 {
+  .div-1737bee5-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-f5d75200\\">
+<div class=\\"builder-columns div-1737bee5\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-f5d75200-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-1737bee5-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -2898,11 +2891,7 @@ class {
       (Builder.isEditing && this.input.previewState) || this.state.formState
     );
   }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
+  onSubmit(event) {
     const sendWithJs =
       this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
 
@@ -2917,19 +2906,16 @@ class {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.input.customHeaders || {};
-      let body: any;
+      let body;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
+      const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!(el as HTMLInputElement).name)
+        .filter((el) => !!el.name)
         .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
+          let value;
+          const key = el.name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -2955,7 +2941,7 @@ class {
               value = el.value;
             }
           } else {
-            value = (el as HTMLInputElement).value;
+            value = el.value;
           }
 
           return {
@@ -3022,7 +3008,7 @@ class {
         this.input.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
-        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action!,
+        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -3134,7 +3120,7 @@ class {
 }
 
 style { 
-  .pre-0dc9e2e8 {
+  .pre-ac3abc3e {
     padding: 10px;
     color: red;
     text-align: center;
@@ -3159,17 +3145,17 @@ style {
   <if(component.submissionState === 'error')>
     <BuilderBlocks
       dataPath=\\"errorMessage\\"
-      blocks=(input.errorMessage!)
+      blocks=(input.errorMessage)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'sending')>
     <BuilderBlocks
       dataPath=\\"sendingMessage\\"
-      blocks=(input.sendingMessage!)
+      blocks=(input.sendingMessage)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-0dc9e2e8\\">
+    <pre class=\\"builder-form-error-text pre-ac3abc3e\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -3179,7 +3165,7 @@ style {
   <if(component.submissionState === 'success')>
     <BuilderBlocks
       dataPath=\\"successMessage\\"
-      blocks=(input.successMessage!)
+      blocks=(input.successMessage)
     ></BuilderBlocks></if>
 </form>"
 `;
@@ -3239,7 +3225,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 }
 
 style { 
-  .img-45432c52 {
+  .img-1cf63efe {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -3252,7 +3238,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-45432c52')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-1cf63efe')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -3447,16 +3433,16 @@ class {
 }
 
 style { 
-  .input-c3470f28 {
+  .input-39aef911 {
     display: block;
   }
-  .textarea-c3470f28 {
+  .textarea-39aef911 {
     display: block;
   }
-  .button-c3470f28 {
+  .button-39aef911 {
     display: block;
   }
-  .review-c3470f28 {
+  .review-39aef911 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -3464,7 +3450,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-c3470f28 {
+  .img-39aef911 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -3477,13 +3463,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-c3470f28\\" />
+    <input placeholder=\\"Title\\" class=\\"input-39aef911\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-c3470f28\\"
+      class=\\"textarea-39aef911\\"
     ></textarea>
     <button
-      class=\\"button-c3470f28\\"
+      class=\\"button-39aef911\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -3493,8 +3479,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-c3470f28\\" key=(review.id)>
-      <img class=\\"img-c3470f28\\" src=(review.avatar) />
+    <div class=\\"review-39aef911\\" key=(review.id)>
+      <img class=\\"img-39aef911\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -3601,13 +3587,13 @@ exports[`Marko > jsx > Typescript Test > basicForwardRef 1`] = `
 }
 
 style { 
-  .input-014e706f {
+  .input-7c942903 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-014e706f\\"
+    class=\\"input-7c942903\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -3627,13 +3613,13 @@ exports[`Marko > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 }
 
 style { 
-  .input-53a59b24 {
+  .input-f79b9d34 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-53a59b24\\"
+    class=\\"input-f79b9d34\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -3820,7 +3806,7 @@ exports[`Marko > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > defaultValsWithTypes 1`] = `
-"const DEFAULT_VALUES: Props = {
+"const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
@@ -4014,7 +4000,7 @@ exports[`Marko > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
 class {}
 
@@ -4214,7 +4200,7 @@ class {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+    const repeatArray = itemsArray.map((item, index) => ({
       context: {
         ...this.input.context,
         state: {
@@ -4326,12 +4312,12 @@ class {
 }
 
 style { 
-  .div-c8eb54c0 {
+  .div-5ac3500e {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-c8eb54c0\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-5ac3500e\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;

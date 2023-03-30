@@ -311,7 +311,7 @@ exports[`Svelte > jsx > Javascript Test > BasicRef 1`] = `
 
 exports[`Svelte > jsx > Javascript Test > BasicRefAssignment 1`] = `
 "<script>
-  function handlerClick(event: Event) {
+  function handlerClick(event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -329,10 +329,10 @@ exports[`Svelte > jsx > Javascript Test > BasicRefAssignment 1`] = `
 
 exports[`Svelte > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "<script>
-  export function usePrevious<T>(value: T) {
+  export function usePrevious(value) {
     // The ref object is a generic container whose current property is mutable ...
     // ... and can hold any value, similar to an instance property on a class
-    let ref = useRef<T>(null); // Store current value in ref
+    let ref = useRef(null); // Store current value in ref
 
     onUpdate(() => {
       ref = value;
@@ -402,12 +402,12 @@ exports[`Svelte > jsx > Javascript Test > Columns 1`] = `
     return typeof space === \\"number\\" ? space || 0 : 20;
   }
 
-  function getWidth(index: number) {
+  function getWidth(index) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index: number) {
+  function getColumnCssWidth(index) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -631,339 +631,299 @@ exports[`Svelte > jsx > Javascript Test > Embed 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > Form 1`] = `
-"<script >
-    
-    
+"<script>
+  import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+  import { Builder, builder } from \\"@builder.io/sdk\\";
+  import { BuilderBlocks } from \\"@fake\\";
+  import { set } from \\"@fake\\";
+  import { get } from \\"@fake\\";
 
-    
-  import { BuilderBlock as BuilderBlockComponent } from '@fake';
-import { Builder, builder } from '@builder.io/sdk';
-import { BuilderBlocks } from '@fake';
-import { set } from '@fake';
-import { get } from '@fake';
-  
-  
+  export let previewState;
+  export let sendWithJs;
+  export let sendSubmissionsTo;
+  export let action;
+  export let customHeaders;
+  export let contentType;
+  export let sendSubmissionsToEmail;
+  export let name;
+  export let method;
+  export let errorMessagePath;
+  export let resetFormOnSubmit;
+  export let successUrl;
+  export let validate;
+  export let attributes;
+  export let builderBlock;
+  export let errorMessage;
+  export let sendingMessage;
+  export let successMessage;
 
+  function onSubmit(event) {
+    const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
 
-    
-    export let previewState;
-export let sendWithJs;
-export let sendSubmissionsTo;
-export let action;
-export let customHeaders;
-export let contentType;
-export let sendSubmissionsToEmail;
-export let name;
-export let method;
-export let errorMessagePath;
-export let resetFormOnSubmit;
-export let successUrl;
-export let validate;
-export let attributes;
-export let builderBlock;
-export let errorMessage;
-export let sendingMessage;
-export let successMessage;
-    
-    
+    if (sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(action || sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
 
-    function onSubmit(event: Event & {
-currentTarget: HTMLFormElement;
-}) {
-const sendWithJs = sendWithJs || sendSubmissionsTo === 'email';
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
 
-if (sendSubmissionsTo === 'zapier') {
-  event.preventDefault();
-} else if (sendWithJs) {
-  if (!(action || sendSubmissionsTo === 'email')) {
-    event.preventDefault();
-    return;
-  }
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
 
-  event.preventDefault();
-  const el = event.currentTarget;
-  const headers = customHeaders || {};
-  let body: any;
-  const formData = new FormData(el); // TODO: maybe support null
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
 
-  const formPairs: {
-    key: string;
-    value: File | boolean | number | string | FileList;
-  }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!(el as HTMLInputElement).name).map(el => {
-    let value: any;
-    const key = (el as HTMLImageElement).name;
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
 
-    if (el instanceof HTMLInputElement) {
-      if (el.type === 'radio') {
-        if (el.checked) {
-          value = el.name;
           return {
             key,
-            value
+            value,
           };
-        }
-      } else if (el.type === 'checkbox') {
-        value = el.checked;
-      } else if (el.type === 'number' || el.type === 'range') {
-        const num = el.valueAsNumber;
+        });
+      let contentType = contentType;
 
-        if (!isNaN(num)) {
-          value = num;
+      if (sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
         }
-      } else if (el.type === 'file') {
-        // TODO: one vs multiple files
-        value = el.files;
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
       } else {
-        value = el.value;
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
       }
-    } else {
-      value = (el as HTMLInputElement).value;
-    }
 
-    return {
-      key,
-      value
-    };
-  });
-  let contentType = contentType;
-
-  if (sendSubmissionsTo === 'email') {
-    contentType = 'multipart/form-data';
-  }
-
-  Array.from(formPairs).forEach(({
-    value
-  }) => {
-    if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
-      contentType = 'multipart/form-data';
-    }
-  }); // TODO: send as urlEncoded or multipart by default
-  // because of ease of use and reliability in browser API
-  // for encoding the form?
-
-  if (contentType !== 'application/json') {
-    body = formData;
-  } else {
-    // Json
-    const json = {};
-    Array.from(formPairs).forEach(({
-      value,
-      key
-    }) => {
-      set(json, key, value);
-    });
-    body = JSON.stringify(json);
-  }
-
-  if (contentType && contentType !== 'multipart/form-data') {
-    if (
-    /* Zapier doesn't allow content-type header to be sent from browsers */
-    !(sendWithJs && action?.includes('zapier.com'))) {
-      headers['content-type'] = contentType;
-    }
-  }
-
-  const presubmitEvent = new CustomEvent('presubmit', {
-    detail: {
-      body
-    }
-  });
-
-  if (formRef) {
-    formRef.dispatchEvent(presubmitEvent);
-
-    if (presubmitEvent.defaultPrevented) {
-      return;
-    }
-  }
-
-  formState = 'sending';
-  const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(name || '')}\`;
-  fetch(sendSubmissionsTo === 'email' ? formUrl : action!
-  /* TODO: throw error if no action URL */
-  , {
-    body,
-    headers,
-    method: method || 'post'
-  }).then(async res => {
-    let body;
-    const contentType = res.headers.get('content-type');
-
-    if (contentType && contentType.indexOf('application/json') !== -1) {
-      body = await res.json();
-    } else {
-      body = await res.text();
-    }
-
-    if (!res.ok && errorMessagePath) {
-      /* TODO: allow supplying an error formatter function */
-      let message = get(body, errorMessagePath);
-
-      if (message) {
-        if (typeof message !== 'string') {
-          /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
-          message = JSON.stringify(message);
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
         }
-
-        formErrorMessage = message;
       }
-    }
 
-    responseData = body;
-    formState = res.ok ? 'success' : 'error';
-
-    if (res.ok) {
-      const submitSuccessEvent = new CustomEvent('submit:success', {
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
         detail: {
-          res,
-          body
-        }
+          body,
+        },
       });
 
       if (formRef) {
-        formRef.dispatchEvent(submitSuccessEvent);
+        formRef.dispatchEvent(presubmitEvent);
 
-        if (submitSuccessEvent.defaultPrevented) {
+        if (presubmitEvent.defaultPrevented) {
           return;
         }
-        /* TODO: option to turn this on/off? */
-
-
-        if (resetFormOnSubmit !== false) {
-          formRef.reset();
-        }
       }
-      /* TODO: client side route event first that can be preventDefaulted */
 
+      formState = \\"sending\\";
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(name || \\"\\")}\`;
+      fetch(
+        sendSubmissionsTo === \\"email\\" ? formUrl : action,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
 
-      if (successUrl) {
-        if (formRef) {
-          const event = new CustomEvent('route', {
-            detail: {
-              url: successUrl
-            }
-          });
-          formRef.dispatchEvent(event);
-
-          if (!event.defaultPrevented) {
-            location.href = successUrl;
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
           }
-        } else {
-          location.href = successUrl;
+
+          if (!res.ok && errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, errorMessagePath);
+
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+                message = JSON.stringify(message);
+              }
+
+              formErrorMessage = message;
+            }
+          }
+
+          responseData = body;
+          formState = res.ok ? \\"success\\" : \\"error\\";
+
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: {
+                res,
+                body,
+              },
+            });
+
+            if (formRef) {
+              formRef.dispatchEvent(submitSuccessEvent);
+
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */
+
+              if (resetFormOnSubmit !== false) {
+                formRef.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (successUrl) {
+              if (formRef) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: successUrl,
+                  },
+                });
+                formRef.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = successUrl;
+                }
+              } else {
+                location.href = successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (formRef) {
+            formRef.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          responseData = err;
+          formState = \\"error\\";
         }
-      }
+      );
     }
-  }, err => {
-    const submitErrorEvent = new CustomEvent('submit:error', {
-      detail: {
-        error: err
-      }
-    });
+  }
+  $: submissionState = () => {
+    return (Builder.isEditing && previewState) || formState;
+  };
 
-    if (formRef) {
-      formRef.dispatchEvent(submitErrorEvent);
+  let formRef;
 
-      if (submitErrorEvent.defaultPrevented) {
-        return;
-      }
-    }
+  let formState = \\"unsubmitted\\";
+  let responseData = null;
+  let formErrorMessage = \\"\\";
+</script>
 
-    responseData = err;
-    formState = 'error';
-  });
-}
-}
-    $: submissionState = () => {
-return Builder.isEditing && previewState || formState;
-};
+<form
+  {validate}
+  bind:this={formRef}
+  action={!sendWithJs && action}
+  {method}
+  {name}
+  on:submit={(event) => {
+    onSubmit(event);
+  }}
+  {...attributes}
+>
+  {#if builderBlock && builderBlock.children}
+    {#each builderBlock?.children as block, index (block.id)}
+      <BuilderBlockComponent {block} {index} />
+    {/each}
+  {/if}
 
-    let formRef
+  {#if submissionState() === \\"error\\"}
+    <BuilderBlocks dataPath=\\"errorMessage\\" blocks={errorMessage} />
+  {/if}
 
-    let formState = 'unsubmitted';
-let responseData = null;
-let formErrorMessage = '';
-    
+  {#if submissionState() === \\"sending\\"}
+    <BuilderBlocks dataPath=\\"sendingMessage\\" blocks={sendingMessage} />
+  {/if}
 
-    
-
-    
-
-    
-
-    
-  </script>
-
-  <form  validate={validate}  bind:this={formRef}  action={!sendWithJs && action}  method={method}  name={name}  on:submit=\\"{event => {onSubmit(event)}}\\"  {...attributes} >
-    
-{#if builderBlock && builderBlock.children }
-
-      
-
-{#each builderBlock?.children as block, index (block.id)}
-<BuilderBlockComponent  block={block}  index={index} ></BuilderBlockComponent>
-{/each}
-
-
-    
-
-
-{/if}
-
-    
-{#if submissionState() === 'error' }
-
-      
-<BuilderBlocks  dataPath=\\"errorMessage\\"  blocks={errorMessage!} ></BuilderBlocks>
-
-    
-
-
-{/if}
-
-    
-{#if submissionState() === 'sending' }
-
-      
-<BuilderBlocks  dataPath=\\"sendingMessage\\"  blocks={sendingMessage!} ></BuilderBlocks>
-
-    
-
-
-{/if}
-
-    
-{#if submissionState() === 'error' && responseData }
-
-      
-<pre  class=\\"builder-form-error-text pre\\" >
+  {#if submissionState() === \\"error\\" && responseData}
+    <pre class=\\"builder-form-error-text pre\\">
         {JSON.stringify(responseData, null, 2)}
       </pre>
+  {/if}
 
-    
+  {#if submissionState() === \\"success\\"}
+    <BuilderBlocks dataPath=\\"successMessage\\" blocks={successMessage} />
+  {/if}
+</form>
 
-
-{/if}
-
-    
-{#if submissionState() === 'success' }
-
-      
-<BuilderBlocks  dataPath=\\"successMessage\\"  blocks={successMessage!} ></BuilderBlocks>
-
-    
-
-
-{/if}
-  </form>
-
-  <style>
-    .pre {
-padding: 10px;
-color: red;
-text-align: center;
-}
-  </style>"
+<style>
+  .pre {
+    padding: 10px;
+    color: red;
+    text-align: center;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Image 1`] = `
@@ -1778,7 +1738,7 @@ exports[`Svelte > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 
 exports[`Svelte > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "<script>
-  const DEFAULT_VALUES: Props = {
+  const DEFAULT_VALUES = {
     name: \\"Sami\\",
   };
 
@@ -1987,7 +1947,7 @@ exports[`Svelte > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
   const foo = () => {};
   export const a = 3;
   export const bar = () => {};
-  export function run<T>(value: T) {}
+  export function run(value) {}
 </script>
 
 <div />"
@@ -2209,7 +2169,7 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+    const repeatArray = itemsArray.map((item, index) => ({
       context: {
         ...context,
         state: {
@@ -2554,14 +2514,8 @@ exports[`Svelte > jsx > Remove Internal mitosis package 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let showInput: Props[\\"showInput\\"];
+"<script lang=\\"ts\\">
+  export let showInput;
 
   function onBlur() {
     // Maintain focus
@@ -2613,13 +2567,7 @@ exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Basic 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface MyBasicComponentProps {
-    id: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   export const DEFAULT_VALUES = {
     name: \\"Steve\\",
   };
@@ -2707,18 +2655,11 @@ exports[`Svelte > jsx > Typescript Test > Basic Context 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Basic OnMount Update 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    hi: string;
-    bye: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
-  export let hi: Props[\\"hi\\"];
-  export let bye: Props[\\"bye\\"];
+  export let hi;
+  export let bye;
 
   let name = \\"PatrickJS\\";
   let names = [\\"Steve\\", \\"PatrickJS\\"];
@@ -2778,17 +2719,10 @@ exports[`Svelte > jsx > Typescript Test > BasicAttribute 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    children: any;
-    type: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-  export let type: Props[\\"type\\"];
+  export let type;
 </script>
 
 <div>
@@ -2846,14 +2780,8 @@ exports[`Svelte > jsx > Typescript Test > BasicFor 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicRef 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let showInput: Props[\\"showInput\\"];
+"<script lang=\\"ts\\">
+  export let showInput;
 
   function onBlur() {
     // Maintain focus
@@ -2900,14 +2828,8 @@ exports[`Svelte > jsx > Typescript Test > BasicRef 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicRefAssignment 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  function handlerClick(event: Event) {
+"<script lang=\\"ts\\">
+  function handlerClick(event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -2924,17 +2846,11 @@ exports[`Svelte > jsx > Typescript Test > BasicRefAssignment 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export function usePrevious<T>(value: T) {
+"<script lang=\\"ts\\">
+  export function usePrevious(value) {
     // The ref object is a generic container whose current property is mutable ...
     // ... and can hold any value, similar to an instance property on a class
-    let ref = useRef<T>(null); // Store current value in ref
+    let ref = useRef(null); // Store current value in ref
 
     onUpdate(() => {
       ref = value;
@@ -2965,20 +2881,11 @@ exports[`Svelte > jsx > Typescript Test > BasicRefPrevious 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Button 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ButtonProps {
-    attributes?: any;
-    text?: string;
-    link?: string;
-    openLinkInNewTab?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"];
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
-  export let text: ButtonProps[\\"text\\"];
+"<script lang=\\"ts\\">
+  export let link;
+  export let attributes;
+  export let openLinkInNewTab;
+  export let text;
 </script>
 
 <div>
@@ -3001,27 +2908,9 @@ exports[`Svelte > jsx > Typescript Test > Button 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Column = {
-    content: any; // TODO: Implement this when support for dynamic CSS lands
-
-    width?: number;
-  };
-
-  export interface ColumnProps {
-    columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
-
-    space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-    stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
-
-    reverseColumnsWhenStacked?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let columns: ColumnProps[\\"columns\\"];
-  export let space: ColumnProps[\\"space\\"];
+"<script lang=\\"ts\\">
+  export let columns;
+  export let space;
 
   function getColumns() {
     return columns || [];
@@ -3031,12 +2920,12 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
     return typeof space === \\"number\\" ? space || 0 : 20;
   }
 
-  function getWidth(index: number) {
+  function getWidth(index) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index: number) {
+  function getColumnCssWidth(index) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -3077,14 +2966,7 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    [key: string]: string | JSX.Element;
-    slotTesting: JSX.Element;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
 </script>
 
 <div>
@@ -3099,15 +2981,9 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    [key: string]: string | JSX.Element;
-  };
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: Props[\\"attributes\\"];
-  export let content: Props[\\"content\\"] = \\"\\";
+"<script lang=\\"ts\\">
+  export let attributes;
+  export let content = \\"\\";
 
   function show() {
     $$slots.content ? 1 : \\"\\";
@@ -3142,18 +3018,11 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotJSX 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface CustomCodeProps {
-    code: string;
-    replaceNodes?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
-  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
-  export let code: CustomCodeProps[\\"code\\"];
+  export let replaceNodes;
+  export let code;
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -3216,18 +3085,11 @@ exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface CustomCodeProps {
-    code: string;
-    replaceNodes?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
-  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
-  export let code: CustomCodeProps[\\"code\\"];
+  export let replaceNodes;
+  export let code;
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -3290,402 +3152,311 @@ exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Form 1`] = `
-"<script context='module' lang='ts'>
-      export interface FormProps {
-attributes?: any;
-name?: string;
-action?: string;
-validate?: boolean;
-method?: string;
-builderBlock?: BuilderElement;
-sendSubmissionsTo?: string;
-sendSubmissionsToEmail?: string;
-sendWithJs?: boolean;
-contentType?: string;
-customHeaders?: {
-  [key: string]: string;
-};
-successUrl?: string;
-previewState?: FormState;
-successMessage?: BuilderElement[];
-errorMessage?: BuilderElement[];
-sendingMessage?: BuilderElement[];
-resetFormOnSubmit?: boolean;
-errorMessagePath?: string;
-}
+"<script lang=\\"ts\\">
+  import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+  import { Builder, builder } from \\"@builder.io/sdk\\";
+  import { BuilderBlocks } from \\"@fake\\";
+  import { set } from \\"@fake\\";
+  import { get } from \\"@fake\\";
 
-export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error';
+  export let previewState;
+  export let sendWithJs;
+  export let sendSubmissionsTo;
+  export let action;
+  export let customHeaders;
+  export let contentType;
+  export let sendSubmissionsToEmail;
+  export let name;
+  export let method;
+  export let errorMessagePath;
+  export let resetFormOnSubmit;
+  export let successUrl;
+  export let validate;
+  export let attributes;
+  export let builderBlock;
+  export let errorMessage;
+  export let sendingMessage;
+  export let successMessage;
 
-    </script>
-    
+  function onSubmit(event) {
+    const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
 
-    
-<script lang='ts'>
-    
-    
+    if (sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(action || sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
 
-    
-  import { BuilderBlock as BuilderBlockComponent } from '@fake';
-import { Builder, builder } from '@builder.io/sdk';
-import { BuilderBlocks } from '@fake';
-import { set } from '@fake';
-import { get } from '@fake';
-  
-  
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
 
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
 
-    
-    export let previewState: FormProps['previewState'];
-export let sendWithJs: FormProps['sendWithJs'];
-export let sendSubmissionsTo: FormProps['sendSubmissionsTo'];
-export let action: FormProps['action'];
-export let customHeaders: FormProps['customHeaders'];
-export let contentType: FormProps['contentType'];
-export let sendSubmissionsToEmail: FormProps['sendSubmissionsToEmail'];
-export let name: FormProps['name'];
-export let method: FormProps['method'];
-export let errorMessagePath: FormProps['errorMessagePath'];
-export let resetFormOnSubmit: FormProps['resetFormOnSubmit'];
-export let successUrl: FormProps['successUrl'];
-export let validate: FormProps['validate'];
-export let attributes: FormProps['attributes'];
-export let builderBlock: FormProps['builderBlock'];
-export let errorMessage: FormProps['errorMessage'];
-export let sendingMessage: FormProps['sendingMessage'];
-export let successMessage: FormProps['successMessage'];
-    
-    
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
 
-    function onSubmit(event: Event & {
-currentTarget: HTMLFormElement;
-}) {
-const sendWithJs = sendWithJs || sendSubmissionsTo === 'email';
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
 
-if (sendSubmissionsTo === 'zapier') {
-  event.preventDefault();
-} else if (sendWithJs) {
-  if (!(action || sendSubmissionsTo === 'email')) {
-    event.preventDefault();
-    return;
-  }
-
-  event.preventDefault();
-  const el = event.currentTarget;
-  const headers = customHeaders || {};
-  let body: any;
-  const formData = new FormData(el); // TODO: maybe support null
-
-  const formPairs: {
-    key: string;
-    value: File | boolean | number | string | FileList;
-  }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!(el as HTMLInputElement).name).map(el => {
-    let value: any;
-    const key = (el as HTMLImageElement).name;
-
-    if (el instanceof HTMLInputElement) {
-      if (el.type === 'radio') {
-        if (el.checked) {
-          value = el.name;
           return {
             key,
-            value
+            value,
           };
-        }
-      } else if (el.type === 'checkbox') {
-        value = el.checked;
-      } else if (el.type === 'number' || el.type === 'range') {
-        const num = el.valueAsNumber;
+        });
+      let contentType = contentType;
 
-        if (!isNaN(num)) {
-          value = num;
+      if (sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
         }
-      } else if (el.type === 'file') {
-        // TODO: one vs multiple files
-        value = el.files;
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
       } else {
-        value = el.value;
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
       }
-    } else {
-      value = (el as HTMLInputElement).value;
-    }
 
-    return {
-      key,
-      value
-    };
-  });
-  let contentType = contentType;
-
-  if (sendSubmissionsTo === 'email') {
-    contentType = 'multipart/form-data';
-  }
-
-  Array.from(formPairs).forEach(({
-    value
-  }) => {
-    if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
-      contentType = 'multipart/form-data';
-    }
-  }); // TODO: send as urlEncoded or multipart by default
-  // because of ease of use and reliability in browser API
-  // for encoding the form?
-
-  if (contentType !== 'application/json') {
-    body = formData;
-  } else {
-    // Json
-    const json = {};
-    Array.from(formPairs).forEach(({
-      value,
-      key
-    }) => {
-      set(json, key, value);
-    });
-    body = JSON.stringify(json);
-  }
-
-  if (contentType && contentType !== 'multipart/form-data') {
-    if (
-    /* Zapier doesn't allow content-type header to be sent from browsers */
-    !(sendWithJs && action?.includes('zapier.com'))) {
-      headers['content-type'] = contentType;
-    }
-  }
-
-  const presubmitEvent = new CustomEvent('presubmit', {
-    detail: {
-      body
-    }
-  });
-
-  if (formRef) {
-    formRef.dispatchEvent(presubmitEvent);
-
-    if (presubmitEvent.defaultPrevented) {
-      return;
-    }
-  }
-
-  formState = 'sending';
-  const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(name || '')}\`;
-  fetch(sendSubmissionsTo === 'email' ? formUrl : action!
-  /* TODO: throw error if no action URL */
-  , {
-    body,
-    headers,
-    method: method || 'post'
-  }).then(async res => {
-    let body;
-    const contentType = res.headers.get('content-type');
-
-    if (contentType && contentType.indexOf('application/json') !== -1) {
-      body = await res.json();
-    } else {
-      body = await res.text();
-    }
-
-    if (!res.ok && errorMessagePath) {
-      /* TODO: allow supplying an error formatter function */
-      let message = get(body, errorMessagePath);
-
-      if (message) {
-        if (typeof message !== 'string') {
-          /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
-          message = JSON.stringify(message);
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
         }
-
-        formErrorMessage = message;
       }
-    }
 
-    responseData = body;
-    formState = res.ok ? 'success' : 'error';
-
-    if (res.ok) {
-      const submitSuccessEvent = new CustomEvent('submit:success', {
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
         detail: {
-          res,
-          body
-        }
+          body,
+        },
       });
 
       if (formRef) {
-        formRef.dispatchEvent(submitSuccessEvent);
+        formRef.dispatchEvent(presubmitEvent);
 
-        if (submitSuccessEvent.defaultPrevented) {
+        if (presubmitEvent.defaultPrevented) {
           return;
         }
-        /* TODO: option to turn this on/off? */
-
-
-        if (resetFormOnSubmit !== false) {
-          formRef.reset();
-        }
       }
-      /* TODO: client side route event first that can be preventDefaulted */
 
+      formState = \\"sending\\";
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(name || \\"\\")}\`;
+      fetch(
+        sendSubmissionsTo === \\"email\\" ? formUrl : action,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
 
-      if (successUrl) {
-        if (formRef) {
-          const event = new CustomEvent('route', {
-            detail: {
-              url: successUrl
-            }
-          });
-          formRef.dispatchEvent(event);
-
-          if (!event.defaultPrevented) {
-            location.href = successUrl;
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
           }
-        } else {
-          location.href = successUrl;
+
+          if (!res.ok && errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, errorMessagePath);
+
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+                message = JSON.stringify(message);
+              }
+
+              formErrorMessage = message;
+            }
+          }
+
+          responseData = body;
+          formState = res.ok ? \\"success\\" : \\"error\\";
+
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: {
+                res,
+                body,
+              },
+            });
+
+            if (formRef) {
+              formRef.dispatchEvent(submitSuccessEvent);
+
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */
+
+              if (resetFormOnSubmit !== false) {
+                formRef.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (successUrl) {
+              if (formRef) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: successUrl,
+                  },
+                });
+                formRef.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = successUrl;
+                }
+              } else {
+                location.href = successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (formRef) {
+            formRef.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          responseData = err;
+          formState = \\"error\\";
         }
-      }
+      );
     }
-  }, err => {
-    const submitErrorEvent = new CustomEvent('submit:error', {
-      detail: {
-        error: err
-      }
-    });
+  }
+  $: submissionState = () => {
+    return (Builder.isEditing && previewState) || formState;
+  };
 
-    if (formRef) {
-      formRef.dispatchEvent(submitErrorEvent);
+  let formRef;
 
-      if (submitErrorEvent.defaultPrevented) {
-        return;
-      }
-    }
+  let formState = \\"unsubmitted\\";
+  let responseData = null;
+  let formErrorMessage = \\"\\";
+</script>
 
-    responseData = err;
-    formState = 'error';
-  });
-}
-}
-    $: submissionState = () => {
-return Builder.isEditing && previewState || formState;
-};
+<form
+  {validate}
+  bind:this={formRef}
+  action={!sendWithJs && action}
+  {method}
+  {name}
+  on:submit={(event) => {
+    onSubmit(event);
+  }}
+  {...attributes}
+>
+  {#if builderBlock && builderBlock.children}
+    {#each builderBlock?.children as block, index (block.id)}
+      <BuilderBlockComponent {block} {index} />
+    {/each}
+  {/if}
 
-    let formRef
+  {#if submissionState() === \\"error\\"}
+    <BuilderBlocks dataPath=\\"errorMessage\\" blocks={errorMessage} />
+  {/if}
 
-    let formState = 'unsubmitted';
-let responseData = null;
-let formErrorMessage = '';
-    
+  {#if submissionState() === \\"sending\\"}
+    <BuilderBlocks dataPath=\\"sendingMessage\\" blocks={sendingMessage} />
+  {/if}
 
-    
-
-    
-
-    
-
-    
-  </script>
-
-  <form  validate={validate}  bind:this={formRef}  action={!sendWithJs && action}  method={method}  name={name}  on:submit=\\"{event => {onSubmit(event)}}\\"  {...attributes} >
-    
-{#if builderBlock && builderBlock.children }
-
-      
-
-{#each builderBlock?.children as block, index (block.id)}
-<BuilderBlockComponent  block={block}  index={index} ></BuilderBlockComponent>
-{/each}
-
-
-    
-
-
-{/if}
-
-    
-{#if submissionState() === 'error' }
-
-      
-<BuilderBlocks  dataPath=\\"errorMessage\\"  blocks={errorMessage!} ></BuilderBlocks>
-
-    
-
-
-{/if}
-
-    
-{#if submissionState() === 'sending' }
-
-      
-<BuilderBlocks  dataPath=\\"sendingMessage\\"  blocks={sendingMessage!} ></BuilderBlocks>
-
-    
-
-
-{/if}
-
-    
-{#if submissionState() === 'error' && responseData }
-
-      
-<pre  class=\\"builder-form-error-text pre\\" >
+  {#if submissionState() === \\"error\\" && responseData}
+    <pre class=\\"builder-form-error-text pre\\">
         {JSON.stringify(responseData, null, 2)}
       </pre>
+  {/if}
 
-    
+  {#if submissionState() === \\"success\\"}
+    <BuilderBlocks dataPath=\\"successMessage\\" blocks={successMessage} />
+  {/if}
+</form>
 
-
-{/if}
-
-    
-{#if submissionState() === 'success' }
-
-      
-<BuilderBlocks  dataPath=\\"successMessage\\"  blocks={successMessage!} ></BuilderBlocks>
-
-    
-
-
-{/if}
-  </form>
-
-  <style>
-    .pre {
-padding: 10px;
-color: red;
-text-align: center;
-}
-  </style>"
+<style>
+  .pre {
+    padding: 10px;
+    color: red;
+    text-align: center;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Image 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  // TODO: AMP Support?
-  export interface ImageProps {
-    _class?: string;
-    image: string;
-    sizes?: string;
-    lazy?: boolean;
-    height?: number;
-    width?: number;
-    altText?: string;
-    backgroundSize?: string;
-    backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-
-    srcset?: string; // TODO: Implement support for custom aspect ratios
-
-    aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
-
-    children?: any;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { onDestroy, onMount } from \\"svelte\\";
 
-  export let lazy: ImageProps[\\"lazy\\"];
-  export let altText: ImageProps[\\"altText\\"];
-  export let _class: ImageProps[\\"_class\\"];
-  export let image: ImageProps[\\"image\\"];
-  export let srcset: ImageProps[\\"srcset\\"];
-  export let sizes: ImageProps[\\"sizes\\"];
+  export let lazy;
+  export let altText;
+  export let _class;
+  export let image;
+  export let srcset;
+  export let sizes;
 
   function setLoaded() {
     imageLoaded = true;
@@ -3784,33 +3555,14 @@ exports[`Svelte > jsx > Typescript Test > Image State 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Img 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ImgProps {
-    attributes?: any;
-    imgSrc?: string;
-    altText?: string;
-    backgroundSize?: \\"cover\\" | \\"contain\\";
-    backgroundPosition?:
-      | \\"center\\"
-      | \\"top\\"
-      | \\"left\\"
-      | \\"right\\"
-      | \\"bottom\\"
-      | \\"top left\\"
-      | \\"top right\\"
-      | \\"bottom left\\"
-      | \\"bottom right\\";
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let backgroundSize: ImgProps[\\"backgroundSize\\"];
-  export let backgroundPosition: ImgProps[\\"backgroundPosition\\"];
-  export let attributes: ImgProps[\\"attributes\\"];
-  export let imgSrc: ImgProps[\\"imgSrc\\"];
-  export let altText: ImgProps[\\"altText\\"];
+  export let backgroundSize;
+  export let backgroundPosition;
+  export let attributes;
+  export let imgSrc;
+  export let altText;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -3836,28 +3588,16 @@ exports[`Svelte > jsx > Typescript Test > Img 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Input 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface FormInputProps {
-    type?: string;
-    attributes?: any;
-    name?: string;
-    value?: string;
-    placeholder?: string;
-    defaultValue?: string;
-    required?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let attributes: FormInputProps[\\"attributes\\"];
-  export let defaultValue: FormInputProps[\\"defaultValue\\"];
-  export let placeholder: FormInputProps[\\"placeholder\\"];
-  export let type: FormInputProps[\\"type\\"];
-  export let name: FormInputProps[\\"name\\"];
-  export let value: FormInputProps[\\"value\\"];
-  export let required: FormInputProps[\\"required\\"];
+  export let attributes;
+  export let defaultValue;
+  export let placeholder;
+  export let type;
+  export let name;
+  export let value;
+  export let required;
 </script>
 
 <input
@@ -3873,16 +3613,9 @@ exports[`Svelte > jsx > Typescript Test > Input 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > RawText 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface RawTextProps {
-    attributes?: any;
-    text?: string; // builderBlock?: any;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: RawTextProps[\\"attributes\\"];
-  export let text: RawTextProps[\\"text\\"];
+"<script lang=\\"ts\\">
+  export let attributes;
+  export let text;
 </script>
 
 <span class={attributes?.class || attributes?.className}
@@ -3891,17 +3624,9 @@ exports[`Svelte > jsx > Typescript Test > RawText 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Section 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface SectionProps {
-    maxWidth?: number;
-    attributes?: any;
-    children?: any;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: SectionProps[\\"attributes\\"];
-  export let maxWidth: SectionProps[\\"maxWidth\\"];
+"<script lang=\\"ts\\">
+  export let attributes;
+  export let maxWidth;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -3927,16 +3652,8 @@ exports[`Svelte > jsx > Typescript Test > Section 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Section 2`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface SectionProps {
-    maxWidth?: number;
-    attributes?: any;
-    children?: any;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: SectionProps[\\"attributes\\"];
+"<script lang=\\"ts\\">
+  export let attributes;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -3967,27 +3684,14 @@ exports[`Svelte > jsx > Typescript Test > Section 2`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Select 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface FormSelectProps {
-    options?: {
-      name?: string;
-      value: string;
-    }[];
-    attributes?: any;
-    name?: string;
-    value?: string;
-    defaultValue?: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let attributes: FormSelectProps[\\"attributes\\"];
-  export let value: FormSelectProps[\\"value\\"];
-  export let defaultValue: FormSelectProps[\\"defaultValue\\"];
-  export let name: FormSelectProps[\\"name\\"];
-  export let options: FormSelectProps[\\"options\\"];
+  export let attributes;
+  export let value;
+  export let defaultValue;
+  export let name;
+  export let options;
 </script>
 
 <select
@@ -4006,13 +3710,7 @@ exports[`Svelte > jsx > Typescript Test > Select 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotDefault 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    [key: string]: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
 </script>
 
 <div>
@@ -4023,13 +3721,7 @@ exports[`Svelte > jsx > Typescript Test > SlotDefault 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotHtml 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    [key: string]: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 </script>
 
@@ -4043,16 +3735,7 @@ exports[`Svelte > jsx > Typescript Test > SlotHtml 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotJsx 1`] = `
-"<script context='module' lang='ts'>
-      type Props = {
-[key: string]: string;
-};
-
-    </script>
-    
-
-    
-<script lang='ts'>
+"<script lang='ts'>
   
   
 
@@ -4090,13 +3773,7 @@ import ContentSlotCode from './content-slot-jsx.raw';
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotNamed 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    [key: string]: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
 </script>
 
 <div>
@@ -4107,21 +3784,14 @@ exports[`Svelte > jsx > Typescript Test > SlotNamed 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type SmileReviewsProps = {
-    productId: string;
-    apiKey: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   import { kebabCase } from \\"lodash\\";
   import { snakeCase } from \\"lodash\\";
 
-  export let apiKey: SmileReviewsProps[\\"apiKey\\"];
-  export let productId: SmileReviewsProps[\\"productId\\"];
+  export let apiKey;
+  export let productId;
 
   function kebabCaseValue() {
     return kebabCase(\\"testThat\\");
@@ -4212,16 +3882,9 @@ exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Submit 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ButtonProps {
-    attributes?: any;
-    text?: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let text: ButtonProps[\\"text\\"];
+"<script lang=\\"ts\\">
+  export let attributes;
+  export let text;
 </script>
 
 <button type=\\"submit\\" {...attributes}>
@@ -4230,21 +3893,11 @@ exports[`Svelte > jsx > Typescript Test > Submit 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Text 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface TextProps {
-    attributes?: any;
-    rtlMode: boolean;
-    text?: string;
-    content?: string;
-    builderBlock?: any;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let text: TextProps[\\"text\\"];
-  export let content: TextProps[\\"content\\"];
+  export let text;
+  export let content;
 
   let name = \\"Decadef20\\";
 </script>
@@ -4260,66 +3913,28 @@ exports[`Svelte > jsx > Typescript Test > Text 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Textarea 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface TextareaProps {
-    attributes?: any;
-    name?: string;
-    value?: string;
-    defaultValue?: string;
-    placeholder?: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: TextareaProps[\\"attributes\\"];
-  export let placeholder: TextareaProps[\\"placeholder\\"];
-  export let name: TextareaProps[\\"name\\"];
-  export let value: TextareaProps[\\"value\\"];
-  export let defaultValue: TextareaProps[\\"defaultValue\\"];
+"<script lang=\\"ts\\">
+  export let attributes;
+  export let placeholder;
+  export let name;
+  export let value;
+  export let defaultValue;
 </script>
 
 <textarea {...attributes} {placeholder} {name} {value} {defaultValue} />"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Video 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface VideoProps {
-    attributes?: any;
-    video?: string;
-    autoPlay?: boolean;
-    controls?: boolean;
-    muted?: boolean;
-    loop?: boolean;
-    playsInline?: boolean;
-    aspectRatio?: number;
-    width?: number;
-    height?: number;
-    fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
-    position?:
-      | \\"center\\"
-      | \\"top\\"
-      | \\"left\\"
-      | \\"right\\"
-      | \\"bottom\\"
-      | \\"top left\\"
-      | \\"top right\\"
-      | \\"bottom left\\"
-      | \\"bottom right\\";
-    posterImage?: string;
-    lazyLoad?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: VideoProps[\\"attributes\\"];
-  export let fit: VideoProps[\\"fit\\"];
-  export let position: VideoProps[\\"position\\"];
-  export let video: VideoProps[\\"video\\"];
-  export let posterImage: VideoProps[\\"posterImage\\"];
-  export let autoPlay: VideoProps[\\"autoPlay\\"];
-  export let muted: VideoProps[\\"muted\\"];
-  export let controls: VideoProps[\\"controls\\"];
-  export let loop: VideoProps[\\"loop\\"];
+"<script lang=\\"ts\\">
+  export let attributes;
+  export let fit;
+  export let position;
+  export let video;
+  export let posterImage;
+  export let autoPlay;
+  export let muted;
+  export let controls;
+  export let loop;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -4371,15 +3986,8 @@ exports[`Svelte > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-    inputRef: HTMLInputElement;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let inputRef: Props[\\"inputRef\\"];
+"<script lang=\\"ts\\">
+  export let inputRef;
 
   let name = \\"PatrickJS\\";
 </script>
@@ -4396,15 +4004,8 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-    inputRef: HTMLInputElement;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let inputRef: Props[\\"inputRef\\"];
+"<script lang=\\"ts\\">
+  export let inputRef;
 
   let name = \\"PatrickJS\\";
 </script>
@@ -4488,14 +4089,7 @@ exports[`Svelte > jsx > Typescript Test > className + css 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > className 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    [key: string]: string | JSX.Element;
-    slotTesting: JSX.Element;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   let bindings = \\"a binding\\";
 </script>
 
@@ -4536,19 +4130,13 @@ exports[`Svelte > jsx > Typescript Test > classState 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ComponentWithContextProps {
-    content: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { getContext, setContext } from \\"svelte\\";
 
   import Context1 from \\"@dummy/1\\";
   import Context2 from \\"@dummy/2\\";
 
-  export let content: ComponentWithContextProps[\\"content\\"];
+  export let content;
 
   let foo = getContext(Context1.key);
 
@@ -4568,19 +4156,13 @@ exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ComponentWithContextProps {
-    content: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { getContext, setContext } from \\"svelte\\";
 
   import Context1 from \\"@dummy/1\\";
   import Context2 from \\"@dummy/2\\";
 
-  export let content: ComponentWithContextProps[\\"content\\"];
+  export let content;
 
   let foo = getContext(Context1.key);
 
@@ -4620,27 +4202,15 @@ exports[`Svelte > jsx > Typescript Test > contentState 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ButtonProps {
-    attributes?: any;
-    text?: string;
-    buttonText?: string; // no default value
-
-    link?: string;
-    openLinkInNewTab?: boolean;
-    onClick?: () => void;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"] = \\"https://builder.io/\\";
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
-  export let text: ButtonProps[\\"text\\"] = \\"default text\\";
-  export let onClick: ButtonProps[\\"onClick\\"] = () => {
+"<script lang=\\"ts\\">
+  export let link = \\"https://builder.io/\\";
+  export let attributes;
+  export let openLinkInNewTab = false;
+  export let text = \\"default text\\";
+  export let onClick = () => {
     console.log(\\"hi\\");
   };
-  export let buttonText: ButtonProps[\\"buttonText\\"];
+  export let buttonText;
 </script>
 
 <div>
@@ -4669,22 +4239,12 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ButtonProps {
-    attributes?: any;
-    text?: string;
-    link?: string;
-    openLinkInNewTab?: boolean;
-    onClick: () => void;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"] = \\"https://builder.io/\\";
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
-  export let text: ButtonProps[\\"text\\"] = \\"default text\\";
-  export let onClick: ButtonProps[\\"onClick\\"] = () => {};
+"<script lang=\\"ts\\">
+  export let link = \\"https://builder.io/\\";
+  export let attributes;
+  export let openLinkInNewTab = false;
+  export let text = \\"default text\\";
+  export let onClick = () => {};
 </script>
 
 <div>
@@ -4713,18 +4273,12 @@ exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > defaultValsWithTypes 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    name: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
-  const DEFAULT_VALUES: Props = {
+"<script lang=\\"ts\\">
+  const DEFAULT_VALUES = {
     name: \\"Sami\\",
   };
 
-  export let name: Props[\\"name\\"];
+  export let name;
 </script>
 
 <div>Hello {name || DEFAULT_VALUES.name}</div>"
@@ -4741,18 +4295,10 @@ exports[`Svelte > jsx > Typescript Test > expressionState 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > import types 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type RenderContentProps = {
-    options?: GetContentOptions;
-    content: BuilderContent;
-    renderContentProps: RenderBlockProps;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import RenderBlock from \\"./builder-render-block.raw\\";
 
-  export let renderContentProps: RenderContentProps[\\"renderContentProps\\"];
+  export let renderContentProps;
 
   function getRenderContentProps(block, index) {
     return {
@@ -4819,16 +4365,9 @@ exports[`Svelte > jsx > Typescript Test > multipleSpreads 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > nestedShow 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  interface Props {
-    conditionA: boolean;
-    conditionB: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let conditionA: Props[\\"conditionA\\"];
-  export let conditionB: Props[\\"conditionB\\"];
+"<script lang=\\"ts\\">
+  export let conditionA;
+  export let conditionB;
 </script>
 
 {#if conditionA}
@@ -4882,18 +4421,12 @@ exports[`Svelte > jsx > Typescript Test > onInit & onMount 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > onInit 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    name: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   export const defaultValues = {
     name: \\"PatrickJS\\",
   };
 
-  export let name: Props[\\"name\\"];
+  export let name;
 
   let name = \\"\\";
   name = defaultValues.name || name;
@@ -4932,14 +4465,8 @@ exports[`Svelte > jsx > Typescript Test > onUpdate 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > onUpdateWithDeps 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    size: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
-  export let size: Props[\\"size\\"];
+"<script lang=\\"ts\\">
+  export let size;
 
   let a = \\"a\\";
   let b = \\"b\\";
@@ -4954,68 +4481,28 @@ exports[`Svelte > jsx > Typescript Test > onUpdateWithDeps 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Types = {
-    s: any[];
-  };
-
-  interface IPost {
-    len: number;
-  }
-
-  export interface MyBasicComponentProps {
-    id: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   const b = 3;
   const foo = () => {};
   export const a = 3;
   export const bar = () => {};
-  export function run<T>(value: T) {}
+  export function run(value) {}
 </script>
 
 <div />"
 `;
 
 exports[`Svelte > jsx > Typescript Test > preserveTyping 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export type A = \\"test\\";
-
-  export interface C {
-    n: \\"test\\";
-  }
-
-  type B = \\"test2\\";
-
-  interface D {
-    n: \\"test\\";
-  }
-
-  export interface MyBasicComponentProps {
-    name: string;
-    age?: number;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let name: MyBasicComponentProps[\\"name\\"];
+"<script lang=\\"ts\\">
+  export let name;
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > propsDestructure 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    children: any;
-    type: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
-  export let type: Props[\\"type\\"];
+"<script lang=\\"ts\\">
+  export let type;
 
   let name = \\"Decadef20\\";
 </script>
@@ -5028,30 +4515,16 @@ exports[`Svelte > jsx > Typescript Test > propsDestructure 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > propsInterface 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  interface Person {
-    name: string;
-    age?: number;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let name: Person[\\"name\\"];
+"<script lang=\\"ts\\">
+  export let name;
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > propsType 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Person = {
-    name: string;
-    age?: number;
-  };
-</script>
-
-<script lang=\\"ts\\">
-  export let name: Person[\\"name\\"];
+"<script lang=\\"ts\\">
+  export let name;
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
@@ -5082,27 +4555,7 @@ exports[`Svelte > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  import type {
-    BuilderContextInterface,
-    RegisteredComponent,
-  } from \\"../../context/types.js\\";
-
-  import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-
-  import type { Nullable } from \\"../../types/typescript.js\\";
-
-  import type { RenderComponentProps } from \\"./render-component\\";
-
-  import type { RepeatData } from \\"./types.js\\";
-
-  export type RenderBlockProps = {
-    block: BuilderBlock;
-    context: BuilderContextInterface;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
   import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
   import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
@@ -5118,8 +4571,8 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
   import RenderComponent from \\"./render-component.svelte\\";
   import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 
-  export let block: RenderBlockProps[\\"block\\"];
-  export let context: RenderBlockProps[\\"context\\"];
+  export let block;
+  export let context;
 
   $: component = () => {
     const componentName = getProcessedBlock({
@@ -5255,7 +4708,7 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+    const repeatArray = itemsArray.map((item, index) => ({
       context: {
         ...context,
         state: {
@@ -5340,17 +4793,7 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    customComponents: string[];
-    content: {
-      blocks: any[];
-      id: string;
-    };
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script lang=\\"ts\\">
   import { onMount, setContext } from \\"svelte\\";
 
   import {
@@ -5361,8 +4804,8 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
   import BuilderContext from \\"@dummy/context.svelte\\";
   import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-  export let content: Props[\\"content\\"];
-  export let customComponents: Props[\\"customComponents\\"];
+  export let content;
+  export let customComponents;
 
   onMount(() => {
     sendComponentsToVisualEditor(customComponents);
@@ -5402,20 +4845,11 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ButtonProps {
-    attributes?: any;
-    text?: string;
-    link?: string;
-    openLinkInNewTab?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"];
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
-  export let text: ButtonProps[\\"text\\"];
+"<script lang=\\"ts\\">
+  export let link;
+  export let attributes;
+  export let openLinkInNewTab;
+  export let text;
 </script>
 
 {#if link}
@@ -5436,14 +4870,8 @@ exports[`Svelte > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > rootShow 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface RenderStylesProps {
-    foo: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let foo: RenderStylesProps[\\"foo\\"];
+"<script lang=\\"ts\\">
+  export let foo;
 </script>
 
 {#if foo === \\"bar\\"}
@@ -5485,16 +4913,9 @@ exports[`Svelte > jsx > Typescript Test > self-referencing component with childr
 `;
 
 exports[`Svelte > jsx > Typescript Test > showWithFor 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  interface Props {
-    conditionA: boolean;
-    items: string[];
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let conditionA: Props[\\"conditionA\\"];
-  export let items: Props[\\"items\\"];
+"<script lang=\\"ts\\">
+  export let conditionA;
+  export let items;
 </script>
 
 {#if conditionA}
@@ -5587,19 +5008,8 @@ exports[`Svelte > jsx > Typescript Test > svgComponent 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > typeDependency 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  import type { Foo } from \\"./foo-type\\";
-
-  import type { Foo as Foo2 } from \\"./type-export\\";
-
-  export type TypeDependencyProps = {
-    foo: Foo;
-    foo2: Foo2;
-  };
-</script>
-
-<script lang=\\"ts\\">
-  export let foo: TypeDependencyProps[\\"foo\\"];
+"<script lang=\\"ts\\">
+  export let foo;
 </script>
 
 <div>{foo}</div>"

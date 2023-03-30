@@ -391,7 +391,6 @@ exports[`Context > Use and set context in complex components 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RenderBlock",
-  "propsTypeRef": "RenderBlockProps",
   "refs": {},
   "state": {
     "actions": {
@@ -412,7 +411,7 @@ exports[`Context > Use and set context in complex components 1`] = `
     return null;
   }
 
-  const ref = components[state.useBlock.component?.name!];
+  const ref = components[state.useBlock.component?.name];
 
   if (componentName && !ref) {
     // TODO: Public doc page with more info about this message
@@ -457,7 +456,7 @@ exports[`Context > Use and set context in complex components 1`] = `
     },
     "tagName": {
       "code": "get tagName() {
-  return (getBlockTag(state.useBlock) as any);
+  return getBlockTag(state.useBlock);
 }",
       "type": "getter",
     },
@@ -473,12 +472,6 @@ exports[`Context > Use and set context in complex components 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export type RenderBlockProps = {
-  block: BuilderBlock;
-  index: number;
-};",
-  ],
 }
 `;
 
@@ -503,7 +496,7 @@ function RenderBlock(props) {
       return null;
     }
 
-    const ref = components[useBlock().component?.name!];
+    const ref = components[useBlock().component?.name];
 
     if (componentName && !ref) {
       // TODO: Public doc page with more info about this message
@@ -524,7 +517,7 @@ function RenderBlock(props) {
   }
 
   function tagName() {
-    return getBlockTag(useBlock()) as any;
+    return getBlockTag(useBlock());
   }
 
   function properties() {
@@ -706,15 +699,9 @@ exports[`Context > Use and set context in components 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ComponentWithContext",
-  "propsTypeRef": "ComponentWithContextProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ComponentWithContextProps {
-  content: string
-}",
-  ],
 }
 `;
 

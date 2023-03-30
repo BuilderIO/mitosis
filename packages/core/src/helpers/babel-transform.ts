@@ -1,5 +1,4 @@
 import * as babel from '@babel/core';
-import jsxPlugin from '@babel/plugin-syntax-jsx';
 import tsPlugin from '@babel/plugin-syntax-typescript';
 import decorators from '@babel/plugin-syntax-decorators';
 import type { Visitor } from '@babel/traverse';
@@ -70,7 +69,6 @@ export const babelTransform = <VisitorContextType = any>(
     plugins: [
       [tsPlugin, { isTSX: true }],
       [decorators, { legacy: true }],
-      jsxPlugin,
       ...(visitor ? [() => ({ visitor })] : []),
     ],
   });

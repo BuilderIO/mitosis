@@ -321,15 +321,12 @@ exports[`Parse JSX > Javascript > AdvancedRef 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicRefComponent",
-  "propsTypeRef": "Props",
   "refs": {
     "inputNoArgRef": {
       "argument": "null",
-      "typeParameter": "HTMLLabelElement",
     },
     "inputRef": {
       "argument": "null",
-      "typeParameter": "HTMLInputElement",
     },
   },
   "state": {
@@ -352,11 +349,6 @@ exports[`Parse JSX > Javascript > AdvancedRef 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-}",
-  ],
 }
 `;
 
@@ -448,13 +440,11 @@ exports[`Parse JSX > Javascript > Basic 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "MyBasicComponentProps",
   "refs": {},
   "state": {
     "age": {
       "code": "1",
       "type": "property",
-      "typeParameter": "number",
     },
     "name": {
       "code": "'Steve'",
@@ -463,7 +453,6 @@ exports[`Parse JSX > Javascript > Basic 1`] = `
     "sports": {
       "code": "['']",
       "type": "property",
-      "typeParameter": "Array<string>",
     },
     "underscore_fn_name": {
       "code": "underscore_fn_name() {
@@ -473,11 +462,6 @@ exports[`Parse JSX > Javascript > Basic 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface MyBasicComponentProps {
-  id: string
-}",
-  ],
 }
 `;
 
@@ -843,7 +827,6 @@ exports[`Parse JSX > Javascript > Basic OnMount Update 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicOnMountUpdateComponent",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "name": {
@@ -856,12 +839,6 @@ exports[`Parse JSX > Javascript > Basic OnMount Update 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  hi: string;
-  bye: string;
-}",
-  ],
 }
 `;
 
@@ -894,7 +871,6 @@ exports[`Parse JSX > Javascript > Basic Outputs 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicOutputsComponent",
-  "propsTypeRef": "any",
   "refs": {},
   "state": {
     "name": {
@@ -943,7 +919,6 @@ exports[`Parse JSX > Javascript > Basic Outputs Meta 1`] = `
     },
   },
   "name": "MyBasicOutputsComponent",
-  "propsTypeRef": "any",
   "refs": {},
   "state": {
     "name": {
@@ -1166,16 +1141,9 @@ exports[`Parse JSX > Javascript > BasicBooleanAttribute 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBooleanAttribute",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  children: any;
-  type: string;
-};",
-  ],
 }
 `;
 
@@ -1816,15 +1784,12 @@ exports[`Parse JSX > Javascript > BasicRef 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicRefComponent",
-  "propsTypeRef": "Props",
   "refs": {
     "inputNoArgRef": {
       "argument": "null",
-      "typeParameter": "HTMLLabelElement",
     },
     "inputRef": {
       "argument": "null",
-      "typeParameter": "HTMLInputElement",
     },
   },
   "state": {
@@ -1847,11 +1812,6 @@ exports[`Parse JSX > Javascript > BasicRef 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-}",
-  ],
 }
 `;
 
@@ -1933,7 +1893,6 @@ exports[`Parse JSX > Javascript > BasicRefAssignment 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicRefAssignmentComponent",
-  "propsTypeRef": "Props",
   "refs": {
     "holdValueRef": {
       "argument": "'Patrick'",
@@ -1941,7 +1900,7 @@ exports[`Parse JSX > Javascript > BasicRefAssignment 1`] = `
   },
   "state": {
     "handlerClick": {
-      "code": "function handlerClick(event: Event) {
+      "code": "function handlerClick(event) {
   event.preventDefault();
   console.log('current value', holdValueRef);
   holdValueRef = holdValueRef + 'JS';
@@ -1950,11 +1909,6 @@ exports[`Parse JSX > Javascript > BasicRefAssignment 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-}",
-  ],
 }
 `;
 
@@ -2114,10 +2068,10 @@ exports[`Parse JSX > Javascript > BasicRefPrevious 1`] = `
   },
   "exports": {
     "usePrevious": {
-      "code": "export function usePrevious<T>(value: T) {
+      "code": "export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -2142,7 +2096,6 @@ exports[`Parse JSX > Javascript > BasicRefPrevious 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyPreviousComponent",
-  "propsTypeRef": "Props",
   "refs": {
     "prevCount": {
       "argument": "state.count",
@@ -2155,11 +2108,6 @@ exports[`Parse JSX > Javascript > BasicRefPrevious 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-}",
-  ],
 }
 `;
 
@@ -2420,18 +2368,9 @@ exports[`Parse JSX > Javascript > Button 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Button",
-  "propsTypeRef": "ButtonProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}",
-  ],
 }
 `;
 
@@ -2602,11 +2541,10 @@ exports[`Parse JSX > Javascript > Columns 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Column",
-  "propsTypeRef": "ColumnProps",
   "refs": {},
   "state": {
     "getColumnCssWidth": {
-      "code": "getColumnCssWidth(index: number) {
+      "code": "getColumnCssWidth(index) {
   const columns = state.getColumns();
   const gutterSize = state.getGutterSize();
   const subtractWidth = gutterSize * (columns.length - 1) / columns.length;
@@ -2627,7 +2565,7 @@ exports[`Parse JSX > Javascript > Columns 1`] = `
       "type": "method",
     },
     "getWidth": {
-      "code": "getWidth(index: number) {
+      "code": "getWidth(index) {
   const columns = state.getColumns();
   return columns[index] && columns[index].width || 100 / columns.length;
 }",
@@ -2635,22 +2573,6 @@ exports[`Parse JSX > Javascript > Columns 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
-
-  width?: number;
-};",
-    "export interface ColumnProps {
-  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
-
-  space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-  stackColumnsAt?: 'tablet' | 'mobile' | 'never'; // TODO: Implement this when support for dynamic CSS lands
-
-  reverseColumnsWhenStacked?: boolean;
-}",
-  ],
 }
 `;
 
@@ -2827,16 +2749,9 @@ exports[`Parse JSX > Javascript > ContentSlotHtml 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ContentSlotCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};",
-  ],
 }
 `;
 
@@ -3120,7 +3035,6 @@ exports[`Parse JSX > Javascript > ContentSlotJSX 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ContentSlotJsxCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "cls": {
@@ -3145,11 +3059,6 @@ exports[`Parse JSX > Javascript > ContentSlotJSX 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string | JSX.Element;
-};",
-  ],
 }
 `;
 
@@ -3194,11 +3103,9 @@ exports[`Parse JSX > Javascript > CustomCode 1`] = `
   "inputs": [],
   "meta": {},
   "name": "CustomCode",
-  "propsTypeRef": "CustomCodeProps",
   "refs": {
     "elem": {
       "argument": "null",
-      "typeParameter": "HTMLDivElement",
     },
   },
   "state": {
@@ -3249,12 +3156,6 @@ exports[`Parse JSX > Javascript > CustomCode 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}",
-  ],
 }
 `;
 
@@ -3299,11 +3200,9 @@ exports[`Parse JSX > Javascript > Embed 1`] = `
   "inputs": [],
   "meta": {},
   "name": "CustomCode",
-  "propsTypeRef": "CustomCodeProps",
   "refs": {
     "elem": {
       "argument": "null",
-      "typeParameter": "HTMLDivElement",
     },
   },
   "state": {
@@ -3354,12 +3253,6 @@ exports[`Parse JSX > Javascript > Embed 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}",
-  ],
 }
 `;
 
@@ -3533,7 +3426,7 @@ exports[`Parse JSX > Javascript > Form 1`] = `
               "@type": "@builder.io/mitosis/node",
               "bindings": {
                 "blocks": {
-                  "code": "props.errorMessage!",
+                  "code": "props.errorMessage",
                   "type": "single",
                 },
               },
@@ -3601,7 +3494,7 @@ exports[`Parse JSX > Javascript > Form 1`] = `
               "@type": "@builder.io/mitosis/node",
               "bindings": {
                 "blocks": {
-                  "code": "props.sendingMessage!",
+                  "code": "props.sendingMessage",
                   "type": "single",
                 },
               },
@@ -3780,7 +3673,7 @@ exports[`Parse JSX > Javascript > Form 1`] = `
               "@type": "@builder.io/mitosis/node",
               "bindings": {
                 "blocks": {
-                  "code": "props.successMessage!",
+                  "code": "props.successMessage",
                   "type": "single",
                 },
               },
@@ -3871,11 +3764,9 @@ exports[`Parse JSX > Javascript > Form 1`] = `
   "inputs": [],
   "meta": {},
   "name": "FormComponent",
-  "propsTypeRef": "FormProps",
   "refs": {
     "formRef": {
       "argument": "null",
-      "typeParameter": "HTMLFormElement",
     },
   },
   "state": {
@@ -3888,9 +3779,7 @@ exports[`Parse JSX > Javascript > Form 1`] = `
       "type": "property",
     },
     "onSubmit": {
-      "code": "onSubmit(event: Event & {
-  currentTarget: HTMLFormElement;
-}) {
+      "code": "onSubmit(event) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === 'email';
 
   if (props.sendSubmissionsTo === 'zapier') {
@@ -3904,15 +3793,12 @@ exports[`Parse JSX > Javascript > Form 1`] = `
     event.preventDefault();
     const el = event.currentTarget;
     const headers = props.customHeaders || {};
-    let body: any;
+    let body;
     const formData = new FormData(el); // TODO: maybe support null
 
-    const formPairs: {
-      key: string;
-      value: File | boolean | number | string | FileList;
-    }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!(el as HTMLInputElement).name).map(el => {
-      let value: any;
-      const key = (el as HTMLImageElement).name;
+    const formPairs = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!el.name).map(el => {
+      let value;
+      const key = el.name;
 
       if (el instanceof HTMLInputElement) {
         if (el.type === 'radio') {
@@ -3938,7 +3824,7 @@ exports[`Parse JSX > Javascript > Form 1`] = `
           value = el.value;
         }
       } else {
-        value = (el as HTMLInputElement).value;
+        value = el.value;
       }
 
       return {
@@ -4000,7 +3886,7 @@ exports[`Parse JSX > Javascript > Form 1`] = `
 
     state.formState = 'sending';
     const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`;
-    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action!
+    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action
     /* TODO: throw error if no action URL */
     , {
       body,
@@ -4109,31 +3995,6 @@ exports[`Parse JSX > Javascript > Form 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface FormProps {
-  attributes?: any;
-  name?: string;
-  action?: string;
-  validate?: boolean;
-  method?: string;
-  builderBlock?: BuilderElement;
-  sendSubmissionsTo?: string;
-  sendSubmissionsToEmail?: string;
-  sendWithJs?: boolean;
-  contentType?: string;
-  customHeaders?: {
-    [key: string]: string;
-  };
-  successUrl?: string;
-  previewState?: FormState;
-  successMessage?: BuilderElement[];
-  errorMessage?: BuilderElement[];
-  sendingMessage?: BuilderElement[];
-  resetFormOnSubmit?: boolean;
-  errorMessagePath?: string;
-}",
-    "export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error';",
-  ],
 }
 `;
 
@@ -4393,11 +4254,9 @@ exports[`Parse JSX > Javascript > Image 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Image",
-  "propsTypeRef": "ImageProps",
   "refs": {
     "pictureRef": {
       "argument": "",
-      "typeParameter": "HTMLElement",
     },
   },
   "state": {
@@ -4434,26 +4293,6 @@ exports[`Parse JSX > Javascript > Image 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "// TODO: AMP Support?
-export interface ImageProps {
-  _class?: string;
-  image: string;
-  sizes?: string;
-  lazy?: boolean;
-  height?: number;
-  width?: number;
-  altText?: string;
-  backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-
-  srcset?: string; // TODO: Implement support for custom aspect ratios
-
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
-
-  children?: any;
-}",
-  ],
 }
 `;
 
@@ -4649,19 +4488,9 @@ exports[`Parse JSX > Javascript > Img 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ImgComponent",
-  "propsTypeRef": "ImgProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ImgProps {
-  attributes?: any;
-  imgSrc?: string;
-  altText?: string;
-  backgroundSize?: 'cover' | 'contain';
-  backgroundPosition?: 'center' | 'top' | 'left' | 'right' | 'bottom' | 'top left' | 'top right' | 'bottom left' | 'bottom right';
-}",
-  ],
 }
 `;
 
@@ -4730,21 +4559,9 @@ exports[`Parse JSX > Javascript > Input 1`] = `
   "inputs": [],
   "meta": {},
   "name": "FormInputComponent",
-  "propsTypeRef": "FormInputProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface FormInputProps {
-  type?: string;
-  attributes?: any;
-  name?: string;
-  value?: string;
-  placeholder?: string;
-  defaultValue?: string;
-  required?: boolean;
-}",
-  ],
 }
 `;
 
@@ -4781,17 +4598,9 @@ exports[`Parse JSX > Javascript > RawText 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RawText",
-  "propsTypeRef": "RawTextProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface RawTextProps {
-  attributes?: any;
-  text?: string; // builderBlock?: any;
-
-}",
-  ],
 }
 `;
 
@@ -4870,17 +4679,9 @@ exports[`Parse JSX > Javascript > Section 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SectionComponent",
-  "propsTypeRef": "SectionProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface SectionProps {
-  maxWidth?: number;
-  attributes?: any;
-  children?: any;
-}",
-  ],
 }
 `;
 
@@ -5015,7 +4816,6 @@ exports[`Parse JSX > Javascript > Section 2`] = `
   "inputs": [],
   "meta": {},
   "name": "SectionStateComponent",
-  "propsTypeRef": "SectionProps",
   "refs": {},
   "state": {
     "items": {
@@ -5028,13 +4828,6 @@ exports[`Parse JSX > Javascript > Section 2`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface SectionProps {
-  maxWidth?: number;
-  attributes?: any;
-  children?: any;
-}",
-  ],
 }
 `;
 
@@ -5191,22 +4984,9 @@ exports[`Parse JSX > Javascript > Select 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SelectComponent",
-  "propsTypeRef": "FormSelectProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface FormSelectProps {
-  options?: {
-    name?: string;
-    value: string;
-  }[];
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-}",
-  ],
 }
 `;
 
@@ -5316,15 +5096,9 @@ exports[`Parse JSX > Javascript > SlotDefault 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SlotCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string;
-};",
-  ],
 }
 `;
 
@@ -5432,15 +5206,9 @@ exports[`Parse JSX > Javascript > SlotHtml 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SlotCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string;
-};",
-  ],
 }
 `;
 
@@ -5514,15 +5282,9 @@ exports[`Parse JSX > Javascript > SlotJsx 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SlotCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string;
-};",
-  ],
 }
 `;
 
@@ -5654,15 +5416,9 @@ exports[`Parse JSX > Javascript > SlotNamed 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SlotCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string;
-};",
-  ],
 }
 `;
 
@@ -6203,7 +5959,6 @@ exports[`Parse JSX > Javascript > Stamped.io 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SmileReviews",
-  "propsTypeRef": "SmileReviewsProps",
   "refs": {},
   "state": {
     "kebabCaseValue": {
@@ -6232,12 +5987,6 @@ exports[`Parse JSX > Javascript > Stamped.io 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
-};",
-  ],
 }
 `;
 
@@ -6312,16 +6061,9 @@ exports[`Parse JSX > Javascript > Submit 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SubmitButton",
-  "propsTypeRef": "ButtonProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-}",
-  ],
 }
 `;
 
@@ -6371,7 +6113,6 @@ exports[`Parse JSX > Javascript > Text 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Text",
-  "propsTypeRef": "TextProps",
   "refs": {},
   "state": {
     "name": {
@@ -6380,15 +6121,6 @@ exports[`Parse JSX > Javascript > Text 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface TextProps {
-  attributes?: any;
-  rtlMode: boolean;
-  text?: string;
-  content?: string;
-  builderBlock?: any;
-}",
-  ],
 }
 `;
 
@@ -6438,19 +6170,9 @@ exports[`Parse JSX > Javascript > Textarea 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Textarea",
-  "propsTypeRef": "TextareaProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface TextareaProps {
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-  placeholder?: string;
-}",
-  ],
 }
 `;
 
@@ -6523,28 +6245,9 @@ exports[`Parse JSX > Javascript > Video 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Video",
-  "propsTypeRef": "VideoProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface VideoProps {
-  attributes?: any;
-  video?: string;
-  autoPlay?: boolean;
-  controls?: boolean;
-  muted?: boolean;
-  loop?: boolean;
-  playsInline?: boolean;
-  aspectRatio?: number;
-  width?: number;
-  height?: number;
-  fit?: 'contain' | 'cover' | 'fill';
-  position?: 'center' | 'top' | 'left' | 'right' | 'bottom' | 'top left' | 'top right' | 'bottom left' | 'bottom right';
-  posterImage?: string;
-  lazyLoad?: boolean;
-}",
-  ],
 }
 `;
 
@@ -6701,7 +6404,6 @@ exports[`Parse JSX > Javascript > basicForwardRef 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicForwardRefComponent",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "name": {
@@ -6710,12 +6412,6 @@ exports[`Parse JSX > Javascript > basicForwardRef 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}",
-  ],
 }
 `;
 
@@ -6803,7 +6499,6 @@ exports[`Parse JSX > Javascript > basicForwardRefMetadata 1`] = `
     },
   },
   "name": "MyBasicForwardRefComponent",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "name": {
@@ -6812,12 +6507,6 @@ exports[`Parse JSX > Javascript > basicForwardRefMetadata 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}",
-  ],
 }
 `;
 
@@ -7193,7 +6882,6 @@ exports[`Parse JSX > Javascript > className 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ClassNameCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "bindings": {
@@ -7202,12 +6890,6 @@ exports[`Parse JSX > Javascript > className 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};",
-  ],
 }
 `;
 
@@ -7397,15 +7079,9 @@ exports[`Parse JSX > Javascript > componentWithContext 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ComponentWithContext",
-  "propsTypeRef": "ComponentWithContextProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ComponentWithContextProps {
-  content: string
-}",
-  ],
 }
 `;
 
@@ -7558,15 +7234,9 @@ exports[`Parse JSX > Javascript > componentWithContextMultiRoot 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ComponentWithContext",
-  "propsTypeRef": "ComponentWithContextProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ComponentWithContextProps {
-  content: string
-}",
-  ],
 }
 `;
 
@@ -7917,21 +7587,9 @@ exports[`Parse JSX > Javascript > defaultProps 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Button",
-  "propsTypeRef": "ButtonProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  buttonText?: string; // no default value
-
-  link?: string;
-  openLinkInNewTab?: boolean;
-  onClick?: () => void;
-}",
-  ],
 }
 `;
 
@@ -8217,19 +7875,9 @@ exports[`Parse JSX > Javascript > defaultPropsOutsideComponent 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Button",
-  "propsTypeRef": "ButtonProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-  onClick: () => void;
-}",
-  ],
 }
 `;
 
@@ -8279,7 +7927,7 @@ exports[`Parse JSX > Javascript > defaultValsWithTypes 1`] = `
   },
   "exports": {
     "DEFAULT_VALUES": {
-      "code": "const DEFAULT_VALUES: Props = {
+      "code": "const DEFAULT_VALUES = {
   name: 'Sami'
 };",
       "isFunction": false,
@@ -8291,15 +7939,9 @@ exports[`Parse JSX > Javascript > defaultValsWithTypes 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ComponentWithTypes",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  name: string;
-};",
-  ],
 }
 `;
 
@@ -8390,7 +8032,6 @@ exports[`Parse JSX > Javascript > import types 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RenderContent",
-  "propsTypeRef": "RenderContentProps",
   "refs": {},
   "state": {
     "getRenderContentProps": {
@@ -8404,13 +8045,6 @@ exports[`Parse JSX > Javascript > import types 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type RenderContentProps = {
-  options?: GetContentOptions;
-  content: BuilderContent;
-  renderContentProps: RenderBlockProps;
-};",
-  ],
 }
 `;
 
@@ -8556,7 +8190,6 @@ exports[`Parse JSX > Javascript > multipleSpreads 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "any",
   "refs": {},
   "state": {
     "attrs": {
@@ -8728,16 +8361,9 @@ exports[`Parse JSX > Javascript > nestedShow 1`] = `
   "inputs": [],
   "meta": {},
   "name": "NestedShow",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "interface Props {
-  conditionA: boolean;
-  conditionB: boolean;
-}",
-  ],
 }
 `;
 
@@ -8902,7 +8528,6 @@ exports[`Parse JSX > Javascript > onInit 1`] = `
   "inputs": [],
   "meta": {},
   "name": "OnInit",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "name": {
@@ -8911,11 +8536,6 @@ exports[`Parse JSX > Javascript > onInit 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Props = {
-  name: string;
-};",
-  ],
 }
 `;
 
@@ -9024,7 +8644,6 @@ exports[`Parse JSX > Javascript > onUpdateWithDeps 1`] = `
   "inputs": [],
   "meta": {},
   "name": "OnUpdateWithDeps",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "a": {
@@ -9037,11 +8656,6 @@ exports[`Parse JSX > Javascript > onUpdateWithDeps 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Props = {
-  size: string;
-};",
-  ],
 }
 `;
 
@@ -9085,7 +8699,7 @@ exports[`Parse JSX > Javascript > preserveExportOrLocalStatement 1`] = `
       "usedInLocal": false,
     },
     "run": {
-      "code": "export function run<T>(value: T) {}",
+      "code": "export function run(value) {}",
       "isFunction": true,
       "usedInLocal": false,
     },
@@ -9095,21 +8709,9 @@ exports[`Parse JSX > Javascript > preserveExportOrLocalStatement 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "MyBasicComponentProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Types = {
-  s: any[];
-};",
-    "interface IPost {
-  len: number;
-}",
-    "export interface MyBasicComponentProps {
-  id: string
-}",
-  ],
 }
 `;
 
@@ -9163,24 +8765,9 @@ exports[`Parse JSX > Javascript > preserveTyping 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "MyBasicComponentProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export type A = 'test';",
-    "export interface C {
-  n: 'test';
-}",
-    "type B = 'test2';",
-    "interface D {
-  n: 'test';
-}",
-    "export interface MyBasicComponentProps {
-  name: string
-  age?: number
-}",
-  ],
 }
 `;
 
@@ -9273,7 +8860,6 @@ exports[`Parse JSX > Javascript > propsDestructure 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "name": {
@@ -9282,12 +8868,6 @@ exports[`Parse JSX > Javascript > propsDestructure 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Props = {
-  children: any;
-  type: string;
-};",
-  ],
 }
 `;
 
@@ -9341,16 +8921,9 @@ exports[`Parse JSX > Javascript > propsInterface 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "Person | never",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "interface Person {
-  name: string;
-  age?: number;
-}",
-  ],
 }
 `;
 
@@ -9404,16 +8977,9 @@ exports[`Parse JSX > Javascript > propsType 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "Person",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Person = {
-  name: string;
-  age?: number;
-};",
-  ],
 }
 `;
 
@@ -10015,7 +9581,6 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RenderBlock",
-  "propsTypeRef": "RenderBlockProps",
   "refs": {},
   "state": {
     "actions": {
@@ -10174,7 +9739,7 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
 
   const collectionName = repeat.collection.split('.').pop();
   const itemNameToUse = repeat.itemName || (collectionName ? collectionName + 'Item' : 'item');
-  const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+  const repeatArray = itemsArray.map((item, index) => ({
     context: { ...props.context,
       state: { ...props.context.state,
         $index: index,
@@ -10224,17 +9789,6 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "import type { BuilderContextInterface, RegisteredComponent } from '../../context/types.js';",
-    "import type { BuilderBlock } from '../../types/builder-block.js';",
-    "import type { Nullable } from '../../types/typescript.js';",
-    "import type { RenderComponentProps } from \\"./render-component\\";",
-    "import type { RepeatData } from './types.js';",
-    "export type RenderBlockProps = {
-  block: BuilderBlock;
-  context: BuilderContextInterface;
-};",
-  ],
 }
 `;
 
@@ -10362,19 +9916,9 @@ exports[`Parse JSX > Javascript > renderContentExample 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RenderContent",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};",
-  ],
 }
 `;
 
@@ -10635,18 +10179,9 @@ exports[`Parse JSX > Javascript > rootFragmentMultiNode 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Button",
-  "propsTypeRef": "ButtonProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}",
-  ],
 }
 `;
 
@@ -10747,15 +10282,9 @@ exports[`Parse JSX > Javascript > rootShow 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RenderStyles",
-  "propsTypeRef": "RenderStylesProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface RenderStylesProps {
-  foo: string
-}",
-  ],
 }
 `;
 
@@ -10884,7 +10413,6 @@ exports[`Parse JSX > Javascript > self-referencing component 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyComponent",
-  "propsTypeRef": "any",
   "refs": {},
   "state": {},
   "subComponents": [],
@@ -11088,7 +10616,6 @@ exports[`Parse JSX > Javascript > self-referencing component with children 1`] =
   "inputs": [],
   "meta": {},
   "name": "MyComponent",
-  "propsTypeRef": "any",
   "refs": {},
   "state": {},
   "subComponents": [],
@@ -11218,16 +10745,9 @@ exports[`Parse JSX > Javascript > showWithFor 1`] = `
   "inputs": [],
   "meta": {},
   "name": "NestedShow",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "interface Props {
-  conditionA: boolean;
-  items: string[];
-}",
-  ],
 }
 `;
 
@@ -11668,18 +11188,9 @@ exports[`Parse JSX > Javascript > typeDependency 1`] = `
   "inputs": [],
   "meta": {},
   "name": "TypeDependency",
-  "propsTypeRef": "TypeDependencyProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "import type { Foo } from './foo-type';",
-    "import type { Foo as Foo2 } from \\"./type-export\\";",
-    "export type TypeDependencyProps = {
-  foo: Foo;
-  foo2: Foo2;
-};",
-  ],
 }
 `;
 
@@ -12240,15 +11751,12 @@ exports[`Parse JSX > Typescript > AdvancedRef 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicRefComponent",
-  "propsTypeRef": "Props",
   "refs": {
     "inputNoArgRef": {
       "argument": "null",
-      "typeParameter": "HTMLLabelElement",
     },
     "inputRef": {
       "argument": "null",
-      "typeParameter": "HTMLInputElement",
     },
   },
   "state": {
@@ -12271,11 +11779,6 @@ exports[`Parse JSX > Typescript > AdvancedRef 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-}",
-  ],
 }
 `;
 
@@ -12367,13 +11870,11 @@ exports[`Parse JSX > Typescript > Basic 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "MyBasicComponentProps",
   "refs": {},
   "state": {
     "age": {
       "code": "1",
       "type": "property",
-      "typeParameter": "number",
     },
     "name": {
       "code": "'Steve'",
@@ -12382,7 +11883,6 @@ exports[`Parse JSX > Typescript > Basic 1`] = `
     "sports": {
       "code": "['']",
       "type": "property",
-      "typeParameter": "Array<string>",
     },
     "underscore_fn_name": {
       "code": "underscore_fn_name() {
@@ -12392,11 +11892,6 @@ exports[`Parse JSX > Typescript > Basic 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface MyBasicComponentProps {
-  id: string
-}",
-  ],
 }
 `;
 
@@ -12762,7 +12257,6 @@ exports[`Parse JSX > Typescript > Basic OnMount Update 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicOnMountUpdateComponent",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "name": {
@@ -12775,12 +12269,6 @@ exports[`Parse JSX > Typescript > Basic OnMount Update 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  hi: string;
-  bye: string;
-}",
-  ],
 }
 `;
 
@@ -12813,7 +12301,6 @@ exports[`Parse JSX > Typescript > Basic Outputs 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicOutputsComponent",
-  "propsTypeRef": "any",
   "refs": {},
   "state": {
     "name": {
@@ -12862,7 +12349,6 @@ exports[`Parse JSX > Typescript > Basic Outputs Meta 1`] = `
     },
   },
   "name": "MyBasicOutputsComponent",
-  "propsTypeRef": "any",
   "refs": {},
   "state": {
     "name": {
@@ -13085,16 +12571,9 @@ exports[`Parse JSX > Typescript > BasicBooleanAttribute 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBooleanAttribute",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  children: any;
-  type: string;
-};",
-  ],
 }
 `;
 
@@ -13735,15 +13214,12 @@ exports[`Parse JSX > Typescript > BasicRef 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicRefComponent",
-  "propsTypeRef": "Props",
   "refs": {
     "inputNoArgRef": {
       "argument": "null",
-      "typeParameter": "HTMLLabelElement",
     },
     "inputRef": {
       "argument": "null",
-      "typeParameter": "HTMLInputElement",
     },
   },
   "state": {
@@ -13766,11 +13242,6 @@ exports[`Parse JSX > Typescript > BasicRef 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-}",
-  ],
 }
 `;
 
@@ -13852,7 +13323,6 @@ exports[`Parse JSX > Typescript > BasicRefAssignment 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicRefAssignmentComponent",
-  "propsTypeRef": "Props",
   "refs": {
     "holdValueRef": {
       "argument": "'Patrick'",
@@ -13869,11 +13339,6 @@ exports[`Parse JSX > Typescript > BasicRefAssignment 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-}",
-  ],
 }
 `;
 
@@ -14033,10 +13498,10 @@ exports[`Parse JSX > Typescript > BasicRefPrevious 1`] = `
   },
   "exports": {
     "usePrevious": {
-      "code": "export function usePrevious<T>(value: T) {
+      "code": "export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -14061,7 +13526,6 @@ exports[`Parse JSX > Typescript > BasicRefPrevious 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyPreviousComponent",
-  "propsTypeRef": "Props",
   "refs": {
     "prevCount": {
       "argument": "state.count",
@@ -14074,11 +13538,6 @@ exports[`Parse JSX > Typescript > BasicRefPrevious 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-}",
-  ],
 }
 `;
 
@@ -14339,18 +13798,9 @@ exports[`Parse JSX > Typescript > Button 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Button",
-  "propsTypeRef": "ButtonProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}",
-  ],
 }
 `;
 
@@ -14521,11 +13971,10 @@ exports[`Parse JSX > Typescript > Columns 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Column",
-  "propsTypeRef": "ColumnProps",
   "refs": {},
   "state": {
     "getColumnCssWidth": {
-      "code": "getColumnCssWidth(index: number) {
+      "code": "getColumnCssWidth(index) {
   const columns = state.getColumns();
   const gutterSize = state.getGutterSize();
   const subtractWidth = gutterSize * (columns.length - 1) / columns.length;
@@ -14546,7 +13995,7 @@ exports[`Parse JSX > Typescript > Columns 1`] = `
       "type": "method",
     },
     "getWidth": {
-      "code": "getWidth(index: number) {
+      "code": "getWidth(index) {
   const columns = state.getColumns();
   return columns[index] && columns[index].width || 100 / columns.length;
 }",
@@ -14554,22 +14003,6 @@ exports[`Parse JSX > Typescript > Columns 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
-
-  width?: number;
-};",
-    "export interface ColumnProps {
-  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
-
-  space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-  stackColumnsAt?: 'tablet' | 'mobile' | 'never'; // TODO: Implement this when support for dynamic CSS lands
-
-  reverseColumnsWhenStacked?: boolean;
-}",
-  ],
 }
 `;
 
@@ -14746,16 +14179,9 @@ exports[`Parse JSX > Typescript > ContentSlotHtml 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ContentSlotCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};",
-  ],
 }
 `;
 
@@ -15039,7 +14465,6 @@ exports[`Parse JSX > Typescript > ContentSlotJSX 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ContentSlotJsxCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "cls": {
@@ -15064,11 +14489,6 @@ exports[`Parse JSX > Typescript > ContentSlotJSX 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string | JSX.Element;
-};",
-  ],
 }
 `;
 
@@ -15113,11 +14533,9 @@ exports[`Parse JSX > Typescript > CustomCode 1`] = `
   "inputs": [],
   "meta": {},
   "name": "CustomCode",
-  "propsTypeRef": "CustomCodeProps",
   "refs": {
     "elem": {
       "argument": "null",
-      "typeParameter": "HTMLDivElement",
     },
   },
   "state": {
@@ -15168,12 +14586,6 @@ exports[`Parse JSX > Typescript > CustomCode 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}",
-  ],
 }
 `;
 
@@ -15218,11 +14630,9 @@ exports[`Parse JSX > Typescript > Embed 1`] = `
   "inputs": [],
   "meta": {},
   "name": "CustomCode",
-  "propsTypeRef": "CustomCodeProps",
   "refs": {
     "elem": {
       "argument": "null",
-      "typeParameter": "HTMLDivElement",
     },
   },
   "state": {
@@ -15273,12 +14683,6 @@ exports[`Parse JSX > Typescript > Embed 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}",
-  ],
 }
 `;
 
@@ -15790,11 +15194,9 @@ exports[`Parse JSX > Typescript > Form 1`] = `
   "inputs": [],
   "meta": {},
   "name": "FormComponent",
-  "propsTypeRef": "FormProps",
   "refs": {
     "formRef": {
       "argument": "null",
-      "typeParameter": "HTMLFormElement",
     },
   },
   "state": {
@@ -15807,9 +15209,7 @@ exports[`Parse JSX > Typescript > Form 1`] = `
       "type": "property",
     },
     "onSubmit": {
-      "code": "onSubmit(event: Event & {
-  currentTarget: HTMLFormElement;
-}) {
+      "code": "onSubmit(event) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === 'email';
 
   if (props.sendSubmissionsTo === 'zapier') {
@@ -15823,15 +15223,12 @@ exports[`Parse JSX > Typescript > Form 1`] = `
     event.preventDefault();
     const el = event.currentTarget;
     const headers = props.customHeaders || {};
-    let body: any;
+    let body;
     const formData = new FormData(el); // TODO: maybe support null
 
-    const formPairs: {
-      key: string;
-      value: File | boolean | number | string | FileList;
-    }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!(el as HTMLInputElement).name).map(el => {
-      let value: any;
-      const key = (el as HTMLImageElement).name;
+    const formPairs = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!el.name).map(el => {
+      let value;
+      const key = el.name;
 
       if (el instanceof HTMLInputElement) {
         if (el.type === 'radio') {
@@ -15857,7 +15254,7 @@ exports[`Parse JSX > Typescript > Form 1`] = `
           value = el.value;
         }
       } else {
-        value = (el as HTMLInputElement).value;
+        value = el.value;
       }
 
       return {
@@ -15919,7 +15316,7 @@ exports[`Parse JSX > Typescript > Form 1`] = `
 
     state.formState = 'sending';
     const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`;
-    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action!
+    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action
     /* TODO: throw error if no action URL */
     , {
       body,
@@ -16028,31 +15425,6 @@ exports[`Parse JSX > Typescript > Form 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface FormProps {
-  attributes?: any;
-  name?: string;
-  action?: string;
-  validate?: boolean;
-  method?: string;
-  builderBlock?: BuilderElement;
-  sendSubmissionsTo?: string;
-  sendSubmissionsToEmail?: string;
-  sendWithJs?: boolean;
-  contentType?: string;
-  customHeaders?: {
-    [key: string]: string;
-  };
-  successUrl?: string;
-  previewState?: FormState;
-  successMessage?: BuilderElement[];
-  errorMessage?: BuilderElement[];
-  sendingMessage?: BuilderElement[];
-  resetFormOnSubmit?: boolean;
-  errorMessagePath?: string;
-}",
-    "export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error';",
-  ],
 }
 `;
 
@@ -16312,11 +15684,9 @@ exports[`Parse JSX > Typescript > Image 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Image",
-  "propsTypeRef": "ImageProps",
   "refs": {
     "pictureRef": {
       "argument": "",
-      "typeParameter": "HTMLElement",
     },
   },
   "state": {
@@ -16353,26 +15723,6 @@ exports[`Parse JSX > Typescript > Image 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "// TODO: AMP Support?
-export interface ImageProps {
-  _class?: string;
-  image: string;
-  sizes?: string;
-  lazy?: boolean;
-  height?: number;
-  width?: number;
-  altText?: string;
-  backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-
-  srcset?: string; // TODO: Implement support for custom aspect ratios
-
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
-
-  children?: any;
-}",
-  ],
 }
 `;
 
@@ -16568,19 +15918,9 @@ exports[`Parse JSX > Typescript > Img 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ImgComponent",
-  "propsTypeRef": "ImgProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ImgProps {
-  attributes?: any;
-  imgSrc?: string;
-  altText?: string;
-  backgroundSize?: 'cover' | 'contain';
-  backgroundPosition?: 'center' | 'top' | 'left' | 'right' | 'bottom' | 'top left' | 'top right' | 'bottom left' | 'bottom right';
-}",
-  ],
 }
 `;
 
@@ -16649,21 +15989,9 @@ exports[`Parse JSX > Typescript > Input 1`] = `
   "inputs": [],
   "meta": {},
   "name": "FormInputComponent",
-  "propsTypeRef": "FormInputProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface FormInputProps {
-  type?: string;
-  attributes?: any;
-  name?: string;
-  value?: string;
-  placeholder?: string;
-  defaultValue?: string;
-  required?: boolean;
-}",
-  ],
 }
 `;
 
@@ -16700,17 +16028,9 @@ exports[`Parse JSX > Typescript > RawText 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RawText",
-  "propsTypeRef": "RawTextProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface RawTextProps {
-  attributes?: any;
-  text?: string; // builderBlock?: any;
-
-}",
-  ],
 }
 `;
 
@@ -16789,17 +16109,9 @@ exports[`Parse JSX > Typescript > Section 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SectionComponent",
-  "propsTypeRef": "SectionProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface SectionProps {
-  maxWidth?: number;
-  attributes?: any;
-  children?: any;
-}",
-  ],
 }
 `;
 
@@ -16934,7 +16246,6 @@ exports[`Parse JSX > Typescript > Section 2`] = `
   "inputs": [],
   "meta": {},
   "name": "SectionStateComponent",
-  "propsTypeRef": "SectionProps",
   "refs": {},
   "state": {
     "items": {
@@ -16947,13 +16258,6 @@ exports[`Parse JSX > Typescript > Section 2`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface SectionProps {
-  maxWidth?: number;
-  attributes?: any;
-  children?: any;
-}",
-  ],
 }
 `;
 
@@ -17110,22 +16414,9 @@ exports[`Parse JSX > Typescript > Select 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SelectComponent",
-  "propsTypeRef": "FormSelectProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface FormSelectProps {
-  options?: {
-    name?: string;
-    value: string;
-  }[];
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-}",
-  ],
 }
 `;
 
@@ -17235,15 +16526,9 @@ exports[`Parse JSX > Typescript > SlotDefault 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SlotCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string;
-};",
-  ],
 }
 `;
 
@@ -17351,15 +16636,9 @@ exports[`Parse JSX > Typescript > SlotHtml 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SlotCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string;
-};",
-  ],
 }
 `;
 
@@ -17433,15 +16712,9 @@ exports[`Parse JSX > Typescript > SlotJsx 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SlotCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string;
-};",
-  ],
 }
 `;
 
@@ -17573,15 +16846,9 @@ exports[`Parse JSX > Typescript > SlotNamed 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SlotCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string;
-};",
-  ],
 }
 `;
 
@@ -18122,7 +17389,6 @@ exports[`Parse JSX > Typescript > Stamped.io 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SmileReviews",
-  "propsTypeRef": "SmileReviewsProps",
   "refs": {},
   "state": {
     "kebabCaseValue": {
@@ -18151,12 +17417,6 @@ exports[`Parse JSX > Typescript > Stamped.io 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
-};",
-  ],
 }
 `;
 
@@ -18231,16 +17491,9 @@ exports[`Parse JSX > Typescript > Submit 1`] = `
   "inputs": [],
   "meta": {},
   "name": "SubmitButton",
-  "propsTypeRef": "ButtonProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-}",
-  ],
 }
 `;
 
@@ -18290,7 +17543,6 @@ exports[`Parse JSX > Typescript > Text 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Text",
-  "propsTypeRef": "TextProps",
   "refs": {},
   "state": {
     "name": {
@@ -18299,15 +17551,6 @@ exports[`Parse JSX > Typescript > Text 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface TextProps {
-  attributes?: any;
-  rtlMode: boolean;
-  text?: string;
-  content?: string;
-  builderBlock?: any;
-}",
-  ],
 }
 `;
 
@@ -18357,19 +17600,9 @@ exports[`Parse JSX > Typescript > Textarea 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Textarea",
-  "propsTypeRef": "TextareaProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface TextareaProps {
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-  placeholder?: string;
-}",
-  ],
 }
 `;
 
@@ -18442,28 +17675,9 @@ exports[`Parse JSX > Typescript > Video 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Video",
-  "propsTypeRef": "VideoProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface VideoProps {
-  attributes?: any;
-  video?: string;
-  autoPlay?: boolean;
-  controls?: boolean;
-  muted?: boolean;
-  loop?: boolean;
-  playsInline?: boolean;
-  aspectRatio?: number;
-  width?: number;
-  height?: number;
-  fit?: 'contain' | 'cover' | 'fill';
-  position?: 'center' | 'top' | 'left' | 'right' | 'bottom' | 'top left' | 'top right' | 'bottom left' | 'bottom right';
-  posterImage?: string;
-  lazyLoad?: boolean;
-}",
-  ],
 }
 `;
 
@@ -18620,7 +17834,6 @@ exports[`Parse JSX > Typescript > basicForwardRef 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicForwardRefComponent",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "name": {
@@ -18629,12 +17842,6 @@ exports[`Parse JSX > Typescript > basicForwardRef 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}",
-  ],
 }
 `;
 
@@ -18722,7 +17929,6 @@ exports[`Parse JSX > Typescript > basicForwardRefMetadata 1`] = `
     },
   },
   "name": "MyBasicForwardRefComponent",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "name": {
@@ -18731,12 +17937,6 @@ exports[`Parse JSX > Typescript > basicForwardRefMetadata 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}",
-  ],
 }
 `;
 
@@ -19112,7 +18312,6 @@ exports[`Parse JSX > Typescript > className 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ClassNameCode",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "bindings": {
@@ -19121,12 +18320,6 @@ exports[`Parse JSX > Typescript > className 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};",
-  ],
 }
 `;
 
@@ -19316,15 +18509,9 @@ exports[`Parse JSX > Typescript > componentWithContext 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ComponentWithContext",
-  "propsTypeRef": "ComponentWithContextProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ComponentWithContextProps {
-  content: string
-}",
-  ],
 }
 `;
 
@@ -19477,15 +18664,9 @@ exports[`Parse JSX > Typescript > componentWithContextMultiRoot 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ComponentWithContext",
-  "propsTypeRef": "ComponentWithContextProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ComponentWithContextProps {
-  content: string
-}",
-  ],
 }
 `;
 
@@ -19836,21 +19017,9 @@ exports[`Parse JSX > Typescript > defaultProps 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Button",
-  "propsTypeRef": "ButtonProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  buttonText?: string; // no default value
-
-  link?: string;
-  openLinkInNewTab?: boolean;
-  onClick?: () => void;
-}",
-  ],
 }
 `;
 
@@ -20136,19 +19305,9 @@ exports[`Parse JSX > Typescript > defaultPropsOutsideComponent 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Button",
-  "propsTypeRef": "ButtonProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-  onClick: () => void;
-}",
-  ],
 }
 `;
 
@@ -20198,7 +19357,7 @@ exports[`Parse JSX > Typescript > defaultValsWithTypes 1`] = `
   },
   "exports": {
     "DEFAULT_VALUES": {
-      "code": "const DEFAULT_VALUES: Props = {
+      "code": "const DEFAULT_VALUES = {
   name: 'Sami'
 };",
       "isFunction": false,
@@ -20210,15 +19369,9 @@ exports[`Parse JSX > Typescript > defaultValsWithTypes 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ComponentWithTypes",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  name: string;
-};",
-  ],
 }
 `;
 
@@ -20309,7 +19462,6 @@ exports[`Parse JSX > Typescript > import types 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RenderContent",
-  "propsTypeRef": "RenderContentProps",
   "refs": {},
   "state": {
     "getRenderContentProps": {
@@ -20323,13 +19475,6 @@ exports[`Parse JSX > Typescript > import types 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type RenderContentProps = {
-  options?: GetContentOptions;
-  content: BuilderContent;
-  renderContentProps: RenderBlockProps;
-};",
-  ],
 }
 `;
 
@@ -20475,7 +19620,6 @@ exports[`Parse JSX > Typescript > multipleSpreads 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "any",
   "refs": {},
   "state": {
     "attrs": {
@@ -20647,16 +19791,9 @@ exports[`Parse JSX > Typescript > nestedShow 1`] = `
   "inputs": [],
   "meta": {},
   "name": "NestedShow",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "interface Props {
-  conditionA: boolean;
-  conditionB: boolean;
-}",
-  ],
 }
 `;
 
@@ -20821,7 +19958,6 @@ exports[`Parse JSX > Typescript > onInit 1`] = `
   "inputs": [],
   "meta": {},
   "name": "OnInit",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "name": {
@@ -20830,11 +19966,6 @@ exports[`Parse JSX > Typescript > onInit 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Props = {
-  name: string;
-};",
-  ],
 }
 `;
 
@@ -20943,7 +20074,6 @@ exports[`Parse JSX > Typescript > onUpdateWithDeps 1`] = `
   "inputs": [],
   "meta": {},
   "name": "OnUpdateWithDeps",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "a": {
@@ -20956,11 +20086,6 @@ exports[`Parse JSX > Typescript > onUpdateWithDeps 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Props = {
-  size: string;
-};",
-  ],
 }
 `;
 
@@ -21004,7 +20129,7 @@ exports[`Parse JSX > Typescript > preserveExportOrLocalStatement 1`] = `
       "usedInLocal": false,
     },
     "run": {
-      "code": "export function run<T>(value: T) {}",
+      "code": "export function run(value) {}",
       "isFunction": true,
       "usedInLocal": false,
     },
@@ -21014,21 +20139,9 @@ exports[`Parse JSX > Typescript > preserveExportOrLocalStatement 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "MyBasicComponentProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Types = {
-  s: any[];
-};",
-    "interface IPost {
-  len: number;
-}",
-    "export interface MyBasicComponentProps {
-  id: string
-}",
-  ],
 }
 `;
 
@@ -21082,24 +20195,9 @@ exports[`Parse JSX > Typescript > preserveTyping 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "MyBasicComponentProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export type A = 'test';",
-    "export interface C {
-  n: 'test';
-}",
-    "type B = 'test2';",
-    "interface D {
-  n: 'test';
-}",
-    "export interface MyBasicComponentProps {
-  name: string
-  age?: number
-}",
-  ],
 }
 `;
 
@@ -21192,7 +20290,6 @@ exports[`Parse JSX > Typescript > propsDestructure 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {
     "name": {
@@ -21201,12 +20298,6 @@ exports[`Parse JSX > Typescript > propsDestructure 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "type Props = {
-  children: any;
-  type: string;
-};",
-  ],
 }
 `;
 
@@ -21260,16 +20351,9 @@ exports[`Parse JSX > Typescript > propsInterface 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "Person | never",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "interface Person {
-  name: string;
-  age?: number;
-}",
-  ],
 }
 `;
 
@@ -21323,16 +20407,9 @@ exports[`Parse JSX > Typescript > propsType 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
-  "propsTypeRef": "Person",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Person = {
-  name: string;
-  age?: number;
-};",
-  ],
 }
 `;
 
@@ -21934,7 +21011,6 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RenderBlock",
-  "propsTypeRef": "RenderBlockProps",
   "refs": {},
   "state": {
     "actions": {
@@ -22093,7 +21169,7 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
 
   const collectionName = repeat.collection.split('.').pop();
   const itemNameToUse = repeat.itemName || (collectionName ? collectionName + 'Item' : 'item');
-  const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+  const repeatArray = itemsArray.map((item, index) => ({
     context: { ...props.context,
       state: { ...props.context.state,
         $index: index,
@@ -22143,17 +21219,6 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "import type { BuilderContextInterface, RegisteredComponent } from '../../context/types.js';",
-    "import type { BuilderBlock } from '../../types/builder-block.js';",
-    "import type { Nullable } from '../../types/typescript.js';",
-    "import type { RenderComponentProps } from \\"./render-component\\";",
-    "import type { RepeatData } from './types.js';",
-    "export type RenderBlockProps = {
-  block: BuilderBlock;
-  context: BuilderContextInterface;
-};",
-  ],
 }
 `;
 
@@ -22281,19 +21346,9 @@ exports[`Parse JSX > Typescript > renderContentExample 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RenderContent",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};",
-  ],
 }
 `;
 
@@ -22554,18 +21609,9 @@ exports[`Parse JSX > Typescript > rootFragmentMultiNode 1`] = `
   "inputs": [],
   "meta": {},
   "name": "Button",
-  "propsTypeRef": "ButtonProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}",
-  ],
 }
 `;
 
@@ -22666,15 +21712,9 @@ exports[`Parse JSX > Typescript > rootShow 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RenderStyles",
-  "propsTypeRef": "RenderStylesProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface RenderStylesProps {
-  foo: string
-}",
-  ],
 }
 `;
 
@@ -22803,7 +21843,6 @@ exports[`Parse JSX > Typescript > self-referencing component 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyComponent",
-  "propsTypeRef": "any",
   "refs": {},
   "state": {},
   "subComponents": [],
@@ -23007,7 +22046,6 @@ exports[`Parse JSX > Typescript > self-referencing component with children 1`] =
   "inputs": [],
   "meta": {},
   "name": "MyComponent",
-  "propsTypeRef": "any",
   "refs": {},
   "state": {},
   "subComponents": [],
@@ -23137,16 +22175,9 @@ exports[`Parse JSX > Typescript > showWithFor 1`] = `
   "inputs": [],
   "meta": {},
   "name": "NestedShow",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "interface Props {
-  conditionA: boolean;
-  items: string[];
-}",
-  ],
 }
 `;
 
@@ -23587,18 +22618,9 @@ exports[`Parse JSX > Typescript > typeDependency 1`] = `
   "inputs": [],
   "meta": {},
   "name": "TypeDependency",
-  "propsTypeRef": "TypeDependencyProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "import type { Foo } from './foo-type';",
-    "import type { Foo as Foo2 } from \\"./type-export\\";",
-    "export type TypeDependencyProps = {
-  foo: Foo;
-  foo2: Foo2;
-};",
-  ],
 }
 `;
 
@@ -23939,16 +22961,9 @@ exports[`Parse JSX > boolean attribute 1`] = `
   "inputs": [],
   "meta": {},
   "name": "MyBooleanAttribute",
-  "propsTypeRef": "Props",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "type Props = {
-  children: any;
-  type: string;
-};",
-  ],
 }
 `;
 
@@ -24216,18 +23231,9 @@ exports[`Parse JSX > metadata 1`] = `
     },
   },
   "name": "Button",
-  "propsTypeRef": "ButtonProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}",
-  ],
 }
 `;
 

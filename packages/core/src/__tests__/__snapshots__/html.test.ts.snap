@@ -1056,7 +1056,7 @@ exports[`Html > jsx > Javascript Test > BasicRefAssignment 1`] = `
 <script>
   (() => {
     const state = {
-      handlerClick: function handlerClick(event: Event) {
+      handlerClick: function handlerClick(event) {
         event.preventDefault();
         console.log(\\"current value\\", holdValueRef);
         holdValueRef = holdValueRef + \\"JS\\";
@@ -1337,11 +1337,11 @@ exports[`Html > jsx > Javascript Test > Columns 1`] = `
       getGutterSize() {
         return typeof props.space === \\"number\\" ? props.space || 0 : 20;
       },
-      getWidth(index: number) {
+      getWidth(index) {
         const columns = state.getColumns();
         return (columns[index] && columns[index].width) || 100 / columns.length;
       },
-      getColumnCssWidth(index: number) {
+      getColumnCssWidth(index) {
         const columns = state.getColumns();
         const gutterSize = state.getGutterSize();
         const subtractWidth =
@@ -4681,22 +4681,19 @@ exports[`Html > jsx > Javascript Test > renderBlock 1`] = `
         const itemNameToUse =
           repeat.itemName ||
           (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-        const repeatArray =
-          itemsArray.map <
-          RepeatData >
-          ((item, index) => ({
-            context: {
-              ...props.context,
-              state: {
-                ...props.context.state,
-                $index: index,
-                $item: item,
-                [itemNameToUse]: item,
-                [\`$\${itemNameToUse}Index\`]: index,
-              },
+        const repeatArray = itemsArray.map((item, index) => ({
+          context: {
+            ...props.context,
+            state: {
+              ...props.context.state,
+              $index: index,
+              $item: item,
+              [itemNameToUse]: item,
+              [\`$\${itemNameToUse}Index\`]: index,
             },
-            block: blockWithoutRepeat,
-          }));
+          },
+          block: blockWithoutRepeat,
+        }));
         return repeatArray;
       },
       get inheritedTextStyles() {
@@ -6835,7 +6832,7 @@ exports[`Html > jsx > Typescript Test > BasicRefAssignment 1`] = `
 <script>
   (() => {
     const state = {
-      handlerClick: function handlerClick(event: Event) {
+      handlerClick: function handlerClick(event) {
         event.preventDefault();
         console.log(\\"current value\\", holdValueRef);
         holdValueRef = holdValueRef + \\"JS\\";
@@ -7116,11 +7113,11 @@ exports[`Html > jsx > Typescript Test > Columns 1`] = `
       getGutterSize() {
         return typeof props.space === \\"number\\" ? props.space || 0 : 20;
       },
-      getWidth(index: number) {
+      getWidth(index) {
         const columns = state.getColumns();
         return (columns[index] && columns[index].width) || 100 / columns.length;
       },
-      getColumnCssWidth(index: number) {
+      getColumnCssWidth(index) {
         const columns = state.getColumns();
         const gutterSize = state.getGutterSize();
         const subtractWidth =
@@ -10460,22 +10457,19 @@ exports[`Html > jsx > Typescript Test > renderBlock 1`] = `
         const itemNameToUse =
           repeat.itemName ||
           (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-        const repeatArray =
-          itemsArray.map <
-          RepeatData >
-          ((item, index) => ({
-            context: {
-              ...props.context,
-              state: {
-                ...props.context.state,
-                $index: index,
-                $item: item,
-                [itemNameToUse]: item,
-                [\`$\${itemNameToUse}Index\`]: index,
-              },
+        const repeatArray = itemsArray.map((item, index) => ({
+          context: {
+            ...props.context,
+            state: {
+              ...props.context.state,
+              $index: index,
+              $item: item,
+              [itemNameToUse]: item,
+              [\`$\${itemNameToUse}Index\`]: index,
             },
-            block: blockWithoutRepeat,
-          }));
+          },
+          block: blockWithoutRepeat,
+        }));
         return repeatArray;
       },
       get inheritedTextStyles() {
