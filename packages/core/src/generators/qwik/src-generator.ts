@@ -364,7 +364,6 @@ export class SrcBuilder {
     function emitJsxProp(key: string, value: any) {
       if (value) {
         if (key === 'innerHTML') key = 'dangerouslySetInnerHTML';
-        if (key === 'for') key = 'htmlFor';
         if (key === 'dataSet') return; // ignore
         if (self.isJSX) {
           self.emit(' ', key, '=');
