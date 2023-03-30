@@ -480,7 +480,7 @@ export const runTestsForJsx = () => {
       JSX_TESTS.forEach((tests) => {
         Object.keys(tests).forEach((key) => {
           test(key, async () => {
-            const component = parseJsx(await tests[key]);
+            const component = parseJsx(await tests[key], config);
             expect(component).toMatchSnapshot();
           });
         });
