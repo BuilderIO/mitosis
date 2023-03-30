@@ -10,7 +10,7 @@ import { Context, ParseMitosisOptions } from './types';
 import { collectModuleScopeHooks } from './hooks';
 import { extractContextComponents } from './context';
 import { isImportOrDefaultExport } from './helpers';
-import { collectTypes, handleTypeImports, isTypeOrInterface } from './component-types';
+import { collectTypes, isTypeOrInterface } from './component-types';
 import { undoPropsDestructure } from './props';
 import { generateExports } from './exports';
 import { pipe } from 'fp-ts/lib/function';
@@ -87,8 +87,6 @@ export function parseJsx(
             const keepStatements = path.node.body.filter(
               (statement) => isImportOrDefaultExport(statement) || isTypeOrInterface(statement),
             );
-
-            handleTypeImports(path, context);
 
             context.builder.component.exports = generateExports(path);
 
