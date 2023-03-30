@@ -5354,14 +5354,6 @@ exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
 
 <script setup lang=\\"ts\\">
 import { computed } from \\"vue\\";
-import type {
-  BuilderContextInterface,
-  RegisteredComponent,
-} from \\"../../context/types.js\\";
-import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-import type { Nullable } from \\"../../types/typescript.js\\";
-import type { RenderComponentProps } from \\"./render-component\\";
-import type { RepeatData } from \\"./types.js\\";
 export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
@@ -5381,7 +5373,7 @@ import { Nullable } from \\"../../types/typescript.js\\";
 import { evaluate } from \\"../../functions/evaluate.js\\";
 import BlockStyles from \\"./block-styles.vue\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import { RenderComponentProps } from \\"./render-component\\";
+import { RenderComponentProps } from \\"./render-component.vue\\";
 import { RepeatData } from \\"./types.js\\";
 import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
 import { TARGET } from \\"../../constants/target.js\\";
@@ -5819,15 +5811,13 @@ exports[`Vue > jsx > Typescript Test > typeDependency 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
 };
 
 import { Foo } from \\"./foo-type\\";
-import { Foo as Foo2 } from \\"./type-export\\";
+import { Foo as Foo2 } from \\"./type-export.vue\\";
 
 const props = defineProps<TypeDependencyProps>();
 </script>"
