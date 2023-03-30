@@ -818,7 +818,7 @@ exports[`Solid > jsx > Javascript Test > BasicRefAssignment 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
 function MyBasicRefAssignmentComponent(props) {
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -841,7 +841,7 @@ exports[`Solid > jsx > Javascript Test > BasicRefAssignment 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicRefAssignmentComponent(props) {
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -1018,12 +1018,12 @@ function Column(props) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -1088,12 +1088,12 @@ function Column(props) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -1586,7 +1586,11 @@ function FormComponent(props) {
     return (Builder.isEditing && props.previewState) || formState();
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -1600,16 +1604,19 @@ function FormComponent(props) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -1635,7 +1642,7 @@ function FormComponent(props) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -1702,7 +1709,7 @@ function FormComponent(props) {
         props.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
       fetch(
-        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -1829,13 +1836,13 @@ function FormComponent(props) {
       <Show when={submissionState() === \\"error\\"}>
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
-          blocks={props.errorMessage}
+          blocks={props.errorMessage!}
         ></BuilderBlocks>
       </Show>
       <Show when={submissionState() === \\"sending\\"}>
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
-          blocks={props.sendingMessage}
+          blocks={props.sendingMessage!}
         ></BuilderBlocks>
       </Show>
       <Show when={submissionState() === \\"error\\" && responseData()}>
@@ -1855,7 +1862,7 @@ function FormComponent(props) {
       <Show when={submissionState() === \\"success\\"}>
         <BuilderBlocks
           dataPath=\\"successMessage\\"
-          blocks={props.successMessage}
+          blocks={props.successMessage!}
         ></BuilderBlocks>
       </Show>
     </form>
@@ -1888,7 +1895,11 @@ function FormComponent(props) {
     return (Builder.isEditing && props.previewState) || formState();
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -1902,16 +1913,19 @@ function FormComponent(props) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -1937,7 +1951,7 @@ function FormComponent(props) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -2004,7 +2018,7 @@ function FormComponent(props) {
         props.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
       fetch(
-        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -2132,29 +2146,29 @@ function FormComponent(props) {
         <Show when={submissionState() === \\"error\\"}>
           <BuilderBlocks
             dataPath=\\"errorMessage\\"
-            blocks={props.errorMessage}
+            blocks={props.errorMessage!}
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"sending\\"}>
           <BuilderBlocks
             dataPath=\\"sendingMessage\\"
-            blocks={props.sendingMessage}
+            blocks={props.sendingMessage!}
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder-form-error-text pre-2d2d05c3\\">
+          <pre class=\\"builder-form-error-text pre-6cae2e3e\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
         <Show when={submissionState() === \\"success\\"}>
           <BuilderBlocks
             dataPath=\\"successMessage\\"
-            blocks={props.successMessage}
+            blocks={props.successMessage!}
           ></BuilderBlocks>
         </Show>
       </form>
       <style jsx>{\`
-        .pre-2d2d05c3 {
+        .pre-6cae2e3e {
           padding: 10px;
           color: red;
           text-align: center;
@@ -4933,7 +4947,7 @@ function RenderBlock(props) {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {
@@ -5207,7 +5221,7 @@ function RenderBlock(props) {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {
@@ -6919,7 +6933,7 @@ export interface Props {
 }
 
 function MyBasicRefAssignmentComponent(props: Props) {
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -6945,7 +6959,7 @@ export interface Props {
 }
 
 function MyBasicRefAssignmentComponent(props: Props) {
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -7156,12 +7170,12 @@ function Column(props: ColumnProps) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -7240,12 +7254,12 @@ function Column(props: ColumnProps) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -7795,7 +7809,11 @@ function FormComponent(props: FormProps) {
     return (Builder.isEditing && props.previewState) || formState();
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -7809,16 +7827,19 @@ function FormComponent(props: FormProps) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -7844,7 +7865,7 @@ function FormComponent(props: FormProps) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -7911,7 +7932,7 @@ function FormComponent(props: FormProps) {
         props.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
       fetch(
-        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -8038,13 +8059,13 @@ function FormComponent(props: FormProps) {
       <Show when={submissionState() === \\"error\\"}>
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
-          blocks={props.errorMessage}
+          blocks={props.errorMessage!}
         ></BuilderBlocks>
       </Show>
       <Show when={submissionState() === \\"sending\\"}>
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
-          blocks={props.sendingMessage}
+          blocks={props.sendingMessage!}
         ></BuilderBlocks>
       </Show>
       <Show when={submissionState() === \\"error\\" && responseData()}>
@@ -8064,7 +8085,7 @@ function FormComponent(props: FormProps) {
       <Show when={submissionState() === \\"success\\"}>
         <BuilderBlocks
           dataPath=\\"successMessage\\"
-          blocks={props.successMessage}
+          blocks={props.successMessage!}
         ></BuilderBlocks>
       </Show>
     </form>
@@ -8120,7 +8141,11 @@ function FormComponent(props: FormProps) {
     return (Builder.isEditing && props.previewState) || formState();
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -8134,16 +8159,19 @@ function FormComponent(props: FormProps) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -8169,7 +8197,7 @@ function FormComponent(props: FormProps) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -8236,7 +8264,7 @@ function FormComponent(props: FormProps) {
         props.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
       fetch(
-        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -8364,29 +8392,29 @@ function FormComponent(props: FormProps) {
         <Show when={submissionState() === \\"error\\"}>
           <BuilderBlocks
             dataPath=\\"errorMessage\\"
-            blocks={props.errorMessage}
+            blocks={props.errorMessage!}
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"sending\\"}>
           <BuilderBlocks
             dataPath=\\"sendingMessage\\"
-            blocks={props.sendingMessage}
+            blocks={props.sendingMessage!}
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder-form-error-text pre-2d2d05c3\\">
+          <pre class=\\"builder-form-error-text pre-6cae2e3e\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
         <Show when={submissionState() === \\"success\\"}>
           <BuilderBlocks
             dataPath=\\"successMessage\\"
-            blocks={props.successMessage}
+            blocks={props.successMessage!}
           ></BuilderBlocks>
         </Show>
       </form>
       <style jsx>{\`
-        .pre-2d2d05c3 {
+        .pre-6cae2e3e {
           padding: 10px;
           color: red;
           text-align: center;
@@ -11613,7 +11641,7 @@ function RenderBlock(props: RenderBlockProps) {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {
@@ -11899,7 +11927,7 @@ function RenderBlock(props: RenderBlockProps) {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {

@@ -503,7 +503,7 @@ function RenderBlock(props) {
       return null;
     }
 
-    const ref = components[useBlock().component?.name];
+    const ref = components[useBlock().component?.name!];
 
     if (componentName && !ref) {
       // TODO: Public doc page with more info about this message
@@ -524,7 +524,7 @@ function RenderBlock(props) {
   }
 
   function tagName() {
-    return getBlockTag(useBlock());
+    return getBlockTag(useBlock()) as any;
   }
 
   function properties() {

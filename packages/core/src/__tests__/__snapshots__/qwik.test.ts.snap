@@ -1519,7 +1519,7 @@ export const handlerClick = function handlerClick(
   props,
   state,
   holdValueRef,
-  event
+  event: Event
 ) {
   event.preventDefault();
   console.log(\\"current value\\", holdValueRef);
@@ -1621,14 +1621,14 @@ export const getColumns = function getColumns(props, state) {
 export const getGutterSize = function getGutterSize(props, state) {
   return typeof props.space === \\"number\\" ? props.space || 0 : 20;
 };
-export const getWidth = function getWidth(props, state, index) {
+export const getWidth = function getWidth(props, state, index: number) {
   const columns = getColumns(props, state);
   return (columns[index] && columns[index].width) || 100 / columns.length;
 };
 export const getColumnCssWidth = function getColumnCssWidth(
   props,
   state,
-  index
+  index: number
 ) {
   const columns = getColumns(props, state);
   const gutterSize = getGutterSize(props, state);
@@ -1922,7 +1922,14 @@ import {
 export const submissionState = function submissionState(props, state, formRef) {
   return (Builder.isEditing && props.previewState) || state.formState;
 };
-export const onSubmit = function onSubmit(props, state, formRef, event) {
+export const onSubmit = function onSubmit(
+  props,
+  state,
+  formRef,
+  event: Event & {
+    currentTarget: HTMLFormElement;
+  }
+) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
   if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -1936,16 +1943,19 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
     event.preventDefault();
     const el = event.currentTarget;
     const headers = props.customHeaders || {};
-    let body;
+    let body: any;
     const formData = new FormData(el); // TODO: maybe support null
 
-    const formPairs = Array.from(
+    const formPairs: {
+      key: string;
+      value: File | boolean | number | string | FileList;
+    }[] = Array.from(
       event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
     )
-      .filter((el) => !!el.name)
+      .filter((el) => !!(el as HTMLInputElement).name)
       .map((el) => {
-        let value;
-        const key = el.name;
+        let value: any;
+        const key = (el as HTMLImageElement).name;
 
         if (el instanceof HTMLInputElement) {
           if (el.type === \\"radio\\") {
@@ -1971,7 +1981,7 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
             value = el.value;
           }
         } else {
-          value = el.value;
+          value = (el as HTMLInputElement).value;
         }
 
         return {
@@ -2038,7 +2048,7 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
       props.sendSubmissionsToEmail || \\"\\"
     )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
     fetch(
-      props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+      props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
       /* TODO: throw error if no action URL */
       {
         body,
@@ -2171,13 +2181,17 @@ export const FormComponent = component$((props) => {
       {submissionState(props, state, formRef) === \\"error\\" ? (
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
-          blocks={props.errorMessage}
+          blocks={(() => {
+            props.errorMessage!;
+          })()}
         ></BuilderBlocks>
       ) : null}
       {submissionState(props, state, formRef) === \\"sending\\" ? (
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
-          blocks={props.sendingMessage}
+          blocks={(() => {
+            props.sendingMessage!;
+          })()}
         ></BuilderBlocks>
       ) : null}
       {submissionState(props, state, formRef) === \\"error\\" &&
@@ -2189,7 +2203,9 @@ export const FormComponent = component$((props) => {
       {submissionState(props, state, formRef) === \\"success\\" ? (
         <BuilderBlocks
           dataPath=\\"successMessage\\"
-          blocks={props.successMessage}
+          blocks={(() => {
+            props.successMessage!;
+          })()}
         ></BuilderBlocks>
       ) : null}
     </form>
@@ -3644,7 +3660,7 @@ export const repeatItemData = function repeatItemData(props, state) {
   const collectionName = repeat.collection.split(\\".\\").pop();
   const itemNameToUse =
     repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-  const repeatArray = itemsArray.map((item, index) => ({
+  const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
     context: {
       ...props.context,
       state: {
@@ -4517,7 +4533,7 @@ export const handlerClick = function handlerClick(
   props,
   state,
   holdValueRef,
-  event
+  event: Event
 ) {
   event.preventDefault();
   console.log(\\"current value\\", holdValueRef);
@@ -5240,13 +5256,17 @@ export const FormComponent = component$((props: FormProps) => {
       {submissionState(props, state, formRef) === \\"error\\" ? (
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
-          blocks={props.errorMessage}
+          blocks={(() => {
+            props.errorMessage!;
+          })()}
         ></BuilderBlocks>
       ) : null}
       {submissionState(props, state, formRef) === \\"sending\\" ? (
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
-          blocks={props.sendingMessage}
+          blocks={(() => {
+            props.sendingMessage!;
+          })()}
         ></BuilderBlocks>
       ) : null}
       {submissionState(props, state, formRef) === \\"error\\" &&
@@ -5258,7 +5278,9 @@ export const FormComponent = component$((props: FormProps) => {
       {submissionState(props, state, formRef) === \\"success\\" ? (
         <BuilderBlocks
           dataPath=\\"successMessage\\"
-          blocks={props.successMessage}
+          blocks={(() => {
+            props.successMessage!;
+          })()}
         ></BuilderBlocks>
       ) : null}
     </form>

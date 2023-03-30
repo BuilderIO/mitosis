@@ -418,7 +418,7 @@ export default {
   name: \\"my-basic-ref-assignment-component\\",
 
   methods: {
-    handlerClick: function handlerClick(event) {
+    handlerClick: function handlerClick(event: Event) {
       event.preventDefault();
       console.log(\\"current value\\", this.$refs.holdValueRef);
       this.$refs.holdValueRef = this.$refs.holdValueRef + \\"JS\\";
@@ -533,11 +533,11 @@ export default {
     getGutterSize() {
       return typeof this.space === \\"number\\" ? this.space || 0 : 20;
     },
-    getWidth(index) {
+    getWidth(index: number) {
       const columns = this.getColumns();
       return (columns[index] && columns[index].width) || 100 / columns.length;
     },
-    getColumnCssWidth(index) {
+    getColumnCssWidth(index: number) {
       const columns = this.getColumns();
       const gutterSize = this.getGutterSize();
       const subtractWidth =
@@ -843,14 +843,14 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
     <template v-if=\\"submissionState === 'error'\\">
       <builder-blocks
         dataPath=\\"errorMessage\\"
-        :blocks=\\"errorMessage\\"
+        :blocks=\\"errorMessage!\\"
       ></builder-blocks>
     </template>
 
     <template v-if=\\"submissionState === 'sending'\\">
       <builder-blocks
         dataPath=\\"sendingMessage\\"
-        :blocks=\\"sendingMessage\\"
+        :blocks=\\"sendingMessage!\\"
       ></builder-blocks>
     </template>
 
@@ -863,277 +863,261 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
     <template v-if=\\"submissionState === 'success'\\">
       <builder-blocks
         dataPath=\\"successMessage\\"
-        :blocks=\\"successMessage\\"
+        :blocks=\\"successMessage!\\"
       ></builder-blocks>
     </template>
   </form>
 </template>
 
 <script>
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
 
-export default {
-  name: \\"form-component\\",
-  components: {
-    BuilderBlockComponent: BuilderBlockComponent,
-    BuilderBlocks: BuilderBlocks,
-  },
-  props: [
-    \\"previewState\\",
-    \\"sendWithJs\\",
-    \\"sendSubmissionsTo\\",
-    \\"action\\",
-    \\"customHeaders\\",
-    \\"contentType\\",
-    \\"sendSubmissionsToEmail\\",
-    \\"name\\",
-    \\"method\\",
-    \\"errorMessagePath\\",
-    \\"resetFormOnSubmit\\",
-    \\"successUrl\\",
-    \\"validate\\",
-    \\"attributes\\",
-    \\"builderBlock\\",
-    \\"errorMessage\\",
-    \\"sendingMessage\\",
-    \\"successMessage\\",
-  ],
 
-  data() {
+
+
+  import { BuilderBlock as BuilderBlockComponent } from '@fake';
+import { Builder, builder } from '@builder.io/sdk';
+import { BuilderBlocks } from '@fake';
+import { set } from '@fake';
+import { get } from '@fake';
+
+
+
+
+
+      export default {
+      name: 'form-component',
+      components: { 'BuilderBlockComponent': BuilderBlockComponent,'BuilderBlocks': BuilderBlocks },
+      props: ['previewState','sendWithJs','sendSubmissionsTo','action','customHeaders','contentType','sendSubmissionsToEmail','name','method','errorMessagePath','resetFormOnSubmit','successUrl','validate','attributes','builderBlock','errorMessage','sendingMessage','successMessage'],
+
+      data() {
+        return { formState: 'unsubmitted', responseData: null, formErrorMessage: '',builder}
+      },
+
+
+
+
+
+
+
+
+
+
+
+        computed: { submissionState() {
+return Builder.isEditing && this.previewState || this.formState;
+},},
+
+
+        methods: {  onSubmit(event: Event & {
+currentTarget: HTMLFormElement;
+}) {
+const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === 'email';
+
+if (this.sendSubmissionsTo === 'zapier') {
+  event.preventDefault();
+} else if (sendWithJs) {
+  if (!(this.action || this.sendSubmissionsTo === 'email')) {
+    event.preventDefault();
+    return;
+  }
+
+  event.preventDefault();
+  const el = event.currentTarget;
+  const headers = this.customHeaders || {};
+  let body: any;
+  const formData = new FormData(el); // TODO: maybe support null
+
+  const formPairs: {
+    key: string;
+    value: File | boolean | number | string | FileList;
+  }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!(el as HTMLInputElement).name).map(el => {
+    let value: any;
+    const key = (el as HTMLImageElement).name;
+
+    if (el instanceof HTMLInputElement) {
+      if (el.type === 'radio') {
+        if (el.checked) {
+          value = el.name;
+          return {
+            key,
+            value
+          };
+        }
+      } else if (el.type === 'checkbox') {
+        value = el.checked;
+      } else if (el.type === 'number' || el.type === 'range') {
+        const num = el.valueAsNumber;
+
+        if (!isNaN(num)) {
+          value = num;
+        }
+      } else if (el.type === 'file') {
+        // TODO: one vs multiple files
+        value = el.files;
+      } else {
+        value = el.value;
+      }
+    } else {
+      value = (el as HTMLInputElement).value;
+    }
+
     return {
-      formState: \\"unsubmitted\\",
-      responseData: null,
-      formErrorMessage: \\"\\",
-      builder,
+      key,
+      value
     };
-  },
+  });
+  let contentType = this.contentType;
 
-  computed: {
-    submissionState() {
-      return (Builder.isEditing && this.previewState) || this.formState;
-    },
-  },
+  if (this.sendSubmissionsTo === 'email') {
+    contentType = 'multipart/form-data';
+  }
 
-  methods: {
-    onSubmit(event) {
-      const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
+  Array.from(formPairs).forEach(({
+    value
+  }) => {
+    if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
+      contentType = 'multipart/form-data';
+    }
+  }); // TODO: send as urlEncoded or multipart by default
+  // because of ease of use and reliability in browser API
+  // for encoding the form?
 
-      if (this.sendSubmissionsTo === \\"zapier\\") {
-        event.preventDefault();
-      } else if (sendWithJs) {
-        if (!(this.action || this.sendSubmissionsTo === \\"email\\")) {
-          event.preventDefault();
+  if (contentType !== 'application/json') {
+    body = formData;
+  } else {
+    // Json
+    const json = {};
+    Array.from(formPairs).forEach(({
+      value,
+      key
+    }) => {
+      set(json, key, value);
+    });
+    body = JSON.stringify(json);
+  }
+
+  if (contentType && contentType !== 'multipart/form-data') {
+    if (
+    /* Zapier doesn't allow content-type header to be sent from browsers */
+    !(sendWithJs && this.action?.includes('zapier.com'))) {
+      headers['content-type'] = contentType;
+    }
+  }
+
+  const presubmitEvent = new CustomEvent('presubmit', {
+    detail: {
+      body
+    }
+  });
+
+  if (this.$refs.formRef) {
+    this.$refs.formRef.dispatchEvent(presubmitEvent);
+
+    if (presubmitEvent.defaultPrevented) {
+      return;
+    }
+  }
+
+  this.formState = 'sending';
+  const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(this.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(this.name || '')}\`;
+  fetch(this.sendSubmissionsTo === 'email' ? formUrl : this.action!
+  /* TODO: throw error if no action URL */
+  , {
+    body,
+    headers,
+    method: this.method || 'post'
+  }).then(async res => {
+    let body;
+    const contentType = res.headers.get('content-type');
+
+    if (contentType && contentType.indexOf('application/json') !== -1) {
+      body = await res.json();
+    } else {
+      body = await res.text();
+    }
+
+    if (!res.ok && this.errorMessagePath) {
+      /* TODO: allow supplying an error formatter function */
+      let message = get(body, this.errorMessagePath);
+
+      if (message) {
+        if (typeof message !== 'string') {
+          /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+          message = JSON.stringify(message);
+        }
+
+        this.formErrorMessage = message;
+      }
+    }
+
+    this.responseData = body;
+    this.formState = res.ok ? 'success' : 'error';
+
+    if (res.ok) {
+      const submitSuccessEvent = new CustomEvent('submit:success', {
+        detail: {
+          res,
+          body
+        }
+      });
+
+      if (this.$refs.formRef) {
+        this.$refs.formRef.dispatchEvent(submitSuccessEvent);
+
+        if (submitSuccessEvent.defaultPrevented) {
           return;
         }
+        /* TODO: option to turn this on/off? */
 
-        event.preventDefault();
-        const el = event.currentTarget;
-        const headers = this.customHeaders || {};
-        let body;
-        const formData = new FormData(el); // TODO: maybe support null
 
-        const formPairs = Array.from(
-          event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-        )
-          .filter((el) => !!el.name)
-          .map((el) => {
-            let value;
-            const key = el.name;
-
-            if (el instanceof HTMLInputElement) {
-              if (el.type === \\"radio\\") {
-                if (el.checked) {
-                  value = el.name;
-                  return {
-                    key,
-                    value,
-                  };
-                }
-              } else if (el.type === \\"checkbox\\") {
-                value = el.checked;
-              } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-                const num = el.valueAsNumber;
-
-                if (!isNaN(num)) {
-                  value = num;
-                }
-              } else if (el.type === \\"file\\") {
-                // TODO: one vs multiple files
-                value = el.files;
-              } else {
-                value = el.value;
-              }
-            } else {
-              value = el.value;
-            }
-
-            return {
-              key,
-              value,
-            };
-          });
-        let contentType = this.contentType;
-
-        if (this.sendSubmissionsTo === \\"email\\") {
-          contentType = \\"multipart/form-data\\";
+        if (this.resetFormOnSubmit !== false) {
+          this.$refs.formRef.reset();
         }
-
-        Array.from(formPairs).forEach(({ value }) => {
-          if (
-            value instanceof File ||
-            (Array.isArray(value) && value[0] instanceof File) ||
-            value instanceof FileList
-          ) {
-            contentType = \\"multipart/form-data\\";
-          }
-        }); // TODO: send as urlEncoded or multipart by default
-        // because of ease of use and reliability in browser API
-        // for encoding the form?
-
-        if (contentType !== \\"application/json\\") {
-          body = formData;
-        } else {
-          // Json
-          const json = {};
-          Array.from(formPairs).forEach(({ value, key }) => {
-            set(json, key, value);
-          });
-          body = JSON.stringify(json);
-        }
-
-        if (contentType && contentType !== \\"multipart/form-data\\") {
-          if (
-            /* Zapier doesn't allow content-type header to be sent from browsers */
-            !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
-          ) {
-            headers[\\"content-type\\"] = contentType;
-          }
-        }
-
-        const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-          detail: {
-            body,
-          },
-        });
-
-        if (this.$refs.formRef) {
-          this.$refs.formRef.dispatchEvent(presubmitEvent);
-
-          if (presubmitEvent.defaultPrevented) {
-            return;
-          }
-        }
-
-        this.formState = \\"sending\\";
-        const formUrl = \`\${
-          builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-        }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-          this.sendSubmissionsToEmail || \\"\\"
-        )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
-        fetch(
-          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
-          /* TODO: throw error if no action URL */
-          {
-            body,
-            headers,
-            method: this.method || \\"post\\",
-          }
-        ).then(
-          async (res) => {
-            let body;
-            const contentType = res.headers.get(\\"content-type\\");
-
-            if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-              body = await res.json();
-            } else {
-              body = await res.text();
-            }
-
-            if (!res.ok && this.errorMessagePath) {
-              /* TODO: allow supplying an error formatter function */
-              let message = get(body, this.errorMessagePath);
-
-              if (message) {
-                if (typeof message !== \\"string\\") {
-                  /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
-                  message = JSON.stringify(message);
-                }
-
-                this.formErrorMessage = message;
-              }
-            }
-
-            this.responseData = body;
-            this.formState = res.ok ? \\"success\\" : \\"error\\";
-
-            if (res.ok) {
-              const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-                detail: {
-                  res,
-                  body,
-                },
-              });
-
-              if (this.$refs.formRef) {
-                this.$refs.formRef.dispatchEvent(submitSuccessEvent);
-
-                if (submitSuccessEvent.defaultPrevented) {
-                  return;
-                }
-                /* TODO: option to turn this on/off? */
-
-                if (this.resetFormOnSubmit !== false) {
-                  this.$refs.formRef.reset();
-                }
-              }
-              /* TODO: client side route event first that can be preventDefaulted */
-
-              if (this.successUrl) {
-                if (this.$refs.formRef) {
-                  const event = new CustomEvent(\\"route\\", {
-                    detail: {
-                      url: this.successUrl,
-                    },
-                  });
-                  this.$refs.formRef.dispatchEvent(event);
-
-                  if (!event.defaultPrevented) {
-                    location.href = this.successUrl;
-                  }
-                } else {
-                  location.href = this.successUrl;
-                }
-              }
-            }
-          },
-          (err) => {
-            const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-              detail: {
-                error: err,
-              },
-            });
-
-            if (this.$refs.formRef) {
-              this.$refs.formRef.dispatchEvent(submitErrorEvent);
-
-              if (submitErrorEvent.defaultPrevented) {
-                return;
-              }
-            }
-
-            this.responseData = err;
-            this.formState = \\"error\\";
-          }
-        );
       }
-    },
-  },
-};
+      /* TODO: client side route event first that can be preventDefaulted */
+
+
+      if (this.successUrl) {
+        if (this.$refs.formRef) {
+          const event = new CustomEvent('route', {
+            detail: {
+              url: this.successUrl
+            }
+          });
+          this.$refs.formRef.dispatchEvent(event);
+
+          if (!event.defaultPrevented) {
+            location.href = this.successUrl;
+          }
+        } else {
+          location.href = this.successUrl;
+        }
+      }
+    }
+  }, err => {
+    const submitErrorEvent = new CustomEvent('submit:error', {
+      detail: {
+        error: err
+      }
+    });
+
+    if (this.$refs.formRef) {
+      this.$refs.formRef.dispatchEvent(submitErrorEvent);
+
+      if (submitErrorEvent.defaultPrevented) {
+        return;
+      }
+    }
+
+    this.responseData = err;
+    this.formState = 'error';
+  });
+}
+},},
+
+
+    }
 </script>
 
 <style scoped>
@@ -2779,19 +2763,22 @@ export default {
       const collectionName = repeat.collection.split(\\".\\").pop();
       const itemNameToUse =
         repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-      const repeatArray = itemsArray.map((item, index) => ({
-        context: {
-          ...this.context,
-          state: {
-            ...this.context.state,
-            $index: index,
-            $item: item,
-            [itemNameToUse]: item,
-            [\`$\${itemNameToUse}Index\`]: index,
+      const repeatArray =
+        itemsArray.map <
+        RepeatData >
+        ((item, index) => ({
+          context: {
+            ...this.context,
+            state: {
+              ...this.context.state,
+              $index: index,
+              $item: item,
+              [itemNameToUse]: item,
+              [\`$\${itemNameToUse}Index\`]: index,
+            },
           },
-        },
-        block: blockWithoutRepeat,
-      }));
+          block: blockWithoutRepeat,
+        }));
       return repeatArray;
     },
     inheritedTextStyles() {
@@ -3629,7 +3616,7 @@ export default {
   name: \\"my-basic-ref-assignment-component\\",
 
   methods: {
-    handlerClick: function handlerClick(event) {
+    handlerClick: function handlerClick(event: Event) {
       event.preventDefault();
       console.log(\\"current value\\", this.$refs.holdValueRef);
       this.$refs.holdValueRef = this.$refs.holdValueRef + \\"JS\\";
@@ -3770,11 +3757,11 @@ export default {
     getGutterSize() {
       return typeof this.space === \\"number\\" ? this.space || 0 : 20;
     },
-    getWidth(index) {
+    getWidth(index: number) {
       const columns = this.getColumns();
       return (columns[index] && columns[index].width) || 100 / columns.length;
     },
-    getColumnCssWidth(index) {
+    getColumnCssWidth(index: number) {
       const columns = this.getColumns();
       const gutterSize = this.getGutterSize();
       const subtractWidth =
@@ -4099,14 +4086,14 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
     <template v-if=\\"submissionState === 'error'\\">
       <builder-blocks
         dataPath=\\"errorMessage\\"
-        :blocks=\\"errorMessage\\"
+        :blocks=\\"errorMessage!\\"
       ></builder-blocks>
     </template>
 
     <template v-if=\\"submissionState === 'sending'\\">
       <builder-blocks
         dataPath=\\"sendingMessage\\"
-        :blocks=\\"sendingMessage\\"
+        :blocks=\\"sendingMessage!\\"
       ></builder-blocks>
     </template>
 
@@ -4119,7 +4106,7 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
     <template v-if=\\"submissionState === 'success'\\">
       <builder-blocks
         dataPath=\\"successMessage\\"
-        :blocks=\\"successMessage\\"
+        :blocks=\\"successMessage!\\"
       ></builder-blocks>
     </template>
   </form>
@@ -4199,7 +4186,11 @@ export default {
   },
 
   methods: {
-    onSubmit(event) {
+    onSubmit(
+      event: Event & {
+        currentTarget: HTMLFormElement;
+      }
+    ) {
       const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
       if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -4213,16 +4204,19 @@ export default {
         event.preventDefault();
         const el = event.currentTarget;
         const headers = this.customHeaders || {};
-        let body;
+        let body: any;
         const formData = new FormData(el); // TODO: maybe support null
 
-        const formPairs = Array.from(
+        const formPairs: {
+          key: string;
+          value: File | boolean | number | string | FileList;
+        }[] = Array.from(
           event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
         )
-          .filter((el) => !!el.name)
+          .filter((el) => !!(el as HTMLInputElement).name)
           .map((el) => {
-            let value;
-            const key = el.name;
+            let value: any;
+            const key = (el as HTMLImageElement).name;
 
             if (el instanceof HTMLInputElement) {
               if (el.type === \\"radio\\") {
@@ -4248,7 +4242,7 @@ export default {
                 value = el.value;
               }
             } else {
-              value = el.value;
+              value = (el as HTMLInputElement).value;
             }
 
             return {
@@ -4315,7 +4309,7 @@ export default {
           this.sendSubmissionsToEmail || \\"\\"
         )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
         fetch(
-          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
           /* TODO: throw error if no action URL */
           {
             body,
@@ -6312,7 +6306,7 @@ export default {
       const collectionName = repeat.collection.split(\\".\\").pop();
       const itemNameToUse =
         repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-      const repeatArray = itemsArray.map((item, index) => ({
+      const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
         context: {
           ...this.context,
           state: {

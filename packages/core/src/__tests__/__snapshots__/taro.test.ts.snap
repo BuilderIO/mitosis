@@ -384,7 +384,7 @@ import { View, Button, Text } from \\"@tarojs/components\\";
 
 function MyBasicRefAssignmentComponent(props) {
   const holdValueRef = useRef(\\"Patrick\\");
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef.current);
     holdValueRef.current = holdValueRef.current + \\"JS\\";
@@ -491,12 +491,12 @@ function Column(props) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -767,7 +767,11 @@ function FormComponent(props) {
     return (Builder.isEditing && props.previewState) || formState;
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -781,16 +785,19 @@ function FormComponent(props) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -816,7 +823,7 @@ function FormComponent(props) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -878,7 +885,7 @@ function FormComponent(props) {
       fetch(
         props.sendSubmissionsTo === \\"email\\"
           ? formUrl
-          : props.action /* TODO: throw error if no action URL */,
+          : props.action! /* TODO: throw error if no action URL */,
         { body, headers, method: props.method || \\"post\\" }
       ).then(
         async (res) => {
@@ -978,7 +985,7 @@ function FormComponent(props) {
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
+              blocks={props.errorMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -986,7 +993,7 @@ function FormComponent(props) {
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
+              blocks={props.sendingMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -1002,7 +1009,7 @@ function FormComponent(props) {
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
+              blocks={props.successMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -2563,7 +2570,7 @@ function RenderBlock(props) {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {
@@ -3487,7 +3494,7 @@ import { View, Button, Text } from \\"@tarojs/components\\";
 
 function MyBasicRefAssignmentComponent(props: Props) {
   const holdValueRef = useRef(\\"Patrick\\");
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef.current);
     holdValueRef.current = holdValueRef.current + \\"JS\\";
@@ -3623,12 +3630,12 @@ function Column(props: ColumnProps) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -3944,7 +3951,11 @@ function FormComponent(props: FormProps) {
     return (Builder.isEditing && props.previewState) || formState;
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -3958,16 +3969,19 @@ function FormComponent(props: FormProps) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -3993,7 +4007,7 @@ function FormComponent(props: FormProps) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -4055,7 +4069,7 @@ function FormComponent(props: FormProps) {
       fetch(
         props.sendSubmissionsTo === \\"email\\"
           ? formUrl
-          : props.action /* TODO: throw error if no action URL */,
+          : props.action! /* TODO: throw error if no action URL */,
         { body, headers, method: props.method || \\"post\\" }
       ).then(
         async (res) => {
@@ -4155,7 +4169,7 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
+              blocks={props.errorMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -4163,7 +4177,7 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
+              blocks={props.sendingMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -4179,7 +4193,7 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
+              blocks={props.successMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -6010,7 +6024,7 @@ function RenderBlock(props: RenderBlockProps) {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {

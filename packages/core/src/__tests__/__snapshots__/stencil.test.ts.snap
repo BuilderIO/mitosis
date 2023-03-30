@@ -396,7 +396,7 @@ exports[`Stencil > jsx > Javascript Test > BasicRefAssignment 1`] = `
   tag: \\"my-basic-ref-assignment-component\\",
 })
 export default class MyBasicRefAssignmentComponent {
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -534,11 +534,11 @@ export default class Column {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -795,7 +795,11 @@ export default class FormComponent {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -809,16 +813,19 @@ export default class FormComponent {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -844,7 +851,7 @@ export default class FormComponent {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -911,7 +918,7 @@ export default class FormComponent {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -1036,7 +1043,7 @@ export default class FormComponent {
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
-              blocks={this.errorMessage}
+              blocks={this.errorMessage!}
             ></BuilderBlocks>
           </>
         ) : null}
@@ -1045,7 +1052,7 @@ export default class FormComponent {
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
-              blocks={this.sendingMessage}
+              blocks={this.sendingMessage!}
             ></BuilderBlocks>
           </>
         ) : null}
@@ -1062,7 +1069,7 @@ export default class FormComponent {
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
-              blocks={this.successMessage}
+              blocks={this.successMessage!}
             ></BuilderBlocks>
           </>
         ) : null}
@@ -3249,7 +3256,7 @@ exports[`Stencil > jsx > Typescript Test > BasicRefAssignment 1`] = `
   tag: \\"my-basic-ref-assignment-component\\",
 })
 export default class MyBasicRefAssignmentComponent {
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -3387,11 +3394,11 @@ export default class Column {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -3648,7 +3655,11 @@ export default class FormComponent {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -3662,16 +3673,19 @@ export default class FormComponent {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -3697,7 +3711,7 @@ export default class FormComponent {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -3764,7 +3778,7 @@ export default class FormComponent {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -3889,7 +3903,7 @@ export default class FormComponent {
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
-              blocks={this.errorMessage}
+              blocks={this.errorMessage!}
             ></BuilderBlocks>
           </>
         ) : null}
@@ -3898,7 +3912,7 @@ export default class FormComponent {
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
-              blocks={this.sendingMessage}
+              blocks={this.sendingMessage!}
             ></BuilderBlocks>
           </>
         ) : null}
@@ -3915,7 +3929,7 @@ export default class FormComponent {
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
-              blocks={this.successMessage}
+              blocks={this.successMessage!}
             ></BuilderBlocks>
           </>
         ) : null}

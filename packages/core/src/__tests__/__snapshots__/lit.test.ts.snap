@@ -506,7 +506,7 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
     return this;
   }
 
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -681,11 +681,11 @@ export default class Column extends LitElement {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -1081,7 +1081,11 @@ export default class FormComponent extends LitElement {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -1095,16 +1099,19 @@ export default class FormComponent extends LitElement {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -1130,7 +1137,7 @@ export default class FormComponent extends LitElement {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -1197,7 +1204,7 @@ export default class FormComponent extends LitElement {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -1320,14 +1327,16 @@ export default class FormComponent extends LitElement {
              
        \${
          this.submissionState === \\"error\\"
-           ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this.errorMessage} ></builder-blocks>\`
+           ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this
+               .errorMessage!} ></builder-blocks>\`
            : null
        }
 
              
        \${
          this.submissionState === \\"sending\\"
-           ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this.sendingMessage} ></builder-blocks>\`
+           ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this
+               .sendingMessage!} ></builder-blocks>\`
            : null
        }
 
@@ -1345,7 +1354,8 @@ export default class FormComponent extends LitElement {
              
        \${
          this.submissionState === \\"success\\"
-           ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this.successMessage} ></builder-blocks>\`
+           ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this
+               .successMessage!} ></builder-blocks>\`
            : null
        }
 
@@ -3582,7 +3592,7 @@ export default class RenderBlock extends LitElement {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.context,
         this: {
@@ -4777,7 +4787,7 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
     return this;
   }
 
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -4952,11 +4962,11 @@ export default class Column extends LitElement {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -5352,7 +5362,11 @@ export default class FormComponent extends LitElement {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -5366,16 +5380,19 @@ export default class FormComponent extends LitElement {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -5401,7 +5418,7 @@ export default class FormComponent extends LitElement {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -5468,7 +5485,7 @@ export default class FormComponent extends LitElement {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -5591,14 +5608,16 @@ export default class FormComponent extends LitElement {
              
        \${
          this.submissionState === \\"error\\"
-           ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this.errorMessage} ></builder-blocks>\`
+           ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this
+               .errorMessage!} ></builder-blocks>\`
            : null
        }
 
              
        \${
          this.submissionState === \\"sending\\"
-           ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this.sendingMessage} ></builder-blocks>\`
+           ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this
+               .sendingMessage!} ></builder-blocks>\`
            : null
        }
 
@@ -5616,7 +5635,8 @@ export default class FormComponent extends LitElement {
              
        \${
          this.submissionState === \\"success\\"
-           ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this.successMessage} ></builder-blocks>\`
+           ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this
+               .successMessage!} ></builder-blocks>\`
            : null
        }
 
@@ -7853,7 +7873,7 @@ export default class RenderBlock extends LitElement {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.context,
         this: {

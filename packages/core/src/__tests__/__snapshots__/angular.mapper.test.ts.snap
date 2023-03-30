@@ -586,7 +586,7 @@ export interface Props {
   \`,
 })
 export class MyBasicRefAssignmentComponent {
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", this._holdValueRef);
     this._holdValueRef = this._holdValueRef + \\"JS\\";
@@ -771,11 +771,11 @@ export class Column {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -1128,14 +1128,14 @@ import { get } from \\"@fake\\";
       <ng-container *ngIf=\\"submissionState === 'error'\\">
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
-          [blocks]=\\"errorMessage\\"
+          [blocks]=\\"errorMessage!\\"
         ></BuilderBlocks>
       </ng-container>
 
       <ng-container *ngIf=\\"submissionState === 'sending'\\">
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
-          [blocks]=\\"sendingMessage\\"
+          [blocks]=\\"sendingMessage!\\"
         ></BuilderBlocks>
       </ng-container>
 
@@ -1151,7 +1151,7 @@ import { get } from \\"@fake\\";
       <ng-container *ngIf=\\"submissionState === 'success'\\">
         <BuilderBlocks
           dataPath=\\"successMessage\\"
-          [blocks]=\\"successMessage\\"
+          [blocks]=\\"successMessage!\\"
         ></BuilderBlocks>
       </ng-container>
     </form>
@@ -1196,7 +1196,11 @@ export class FormComponent {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -1210,16 +1214,19 @@ export class FormComponent {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -1245,7 +1252,7 @@ export class FormComponent {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -1312,7 +1319,7 @@ export class FormComponent {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -3822,7 +3829,7 @@ export class RenderBlock {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.context,
         this: {
@@ -5069,7 +5076,7 @@ export interface Props {
   \`,
 })
 export class MyBasicRefAssignmentComponent {
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", this._holdValueRef);
     this._holdValueRef = this._holdValueRef + \\"JS\\";
@@ -5254,11 +5261,11 @@ export class Column {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -5611,14 +5618,14 @@ import { get } from \\"@fake\\";
       <ng-container *ngIf=\\"submissionState === 'error'\\">
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
-          [blocks]=\\"errorMessage\\"
+          [blocks]=\\"errorMessage!\\"
         ></BuilderBlocks>
       </ng-container>
 
       <ng-container *ngIf=\\"submissionState === 'sending'\\">
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
-          [blocks]=\\"sendingMessage\\"
+          [blocks]=\\"sendingMessage!\\"
         ></BuilderBlocks>
       </ng-container>
 
@@ -5634,7 +5641,7 @@ import { get } from \\"@fake\\";
       <ng-container *ngIf=\\"submissionState === 'success'\\">
         <BuilderBlocks
           dataPath=\\"successMessage\\"
-          [blocks]=\\"successMessage\\"
+          [blocks]=\\"successMessage!\\"
         ></BuilderBlocks>
       </ng-container>
     </form>
@@ -5679,7 +5686,11 @@ export class FormComponent {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -5693,16 +5704,19 @@ export class FormComponent {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -5728,7 +5742,7 @@ export class FormComponent {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -5795,7 +5809,7 @@ export class FormComponent {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -8305,7 +8319,7 @@ export class RenderBlock {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.context,
         this: {

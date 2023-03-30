@@ -361,7 +361,7 @@ style {
 
 exports[`Marko > jsx > Javascript Test > BasicRefAssignment 1`] = `
 "class {
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", this.holdValueRef);
     this.holdValueRef = this.holdValueRef + \\"JS\\";
@@ -430,11 +430,11 @@ exports[`Marko > jsx > Javascript Test > Columns 1`] = `
   getGutterSize() {
     return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -663,7 +663,11 @@ class {
       (Builder.isEditing && this.input.previewState) || this.state.formState
     );
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs =
       this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
 
@@ -678,16 +682,19 @@ class {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.input.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -713,7 +720,7 @@ class {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -780,7 +787,7 @@ class {
         this.input.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
-        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
+        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -892,7 +899,7 @@ class {
 }
 
 style { 
-  .pre-37eea1bf {
+  .pre-0dc9e2e8 {
     padding: 10px;
     color: red;
     text-align: center;
@@ -917,17 +924,17 @@ style {
   <if(component.submissionState === 'error')>
     <BuilderBlocks
       dataPath=\\"errorMessage\\"
-      blocks=(input.errorMessage)
+      blocks=(input.errorMessage!)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'sending')>
     <BuilderBlocks
       dataPath=\\"sendingMessage\\"
-      blocks=(input.sendingMessage)
+      blocks=(input.sendingMessage!)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-37eea1bf\\">
+    <pre class=\\"builder-form-error-text pre-0dc9e2e8\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -937,7 +944,7 @@ style {
   <if(component.submissionState === 'success')>
     <BuilderBlocks
       dataPath=\\"successMessage\\"
-      blocks=(input.successMessage)
+      blocks=(input.successMessage!)
     ></BuilderBlocks></if>
 </form>"
 `;
@@ -1972,7 +1979,7 @@ class {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.input.context,
         state: {
@@ -2589,7 +2596,7 @@ style {
 
 exports[`Marko > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "class {
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", this.holdValueRef);
     this.holdValueRef = this.holdValueRef + \\"JS\\";
@@ -2658,11 +2665,11 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
   getGutterSize() {
     return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -2891,7 +2898,11 @@ class {
       (Builder.isEditing && this.input.previewState) || this.state.formState
     );
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs =
       this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
 
@@ -2906,16 +2917,19 @@ class {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.input.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -2941,7 +2955,7 @@ class {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -3008,7 +3022,7 @@ class {
         this.input.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
-        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
+        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -3120,7 +3134,7 @@ class {
 }
 
 style { 
-  .pre-37eea1bf {
+  .pre-0dc9e2e8 {
     padding: 10px;
     color: red;
     text-align: center;
@@ -3145,17 +3159,17 @@ style {
   <if(component.submissionState === 'error')>
     <BuilderBlocks
       dataPath=\\"errorMessage\\"
-      blocks=(input.errorMessage)
+      blocks=(input.errorMessage!)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'sending')>
     <BuilderBlocks
       dataPath=\\"sendingMessage\\"
-      blocks=(input.sendingMessage)
+      blocks=(input.sendingMessage!)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-37eea1bf\\">
+    <pre class=\\"builder-form-error-text pre-0dc9e2e8\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -3165,7 +3179,7 @@ style {
   <if(component.submissionState === 'success')>
     <BuilderBlocks
       dataPath=\\"successMessage\\"
-      blocks=(input.successMessage)
+      blocks=(input.successMessage!)
     ></BuilderBlocks></if>
 </form>"
 `;
@@ -4200,7 +4214,7 @@ class {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.input.context,
         state: {
