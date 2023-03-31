@@ -1,3 +1,4 @@
+import tsPreset from '@babel/preset-typescript';
 import * as babel from '@babel/core';
 import tsPlugin from '@babel/plugin-syntax-typescript';
 import decorators from '@babel/plugin-syntax-decorators';
@@ -10,11 +11,13 @@ const handleErrorOrExpression = <VisitorContextType = any>({
   useCode,
   result,
   visitor,
+  stripTypes,
 }: {
   code: string;
   useCode: string;
   result: string | null;
   visitor: Visitor<VisitorContextType>;
+  stripTypes: boolean;
 }) => {
   try {
     // If it can't, e.g. this is an expression or code fragment, modify the code below and try again
@@ -38,7 +41,7 @@ const handleErrorOrExpression = <VisitorContextType = any>({
       // e.g. if the code parsed is { ... } babel will treat that as a block by deafult, unless processed as an expression
       // that is an object
       `let _ = ${useCode}`,
-      (code) => babelTransformCode(code, visitor),
+      (code) => babelTransformCode(code, visitor, stripTypes),
       trimSemicolons,
       // Remove our fake variable assignment
       (str) => str.replace(/let _ =\s/, ''),
@@ -55,15 +58,21 @@ const handleErrorOrExpression = <VisitorContextType = any>({
   }
 };
 
-const babelTransform = <VisitorContextType = any>(
-  code: string,
-  visitor?: Visitor<VisitorContextType>,
-) => {
+const babelTransform = <VisitorContextType = any>({
+  code,
+  visitor,
+  stripTypes,
+}: {
+  code: string;
+  visitor?: Visitor<VisitorContextType>;
+  stripTypes: boolean;
+}) => {
   return babel.transform(code, {
     sourceFileName: 'file.tsx',
     configFile: false,
     babelrc: false,
     parserOpts: { allowReturnOutsideFunction: true },
+    ...(stripTypes ? { presets: [[tsPreset, { isTSX: true, allExtensions: true }]] } : {}),
     plugins: [
       [tsPlugin, { isTSX: true }],
       [decorators, { legacy: true }],
@@ -75,7 +84,8 @@ const babelTransform = <VisitorContextType = any>(
 export const babelTransformCode = <VisitorContextType = any>(
   code: string,
   visitor?: Visitor<VisitorContextType>,
-) => babelTransform(code, visitor)?.code || '';
+  stripTypes = false,
+) => babelTransform({ code, visitor, stripTypes })?.code || '';
 
 // Babel adds trailing semicolons, but for expressions we need those gone
 // TODO: maybe detect if the original code ended with one, and keep it if so, for the case
@@ -115,6 +125,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
   code: string,
   visitor: Visitor<VisitorContextType>,
   initialType: ExpressionType = 'unknown',
+  stripTypes = false,
 ): string => {
   if (!code) {
     return '';
@@ -135,18 +146,33 @@ export const babelTransformExpression = <VisitorContextType = any>(
     ({ type, useCode }) => {
       if (type !== 'expression') {
         try {
-          return pipe(babelTransformCode(useCode, visitor), trimExpression(type));
+          return pipe(babelTransformCode(useCode, visitor, stripTypes), trimExpression(type));
         } catch (error) {
-          return handleErrorOrExpression({ code, useCode, result: null, visitor });
+          return handleErrorOrExpression({ code, useCode, result: null, visitor, stripTypes });
         }
       } else {
-        return handleErrorOrExpression({ code, useCode, result: null, visitor });
+        return handleErrorOrExpression({ code, useCode, result: null, visitor, stripTypes });
       }
     },
     isGetter ? replaceFunctionWithGetter : identity,
   );
 };
 
-export function convertTypeScriptToJS(code: string): string {
-  return babelTransformExpression(code, {});
-}
+export const convertTypeScriptToJS = (code: string): string =>
+  babelTransformExpression(code, {}, 'unknown', true);
+// pipe(
+//   babel.transform(code, {
+//     sourceFileName: 'file.tsx',
+//     configFile: false,
+//     babelrc: false,
+//     parserOpts: { allowReturnOutsideFunction: true },
+//     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
+//     plugins: [[decorators, { legacy: true }]],
+//   })?.code || '',
+//   (x) => {
+//     if (x.endsWith(';')) {
+//       console.log({ x });
+//     }
+//     return x.endsWith(';') ? x.slice(0, -1) : x;
+//   },
+// );

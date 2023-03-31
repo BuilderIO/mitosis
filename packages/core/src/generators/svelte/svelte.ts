@@ -365,7 +365,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         });
       } catch (err) {
         console.warn('Could not prettify');
-        console.warn({ string: str }, err);
+        console.warn(str, err);
       }
     }
 
