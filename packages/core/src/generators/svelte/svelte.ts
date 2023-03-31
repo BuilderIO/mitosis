@@ -121,11 +121,11 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'bindings':
+          case 'properties':
             return convertTypeScriptToJS;
           case 'hooks':
           case 'hooks-deps':
           case 'state':
-          case 'properties':
             return (x) => x;
         }
       }),
