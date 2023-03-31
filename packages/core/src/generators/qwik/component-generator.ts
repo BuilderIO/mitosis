@@ -100,7 +100,6 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
             emitUseClientEffect(file, component);
             emitUseMount(file, component);
             emitUseTask(file, component);
-            emitUseCleanup(file, component);
 
             emitTagNameHack(file, component, component.meta.useMetadata?.elementTag);
             emitTagNameHack(file, component, component.meta.useMetadata?.componentElementTag);
@@ -191,13 +190,6 @@ function emitTrackExpressions(src: SrcBuilder, deps?: string) {
   });
 }
 
-function emitUseCleanup(file: File, component: MitosisComponent) {
-  if (component.hooks.onUnMount) {
-    const code = component.hooks.onUnMount.code;
-    file.src.emit(file.import(file.qwikModule, 'useCleanup$').localName, '(()=>{', code, '});');
-  }
-}
-
 function emitJSX(file: File, component: MitosisComponent, mutable: string[]) {
   const directives = new Map();
   const handlers = new Map<string, string>();
@@ -259,7 +251,13 @@ function emitUseContext(file: File, component: MitosisComponent) {
 
 function emitUseRef(file: File, component: MitosisComponent) {
   Object.keys(component.refs).forEach((refKey) => {
-    file.src.emit(`const `, refKey, '=', file.import(file.qwikModule, 'useRef').localName, '();');
+    file.src.emit(
+      `const `,
+      refKey,
+      '=',
+      file.import(file.qwikModule, 'useSignal').localName,
+      `${file.options.isTypeScript ? '<Element>' : ''}();`,
+    );
   });
 }
 
