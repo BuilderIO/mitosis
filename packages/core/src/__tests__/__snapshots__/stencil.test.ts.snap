@@ -414,10 +414,10 @@ export default class MyBasicRefAssignmentComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"export function usePrevious<T>(value: T) {
+"export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -2098,7 +2098,7 @@ export default class Button {
 `;
 
 exports[`Stencil > jsx > Javascript Test > defaultValsWithTypes 1`] = `
-"const DEFAULT_VALUES: Props = {
+"const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
@@ -2333,7 +2333,7 @@ exports[`Stencil > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = 
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -3249,7 +3249,7 @@ exports[`Stencil > jsx > Typescript Test > BasicRefAssignment 1`] = `
   tag: \\"my-basic-ref-assignment-component\\",
 })
 export default class MyBasicRefAssignmentComponent {
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -3387,11 +3387,11 @@ export default class Column {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -3416,7 +3416,9 @@ export default class Column {
 `;
 
 exports[`Stencil > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+"import { JSX } from \\"../../../../jsx-runtime\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"content-slot-code\\",
@@ -3444,14 +3446,14 @@ export default class ContentSlotCode {
 `;
 
 exports[`Stencil > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"':' expected. (33:15)
-  31 |        return (
-  32 |        
-> 33 |          {this.slotReference ? (
+"':' expected. (38:15)
+  36 |        return (
+  37 |        
+> 38 |          {this.slotReference ? (
      |               ^
-  34 |      <><div  class={state.cls}  name={this.slotContent ? 'name1' : 'name2'}  title={this.slotContent ? 'title1' : 'title2'}  {...(props.attributes)}  onClick={event => this.show()} >
-  35 |        
-  36 | {this.showContent && this.slotContent ? ("
+  39 |      <><div  class={state.cls}  name={this.slotContent ? 'name1' : 'name2'}  title={this.slotContent ? 'title1' : 'title2'}  {...(props.attributes)}  onClick={event => this.show()} >
+  40 |        
+  41 | {this.showContent && this.slotContent ? ("
 `;
 
 exports[`Stencil > jsx > Typescript Test > CustomCode 1`] = `
@@ -3604,7 +3606,7 @@ export default class CustomCode {
 
 exports[`Stencil > jsx > Typescript Test > Form 1`] = `
 "import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -3648,7 +3650,11 @@ export default class FormComponent {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -3662,16 +3668,19 @@ export default class FormComponent {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -3697,7 +3706,7 @@ export default class FormComponent {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -3764,7 +3773,7 @@ export default class FormComponent {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -3889,7 +3898,7 @@ export default class FormComponent {
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
-              blocks={this.errorMessage}
+              blocks={this.errorMessage!}
             ></BuilderBlocks>
           </>
         ) : null}
@@ -3898,7 +3907,7 @@ export default class FormComponent {
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
-              blocks={this.sendingMessage}
+              blocks={this.sendingMessage!}
             ></BuilderBlocks>
           </>
         ) : null}
@@ -3915,7 +3924,7 @@ export default class FormComponent {
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
-              blocks={this.successMessage}
+              blocks={this.successMessage!}
             ></BuilderBlocks>
           </>
         ) : null}
@@ -4741,7 +4750,9 @@ export default class MyBasicComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > className 1`] = `
-"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+"import { JSX } from \\"../../../../jsx-runtime\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"class-name-code\\",
@@ -4997,7 +5008,8 @@ export default class MyComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > import types 1`] = `
-"import RenderBlock from \\"./builder-render-block.raw\\";
+"import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -5318,14 +5330,14 @@ export default class OnUpdate {
 `;
 
 exports[`Stencil > jsx > Typescript Test > renderBlock 1`] = `
-"':' expected. (205:15)
-  203 |        return (
-  204 |        
-> 205 |          {this.shouldWrap ? (
+"':' expected. (210:15)
+  208 |        return (
+  209 |        
+> 210 |          {this.shouldWrap ? (
       |               ^
-  206 |      <>{isEmptyHtmlElement(this.tag) ? (
-  207 |      <><state.tag  {...(state.attributes)}  {...(state.actions)} ></state.tag></>
-  208 |    ) : null}"
+  211 |      <>{isEmptyHtmlElement(this.tag) ? (
+  212 |      <><state.tag  {...(state.attributes)}  {...(state.actions)} ></state.tag></>
+  213 |    ) : null}"
 `;
 
 exports[`Stencil > jsx > Typescript Test > renderContentExample 1`] = `
@@ -5597,7 +5609,10 @@ export default class SvgComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > typeDependency 1`] = `
-"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+"import { Foo } from \\"./foo-type\\";
+import { Foo as Foo2 } from \\"./type-export.lite\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"type-dependency\\",

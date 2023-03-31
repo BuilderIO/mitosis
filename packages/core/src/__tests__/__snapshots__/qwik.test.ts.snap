@@ -1486,7 +1486,7 @@ export const MyBasicRefComponent = component$((props) => {
             onBlur$={(event) => state.onBlur()}
             onChange$={(event) => (state.name = event.target.value)}
           />
-          <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+          <label for=\\"cars\\" ref={inputNoArgRef}>
             Choose a car:
           </label>
           <select name=\\"cars\\" id=\\"cars\\">
@@ -1550,10 +1550,10 @@ exports[`qwik > jsx > Javascript Test > BasicRefPrevious 1`] = `
   useTask$,
 } from \\"@builder.io/qwik\\";
 
-export function usePrevious<T>(value: T) {
+export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -3101,7 +3101,7 @@ export default Button;
 exports[`qwik > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
-export const DEFAULT_VALUES: Props = {
+export const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 export const ComponentWithTypes = component$((props) => {
@@ -3393,7 +3393,7 @@ export const b = 3;
 export const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 export const MyBasicComponent = component$((props) => {
   return <div></div>;
 });
@@ -4472,7 +4472,7 @@ export const MyBasicRefComponent = component$((props: Props) => {
             onBlur$={(event) => state.onBlur()}
             onChange$={(event) => (state.name = event.target.value)}
           />
-          <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+          <label for=\\"cars\\" ref={inputNoArgRef}>
             Choose a car:
           </label>
           <select name=\\"cars\\" id=\\"cars\\">
@@ -4508,7 +4508,7 @@ export const handlerClick = function handlerClick(
   props,
   state,
   holdValueRef,
-  event
+  event: Event
 ) {
   event.preventDefault();
   console.log(\\"current value\\", holdValueRef);
@@ -4633,14 +4633,14 @@ export const getColumns = function getColumns(props, state) {
 export const getGutterSize = function getGutterSize(props, state) {
   return typeof props.space === \\"number\\" ? props.space || 0 : 20;
 };
-export const getWidth = function getWidth(props, state, index) {
+export const getWidth = function getWidth(props, state, index: number) {
   const columns = getColumns(props, state);
   return (columns[index] && columns[index].width) || 100 / columns.length;
 };
 export const getColumnCssWidth = function getColumnCssWidth(
   props,
   state,
-  index
+  index: number
 ) {
   const columns = getColumns(props, state);
   const gutterSize = getGutterSize(props, state);
@@ -4693,7 +4693,9 @@ export const STYLES = \`
 `;
 
 exports[`qwik > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"import { Slot } from \\"./med.js\\";
+"import { JSX } from \\"../../../../jsx-runtime\\";
+
+import { Slot } from \\"./med.js\\";
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
@@ -4720,7 +4722,9 @@ export default ContentSlotCode;
 `;
 
 exports[`qwik > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"import { Slot } from \\"./med.js\\";
+"import { JSX } from \\"../../../../jsx-runtime\\";
+
+import { Slot } from \\"./med.js\\";
 
 import {
   Fragment,
@@ -4944,7 +4948,7 @@ exports[`qwik > jsx > Typescript Test > Form 1`] = `
   useStylesScoped$,
 } from \\"@builder.io/qwik\\";
 
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { Builder, BuilderElement, builder } from \\"@builder.io/sdk\\";
 
 import {
   BuilderBlock as BuilderBlockComponent,
@@ -4976,7 +4980,14 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-export const onSubmit = function onSubmit(props, state, formRef, event) {
+export const onSubmit = function onSubmit(
+  props,
+  state,
+  formRef,
+  event: Event & {
+    currentTarget: HTMLFormElement;
+  }
+) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
   if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -4990,16 +5001,19 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
     event.preventDefault();
     const el = event.currentTarget;
     const headers = props.customHeaders || {};
-    let body;
+    let body: any;
     const formData = new FormData(el); // TODO: maybe support null
 
-    const formPairs = Array.from(
+    const formPairs: {
+      key: string;
+      value: File | boolean | number | string | FileList;
+    }[] = Array.from(
       event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
     )
-      .filter((el) => !!el.name)
+      .filter((el) => !!(el as HTMLInputElement).name)
       .map((el) => {
-        let value;
-        const key = el.name;
+        let value: any;
+        const key = (el as HTMLImageElement).name;
 
         if (el instanceof HTMLInputElement) {
           if (el.type === \\"radio\\") {
@@ -5025,7 +5039,7 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
             value = el.value;
           }
         } else {
-          value = el.value;
+          value = (el as HTMLInputElement).value;
         }
 
         return {
@@ -5092,7 +5106,7 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
       props.sendSubmissionsToEmail || \\"\\"
     )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
     fetch(
-      props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+      props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
       /* TODO: throw error if no action URL */
       {
         body,
@@ -5227,13 +5241,13 @@ export const FormComponent = component$((props: FormProps) => {
       {submissionState.value === \\"error\\" ? (
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
-          blocks={props.errorMessage}
+          blocks={props.errorMessage!}
         ></BuilderBlocks>
       ) : null}
       {submissionState.value === \\"sending\\" ? (
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
-          blocks={props.sendingMessage}
+          blocks={props.sendingMessage!}
         ></BuilderBlocks>
       ) : null}
       {submissionState.value === \\"error\\" && state.responseData ? (
@@ -5244,7 +5258,7 @@ export const FormComponent = component$((props: FormProps) => {
       {submissionState.value === \\"success\\" ? (
         <BuilderBlocks
           dataPath=\\"successMessage\\"
-          blocks={props.successMessage}
+          blocks={props.successMessage!}
         ></BuilderBlocks>
       ) : null}
     </form>
@@ -6135,7 +6149,9 @@ export const STYLES = \`
 `;
 
 exports[`qwik > jsx > Typescript Test > className 1`] = `
-"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+"import { JSX } from \\"../../../../jsx-runtime\\";
+
+import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -6337,9 +6353,14 @@ export default MyComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > import types 1`] = `
-"import RenderBlock from \\"./builder-render-block.raw\\";
+"import {
+  RenderBlockProps,
+  default as RenderBlock,
+} from \\"./builder-render-block.raw\\";
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
 
 type RenderContentProps = {
   options?: GetContentOptions;
@@ -6743,6 +6764,11 @@ export default OnUpdate;
 exports[`qwik > jsx > Typescript Test > renderBlock 1`] = `
 "import { TARGET } from \\"../../constants/target.js\\";
 
+import {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+
 import { evaluate } from \\"../../functions/evaluate.js\\";
 
 import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
@@ -6759,26 +6785,27 @@ import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
 
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 
+import { BuilderBlock } from \\"../../types/builder-block.js\\";
+
+import { Nullable } from \\"../../types/typescript.js\\";
+
 import BlockStyles from \\"./block-styles\\";
 
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
 
-import RenderComponent from \\"./render-component\\";
+import {
+  RenderComponentProps,
+  default as RenderComponent,
+} from \\"./render-component\\";
 
 import RenderComponentWithContext from \\"./render-component-with-context\\";
 
 import RenderRepeatedBlock from \\"./render-repeated-block\\";
 
+import { RepeatData } from \\"./types.js\\";
+
 import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
 
-import type {
-  BuilderContextInterface,
-  RegisteredComponent,
-} from \\"../../context/types.js\\";
-import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-import type { Nullable } from \\"../../types/typescript.js\\";
-import type { RenderComponentProps } from \\"./render-component\\";
-import type { RepeatData } from \\"./types.js\\";
 export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
@@ -6910,7 +6937,7 @@ export const RenderBlock = component$((props: RenderBlockProps) => {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {
@@ -7311,10 +7338,12 @@ export default SvgComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > typeDependency 1`] = `
-"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+"import { Foo } from \\"./foo-type\\";
 
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
+import { Foo as Foo2 } from \\"./type-export\\";
+
+import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
