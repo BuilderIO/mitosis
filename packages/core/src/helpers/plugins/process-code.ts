@@ -13,10 +13,14 @@ type CodeType =
   // this is for when we write dynamic JSX elements like `<state.foo>Hello</state.foo>` in Mitosis
   | 'dynamic-jsx-elements';
 
+// declare function codeProcessor<T extends CodeType>(
+//   codeType: T,
+//   json: MitosisComponent,
+// ): (code: string, hookType: T extends 'hooks' ? keyof MitosisComponent['hooks'] : string) => string;
 declare function codeProcessor(
   codeType: CodeType,
   json: MitosisComponent,
-): (code: string, hookType?: keyof MitosisComponent['hooks']) => string;
+): (code: string, hookType: string) => string;
 
 type CodeProcessor = typeof codeProcessor;
 
@@ -44,11 +48,11 @@ const preProcessNodeCode = ({
   for (const key in json.bindings) {
     const value = json.bindings[key];
     if (value?.code) {
-      value.code = bindingsProcessor(value.code);
+      value.code = bindingsProcessor(value.code, key);
     }
   }
 
-  json.name = codeProcessor('dynamic-jsx-elements', parentComponent)(json.name);
+  json.name = codeProcessor('dynamic-jsx-elements', parentComponent)(json.name, '');
 };
 
 /**
@@ -62,7 +66,7 @@ export const CODE_PROCESSOR_PLUGIN =
         function processHook(key: keyof typeof json.hooks, hook: extendedHook) {
           hook.code = codeProcessor('hooks', json)(hook.code, key);
           if (hook.deps) {
-            hook.deps = codeProcessor('hooks-deps', json)(hook.deps);
+            hook.deps = codeProcessor('hooks-deps', json)(hook.deps, key);
           }
         }
 
@@ -87,7 +91,7 @@ export const CODE_PROCESSOR_PLUGIN =
         for (const key in json.state) {
           const state = json.state[key];
           if (state) {
-            state.code = codeProcessor('state', json)(state.code);
+            state.code = codeProcessor('state', json)(state.code, key);
           }
         }
 

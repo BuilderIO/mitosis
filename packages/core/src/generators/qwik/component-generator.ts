@@ -19,7 +19,7 @@ import { mergeOptions } from '../../helpers/merge-options';
 import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
 import { convertTypeScriptToJS } from './helpers/transform-code';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { replaceStateIdentifier } from 'src/helpers/replace-identifiers';
+import { replaceIdentifiers, replaceStateIdentifier } from '../../helpers/replace-identifiers';
 
 Error.stackTraceLimit = 9999;
 
@@ -39,26 +39,40 @@ const PLUGINS: Plugin[] = [
   }),
   CODE_PROCESSOR_PLUGIN((codeType, json) => {
     switch (codeType) {
-      case 'state':
       case 'bindings':
+      case 'state':
       case 'hooks':
       case 'hooks-deps':
       case 'properties':
       case 'dynamic-jsx-elements':
         // update signal getters to have `.value`
-        return replaceStateIdentifier((name) => {
-          const state = json.state[name];
-          switch (state?.type) {
-            case 'getter':
-              return `${name}.value`;
-
-            case 'function':
-            case 'method':
-            case 'property':
-            case undefined:
-              return `state.${name}`;
+        return (code, k) => {
+          // `ref` should not update the signal value access
+          if (k === 'ref') {
+            return code;
           }
-        });
+          Object.keys(json.refs).forEach((ref) => {
+            code = replaceIdentifiers({
+              code,
+              from: ref,
+              to: (x) => (x === ref ? `${x}.value` : `${ref}.value.${x}`),
+            });
+          });
+          // update signal getters to have `.value`
+          return replaceStateIdentifier((name) => {
+            const state = json.state[name];
+            switch (state?.type) {
+              case 'getter':
+                return `${name}.value`;
+
+              case 'function':
+              case 'method':
+              case 'property':
+              case undefined:
+                return `state.${name}`;
+            }
+          })(code);
+        };
     }
   }),
 ];
@@ -120,7 +134,6 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
             emitUseClientEffect(file, component);
             emitUseMount(file, component);
             emitUseTask(file, component);
-            emitUseCleanup(file, component);
 
             emitJSX(file, component, mutable);
           },
@@ -161,19 +174,14 @@ function emitUseClientEffect(file: File, component: MitosisComponent) {
     // This is called useMount, but in practice it is used as
     // useClientEffect. Not sure if this is correct, but for now.
     const code = component.hooks.onMount.code;
-    file.src.emit(
-      file.import(file.qwikModule, 'useClientEffect$').localName,
-      '(()=>{',
-      code,
-      '});',
-    );
+    file.src.emit(file.import(file.qwikModule, 'useVisibleTask$').localName, '(()=>{', code, '});');
   }
 }
 
 function emitUseMount(file: File, component: MitosisComponent) {
   if (component.hooks.onInit) {
     const code = component.hooks.onInit.code;
-    file.src.emit(file.import(file.qwikModule, 'useMount$').localName, '(()=>{', code, '});');
+    file.src.emit(file.import(file.qwikModule, 'useTask$').localName, '(()=>{', code, '});');
   }
 }
 
@@ -197,13 +205,6 @@ function emitTrackExpressions(src: SrcBuilder, deps?: string) {
   dependencies.forEach((dep) => {
     src.emit(`track(() => ${dep});`);
   });
-}
-
-function emitUseCleanup(file: File, component: MitosisComponent) {
-  if (component.hooks.onUnMount) {
-    const code = component.hooks.onUnMount.code;
-    file.src.emit(file.import(file.qwikModule, 'useCleanup$').localName, '(()=>{', code, '});');
-  }
 }
 
 function emitJSX(file: File, component: MitosisComponent, mutable: string[]) {
@@ -267,7 +268,13 @@ function emitUseContext(file: File, component: MitosisComponent) {
 
 function emitUseRef(file: File, component: MitosisComponent) {
   Object.keys(component.refs).forEach((refKey) => {
-    file.src.emit(`const `, refKey, '=', file.import(file.qwikModule, 'useRef').localName, '();');
+    file.src.emit(
+      `const `,
+      refKey,
+      '=',
+      file.import(file.qwikModule, 'useSignal').localName,
+      `${file.options.isTypeScript ? '<Element>' : ''}();`,
+    );
   });
 }
 
