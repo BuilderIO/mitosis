@@ -1458,7 +1458,7 @@ exports[`qwik > jsx > Javascript Test > BasicRef 1`] = `
 
 export const onBlur = function onBlur(props, state, inputRef, inputNoArgRef) {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 };
 export const lowerCaseName = function lowerCaseName(
   props,
@@ -1522,8 +1522,8 @@ export const handlerClick = function handlerClick(
   event
 ) {
   event.preventDefault();
-  console.log(\\"current value\\", holdValueRef);
-  holdValueRef = holdValueRef + \\"JS\\";
+  console.log(\\"current value\\", holdValueRef.value);
+  holdValueRef.value = holdValueRef.value + \\"JS\\";
 };
 export const MyBasicRefAssignmentComponent = component$((props) => {
   const holdValueRef = useSignal();
@@ -1567,13 +1567,13 @@ export const MyPreviousComponent = component$((props) => {
   const state = useStore({ count: 0 });
   useTask$(({ track }) => {
     track(() => state.count);
-    prevCount = state.count;
+    prevCount.value = state.count;
   });
 
   return (
     <div>
       <h1>
-        Now: {state.count}, before: {prevCount}
+        Now: {state.count}, before: {prevCount.value}
       </h1>
       <button onClick$={(event) => (state.count += 1)}>Increment</button>
     </div>
@@ -1762,9 +1762,9 @@ export const findAndRunScripts = function findAndRunScripts(
   elem
 ) {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -1839,9 +1839,9 @@ export const findAndRunScripts = function findAndRunScripts(
   elem
 ) {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -2023,8 +2023,8 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
       },
     });
 
-    if (formRef) {
-      formRef.dispatchEvent(presubmitEvent);
+    if (formRef.value) {
+      formRef.value.dispatchEvent(presubmitEvent);
 
       if (presubmitEvent.defaultPrevented) {
         return;
@@ -2082,8 +2082,8 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitSuccessEvent);
+          if (formRef.value) {
+            formRef.value.dispatchEvent(submitSuccessEvent);
 
             if (submitSuccessEvent.defaultPrevented) {
               return;
@@ -2091,19 +2091,19 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
             /* TODO: option to turn this on/off? */
 
             if (props.resetFormOnSubmit !== false) {
-              formRef.reset();
+              formRef.value.reset();
             }
           }
           /* TODO: client side route event first that can be preventDefaulted */
 
           if (props.successUrl) {
-            if (formRef) {
+            if (formRef.value) {
               const event = new CustomEvent(\\"route\\", {
                 detail: {
                   url: props.successUrl,
                 },
               });
-              formRef.dispatchEvent(event);
+              formRef.value.dispatchEvent(event);
 
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
@@ -2121,8 +2121,8 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
           },
         });
 
-        if (formRef) {
-          formRef.dispatchEvent(submitErrorEvent);
+        if (formRef.value) {
+          formRef.value.dispatchEvent(submitErrorEvent);
 
           if (submitErrorEvent.defaultPrevented) {
             return;
@@ -2249,8 +2249,8 @@ export const Image = component$((props) => {
     if (useLazyLoading(props, state, pictureRef)) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
+        if (pictureRef.value) {
+          const rect = pictureRef.value.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -4438,7 +4438,7 @@ export interface Props {
 }
 export const onBlur = function onBlur(props, state, inputRef, inputNoArgRef) {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 };
 export const lowerCaseName = function lowerCaseName(
   props,
@@ -4505,8 +4505,8 @@ export const handlerClick = function handlerClick(
   event: Event
 ) {
   event.preventDefault();
-  console.log(\\"current value\\", holdValueRef);
-  holdValueRef = holdValueRef + \\"JS\\";
+  console.log(\\"current value\\", holdValueRef.value);
+  holdValueRef.value = holdValueRef.value + \\"JS\\";
 };
 export const MyBasicRefAssignmentComponent = component$((props: Props) => {
   const holdValueRef = useSignal<Element>();
@@ -4553,13 +4553,13 @@ export const MyPreviousComponent = component$((props: Props) => {
   const state = useStore<any>({ count: 0 });
   useTask$(({ track }) => {
     track(() => state.count);
-    prevCount = state.count;
+    prevCount.value = state.count;
   });
 
   return (
     <div>
       <h1>
-        Now: {state.count}, before: {prevCount}
+        Now: {state.count}, before: {prevCount.value}
       </h1>
       <button onClick$={(event) => (state.count += 1)}>Increment</button>
     </div>
@@ -4783,9 +4783,9 @@ export const findAndRunScripts = function findAndRunScripts(
   elem
 ) {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -4864,9 +4864,9 @@ export const findAndRunScripts = function findAndRunScripts(
   elem
 ) {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -5081,8 +5081,8 @@ export const onSubmit = function onSubmit(
       },
     });
 
-    if (formRef) {
-      formRef.dispatchEvent(presubmitEvent);
+    if (formRef.value) {
+      formRef.value.dispatchEvent(presubmitEvent);
 
       if (presubmitEvent.defaultPrevented) {
         return;
@@ -5140,8 +5140,8 @@ export const onSubmit = function onSubmit(
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitSuccessEvent);
+          if (formRef.value) {
+            formRef.value.dispatchEvent(submitSuccessEvent);
 
             if (submitSuccessEvent.defaultPrevented) {
               return;
@@ -5149,19 +5149,19 @@ export const onSubmit = function onSubmit(
             /* TODO: option to turn this on/off? */
 
             if (props.resetFormOnSubmit !== false) {
-              formRef.reset();
+              formRef.value.reset();
             }
           }
           /* TODO: client side route event first that can be preventDefaulted */
 
           if (props.successUrl) {
-            if (formRef) {
+            if (formRef.value) {
               const event = new CustomEvent(\\"route\\", {
                 detail: {
                   url: props.successUrl,
                 },
               });
-              formRef.dispatchEvent(event);
+              formRef.value.dispatchEvent(event);
 
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
@@ -5179,8 +5179,8 @@ export const onSubmit = function onSubmit(
           },
         });
 
-        if (formRef) {
-          formRef.dispatchEvent(submitErrorEvent);
+        if (formRef.value) {
+          formRef.value.dispatchEvent(submitErrorEvent);
 
           if (submitErrorEvent.defaultPrevented) {
             return;
@@ -5325,8 +5325,8 @@ export const Image = component$((props: ImageProps) => {
     if (useLazyLoading(props, state, pictureRef)) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
+        if (pictureRef.value) {
+          const rect = pictureRef.value.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {

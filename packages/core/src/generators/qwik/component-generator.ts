@@ -25,6 +25,8 @@ import {
   StateInit,
 } from './helpers/state';
 import { convertTypeScriptToJS } from './helpers/transform-code';
+import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
+import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 
 Error.stackTraceLimit = 9999;
 
@@ -41,6 +43,30 @@ const PLUGINS: Plugin[] = [
         return json;
       },
     },
+  }),
+  CODE_PROCESSOR_PLUGIN((codeType, json) => {
+    switch (codeType) {
+      case 'bindings':
+      case 'state':
+      case 'hooks':
+      case 'hooks-deps':
+      case 'properties':
+        // update signal getters to have `.value`
+        return (code, k) => {
+          // `ref` should not update the signal value access
+          if (k === 'ref') {
+            return code;
+          }
+          Object.keys(json.refs).forEach((ref) => {
+            code = replaceIdentifiers({
+              code,
+              from: ref,
+              to: (x) => (x === ref ? `${x}.value` : `${ref}.value.${x}`),
+            });
+          });
+          return code;
+        };
+    }
   }),
 ];
 
