@@ -160,19 +160,3 @@ export const babelTransformExpression = <VisitorContextType = any>(
 
 export const convertTypeScriptToJS = (code: string): string =>
   babelTransformExpression(code, {}, 'unknown', true);
-// pipe(
-//   babel.transform(code, {
-//     sourceFileName: 'file.tsx',
-//     configFile: false,
-//     babelrc: false,
-//     parserOpts: { allowReturnOutsideFunction: true },
-//     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-//     plugins: [[decorators, { legacy: true }]],
-//   })?.code || '',
-//   (x) => {
-//     if (x.endsWith(';')) {
-//       console.log({ x });
-//     }
-//     return x.endsWith(';') ? x.slice(0, -1) : x;
-//   },
-// );
