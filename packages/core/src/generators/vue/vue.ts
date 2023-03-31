@@ -29,8 +29,8 @@ import { generateCompositionApiScript } from './compositionApi';
 import { blockToVue } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { createSingleBinding } from '../../helpers/bindings';
+import { replaceStateIdentifier } from 'src/helpers/replace-identifiers';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
@@ -115,7 +115,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'bindings':
               return (code) => processBinding({ code, options, json: component, codeType });
             case 'hooks-deps':
-              return (c) => stripStateAndPropsRefs(c, { includeProps: false });
+              return replaceStateIdentifier(null);
             case 'properties':
             case 'dynamic-jsx-elements':
               return (c) => c;

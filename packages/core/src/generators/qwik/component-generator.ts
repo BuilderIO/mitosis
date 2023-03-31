@@ -19,7 +19,7 @@ import { mergeOptions } from '../../helpers/merge-options';
 import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
 import { convertTypeScriptToJS } from './helpers/transform-code';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { replaceStateIdentifier } from 'src/helpers/replace-identifiers';
 
 Error.stackTraceLimit = 9999;
 
@@ -45,25 +45,20 @@ const PLUGINS: Plugin[] = [
       case 'hooks-deps':
       case 'properties':
       case 'dynamic-jsx-elements':
-        return (value) =>
-          // update signal getters to have `.value`
-          stripStateAndPropsRefs(value, {
-            includeState: true,
-            includeProps: false,
-            replaceWith: (name): string => {
-              const state = json.state[name];
-              switch (state?.type) {
-                case 'getter':
-                  return `${name}.value`;
+        // update signal getters to have `.value`
+        return replaceStateIdentifier((name) => {
+          const state = json.state[name];
+          switch (state?.type) {
+            case 'getter':
+              return `${name}.value`;
 
-                case 'function':
-                case 'method':
-                case 'property':
-                case undefined:
-                  return `state.${name}`;
-              }
-            },
-          });
+            case 'function':
+            case 'method':
+            case 'property':
+            case undefined:
+              return `state.${name}`;
+          }
+        });
     }
   }),
 ];
