@@ -1451,7 +1451,7 @@ exports[`qwik > jsx > Javascript Test > BasicRef 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
 } from \\"@builder.io/qwik\\";
@@ -1471,8 +1471,8 @@ export const lowerCaseName = function lowerCaseName(
 export const MyBasicRefComponent = component$((props) => {
   useStylesScoped$(STYLES);
 
-  const inputRef = useRef();
-  const inputNoArgRef = useRef();
+  const inputRef = useSignal();
+  const inputNoArgRef = useSignal();
   const state = useStore({ name: \\"PatrickJS\\" });
 
   return (
@@ -1513,7 +1513,7 @@ export const STYLES = \`
 `;
 
 exports[`qwik > jsx > Javascript Test > BasicRefAssignment 1`] = `
-"import { Fragment, component$, h, useRef } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
 
 export const handlerClick = function handlerClick(
   props,
@@ -1526,7 +1526,7 @@ export const handlerClick = function handlerClick(
   holdValueRef = holdValueRef + \\"JS\\";
 };
 export const MyBasicRefAssignmentComponent = component$((props) => {
-  const holdValueRef = useRef();
+  const holdValueRef = useSignal();
   const state = {};
 
   return (
@@ -1545,7 +1545,7 @@ exports[`qwik > jsx > Javascript Test > BasicRefPrevious 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useTask$,
 } from \\"@builder.io/qwik\\";
@@ -1563,7 +1563,7 @@ export function usePrevious(value) {
   return ref;
 }
 export const MyPreviousComponent = component$((props) => {
-  const prevCount = useRef();
+  const prevCount = useSignal();
   const state = useStore({ count: 0 });
   useTask$(({ track }) => {
     track(() => state.count);
@@ -1751,7 +1751,7 @@ exports[`qwik > jsx > Javascript Test > CustomCode 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
@@ -1802,7 +1802,7 @@ export const findAndRunScripts = function findAndRunScripts(
   }
 };
 export const CustomCode = component$((props) => {
-  const elem = useRef();
+  const elem = useSignal();
   const state = useStore({ scriptsInserted: [], scriptsRun: [] });
   useVisibleTask$(() => {
     findAndRunScripts(props, state, elem);
@@ -1828,7 +1828,7 @@ exports[`qwik > jsx > Javascript Test > Embed 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
@@ -1879,7 +1879,7 @@ export const findAndRunScripts = function findAndRunScripts(
   }
 };
 export const CustomCode = component$((props) => {
-  const elem = useRef();
+  const elem = useSignal();
   const state = useStore({ scriptsInserted: [], scriptsRun: [] });
   useVisibleTask$(() => {
     findAndRunScripts(props, state, elem);
@@ -1905,7 +1905,7 @@ exports[`qwik > jsx > Javascript Test > Form 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
 } from \\"@builder.io/qwik\\";
@@ -2138,7 +2138,7 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
 export const FormComponent = component$((props) => {
   useStylesScoped$(STYLES);
 
-  const formRef = useRef();
+  const formRef = useSignal();
   const state = useStore({
     formErrorMessage: \\"\\",
     formState: \\"unsubmitted\\",
@@ -2214,8 +2214,7 @@ exports[`qwik > jsx > Javascript Test > Image 1`] = `
   Slot,
   component$,
   h,
-  useCleanup$,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
   useVisibleTask$,
@@ -2240,7 +2239,7 @@ export const isBrowser = function isBrowser(props, state, pictureRef) {
 export const Image = component$((props) => {
   useStylesScoped$(STYLES);
 
-  const pictureRef = useRef();
+  const pictureRef = useSignal();
   const state = useStore({
     imageLoaded: false,
     load: false,
@@ -2268,11 +2267,6 @@ export const Image = component$((props) => {
         passive: true,
       });
       listener();
-    }
-  });
-  useCleanup$(() => {
-    if (state.scrollListener) {
-      window.removeEventListener(\\"scroll\\", state.scrollListener);
     }
   });
 
@@ -3324,20 +3318,11 @@ export default OnInit;
 `;
 
 exports[`qwik > jsx > Javascript Test > onMount 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useCleanup$,
-  useVisibleTask$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useVisibleTask$ } from \\"@builder.io/qwik\\";
 
 export const Comp = component$((props) => {
   useVisibleTask$(() => {
     console.log(\\"Runs on mount\\");
-  });
-  useCleanup$(() => {
-    console.log(\\"Runs on unMount\\");
   });
 
   return <div></div>;
@@ -4443,7 +4428,7 @@ exports[`qwik > jsx > Typescript Test > BasicRef 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
 } from \\"@builder.io/qwik\\";
@@ -4466,8 +4451,8 @@ export const lowerCaseName = function lowerCaseName(
 export const MyBasicRefComponent = component$((props: Props) => {
   useStylesScoped$(STYLES);
 
-  const inputRef = useRef();
-  const inputNoArgRef = useRef();
+  const inputRef = useSignal<Element>();
+  const inputNoArgRef = useSignal<Element>();
   const state = useStore<any>({ name: \\"PatrickJS\\" });
 
   return (
@@ -4508,7 +4493,7 @@ export const STYLES = \`
 `;
 
 exports[`qwik > jsx > Typescript Test > BasicRefAssignment 1`] = `
-"import { Fragment, component$, h, useRef } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
 
 export interface Props {
   showInput: boolean;
@@ -4524,7 +4509,7 @@ export const handlerClick = function handlerClick(
   holdValueRef = holdValueRef + \\"JS\\";
 };
 export const MyBasicRefAssignmentComponent = component$((props: Props) => {
-  const holdValueRef = useRef();
+  const holdValueRef = useSignal<Element>();
   const state: any = {};
 
   return (
@@ -4543,7 +4528,7 @@ exports[`qwik > jsx > Typescript Test > BasicRefPrevious 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useTask$,
 } from \\"@builder.io/qwik\\";
@@ -4564,7 +4549,7 @@ export function usePrevious<T>(value: T) {
   return ref;
 }
 export const MyPreviousComponent = component$((props: Props) => {
-  const prevCount = useRef();
+  const prevCount = useSignal<Element>();
   const state = useStore<any>({ count: 0 });
   useTask$(({ track }) => {
     track(() => state.count);
@@ -4783,7 +4768,7 @@ exports[`qwik > jsx > Typescript Test > CustomCode 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
@@ -4838,7 +4823,7 @@ export const findAndRunScripts = function findAndRunScripts(
   }
 };
 export const CustomCode = component$((props: CustomCodeProps) => {
-  const elem = useRef();
+  const elem = useSignal<Element>();
   const state = useStore<any>({ scriptsInserted: [], scriptsRun: [] });
   useVisibleTask$(() => {
     findAndRunScripts(props, state, elem);
@@ -4864,7 +4849,7 @@ exports[`qwik > jsx > Typescript Test > Embed 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
@@ -4919,7 +4904,7 @@ export const findAndRunScripts = function findAndRunScripts(
   }
 };
 export const CustomCode = component$((props: CustomCodeProps) => {
-  const elem = useRef();
+  const elem = useSignal<Element>();
   const state = useStore<any>({ scriptsInserted: [], scriptsRun: [] });
   useVisibleTask$(() => {
     findAndRunScripts(props, state, elem);
@@ -4945,7 +4930,7 @@ exports[`qwik > jsx > Typescript Test > Form 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
 } from \\"@builder.io/qwik\\";
@@ -5211,7 +5196,7 @@ export const onSubmit = function onSubmit(
 export const FormComponent = component$((props: FormProps) => {
   useStylesScoped$(STYLES);
 
-  const formRef = useRef();
+  const formRef = useSignal<Element>();
   const state = useStore<any>({
     formErrorMessage: \\"\\",
     formState: \\"unsubmitted\\",
@@ -5287,8 +5272,7 @@ exports[`qwik > jsx > Typescript Test > Image 1`] = `
   Slot,
   component$,
   h,
-  useCleanup$,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
   useVisibleTask$,
@@ -5331,7 +5315,7 @@ export const isBrowser = function isBrowser(props, state, pictureRef) {
 export const Image = component$((props: ImageProps) => {
   useStylesScoped$(STYLES);
 
-  const pictureRef = useRef();
+  const pictureRef = useSignal<Element>();
   const state = useStore<any>({
     imageLoaded: false,
     load: false,
@@ -5359,11 +5343,6 @@ export const Image = component$((props: ImageProps) => {
         passive: true,
       });
       listener();
-    }
-  });
-  useCleanup$(() => {
-    if (state.scrollListener) {
-      window.removeEventListener(\\"scroll\\", state.scrollListener);
     }
   });
 
@@ -6573,20 +6552,11 @@ export default OnInit;
 `;
 
 exports[`qwik > jsx > Typescript Test > onMount 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useCleanup$,
-  useVisibleTask$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useVisibleTask$ } from \\"@builder.io/qwik\\";
 
 export const Comp = component$((props: any) => {
   useVisibleTask$(() => {
     console.log(\\"Runs on mount\\");
-  });
-  useCleanup$(() => {
-    console.log(\\"Runs on unMount\\");
   });
 
   return <div></div>;
@@ -8009,7 +7979,6 @@ exports[`qwik > svelte > Javascript Test > lifecycleHooks 1`] = `
   Fragment,
   component$,
   h,
-  useCleanup$,
   useTask$,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
@@ -8020,9 +7989,6 @@ export const MyComponent = component$((props) => {
   });
   useTask$(({ track }) => {
     console.log(\\"onAfterUpdate\\");
-  });
-  useCleanup$(() => {
-    console.log(\\"onDestroy\\");
   });
 
   return <div></div>;
@@ -8410,7 +8376,6 @@ exports[`qwik > svelte > Typescript Test > lifecycleHooks 1`] = `
   Fragment,
   component$,
   h,
-  useCleanup$,
   useTask$,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
@@ -8421,9 +8386,6 @@ export const MyComponent = component$((props: any) => {
   });
   useTask$(({ track }) => {
     console.log(\\"onAfterUpdate\\");
-  });
-  useCleanup$(() => {
-    console.log(\\"onDestroy\\");
   });
 
   return <div></div>;
