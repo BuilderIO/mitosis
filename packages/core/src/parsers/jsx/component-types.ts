@@ -50,22 +50,32 @@ export const isTypeOrInterface = (node: babel.Node) =>
   (types.isExportNamedDeclaration(node) && types.isTSTypeAliasDeclaration(node.declaration)) ||
   (types.isExportNamedDeclaration(node) && types.isTSInterfaceDeclaration(node.declaration));
 
-export const collectTypes = (node: babel.Node, context: Context) => {
+import { NodePath as BabelTraverseNodePath } from '@babel/traverse';
+
+const getTypesFromNode = (
+  node:
+    | babel.types.TSTypeAliasDeclaration
+    | babel.types.ExportNamedDeclaration
+    | babel.types.TSInterfaceDeclaration
+    | babel.types.TSTypeAliasDeclaration
+    | babel.types.ImportDeclaration,
+  context: Context,
+) => {
   const typeStr = generate(node).code;
   const { types = [] } = context.builder.component;
   types.push(typeStr);
   context.builder.component.types = types.filter(Boolean);
 };
 
-export function handleTypeImports(path: babel.NodePath<babel.types.Program>, context: Context) {
-  for (const statement of path.node.body) {
-    if (isTypeImport(statement)) {
-      const importDeclaration = statement;
-      // Remove .lite from path if exists, as that will be stripped
-      if (importDeclaration.source.value.endsWith('.lite')) {
-        importDeclaration.source.value = importDeclaration.source.value.replace(/\.lite$/, '');
-      }
-      collectTypes(statement, context);
-    }
-  }
-}
+export const collectTypes = (
+  path:
+    | BabelTraverseNodePath<babel.types.TSTypeAliasDeclaration>
+    | BabelTraverseNodePath<babel.types.ExportNamedDeclaration>
+    | BabelTraverseNodePath<babel.types.TSInterfaceDeclaration>
+    | BabelTraverseNodePath<babel.types.TSTypeAliasDeclaration>,
+  context: Context,
+) => {
+  const { node } = path;
+  getTypesFromNode(node, context);
+  path.remove();
+};
