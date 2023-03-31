@@ -364,7 +364,6 @@ export class SrcBuilder {
     function emitJsxProp(key: string, value: any) {
       if (value) {
         if (key === 'innerHTML') key = 'dangerouslySetInnerHTML';
-        if (key === 'for') key = 'htmlFor';
         if (key === 'dataSet') return; // ignore
         if (self.isJSX) {
           self.emit(' ', key, '=');
@@ -567,12 +566,18 @@ function literalTagName(symbol: string | Symbol): string | Symbol {
  * it is not 100% but a good enough approximation
  */
 export function isStatement(code: string) {
+  // remove trailing `!` as it is used to mark a non-null assertion in TS
+  // it messes up the logic afterwards
+  if (code.endsWith('!')) {
+    code = code.substr(0, code.length - 1);
+  }
+
   code = code.trim();
   if (
     (code.startsWith('(') && code.endsWith(')')) ||
     (code.startsWith('{') && code.endsWith('}'))
   ) {
-    // Code starting with `(` is most likely and IFF and hence is an expression.
+    // Code starting with `(` is most likely an IFF and hence is an expression.
     return false;
   }
   const codeNoStrings = code.replace(STRING_LITERAL, 'STRING_LITERAL');

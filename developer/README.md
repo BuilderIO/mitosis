@@ -32,11 +32,11 @@ We need your help! If you found a bug, it's best to [create an issue](https://gi
 
 ## Developing for Core & Testing
 
-In `core`, we use jest snapshots for testing. If you are solving a problem that is reproducible by a fiddle in [mitosis.builder.io](https://mitosis.builder.io), we highly recommend the following flow:
+In `core`, we use vitest snapshots for testing. If you are solving a problem that is reproducible by a fiddle in [mitosis.builder.io](https://mitosis.builder.io), we highly recommend the following flow:
 
 - copy your component from the fiddle into a file in `packages/core/src/__tests__/data`. See [packages/core/src/**tests**/data/basic.raw.tsx](/packages/core/src/__tests__/data/basic.raw.tsx) as an example.
 - Create a test that shows how compiling this component to a certain target causes the bug. See [context.test.ts](/packages/core/src/__tests__/context.test.ts) as an example of using `builder-render-block.raw.tsx`
-- run `jest` in watch mode: `yarn test --watch`
+- run `vitest` in watch mode: `yarn test:watch`
 - run the development server: `yarn start`
 - keep iterating until your test passes!
 - after making your changes, run `yarn run fmt:prettier` in the root directory.

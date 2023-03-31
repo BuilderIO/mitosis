@@ -1,10 +1,9 @@
 import * as babel from '@babel/core';
-const jsxPlugin = require('@babel/plugin-syntax-jsx');
-const tsPreset = require('@babel/preset-typescript');
-const decorators = require('@babel/plugin-syntax-decorators');
+import tsPlugin from '@babel/plugin-syntax-typescript';
+import decorators from '@babel/plugin-syntax-decorators';
 import type { Visitor } from '@babel/traverse';
-import { pipe } from 'fp-ts/lib/function';
-import { checkIsGetter } from './patterns';
+import { pipe, identity } from 'fp-ts/lib/function';
+import { checkIsGetter, replaceFunctionWithGetter, replaceGetterWithFunction } from './patterns';
 
 const handleErrorOrExpression = <VisitorContextType = any>({
   code,
@@ -64,9 +63,14 @@ export const babelTransform = <VisitorContextType = any>(
     sourceFileName: 'file.tsx',
     configFile: false,
     babelrc: false,
-    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
+    // TO-DO: keep doing this if `typescript: true`
+    // presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     parserOpts: { allowReturnOutsideFunction: true },
-    plugins: [[decorators, { legacy: true }], jsxPlugin, ...(visitor ? [() => ({ visitor })] : [])],
+    plugins: [
+      [tsPlugin, { isTSX: true }],
+      [decorators, { legacy: true }],
+      ...(visitor ? [() => ({ visitor })] : []),
+    ],
   });
 };
 export const babelTransformCode = <VisitorContextType = any>(
@@ -121,9 +125,8 @@ export const babelTransformExpression = <VisitorContextType = any>(
 
   return pipe(
     code,
+    isGetter ? replaceGetterWithFunction : identity,
     (code) => {
-      code = isGetter ? code.replace('get', 'function ') : code;
-
       const type = getType(code, initialType);
 
       const useCode = type === 'functionBody' ? `function(){${code}}` : code;
@@ -141,8 +144,6 @@ export const babelTransformExpression = <VisitorContextType = any>(
         return handleErrorOrExpression({ code, useCode, result: null, visitor });
       }
     },
-    (transformed) => {
-      return isGetter ? transformed.replace('function ', 'get ') : transformed;
-    },
+    isGetter ? replaceFunctionWithGetter : identity,
   );
 };

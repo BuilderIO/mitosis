@@ -470,11 +470,20 @@ export const runTestsForJsx = () => {
     expect(component).toMatchSnapshot();
   });
 
-  JSX_TESTS.forEach((tests) => {
-    Object.keys(tests).forEach((key) => {
-      test(key, async () => {
-        const component = parseJsx(await tests[key]);
-        expect(component).toMatchSnapshot();
+  const configurations: Array<Parameters<typeof parseJsx>[1] & { testName: string }> = [
+    { typescript: true, testName: 'Typescript' },
+    { typescript: false, testName: 'Javascript' },
+  ];
+
+  configurations.forEach((config) => {
+    describe(config.testName, () => {
+      JSX_TESTS.forEach((tests) => {
+        Object.keys(tests).forEach((key) => {
+          test(key, async () => {
+            const component = parseJsx(await tests[key], config);
+            expect(component).toMatchSnapshot();
+          });
+        });
       });
     });
   });
@@ -508,23 +517,22 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
     testsArray?: Tests[];
   };
 
-  const parsers: ParserConfig[] = [
-    {
-      name: 'jsx',
-      parser: async (x) => parseJsx(x, { typescript: options.typescript }),
-      testsArray: JSX_TESTS_FOR_TARGET[target],
-    },
-    {
-      name: 'svelte',
-      parser: async (x) => parseSvelte(x),
-      testsArray: [SVELTE_SYNTAX_TESTS],
-    },
-  ];
-
-  for (const { name, parser, testsArray } of parsers) {
-    if (testsArray) {
-      describe(name, () => {
-        configurations.forEach(({ options, testName }) => {
+  configurations.forEach(({ options, testName }) => {
+    const parsers: ParserConfig[] = [
+      {
+        name: 'jsx',
+        parser: async (x) => parseJsx(x, { typescript: options.typescript }),
+        testsArray: JSX_TESTS_FOR_TARGET[target],
+      },
+      {
+        name: 'svelte',
+        parser: async (x) => parseSvelte(x),
+        testsArray: [SVELTE_SYNTAX_TESTS],
+      },
+    ];
+    for (const { name, parser, testsArray } of parsers) {
+      if (testsArray) {
+        describe(name, () => {
           if (name === 'jsx' && options.typescript === false) {
             test('Remove Internal mitosis package', async () => {
               const component = parseJsx(await basicMitosis, {
@@ -550,7 +558,7 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
             });
           });
         });
-      });
+      }
     }
-  }
+  });
 };

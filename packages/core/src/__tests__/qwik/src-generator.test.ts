@@ -10,6 +10,7 @@ describe('src-generator', () => {
   describe('isStatement', () => {
     test('is an expression', () => {
       expect(isStatement('a.b')).toBe(false);
+      expect(isStatement('a.b!')).toBe(false);
       expect(isStatement('1?2:"bar"')).toBe(false);
       expect(isStatement('"var x; return foo + \'\\"\';"')).toBe(false);
       expect(isStatement('"foo" + `bar\nbaz`')).toBe(false);
