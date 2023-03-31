@@ -158,12 +158,7 @@ function emitUseClientEffect(file: File, component: MitosisComponent) {
     // This is called useMount, but in practice it is used as
     // useClientEffect. Not sure if this is correct, but for now.
     const code = component.hooks.onMount.code;
-    file.src.emit(
-      file.import(file.qwikModule, 'useClientEffect$').localName,
-      '(()=>{',
-      code,
-      '});',
-    );
+    file.src.emit(file.import(file.qwikModule, 'useVisibleTask$').localName, '(()=>{', code, '});');
   }
 }
 
