@@ -6,21 +6,28 @@ import { traverseNodes } from '../traverse-nodes';
 
 type CodeType = 'hooks' | 'hooks-deps' | 'bindings' | 'properties' | 'state';
 
+// declare function codeProcessor<T extends CodeType>(
+//   codeType: T,
+//   json: MitosisComponent,
+// ): (code: string, hookType: T extends 'hooks' ? keyof MitosisComponent['hooks'] : string) => string;
 declare function codeProcessor(
   codeType: CodeType,
-): (code: string, hookType?: keyof MitosisComponent['hooks']) => string;
+  json: MitosisComponent,
+): (code: string, hookType: string) => string;
 
 type CodeProcessor = typeof codeProcessor;
 
 /**
- * Process code in bindings and properties of a node
+ * Process code in each node.
  */
-const preProcessBlockCode = ({
+const preProcessNodeCode = ({
   json,
   codeProcessor,
+  parentComponent,
 }: {
   json: MitosisNode;
   codeProcessor: CodeProcessor;
+  parentComponent: MitosisComponent;
 }) => {
   // const propertiesProcessor = codeProcessor('properties');
   // for (const key in json.properties) {
@@ -30,11 +37,11 @@ const preProcessBlockCode = ({
   //   }
   // }
 
-  const bindingsProcessor = codeProcessor('bindings');
+  const bindingsProcessor = codeProcessor('bindings', parentComponent);
   for (const key in json.bindings) {
     const value = json.bindings[key];
     if (value?.code) {
-      value.code = bindingsProcessor(value.code);
+      value.code = bindingsProcessor(value.code, key);
     }
   }
 };
@@ -46,11 +53,11 @@ export const CODE_PROCESSOR_PLUGIN =
   (codeProcessor: CodeProcessor): Plugin =>
   () => ({
     json: {
-      post: (json: MitosisComponent) => {
+      post: (json) => {
         function processHook(key: keyof typeof json.hooks, hook: extendedHook) {
-          hook.code = codeProcessor('hooks')(hook.code, key);
+          hook.code = codeProcessor('hooks', json)(hook.code, key);
           if (hook.deps) {
-            hook.deps = codeProcessor('hooks-deps')(hook.deps);
+            hook.deps = codeProcessor('hooks-deps', json)(hook.deps, key);
           }
         }
 
@@ -75,12 +82,12 @@ export const CODE_PROCESSOR_PLUGIN =
         for (const key in json.state) {
           const state = json.state[key];
           if (state) {
-            state.code = codeProcessor('state')(state.code);
+            state.code = codeProcessor('state', json)(state.code, key);
           }
         }
 
         traverseNodes(json, (node) => {
-          preProcessBlockCode({ json: node, codeProcessor });
+          preProcessNodeCode({ json: node, codeProcessor, parentComponent: json });
         });
       },
     },

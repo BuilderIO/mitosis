@@ -1237,11 +1237,11 @@ exports[`qwik > jsx > Javascript Test > Basic Context 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useContext,
   useContextProvider,
-  useMount$,
   useStore,
+  useTask$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
@@ -1254,11 +1254,11 @@ export const MyBasicComponent = component$((props) => {
   const myService = useContext(MyService);
   const state = useStore({ name: \\"PatrickJS\\" });
   useContextProvider(Injector, useStore({}));
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     const bye = myService.method(\\"hi\\");
     console.log(bye);
   });
-  useMount$(() => {
+  useTask$(() => {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
   });
@@ -1281,17 +1281,17 @@ exports[`qwik > jsx > Javascript Test > Basic OnMount Update 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
-  useMount$,
   useStore,
+  useTask$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const MyBasicOnMountUpdateComponent = component$((props) => {
   const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     state.name = \\"PatrickJS onMount\\" + props.bye;
   });
-  useMount$(() => {
+  useTask$(() => {
     state.name = \\"PatrickJS onInit\\" + props.hi;
   });
 
@@ -1307,13 +1307,13 @@ exports[`qwik > jsx > Javascript Test > Basic Outputs 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useStore,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const MyBasicOutputsComponent = component$((props) => {
   const state = useStore({ name: \\"PatrickJS\\" });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     props.onMessage(state.name);
     props.onEvent(props.message);
   });
@@ -1330,13 +1330,13 @@ exports[`qwik > jsx > Javascript Test > Basic Outputs Meta 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useStore,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const MyBasicOutputsComponent = component$((props) => {
   const state = useStore({ name: \\"PatrickJS\\" });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     props.onMessage(state.name);
     props.onEvent(props.message);
   });
@@ -1412,13 +1412,13 @@ exports[`qwik > jsx > Javascript Test > BasicFor 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useStore,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const MyBasicForComponent = component$((props) => {
   const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     console.log(\\"onMount code\\");
   });
 
@@ -1451,14 +1451,14 @@ exports[`qwik > jsx > Javascript Test > BasicRef 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
 } from \\"@builder.io/qwik\\";
 
 export const onBlur = function onBlur(props, state, inputRef, inputNoArgRef) {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 };
 export const lowerCaseName = function lowerCaseName(
   props,
@@ -1471,8 +1471,8 @@ export const lowerCaseName = function lowerCaseName(
 export const MyBasicRefComponent = component$((props) => {
   useStylesScoped$(STYLES);
 
-  const inputRef = useRef();
-  const inputNoArgRef = useRef();
+  const inputRef = useSignal();
+  const inputNoArgRef = useSignal();
   const state = useStore({ name: \\"PatrickJS\\" });
 
   return (
@@ -1513,7 +1513,7 @@ export const STYLES = \`
 `;
 
 exports[`qwik > jsx > Javascript Test > BasicRefAssignment 1`] = `
-"import { Fragment, component$, h, useRef } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
 
 export const handlerClick = function handlerClick(
   props,
@@ -1522,11 +1522,11 @@ export const handlerClick = function handlerClick(
   event
 ) {
   event.preventDefault();
-  console.log(\\"current value\\", holdValueRef);
-  holdValueRef = holdValueRef + \\"JS\\";
+  console.log(\\"current value\\", holdValueRef.value);
+  holdValueRef.value = holdValueRef.value + \\"JS\\";
 };
 export const MyBasicRefAssignmentComponent = component$((props) => {
-  const holdValueRef = useRef();
+  const holdValueRef = useSignal();
   const state = {};
 
   return (
@@ -1545,7 +1545,7 @@ exports[`qwik > jsx > Javascript Test > BasicRefPrevious 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useTask$,
 } from \\"@builder.io/qwik\\";
@@ -1563,17 +1563,17 @@ export function usePrevious(value) {
   return ref;
 }
 export const MyPreviousComponent = component$((props) => {
-  const prevCount = useRef();
+  const prevCount = useSignal();
   const state = useStore({ count: 0 });
   useTask$(({ track }) => {
     track(() => state.count);
-    prevCount = state.count;
+    prevCount.value = state.count;
   });
 
   return (
     <div>
       <h1>
-        Now: {state.count}, before: {prevCount}
+        Now: {state.count}, before: {prevCount.value}
       </h1>
       <button onClick$={(event) => (state.count += 1)}>Increment</button>
     </div>
@@ -1751,9 +1751,9 @@ exports[`qwik > jsx > Javascript Test > CustomCode 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
-  useRef,
+  useSignal,
   useStore,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const findAndRunScripts = function findAndRunScripts(
@@ -1762,9 +1762,9 @@ export const findAndRunScripts = function findAndRunScripts(
   elem
 ) {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -1802,9 +1802,9 @@ export const findAndRunScripts = function findAndRunScripts(
   }
 };
 export const CustomCode = component$((props) => {
-  const elem = useRef();
+  const elem = useSignal();
   const state = useStore({ scriptsInserted: [], scriptsRun: [] });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     findAndRunScripts(props, state, elem);
   });
 
@@ -1828,9 +1828,9 @@ exports[`qwik > jsx > Javascript Test > Embed 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
-  useRef,
+  useSignal,
   useStore,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const findAndRunScripts = function findAndRunScripts(
@@ -1839,9 +1839,9 @@ export const findAndRunScripts = function findAndRunScripts(
   elem
 ) {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -1879,9 +1879,9 @@ export const findAndRunScripts = function findAndRunScripts(
   }
 };
 export const CustomCode = component$((props) => {
-  const elem = useRef();
+  const elem = useSignal();
   const state = useStore({ scriptsInserted: [], scriptsRun: [] });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     findAndRunScripts(props, state, elem);
   });
 
@@ -1905,7 +1905,7 @@ exports[`qwik > jsx > Javascript Test > Form 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
 } from \\"@builder.io/qwik\\";
@@ -2023,8 +2023,8 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
       },
     });
 
-    if (formRef) {
-      formRef.dispatchEvent(presubmitEvent);
+    if (formRef.value) {
+      formRef.value.dispatchEvent(presubmitEvent);
 
       if (presubmitEvent.defaultPrevented) {
         return;
@@ -2082,8 +2082,8 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitSuccessEvent);
+          if (formRef.value) {
+            formRef.value.dispatchEvent(submitSuccessEvent);
 
             if (submitSuccessEvent.defaultPrevented) {
               return;
@@ -2091,19 +2091,19 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
             /* TODO: option to turn this on/off? */
 
             if (props.resetFormOnSubmit !== false) {
-              formRef.reset();
+              formRef.value.reset();
             }
           }
           /* TODO: client side route event first that can be preventDefaulted */
 
           if (props.successUrl) {
-            if (formRef) {
+            if (formRef.value) {
               const event = new CustomEvent(\\"route\\", {
                 detail: {
                   url: props.successUrl,
                 },
               });
-              formRef.dispatchEvent(event);
+              formRef.value.dispatchEvent(event);
 
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
@@ -2121,8 +2121,8 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
           },
         });
 
-        if (formRef) {
-          formRef.dispatchEvent(submitErrorEvent);
+        if (formRef.value) {
+          formRef.value.dispatchEvent(submitErrorEvent);
 
           if (submitErrorEvent.defaultPrevented) {
             return;
@@ -2138,7 +2138,7 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
 export const FormComponent = component$((props) => {
   useStylesScoped$(STYLES);
 
-  const formRef = useRef();
+  const formRef = useSignal();
   const state = useStore({
     formErrorMessage: \\"\\",
     formState: \\"unsubmitted\\",
@@ -2214,11 +2214,10 @@ exports[`qwik > jsx > Javascript Test > Image 1`] = `
   Slot,
   component$,
   h,
-  useCleanup$,
-  useClientEffect$,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const setLoaded = function setLoaded(props, state, pictureRef) {
@@ -2240,18 +2239,18 @@ export const isBrowser = function isBrowser(props, state, pictureRef) {
 export const Image = component$((props) => {
   useStylesScoped$(STYLES);
 
-  const pictureRef = useRef();
+  const pictureRef = useSignal();
   const state = useStore({
     imageLoaded: false,
     load: false,
     scrollListener: null,
   });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     if (useLazyLoading(props, state, pictureRef)) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
+        if (pictureRef.value) {
+          const rect = pictureRef.value.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -2268,11 +2267,6 @@ export const Image = component$((props) => {
         passive: true,
       });
       listener();
-    }
-  });
-  useCleanup$(() => {
-    if (state.scrollListener) {
-      window.removeEventListener(\\"scroll\\", state.scrollListener);
     }
   });
 
@@ -2584,9 +2578,9 @@ exports[`qwik > jsx > Javascript Test > Stamped.io 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useStore,
   useStylesScoped$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 import { kebabCase, snakeCase } from \\"lodash\\";
@@ -2605,7 +2599,7 @@ export const SmileReviews = component$((props) => {
     reviews: [],
     showReviewPrompt: false,
   });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     fetch(
       \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
         props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
@@ -3284,15 +3278,15 @@ exports[`qwik > jsx > Javascript Test > onInit & onMount 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
-  useMount$,
+  useTask$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const OnInit = component$((props) => {
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     console.log(\\"onMount\\");
   });
-  useMount$(() => {
+  useTask$(() => {
     console.log(\\"onInit\\");
   });
 
@@ -3304,14 +3298,14 @@ export default OnInit;
 `;
 
 exports[`qwik > jsx > Javascript Test > onInit 1`] = `
-"import { Fragment, component$, h, useMount$, useStore } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore, useTask$ } from \\"@builder.io/qwik\\";
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 export const OnInit = component$((props) => {
   const state = useStore({ name: \\"\\" });
-  useMount$(() => {
+  useTask$(() => {
     state.name = defaultValues.name || props.name;
     console.log(\\"set defaults with props\\");
   });
@@ -3324,20 +3318,11 @@ export default OnInit;
 `;
 
 exports[`qwik > jsx > Javascript Test > onMount 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useCleanup$,
-  useClientEffect$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useVisibleTask$ } from \\"@builder.io/qwik\\";
 
 export const Comp = component$((props) => {
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     console.log(\\"Runs on mount\\");
-  });
-  useCleanup$(() => {
-    console.log(\\"Runs on unMount\\");
   });
 
   return <div></div>;
@@ -3765,11 +3750,11 @@ exports[`qwik > jsx > Javascript Test > renderContentExample 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useContextProvider,
   useStore,
   useStylesScoped$,
   useTask$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 import RenderBlocks from \\"@dummy/RenderBlocks\\";
@@ -3796,7 +3781,7 @@ export const RenderContent = component$((props) => {
       })(),
     })
   );
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     sendComponentsToVisualEditor(props.customComponents);
   });
   useTask$(({ track }) => {
@@ -4215,11 +4200,11 @@ exports[`qwik > jsx > Typescript Test > Basic Context 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useContext,
   useContextProvider,
-  useMount$,
   useStore,
+  useTask$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
@@ -4232,11 +4217,11 @@ export const MyBasicComponent = component$((props: any) => {
   const myService = useContext(MyService);
   const state = useStore<any>({ name: \\"PatrickJS\\" });
   useContextProvider(Injector, useStore({}));
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     const bye = myService.method(\\"hi\\");
     console.log(bye);
   });
-  useMount$(() => {
+  useTask$(() => {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
   });
@@ -4259,9 +4244,9 @@ exports[`qwik > jsx > Typescript Test > Basic OnMount Update 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
-  useMount$,
   useStore,
+  useTask$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export interface Props {
@@ -4273,10 +4258,10 @@ export const MyBasicOnMountUpdateComponent = component$((props: Props) => {
     name: \\"PatrickJS\\",
     names: [\\"Steve\\", \\"PatrickJS\\"],
   });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     state.name = \\"PatrickJS onMount\\" + props.bye;
   });
-  useMount$(() => {
+  useTask$(() => {
     state.name = \\"PatrickJS onInit\\" + props.hi;
   });
 
@@ -4292,13 +4277,13 @@ exports[`qwik > jsx > Typescript Test > Basic Outputs 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useStore,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const MyBasicOutputsComponent = component$((props: any) => {
   const state = useStore<any>({ name: \\"PatrickJS\\" });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     props.onMessage(state.name);
     props.onEvent(props.message);
   });
@@ -4315,13 +4300,13 @@ exports[`qwik > jsx > Typescript Test > Basic Outputs Meta 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useStore,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const MyBasicOutputsComponent = component$((props: any) => {
   const state = useStore<any>({ name: \\"PatrickJS\\" });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     props.onMessage(state.name);
     props.onEvent(props.message);
   });
@@ -4401,8 +4386,8 @@ exports[`qwik > jsx > Typescript Test > BasicFor 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useStore,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const MyBasicForComponent = component$((props: any) => {
@@ -4410,7 +4395,7 @@ export const MyBasicForComponent = component$((props: any) => {
     name: \\"PatrickJS\\",
     names: [\\"Steve\\", \\"PatrickJS\\"],
   });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     console.log(\\"onMount code\\");
   });
 
@@ -4443,7 +4428,7 @@ exports[`qwik > jsx > Typescript Test > BasicRef 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
 } from \\"@builder.io/qwik\\";
@@ -4453,7 +4438,7 @@ export interface Props {
 }
 export const onBlur = function onBlur(props, state, inputRef, inputNoArgRef) {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 };
 export const lowerCaseName = function lowerCaseName(
   props,
@@ -4466,8 +4451,8 @@ export const lowerCaseName = function lowerCaseName(
 export const MyBasicRefComponent = component$((props: Props) => {
   useStylesScoped$(STYLES);
 
-  const inputRef = useRef();
-  const inputNoArgRef = useRef();
+  const inputRef = useSignal<Element>();
+  const inputNoArgRef = useSignal<Element>();
   const state = useStore<any>({ name: \\"PatrickJS\\" });
 
   return (
@@ -4508,7 +4493,7 @@ export const STYLES = \`
 `;
 
 exports[`qwik > jsx > Typescript Test > BasicRefAssignment 1`] = `
-"import { Fragment, component$, h, useRef } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
 
 export interface Props {
   showInput: boolean;
@@ -4520,11 +4505,11 @@ export const handlerClick = function handlerClick(
   event: Event
 ) {
   event.preventDefault();
-  console.log(\\"current value\\", holdValueRef);
-  holdValueRef = holdValueRef + \\"JS\\";
+  console.log(\\"current value\\", holdValueRef.value);
+  holdValueRef.value = holdValueRef.value + \\"JS\\";
 };
 export const MyBasicRefAssignmentComponent = component$((props: Props) => {
-  const holdValueRef = useRef();
+  const holdValueRef = useSignal<Element>();
   const state: any = {};
 
   return (
@@ -4543,7 +4528,7 @@ exports[`qwik > jsx > Typescript Test > BasicRefPrevious 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useTask$,
 } from \\"@builder.io/qwik\\";
@@ -4564,17 +4549,17 @@ export function usePrevious<T>(value: T) {
   return ref;
 }
 export const MyPreviousComponent = component$((props: Props) => {
-  const prevCount = useRef();
+  const prevCount = useSignal<Element>();
   const state = useStore<any>({ count: 0 });
   useTask$(({ track }) => {
     track(() => state.count);
-    prevCount = state.count;
+    prevCount.value = state.count;
   });
 
   return (
     <div>
       <h1>
-        Now: {state.count}, before: {prevCount}
+        Now: {state.count}, before: {prevCount.value}
       </h1>
       <button onClick$={(event) => (state.count += 1)}>Increment</button>
     </div>
@@ -4783,9 +4768,9 @@ exports[`qwik > jsx > Typescript Test > CustomCode 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
-  useRef,
+  useSignal,
   useStore,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export interface CustomCodeProps {
@@ -4798,9 +4783,9 @@ export const findAndRunScripts = function findAndRunScripts(
   elem
 ) {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -4838,9 +4823,9 @@ export const findAndRunScripts = function findAndRunScripts(
   }
 };
 export const CustomCode = component$((props: CustomCodeProps) => {
-  const elem = useRef();
+  const elem = useSignal<Element>();
   const state = useStore<any>({ scriptsInserted: [], scriptsRun: [] });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     findAndRunScripts(props, state, elem);
   });
 
@@ -4864,9 +4849,9 @@ exports[`qwik > jsx > Typescript Test > Embed 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
-  useRef,
+  useSignal,
   useStore,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export interface CustomCodeProps {
@@ -4879,9 +4864,9 @@ export const findAndRunScripts = function findAndRunScripts(
   elem
 ) {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -4919,9 +4904,9 @@ export const findAndRunScripts = function findAndRunScripts(
   }
 };
 export const CustomCode = component$((props: CustomCodeProps) => {
-  const elem = useRef();
+  const elem = useSignal<Element>();
   const state = useStore<any>({ scriptsInserted: [], scriptsRun: [] });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     findAndRunScripts(props, state, elem);
   });
 
@@ -4945,7 +4930,7 @@ exports[`qwik > jsx > Typescript Test > Form 1`] = `
   Fragment,
   component$,
   h,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
 } from \\"@builder.io/qwik\\";
@@ -5096,8 +5081,8 @@ export const onSubmit = function onSubmit(
       },
     });
 
-    if (formRef) {
-      formRef.dispatchEvent(presubmitEvent);
+    if (formRef.value) {
+      formRef.value.dispatchEvent(presubmitEvent);
 
       if (presubmitEvent.defaultPrevented) {
         return;
@@ -5155,8 +5140,8 @@ export const onSubmit = function onSubmit(
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitSuccessEvent);
+          if (formRef.value) {
+            formRef.value.dispatchEvent(submitSuccessEvent);
 
             if (submitSuccessEvent.defaultPrevented) {
               return;
@@ -5164,19 +5149,19 @@ export const onSubmit = function onSubmit(
             /* TODO: option to turn this on/off? */
 
             if (props.resetFormOnSubmit !== false) {
-              formRef.reset();
+              formRef.value.reset();
             }
           }
           /* TODO: client side route event first that can be preventDefaulted */
 
           if (props.successUrl) {
-            if (formRef) {
+            if (formRef.value) {
               const event = new CustomEvent(\\"route\\", {
                 detail: {
                   url: props.successUrl,
                 },
               });
-              formRef.dispatchEvent(event);
+              formRef.value.dispatchEvent(event);
 
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
@@ -5194,8 +5179,8 @@ export const onSubmit = function onSubmit(
           },
         });
 
-        if (formRef) {
-          formRef.dispatchEvent(submitErrorEvent);
+        if (formRef.value) {
+          formRef.value.dispatchEvent(submitErrorEvent);
 
           if (submitErrorEvent.defaultPrevented) {
             return;
@@ -5211,7 +5196,7 @@ export const onSubmit = function onSubmit(
 export const FormComponent = component$((props: FormProps) => {
   useStylesScoped$(STYLES);
 
-  const formRef = useRef();
+  const formRef = useSignal<Element>();
   const state = useStore<any>({
     formErrorMessage: \\"\\",
     formState: \\"unsubmitted\\",
@@ -5287,11 +5272,10 @@ exports[`qwik > jsx > Typescript Test > Image 1`] = `
   Slot,
   component$,
   h,
-  useCleanup$,
-  useClientEffect$,
-  useRef,
+  useSignal,
   useStore,
   useStylesScoped$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 // TODO: AMP Support?
@@ -5331,18 +5315,18 @@ export const isBrowser = function isBrowser(props, state, pictureRef) {
 export const Image = component$((props: ImageProps) => {
   useStylesScoped$(STYLES);
 
-  const pictureRef = useRef();
+  const pictureRef = useSignal<Element>();
   const state = useStore<any>({
     imageLoaded: false,
     load: false,
     scrollListener: null,
   });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     if (useLazyLoading(props, state, pictureRef)) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
+        if (pictureRef.value) {
+          const rect = pictureRef.value.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -5359,11 +5343,6 @@ export const Image = component$((props: ImageProps) => {
         passive: true,
       });
       listener();
-    }
-  });
-  useCleanup$(() => {
-    if (state.scrollListener) {
-      window.removeEventListener(\\"scroll\\", state.scrollListener);
     }
   });
 
@@ -5736,9 +5715,9 @@ exports[`qwik > jsx > Typescript Test > Stamped.io 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useStore,
   useStylesScoped$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 import { kebabCase, snakeCase } from \\"lodash\\";
@@ -5761,7 +5740,7 @@ export const SmileReviews = component$((props: SmileReviewsProps) => {
     reviews: [],
     showReviewPrompt: false,
   });
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     fetch(
       \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
         props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
@@ -6530,15 +6509,15 @@ exports[`qwik > jsx > Typescript Test > onInit & onMount 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
-  useMount$,
+  useTask$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const OnInit = component$((props: any) => {
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     console.log(\\"onMount\\");
   });
-  useMount$(() => {
+  useTask$(() => {
     console.log(\\"onInit\\");
   });
 
@@ -6550,7 +6529,7 @@ export default OnInit;
 `;
 
 exports[`qwik > jsx > Typescript Test > onInit 1`] = `
-"import { Fragment, component$, h, useMount$, useStore } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore, useTask$ } from \\"@builder.io/qwik\\";
 
 type Props = {
   name: string;
@@ -6560,7 +6539,7 @@ export const defaultValues = {
 };
 export const OnInit = component$((props: Props) => {
   const state = useStore<any>({ name: \\"\\" });
-  useMount$(() => {
+  useTask$(() => {
     state.name = defaultValues.name || props.name;
     console.log(\\"set defaults with props\\");
   });
@@ -6573,20 +6552,11 @@ export default OnInit;
 `;
 
 exports[`qwik > jsx > Typescript Test > onMount 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useCleanup$,
-  useClientEffect$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useVisibleTask$ } from \\"@builder.io/qwik\\";
 
 export const Comp = component$((props: any) => {
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     console.log(\\"Runs on mount\\");
-  });
-  useCleanup$(() => {
-    console.log(\\"Runs on unMount\\");
   });
 
   return <div></div>;
@@ -7068,11 +7038,11 @@ exports[`qwik > jsx > Typescript Test > renderContentExample 1`] = `
   Fragment,
   component$,
   h,
-  useClientEffect$,
   useContextProvider,
   useStore,
   useStylesScoped$,
   useTask$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 import RenderBlocks from \\"@dummy/RenderBlocks\\";
@@ -7106,7 +7076,7 @@ export const RenderContent = component$((props: Props) => {
       })(),
     })
   );
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     sendComponentsToVisualEditor(props.customComponents);
   });
   useTask$(({ track }) => {
@@ -8009,20 +7979,16 @@ exports[`qwik > svelte > Javascript Test > lifecycleHooks 1`] = `
   Fragment,
   component$,
   h,
-  useCleanup$,
-  useClientEffect$,
   useTask$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props) => {
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     console.log(\\"onMount\\");
   });
   useTask$(({ track }) => {
     console.log(\\"onAfterUpdate\\");
-  });
-  useCleanup$(() => {
-    console.log(\\"onDestroy\\");
   });
 
   return <div></div>;
@@ -8410,20 +8376,16 @@ exports[`qwik > svelte > Typescript Test > lifecycleHooks 1`] = `
   Fragment,
   component$,
   h,
-  useCleanup$,
-  useClientEffect$,
   useTask$,
+  useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props: any) => {
-  useClientEffect$(() => {
+  useVisibleTask$(() => {
     console.log(\\"onMount\\");
   });
   useTask$(({ track }) => {
     console.log(\\"onAfterUpdate\\");
-  });
-  useCleanup$(() => {
-    console.log(\\"onDestroy\\");
   });
 
   return <div></div>;
