@@ -1239,8 +1239,8 @@ exports[`qwik > jsx > Javascript Test > Basic Context 1`] = `
   h,
   useContext,
   useContextProvider,
-  useMount$,
   useStore,
+  useTask$,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
@@ -1258,7 +1258,7 @@ export const MyBasicComponent = component$((props) => {
     const bye = myService.method(\\"hi\\");
     console.log(bye);
   });
-  useMount$(() => {
+  useTask$(() => {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
   });
@@ -1281,8 +1281,8 @@ exports[`qwik > jsx > Javascript Test > Basic OnMount Update 1`] = `
   Fragment,
   component$,
   h,
-  useMount$,
   useStore,
+  useTask$,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
@@ -1291,7 +1291,7 @@ export const MyBasicOnMountUpdateComponent = component$((props) => {
   useVisibleTask$(() => {
     state.name = \\"PatrickJS onMount\\" + props.bye;
   });
-  useMount$(() => {
+  useTask$(() => {
     state.name = \\"PatrickJS onInit\\" + props.hi;
   });
 
@@ -3284,7 +3284,7 @@ exports[`qwik > jsx > Javascript Test > onInit & onMount 1`] = `
   Fragment,
   component$,
   h,
-  useMount$,
+  useTask$,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
@@ -3292,7 +3292,7 @@ export const OnInit = component$((props) => {
   useVisibleTask$(() => {
     console.log(\\"onMount\\");
   });
-  useMount$(() => {
+  useTask$(() => {
     console.log(\\"onInit\\");
   });
 
@@ -3304,14 +3304,14 @@ export default OnInit;
 `;
 
 exports[`qwik > jsx > Javascript Test > onInit 1`] = `
-"import { Fragment, component$, h, useMount$, useStore } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore, useTask$ } from \\"@builder.io/qwik\\";
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 export const OnInit = component$((props) => {
   const state = useStore({ name: \\"\\" });
-  useMount$(() => {
+  useTask$(() => {
     state.name = defaultValues.name || props.name;
     console.log(\\"set defaults with props\\");
   });
@@ -4217,8 +4217,8 @@ exports[`qwik > jsx > Typescript Test > Basic Context 1`] = `
   h,
   useContext,
   useContextProvider,
-  useMount$,
   useStore,
+  useTask$,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
@@ -4236,7 +4236,7 @@ export const MyBasicComponent = component$((props: any) => {
     const bye = myService.method(\\"hi\\");
     console.log(bye);
   });
-  useMount$(() => {
+  useTask$(() => {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
   });
@@ -4259,8 +4259,8 @@ exports[`qwik > jsx > Typescript Test > Basic OnMount Update 1`] = `
   Fragment,
   component$,
   h,
-  useMount$,
   useStore,
+  useTask$,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
@@ -4276,7 +4276,7 @@ export const MyBasicOnMountUpdateComponent = component$((props: Props) => {
   useVisibleTask$(() => {
     state.name = \\"PatrickJS onMount\\" + props.bye;
   });
-  useMount$(() => {
+  useTask$(() => {
     state.name = \\"PatrickJS onInit\\" + props.hi;
   });
 
@@ -6530,7 +6530,7 @@ exports[`qwik > jsx > Typescript Test > onInit & onMount 1`] = `
   Fragment,
   component$,
   h,
-  useMount$,
+  useTask$,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
@@ -6538,7 +6538,7 @@ export const OnInit = component$((props: any) => {
   useVisibleTask$(() => {
     console.log(\\"onMount\\");
   });
-  useMount$(() => {
+  useTask$(() => {
     console.log(\\"onInit\\");
   });
 
@@ -6550,7 +6550,7 @@ export default OnInit;
 `;
 
 exports[`qwik > jsx > Typescript Test > onInit 1`] = `
-"import { Fragment, component$, h, useMount$, useStore } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore, useTask$ } from \\"@builder.io/qwik\\";
 
 type Props = {
   name: string;
@@ -6560,7 +6560,7 @@ export const defaultValues = {
 };
 export const OnInit = component$((props: Props) => {
   const state = useStore<any>({ name: \\"\\" });
-  useMount$(() => {
+  useTask$(() => {
     state.name = defaultValues.name || props.name;
     console.log(\\"set defaults with props\\");
   });

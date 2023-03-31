@@ -165,7 +165,7 @@ function emitUseClientEffect(file: File, component: MitosisComponent) {
 function emitUseMount(file: File, component: MitosisComponent) {
   if (component.hooks.onInit) {
     const code = component.hooks.onInit.code;
-    file.src.emit(file.import(file.qwikModule, 'useMount$').localName, '(()=>{', code, '});');
+    file.src.emit(file.import(file.qwikModule, 'useTask$').localName, '(()=>{', code, '});');
   }
 }
 
