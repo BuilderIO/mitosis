@@ -55,7 +55,7 @@ const handleErrorOrExpression = <VisitorContextType = any>({
   }
 };
 
-export const babelTransform = <VisitorContextType = any>(
+const babelTransform = <VisitorContextType = any>(
   code: string,
   visitor?: Visitor<VisitorContextType>,
 ) => {
@@ -63,8 +63,6 @@ export const babelTransform = <VisitorContextType = any>(
     sourceFileName: 'file.tsx',
     configFile: false,
     babelrc: false,
-    // TO-DO: keep doing this if `typescript: true`
-    // presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     parserOpts: { allowReturnOutsideFunction: true },
     plugins: [
       [tsPlugin, { isTSX: true }],
@@ -73,6 +71,7 @@ export const babelTransform = <VisitorContextType = any>(
     ],
   });
 };
+
 export const babelTransformCode = <VisitorContextType = any>(
   code: string,
   visitor?: Visitor<VisitorContextType>,
@@ -147,3 +146,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
     isGetter ? replaceFunctionWithGetter : identity,
   );
 };
+
+export function convertTypeScriptToJS(code: string): string {
+  return babelTransformExpression(code, {});
+}

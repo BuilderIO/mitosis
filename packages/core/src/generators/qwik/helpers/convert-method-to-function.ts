@@ -16,7 +16,6 @@ export function convertMethodToFunction(
   let lastCh = null;
   while (idx < end) {
     const ch = code.charCodeAt(idx++);
-    // console.log(mode, code[idx - 1]);
     switch (mode) {
       case Mode.code:
         if (ch === QUOTE_DOUBLE) {

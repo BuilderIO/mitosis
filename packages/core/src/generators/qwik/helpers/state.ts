@@ -3,7 +3,7 @@ import traverse from 'traverse';
 import { File } from '../src-generator';
 import { convertMethodToFunction } from './convert-method-to-function';
 import { stableInject } from './stable-inject';
-import { convertTypeScriptToJS } from './transform-code';
+import { convertTypeScriptToJS } from '../../../helpers/babel-transform';
 
 /**
  * Stores getters and initialization map.
@@ -54,7 +54,6 @@ function emitStateMethods(
   for (const key in componentState) {
     const stateValue = componentState[key];
 
-    console.log(componentState);
     switch (stateValue?.type) {
       case 'method':
       case 'getter':
@@ -80,7 +79,6 @@ function emitStateMethods(
           code = convertTypeScriptToJS(code);
         }
         file.exportConst(functionName, 'function ' + code, true);
-        console.log(functionName, 'function ' + code);
         continue;
 
       case 'property':
