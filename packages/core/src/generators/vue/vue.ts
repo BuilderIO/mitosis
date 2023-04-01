@@ -19,7 +19,7 @@ import traverse from 'traverse';
 import { pickBy, size, uniq } from 'lodash';
 import { processHttpRequests } from '../../helpers/process-http-requests';
 import { TranspilerGenerator } from '../../types/transpiler';
-import { pipe } from 'fp-ts/lib/function';
+import { pipe, flow } from 'fp-ts/lib/function';
 import { isSlotProperty } from '../../helpers/slots';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { getOnUpdateHookName, processBinding, renameMitosisComponentsToKebabCase } from './helpers';
@@ -31,6 +31,7 @@ import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { createSingleBinding } from '../../helpers/bindings';
+import { convertTypeScriptToJS } from '../../helpers/babel-transform';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
@@ -113,7 +114,11 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'state':
               return (code) => processBinding({ code, options, json: component });
             case 'bindings':
-              return (code) => processBinding({ code, options, json: component, codeType });
+              return flow(
+                // Strip types from any JS code that ends up in the template, because Vue does not support TS code in templates.
+                convertTypeScriptToJS,
+                (code) => processBinding({ code, options, json: component, codeType }),
+              );
             case 'hooks-deps':
               return (c) => stripStateAndPropsRefs(c, { includeProps: false });
             case 'properties':
@@ -124,7 +129,11 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'hooks':
               return (code) => processBinding({ code, options, json: component });
             case 'bindings':
-              return (code) => processBinding({ code, options, json: component, codeType });
+              return flow(
+                // Strip types from any JS code that ends up in the template, because Vue does not support TS code in templates.
+                convertTypeScriptToJS,
+                (code) => processBinding({ code, options, json: component, codeType }),
+              );
             case 'properties':
             case 'hooks-deps':
               return (c) => c;
