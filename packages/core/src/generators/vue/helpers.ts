@@ -222,7 +222,7 @@ export const processBinding = ({
       (x) => (preserveGetter === false ? stripGetter(x) : x),
     );
   } catch (e) {
-    console.log('could not process bindings in ', { code });
+    console.error('could not process bindings in ', { code });
     throw e;
   }
 };

@@ -22,7 +22,7 @@ import {
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import { TranspilerGenerator } from '../../types/transpiler';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
-import { babelTransformCode } from '../../helpers/babel-transform';
+import { babelTransformCode, convertTypeScriptToJS } from '../../helpers/babel-transform';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { hasGetContext, hasSetContext } from '../helpers/context';
 import { isSlotProperty } from '../../helpers/slots';
@@ -117,6 +117,18 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     options.plugins = [
       ...(options.plugins || []),
+      // Strip types from any JS code that ends up in the template, because Svelte does not support TS code in templates.
+      CODE_PROCESSOR_PLUGIN((codeType) => {
+        switch (codeType) {
+          case 'bindings':
+          case 'properties':
+            return convertTypeScriptToJS;
+          case 'hooks':
+          case 'hooks-deps':
+          case 'state':
+            return (x) => x;
+        }
+      }),
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'hooks':
@@ -355,7 +367,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         });
       } catch (err) {
         console.warn('Could not prettify');
-        console.warn({ string: str }, err);
+        console.warn(str, err);
       }
     }
 

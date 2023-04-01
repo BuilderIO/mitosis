@@ -3,7 +3,7 @@ import traverse from 'traverse';
 import { File } from '../src-generator';
 import { convertMethodToFunction } from './convert-method-to-function';
 import { stableInject } from './stable-inject';
-import { convertTypeScriptToJS } from './transform-code';
+import { convertTypeScriptToJS } from '../../../helpers/babel-transform';
 
 /**
  * Stores getters and initialization map.

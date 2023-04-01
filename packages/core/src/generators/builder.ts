@@ -342,7 +342,6 @@ export const componentToBuilder =
       if (isBuilderElement(el)) {
         const value = subComponentMap[el.component?.name!];
         if (value) {
-          console.log('applied?');
           set(el, 'component.options.symbol.content', value);
         }
       }

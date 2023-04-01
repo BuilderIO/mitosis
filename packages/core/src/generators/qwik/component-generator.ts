@@ -17,9 +17,9 @@ import {
 import { stableInject } from './helpers/stable-inject';
 import { mergeOptions } from '../../helpers/merge-options';
 import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
-import { convertTypeScriptToJS } from './helpers/transform-code';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { replaceIdentifiers, replaceStateIdentifier } from '../../helpers/replace-identifiers';
+import { convertTypeScriptToJS } from '../../helpers/babel-transform';
 
 Error.stackTraceLimit = 9999;
 
