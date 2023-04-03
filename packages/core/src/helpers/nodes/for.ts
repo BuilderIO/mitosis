@@ -7,7 +7,7 @@ export const getForArguments = (
 ): string[] => {
   return [
     node.scope.forName || 'item',
-    node.scope.indexName,
+    node.scope.indexName || '$index',
     excludeCollectionName ? undefined : node.scope.collectionName,
   ].filter(checkIsDefined);
 };
