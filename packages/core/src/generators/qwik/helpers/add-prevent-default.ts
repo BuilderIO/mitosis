@@ -1,6 +1,6 @@
 import traverse from 'traverse';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { isMitosisNode } from '../../../helpers/is-mitosis-node';
+import { MitosisComponent } from '../../../types/mitosis-component';
 
 /**
  * Find event handlers that explicitly call .preventDefault() and

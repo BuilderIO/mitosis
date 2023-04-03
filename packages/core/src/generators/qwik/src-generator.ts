@@ -1,7 +1,7 @@
 import { format } from 'prettier/standalone';
 import { selfClosingTags } from '../../parsers/jsx';
 import { convertExportDefaultToReturn } from '../../parsers/builder';
-import { stableJSONserialize } from './stable-serialize';
+import { stableJSONserialize } from './helpers/stable-serialize';
 export interface SrcBuilderOptions {
   isPretty: boolean;
   isTypeScript: boolean;
@@ -114,8 +114,6 @@ function removeExt(filename: string): string {
   const indx = filename.lastIndexOf('.');
   return indx == -1 ? filename : filename.substr(0, indx);
 }
-
-const spaces: string[] = [''];
 
 export class SrcBuilder {
   file: File;
@@ -366,7 +364,6 @@ export class SrcBuilder {
     function emitJsxProp(key: string, value: any) {
       if (value) {
         if (key === 'innerHTML') key = 'dangerouslySetInnerHTML';
-        if (key === 'for') key = 'htmlFor';
         if (key === 'dataSet') return; // ignore
         if (self.isJSX) {
           self.emit(' ', key, '=');
@@ -485,13 +482,6 @@ function ignoreKey(key: string): boolean {
   );
 }
 
-export class Block {
-  imports: Imports;
-  constructor(imports: Imports) {
-    this.imports = imports;
-  }
-}
-
 function possiblyQuotePropertyName(key: string): any {
   return /^\w[\w\d]*$/.test(key) ? key : quote(key);
 }
@@ -576,12 +566,18 @@ function literalTagName(symbol: string | Symbol): string | Symbol {
  * it is not 100% but a good enough approximation
  */
 export function isStatement(code: string) {
+  // remove trailing `!` as it is used to mark a non-null assertion in TS
+  // it messes up the logic afterwards
+  if (code.endsWith('!')) {
+    code = code.substr(0, code.length - 1);
+  }
+
   code = code.trim();
   if (
     (code.startsWith('(') && code.endsWith(')')) ||
     (code.startsWith('{') && code.endsWith('}'))
   ) {
-    // Code starting with `(` is most likely and IFF and hence is an expression.
+    // Code starting with `(` is most likely an IFF and hence is an expression.
     return false;
   }
   const codeNoStrings = code.replace(STRING_LITERAL, 'STRING_LITERAL');

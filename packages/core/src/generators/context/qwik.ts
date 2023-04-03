@@ -9,9 +9,9 @@ export const contextToQwik =
   (options: ContextToQwikOptions = {}) =>
   ({ context }: { context: MitosisContext }): string => {
     let str = `
-  import { createContext } from '@builder.io/qwik';
+  import { createContextId } from '@builder.io/qwik';
 
-  export default createContext<any>("${context.name}")
+  export default createContextId<any>("${context.name}")
   `;
 
     if (options.format !== false) {

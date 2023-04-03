@@ -329,10 +329,10 @@ exports[`Svelte > jsx > Javascript Test > BasicRefAssignment 1`] = `
 
 exports[`Svelte > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "<script>
-  export function usePrevious<T>(value: T) {
+  export function usePrevious(value) {
     // The ref object is a generic container whose current property is mutable ...
     // ... and can hold any value, similar to an instance property on a class
-    let ref = useRef<T>(null); // Store current value in ref
+    let ref = useRef(null); // Store current value in ref
 
     onUpdate(() => {
       ref = value;
@@ -1738,7 +1738,7 @@ exports[`Svelte > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 
 exports[`Svelte > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "<script>
-  const DEFAULT_VALUES: Props = {
+  const DEFAULT_VALUES = {
     name: \\"Sami\\",
   };
 
@@ -1947,7 +1947,7 @@ exports[`Svelte > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
   const foo = () => {};
   export const a = 3;
   export const bar = () => {};
-  export function run<T>(value: T) {}
+  export function run(value) {}
 </script>
 
 <div />"
@@ -2867,7 +2867,7 @@ exports[`Svelte > jsx > Typescript Test > BasicRefAssignment 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -2991,12 +2991,12 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
     return typeof space === \\"number\\" ? space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -3045,6 +3045,7 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotHtml 1`] = `
 </script>
 
 <script lang=\\"ts\\">
+  import { JSX } from \\"../../../../jsx-runtime\\";
 </script>
 
 <div>
@@ -3066,6 +3067,8 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotJSX 1`] = `
 </script>
 
 <script lang=\\"ts\\">
+  import { JSX } from \\"../../../../jsx-runtime\\";
+
   export let attributes: Props[\\"attributes\\"];
   export let content: Props[\\"content\\"] = \\"\\";
 
@@ -3279,7 +3282,7 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
 
 <script lang=\\"ts\\">
   import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-  import { Builder, builder } from \\"@builder.io/sdk\\";
+  import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
   import { BuilderBlocks } from \\"@fake\\";
   import { set } from \\"@fake\\";
   import { get } from \\"@fake\\";
@@ -3303,7 +3306,11 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
   export let sendingMessage: FormProps[\\"sendingMessage\\"];
   export let successMessage: FormProps[\\"successMessage\\"];
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
 
     if (sendSubmissionsTo === \\"zapier\\") {
@@ -3317,16 +3324,19 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
       event.preventDefault();
       const el = event.currentTarget;
       const headers = customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -3352,7 +3362,7 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -3419,7 +3429,7 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
         sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(name || \\"\\")}\`;
       fetch(
-        sendSubmissionsTo === \\"email\\" ? formUrl : action,
+        sendSubmissionsTo === \\"email\\" ? formUrl : action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -4413,6 +4423,8 @@ exports[`Svelte > jsx > Typescript Test > className 1`] = `
 </script>
 
 <script lang=\\"ts\\">
+  import { JSX } from \\"../../../../jsx-runtime\\";
+
   let bindings = \\"a binding\\";
 </script>
 
@@ -4667,7 +4679,8 @@ exports[`Svelte > jsx > Typescript Test > import types 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  import RenderBlock from \\"./builder-render-block.raw\\";
+  import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+  import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
   export let renderContentProps: RenderContentProps[\\"renderContentProps\\"];
 
@@ -5000,19 +5013,6 @@ exports[`Svelte > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 
 exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
-  import type {
-    BuilderContextInterface,
-    RegisteredComponent,
-  } from \\"../../context/types.js\\";
-
-  import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-
-  import type { Nullable } from \\"../../types/typescript.js\\";
-
-  import type { RenderComponentProps } from \\"./render-component\\";
-
-  import type { RepeatData } from \\"./types.js\\";
-
   export type RenderBlockProps = {
     block: BuilderBlock;
     context: BuilderContextInterface;
@@ -5020,14 +5020,22 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
 </script>
 
 <script lang=\\"ts\\">
+  import {
+    BuilderContextInterface,
+    RegisteredComponent,
+  } from \\"../../context/types.js\\";
   import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
   import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
   import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
   import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
   import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+  import { BuilderBlock } from \\"../../types/builder-block.js\\";
+  import { Nullable } from \\"../../types/typescript.js\\";
   import { evaluate } from \\"../../functions/evaluate.js\\";
   import BlockStyles from \\"./block-styles.svelte\\";
   import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+  import { RenderComponentProps } from \\"./render-component.svelte\\";
+  import { RepeatData } from \\"./types.js\\";
   import RenderRepeatedBlock from \\"./render-repeated-block.svelte\\";
   import { TARGET } from \\"../../constants/target.js\\";
   import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
@@ -5172,7 +5180,7 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...context,
         state: {
@@ -5505,10 +5513,6 @@ exports[`Svelte > jsx > Typescript Test > svgComponent 1`] = `
 
 exports[`Svelte > jsx > Typescript Test > typeDependency 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
-  import type { Foo } from \\"./foo-type\\";
-
-  import type { Foo as Foo2 } from \\"./type-export\\";
-
   export type TypeDependencyProps = {
     foo: Foo;
     foo2: Foo2;
@@ -5516,6 +5520,9 @@ exports[`Svelte > jsx > Typescript Test > typeDependency 1`] = `
 </script>
 
 <script lang=\\"ts\\">
+  import { Foo } from \\"./foo-type\\";
+  import { Foo as Foo2 } from \\"./type-export.svelte\\";
+
   export let foo: TypeDependencyProps[\\"foo\\"];
 </script>
 
