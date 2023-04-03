@@ -347,6 +347,7 @@ const componentMappers: {
       },
       scope: {
         forName: block.component!.options!.repeat!.itemName,
+        indexName: '$index',
       },
       children: (block.children || []).map((child) => builderElementToMitosisNode(child, options)),
     });
@@ -474,6 +475,7 @@ export const builderElementToMitosisNode = (
         },
         scope: {
           forName: block.repeat?.itemName || 'item',
+          indexName: '$index',
         },
         children: block.children?.map((child) => builderElementToMitosisNode(child, options)) || [],
       });
@@ -491,6 +493,7 @@ export const builderElementToMitosisNode = (
         },
         scope: {
           forName: block.repeat?.itemName || 'item',
+          indexName: '$index',
         },
         children: [builderElementToMitosisNode(omit(useBlock, 'repeat'), options)],
       });

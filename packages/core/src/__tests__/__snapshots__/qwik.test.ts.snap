@@ -1445,13 +1445,8 @@ exports.Component000012OnMount = (p) => {
       class: \\"cv6ku2d builder-block\\",
     },
     (state.hits || []).map(
-      function (item, $index) {
-        const l = {
-          ...this,
-          hitsItem: item == null ? {} : item,
-          item: item,
-          $index: $index,
-        };
+      function (item) {
+        const l = { ...this, hitsItem: item == null ? {} : item, item: item };
         const state = __proxyMerge__(s, p, l);
         return h(
           \\"div\\",
@@ -1657,7 +1652,7 @@ export const MyBasicForShowComponent = component$((props) => {
 
   return (
     <div>
-      {(state.names || []).map(function (person, $index) {
+      {(state.names || []).map(function (person) {
         return person === state.name ? (
           <>
             <input
@@ -1871,7 +1866,7 @@ export const MyBasicForComponent = component$((props) => {
 
   return (
     <div>
-      {(state.names || []).map(function (person, $index) {
+      {(state.names || []).map(function (person) {
         return (
           <Fragment>
             <input
@@ -2882,7 +2877,7 @@ export const SectionStateComponent = component$((props) => {
   return (
     <>
       {state.max
-        ? (state.items || []).map(function (item, $index) {
+        ? (state.items || []).map(function (item) {
             return (
               <section
                 {...props.attributes}
@@ -4155,7 +4150,7 @@ export const RenderBlock = component$((props) => {
                 {...renderComponentProps(props, state)}
               ></state.renderComponentTag>
               {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child, $index) {
+                function (child) {
                   return (
                     <RenderBlock
                       key={\\"render-block-\\" + child.id}
@@ -4166,7 +4161,7 @@ export const RenderBlock = component$((props) => {
                 }
               )}
               {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child, $index) {
+                function (child) {
                   return (
                     <BlockStyles
                       key={\\"block-style-\\" + child.id}
@@ -4620,7 +4615,7 @@ export const MyBasicForShowComponent = component$((props: any) => {
 
   return (
     <div>
-      {(state.names || []).map(function (person, $index) {
+      {(state.names || []).map(function (person) {
         return person === state.name ? (
           <>
             <input
@@ -4848,7 +4843,7 @@ export const MyBasicForComponent = component$((props: any) => {
 
   return (
     <div>
-      {(state.names || []).map(function (person, $index) {
+      {(state.names || []).map(function (person) {
         return (
           <Fragment>
             <input
@@ -5997,7 +5992,7 @@ export const SectionStateComponent = component$((props: SectionProps) => {
   return (
     <>
       {state.max
-        ? (state.items || []).map(function (item, $index) {
+        ? (state.items || []).map(function (item) {
             return (
               <section
                 {...props.attributes}
@@ -7443,7 +7438,7 @@ export const RenderBlock = component$((props: RenderBlockProps) => {
                 {...renderComponentProps(props, state)}
               ></state.renderComponentTag>
               {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child, $index) {
+                function (child) {
                   return (
                     <RenderBlock
                       key={\\"render-block-\\" + child.id}
@@ -7454,7 +7449,7 @@ export const RenderBlock = component$((props: RenderBlockProps) => {
                 }
               )}
               {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child, $index) {
+                function (child) {
                   return (
                     <BlockStyles
                       key={\\"block-style-\\" + child.id}
@@ -8448,7 +8443,7 @@ export const MyComponent = component$((props) => {
 
   return (
     <ul>
-      {(state.numbers || []).map(function (num, $index) {
+      {(state.numbers || []).map(function (num) {
         return <li>{num}</li>;
       })}
     </ul>
@@ -8845,7 +8840,7 @@ export const MyComponent = component$((props: any) => {
 
   return (
     <ul>
-      {(state.numbers || []).map(function (num, $index) {
+      {(state.numbers || []).map(function (num) {
         return <li>{num}</li>;
       })}
     </ul>
@@ -9578,12 +9573,11 @@ export const TodosOnMount = (p) => {
       ) : null}
       <ul class=\\"todo-list\\">
         {(todosState.todos || []).map(
-          function (todo, $index) {
+          function (todo) {
             const l = {
               ...this,
               todosItem: todo == null ? {} : todo,
               todo: todo,
-              $index: $index,
             };
             const state = __proxyMerge__(s, p, l);
             return <Todo todo={todo}></Todo>;
