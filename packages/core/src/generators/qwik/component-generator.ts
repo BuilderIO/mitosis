@@ -128,7 +128,8 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
             css = emitUseStyles(file, component);
             emitUseContext(file, component);
             emitUseRef(file, component);
-            hasState && emitUseStore(file, state);
+            hasState &&
+              emitUseStore({ file, stateInit: state, isDeep: metadata?.qwik?.hasDeepStore });
             emitUseComputed(file, component);
             emitUseContextProvider(file, component);
             emitUseClientEffect(file, component);
