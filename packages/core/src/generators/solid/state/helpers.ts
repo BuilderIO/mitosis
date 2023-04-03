@@ -5,7 +5,7 @@ import { ToSolidOptions } from '../types';
 import { flow, identity } from 'fp-ts/lib/function';
 import { transformStateSetters } from '../../../helpers/transform-state-setters';
 import { capitalize } from '../../../helpers/capitalize';
-import { replaceStateIdentifier } from 'src/helpers/replace-identifiers';
+import { replaceStateIdentifier } from '../../../helpers/replace-identifiers';
 
 export const getStateSetterName = (stateName: string) => `set${capitalize(stateName)}`;
 
