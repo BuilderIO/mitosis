@@ -17,6 +17,7 @@ import {
 } from './src-generator';
 import { stableJSONserialize } from './helpers/stable-serialize';
 import { collectStyles, CssStyles, renderStyles } from './helpers/styles';
+import { DIRECTIVES } from './directives';
 
 export type QwikOptions = {
   qwikLib?: string;
@@ -144,6 +145,8 @@ export function addComponent(
     fileSet.med.import(fileSet.med.qwikModule, 'h');
     fileSet.med.exportConst(name, code, true);
   });
+  fileSet.low.exportConst('__proxyMerge__', DIRECTIVES['__proxyMerge__'], true);
+  fileSet.high.exportConst('__proxyMerge__', DIRECTIVES['__proxyMerge__'], true);
 }
 
 function generateStyles(fromFile: File, dstFile: File, symbol: string, scoped: boolean): EmitFn {
@@ -174,11 +177,20 @@ function addBuilderBlockClass(children: MitosisNode[]) {
 
 export function renderUseLexicalScope(file: File) {
   return function (this: SrcBuilder) {
-    return this.emit(
-      'const state=',
-      file.import(file.qwikModule, 'useLexicalScope').localName,
-      '()[0]',
-    );
+    if (this.file.options.isBuilder) {
+      return this.emit(
+        'const [s,p,l]=',
+        file.import(file.qwikModule, 'useLexicalScope').localName,
+        '();',
+        'const state=__proxyMerge__(s,p,l);',
+      );
+    } else {
+      return this.emit(
+        'const state=',
+        file.import(file.qwikModule, 'useLexicalScope').localName,
+        '()[0]',
+      );
+    }
   };
 }
 
@@ -202,9 +214,9 @@ function addComponentOnMount(
     component.inputs.forEach((input) => {
       input.defaultValue !== undefined &&
         inputInitializer.push(
-          'if(!state.hasOwnProperty("',
+          'if(!s.hasOwnProperty("',
           input.name,
-          '"))state.',
+          '"))s.',
           input.name,
           '=',
           stableJSONserialize(input.defaultValue),
@@ -214,17 +226,19 @@ function addComponentOnMount(
   }
   componentFile.exportConst(componentName + 'OnMount', function (this: SrcBuilder) {
     this.emit(
-      arrowFnValue(['props'], () =>
+      arrowFnValue(['p'], () =>
         this.emit(
           '{',
-          'const state=',
+          'const s=',
           componentFile.import(componentFile.qwikModule, 'useStore').localName,
           '(()=>{',
-          'const state = Object.assign({},props,typeof __STATE__==="object"?__STATE__[props.serverStateId]:undefined);',
+          'const state=structuredClone(typeof __STATE__==="object"?__STATE__[p.serverStateId]:{});',
           ...inputInitializer,
           inlineCode(component.hooks.onMount?.code),
           'return state;',
-          '});',
+          '},{deep:true});',
+          'const l={};',
+          'const state=__proxyMerge__(s,p,l);',
           useStyles,
           onRenderEmit,
           ';}',

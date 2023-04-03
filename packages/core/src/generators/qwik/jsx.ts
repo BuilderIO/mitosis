@@ -66,14 +66,11 @@ export function renderJSXNodes(
           });
           this.emit(directive(child, blockFn));
           !this.isJSX && this.emit(',');
+          includedHelperDirectives(directive.toString(), directives);
         } else {
           if (typeof directive == 'string') {
             directives.set(childName, directive);
-            Array.from(directive.matchAll(/(__[^_]+__)/g)).forEach((match) => {
-              const name = match[0];
-              const code = DIRECTIVES[name];
-              typeof code == 'string' && directives.set(name, code);
-            });
+            includedHelperDirectives(directive, directives);
             if (file.module !== 'med' && file.imports.hasImport(childName)) {
               file.import('./med.js', childName);
             }
@@ -139,6 +136,14 @@ export function renderJSXNodes(
   };
 }
 
+function includedHelperDirectives(directive: string, directives: Map<string, string>) {
+  Array.from(directive.matchAll(/(__[\w]+__)/g)).forEach((match) => {
+    const name = match[0];
+    const code = DIRECTIVES[name];
+    typeof code == 'string' && directives.set(name, code);
+  });
+}
+
 function isSymbol(name: string): boolean {
   return name.charAt(0) == name.charAt(0).toUpperCase();
 }
@@ -200,7 +205,7 @@ function rewriteHandlers(
         bindingExpr = invoke(file.import(file.qwikModule, 'qrl'), [
           quote(file.qrlPrefix + 'high.js'),
           quote(handlerBlock),
-          '[state]',
+          file.options.isBuilder ? '[s,p,l]' : '[state]',
         ]) as any;
       } else if (symbolBindings && key.startsWith('symbol.data.')) {
         symbolBindings[lastProperty(key)] = bindingExpr;

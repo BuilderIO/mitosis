@@ -33,25 +33,32 @@ export const DIRECTIVES: Record<
         this.isBuilder && this.emit('(('), this.emit('function(', forArgs, '){');
         if (this.isBuilder) {
           this.emit(
-            'var state=Object.assign({},this,{',
+            'const l={...this,',
             iteratorProperty(expr),
             ':',
             forName,
             '==null?{}:',
             forName,
-            '});',
+            ',',
+            () =>
+              forArgs.forEach((arg) => {
+                this.emit(arg, ':', arg, ',');
+              }),
+            '};',
           );
+          this.emit('const state = __proxyMerge__(s,p,l);');
         }
         this.emit('return(');
         blockFn();
         this.emit(');}');
-        this.isBuilder && this.emit(').bind(state))');
+        this.isBuilder && this.emit(').bind(l))');
         this.emit(')');
       });
     },
   Image: minify`${Image}`,
   CoreButton: minify`${CoreButton}`,
   __passThroughProps__: minify`${__passThroughProps__}`,
+  __proxyMerge__: minify`${__proxyMerge__}`,
 };
 
 declare const h: (name: string, props: Record<string, any>, children?: any[]) => any;
@@ -177,4 +184,22 @@ function CoreButton(props: {
     class: props.class,
   };
   return h(hasLink ? 'a' : props.tagName$ || 'span', __passThroughProps__(hProps, props));
+}
+
+function __proxyMerge__(state: any, props: any, local: any) {
+  return new Proxy(state, {
+    get: (obj: any, prop: any) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else if (props && prop in props) {
+        return props[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj: any, prop: any, value: any) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
 }
