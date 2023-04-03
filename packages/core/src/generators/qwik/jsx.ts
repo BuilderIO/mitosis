@@ -191,11 +191,11 @@ function rewriteHandlers(
     if (Object.prototype.hasOwnProperty.call(bindings, key)) {
       const bindingValue = bindings[key]!;
       let bindingExpr: string = bindingValue.code;
-      let handlerBlock: string | undefined;
+      const handlerBlock = handlers.get(bindingExpr);
 
       if (key == 'css') {
         continue;
-      } else if ((handlerBlock = handlers.get(bindingExpr))) {
+      } else if (handlerBlock) {
         key = `${key}$`;
         bindingExpr = invoke(file.import(file.qwikModule, 'qrl'), [
           quote(file.qrlPrefix + 'high.js'),

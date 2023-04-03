@@ -446,7 +446,7 @@ export class Symbol {
 export class Imports {
   imports: Map<string, Map<string, Symbol>> = new Map();
 
-  get(moduleName: string, symbolName: string, as?: string) {
+  get(moduleName: string, symbolName: string, asVar?: string) {
     let importSymbols = this.imports.get(moduleName);
     if (!importSymbols) {
       importSymbols = new Map();
@@ -454,7 +454,7 @@ export class Imports {
     }
     let symbol = importSymbols.get(symbolName);
     if (!symbol) {
-      symbol = new Symbol(symbolName, as || symbolName);
+      symbol = new Symbol(symbolName, asVar || symbolName);
       importSymbols.set(symbolName, symbol);
     }
     return symbol;

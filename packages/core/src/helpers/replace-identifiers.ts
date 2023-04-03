@@ -164,3 +164,9 @@ export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
     throw err;
   }
 };
+
+export const replaceStateIdentifier = (to: ReplaceArgs['to']) => (code: string) =>
+  replaceIdentifiers({ code, from: 'state', to });
+
+export const replacePropsIdentifier = (to: ReplaceArgs['to']) => (code: string) =>
+  replaceIdentifiers({ code, from: 'props', to });

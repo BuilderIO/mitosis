@@ -102,6 +102,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'state':
+          case 'dynamic-jsx-elements':
             return (c) => c;
           case 'bindings':
           case 'hooks':

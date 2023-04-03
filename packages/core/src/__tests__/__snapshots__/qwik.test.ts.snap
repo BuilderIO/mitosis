@@ -1706,17 +1706,23 @@ export default ContentSlotCode;
 exports[`qwik > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "import { Slot } from \\"./med.js\\";
 
-import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
+import {
+  Fragment,
+  Slot,
+  component$,
+  h,
+  useComputed$,
+  useStore,
+} from \\"@builder.io/qwik\\";
 
-export const cls = function cls(props, state) {
-  return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
-};
 export const show = function show(props, state) {
   props.slotContent ? 1 : \\"\\";
 };
 export const ContentSlotJsxCode = component$((props) => {
   const state = useStore({ name: \\"king\\", showContent: false });
-
+  const cls = useComputed$(() => {
+    return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
+  });
   return (
     <>
       {props.slotReference ? (
@@ -1725,7 +1731,7 @@ export const ContentSlotJsxCode = component$((props) => {
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
           onClick$={(event) => show(props, state)}
-          class={props.slotContent ? \`\${state.name}-content\` : \\"\\"}
+          class={cls.value}
         >
           {state.showContent && props.slotContent ? (
             <Slot name=\\"content\\">{props.content}</Slot>
@@ -1905,6 +1911,7 @@ exports[`qwik > jsx > Javascript Test > Form 1`] = `
   Fragment,
   component$,
   h,
+  useComputed$,
   useSignal,
   useStore,
   useStylesScoped$,
@@ -1919,9 +1926,6 @@ import {
   set,
 } from \\"@fake\\";
 
-export const submissionState = function submissionState(props, state, formRef) {
-  return (Builder.isEditing && props.previewState) || state.formState;
-};
 export const onSubmit = function onSubmit(props, state, formRef, event) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
@@ -2144,7 +2148,9 @@ export const FormComponent = component$((props) => {
     formState: \\"unsubmitted\\",
     responseData: null,
   });
-
+  const submissionState = useComputed$(() => {
+    return (Builder.isEditing && props.previewState) || state.formState;
+  });
   return (
     <form
       validate={props.validate}
@@ -2168,25 +2174,24 @@ export const FormComponent = component$((props) => {
             );
           })
         : null}
-      {submissionState(props, state, formRef) === \\"error\\" ? (
+      {submissionState.value === \\"error\\" ? (
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
           blocks={props.errorMessage}
         ></BuilderBlocks>
       ) : null}
-      {submissionState(props, state, formRef) === \\"sending\\" ? (
+      {submissionState.value === \\"sending\\" ? (
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
           blocks={props.sendingMessage}
         ></BuilderBlocks>
       ) : null}
-      {submissionState(props, state, formRef) === \\"error\\" &&
-      state.responseData ? (
+      {submissionState.value === \\"error\\" && state.responseData ? (
         <pre class=\\"builder-form-error-text pre-FormComponent\\">
           {JSON.stringify(state.responseData, null, 2)}
         </pre>
       ) : null}
-      {submissionState(props, state, formRef) === \\"success\\" ? (
+      {submissionState.value === \\"success\\" ? (
         <BuilderBlocks
           dataPath=\\"successMessage\\"
           blocks={props.successMessage}
@@ -3494,107 +3499,101 @@ import RenderComponentWithContext from \\"./render-component-with-context\\";
 
 import RenderRepeatedBlock from \\"./render-repeated-block\\";
 
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
 
-export const component = function component(props, state) {
-  const componentName = getProcessedBlock({
-    block: props.block,
-    state: props.context.state,
-    context: props.context.context,
-    shouldEvaluateBindings: false,
-  }).component?.name;
+export const RenderBlock = component$((props) => {
+  const state = {};
+  const component = useComputed$(() => {
+    const componentName = getProcessedBlock({
+      block: props.block,
+      state: props.context.state,
+      context: props.context.context,
+      shouldEvaluateBindings: false,
+    }).component?.name;
 
-  if (!componentName) {
-    return null;
-  }
+    if (!componentName) {
+      return null;
+    }
 
-  const ref = props.context.registeredComponents[componentName];
+    const ref = props.context.registeredComponents[componentName];
 
-  if (!ref) {
-    // TODO: Public doc page with more info about this message
-    console.warn(\`
+    if (!ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
           Could not find a registered component named \\"\${componentName}\\". 
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
-    return undefined;
-  } else {
-    return ref;
-  }
-};
-export const tag = function tag(props, state) {
-  return getBlockTag(useBlock(props, state));
-};
-export const useBlock = function useBlock(props, state) {
-  return repeatItemData(props, state)
-    ? props.block
-    : getProcessedBlock({
-        block: props.block,
-        state: props.context.state,
-        context: props.context.context,
-        shouldEvaluateBindings: true,
-      });
-};
-export const actions = function actions(props, state) {
-  return getBlockActions({
-    block: useBlock(props, state),
-    state: props.context.state,
-    context: props.context.context,
+      return undefined;
+    } else {
+      return ref;
+    }
   });
-};
-export const attributes = function attributes(props, state) {
-  const blockProperties = getBlockProperties(useBlock(props, state));
-  return {
-    ...blockProperties,
-    ...(TARGET === \\"reactNative\\"
-      ? {
-          style: getReactNativeBlockStyles({
-            block: useBlock(props, state),
-            context: props.context,
-            blockStyles: blockProperties.style,
-          }),
-        }
-      : {}),
-  };
-};
-export const shouldWrap = function shouldWrap(props, state) {
-  return !component(props, state)?.noWrap;
-};
-export const renderComponentProps = function renderComponentProps(
-  props,
-  state
-) {
-  return {
-    blockChildren: useChildren(props, state),
-    componentRef: component(props, state)?.component,
-    componentOptions: {
-      ...getBlockComponentOptions(useBlock(props, state)),
+  const tag = useComputed$(() => {
+    return getBlockTag(useBlock.value);
+  });
+  const useBlock = useComputed$(() => {
+    return repeatItemData.value
+      ? props.block
+      : getProcessedBlock({
+          block: props.block,
+          state: props.context.state,
+          context: props.context.context,
+          shouldEvaluateBindings: true,
+        });
+  });
+  const actions = useComputed$(() => {
+    return getBlockActions({
+      block: useBlock.value,
+      state: props.context.state,
+      context: props.context.context,
+    });
+  });
+  const attributes = useComputed$(() => {
+    const blockProperties = getBlockProperties(useBlock.value);
+    return {
+      ...blockProperties,
+      ...(TARGET === \\"reactNative\\"
+        ? {
+            style: getReactNativeBlockStyles({
+              block: useBlock.value,
+              context: props.context,
+              blockStyles: blockProperties.style,
+            }),
+          }
+        : {}),
+    };
+  });
+  const shouldWrap = useComputed$(() => {
+    return !component.value?.noWrap;
+  });
+  const renderComponentProps = useComputed$(() => {
+    return {
+      blockChildren: useChildren.value,
+      componentRef: component.value?.component,
+      componentOptions: {
+        ...getBlockComponentOptions(useBlock.value),
 
-      /**
-       * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-       * they are provided to the component itself directly.
-       */
-      ...(shouldWrap(props, state)
-        ? {}
-        : {
-            attributes: {
-              ...attributes(props, state),
-              ...actions(props, state),
-            },
-          }),
-      customBreakpoints: childrenContext(props, state)?.content?.meta
-        ?.breakpoints,
-    },
-    context: childrenContext(props, state),
-  };
-};
-export const useChildren = function useChildren(props, state) {
-  // TO-DO: When should \`canHaveChildren\` dictate rendering?
-  // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-  // but still receive and need to render children.
-  // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
-  return useBlock(props, state).children ?? [];
-};
-export const childrenWithoutParentComponent =
-  function childrenWithoutParentComponent(props, state) {
+        /**
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
+         */
+        ...(shouldWrap.value
+          ? {}
+          : {
+              attributes: { ...attributes.value, ...actions.value },
+            }),
+        customBreakpoints: childrenContext.value?.content?.meta?.breakpoints,
+      },
+      context: childrenContext.value,
+    };
+  });
+  const useChildren = useComputed$(() => {
+    // TO-DO: When should \`canHaveChildren\` dictate rendering?
+    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+    // but still receive and need to render children.
+    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
+    return useBlock.value.children ?? [];
+  });
+  const childrenWithoutParentComponent = useComputed$(() => {
     /**
      * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
      * we render them outside of \`componentRef\`.
@@ -3602,96 +3601,89 @@ export const childrenWithoutParentComponent =
      * blocks, and the children will be repeated within those blocks.
      */
     const shouldRenderChildrenOutsideRef =
-      !component(props, state)?.component && !repeatItemData(props, state);
-    return shouldRenderChildrenOutsideRef ? useChildren(props, state) : [];
-  };
-export const repeatItemData = function repeatItemData(props, state) {
-  /**
-   * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-   * which will not work if there is a repeat.
-   */
-  const { repeat, ...blockWithoutRepeat } = props.block;
-
-  if (!repeat?.collection) {
-    return undefined;
-  }
-
-  const itemsArray = evaluate({
-    code: repeat.collection,
-    state: props.context.state,
-    context: props.context.context,
+      !component.value?.component && !repeatItemData.value;
+    return shouldRenderChildrenOutsideRef ? useChildren.value : [];
   });
+  const repeatItemData = useComputed$(() => {
+    /**
+     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
+     * which will not work if there is a repeat.
+     */
+    const { repeat, ...blockWithoutRepeat } = props.block;
 
-  if (!Array.isArray(itemsArray)) {
-    return undefined;
-  }
+    if (!repeat?.collection) {
+      return undefined;
+    }
 
-  const collectionName = repeat.collection.split(\\".\\").pop();
-  const itemNameToUse =
-    repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-  const repeatArray = itemsArray.map((item, index) => ({
-    context: {
-      ...props.context,
-      state: {
-        ...props.context.state,
-        $index: index,
-        $item: item,
-        [itemNameToUse]: item,
-        [\`$\${itemNameToUse}Index\`]: index,
+    const itemsArray = evaluate({
+      code: repeat.collection,
+      state: props.context.state,
+      context: props.context.context,
+    });
+
+    if (!Array.isArray(itemsArray)) {
+      return undefined;
+    }
+
+    const collectionName = repeat.collection.split(\\".\\").pop();
+    const itemNameToUse =
+      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+    const repeatArray = itemsArray.map((item, index) => ({
+      context: {
+        ...props.context,
+        state: {
+          ...props.context.state,
+          $index: index,
+          $item: item,
+          [itemNameToUse]: item,
+          [\`$\${itemNameToUse}Index\`]: index,
+        },
       },
-    },
-    block: blockWithoutRepeat,
-  }));
-  return repeatArray;
-};
-export const inheritedTextStyles = function inheritedTextStyles(props, state) {
-  if (TARGET !== \\"reactNative\\") {
-    return {};
-  }
-
-  const styles = getReactNativeBlockStyles({
-    block: useBlock(props, state),
-    context: props.context,
-    blockStyles: attributes(props, state).style,
+      block: blockWithoutRepeat,
+    }));
+    return repeatArray;
   });
-  return extractTextStyles(styles);
-};
-export const childrenContext = function childrenContext(props, state) {
-  return {
-    apiKey: props.context.apiKey,
-    state: props.context.state,
-    content: props.context.content,
-    context: props.context.context,
-    registeredComponents: props.context.registeredComponents,
-    inheritedStyles: inheritedTextStyles(props, state),
-  };
-};
-export const renderComponentTag = function renderComponentTag(props, state) {
-  if (TARGET === \\"reactNative\\") {
-    return RenderComponentWithContext;
-  } else if (TARGET === \\"vue3\\") {
-    // vue3 expects a string for the component tag
-    return \\"RenderComponent\\";
-  } else {
-    return RenderComponent;
-  }
-};
-export const RenderBlock = component$((props) => {
-  const state = {};
+  const inheritedTextStyles = useComputed$(() => {
+    if (TARGET !== \\"reactNative\\") {
+      return {};
+    }
 
+    const styles = getReactNativeBlockStyles({
+      block: useBlock.value,
+      context: props.context,
+      blockStyles: attributes.value.style,
+    });
+    return extractTextStyles(styles);
+  });
+  const childrenContext = useComputed$(() => {
+    return {
+      apiKey: props.context.apiKey,
+      state: props.context.state,
+      content: props.context.content,
+      context: props.context.context,
+      registeredComponents: props.context.registeredComponents,
+      inheritedStyles: inheritedTextStyles.value,
+    };
+  });
+  const renderComponentTag = useComputed$(() => {
+    if (TARGET === \\"reactNative\\") {
+      return RenderComponentWithContext;
+    } else if (TARGET === \\"vue3\\") {
+      // vue3 expects a string for the component tag
+      return \\"RenderComponent\\";
+    } else {
+      return RenderComponent;
+    }
+  });
   return (
     <>
-      {shouldWrap(props, state) ? (
+      {shouldWrap.value ? (
         <>
-          {isEmptyHtmlElement(tag(props, state)) ? (
-            <state.tag
-              {...attributes(props, state)}
-              {...actions(props, state)}
-            ></state.tag>
+          {isEmptyHtmlElement(tag.value) ? (
+            <tag.value {...attributes.value} {...actions.value}></tag.value>
           ) : null}
-          {!isEmptyHtmlElement(tag(props, state)) &&
-          repeatItemData(props, state)
-            ? (repeatItemData(props, state) || []).map(function (data, index) {
+          {!isEmptyHtmlElement(tag.value) && repeatItemData.value
+            ? (repeatItemData.value || []).map(function (data, index) {
                 return (
                   <RenderRepeatedBlock
                     key={index}
@@ -3701,41 +3693,40 @@ export const RenderBlock = component$((props) => {
                 );
               })
             : null}
-          {!isEmptyHtmlElement(tag(props, state)) &&
-          !repeatItemData(props, state) ? (
-            <state.tag {...attributes(props, state)} {...actions(props, state)}>
-              <state.renderComponentTag
-                {...renderComponentProps(props, state)}
-              ></state.renderComponentTag>
-              {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child) {
-                  return (
-                    <RenderBlock
-                      key={\\"render-block-\\" + child.id}
-                      block={child}
-                      context={childrenContext(props, state)}
-                    ></RenderBlock>
-                  );
-                }
-              )}
-              {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child) {
-                  return (
-                    <BlockStyles
-                      key={\\"block-style-\\" + child.id}
-                      block={child}
-                      context={childrenContext(props, state)}
-                    ></BlockStyles>
-                  );
-                }
-              )}
-            </state.tag>
+          {!isEmptyHtmlElement(tag.value) && !repeatItemData.value ? (
+            <tag.value {...attributes.value} {...actions.value}>
+              <renderComponentTag.value
+                {...renderComponentProps.value}
+              ></renderComponentTag.value>
+              {(childrenWithoutParentComponent.value || []).map(function (
+                child
+              ) {
+                return (
+                  <RenderBlock
+                    key={\\"render-block-\\" + child.id}
+                    block={child}
+                    context={childrenContext.value}
+                  ></RenderBlock>
+                );
+              })}
+              {(childrenWithoutParentComponent.value || []).map(function (
+                child
+              ) {
+                return (
+                  <BlockStyles
+                    key={\\"block-style-\\" + child.id}
+                    block={child}
+                    context={childrenContext.value}
+                  ></BlockStyles>
+                );
+              })}
+            </tag.value>
           ) : null}
         </>
       ) : (
-        <state.renderComponentTag
-          {...renderComponentProps(props, state)}
-        ></state.renderComponentTag>
+        <renderComponentTag.value
+          {...renderComponentProps.value}
+        ></renderComponentTag.value>
       )}
     </>
   );
@@ -4720,20 +4711,26 @@ exports[`qwik > jsx > Typescript Test > ContentSlotJSX 1`] = `
 
 import { Slot } from \\"./med.js\\";
 
-import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
+import {
+  Fragment,
+  Slot,
+  component$,
+  h,
+  useComputed$,
+  useStore,
+} from \\"@builder.io/qwik\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
-};
-export const cls = function cls(props, state) {
-  return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
 };
 export const show = function show(props, state) {
   props.slotContent ? 1 : \\"\\";
 };
 export const ContentSlotJsxCode = component$((props: Props) => {
   const state = useStore<any>({ name: \\"king\\", showContent: false });
-
+  const cls = useComputed$(() => {
+    return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
+  });
   return (
     <>
       {props.slotReference ? (
@@ -4742,7 +4739,7 @@ export const ContentSlotJsxCode = component$((props: Props) => {
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
           onClick$={(event) => show(props, state)}
-          class={props.slotContent ? \`\${state.name}-content\` : \\"\\"}
+          class={cls.value}
         >
           {state.showContent && props.slotContent ? (
             <Slot name=\\"content\\">{props.content}</Slot>
@@ -4930,6 +4927,7 @@ exports[`qwik > jsx > Typescript Test > Form 1`] = `
   Fragment,
   component$,
   h,
+  useComputed$,
   useSignal,
   useStore,
   useStylesScoped$,
@@ -4967,9 +4965,6 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-export const submissionState = function submissionState(props, state, formRef) {
-  return (Builder.isEditing && props.previewState) || state.formState;
-};
 export const onSubmit = function onSubmit(
   props,
   state,
@@ -5202,7 +5197,9 @@ export const FormComponent = component$((props: FormProps) => {
     formState: \\"unsubmitted\\",
     responseData: null,
   });
-
+  const submissionState = useComputed$(() => {
+    return (Builder.isEditing && props.previewState) || state.formState;
+  });
   return (
     <form
       validate={props.validate}
@@ -5226,25 +5223,24 @@ export const FormComponent = component$((props: FormProps) => {
             );
           })
         : null}
-      {submissionState(props, state, formRef) === \\"error\\" ? (
+      {submissionState.value === \\"error\\" ? (
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
           blocks={props.errorMessage!}
         ></BuilderBlocks>
       ) : null}
-      {submissionState(props, state, formRef) === \\"sending\\" ? (
+      {submissionState.value === \\"sending\\" ? (
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
           blocks={props.sendingMessage!}
         ></BuilderBlocks>
       ) : null}
-      {submissionState(props, state, formRef) === \\"error\\" &&
-      state.responseData ? (
+      {submissionState.value === \\"error\\" && state.responseData ? (
         <pre class=\\"builder-form-error-text pre-FormComponent\\">
           {JSON.stringify(state.responseData, null, 2)}
         </pre>
       ) : null}
-      {submissionState(props, state, formRef) === \\"success\\" ? (
+      {submissionState.value === \\"success\\" ? (
         <BuilderBlocks
           dataPath=\\"successMessage\\"
           blocks={props.successMessage!}
@@ -6778,111 +6774,105 @@ import RenderRepeatedBlock from \\"./render-repeated-block\\";
 
 import { RepeatData } from \\"./types.js\\";
 
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
 
 export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
 };
-export const component = function component(props, state) {
-  const componentName = getProcessedBlock({
-    block: props.block,
-    state: props.context.state,
-    context: props.context.context,
-    shouldEvaluateBindings: false,
-  }).component?.name;
+export const RenderBlock = component$((props: RenderBlockProps) => {
+  const state: any = {};
+  const component = useComputed$(() => {
+    const componentName = getProcessedBlock({
+      block: props.block,
+      state: props.context.state,
+      context: props.context.context,
+      shouldEvaluateBindings: false,
+    }).component?.name;
 
-  if (!componentName) {
-    return null;
-  }
+    if (!componentName) {
+      return null;
+    }
 
-  const ref = props.context.registeredComponents[componentName];
+    const ref = props.context.registeredComponents[componentName];
 
-  if (!ref) {
-    // TODO: Public doc page with more info about this message
-    console.warn(\`
+    if (!ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
           Could not find a registered component named \\"\${componentName}\\". 
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
-    return undefined;
-  } else {
-    return ref;
-  }
-};
-export const tag = function tag(props, state) {
-  return getBlockTag(useBlock(props, state));
-};
-export const useBlock = function useBlock(props, state) {
-  return repeatItemData(props, state)
-    ? props.block
-    : getProcessedBlock({
-        block: props.block,
-        state: props.context.state,
-        context: props.context.context,
-        shouldEvaluateBindings: true,
-      });
-};
-export const actions = function actions(props, state) {
-  return getBlockActions({
-    block: useBlock(props, state),
-    state: props.context.state,
-    context: props.context.context,
+      return undefined;
+    } else {
+      return ref;
+    }
   });
-};
-export const attributes = function attributes(props, state) {
-  const blockProperties = getBlockProperties(useBlock(props, state));
-  return {
-    ...blockProperties,
-    ...(TARGET === \\"reactNative\\"
-      ? {
-          style: getReactNativeBlockStyles({
-            block: useBlock(props, state),
-            context: props.context,
-            blockStyles: blockProperties.style,
-          }),
-        }
-      : {}),
-  };
-};
-export const shouldWrap = function shouldWrap(props, state) {
-  return !component(props, state)?.noWrap;
-};
-export const renderComponentProps = function renderComponentProps(
-  props,
-  state
-) {
-  return {
-    blockChildren: useChildren(props, state),
-    componentRef: component(props, state)?.component,
-    componentOptions: {
-      ...getBlockComponentOptions(useBlock(props, state)),
+  const tag = useComputed$(() => {
+    return getBlockTag(useBlock.value);
+  });
+  const useBlock = useComputed$(() => {
+    return repeatItemData.value
+      ? props.block
+      : getProcessedBlock({
+          block: props.block,
+          state: props.context.state,
+          context: props.context.context,
+          shouldEvaluateBindings: true,
+        });
+  });
+  const actions = useComputed$(() => {
+    return getBlockActions({
+      block: useBlock.value,
+      state: props.context.state,
+      context: props.context.context,
+    });
+  });
+  const attributes = useComputed$(() => {
+    const blockProperties = getBlockProperties(useBlock.value);
+    return {
+      ...blockProperties,
+      ...(TARGET === \\"reactNative\\"
+        ? {
+            style: getReactNativeBlockStyles({
+              block: useBlock.value,
+              context: props.context,
+              blockStyles: blockProperties.style,
+            }),
+          }
+        : {}),
+    };
+  });
+  const shouldWrap = useComputed$(() => {
+    return !component.value?.noWrap;
+  });
+  const renderComponentProps = useComputed$(() => {
+    return {
+      blockChildren: useChildren.value,
+      componentRef: component.value?.component,
+      componentOptions: {
+        ...getBlockComponentOptions(useBlock.value),
 
-      /**
-       * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-       * they are provided to the component itself directly.
-       */
-      ...(shouldWrap(props, state)
-        ? {}
-        : {
-            attributes: {
-              ...attributes(props, state),
-              ...actions(props, state),
-            },
-          }),
-      customBreakpoints: childrenContext(props, state)?.content?.meta
-        ?.breakpoints,
-    },
-    context: childrenContext(props, state),
-  };
-};
-export const useChildren = function useChildren(props, state) {
-  // TO-DO: When should \`canHaveChildren\` dictate rendering?
-  // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-  // but still receive and need to render children.
-  // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
-  return useBlock(props, state).children ?? [];
-};
-export const childrenWithoutParentComponent =
-  function childrenWithoutParentComponent(props, state) {
+        /**
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
+         */
+        ...(shouldWrap.value
+          ? {}
+          : {
+              attributes: { ...attributes.value, ...actions.value },
+            }),
+        customBreakpoints: childrenContext.value?.content?.meta?.breakpoints,
+      },
+      context: childrenContext.value,
+    };
+  });
+  const useChildren = useComputed$(() => {
+    // TO-DO: When should \`canHaveChildren\` dictate rendering?
+    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+    // but still receive and need to render children.
+    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
+    return useBlock.value.children ?? [];
+  });
+  const childrenWithoutParentComponent = useComputed$(() => {
     /**
      * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
      * we render them outside of \`componentRef\`.
@@ -6890,96 +6880,89 @@ export const childrenWithoutParentComponent =
      * blocks, and the children will be repeated within those blocks.
      */
     const shouldRenderChildrenOutsideRef =
-      !component(props, state)?.component && !repeatItemData(props, state);
-    return shouldRenderChildrenOutsideRef ? useChildren(props, state) : [];
-  };
-export const repeatItemData = function repeatItemData(props, state) {
-  /**
-   * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-   * which will not work if there is a repeat.
-   */
-  const { repeat, ...blockWithoutRepeat } = props.block;
-
-  if (!repeat?.collection) {
-    return undefined;
-  }
-
-  const itemsArray = evaluate({
-    code: repeat.collection,
-    state: props.context.state,
-    context: props.context.context,
+      !component.value?.component && !repeatItemData.value;
+    return shouldRenderChildrenOutsideRef ? useChildren.value : [];
   });
+  const repeatItemData = useComputed$(() => {
+    /**
+     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
+     * which will not work if there is a repeat.
+     */
+    const { repeat, ...blockWithoutRepeat } = props.block;
 
-  if (!Array.isArray(itemsArray)) {
-    return undefined;
-  }
+    if (!repeat?.collection) {
+      return undefined;
+    }
 
-  const collectionName = repeat.collection.split(\\".\\").pop();
-  const itemNameToUse =
-    repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-  const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
-    context: {
-      ...props.context,
-      state: {
-        ...props.context.state,
-        $index: index,
-        $item: item,
-        [itemNameToUse]: item,
-        [\`$\${itemNameToUse}Index\`]: index,
+    const itemsArray = evaluate({
+      code: repeat.collection,
+      state: props.context.state,
+      context: props.context.context,
+    });
+
+    if (!Array.isArray(itemsArray)) {
+      return undefined;
+    }
+
+    const collectionName = repeat.collection.split(\\".\\").pop();
+    const itemNameToUse =
+      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+      context: {
+        ...props.context,
+        state: {
+          ...props.context.state,
+          $index: index,
+          $item: item,
+          [itemNameToUse]: item,
+          [\`$\${itemNameToUse}Index\`]: index,
+        },
       },
-    },
-    block: blockWithoutRepeat,
-  }));
-  return repeatArray;
-};
-export const inheritedTextStyles = function inheritedTextStyles(props, state) {
-  if (TARGET !== \\"reactNative\\") {
-    return {};
-  }
-
-  const styles = getReactNativeBlockStyles({
-    block: useBlock(props, state),
-    context: props.context,
-    blockStyles: attributes(props, state).style,
+      block: blockWithoutRepeat,
+    }));
+    return repeatArray;
   });
-  return extractTextStyles(styles);
-};
-export const childrenContext = function childrenContext(props, state) {
-  return {
-    apiKey: props.context.apiKey,
-    state: props.context.state,
-    content: props.context.content,
-    context: props.context.context,
-    registeredComponents: props.context.registeredComponents,
-    inheritedStyles: inheritedTextStyles(props, state),
-  };
-};
-export const renderComponentTag = function renderComponentTag(props, state) {
-  if (TARGET === \\"reactNative\\") {
-    return RenderComponentWithContext;
-  } else if (TARGET === \\"vue3\\") {
-    // vue3 expects a string for the component tag
-    return \\"RenderComponent\\";
-  } else {
-    return RenderComponent;
-  }
-};
-export const RenderBlock = component$((props: RenderBlockProps) => {
-  const state: any = {};
+  const inheritedTextStyles = useComputed$(() => {
+    if (TARGET !== \\"reactNative\\") {
+      return {};
+    }
 
+    const styles = getReactNativeBlockStyles({
+      block: useBlock.value,
+      context: props.context,
+      blockStyles: attributes.value.style,
+    });
+    return extractTextStyles(styles);
+  });
+  const childrenContext = useComputed$(() => {
+    return {
+      apiKey: props.context.apiKey,
+      state: props.context.state,
+      content: props.context.content,
+      context: props.context.context,
+      registeredComponents: props.context.registeredComponents,
+      inheritedStyles: inheritedTextStyles.value,
+    };
+  });
+  const renderComponentTag = useComputed$(() => {
+    if (TARGET === \\"reactNative\\") {
+      return RenderComponentWithContext;
+    } else if (TARGET === \\"vue3\\") {
+      // vue3 expects a string for the component tag
+      return \\"RenderComponent\\";
+    } else {
+      return RenderComponent;
+    }
+  });
   return (
     <>
-      {shouldWrap(props, state) ? (
+      {shouldWrap.value ? (
         <>
-          {isEmptyHtmlElement(tag(props, state)) ? (
-            <state.tag
-              {...attributes(props, state)}
-              {...actions(props, state)}
-            ></state.tag>
+          {isEmptyHtmlElement(tag.value) ? (
+            <tag.value {...attributes.value} {...actions.value}></tag.value>
           ) : null}
-          {!isEmptyHtmlElement(tag(props, state)) &&
-          repeatItemData(props, state)
-            ? (repeatItemData(props, state) || []).map(function (data, index) {
+          {!isEmptyHtmlElement(tag.value) && repeatItemData.value
+            ? (repeatItemData.value || []).map(function (data, index) {
                 return (
                   <RenderRepeatedBlock
                     key={index}
@@ -6989,41 +6972,40 @@ export const RenderBlock = component$((props: RenderBlockProps) => {
                 );
               })
             : null}
-          {!isEmptyHtmlElement(tag(props, state)) &&
-          !repeatItemData(props, state) ? (
-            <state.tag {...attributes(props, state)} {...actions(props, state)}>
-              <state.renderComponentTag
-                {...renderComponentProps(props, state)}
-              ></state.renderComponentTag>
-              {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child) {
-                  return (
-                    <RenderBlock
-                      key={\\"render-block-\\" + child.id}
-                      block={child}
-                      context={childrenContext(props, state)}
-                    ></RenderBlock>
-                  );
-                }
-              )}
-              {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child) {
-                  return (
-                    <BlockStyles
-                      key={\\"block-style-\\" + child.id}
-                      block={child}
-                      context={childrenContext(props, state)}
-                    ></BlockStyles>
-                  );
-                }
-              )}
-            </state.tag>
+          {!isEmptyHtmlElement(tag.value) && !repeatItemData.value ? (
+            <tag.value {...attributes.value} {...actions.value}>
+              <renderComponentTag.value
+                {...renderComponentProps.value}
+              ></renderComponentTag.value>
+              {(childrenWithoutParentComponent.value || []).map(function (
+                child
+              ) {
+                return (
+                  <RenderBlock
+                    key={\\"render-block-\\" + child.id}
+                    block={child}
+                    context={childrenContext.value}
+                  ></RenderBlock>
+                );
+              })}
+              {(childrenWithoutParentComponent.value || []).map(function (
+                child
+              ) {
+                return (
+                  <BlockStyles
+                    key={\\"block-style-\\" + child.id}
+                    block={child}
+                    context={childrenContext.value}
+                  ></BlockStyles>
+                );
+              })}
+            </tag.value>
           ) : null}
         </>
       ) : (
-        <state.renderComponentTag
-          {...renderComponentProps(props, state)}
-        ></state.renderComponentTag>
+        <renderComponentTag.value
+          {...renderComponentProps.value}
+        ></renderComponentTag.value>
       )}
     </>
   );
@@ -7999,18 +7981,23 @@ export default MyComponent;
 `;
 
 exports[`qwik > svelte > Javascript Test > reactive 1`] = `
-"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+"import {
+  Fragment,
+  component$,
+  h,
+  useComputed$,
+  useStore,
+} from \\"@builder.io/qwik\\";
 
-export const lowercaseName = function lowercaseName(props, state) {
-  return state.name.toLowerCase();
-};
 export const MyComponent = component$((props) => {
   const state = useStore({ name: \\"Steve\\" });
-
+  const lowercaseName = useComputed$(() => {
+    return state.name.toLowerCase();
+  });
   return (
     <div>
       <input value={state.name} />
-      Lowercase: {lowercaseName(props, state)}
+      Lowercase: {lowercaseName.value}
     </div>
   );
 });
@@ -8396,18 +8383,23 @@ export default MyComponent;
 `;
 
 exports[`qwik > svelte > Typescript Test > reactive 1`] = `
-"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+"import {
+  Fragment,
+  component$,
+  h,
+  useComputed$,
+  useStore,
+} from \\"@builder.io/qwik\\";
 
-export const lowercaseName = function lowercaseName(props, state) {
-  return state.name.toLowerCase();
-};
 export const MyComponent = component$((props: any) => {
   const state = useStore<any>({ name: \\"Steve\\" });
-
+  const lowercaseName = useComputed$(() => {
+    return state.name.toLowerCase();
+  });
   return (
     <div>
       <input value={state.name} />
-      Lowercase: {lowercaseName(props, state)}
+      Lowercase: {lowercaseName.value}
     </div>
   );
 });

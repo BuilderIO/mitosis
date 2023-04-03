@@ -316,6 +316,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           case 'hooks-deps':
           case 'state':
           case 'properties':
+          case 'dynamic-jsx-elements':
             return (x) => x;
         }
       }),

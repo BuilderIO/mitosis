@@ -126,6 +126,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           case 'hooks':
           case 'hooks-deps':
           case 'state':
+          case 'dynamic-jsx-elements':
             return (x) => x;
         }
       }),
@@ -139,6 +140,8 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             return flow(stripStateAndProps({ json, options }), stripGetter);
           case 'properties':
             return stripStateAndProps({ json, options });
+          case 'dynamic-jsx-elements':
+            return (x) => x;
         }
       }),
     ];

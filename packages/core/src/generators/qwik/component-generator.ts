@@ -5,7 +5,6 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { checkHasState } from '../../helpers/state';
 import { addPreventDefault } from './helpers/add-prevent-default';
-import { convertMethodToFunction } from './helpers/convert-method-to-function';
 import { renderJSXNodes } from './jsx';
 import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 import {
@@ -17,15 +16,9 @@ import {
 } from '../../modules/plugins';
 import { stableInject } from './helpers/stable-inject';
 import { mergeOptions } from '../../helpers/merge-options';
-import {
-  emitStateMethodsAndRewriteBindings,
-  emitUseStore,
-  getLexicalScopeVars,
-  getStateMethodsAndGetters,
-  StateInit,
-} from './helpers/state';
+import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { replaceIdentifiers, replaceStateIdentifier } from '../../helpers/replace-identifiers';
 import { convertTypeScriptToJS } from '../../helpers/babel-transform';
 
 Error.stackTraceLimit = 9999;
@@ -51,6 +44,7 @@ const PLUGINS: Plugin[] = [
       case 'hooks':
       case 'hooks-deps':
       case 'properties':
+      case 'dynamic-jsx-elements':
         // update signal getters to have `.value`
         return (code, k) => {
           // `ref` should not update the signal value access
@@ -64,7 +58,20 @@ const PLUGINS: Plugin[] = [
               to: (x) => (x === ref ? `${x}.value` : `${ref}.value.${x}`),
             });
           });
-          return code;
+          // update signal getters to have `.value`
+          return replaceStateIdentifier((name) => {
+            const state = json.state[name];
+            switch (state?.type) {
+              case 'getter':
+                return `${name}.value`;
+
+              case 'function':
+              case 'method':
+              case 'property':
+              case undefined:
+                return `state.${name}`;
+            }
+          })(code);
         };
     }
   }),
@@ -121,14 +128,14 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
             css = emitUseStyles(file, component);
             emitUseContext(file, component);
             emitUseRef(file, component);
-            hasState && emitUseStore(file, state);
+            hasState &&
+              emitUseStore({ file, stateInit: state, isDeep: metadata?.qwik?.hasDeepStore });
+            emitUseComputed(file, component);
             emitUseContextProvider(file, component);
             emitUseClientEffect(file, component);
             emitUseMount(file, component);
             emitUseTask(file, component);
 
-            emitTagNameHack(file, component, component.meta.useMetadata?.elementTag);
-            emitTagNameHack(file, component, component.meta.useMetadata?.componentElementTag);
             emitJSX(file, component, mutable);
           },
         ],
@@ -161,21 +168,6 @@ function emitExports(file: File, component: MitosisComponent) {
     const code = exportObj.code.startsWith('export ') ? exportObj.code : `export ${exportObj.code}`;
     file.src.emit(code);
   });
-}
-
-function emitTagNameHack(file: File, component: MitosisComponent, metadataValue: unknown) {
-  if (typeof metadataValue === 'string' && metadataValue) {
-    file.src.emit(
-      metadataValue,
-      '=',
-      convertMethodToFunction(
-        metadataValue,
-        getStateMethodsAndGetters(component.state),
-        getLexicalScopeVars(component),
-      ),
-      ';',
-    );
-  }
 }
 
 function emitUseClientEffect(file: File, component: MitosisComponent) {
@@ -347,4 +339,18 @@ function extractGetterBody(code: string): string {
   const start = code.indexOf('{');
   const end = code.lastIndexOf('}');
   return code.substring(start + 1, end).trim();
+}
+
+function emitUseComputed(file: File, component: MitosisComponent) {
+  for (const [key, stateValue] of Object.entries(component.state)) {
+    switch (stateValue?.type) {
+      case 'getter':
+        file.src.const(`
+          ${key} = ${file.import(file.qwikModule, 'useComputed$').localName}(() => {
+            ${extractGetterBody(stateValue.code)}
+          })
+        `);
+        continue;
+    }
+  }
 }

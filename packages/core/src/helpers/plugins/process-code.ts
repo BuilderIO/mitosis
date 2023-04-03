@@ -4,7 +4,14 @@ import { MitosisNode } from '../../types/mitosis-node';
 import { checkIsDefined } from '../nullable';
 import { traverseNodes } from '../traverse-nodes';
 
-type CodeType = 'hooks' | 'hooks-deps' | 'bindings' | 'properties' | 'state';
+type CodeType =
+  | 'hooks'
+  | 'hooks-deps'
+  | 'bindings'
+  | 'properties'
+  | 'state'
+  // this is for when we write dynamic JSX elements like `<state.foo>Hello</state.foo>` in Mitosis
+  | 'dynamic-jsx-elements';
 
 // declare function codeProcessor<T extends CodeType>(
 //   codeType: T,
@@ -44,6 +51,8 @@ const preProcessNodeCode = ({
       value.code = bindingsProcessor(value.code, key);
     }
   }
+
+  json.name = codeProcessor('dynamic-jsx-elements', parentComponent)(json.name, '');
 };
 
 /**

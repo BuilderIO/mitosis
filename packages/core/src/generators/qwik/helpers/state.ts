@@ -28,7 +28,15 @@ export type StateValues = Record<PropertyName, StateValue>;
  * @param file
  * @param stateInit
  */
-export function emitUseStore(file: File, stateInit: StateInit) {
+export function emitUseStore({
+  file,
+  stateInit,
+  isDeep,
+}: {
+  file: File;
+  stateInit: StateInit;
+  isDeep: boolean;
+}) {
   const state = stateInit[0];
   const hasState = state && Object.keys(state).length > 0;
   if (hasState) {
@@ -36,7 +44,8 @@ export function emitUseStore(file: File, stateInit: StateInit) {
     if (file.options.isTypeScript) {
       file.src.emit('<any>');
     }
-    file.src.emit(`(${stableInject(state)});`);
+    const fnArgs = [stableInject(state), isDeep ? '{deep: true}' : undefined].filter(Boolean);
+    file.src.emit(`(${fnArgs});`);
   } else {
     // TODO hack for now so that `state` variable is defined, even though it is never read.
     file.src.emit(`const state${file.options.isTypeScript ? ': any' : ''} = {};`);
@@ -56,13 +65,10 @@ function emitStateMethods(
 
     switch (stateValue?.type) {
       case 'method':
-      case 'getter':
       case 'function':
         let code = stateValue.code;
         let prefixIdx = 0;
-        if (stateValue.type === 'getter') {
-          prefixIdx += 'get '.length;
-        } else if (stateValue.type === 'function') {
+        if (stateValue.type === 'function') {
           prefixIdx += 'function '.length;
         }
         code = code.substring(prefixIdx);
@@ -71,9 +77,6 @@ function emitStateMethods(
           `(${lexicalArgs.join(',')},`,
         );
         const functionName = code.split(/\(/)[0];
-        if (stateValue.type === 'getter') {
-          stateInit.push(`state.${key}=${functionName}(${lexicalArgs.join(',')})`);
-        }
         if (!file.options.isTypeScript) {
           // Erase type information
           code = convertTypeScriptToJS(code);

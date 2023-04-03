@@ -29,8 +29,8 @@ import { generateCompositionApiScript } from './compositionApi';
 import { blockToVue } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { createSingleBinding } from '../../helpers/bindings';
+import { replaceStateIdentifier } from '../../helpers/replace-identifiers';
 import { convertTypeScriptToJS } from '../../helpers/babel-transform';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
@@ -120,8 +120,9 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
                 (code) => processBinding({ code, options, json: component, codeType }),
               );
             case 'hooks-deps':
-              return (c) => stripStateAndPropsRefs(c, { includeProps: false });
+              return replaceStateIdentifier(null);
             case 'properties':
+            case 'dynamic-jsx-elements':
               return (c) => c;
           }
         } else {
@@ -135,6 +136,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
                 (code) => processBinding({ code, options, json: component, codeType }),
               );
             case 'properties':
+            case 'dynamic-jsx-elements':
             case 'hooks-deps':
               return (c) => c;
             case 'state':
