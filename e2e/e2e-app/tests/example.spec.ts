@@ -30,8 +30,8 @@ test.describe('e2e', () => {
   test('show-for component test', async ({ page }) => {
     await page.goto('/show-for-component/');
 
-    await expect(page.locator('text=number : 1')).toBeVisible();
-    await expect(page.locator('text=number : 2')).toBeVisible();
-    await expect(page.locator('text=number : 3')).toBeVisible();
+    await expect(page.locator('text=number :1')).toBeVisible();
+    await expect(page.locator('text=number :2')).toBeVisible();
+    await expect(page.locator('text=number :3')).toBeVisible();
   });
 });

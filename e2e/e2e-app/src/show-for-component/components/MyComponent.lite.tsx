@@ -11,12 +11,12 @@ export default function MyComponent() {
       <Show when={state.numbers}
         else = {
             <For each = {state.vowels}>
-              {(vowel) => <h1>vowel : {vowel}</h1>}
+              {(vowel) => <h1>vowel :{vowel}</h1>}
             </For>
         }
       >
         <For each={state.numbers}>
-          {(number) => <h1>number : {number}</h1>}
+          {(number) => <h1>number :{number}</h1>}
         </For>
       </Show>
     </div>
