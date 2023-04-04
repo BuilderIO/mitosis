@@ -146,6 +146,7 @@ export function addComponent(
     fileSet.med.exportConst(name, code, true);
   });
   fileSet.low.exportConst('__proxyMerge__', DIRECTIVES['__proxyMerge__'], true);
+  fileSet.med.exportConst('__proxyMerge__', DIRECTIVES['__proxyMerge__'], true);
   fileSet.high.exportConst('__proxyMerge__', DIRECTIVES['__proxyMerge__'], true);
 }
 
@@ -179,10 +180,10 @@ export function renderUseLexicalScope(file: File) {
   return function (this: SrcBuilder) {
     if (this.file.options.isBuilder) {
       return this.emit(
-        'const [s,p,l]=',
+        'const [s,l]=',
         file.import(file.qwikModule, 'useLexicalScope').localName,
         '();',
-        'const state=__proxyMerge__(s,p,l);',
+        'const state=__proxyMerge__(s,l);',
       );
     } else {
       return this.emit(
@@ -214,9 +215,9 @@ function addComponentOnMount(
     component.inputs.forEach((input) => {
       input.defaultValue !== undefined &&
         inputInitializer.push(
-          'if(!s.hasOwnProperty("',
+          'if(!state.hasOwnProperty("',
           input.name,
-          '"))s.',
+          '"))state.',
           input.name,
           '=',
           stableJSONserialize(input.defaultValue),
@@ -232,13 +233,13 @@ function addComponentOnMount(
           'const s=',
           componentFile.import(componentFile.qwikModule, 'useStore').localName,
           '(()=>{',
-          'const state=structuredClone(typeof __STATE__==="object"?__STATE__[p.serverStateId]:{});',
+          'const state=Object.assign({},structuredClone(typeof __STATE__==="object"&&__STATE__[p.serverStateId]),p);',
           ...inputInitializer,
           inlineCode(component.hooks.onMount?.code),
           'return state;',
           '},{deep:true});',
           'const l={};',
-          'const state=__proxyMerge__(s,p,l);',
+          'const state=__proxyMerge__(s,l);',
           useStyles,
           onRenderEmit,
           ';}',
