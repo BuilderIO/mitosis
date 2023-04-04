@@ -124,7 +124,7 @@ export function addComponent(
     function (this: SrcBuilder) {
       return this.emit(
         'return ',
-        renderJSXNodes(onRenderFile, directives, handlers, rootChildren, styles, {}),
+        renderJSXNodes(onRenderFile, directives, handlers, rootChildren, styles, null, {}),
         ';',
       );
     },

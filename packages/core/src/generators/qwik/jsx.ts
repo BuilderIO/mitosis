@@ -12,6 +12,7 @@ import { CssStyles } from './helpers/styles';
  * @param handlers A set of handlers which we came across so that they can be rendered
  * @param children A list of children to convert to JSX
  * @param styles Store for styles which we came across so that they can be rendered.
+ * @param key Key to be used for the node if needed
  * @param parentSymbolBindings A set of bindings from parent to be written into the child.
  * @param root True if this is the root JSX, and may need a Fragment wrapper.
  * @returns
@@ -22,6 +23,7 @@ export function renderJSXNodes(
   handlers: Map<string, string>,
   children: MitosisNode[],
   styles: Map<string, CssStyles>,
+  key: string | null | undefined,
   parentSymbolBindings: Record<string, string>,
   root = true,
 ): any {
@@ -98,6 +100,14 @@ export function renderJSXNodes(
               props.class = addClass(styleProps.CLASS_NAME, props.class);
             }
           }
+          key = props['builder-id'] || key;
+          if (props.innerHTML) {
+            // Special case. innerHTML requires `key` in Qwik
+            props = {
+              key: key || 'default',
+              ...props,
+            };
+          }
           const symbolBindings: Record<string, string> = {};
           const bindings = rewriteHandlers(file, handlers, child.bindings, symbolBindings);
           this.jsxBegin(childName, props, {
@@ -111,6 +121,7 @@ export function renderJSXNodes(
             handlers,
             child.children,
             styles,
+            key,
             symbolBindings,
             false,
           ).call(this);
@@ -129,7 +140,9 @@ export function renderJSXNodes(
         const childNeedsFragment =
           children.length > 1 || (children.length && isTextNode(children[0]));
         childNeedsFragment && srcBuilder.jsxBeginFragment(fragmentSymbol);
-        renderJSXNodes(file, directives, handlers, children, styles, {}, false).call(srcBuilder);
+        renderJSXNodes(file, directives, handlers, children, styles, null, {}, false).call(
+          srcBuilder,
+        );
         childNeedsFragment && srcBuilder.jsxEndFragment();
       };
     }
