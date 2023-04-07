@@ -2,13 +2,11 @@
 
 exports[`qwik > Accordion 1`] = `
 {
-  "high.jsx": "export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+  "high.jsx": "export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -32,15 +30,19 @@ export const MyComponentStyles = \`.csw5022{display:flex;flex-direction:column;p
 export const MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./low.js\\", \\"MyComponentStyles\\", []));
 
@@ -214,6 +216,7 @@ export const MyComponentOnMount = (p) => {
             >
               <div class=\\"crwdrpw\\">
                 <div
+                  key=\\"builder-5fed2723c1cc4fb39e9d22b9c54ef179\\"
                   dangerouslySetInnerHTML=\\"<p>Item 1</p>\\"
                   class=\\"builder-text\\"
                 ></div>
@@ -227,6 +230,7 @@ export const MyComponentOnMount = (p) => {
             >
               <div class=\\"ctcw2m4\\">
                 <div
+                  key=\\"builder-18279a99b32240f19aa21d3f4b015cc9\\"
                   dangerouslySetInnerHTML=\\"<p>Item 1 content</p>\\"
                   class=\\"builder-text\\"
                 ></div>
@@ -242,6 +246,7 @@ export const MyComponentOnMount = (p) => {
             >
               <div class=\\"crwdrpw\\">
                 <div
+                  key=\\"builder-2a93def22a354cf7aa193c20d1ad6def\\"
                   dangerouslySetInnerHTML=\\"<p>Item 2</p>\\"
                   class=\\"builder-text\\"
                 ></div>
@@ -255,6 +260,7 @@ export const MyComponentOnMount = (p) => {
             >
               <div class=\\"ctcw2m4\\">
                 <div
+                  key=\\"builder-fd6ef41da6d040328fbd8b0801611fe5\\"
                   dangerouslySetInnerHTML=\\"<p>Item 2 content</p>\\"
                   class=\\"builder-text\\"
                 ></div>
@@ -266,13 +272,11 @@ export const MyComponentOnMount = (p) => {
     </div>
   );
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -289,19 +293,32 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
 export const MyComponent = componentQrl(
   qrl(\\"./low.js\\", \\"MyComponentOnMount\\", [])
 );
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+};
 ",
 }
 `;
 
 exports[`qwik > For 1`] = `
 {
-  "high.jsx": "export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+  "high.jsx": "export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -325,15 +342,19 @@ export const MyComponentStyles = \`.cvdfnp5{display:flex;flex-direction:column;p
 export const MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./low.js\\", \\"MyComponentStyles\\", []));
 
@@ -355,10 +376,11 @@ export const MyComponentOnMount = (p) => {
               item: item,
               $index: $index,
             };
-            const state = __proxyMerge__(s, p, l);
+            const state = __proxyMerge__(s, l);
             return (
               <div class=\\"cdrk993\\">
                 <div
+                  key=\\"default\\"
                   class=\\"builder-text\\"
                   dangerouslySetInnerHTML={(() => {
                     try {
@@ -377,13 +399,11 @@ export const MyComponentOnMount = (p) => {
     </div>
   );
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -400,13 +420,11 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
 export const MyComponent = componentQrl(
   qrl(\\"./low.js\\", \\"MyComponentOnMount\\", [])
 );
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -426,21 +444,19 @@ exports[`qwik > Image 1`] = `
   "high.js": "import { useLexicalScope } from \\"@builder.io/qwik\\";
 
 export const MyComponent_onClick_0 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
   try {
     return (state.myState = \\"changed value\\");
   } catch (err) {
     console.warn(\\"Builder code error\\", err);
   }
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -452,13 +468,11 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
   });
 };
 ",
-  "low.js": "export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+  "low.js": "export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -483,16 +497,20 @@ export const MyComponentStyles = \`.cvk52jt{display:flex;flex-direction:column;p
 export const MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
-      if (!s.hasOwnProperty(\\"myState\\")) s.myState = \\"initialValue\\";
+      if (!state.hasOwnProperty(\\"myState\\")) state.myState = \\"initialValue\\";
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./med.js\\", \\"MyComponentStyles\\", []));
 
@@ -509,7 +527,7 @@ export const MyComponentOnMount = (p) => {
         \\"https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=100 100w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=200 200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=400 400w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=800 800w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1160 1160w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=598 598w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=958 958w\\",
       sizes: \\"(max-width: 638px) 94vw, (max-width: 998px) 96vw, 83vw\\",
       class: \\"cvk52jt builder-block\\",
-      onClick$: qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [s, p, l]),
+      onClick$: qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [s, l]),
       lazy: false,
       fitContent: true,
       aspectRatio: 1,
@@ -520,6 +538,7 @@ export const MyComponentOnMount = (p) => {
       \\"div\\",
       { class: \\"cjrqfb1\\" },
       h(\\"div\\", {
+        key: \\"builder-fa4480d2f48a44a7a2e98cf07c54927b\\",
         class: \\"builder-text\\",
         dangerouslySetInnerHTML: (() => {
           try {
@@ -626,6 +645,21 @@ export const __passThroughProps__ = function __passThroughProps__(
     }
   }
   return dstProps;
+};
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
 };
 ",
 }
@@ -636,21 +670,19 @@ exports[`qwik > Image.slow 1`] = `
   "high.js": "import { useLexicalScope } from \\"@builder.io/qwik\\";
 
 export const MyComponent_onClick_0 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
   try {
     return (state.myState = \\"changed value\\");
   } catch (err) {
     console.warn(\\"Builder code error\\", err);
   }
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -662,13 +694,11 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
   });
 };
 ",
-  "low.js": "export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+  "low.js": "export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -693,16 +723,20 @@ export const MyComponentStyles = \`.cvk52jt{display:flex;flex-direction:column;p
 export const MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
-      if (!s.hasOwnProperty(\\"myState\\")) s.myState = \\"initialValue\\";
+      if (!state.hasOwnProperty(\\"myState\\")) state.myState = \\"initialValue\\";
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./med.js\\", \\"MyComponentStyles\\", []));
 
@@ -719,7 +753,7 @@ export const MyComponentOnMount = (p) => {
         \\"https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=100 100w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=200 200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=400 400w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=800 800w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1160 1160w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=598 598w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=958 958w\\",
       sizes: \\"(max-width: 638px) 94vw, (max-width: 998px) 96vw, 83vw\\",
       class: \\"cvk52jt builder-block\\",
-      onClick$: qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [s, p, l]),
+      onClick$: qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [s, l]),
       lazy: false,
       fitContent: true,
       aspectRatio: 1,
@@ -730,6 +764,7 @@ export const MyComponentOnMount = (p) => {
       \\"div\\",
       { class: \\"cjrqfb1\\" },
       h(\\"div\\", {
+        key: \\"builder-fa4480d2f48a44a7a2e98cf07c54927b\\",
         class: \\"builder-text\\",
         dangerouslySetInnerHTML: (() => {
           try {
@@ -837,6 +872,21 @@ export const __passThroughProps__ = function __passThroughProps__(
   }
   return dstProps;
 };
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+};
 ",
 }
 `;
@@ -845,15 +895,12 @@ exports[`qwik > bindings 1`] = `
 {
   "high.cjs": "const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
   state,
-  props,
   local
 ) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -875,17 +922,21 @@ exports.MyComponentStyles = \`.cjrqfb1{display:flex;flex-direction:column;positi
 exports.MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
-      if (!s.hasOwnProperty(\\"title\\")) s.title = '\\"Default title value\\"';
-      if (!s.hasOwnProperty(\\"hiliteTitle\\")) s.hiliteTitle = true;
+      if (!state.hasOwnProperty(\\"title\\")) state.title = '\\"Default title value\\"';
+      if (!state.hasOwnProperty(\\"hiliteTitle\\")) state.hiliteTitle = true;
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./low.js\\", \\"MyComponentStyles\\", []));
 
@@ -904,6 +955,7 @@ exports.MyComponentOnMount = (p) => {
       },
     },
     h(\\"div\\", {
+      key: \\"default\\",
       class: \\"builder-text\\",
       dangerouslySetInnerHTML: (() => {
         try {
@@ -918,15 +970,12 @@ exports.MyComponentOnMount = (p) => {
 };
 const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
   state,
-  props,
   local
 ) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -942,6 +991,24 @@ const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
 const qrl = require(\\"@builder.io/qwik\\").qrl;
 
 exports.MyComponent = componentQrl(qrl(\\"./low.js\\", \\"MyComponentOnMount\\", []));
+const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
+  state,
+  local
+) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+});
 ",
 }
 `;
@@ -951,13 +1018,11 @@ exports[`qwik > button 1`] = `
   "high.js": "export const MyComponent_onClick_0 = (event) => {
   alert(\\"WORKS!\\");
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -983,31 +1048,33 @@ export const MyComponentStyles = \`.c9nzze9{display:flex;flex-direction:column;p
 export const MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./low.js\\", \\"MyComponentStyles\\", []));
 
   return h(CoreButton, {
     text: \\"Click me!\\",
     class: \\"c9nzze9\\",
-    onClick$: qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [s, p, l]),
+    onClick$: qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [s, l]),
   });
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -1051,6 +1118,21 @@ export const __passThroughProps__ = function __passThroughProps__(
   }
   return dstProps;
 };
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+};
 ",
 }
 `;
@@ -1077,13 +1159,11 @@ exports[`qwik > component > bindings 1`] = `
 
 exports[`qwik > component > bindings 2`] = `
 {
-  "high.jsx": "export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+  "high.jsx": "export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -1109,16 +1189,20 @@ export const ComponentD187055AF171488FAD843ACF045D6BF7Styles = \`.cj49hqu{displa
 export const ComponentD187055AF171488FAD843ACF045D6BF7OnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
-      if (!s.hasOwnProperty(\\"title\\")) s.title = \\"default-title\\";
+      if (!state.hasOwnProperty(\\"title\\")) state.title = \\"default-title\\";
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(
     qrl(\\"./low.js\\", \\"ComponentD187055AF171488FAD843ACF045D6BF7Styles\\", [])
@@ -1131,6 +1215,7 @@ export const ComponentD187055AF171488FAD843ACF045D6BF7OnMount = (p) => {
     >
       <div class=\\"cjrqfb1\\">
         <div
+          key=\\"builder-139a8479536b4c4f9c2738e724ed0952\\"
           class=\\"builder-text\\"
           dangerouslySetInnerHTML={(() => {
             try {
@@ -1145,13 +1230,11 @@ export const ComponentD187055AF171488FAD843ACF045D6BF7OnMount = (p) => {
     </div>
   );
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -1166,8 +1249,12 @@ export const MyComponentStyles = \`.c713ty2{display:flex;flex-direction:column;p
 export const MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
       /*
        * Global objects available:
@@ -1199,7 +1286,7 @@ export const MyComponentOnMount = (p) => {
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./low.js\\", \\"MyComponentStyles\\", []));
 
@@ -1238,6 +1325,21 @@ export const MyComponentOnMount = (p) => {
 export const ComponentD187055AF171488FAD843ACF045D6BF7 = componentQrl(
   qrl(\\"./low.js\\", \\"ComponentD187055AF171488FAD843ACF045D6BF7OnMount\\", [])
 );
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+};
 export const MyComponent = componentQrl(
   qrl(\\"./low.js\\", \\"MyComponentOnMount\\", [])
 );
@@ -1252,8 +1354,8 @@ exports[`qwik > component > component inputs 2`] = `
   "high.cjsx": "const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
 
 exports.MyComponent_onClick_0 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
   try {
     return (state.data = state.data + 1);
   } catch (err) {
@@ -1262,15 +1364,12 @@ exports.MyComponent_onClick_0 = (event) => {
 };
 const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
   state,
-  props,
   local
 ) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -1284,15 +1383,12 @@ const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
 ",
   "low.cjsx": "const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
   state,
-  props,
   local
 ) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -1315,16 +1411,20 @@ exports.MyComponentStyles = \`.cjrqfb1{display:flex;flex-direction:column;positi
 exports.MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
-      if (!s.hasOwnProperty(\\"data\\")) s.data = 0;
+      if (!state.hasOwnProperty(\\"data\\")) state.data = 0;
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./med.js\\", \\"MyComponentStyles\\", []));
 
@@ -1332,6 +1432,7 @@ exports.MyComponentOnMount = (p) => {
     <>
       <div class=\\"cjrqfb1\\">
         <div
+          key=\\"default\\"
           class=\\"builder-text\\"
           dangerouslySetInnerHTML={(() => {
             try {
@@ -1347,7 +1448,7 @@ exports.MyComponentOnMount = (p) => {
         builder-id=\\"builder-6f8fe6a1d2284f2890ae97657eed084a\\"
         text=\\"Something else\\"
         class=\\"c9nzze9 builder-block\\"
-        onClick$={qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [s, p, l])}
+        onClick$={qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [s, l])}
       ></CoreButton>
     </>
   );
@@ -1378,6 +1479,24 @@ const __passThroughProps__ = (exports.__passThroughProps__ =
     }
     return dstProps;
   });
+const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
+  state,
+  local
+) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+});
 ",
 }
 `;
@@ -1386,15 +1505,12 @@ exports[`qwik > for-loop.bindings 1`] = `
 {
   "high.cjs": "const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
   state,
-  props,
   local
 ) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -1418,13 +1534,17 @@ exports.Component000012Styles = \`.cv6ku2d{display:flex;flex-direction:row;posit
 exports.Component000012OnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
-      if (!s.hasOwnProperty(\\"offset\\")) s.offset = \\"0\\";
-      if (!s.hasOwnProperty(\\"limit\\")) s.limit = 3;
-      if (!s.hasOwnProperty(\\"blogCategory\\"))
-        s.blogCategory = {
+      if (!state.hasOwnProperty(\\"offset\\")) state.offset = \\"0\\";
+      if (!state.hasOwnProperty(\\"limit\\")) state.limit = 3;
+      if (!state.hasOwnProperty(\\"blogCategory\\"))
+        state.blogCategory = {
           \\"@type\\": \\"@builder.io/core:Reference\\",
           id: \\"\\",
           model: \\"\\",
@@ -1434,7 +1554,7 @@ exports.Component000012OnMount = (p) => {
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./low.js\\", \\"Component000012Styles\\", []));
 
@@ -1447,7 +1567,7 @@ exports.Component000012OnMount = (p) => {
     (state.hits || []).map(
       function (item) {
         const l = { ...this, hitsItem: item == null ? {} : item, item: item };
-        const state = __proxyMerge__(s, p, l);
+        const state = __proxyMerge__(s, l);
         return h(
           \\"div\\",
           {
@@ -1472,15 +1592,12 @@ exports.Component000012OnMount = (p) => {
 };
 const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
   state,
-  props,
   local
 ) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -1501,15 +1618,12 @@ exports.Component000012 = componentQrl(
 );
 const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
   state,
-  props,
   local
 ) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -1526,13 +1640,11 @@ const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
 
 exports[`qwik > hello_world > stylesheet 1`] = `
 {
-  "high.jsx": "export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+  "high.jsx": "export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -1556,15 +1668,19 @@ export const MyComponentStyles = \`.crt27f8{display:flex;flex-direction:column;p
 export const MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./low.js\\", \\"MyComponentStyles\\", []));
 
@@ -1576,13 +1692,11 @@ export const MyComponentOnMount = (p) => {
     </div>
   );
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -1599,6 +1713,21 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
 export const MyComponent = componentQrl(
   qrl(\\"./low.js\\", \\"MyComponentOnMount\\", [])
 );
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+};
 ",
 }
 `;
@@ -7845,15 +7974,12 @@ exports[`qwik > mount 1`] = `
 {
   "high.cjs": "const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
   state,
-  props,
   local
 ) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -7875,11 +8001,15 @@ exports.MyComponentStyles = \`.cjrqfb1{display:flex;flex-direction:column;positi
 exports.MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
-      if (!s.hasOwnProperty(\\"title\\")) s.title = '\\"Default title value\\"';
-      if (!s.hasOwnProperty(\\"hiliteTitle\\")) s.hiliteTitle = true;
+      if (!state.hasOwnProperty(\\"title\\")) state.title = '\\"Default title value\\"';
+      if (!state.hasOwnProperty(\\"hiliteTitle\\")) state.hiliteTitle = true;
       var _virtual_index = 1234;
       _virtual_index;
       return state;
@@ -7887,7 +8017,7 @@ exports.MyComponentOnMount = (p) => {
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./low.js\\", \\"MyComponentStyles\\", []));
 
@@ -7906,6 +8036,7 @@ exports.MyComponentOnMount = (p) => {
       },
     },
     h(\\"div\\", {
+      key: \\"default\\",
       class: \\"builder-text\\",
       dangerouslySetInnerHTML: (() => {
         try {
@@ -7920,15 +8051,12 @@ exports.MyComponentOnMount = (p) => {
 };
 const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
   state,
-  props,
   local
 ) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -7944,19 +8072,35 @@ const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
 const qrl = require(\\"@builder.io/qwik\\").qrl;
 
 exports.MyComponent = componentQrl(qrl(\\"./low.js\\", \\"MyComponentOnMount\\", []));
+const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
+  state,
+  local
+) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+});
 ",
 }
 `;
 
 exports[`qwik > page-with-symbol 1`] = `
 {
-  "high.js": "export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+  "high.js": "export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -7982,15 +8126,19 @@ export const MyComponentStyles = \`.c713ty2{display:flex;flex-direction:column;p
 export const MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./low.js\\", \\"MyComponentStyles\\", []));
 
@@ -8008,13 +8156,11 @@ export const MyComponentOnMount = (p) => {
     h(\\"div\\", { class: \\"cxvcn5v\\" }, \\"<p>Main Text</p>\\")
   );
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -8031,32 +8177,11 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
 export const MyComponent = componentQrl(
   qrl(\\"./low.js\\", \\"MyComponentOnMount\\", [])
 );
-",
-}
-`;
-
-exports[`qwik > show-hide 1`] = `{}`;
-
-exports[`qwik > show-hide 2`] = `
-{
-  "high.jsx": "import { useLexicalScope } from \\"@builder.io/qwik\\";
-
-export const MyComponent_onClick_0 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
-  try {
-    return (state.visible = !state.visible);
-  } catch (err) {
-    console.warn(\\"Builder code error\\", err);
-  }
-};
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -8068,13 +8193,45 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
   });
 };
 ",
-  "low.jsx": "export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+}
+`;
+
+exports[`qwik > show-hide 1`] = `{}`;
+
+exports[`qwik > show-hide 2`] = `
+{
+  "high.jsx": "import { useLexicalScope } from \\"@builder.io/qwik\\";
+
+export const MyComponent_onClick_0 = (event) => {
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
+  try {
+    return (state.visible = !state.visible);
+  } catch (err) {
+    console.warn(\\"Builder code error\\", err);
+  }
+};
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+};
+",
+  "low.jsx": "export const __proxyMerge__ = function __proxyMerge__(state, local) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
       } else {
         return state[prop];
       }
@@ -8099,16 +8256,20 @@ export const MyComponentStyles = \`.c9nzze9{display:flex;flex-direction:column;p
 export const MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
-      if (!s.hasOwnProperty(\\"visible\\")) s.visible = false;
+      if (!state.hasOwnProperty(\\"visible\\")) state.visible = false;
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./med.js\\", \\"MyComponentStyles\\", []));
 
@@ -8118,11 +8279,12 @@ export const MyComponentOnMount = (p) => {
         builder-id=\\"builder-7ac4d7c20b01404ca338b2f4c59b3f82\\"
         text=\\"Toggle\\"
         class=\\"c9nzze9 builder-block\\"
-        onClick$={qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [s, p, l])}
+        onClick$={qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [s, l])}
       ></CoreButton>
       {state.visible ? (
         <div class=\\"cjrqfb1\\">
           <div
+            key=\\"default\\"
             dangerouslySetInnerHTML=\\"<p>Show when visible=true</p>\\"
             class=\\"builder-text\\"
           ></div>
@@ -8131,6 +8293,7 @@ export const MyComponentOnMount = (p) => {
       {!state.visible ? (
         <div class=\\"cjrqfb1\\">
           <div
+            key=\\"default\\"
             dangerouslySetInnerHTML=\\"<p>Show when visible=false</p>\\"
             class=\\"builder-text\\"
           ></div>
@@ -8261,6 +8424,21 @@ export const Image = function Image(props) {
     }
     return uri + separator + key + \\"=\\" + encodeURIComponent(value);
   }
+};
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
 };
 ",
 }
@@ -9072,13 +9250,11 @@ export default MyComponent;
 
 exports[`qwik > svg 1`] = `
 {
-  "high.js": "export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+  "high.js": "export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -9102,15 +9278,19 @@ export const MyComponentStyles = \`.c8xlkz3{display:flex;flex-direction:column;a
 export const MyComponentOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
 
   useStylesScopedQrl(qrl(\\"./low.js\\", \\"MyComponentStyles\\", []));
 
@@ -9121,18 +9301,17 @@ export const MyComponentOnMount = (p) => {
       class: \\"c8xlkz3 builder-block\\",
     },
     h(\\"div\\", {
+      key: \\"builder-5bdc93549f3a4c30b28e85aa1fd91a1c\\",
       dangerouslySetInnerHTML:
         '<svg\\\\n  width=\\"42\\"\\\\n  height=\\"42\\"\\\\n  viewBox=\\"0 0 42 42\\"\\\\n  fill=\\"none\\"\\\\n  xmlns=\\"http://www.w3.org/2000/svg\\"\\\\n>\\\\n  <path\\\\n    d=\\"M19.626 0.0327762C19.5357 0.0409786 19.2486 0.0696867 18.9903 0.0901925C13.0313 0.627445 7.4496 3.84276 3.9144 8.78466C1.94585 11.5324 0.686788 14.6493 0.211053 17.9508C0.0429057 19.1032 0.0223999 19.4436 0.0223999 21.0061C0.0223999 22.5687 0.0429057 22.9091 0.211053 24.0615C1.35118 31.9398 6.95747 38.5591 14.561 41.0116C15.9226 41.4504 17.358 41.7498 18.9903 41.9302C19.626 42 22.3737 42 23.0094 41.9302C25.8269 41.6186 28.2138 40.9214 30.5679 39.7197C30.9288 39.5352 30.9985 39.486 30.9493 39.4449C30.9165 39.4203 29.3785 37.3575 27.533 34.8639L24.1782 30.3322L19.9746 24.1107C17.6615 20.6903 15.7586 17.8933 15.7422 17.8933C15.7257 17.8892 15.7093 20.6534 15.7011 24.0287C15.6888 29.9385 15.6847 30.1763 15.6109 30.3158C15.5043 30.5167 15.4223 30.5987 15.25 30.689C15.1188 30.7546 15.0039 30.7669 14.3847 30.7669H13.6752L13.4865 30.648C13.3635 30.57 13.2733 30.4675 13.2117 30.3486L13.1256 30.164L13.1338 21.9412L13.1461 13.7143L13.2733 13.5543C13.3389 13.4682 13.4783 13.3575 13.5767 13.3041C13.7449 13.2221 13.8105 13.2139 14.52 13.2139C15.3566 13.2139 15.4961 13.2467 15.7134 13.4846C15.775 13.5502 18.0511 16.9788 20.7743 21.1086C23.4975 25.2385 27.2213 30.8776 29.0504 33.6459L32.3724 38.678L32.5405 38.5673C34.0292 37.5994 35.6041 36.2214 36.8508 34.786C39.5043 31.7389 41.2145 28.0232 41.7886 24.0615C41.9568 22.9091 41.9773 22.5687 41.9773 21.0061C41.9773 19.4436 41.9568 19.1032 41.7886 17.9508C40.6485 10.0724 35.0422 3.45315 27.4387 1.00065C26.0976 0.565927 24.6704 0.266542 23.0709 0.0860913C22.6772 0.0450797 19.9664 -3.30508e-05 19.626 0.0327762ZM28.2138 12.7218C28.4106 12.8202 28.5706 13.0089 28.628 13.2057C28.6608 13.3123 28.669 15.5926 28.6608 20.7313L28.6485 28.1052L27.3484 26.1121L26.0443 24.1189V18.7587C26.0443 15.2932 26.0607 13.3451 26.0853 13.2508C26.1509 13.0212 26.2944 12.8407 26.4913 12.7341C26.6595 12.648 26.721 12.6397 27.3649 12.6397C27.9718 12.6397 28.0785 12.648 28.2138 12.7218Z\\"\\\\n    fill=\\"#9CD3D7\\"\\\\n  />\\\\n  <path\\\\n    d=\\"M32.1674 38.7681C32.0239 38.8584 31.9787 38.9199 32.1059 38.8502C32.1961 38.7968 32.3437 38.6861 32.3191 38.682C32.3068 38.682 32.2371 38.723 32.1674 38.7681ZM31.8844 38.9527C31.8106 39.0101 31.8106 39.0142 31.9008 38.9691C31.95 38.9445 31.991 38.9158 31.991 38.9076C31.991 38.8748 31.9705 38.883 31.8844 38.9527ZM31.6794 39.0757C31.6055 39.1331 31.6055 39.1372 31.6958 39.0921C31.745 39.0675 31.786 39.0388 31.786 39.0306C31.786 38.9978 31.7655 39.006 31.6794 39.0757ZM31.4743 39.1988C31.4005 39.2562 31.4005 39.2603 31.4907 39.2152C31.5399 39.1906 31.5809 39.1618 31.5809 39.1536C31.5809 39.1208 31.5604 39.129 31.4743 39.1988ZM31.1626 39.3628C31.0068 39.4448 31.015 39.4776 31.1708 39.3997C31.2405 39.3628 31.2938 39.3259 31.2938 39.3177C31.2938 39.289 31.2897 39.2931 31.1626 39.3628Z\\"\\\\n    fill=\\"#9CD3D7\\"\\\\n  />\\\\n</svg>\\\\n',
     })
   );
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -9149,6 +9328,21 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
 export const MyComponent = componentQrl(
   qrl(\\"./low.js\\", \\"MyComponentOnMount\\", [])
 );
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+};
 ",
 }
 `;
@@ -9158,21 +9352,21 @@ exports[`qwik > todo > Todo.cjs 1`] = `
   "high.cjs": "const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
 
 exports.Todo_onClick_0 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
   state.toggle();
 };
 exports.Todo_onDblClick_1 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
   state.editing = true;
 };
 exports.Todo_onClick_2 = (event) => {
   todosState.todos.splice(todosState.todos.indexOf(props.todo));
 };
 exports.Todo_onBlur_3 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
   state.editing = false;
 };
 exports.Todo_onKeyUp_4 = (event) => {
@@ -9180,15 +9374,12 @@ exports.Todo_onKeyUp_4 = (event) => {
 };
 const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
   state,
-  props,
   local
 ) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -9202,15 +9393,12 @@ const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
 ",
   "low.cjs": "const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
   state,
-  props,
   local
 ) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -9231,15 +9419,19 @@ const useStore = require(\\"@builder.io/qwik\\").useStore;
 exports.TodoOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
   return h(
     \\"li\\",
     {
@@ -9254,29 +9446,47 @@ exports.TodoOnMount = (p) => {
         class: \\"toggle\\",
         type: \\"checkbox\\",
         checked: props.todo.completed,
-        onClick$: qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [s, p, l]),
+        onClick$: qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [s, l]),
       }),
       h(
         \\"label\\",
-        { onDblClick$: qrl(\\"./high.js\\", \\"Todo_onDblClick_1\\", [s, p, l]) },
+        { onDblClick$: qrl(\\"./high.js\\", \\"Todo_onDblClick_1\\", [s, l]) },
         props.todo.text
       ),
       h(\\"button\\", {
         class: \\"destroy\\",
-        onClick$: qrl(\\"./high.js\\", \\"Todo_onClick_2\\", [s, p, l]),
+        onClick$: qrl(\\"./high.js\\", \\"Todo_onClick_2\\", [s, l]),
       })
     ),
     state.editing
       ? h(\\"input\\", {
           class: \\"edit\\",
           value: props.todo.text,
-          onBlur$: qrl(\\"./high.js\\", \\"Todo_onBlur_3\\", [s, p, l]),
-          onKeyUp$: qrl(\\"./high.js\\", \\"Todo_onKeyUp_4\\", [s, p, l]),
+          onBlur$: qrl(\\"./high.js\\", \\"Todo_onBlur_3\\", [s, l]),
+          onKeyUp$: qrl(\\"./high.js\\", \\"Todo_onKeyUp_4\\", [s, l]),
         })
       : null
   );
 };
 exports.Todo = componentQrl(qrl(\\"./med.js\\", \\"TodoOnMount\\", []));
+const __proxyMerge__ = (exports.__proxyMerge__ = function __proxyMerge__(
+  state,
+  local
+) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+});
 ",
 }
 `;
@@ -9286,33 +9496,31 @@ exports[`qwik > todo > Todo.js 1`] = `
   "high.js": "import { useLexicalScope } from \\"@builder.io/qwik\\";
 
 export const Todo_onClick_0 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
   state.toggle();
 };
 export const Todo_onDblClick_1 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
   state.editing = true;
 };
 export const Todo_onClick_2 = (event) => {
   todosState.todos.splice(todosState.todos.indexOf(props.todo));
 };
 export const Todo_onBlur_3 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
   state.editing = false;
 };
 export const Todo_onKeyUp_4 = (event) => {
   props.todo.text = event.target.value;
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -9324,13 +9532,11 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
   });
 };
 ",
-  "low.js": "export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+  "low.js": "export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -9347,15 +9553,19 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
 export const TodoOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
   return h(
     \\"li\\",
     {
@@ -9370,65 +9580,34 @@ export const TodoOnMount = (p) => {
         class: \\"toggle\\",
         type: \\"checkbox\\",
         checked: props.todo.completed,
-        onClick$: qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [s, p, l]),
+        onClick$: qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [s, l]),
       }),
       h(
         \\"label\\",
-        { onDblClick$: qrl(\\"./high.js\\", \\"Todo_onDblClick_1\\", [s, p, l]) },
+        { onDblClick$: qrl(\\"./high.js\\", \\"Todo_onDblClick_1\\", [s, l]) },
         props.todo.text
       ),
       h(\\"button\\", {
         class: \\"destroy\\",
-        onClick$: qrl(\\"./high.js\\", \\"Todo_onClick_2\\", [s, p, l]),
+        onClick$: qrl(\\"./high.js\\", \\"Todo_onClick_2\\", [s, l]),
       })
     ),
     state.editing
       ? h(\\"input\\", {
           class: \\"edit\\",
           value: props.todo.text,
-          onBlur$: qrl(\\"./high.js\\", \\"Todo_onBlur_3\\", [s, p, l]),
-          onKeyUp$: qrl(\\"./high.js\\", \\"Todo_onKeyUp_4\\", [s, p, l]),
+          onBlur$: qrl(\\"./high.js\\", \\"Todo_onBlur_3\\", [s, l]),
+          onKeyUp$: qrl(\\"./high.js\\", \\"Todo_onKeyUp_4\\", [s, l]),
         })
       : null
   );
 };
 export const Todo = componentQrl(qrl(\\"./med.js\\", \\"TodoOnMount\\", []));
-",
-}
-`;
-
-exports[`qwik > todo > Todo.tsx 1`] = `
-{
-  "high.tsx": "import { useLexicalScope } from \\"@builder.io/qwik\\";
-
-export const Todo_onClick_0 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
-  state.toggle();
-};
-export const Todo_onDblClick_1 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
-  state.editing = true;
-};
-export const Todo_onClick_2 = (event) => {
-  todosState.todos.splice(todosState.todos.indexOf(props.todo));
-};
-export const Todo_onBlur_3 = (event) => {
-  const [s, p, l] = useLexicalScope();
-  const state = __proxyMerge__(s, p, l);
-  state.editing = false;
-};
-export const Todo_onKeyUp_4 = (event) => {
-  props.todo.text = event.target.value;
-};
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -9440,13 +9619,55 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
   });
 };
 ",
-  "low.tsx": "export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+}
+`;
+
+exports[`qwik > todo > Todo.tsx 1`] = `
+{
+  "high.tsx": "import { useLexicalScope } from \\"@builder.io/qwik\\";
+
+export const Todo_onClick_0 = (event) => {
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
+  state.toggle();
+};
+export const Todo_onDblClick_1 = (event) => {
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
+  state.editing = true;
+};
+export const Todo_onClick_2 = (event) => {
+  todosState.todos.splice(todosState.todos.indexOf(props.todo));
+};
+export const Todo_onBlur_3 = (event) => {
+  const [s, l] = useLexicalScope();
+  const state = __proxyMerge__(s, l);
+  state.editing = false;
+};
+export const Todo_onKeyUp_4 = (event) => {
+  props.todo.text = event.target.value;
+};
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+};
+",
+  "low.tsx": "export const __proxyMerge__ = function __proxyMerge__(state, local) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
       } else {
         return state[prop];
       }
@@ -9463,15 +9684,19 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
 export const TodoOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
   return (
     <li
       class={\`\${props.todo.completed ? \\"completed\\" : \\"\\"} \${
@@ -9483,28 +9708,43 @@ export const TodoOnMount = (p) => {
           class=\\"toggle\\"
           type=\\"checkbox\\"
           checked={props.todo.completed}
-          onClick$={qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [s, p, l])}
+          onClick$={qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [s, l])}
         />
-        <label onDblClick$={qrl(\\"./high.js\\", \\"Todo_onDblClick_1\\", [s, p, l])}>
+        <label onDblClick$={qrl(\\"./high.js\\", \\"Todo_onDblClick_1\\", [s, l])}>
           {props.todo.text}
         </label>
         <button
           class=\\"destroy\\"
-          onClick$={qrl(\\"./high.js\\", \\"Todo_onClick_2\\", [s, p, l])}
+          onClick$={qrl(\\"./high.js\\", \\"Todo_onClick_2\\", [s, l])}
         ></button>
       </div>
       {state.editing ? (
         <input
           class=\\"edit\\"
           value={props.todo.text}
-          onBlur$={qrl(\\"./high.js\\", \\"Todo_onBlur_3\\", [s, p, l])}
-          onKeyUp$={qrl(\\"./high.js\\", \\"Todo_onKeyUp_4\\", [s, p, l])}
+          onBlur$={qrl(\\"./high.js\\", \\"Todo_onBlur_3\\", [s, l])}
+          onKeyUp$={qrl(\\"./high.js\\", \\"Todo_onKeyUp_4\\", [s, l])}
         />
       ) : null}
     </li>
   );
 };
 export const Todo = componentQrl<any, any>(qrl(\\"./med.js\\", \\"TodoOnMount\\", []));
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
+  return new Proxy(state, {
+    get: (obj, prop) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj, prop, value) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
+};
 ",
 }
 `;
@@ -9518,13 +9758,11 @@ exports[`qwik > todos > Todo.tsx 1`] = `
     todoItem.completed = newValue;
   }
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -9543,15 +9781,19 @@ import { Fragment, h, qrl, useStore } from \\"@builder.io/qwik\\";
 export const TodosOnMount = (p) => {
   const s = useStore(
     () => {
-      const state = structuredClone(
-        typeof __STATE__ === \\"object\\" ? __STATE__[p.serverStateId] : {}
+      const state = Object.assign(
+        {},
+        structuredClone(
+          typeof __STATE__ === \\"object\\" && __STATE__[p.serverStateId]
+        ),
+        p
       );
       return state;
     },
     { deep: true }
   );
   const l = {};
-  const state = __proxyMerge__(s, p, l);
+  const state = __proxyMerge__(s, l);
   return (
     <section class=\\"main\\">
       <Header name=\\"World\\">Hello</Header>
@@ -9560,7 +9802,7 @@ export const TodosOnMount = (p) => {
           class=\\"toggle-all\\"
           type=\\"checkbox\\"
           checked={todosState.allCompleted}
-          onClick$={qrl(\\"./high.js\\", \\"Todos_onClick_0\\", [s, p, l])}
+          onClick$={qrl(\\"./high.js\\", \\"Todos_onClick_0\\", [s, l])}
         />
       ) : null}
       <ul class=\\"todo-list\\">
@@ -9571,7 +9813,7 @@ export const TodosOnMount = (p) => {
               todosItem: todo == null ? {} : todo,
               todo: todo,
             };
-            const state = __proxyMerge__(s, p, l);
+            const state = __proxyMerge__(s, l);
             return <Todo todo={todo}></Todo>;
           }.bind(l)
         )}
@@ -9579,13 +9821,11 @@ export const TodosOnMount = (p) => {
     </section>
   );
 };
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
@@ -9602,13 +9842,11 @@ export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
 export const Todos = componentQrl<any, any>(
   qrl(\\"./low.js\\", \\"TodosOnMount\\", [])
 );
-export const __proxyMerge__ = function __proxyMerge__(state, props, local) {
+export const __proxyMerge__ = function __proxyMerge__(state, local) {
   return new Proxy(state, {
     get: (obj, prop) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }

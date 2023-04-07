@@ -218,7 +218,15 @@ function emitJSX(file: File, component: MitosisComponent, mutable: string[]) {
   }
   file.src.emit(
     'return ',
-    renderJSXNodes(file, directives, handlers, component.children, styles, parentSymbolBindings),
+    renderJSXNodes(
+      file,
+      directives,
+      handlers,
+      component.children,
+      styles,
+      null,
+      parentSymbolBindings,
+    ),
   );
 }
 
