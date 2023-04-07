@@ -114,7 +114,7 @@ export function Image(props: ImageProps) {
         .map((size) => {
           return updateQueryParam(webpImage, 'width', size) + ' ' + size + 'w';
         })
-        .concat([tryAppendWidth(image)])
+        .concat(tryAppendWidth(image))
         .join(', ');
       imgProps.srcset = srcset;
       jsx = jsx = [
@@ -157,9 +157,9 @@ export function Image(props: ImageProps) {
     const match = url.match(/[?&]width=(\d+)/);
     const width = match && match[1];
     if (width) {
-      return url + ' ' + width + 'w';
+      return [url + ' ' + width + 'w'];
     }
-    return url;
+    return [];
   }
 }
 
