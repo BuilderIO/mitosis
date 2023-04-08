@@ -28,7 +28,6 @@ OPTIONS
                 - builder
                 - customElement
                 - html
-                - json
                 - liquid
                 - lit
                 - marko
