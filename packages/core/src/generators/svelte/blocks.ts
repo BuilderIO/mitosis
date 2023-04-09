@@ -4,7 +4,7 @@ import { BaseNode, Binding, ForNode, MitosisNode } from '../../types/mitosis-nod
 
 import isChildren from '../../helpers/is-children';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
+import { addSlotName, isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { getForArguments } from '../../helpers/nodes/for';
@@ -156,7 +156,7 @@ type BlockToSvelte<T extends BaseNode = MitosisNode> = (props: {
 const stringifyBinding =
   (options: ToSvelteOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
-    if (key === 'innerHTML' || !binding) {
+    if (key === 'innerHTML' || !binding || isSlotProperty(key)) {
       return '';
     }
 
@@ -246,6 +246,17 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     return str + ' />';
   }
   str += '>';
+
+  for (const key in json.bindings) {
+    if (isSlotProperty(key)) {
+      // Argument should be a JSX element. Add the "slot" attribute to the opening tag.
+      const slotCode = json.bindings[key]?.code;
+      if (slotCode) {
+        str += addSlotName(slotCode, `slot="${stripSlotPrefix(key).toLowerCase()}"`);
+      }
+    }
+  }
+
   if (json.children) {
     str += json.children
       .map((item) => blockToSvelte({ json: item, options, parentComponent }))
