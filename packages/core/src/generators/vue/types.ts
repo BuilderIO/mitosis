@@ -12,6 +12,7 @@ export interface ToVueOptions extends BaseTranspilerOptions, VueVersionOpt {
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
   asyncComponentImports?: boolean;
+  defineComponent?: boolean;
   api: Api;
 }
 

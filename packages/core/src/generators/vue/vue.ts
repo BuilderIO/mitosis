@@ -193,6 +193,9 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     if (options.vueVersion >= 3 && options.asyncComponentImports) {
       vueImports.push('defineAsyncComponent');
     }
+    if (options.vueVersion >= 3 && options.defineComponent) {
+      vueImports.push('defineComponent');
+    }
     if (options.api === 'composition') {
       onUpdateWithDeps.length && vueImports.push('watch');
       component.hooks.onMount?.code && vueImports.push('onMounted');
