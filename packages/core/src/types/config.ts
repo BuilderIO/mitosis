@@ -1,5 +1,5 @@
 import { MitosisComponent } from './mitosis-component';
-import { TranspilerGenerator } from './transpiler'
+import { TranspilerGenerator } from './transpiler';
 
 export type Format = 'esm' | 'cjs';
 export type Language = 'js' | 'ts';
@@ -22,10 +22,9 @@ export interface TargetContext {
 }
 
 export interface OutputFiles {
-  outputDir: string
-  outputFilePath: string
+  outputDir: string;
+  outputFilePath: string;
 }
-
 
 export type MitosisConfig = {
   /**
@@ -76,12 +75,15 @@ export type MitosisConfig = {
    * hooks
    */
   hooks?: Partial<{
-    beforeBuild: (TargetContexts: TargetContext[]) => void | Promise<void>
-    afterbuild: (TargetContext: TargetContext, files: {
-      componentFiles: OutputFiles[],
-      nonComponentFiles: OutputFiles[]
-    }) => void | Promise<void>
-  }>,
+    beforeBuild: (TargetContexts: TargetContext[]) => void | Promise<void>;
+    afterbuild: (
+      TargetContext: TargetContext,
+      files: {
+        componentFiles: OutputFiles[];
+        nonComponentFiles: OutputFiles[];
+      },
+    ) => void | Promise<void>;
+  }>;
   /**
    * Configure a custom parser function which takes a string and returns MitosisJSON
    * Defaults to the JSXParser of this project (src/parsers/jsx)
