@@ -71,3 +71,4 @@ export const parseSvelte = async function (
   const componentName = path.split('/').pop()?.split('.')[0] ?? 'MyComponent';
   return mapAstToMitosisJson(ast, componentName, string_, usesTypescript);
 };
+export {parseSvelte, mapAstToMitosisJson}
