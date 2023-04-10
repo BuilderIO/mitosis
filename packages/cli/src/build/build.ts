@@ -24,13 +24,14 @@ import {
   MitosisConfig,
   parseJsx,
   Target,
-  TranspilerGenerator,
   parseSvelte,
+  TargetContext,
+  OutputFiles
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
-import { kebabCase } from 'lodash';
+import { kebabCase, get } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
@@ -192,12 +193,6 @@ const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedM
   );
 };
 
-interface TargetContext {
-  target: Target;
-  generator: TranspilerGenerator<MitosisConfig['options'][Target]>;
-  outputPath: string;
-}
-
 interface TargetContextWithConfig extends TargetContext {
   options: MitosisConfig;
 }
@@ -216,6 +211,22 @@ const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithC
   return await outputNonComponentFiles({ ...targetContext, files });
 };
 
+function runHook(hook: string, config?: MitosisConfig) {
+  const noop = () => {}
+  const hookFn = get(config, `hooks.${hook}`)
+
+  if(!hookFn) {
+    return noop
+  }
+  const debugTarget = debug(`mitosis:${hook}`);
+
+  return async (...params) => {
+    debugTarget(`before run ${hook} hook...`)
+    await hookFn(...params)
+    debugTarget(`after run ${hook} hook`)
+  }
+}
+
 export async function build(config?: MitosisConfig) {
   // merge default options
   const options = getOptions(config);
@@ -227,6 +238,7 @@ export async function build(config?: MitosisConfig) {
   const mitosisComponents = await getMitosisComponentJSONs(options);
 
   const targetContexts = getTargetContexts(options);
+  await runHook('beforeBuild')(targetContexts)
 
   await Promise.all(
     targetContexts.map(async (targetContext) => {
@@ -238,7 +250,10 @@ export async function build(config?: MitosisConfig) {
         buildAndOutputNonComponentFiles({ ...targetContext, options }),
         buildAndOutputComponentFiles({ ...targetContext, options, files }),
       ]);
-
+      await runHook('afterbuild')(targetContext, {
+        componentFiles: x[1],
+        nonComponentFiles: x[0]
+      })
       console.info(
         `Mitosis: ${targetContext.target}: generated ${x[1].length} components, ${x[0].length} regular files.`,
       );
@@ -326,7 +341,7 @@ async function buildAndOutputComponentFiles({
   options,
   generator,
   outputPath,
-}: TargetContextWithConfig & { files: ParsedMitosisJson[] }) {
+}: TargetContextWithConfig & { files: ParsedMitosisJson[] }): Promise<OutputFiles[]> {
   const debugTarget = debug(`mitosis:${target}`);
   const shouldOutputTypescript = checkShouldOutputTypeScript({ options, target });
 
@@ -368,6 +383,7 @@ async function buildAndOutputComponentFiles({
     const outputDir = `${options.dest}/${outputPath}`;
 
     await outputFile(`${outputDir}/${outputFilePath}`, transpiled);
+    return { outputDir, outputFilePath }
   });
   return await Promise.all(output);
 }
@@ -387,13 +403,15 @@ const outputNonComponentFiles = async ({
 }: TargetContext & {
   files: { path: string; output: string }[];
   options: MitosisConfig;
-}) => {
+}): Promise<OutputFiles[]> => {
   const extension = getNonComponentFileExtension({ target, options });
-  const folderPath = `${options.dest}/${outputPath}`;
+  const outputDir = `${options.dest}/${outputPath}`;
   return await Promise.all(
-    files.map(({ path, output }) =>
-      outputFile(`${folderPath}/${path.replace(/\.tsx?$/, extension)}`, output),
-    ),
+    files.map(async ({ path, output }) => {
+      const outputFilePath = path.replace(/\.tsx?$/, extension)
+      await outputFile(`${outputDir}/${outputFilePath}`, output)
+      return { outputDir, outputFilePath }
+    }),
   );
 };
 
