@@ -4,6 +4,7 @@ import {
   GeneratorOptions,
   MitosisComponent,
   parseJsx,
+  parseSvelte,
   Plugin,
   Target,
   targets,
@@ -126,6 +127,9 @@ const command: GluegunCommand = {
           case 'builder':
             json = builderContentToMitosisComponent(JSON.parse(data!));
             break;
+          case 'svelte':            
+            console.warning("Please note that compilation from Svelte is EXPERIMENTAL. Please report bugs in the Mitosis issues.");
+            json = parseSvelte("placeholder" /*TO-DO: test sveltosis in cli*/)
 
           default:
             print.error(`${from_} is not a valid input type`);
