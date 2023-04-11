@@ -1,5 +1,5 @@
-import dedent from 'dedent';
 import { format } from 'prettier/standalone';
+import { dedent } from '../../helpers/dedent';
 import { hasCss } from '../../helpers/styles/helpers';
 import { getRefs } from '../../helpers/get-refs';
 import { renderPreComponent } from '../../helpers/render-imports';
@@ -102,6 +102,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'state':
+          case 'dynamic-jsx-elements':
             return (c) => c;
           case 'bindings':
           case 'hooks':

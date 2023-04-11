@@ -1,17 +1,20 @@
 import { Nullable } from '../../helpers/nullable';
 import { stringifyContextValue } from '../../helpers/get-state-object-string';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { ContextGetInfo, ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { ToVueOptions } from './types';
-import { pipe } from 'fp-ts/lib/function';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
 import { pickBy } from 'lodash';
 import { stripGetter } from '../../helpers/patterns';
-import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import {
+  replaceIdentifiers,
+  replacePropsIdentifier,
+  replaceStateIdentifier,
+} from '../../helpers/replace-identifiers';
 import { isSlotProperty, replaceSlotsInString } from '../../helpers/slots';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
+import { pipe } from 'fp-ts/lib/function';
 
 export const addPropertiesToJson =
   (properties: MitosisNode['properties']) =>
@@ -183,56 +186,40 @@ export const processBinding = ({
 }: ProcessBinding): string => {
   try {
     return pipe(
-      // processed twice, once for props and once for state
-      stripStateAndPropsRefs(code, {
-        includeState: false,
-        includeProps: true,
-        replaceWith: (name) => {
-          switch (options.api) {
-            // keep pointing to `props.${value}`
-            case 'composition':
-              if (codeType === 'bindings') {
-                return isSlotProperty(name)
-                  ? replaceSlotsInString(name, (x) => `$slots.${x}`)
-                  : name;
-              }
-
-              if (name === 'children' || name.startsWith('children.')) {
-                return `useSlots().default`;
-              }
-              return isSlotProperty(name)
-                ? replaceSlotsInString(name, (x) => `useSlots().${x}`)
-                : `props.${name}`;
-            case 'options':
-              return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
-          }
-        },
-      }),
-      (code) =>
-        stripStateAndPropsRefs(code, {
-          includeState: true,
-          includeProps: false,
-          replaceWith: (name) => {
-            switch (options.api) {
-              case 'composition':
-                return name;
-              case 'options':
-                return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
+      code,
+      replacePropsIdentifier((name) => {
+        switch (options.api) {
+          // keep pointing to `props.${value}`
+          case 'composition':
+            if (codeType === 'bindings') {
+              return isSlotProperty(name) ? replaceSlotsInString(name, (x) => `$slots.${x}`) : name;
             }
-          },
-        }),
-      (x) => {
-        return pipe(
-          x,
-          // bindings does not need process refs and prefix this
-          (code) =>
-            codeType === 'bindings'
-              ? code
-              : processRefs({ input: code, component: json, options, thisPrefix }),
-          (code) => (codeType === 'bindings' ? code : prefixMethodsWithThis(code, json, options)),
-          (code) => (preserveGetter === false ? stripGetter(code) : code),
-        );
-      },
+
+            if (name === 'children' || name.startsWith('children.')) {
+              return `useSlots().default`;
+            }
+            return isSlotProperty(name)
+              ? replaceSlotsInString(name, (x) => `useSlots().${x}`)
+              : `props.${name}`;
+          case 'options':
+            return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
+        }
+      }),
+      replaceStateIdentifier((name) => {
+        switch (options.api) {
+          case 'composition':
+            return name;
+          case 'options':
+            return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
+        }
+      }),
+      // bindings does not need process refs and prefix this
+      (x) =>
+        codeType === 'bindings'
+          ? x
+          : processRefs({ input: x, component: json, options, thisPrefix }),
+      (x) => (codeType === 'bindings' ? x : prefixMethodsWithThis(x, json, options)),
+      (x) => (preserveGetter === false ? stripGetter(x) : x),
     );
   } catch (e) {
     console.error('could not process bindings in ', { code });

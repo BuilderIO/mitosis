@@ -1,7 +1,7 @@
-import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
 import { collectCss } from '../../helpers/styles/collect-css';
+import { dedent } from '../../helpers/dedent';
 import { hasStyle } from '../../helpers/styles/helpers';
 import { fastClone } from '../../helpers/fast-clone';
 import { getProps } from '../../helpers/get-props';
@@ -126,6 +126,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           case 'hooks':
           case 'hooks-deps':
           case 'state':
+          case 'dynamic-jsx-elements':
             return (x) => x;
         }
       }),
@@ -139,6 +140,8 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             return flow(stripStateAndProps({ json, options }), stripGetter);
           case 'properties':
             return stripStateAndProps({ json, options });
+          case 'dynamic-jsx-elements':
+            return (x) => x;
         }
       }),
     ];

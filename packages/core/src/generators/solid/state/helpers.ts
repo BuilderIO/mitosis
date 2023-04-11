@@ -5,6 +5,7 @@ import { ToSolidOptions } from '../types';
 import { flow, identity } from 'fp-ts/lib/function';
 import { transformStateSetters } from '../../../helpers/transform-state-setters';
 import { capitalize } from '../../../helpers/capitalize';
+import { replaceStateIdentifier } from '../../../helpers/replace-identifiers';
 
 export const getStateSetterName = (stateName: string) => `set${capitalize(stateName)}`;
 
@@ -89,34 +90,28 @@ const updateStateSettersInCode =
     }
   };
 
-const updateStateGettersInCode =
-  (options: ToSolidOptions, component: MitosisComponent) =>
-  (value: string): string =>
-    stripStateAndPropsRefs(value, {
-      includeState: true,
-      includeProps: false,
-      replaceWith: (name): string => {
-        const stateType = getStateTypeForValue({ value: name, component, options });
-        const state = component.state[name];
-        switch (stateType) {
-          case 'signals':
-            if (
-              // signal accessors are lazy, so we need to add a function call to property calls
-              state?.type === 'property' ||
-              // getters become plain functions, requiring a function call to access their value
-              state?.type === 'getter'
-            ) {
-              return `${name}()`;
-            } else {
-              return name;
-            }
-
-          case 'store':
-          case 'mutable':
-            return name;
+const updateStateGettersInCode = (options: ToSolidOptions, component: MitosisComponent) =>
+  replaceStateIdentifier((name) => {
+    const stateType = getStateTypeForValue({ value: name, component, options });
+    const state = component.state[name];
+    switch (stateType) {
+      case 'signals':
+        if (
+          // signal accessors are lazy, so we need to add a function call to property calls
+          state?.type === 'property' ||
+          // getters become plain functions, requiring a function call to access their value
+          state?.type === 'getter'
+        ) {
+          return `${name}()`;
+        } else {
+          return name;
         }
-      },
-    });
+
+      case 'store':
+      case 'mutable':
+        return name;
+    }
+  });
 
 export const updateStateCode = ({
   options,
