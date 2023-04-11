@@ -1,25 +1,14 @@
 import { Image } from '../generators/qwik/directives';
 
 describe('qwik directives', () => {
-  const partial = expect.objectContaining;
   beforeEach(() => {
     (global as any).h = mockH;
   });
   afterEach(() => ((global as any).h = undefined));
   describe('Image', () => {
     test('altText', () => {
-      expect(Image({ altText: 'foo', image: 'http://some.url' }).children[0][0]).toEqual(
-        partial({
-          tag: 'img',
-          props: partial({ src: 'http://some.url', alt: 'foo' }),
-        }),
-      );
-      expect(Image({ image: 'http://some.url' }).children[0][0]).toEqual(
-        partial({
-          tag: 'img',
-          props: partial({ src: 'http://some.url', role: 'presentation' }),
-        }),
-      );
+      expect(Image({ altText: 'foo', image: 'http://some.url' }).children[0][0]).toMatchSnapshot();
+      expect(Image({ image: 'http://some.url' }).children[0][0]).toMatchSnapshot();
     });
     test('builder-pixel is eager', () => {
       expect(
@@ -27,24 +16,14 @@ describe('qwik directives', () => {
           builderBlock: { id: 'builder-pixel-foo' },
           image: 'http://some.url',
         }).children[0][0],
-      ).toEqual(
-        partial({
-          tag: 'img',
-          props: partial({ loading: 'eager' }),
-        }),
-      );
+      ).toMatchSnapshot();
     });
     test('images are lazy loaded', () => {
       expect(
         Image({
           image: 'http://some.url',
         }).children[0][0],
-      ).toEqual(
-        partial({
-          tag: 'img',
-          props: partial({ loading: 'lazy' }),
-        }),
-      );
+      ).toMatchSnapshot();
     });
     test('builder.io URLs are served using webp', () => {
       expect(
@@ -54,15 +33,7 @@ describe('qwik directives', () => {
             image: 'http://foo.builder.io/foo',
           }),
         ),
-      ).toEqual(
-        partial({
-          tag: 'source',
-          props: partial({
-            srcset: srcSet('http://foo.builder.io/foo?format=webp'),
-            type: 'image/webp',
-          }),
-        }),
-      );
+      ).toMatchSnapshot();
     });
     test('maxWidth is added to the srcs', () => {
       expect(
@@ -73,15 +44,7 @@ describe('qwik directives', () => {
             srcsetSizes: '1234 456',
           }),
         ),
-      ).toEqual(
-        partial({
-          tag: 'source',
-          props: partial({
-            srcset: srcSet('http://foo.builder.io/foo?format=webp', '1234 456'),
-            type: 'image/webp',
-          }),
-        }),
-      );
+      ).toMatchSnapshot();
     });
     test('anchor should wrap in <a>', () => {
       expect(
@@ -92,12 +55,7 @@ describe('qwik directives', () => {
             href: 'my-url',
           }),
         ),
-      ).toEqual(
-        partial({
-          tag: 'a',
-          props: partial({ href: 'my-url' }),
-        }),
-      );
+      ).toMatchSnapshot();
     });
   });
 });
