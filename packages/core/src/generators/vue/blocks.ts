@@ -295,7 +295,7 @@ const NODE_MAPPERS: {
 const stringifyBinding =
   (node: MitosisNode) =>
   ([key, value]: [string, Binding]) => {
-    if (value.type === 'spread') {
+    if (value.type === 'spread' || isSlotProperty(key)) {
       return ''; // we handle this after
     } else if (key === 'class') {
       return `:class="_classStringToObject(${value?.code})"`;
@@ -418,6 +418,15 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
   }
 
   str += '>';
+
+  for (const key in node.bindings) {
+    if (isSlotProperty(key)) {
+      str += `<template #${stripSlotPrefix(key).toLowerCase()}>${
+        node.bindings[key]?.code
+      }</template>`;
+    }
+  }
+
   if (node.children) {
     str += node.children.map((item) => blockToVue(item, options)).join('');
   }

@@ -21,3 +21,14 @@ export function replaceSlotsInString(code: string, mapper: SlotMapper) {
     },
   });
 }
+
+export function addSlotName(code: string, slotAttribute: string) {
+  // If the tag has other attributes, add the "slot" attribute before the first attribute
+  // If the tag has no attributes, add the "slot" attribute after the tag name
+  let splitIndex = code.indexOf('>');
+  const whitespaceIndex = code.indexOf(' ');
+  if (whitespaceIndex > -1 && whitespaceIndex < splitIndex) {
+    splitIndex = whitespaceIndex;
+  }
+  return `${code.slice(0, splitIndex)} ${slotAttribute}${code.slice(splitIndex)}`;
+}
