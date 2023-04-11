@@ -302,7 +302,9 @@ export default function Fiddle() {
             break;
           case 'jsx':
           default:
-            json = parseJsx(state.code);
+            json = parseJsx(state.code, {
+              typescript: state.options.typescript === 'true',
+            });
             break;
         }
 
