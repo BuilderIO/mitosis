@@ -46,7 +46,7 @@ export const DIRECTIVES: Record<
               }),
             '};',
           );
-          this.emit('const state = __proxyMerge__(s,p,l);');
+          this.emit('const state = __proxyMerge__(s,l);');
         }
         this.emit('return(');
         blockFn();
@@ -114,7 +114,7 @@ export function Image(props: ImageProps) {
         .map((size) => {
           return updateQueryParam(webpImage, 'width', size) + ' ' + size + 'w';
         })
-        .concat([image])
+        .concat(tryAppendWidth(image))
         .join(', ');
       imgProps.srcset = srcset;
       jsx = jsx = [
@@ -152,6 +152,15 @@ export function Image(props: ImageProps) {
 
     return uri + separator + key + '=' + encodeURIComponent(value);
   }
+
+  function tryAppendWidth(url: string) {
+    const match = url.match(/[?&]width=(\d+)/);
+    const width = match && match[1];
+    if (width) {
+      return [url + ' ' + width + 'w'];
+    }
+    return [];
+  }
 }
 
 function __passThroughProps__(
@@ -186,13 +195,11 @@ function CoreButton(props: {
   return h(hasLink ? 'a' : props.tagName$ || 'span', __passThroughProps__(hProps, props));
 }
 
-function __proxyMerge__(state: any, props: any, local: any) {
+function __proxyMerge__(state: any, local: any) {
   return new Proxy(state, {
     get: (obj: any, prop: any) => {
       if (local && prop in local) {
         return local[prop];
-      } else if (props && prop in props) {
-        return props[prop];
       } else {
         return state[prop];
       }
