@@ -1,9 +1,9 @@
-import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import { TranspilerGenerator } from '../../types/transpiler';
 import { collectCss } from '../../helpers/styles/collect-css';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
+import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
 import { getRefs } from '../../helpers/get-refs';
 import { getPropsRef } from '../../helpers/get-props-ref';
