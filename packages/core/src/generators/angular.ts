@@ -1,5 +1,5 @@
-import dedent from 'dedent';
 import { format } from 'prettier/standalone';
+import { dedent } from '../helpers/dedent';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
 import { getRefs } from '../helpers/get-refs';
