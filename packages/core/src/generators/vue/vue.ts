@@ -99,6 +99,7 @@ const BASE_OPTIONS: ToVueOptions = {
   plugins: [],
   vueVersion: 2,
   api: 'options',
+  defineComponent: true,
 };
 
 const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
@@ -193,7 +194,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     if (options.vueVersion >= 3 && options.asyncComponentImports) {
       vueImports.push('defineAsyncComponent');
     }
-    if (options.vueVersion >= 3 && options.defineComponent) {
+    if (options.vueVersion >= 3 && options.api === 'options' && options.defineComponent) {
       vueImports.push('defineComponent');
     }
     if (options.api === 'composition') {
