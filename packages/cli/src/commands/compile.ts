@@ -129,7 +129,7 @@ const command: GluegunCommand = {
             break;
           case 'svelte':            
             console.warning("Please note that compilation from Svelte is EXPERIMENTAL. Please report bugs in the Mitosis issues.");
-            json = parseSvelte("placeholder" /*TO-DO: test sveltosis in cli*/)
+            json = parseSvelte(data!)
 
           default:
             print.error(`${from_} is not a valid input type`);
