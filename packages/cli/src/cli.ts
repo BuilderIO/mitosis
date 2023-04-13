@@ -24,25 +24,31 @@ OPTIONS
 	--to=<format>, -t=<format>
 		Specify output format. <format> can be one of:
 		
-		- reactNative
-		- solid
-		- vue
-		- react
-		- template
-		- html
-		- customElement
-		- mitosis
-		- builder
-		- swift
-		- svelte
-		- liquid
-		- angular
+		- alpine
+                - angular
+                - builder
+                - customComponent
+                - html
+                - liquid
+                - lit
+                - marko
+                - mitosis
+                - preact
+                - qwik
+                - react
+                - reactNative
+                - rsc
+                - solid
+                - stencil
+                - svelte
+                - swift
+                - template
+                - vue
 	--from=<format>, -f=<format>
-		Specify input format. <format> can be one of:
-		
+		Specify input format. <format> can be one of:		
 		- mitosis
 		- builder
-		- liquid
+		- svelte
 	--list, -l
 		List available output formats.
 	--config=<file>, -c=<file>
