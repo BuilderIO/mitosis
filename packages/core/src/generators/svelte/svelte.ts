@@ -33,6 +33,9 @@ import { stripStateAndProps } from './helpers';
 import { ToSvelteOptions } from './types';
 import { blockToSvelte } from './blocks';
 import { stripGetter } from '../../helpers/patterns';
+import { isFirstLetterLowerCase } from '../../helpers/is-first-letter-lower-case'
+import { mapCamelCasedHtmlAttributes } from 'src/helpers/map-camel-cased-html-attributes';
+import { MitosisNode } from 'src/types/mitosis-node';
 
 const getContextCode = (json: MitosisComponent) => {
   const contextGetters = json.context.get;
@@ -146,7 +149,9 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       .filter((x) => !props.includes(x));
 
     json = runPostJsonPlugins(json, options.plugins);
-
+    //@ts-ignore
+    mapCamelCasedHtmlAttributes(json)
+    
     const css = collectCss(json);
     stripMetaProperties(json);
 
