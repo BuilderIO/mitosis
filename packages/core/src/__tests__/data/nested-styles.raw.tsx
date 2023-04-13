@@ -3,7 +3,8 @@ export default function NestedStyles() {
     <div
       css={{
         display: 'flex',
-        foo: 'var(--bar)',
+        '--bar': 'red',
+        color: 'var(--bar)',
         '@media (max-width: env(--mobile))': {
           display: 'block',
         },
