@@ -29,8 +29,8 @@ export interface OutputFiles {
 export interface MitosisPlugin {
   name: string;
   order: number;
-  beforeBuild: (TargetContexts: TargetContext[]) => void | Promise<void>;
-  afterbuild: (
+  [HookType.BeforeBuild]: (TargetContexts: TargetContext[]) => void | Promise<void>;
+  [HookType.Afterbuild]: (
     TargetContext: TargetContext,
     files: {
       componentFiles: OutputFiles[];
@@ -40,6 +40,11 @@ export interface MitosisPlugin {
 }
 
 export type MitosisPluginFn = () => Partial<MitosisPlugin>;
+
+export enum HookType {
+  BeforeBuild = 'beforeBuild',
+  Afterbuild = 'afterbuild',
+}
 
 export type MitosisConfig = {
   /**

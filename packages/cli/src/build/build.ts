@@ -29,6 +29,7 @@ import {
   OutputFiles,
   MitosisPlugin,
   MitosisPluginFn,
+  HookType,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import { flow, pipe } from 'fp-ts/lib/function';
@@ -72,7 +73,7 @@ const DEFAULT_CONFIG: Partial<MitosisConfig> = {
   getTargetPath,
 };
 
-const formatHook = (config?: MitosisConfig): Partial<MitosisPlugin>[] => {
+export const formatHook = (config?: MitosisConfig): Partial<MitosisPlugin>[] => {
   const plugins = config?.plugins;
   if (!plugins) return [];
 
@@ -233,7 +234,7 @@ const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithC
   return await outputNonComponentFiles({ ...targetContext, files });
 };
 
-function runHook(hook: string, config: MitosisConfig) {
+export function runHook(hook: string, config: MitosisConfig) {
   const plugins = config.plugins as Partial<MitosisPlugin>[];
   const debugTarget = debug(`mitosis:${hook}`);
 
@@ -258,7 +259,7 @@ export async function build(config?: MitosisConfig) {
   const mitosisComponents = await getMitosisComponentJSONs(options);
 
   const targetContexts = getTargetContexts(options);
-  await runHook('beforeBuild', options)(targetContexts);
+  await runHook(HookType.BeforeBuild, options)(targetContexts);
 
   await Promise.all(
     targetContexts.map(async (targetContext) => {
@@ -270,7 +271,7 @@ export async function build(config?: MitosisConfig) {
         buildAndOutputNonComponentFiles({ ...targetContext, options }),
         buildAndOutputComponentFiles({ ...targetContext, options, files }),
       ]);
-      await runHook('afterbuild', options)(targetContext, {
+      await runHook(HookType.Afterbuild, options)(targetContext, {
         componentFiles: x[1],
         nonComponentFiles: x[0],
       });
