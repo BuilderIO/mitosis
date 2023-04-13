@@ -27,11 +27,13 @@ import {
   parseSvelte,
   TargetContext,
   OutputFiles,
+  MitosisPlugin,
+  MitosisPluginFn,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
-import { kebabCase, get } from 'lodash';
+import { kebabCase } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
@@ -70,6 +72,25 @@ const DEFAULT_CONFIG: Partial<MitosisConfig> = {
   getTargetPath,
 };
 
+const formatHook = (config?: MitosisConfig): Partial<MitosisPlugin>[] => {
+  const plugins = config?.plugins;
+  if (!plugins) return [];
+
+  let pluginList = plugins;
+  if (!Array.isArray(plugins)) {
+    pluginList = [plugins];
+  }
+
+  return (pluginList as Array<MitosisPluginFn | Partial<MitosisPlugin>>)
+    .map((plugin) => {
+      if (typeof plugin === 'function') {
+        return plugin();
+      }
+      return plugin;
+    })
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
+};
+
 const getOptions = (config?: MitosisConfig): MitosisConfig => ({
   ...DEFAULT_CONFIG,
   ...config,
@@ -77,6 +98,7 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => ({
     ...DEFAULT_CONFIG.options,
     ...config?.options,
   },
+  plugins: formatHook(config),
 });
 
 async function clean(options: MitosisConfig) {
@@ -211,19 +233,17 @@ const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithC
   return await outputNonComponentFiles({ ...targetContext, files });
 };
 
-function runHook(hook: string, config?: MitosisConfig) {
-  const noop = () => {};
-  const hookFn = get(config, `hooks.${hook}`);
-
-  if (!hookFn) {
-    return noop;
-  }
+function runHook(hook: string, config: MitosisConfig) {
+  const plugins = config.plugins as Partial<MitosisPlugin>[];
   const debugTarget = debug(`mitosis:${hook}`);
 
   return async (...params) => {
-    debugTarget(`before run ${hook} hook...`);
-    await hookFn(...params);
-    debugTarget(`after run ${hook} hook`);
+    for (let plugin of plugins) {
+      if (!plugin[hook]) continue;
+      debugTarget(`before run ${plugin.name} ${hook} hook...`);
+      await plugin[hook](...params);
+      debugTarget(`run $${plugin.name} ${hook} hook done`);
+    }
   };
 }
 
@@ -238,7 +258,7 @@ export async function build(config?: MitosisConfig) {
   const mitosisComponents = await getMitosisComponentJSONs(options);
 
   const targetContexts = getTargetContexts(options);
-  await runHook('beforeBuild')(targetContexts);
+  await runHook('beforeBuild', options)(targetContexts);
 
   await Promise.all(
     targetContexts.map(async (targetContext) => {
@@ -250,7 +270,7 @@ export async function build(config?: MitosisConfig) {
         buildAndOutputNonComponentFiles({ ...targetContext, options }),
         buildAndOutputComponentFiles({ ...targetContext, options, files }),
       ]);
-      await runHook('afterbuild')(targetContext, {
+      await runHook('afterbuild', options)(targetContext, {
         componentFiles: x[1],
         nonComponentFiles: x[0],
       });

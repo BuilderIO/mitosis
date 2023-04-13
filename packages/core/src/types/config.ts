@@ -26,6 +26,21 @@ export interface OutputFiles {
   outputFilePath: string;
 }
 
+export interface MitosisPlugin {
+  name: string;
+  order: number;
+  beforeBuild: (TargetContexts: TargetContext[]) => void | Promise<void>;
+  afterbuild: (
+    TargetContext: TargetContext,
+    files: {
+      componentFiles: OutputFiles[];
+      nonComponentFiles: OutputFiles[];
+    },
+  ) => void | Promise<void>;
+}
+
+export type MitosisPluginFn = () => Partial<MitosisPlugin>;
+
 export type MitosisConfig = {
   /**
    * List of targets to compile to.
@@ -74,16 +89,10 @@ export type MitosisConfig = {
   /**
    * hooks
    */
-  hooks?: Partial<{
-    beforeBuild: (TargetContexts: TargetContext[]) => void | Promise<void>;
-    afterbuild: (
-      TargetContext: TargetContext,
-      files: {
-        componentFiles: OutputFiles[];
-        nonComponentFiles: OutputFiles[];
-      },
-    ) => void | Promise<void>;
-  }>;
+  plugins?:
+    | Partial<MitosisPlugin>
+    | (() => Partial<MitosisPlugin>)
+    | Array<Partial<MitosisPlugin> | MitosisPluginFn>;
   /**
    * Configure a custom parser function which takes a string and returns MitosisJSON
    * Defaults to the JSXParser of this project (src/parsers/jsx)
