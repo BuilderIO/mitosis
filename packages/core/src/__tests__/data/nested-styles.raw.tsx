@@ -11,8 +11,14 @@ export default function NestedStyles() {
         '&:hover': {
           display: 'flex',
         },
+        ':active': {
+          display: 'inline',
+        },
         '.nested-selector': {
           display: 'grid',
+        },
+        '.nested-selector:hover': {
+          display: 'block',
         },
       }}
     >
