@@ -2159,7 +2159,8 @@ function NestedStyles(props) {
       <style jsx>{\`
         .view {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .view {
@@ -2663,7 +2664,9 @@ function RenderBlock(props) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -5556,7 +5559,8 @@ function NestedStyles(props: any) {
       <style jsx>{\`
         .view {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .view {
@@ -6122,7 +6126,9 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );

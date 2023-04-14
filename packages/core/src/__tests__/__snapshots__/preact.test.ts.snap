@@ -2192,7 +2192,8 @@ function NestedStyles(props) {
       <style jsx>{\`
         .div {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .div {
@@ -2699,7 +2700,9 @@ function RenderBlock(props) {
           ) : null}
         </Fragment>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <Fragment>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </Fragment>
       )}
     </Fragment>
   );
@@ -5601,7 +5604,8 @@ function NestedStyles(props: any) {
       <style jsx>{\`
         .div {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .div {
@@ -6167,7 +6171,9 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
         </Fragment>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <Fragment>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </Fragment>
       )}
     </Fragment>
   );

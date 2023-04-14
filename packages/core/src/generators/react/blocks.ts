@@ -6,7 +6,7 @@ import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
 import { getForArguments } from '../../helpers/nodes/for';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode, ForNode } from '../../types/mitosis-node';
+import { MitosisNode, ForNode, checkIsForNode } from '../../types/mitosis-node';
 import { closeFrag, getFragment, openFrag, processBinding, wrapInFragment } from './helpers';
 import { updateStateSettersInCode } from './state';
 import { ToReactOptions } from './types';
@@ -106,12 +106,21 @@ const NODE_MAPPERS: {
   },
   Show(json, options, component) {
     const wrap = wrapInFragment(json);
+    const wrapElse =
+      json.meta.else &&
+      (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options, component))
       .join('\n')}${wrap ? closeFrag(options) : ''}
-    ) : ${!json.meta.else ? 'null' : blockToReact(json.meta.else as any, options, component)}}`;
+    ) : ${
+      !json.meta.else
+        ? 'null'
+        : (wrapElse ? openFrag(options) : '') +
+          blockToReact(json.meta.else as any, options, component) +
+          (wrapElse ? closeFrag(options) : '')
+    }}`;
   },
 };
 
