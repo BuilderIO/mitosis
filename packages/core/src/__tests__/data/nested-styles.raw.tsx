@@ -20,6 +20,9 @@ export default function NestedStyles() {
         '.nested-selector:hover': {
           display: 'block',
         },
+        '&.nested-selector:active': {
+          display: 'inline-block',
+        },
       }}
     >
       Hello world
