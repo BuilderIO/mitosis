@@ -3582,6 +3582,35 @@ export default class NestedShow extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > showWithRootText 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"show-root-text\\")
+export default class ShowRootText extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() conditionA: any;
+
+  render() {
+    return html\`
+
+          \${
+            this.conditionA
+              ? html\` ContentA \`
+              : html\`
+    <div>else-condition-A</div>
+    \`
+          }
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > spreadAttrs 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -7855,6 +7884,39 @@ export default class NestedShow extends LitElement {
         <div .key=\\"\${idx}\\">\${item}</div>
         \`
                 )}\`
+              : html\`
+      <div>else-condition-A</div>
+      \`
+          }
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > showWithRootText 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+@customElement(\\"show-root-text\\")
+export default class ShowRootText extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() conditionA: any;
+
+  render() {
+    return html\`
+
+          \${
+            this.conditionA
+              ? html\` ContentA \`
               : html\`
       <div>else-condition-A</div>
       \`

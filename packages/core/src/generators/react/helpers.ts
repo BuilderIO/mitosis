@@ -21,6 +21,4 @@ export function getFragment(type: 'open' | 'close', options: ToReactOptions) {
   const tagName = options.preact ? 'Fragment' : '';
   return type === 'open' ? `<${tagName}>` : `</${tagName}>`;
 }
-export const wrapInFragment = (json: MitosisComponent | MitosisNode) => {
-  return json.children.length !== 1;
-};
+export const wrapInFragment = (json: MitosisComponent | MitosisNode) => json.children.length !== 1;

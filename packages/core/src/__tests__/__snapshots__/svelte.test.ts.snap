@@ -2389,6 +2389,18 @@ exports[`Svelte > jsx > Javascript Test > showWithFor 1`] = `
 {/if}"
 `;
 
+exports[`Svelte > jsx > Javascript Test > showWithRootText 1`] = `
+"<script>
+  export let conditionA;
+</script>
+
+{#if conditionA}
+  ContentA
+{:else}
+  <div>else-condition-A</div>
+{/if}"
+`;
+
 exports[`Svelte > jsx > Javascript Test > spreadAttrs 1`] = `"<input {...attrs} />"`;
 
 exports[`Svelte > jsx > Javascript Test > spreadNestedProps 1`] = `
@@ -5428,6 +5440,24 @@ exports[`Svelte > jsx > Typescript Test > showWithFor 1`] = `
   {#each items as item, idx (idx)}
     <div>{item}</div>
   {/each}
+{:else}
+  <div>else-condition-A</div>
+{/if}"
+`;
+
+exports[`Svelte > jsx > Typescript Test > showWithRootText 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  interface Props {
+    conditionA: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let conditionA: Props[\\"conditionA\\"];
+</script>
+
+{#if conditionA}
+  ContentA
 {:else}
   <div>else-condition-A</div>
 {/if}"
