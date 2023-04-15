@@ -5,7 +5,7 @@ import basicExample from './data/basic.raw.tsx?raw';
 import renderBlockExample from './data/blocks/render-block.raw.tsx?raw';
 import subComponentExample from './data/sub-component.raw.tsx?raw';
 
-const generateNgModule = (name: string, componentsUsed: string[]) =>
+const mockNgModule = (name: string, componentsUsed: string[]) =>
   tryPrettierFormat(
     `@NgModule({
   declarations: [${name}],
@@ -18,7 +18,7 @@ export class ${name}Module {}`,
     'typescript',
   ).trim();
 
-const generateStandaloneComponentMetadata = (name: string, componentsUsed: string[]) =>
+const mockStandaloneComponentMetadata = (name: string, componentsUsed: string[]) =>
   tryPrettierFormat(
     `
   standalone: true,
@@ -32,8 +32,8 @@ export class ${name} {`,
 
 describe('Angular standalone component', () => {
   test('Standalone option should prevent NgModule generation in basic components', () => {
-    const basicNgModule = generateNgModule('MyBasicComponent', []);
-    const standaloneComponentMetadata = generateStandaloneComponentMetadata('MyBasicComponent', []);
+    const basicNgModule = mockNgModule('MyBasicComponent', []);
+    const standaloneComponentMetadata = mockStandaloneComponentMetadata('MyBasicComponent', []);
     const component = parseJsx(basicExample);
 
     const nonStandaloneComponent = componentToAngular({ standalone: false })({ component });
@@ -47,8 +47,8 @@ describe('Angular standalone component', () => {
   });
 
   test('Standalone option should prevent NgModule generation when used whith sub-components', () => {
-    const subComponentNgModule = generateNgModule('SubComponent', ['Foo']);
-    const standaloneComponentMetadata = generateStandaloneComponentMetadata('SubComponent', [
+    const subComponentNgModule = mockNgModule('SubComponent', ['Foo']);
+    const standaloneComponentMetadata = mockStandaloneComponentMetadata('SubComponent', [
       'Foo',
     ]);
     const component = parseJsx(subComponentExample);
@@ -64,12 +64,12 @@ describe('Angular standalone component', () => {
   });
 
   test('Standalone option should prevent NgModule generation in complex components', () => {
-    const renderBlockNgModule = generateNgModule('RenderBlock', [
+    const renderBlockNgModule = mockNgModule('RenderBlock', [
       'RenderRepeatedBlock',
       'RenderBlock',
       'BlockStyles',
     ]);
-    const standaloneComponentMetadata = generateStandaloneComponentMetadata('RenderBlock', [
+    const standaloneComponentMetadata = mockStandaloneComponentMetadata('RenderBlock', [
       'RenderRepeatedBlock',
       'RenderBlock',
       'BlockStyles',
