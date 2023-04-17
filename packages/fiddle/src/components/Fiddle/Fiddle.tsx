@@ -510,13 +510,14 @@ export default function Fiddle() {
   );
 
   return useObserver(() => {
-    const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
+    const isDarkMode = theme.darkMode;
+    const monacoTheme = isDarkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
       overflow: 'auto',
       whiteSpace: 'nowrap',
-      ...(theme.darkMode ? null : { backgroundColor: 'white' }),
+      ...(isDarkMode ? null : { backgroundColor: 'white' }),
     };
-
+    const textColor = isDarkMode?"white":"black";
     return (
       <div
         css={{
@@ -532,6 +533,11 @@ export default function Fiddle() {
             color: 'white',
             textDecoration: 'none',
           },
+          
+          '.monaco-editor a>span':{
+            color:textColor
+          }
+          ,
         }}
       >
         <div
