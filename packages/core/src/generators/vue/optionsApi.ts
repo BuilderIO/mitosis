@@ -179,10 +179,8 @@ export function generateOptionsApiScript(
     return `${str},`;
   };
 
-  const isDefineComponent = options.vueVersion >= 3 && options.defineComponent;
-
   return `
-        ${isDefineComponent ? 'export default defineComponent({' : 'export default {'}
+        export default ${options.defineComponent ? 'defineComponent(' : ''} {
         ${
           !component.name
             ? ''
@@ -273,5 +271,6 @@ export function generateOptionsApiScript(
         ${Object.entries(component.meta.vueConfig || {})
           .map(([k, v]) => `${k}: ${v}`)
           .join(',')}
-        ${isDefineComponent ? '})' : '}'}`;
+        }
+        ${options.defineComponent ? ')' : ''}`;
 }
