@@ -194,7 +194,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     if (options.vueVersion >= 3 && options.asyncComponentImports) {
       vueImports.push('defineAsyncComponent');
     }
-    if (options.vueVersion >= 3 && options.api === 'options' && options.defineComponent) {
+    if (options.api === 'options' && options.defineComponent) {
       vueImports.push('defineComponent');
     }
     if (options.api === 'composition') {
