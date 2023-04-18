@@ -7610,6 +7610,59 @@ export class NestedShowModule {}
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > showWithRootText 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"show-root-text, ShowRootText\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+  \`,
+})
+export class ShowRootText {
+  @Input() conditionA: any;
+}
+
+@NgModule({
+  declarations: [ShowRootText],
+  imports: [CommonModule],
+  exports: [ShowRootText],
+})
+export class ShowRootTextModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > showWithRootText 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"show-root-text, ShowRootText\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class ShowRootText {
+  @Input() conditionA: any;
+}
+
+@NgModule({
+  declarations: [ShowRootText],
+  imports: [CommonModule],
+  exports: [ShowRootText],
+})
+export class ShowRootTextModule {}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > spreadAttrs 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -16696,6 +16749,67 @@ export class NestedShow {
   exports: [NestedShow],
 })
 export class NestedShowModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > showWithRootText 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+@Component({
+  selector: \\"show-root-text, ShowRootText\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+  \`,
+})
+export class ShowRootText {
+  @Input() conditionA: Props[\\"conditionA\\"];
+}
+
+@NgModule({
+  declarations: [ShowRootText],
+  imports: [CommonModule],
+  exports: [ShowRootText],
+})
+export class ShowRootTextModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > showWithRootText 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+@Component({
+  selector: \\"show-root-text, ShowRootText\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class ShowRootText {
+  @Input() conditionA: Props[\\"conditionA\\"];
+}
+
+@NgModule({
+  declarations: [ShowRootText],
+  imports: [CommonModule],
+  exports: [ShowRootText],
+})
+export class ShowRootTextModule {}
 "
 `;
 
