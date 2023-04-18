@@ -1566,6 +1566,7 @@ export declare namespace JSX {
       FitToViewBoxSVGAttributes,
       ZoomAndPanSVGAttributes,
       Pick<PresentationSVGAttributes, 'display' | 'visibility'> {
+    xmlns?: string;
     version?: string;
     'base-profile'?: string;
     x?: number | string;
