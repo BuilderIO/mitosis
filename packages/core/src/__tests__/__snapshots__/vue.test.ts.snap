@@ -25,7 +25,7 @@ exports[`Vue > jsx > Javascript Test > AdvancedRef 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-ref-component\\",
 
   props: [\\"showInput\\"],
@@ -61,7 +61,7 @@ export default {
       return this.name.toLowerCase();
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -87,7 +87,7 @@ export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   data() {
@@ -99,7 +99,7 @@ export default {
       return \\"bar\\";
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -126,13 +126,13 @@ exports[`Vue > jsx > Javascript Test > Basic 2`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-for-show-component\\",
 
   data() {
     return { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
   },
-};
+});
 </script>"
 `;
 
@@ -148,7 +148,7 @@ exports[`Vue > jsx > Javascript Test > Basic Context 1`] = `
 <script>
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   data() {
@@ -179,7 +179,7 @@ export default {
       console.log(change);
     },
   },
-};
+});
 </script>"
 `;
 
@@ -189,7 +189,7 @@ exports[`Vue > jsx > Javascript Test > Basic OnMount Update 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-on-mount-update-component\\",
 
   props: [\\"hi\\", \\"bye\\"],
@@ -204,7 +204,7 @@ export default {
   mounted() {
     this.name = \\"PatrickJS onMount\\" + this.bye;
   },
-};
+});
 </script>"
 `;
 
@@ -214,7 +214,7 @@ exports[`Vue > jsx > Javascript Test > Basic Outputs 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-outputs-component\\",
 
   props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
@@ -227,7 +227,7 @@ export default {
     this.onMessage(this.name);
     this.onEvent(this.message);
   },
-};
+});
 </script>"
 `;
 
@@ -237,7 +237,7 @@ exports[`Vue > jsx > Javascript Test > Basic Outputs Meta 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-outputs-component\\",
 
   props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
@@ -250,7 +250,7 @@ export default {
     this.onMessage(this.name);
     this.onEvent(this.message);
   },
-};
+});
 </script>"
 `;
 
@@ -260,9 +260,9 @@ exports[`Vue > jsx > Javascript Test > BasicAttribute 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>"
 `;
 
@@ -285,11 +285,11 @@ exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 <script>
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-export default {
+export default defineComponent({
   name: \\"my-boolean-attribute\\",
   components: { MyBooleanAttributeComponent: MyBooleanAttributeComponent },
   props: [\\"type\\"],
-};
+});
 </script>"
 `;
 
@@ -310,7 +310,7 @@ exports[`Vue > jsx > Javascript Test > BasicChildComponent 1`] = `
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
-export default {
+export default defineComponent({
   name: \\"my-basic-child-component\\",
   components: {
     MyBasicComponent: MyBasicComponent,
@@ -320,7 +320,7 @@ export default {
   data() {
     return { name: \\"Steve\\", dev: \\"PatrickJS\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -339,7 +339,7 @@ exports[`Vue > jsx > Javascript Test > BasicFor 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-for-component\\",
 
   data() {
@@ -349,7 +349,7 @@ export default {
   mounted() {
     console.log(\\"onMount code\\");
   },
-};
+});
 </script>"
 `;
 
@@ -378,7 +378,7 @@ exports[`Vue > jsx > Javascript Test > BasicRef 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-ref-component\\",
 
   props: [\\"showInput\\"],
@@ -396,7 +396,7 @@ export default {
       return this.name.toLowerCase();
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -414,7 +414,7 @@ exports[`Vue > jsx > Javascript Test > BasicRefAssignment 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-ref-assignment-component\\",
 
   methods: {
@@ -424,7 +424,7 @@ export default {
       this.$refs.holdValueRef = this.$refs.holdValueRef + \\"JS\\";
     },
   },
-};
+});
 </script>"
 `;
 
@@ -450,7 +450,7 @@ export function usePrevious(value) {
   return ref;
 }
 
-export default {
+export default defineComponent({
   name: \\"my-previous-component\\",
 
   data() {
@@ -473,7 +473,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -499,11 +499,11 @@ exports[`Vue > jsx > Javascript Test > Button 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"button\\",
 
   props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
-};
+});
 </script>"
 `;
 
@@ -521,7 +521,7 @@ exports[`Vue > jsx > Javascript Test > Columns 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"column\\",
 
   props: [\\"columns\\", \\"space\\"],
@@ -545,7 +545,7 @@ export default {
       return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -585,9 +585,9 @@ exports[`Vue > jsx > Javascript Test > ContentSlotHtml 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"content-slot-code\\",
-};
+});
 </script>"
 `;
 
@@ -613,7 +613,7 @@ exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"content-slot-jsx-code\\",
 
   props: { attributes: { default: undefined }, content: { default: \\"\\" } },
@@ -646,7 +646,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -664,7 +664,7 @@ exports[`Vue > jsx > Javascript Test > CustomCode 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"custom-code\\",
 
   props: [\\"replaceNodes\\", \\"code\\"],
@@ -731,7 +731,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -749,7 +749,7 @@ exports[`Vue > jsx > Javascript Test > Embed 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"custom-code\\",
 
   props: [\\"replaceNodes\\", \\"code\\"],
@@ -816,7 +816,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -876,7 +876,7 @@ import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
-export default {
+export default defineComponent({
   name: \\"form-component\\",
   components: {
     BuilderBlockComponent: BuilderBlockComponent,
@@ -1133,7 +1133,7 @@ export default {
       }
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -1172,7 +1172,7 @@ exports[`Vue > jsx > Javascript Test > Image 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"image\\",
 
   props: [\\"lazy\\", \\"altText\\", \\"_class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
@@ -1238,7 +1238,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -1259,13 +1259,13 @@ exports[`Vue > jsx > Javascript Test > Image State 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"img-state-component\\",
 
   data() {
     return { canShow: true, images: [\\"http://example.com/qwik.png\\"] };
   },
-};
+});
 </script>"
 `;
 
@@ -1286,7 +1286,7 @@ exports[`Vue > jsx > Javascript Test > Img 1`] = `
 <script>
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default {
+export default defineComponent({
   name: \\"img-component\\",
 
   props: [
@@ -1296,7 +1296,7 @@ export default {
     \\"imgSrc\\",
     \\"altText\\",
   ],
-};
+});
 </script>"
 `;
 
@@ -1317,7 +1317,7 @@ exports[`Vue > jsx > Javascript Test > Input 1`] = `
 <script>
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default {
+export default defineComponent({
   name: \\"form-input-component\\",
 
   props: [
@@ -1329,7 +1329,7 @@ export default {
     \\"value\\",
     \\"required\\",
   ],
-};
+});
 </script>"
 `;
 
@@ -1342,7 +1342,7 @@ exports[`Vue > jsx > Javascript Test > RawText 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"raw-text\\",
 
   props: [\\"attributes\\", \\"text\\"],
@@ -1360,7 +1360,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -1381,11 +1381,11 @@ exports[`Vue > jsx > Javascript Test > Section 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"section-component\\",
 
   props: [\\"attributes\\", \\"maxWidth\\"],
-};
+});
 </script>"
 `;
 
@@ -1405,7 +1405,7 @@ exports[`Vue > jsx > Javascript Test > Section 2`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"section-state-component\\",
 
   props: [\\"attributes\\"],
@@ -1413,7 +1413,7 @@ export default {
   data() {
     return { max: 42, items: [42] };
   },
-};
+});
 </script>"
 `;
 
@@ -1440,11 +1440,11 @@ exports[`Vue > jsx > Javascript Test > Select 1`] = `
 <script>
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default {
+export default defineComponent({
   name: \\"select-component\\",
 
   props: [\\"attributes\\", \\"value\\", \\"defaultValue\\", \\"name\\", \\"options\\"],
-};
+});
 </script>"
 `;
 
@@ -1458,9 +1458,9 @@ exports[`Vue > jsx > Javascript Test > SlotDefault 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"slot-code\\",
-};
+});
 </script>"
 `;
 
@@ -1478,10 +1478,10 @@ exports[`Vue > jsx > Javascript Test > SlotHtml 1`] = `
 <script>
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default {
+export default defineComponent({
   name: \\"slot-code\\",
   components: { ContentSlotCode: ContentSlotCode },
-};
+});
 </script>"
 `;
 
@@ -1495,10 +1495,10 @@ exports[`Vue > jsx > Javascript Test > SlotJsx 1`] = `
 <script>
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default {
+export default defineComponent({
   name: \\"slot-code\\",
   components: { ContentSlotCode: ContentSlotCode },
-};
+});
 </script>"
 `;
 
@@ -1512,9 +1512,9 @@ exports[`Vue > jsx > Javascript Test > SlotNamed 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"slot-code\\",
-};
+});
 </script>"
 `;
 
@@ -1563,7 +1563,7 @@ exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
-export default {
+export default defineComponent({
   name: \\"smile-reviews\\",
 
   props: [\\"apiKey\\", \\"productId\\"],
@@ -1603,7 +1603,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -1640,11 +1640,11 @@ exports[`Vue > jsx > Javascript Test > Submit 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"submit-button\\",
 
   props: [\\"attributes\\", \\"text\\"],
-};
+});
 </script>"
 `;
 
@@ -1662,7 +1662,7 @@ exports[`Vue > jsx > Javascript Test > Text 1`] = `
 <script>
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default {
+export default defineComponent({
   name: \\"text\\",
 
   props: [\\"text\\", \\"content\\"],
@@ -1670,7 +1670,7 @@ export default {
   data() {
     return { name: \\"Decadef20\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -1686,11 +1686,11 @@ exports[`Vue > jsx > Javascript Test > Textarea 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"textarea\\",
 
   props: [\\"attributes\\", \\"placeholder\\", \\"name\\", \\"value\\", \\"defaultValue\\"],
-};
+});
 </script>"
 `;
 
@@ -1719,7 +1719,7 @@ exports[`Vue > jsx > Javascript Test > Video 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"video\\",
 
   props: [
@@ -1733,7 +1733,7 @@ export default {
     \\"controls\\",
     \\"loop\\",
   ],
-};
+});
 </script>"
 `;
 
@@ -1743,7 +1743,7 @@ exports[`Vue > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
@@ -1758,7 +1758,7 @@ export default {
       this.name = value;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -1775,7 +1775,7 @@ exports[`Vue > jsx > Javascript Test > basicForwardRef 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-forward-ref-component\\",
 
   props: [\\"inputRef\\"],
@@ -1783,7 +1783,7 @@ export default {
   data() {
     return { name: \\"PatrickJS\\" };
   },
-};
+});
 </script>
 
 <style scoped>
@@ -1806,7 +1806,7 @@ exports[`Vue > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-forward-ref-component\\",
 
   props: [\\"inputRef\\"],
@@ -1814,7 +1814,7 @@ export default {
   data() {
     return { name: \\"PatrickJS\\" };
   },
-};
+});
 </script>
 
 <style scoped>
@@ -1830,7 +1830,7 @@ exports[`Vue > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-on-update-return-component\\",
 
   data() {
@@ -1866,7 +1866,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -1878,9 +1878,9 @@ exports[`Vue > jsx > Javascript Test > class + ClassName + css 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -1896,9 +1896,9 @@ exports[`Vue > jsx > Javascript Test > class + css 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -1914,9 +1914,9 @@ exports[`Vue > jsx > Javascript Test > className + css 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -1936,7 +1936,7 @@ exports[`Vue > jsx > Javascript Test > className 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"class-name-code\\",
 
   data() {
@@ -1956,7 +1956,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -1968,7 +1968,7 @@ exports[`Vue > jsx > Javascript Test > classState 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   data() {
@@ -1993,7 +1993,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -2012,7 +2012,7 @@ exports[`Vue > jsx > Javascript Test > componentWithContext 1`] = `
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default {
+export default defineComponent({
   name: \\"component-with-context\\",
 
   props: [\\"content\\"],
@@ -2032,7 +2032,7 @@ export default {
   inject: {
     foo: Context1.key,
   },
-};
+});
 </script>"
 `;
 
@@ -2046,7 +2046,7 @@ exports[`Vue > jsx > Javascript Test > contentState 1`] = `
 <script>
 import BuilderContext from \\"@dummy/context.vue\\";
 
-export default {
+export default defineComponent({
   name: \\"render-content\\",
   components: { BuilderContext: BuilderContext },
   props: [\\"content\\", \\"customComponents\\"],
@@ -2060,7 +2060,7 @@ export default {
       },
     };
   },
-};
+});
 </script>"
 `;
 
@@ -2086,7 +2086,7 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"button\\",
 
   props: {
@@ -2101,7 +2101,7 @@ export default {
     },
     buttonText: { default: undefined },
   },
-};
+});
 </script>"
 `;
 
@@ -2127,7 +2127,7 @@ exports[`Vue > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"button\\",
 
   props: {
@@ -2137,7 +2137,7 @@ export default {
     text: { default: \\"default text\\" },
     onClick: { default: () => {} },
   },
-};
+});
 </script>"
 `;
 
@@ -2151,7 +2151,7 @@ const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
-export default {
+export default defineComponent({
   name: \\"component-with-types\\",
 
   props: [\\"name\\"],
@@ -2159,7 +2159,7 @@ export default {
   data() {
     return { DEFAULT_VALUES };
   },
-};
+});
 </script>"
 `;
 
@@ -2169,7 +2169,7 @@ exports[`Vue > jsx > Javascript Test > expressionState 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   props: [\\"componentRef\\"],
@@ -2181,7 +2181,7 @@ export default {
         : null,
     };
   },
-};
+});
 </script>"
 `;
 
@@ -2195,7 +2195,7 @@ exports[`Vue > jsx > Javascript Test > import types 1`] = `
 <script>
 import RenderBlock from \\"./builder-render-block.raw\\";
 
-export default {
+export default defineComponent({
   name: \\"render-content\\",
   components: { RenderBlock: RenderBlock },
   props: [\\"renderContentProps\\"],
@@ -2208,7 +2208,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -2218,14 +2218,14 @@ exports[`Vue > jsx > Javascript Test > multipleOnUpdate 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"multiple-on-update\\",
 
   updated() {
     console.log(\\"Runs on every update/rerender\\");
     console.log(\\"Runs on every update/rerender as well\\");
   },
-};
+});
 </script>"
 `;
 
@@ -2235,7 +2235,7 @@ exports[`Vue > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"multiple-on-update-with-deps\\",
 
   data() {
@@ -2279,7 +2279,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -2289,7 +2289,7 @@ exports[`Vue > jsx > Javascript Test > multipleSpreads 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   data() {
@@ -2299,7 +2299,7 @@ export default {
       },
     };
   },
-};
+});
 </script>"
 `;
 
@@ -2313,11 +2313,11 @@ exports[`Vue > jsx > Javascript Test > nestedShow 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"nested-show\\",
 
   props: [\\"conditionA\\", \\"conditionB\\"],
-};
+});
 </script>"
 `;
 
@@ -2327,9 +2327,9 @@ exports[`Vue > jsx > Javascript Test > nestedStyles 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"nested-styles\\",
-};
+});
 </script>
 
 <style scoped>
@@ -2367,7 +2367,7 @@ exports[`Vue > jsx > Javascript Test > onInit & onMount 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"on-init\\",
 
   created() {
@@ -2376,7 +2376,7 @@ export default {
   mounted() {
     console.log(\\"onMount\\");
   },
-};
+});
 </script>"
 `;
 
@@ -2390,7 +2390,7 @@ export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
-export default {
+export default defineComponent({
   name: \\"on-init\\",
 
   props: [\\"name\\"],
@@ -2403,7 +2403,7 @@ export default {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   },
-};
+});
 </script>"
 `;
 
@@ -2413,7 +2413,7 @@ exports[`Vue > jsx > Javascript Test > onMount 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"comp\\",
 
   mounted() {
@@ -2423,7 +2423,7 @@ export default {
   unmounted() {
     console.log(\\"Runs on unMount\\");
   },
-};
+});
 </script>"
 `;
 
@@ -2433,13 +2433,13 @@ exports[`Vue > jsx > Javascript Test > onUpdate 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"on-update\\",
 
   updated() {
     console.log(\\"Runs on every update/rerender\\");
   },
-};
+});
 </script>"
 `;
 
@@ -2449,7 +2449,7 @@ exports[`Vue > jsx > Javascript Test > onUpdateWithDeps 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"on-update-with-deps\\",
 
   props: [\\"size\\"],
@@ -2481,7 +2481,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -2497,9 +2497,9 @@ export const a = 3;
 export const bar = () => {};
 export function run(value) {}
 
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>"
 `;
 
@@ -2509,11 +2509,11 @@ exports[`Vue > jsx > Javascript Test > preserveTyping 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   props: [\\"name\\"],
-};
+});
 </script>"
 `;
 
@@ -2526,7 +2526,7 @@ exports[`Vue > jsx > Javascript Test > propsDestructure 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   props: [\\"type\\"],
@@ -2534,7 +2534,7 @@ export default {
   data() {
     return { name: \\"Decadef20\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -2544,11 +2544,11 @@ exports[`Vue > jsx > Javascript Test > propsInterface 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   props: [\\"name\\"],
-};
+});
 </script>"
 `;
 
@@ -2558,11 +2558,11 @@ exports[`Vue > jsx > Javascript Test > propsType 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   props: [\\"name\\"],
-};
+});
 </script>"
 `;
 
@@ -2572,7 +2572,7 @@ exports[`Vue > jsx > Javascript Test > referencingFunInsideHook 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"on-update\\",
 
   updated() {
@@ -2590,7 +2590,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -2649,7 +2649,7 @@ import RenderComponentWithContext from \\"./render-component-with-context.vue\\"
 import RenderComponent from \\"./render-component.vue\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 
-export default {
+export default defineComponent({
   name: \\"render-block\\",
   components: {
     RenderRepeatedBlock: RenderRepeatedBlock,
@@ -2837,7 +2837,7 @@ export default {
       }
     },
   },
-};
+});
 </script>"
 `;
 
@@ -2857,7 +2857,7 @@ import {
 import BuilderContext from \\"@dummy/context.vue\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-export default {
+export default defineComponent({
   name: \\"render-content\\",
   components: { RenderBlocks: RenderBlocks, BuilderContext: BuilderContext },
   props: [\\"content\\", \\"customComponents\\"],
@@ -2900,7 +2900,7 @@ export default {
       };
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -2920,11 +2920,11 @@ exports[`Vue > jsx > Javascript Test > rootShow 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"render-styles\\",
 
   props: [\\"foo\\"],
-};
+});
 </script>"
 `;
 
@@ -2940,11 +2940,11 @@ exports[`Vue > jsx > Javascript Test > self-referencing component 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   props: [\\"name\\"],
-};
+});
 </script>"
 `;
 
@@ -2963,11 +2963,11 @@ exports[`Vue > jsx > Javascript Test > self-referencing component with children 
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   props: [\\"name\\"],
-};
+});
 </script>"
 `;
 
@@ -2980,11 +2980,11 @@ exports[`Vue > jsx > Javascript Test > showWithFor 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"nested-show\\",
 
   props: [\\"conditionA\\", \\"items\\"],
-};
+});
 </script>"
 `;
 
@@ -2994,9 +2994,9 @@ exports[`Vue > jsx > Javascript Test > spreadAttrs 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>"
 `;
 
@@ -3006,11 +3006,11 @@ exports[`Vue > jsx > Javascript Test > spreadNestedProps 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   props: [\\"nested\\"],
-};
+});
 </script>"
 `;
 
@@ -3020,9 +3020,9 @@ exports[`Vue > jsx > Javascript Test > spreadProps 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>"
 `;
 
@@ -3037,9 +3037,9 @@ exports[`Vue > jsx > Javascript Test > styleClassAndCss 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -3059,10 +3059,10 @@ exports[`Vue > jsx > Javascript Test > subComponent 1`] = `
 <script>
 import Foo from \\"./foo-sub-component.vue\\";
 
-export default {
+export default defineComponent({
   name: \\"sub-component\\",
   components: { Foo: Foo },
-};
+});
 </script>"
 `;
 
@@ -3093,9 +3093,9 @@ exports[`Vue > jsx > Javascript Test > svgComponent 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"svg-component\\",
-};
+});
 </script>"
 `;
 
@@ -3105,11 +3105,11 @@ exports[`Vue > jsx > Javascript Test > typeDependency 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"type-dependency\\",
 
   props: [\\"foo\\"],
-};
+});
 </script>"
 `;
 
@@ -3119,9 +3119,9 @@ exports[`Vue > jsx > Javascript Test > use-style 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -3140,9 +3140,9 @@ exports[`Vue > jsx > Javascript Test > use-style-and-css 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -3164,9 +3164,9 @@ exports[`Vue > jsx > Javascript Test > use-style-outside-component 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -3185,13 +3185,13 @@ exports[`Vue > jsx > Remove Internal mitosis package 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   data() {
     return { name: \\"PatrickJS\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -3224,7 +3224,7 @@ export interface Props {
   showInput: boolean;
 }
 
-export default {
+export default defineComponent({
   name: \\"my-basic-ref-component\\",
 
   props: [\\"showInput\\"],
@@ -3260,7 +3260,7 @@ export default {
       return this.name.toLowerCase();
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -3290,7 +3290,7 @@ export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   data() {
@@ -3302,7 +3302,7 @@ export default {
       return \\"bar\\";
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -3329,13 +3329,13 @@ exports[`Vue > jsx > Typescript Test > Basic 2`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-for-show-component\\",
 
   data() {
     return { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
   },
-};
+});
 </script>"
 `;
 
@@ -3351,7 +3351,7 @@ exports[`Vue > jsx > Typescript Test > Basic Context 1`] = `
 <script lang=\\"ts\\">
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   data() {
@@ -3382,7 +3382,7 @@ export default {
       console.log(change);
     },
   },
-};
+});
 </script>"
 `;
 
@@ -3397,7 +3397,7 @@ export interface Props {
   bye: string;
 }
 
-export default {
+export default defineComponent({
   name: \\"my-basic-on-mount-update-component\\",
 
   props: [\\"hi\\", \\"bye\\"],
@@ -3412,7 +3412,7 @@ export default {
   mounted() {
     this.name = \\"PatrickJS onMount\\" + this.bye;
   },
-};
+});
 </script>"
 `;
 
@@ -3422,7 +3422,7 @@ exports[`Vue > jsx > Typescript Test > Basic Outputs 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-outputs-component\\",
 
   props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
@@ -3435,7 +3435,7 @@ export default {
     this.onMessage(this.name);
     this.onEvent(this.message);
   },
-};
+});
 </script>"
 `;
 
@@ -3445,7 +3445,7 @@ exports[`Vue > jsx > Typescript Test > Basic Outputs Meta 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-outputs-component\\",
 
   props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
@@ -3458,7 +3458,7 @@ export default {
     this.onMessage(this.name);
     this.onEvent(this.message);
   },
-};
+});
 </script>"
 `;
 
@@ -3468,9 +3468,9 @@ exports[`Vue > jsx > Typescript Test > BasicAttribute 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>"
 `;
 
@@ -3498,11 +3498,11 @@ type Props = {
 
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-export default {
+export default defineComponent({
   name: \\"my-boolean-attribute\\",
   components: { MyBooleanAttributeComponent: MyBooleanAttributeComponent },
   props: [\\"type\\"],
-};
+});
 </script>"
 `;
 
@@ -3523,7 +3523,7 @@ exports[`Vue > jsx > Typescript Test > BasicChildComponent 1`] = `
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
-export default {
+export default defineComponent({
   name: \\"my-basic-child-component\\",
   components: {
     MyBasicComponent: MyBasicComponent,
@@ -3533,7 +3533,7 @@ export default {
   data() {
     return { name: \\"Steve\\", dev: \\"PatrickJS\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -3552,7 +3552,7 @@ exports[`Vue > jsx > Typescript Test > BasicFor 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-for-component\\",
 
   data() {
@@ -3562,7 +3562,7 @@ export default {
   mounted() {
     console.log(\\"onMount code\\");
   },
-};
+});
 </script>"
 `;
 
@@ -3595,7 +3595,7 @@ export interface Props {
   showInput: boolean;
 }
 
-export default {
+export default defineComponent({
   name: \\"my-basic-ref-component\\",
 
   props: [\\"showInput\\"],
@@ -3613,7 +3613,7 @@ export default {
       return this.name.toLowerCase();
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -3635,7 +3635,7 @@ export interface Props {
   showInput: boolean;
 }
 
-export default {
+export default defineComponent({
   name: \\"my-basic-ref-assignment-component\\",
 
   methods: {
@@ -3645,7 +3645,7 @@ export default {
       this.$refs.holdValueRef = this.$refs.holdValueRef + \\"JS\\";
     },
   },
-};
+});
 </script>"
 `;
 
@@ -3675,7 +3675,7 @@ export function usePrevious<T>(value: T) {
   return ref;
 }
 
-export default {
+export default defineComponent({
   name: \\"my-previous-component\\",
 
   data() {
@@ -3698,7 +3698,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -3731,11 +3731,11 @@ export interface ButtonProps {
   openLinkInNewTab?: boolean;
 }
 
-export default {
+export default defineComponent({
   name: \\"button\\",
 
   props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
-};
+});
 </script>"
 `;
 
@@ -3768,7 +3768,7 @@ export interface ColumnProps {
   reverseColumnsWhenStacked?: boolean;
 }
 
-export default {
+export default defineComponent({
   name: \\"column\\",
 
   props: [\\"columns\\", \\"space\\"],
@@ -3792,7 +3792,7 @@ export default {
       return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -3839,9 +3839,9 @@ type Props = {
 
 import { JSX } from \\"../../../../jsx-runtime\\";
 
-export default {
+export default defineComponent({
   name: \\"content-slot-code\\",
-};
+});
 </script>"
 `;
 
@@ -3873,7 +3873,7 @@ type Props = {
 
 import { JSX } from \\"../../../../jsx-runtime\\";
 
-export default {
+export default defineComponent({
   name: \\"content-slot-jsx-code\\",
 
   props: { attributes: { default: undefined }, content: { default: \\"\\" } },
@@ -3906,7 +3906,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -3929,7 +3929,7 @@ export interface CustomCodeProps {
   replaceNodes?: boolean;
 }
 
-export default {
+export default defineComponent({
   name: \\"custom-code\\",
 
   props: [\\"replaceNodes\\", \\"code\\"],
@@ -3996,7 +3996,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -4019,7 +4019,7 @@ export interface CustomCodeProps {
   replaceNodes?: boolean;
 }
 
-export default {
+export default defineComponent({
   name: \\"custom-code\\",
 
   props: [\\"replaceNodes\\", \\"code\\"],
@@ -4086,7 +4086,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -4170,7 +4170,7 @@ import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
-export default {
+export default defineComponent({
   name: \\"form-component\\",
   components: {
     BuilderBlockComponent: BuilderBlockComponent,
@@ -4434,7 +4434,7 @@ export default {
       }
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -4492,7 +4492,7 @@ export interface ImageProps {
   children?: any;
 }
 
-export default {
+export default defineComponent({
   name: \\"image\\",
 
   props: [\\"lazy\\", \\"altText\\", \\"_class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
@@ -4558,7 +4558,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -4579,13 +4579,13 @@ exports[`Vue > jsx > Typescript Test > Image State 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"img-state-component\\",
 
   data() {
     return { canShow: true, images: [\\"http://example.com/qwik.png\\"] };
   },
-};
+});
 </script>"
 `;
 
@@ -4623,7 +4623,7 @@ export interface ImgProps {
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default {
+export default defineComponent({
   name: \\"img-component\\",
 
   props: [
@@ -4633,7 +4633,7 @@ export default {
     \\"imgSrc\\",
     \\"altText\\",
   ],
-};
+});
 </script>"
 `;
 
@@ -4664,7 +4664,7 @@ export interface FormInputProps {
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default {
+export default defineComponent({
   name: \\"form-input-component\\",
 
   props: [
@@ -4676,7 +4676,7 @@ export default {
     \\"value\\",
     \\"required\\",
   ],
-};
+});
 </script>"
 `;
 
@@ -4694,7 +4694,7 @@ export interface RawTextProps {
   text?: string; // builderBlock?: any;
 }
 
-export default {
+export default defineComponent({
   name: \\"raw-text\\",
 
   props: [\\"attributes\\", \\"text\\"],
@@ -4712,7 +4712,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -4739,11 +4739,11 @@ export interface SectionProps {
   children?: any;
 }
 
-export default {
+export default defineComponent({
   name: \\"section-component\\",
 
   props: [\\"attributes\\", \\"maxWidth\\"],
-};
+});
 </script>"
 `;
 
@@ -4769,7 +4769,7 @@ export interface SectionProps {
   children?: any;
 }
 
-export default {
+export default defineComponent({
   name: \\"section-state-component\\",
 
   props: [\\"attributes\\"],
@@ -4777,7 +4777,7 @@ export default {
   data() {
     return { max: 42, items: [42] };
   },
-};
+});
 </script>"
 `;
 
@@ -4815,11 +4815,11 @@ export interface FormSelectProps {
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default {
+export default defineComponent({
   name: \\"select-component\\",
 
   props: [\\"attributes\\", \\"value\\", \\"defaultValue\\", \\"name\\", \\"options\\"],
-};
+});
 </script>"
 `;
 
@@ -4837,9 +4837,9 @@ type Props = {
   [key: string]: string;
 };
 
-export default {
+export default defineComponent({
   name: \\"slot-code\\",
-};
+});
 </script>"
 `;
 
@@ -4861,10 +4861,10 @@ type Props = {
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default {
+export default defineComponent({
   name: \\"slot-code\\",
   components: { ContentSlotCode: ContentSlotCode },
-};
+});
 </script>"
 `;
 
@@ -4882,10 +4882,10 @@ type Props = {
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default {
+export default defineComponent({
   name: \\"slot-code\\",
   components: { ContentSlotCode: ContentSlotCode },
-};
+});
 </script>"
 `;
 
@@ -4903,9 +4903,9 @@ type Props = {
   [key: string]: string;
 };
 
-export default {
+export default defineComponent({
   name: \\"slot-code\\",
-};
+});
 </script>"
 `;
 
@@ -4959,7 +4959,7 @@ type SmileReviewsProps = {
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
-export default {
+export default defineComponent({
   name: \\"smile-reviews\\",
 
   props: [\\"apiKey\\", \\"productId\\"],
@@ -4999,7 +4999,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -5041,11 +5041,11 @@ export interface ButtonProps {
   text?: string;
 }
 
-export default {
+export default defineComponent({
   name: \\"submit-button\\",
 
   props: [\\"attributes\\", \\"text\\"],
-};
+});
 </script>"
 `;
 
@@ -5071,7 +5071,7 @@ export interface TextProps {
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default {
+export default defineComponent({
   name: \\"text\\",
 
   props: [\\"text\\", \\"content\\"],
@@ -5079,7 +5079,7 @@ export default {
   data() {
     return { name: \\"Decadef20\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -5103,11 +5103,11 @@ export interface TextareaProps {
   placeholder?: string;
 }
 
-export default {
+export default defineComponent({
   name: \\"textarea\\",
 
   props: [\\"attributes\\", \\"placeholder\\", \\"name\\", \\"value\\", \\"defaultValue\\"],
-};
+});
 </script>"
 `;
 
@@ -5162,7 +5162,7 @@ export interface VideoProps {
   lazyLoad?: boolean;
 }
 
-export default {
+export default defineComponent({
   name: \\"video\\",
 
   props: [
@@ -5176,7 +5176,7 @@ export default {
     \\"controls\\",
     \\"loop\\",
   ],
-};
+});
 </script>"
 `;
 
@@ -5186,7 +5186,7 @@ exports[`Vue > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
@@ -5201,7 +5201,7 @@ export default {
       this.name = value;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -5223,7 +5223,7 @@ export interface Props {
   inputRef: HTMLInputElement;
 }
 
-export default {
+export default defineComponent({
   name: \\"my-basic-forward-ref-component\\",
 
   props: [\\"inputRef\\"],
@@ -5231,7 +5231,7 @@ export default {
   data() {
     return { name: \\"PatrickJS\\" };
   },
-};
+});
 </script>
 
 <style scoped>
@@ -5259,7 +5259,7 @@ export interface Props {
   inputRef: HTMLInputElement;
 }
 
-export default {
+export default defineComponent({
   name: \\"my-basic-forward-ref-component\\",
 
   props: [\\"inputRef\\"],
@@ -5267,7 +5267,7 @@ export default {
   data() {
     return { name: \\"PatrickJS\\" };
   },
-};
+});
 </script>
 
 <style scoped>
@@ -5283,7 +5283,7 @@ exports[`Vue > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-on-update-return-component\\",
 
   data() {
@@ -5319,7 +5319,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -5331,9 +5331,9 @@ exports[`Vue > jsx > Typescript Test > class + ClassName + css 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -5349,9 +5349,9 @@ exports[`Vue > jsx > Typescript Test > class + css 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -5367,9 +5367,9 @@ exports[`Vue > jsx > Typescript Test > className + css 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -5396,7 +5396,7 @@ type Props = {
 
 import { JSX } from \\"../../../../jsx-runtime\\";
 
-export default {
+export default defineComponent({
   name: \\"class-name-code\\",
 
   data() {
@@ -5416,7 +5416,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -5428,7 +5428,7 @@ exports[`Vue > jsx > Typescript Test > classState 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   data() {
@@ -5453,7 +5453,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -5476,7 +5476,7 @@ export interface ComponentWithContextProps {
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default {
+export default defineComponent({
   name: \\"component-with-context\\",
 
   props: [\\"content\\"],
@@ -5496,7 +5496,7 @@ export default {
   inject: {
     foo: Context1.key,
   },
-};
+});
 </script>"
 `;
 
@@ -5510,7 +5510,7 @@ exports[`Vue > jsx > Typescript Test > contentState 1`] = `
 <script lang=\\"ts\\">
 import BuilderContext from \\"@dummy/context.vue\\";
 
-export default {
+export default defineComponent({
   name: \\"render-content\\",
   components: { BuilderContext: BuilderContext },
   props: [\\"content\\", \\"customComponents\\"],
@@ -5524,7 +5524,7 @@ export default {
       },
     };
   },
-};
+});
 </script>"
 `;
 
@@ -5560,7 +5560,7 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-export default {
+export default defineComponent({
   name: \\"button\\",
 
   props: {
@@ -5575,7 +5575,7 @@ export default {
     },
     buttonText: { default: undefined },
   },
-};
+});
 </script>"
 `;
 
@@ -5609,7 +5609,7 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-export default {
+export default defineComponent({
   name: \\"button\\",
 
   props: {
@@ -5619,7 +5619,7 @@ export default {
     text: { default: \\"default text\\" },
     onClick: { default: () => {} },
   },
-};
+});
 </script>"
 `;
 
@@ -5637,7 +5637,7 @@ const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
-export default {
+export default defineComponent({
   name: \\"component-with-types\\",
 
   props: [\\"name\\"],
@@ -5645,7 +5645,7 @@ export default {
   data() {
     return { DEFAULT_VALUES };
   },
-};
+});
 </script>"
 `;
 
@@ -5655,7 +5655,7 @@ exports[`Vue > jsx > Typescript Test > expressionState 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   props: [\\"componentRef\\"],
@@ -5667,7 +5667,7 @@ export default {
         : null,
     };
   },
-};
+});
 </script>"
 `;
 
@@ -5688,7 +5688,7 @@ type RenderContentProps = {
 import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
 import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
-export default {
+export default defineComponent({
   name: \\"render-content\\",
   components: { RenderBlock: RenderBlock },
   props: [\\"renderContentProps\\"],
@@ -5701,7 +5701,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -5711,14 +5711,14 @@ exports[`Vue > jsx > Typescript Test > multipleOnUpdate 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"multiple-on-update\\",
 
   updated() {
     console.log(\\"Runs on every update/rerender\\");
     console.log(\\"Runs on every update/rerender as well\\");
   },
-};
+});
 </script>"
 `;
 
@@ -5728,7 +5728,7 @@ exports[`Vue > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"multiple-on-update-with-deps\\",
 
   data() {
@@ -5772,7 +5772,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -5782,7 +5782,7 @@ exports[`Vue > jsx > Typescript Test > multipleSpreads 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   data() {
@@ -5792,7 +5792,7 @@ export default {
       },
     };
   },
-};
+});
 </script>"
 `;
 
@@ -5811,11 +5811,11 @@ interface Props {
   conditionB: boolean;
 }
 
-export default {
+export default defineComponent({
   name: \\"nested-show\\",
 
   props: [\\"conditionA\\", \\"conditionB\\"],
-};
+});
 </script>"
 `;
 
@@ -5825,9 +5825,9 @@ exports[`Vue > jsx > Typescript Test > nestedStyles 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"nested-styles\\",
-};
+});
 </script>
 
 <style scoped>
@@ -5865,7 +5865,7 @@ exports[`Vue > jsx > Typescript Test > onInit & onMount 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"on-init\\",
 
   created() {
@@ -5874,7 +5874,7 @@ export default {
   mounted() {
     console.log(\\"onMount\\");
   },
-};
+});
 </script>"
 `;
 
@@ -5892,7 +5892,7 @@ export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
-export default {
+export default defineComponent({
   name: \\"on-init\\",
 
   props: [\\"name\\"],
@@ -5905,7 +5905,7 @@ export default {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   },
-};
+});
 </script>"
 `;
 
@@ -5915,7 +5915,7 @@ exports[`Vue > jsx > Typescript Test > onMount 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"comp\\",
 
   mounted() {
@@ -5925,7 +5925,7 @@ export default {
   unmounted() {
     console.log(\\"Runs on unMount\\");
   },
-};
+});
 </script>"
 `;
 
@@ -5935,13 +5935,13 @@ exports[`Vue > jsx > Typescript Test > onUpdate 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"on-update\\",
 
   updated() {
     console.log(\\"Runs on every update/rerender\\");
   },
-};
+});
 </script>"
 `;
 
@@ -5955,7 +5955,7 @@ type Props = {
   size: string;
 };
 
-export default {
+export default defineComponent({
   name: \\"on-update-with-deps\\",
 
   props: [\\"size\\"],
@@ -5987,7 +5987,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -6013,9 +6013,9 @@ export const a = 3;
 export const bar = () => {};
 export function run<T>(value: T) {}
 
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>"
 `;
 
@@ -6038,11 +6038,11 @@ export interface MyBasicComponentProps {
   age?: number;
 }
 
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   props: [\\"name\\"],
-};
+});
 </script>"
 `;
 
@@ -6060,7 +6060,7 @@ type Props = {
   type: string;
 };
 
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   props: [\\"type\\"],
@@ -6068,7 +6068,7 @@ export default {
   data() {
     return { name: \\"Decadef20\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -6083,11 +6083,11 @@ interface Person {
   age?: number;
 }
 
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   props: [\\"name\\"],
-};
+});
 </script>"
 `;
 
@@ -6102,11 +6102,11 @@ type Person = {
   age?: number;
 };
 
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   props: [\\"name\\"],
-};
+});
 </script>"
 `;
 
@@ -6116,7 +6116,7 @@ exports[`Vue > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"on-update\\",
 
   updated() {
@@ -6134,7 +6134,7 @@ export default {
       };
     },
   },
-};
+});
 </script>"
 `;
 
@@ -6206,7 +6206,7 @@ import RenderComponentWithContext from \\"./render-component-with-context.vue\\"
 import RenderComponent from \\"./render-component.vue\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 
-export default {
+export default defineComponent({
   name: \\"render-block\\",
   components: {
     RenderRepeatedBlock: RenderRepeatedBlock,
@@ -6394,7 +6394,7 @@ export default {
       }
     },
   },
-};
+});
 </script>"
 `;
 
@@ -6422,7 +6422,7 @@ import {
 import BuilderContext from \\"@dummy/context.vue\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-export default {
+export default defineComponent({
   name: \\"render-content\\",
   components: { RenderBlocks: RenderBlocks, BuilderContext: BuilderContext },
   props: [\\"content\\", \\"customComponents\\"],
@@ -6465,7 +6465,7 @@ export default {
       };
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -6489,11 +6489,11 @@ export interface RenderStylesProps {
   foo: string;
 }
 
-export default {
+export default defineComponent({
   name: \\"render-styles\\",
 
   props: [\\"foo\\"],
-};
+});
 </script>"
 `;
 
@@ -6509,11 +6509,11 @@ exports[`Vue > jsx > Typescript Test > self-referencing component 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   props: [\\"name\\"],
-};
+});
 </script>"
 `;
 
@@ -6532,11 +6532,11 @@ exports[`Vue > jsx > Typescript Test > self-referencing component with children 
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   props: [\\"name\\"],
-};
+});
 </script>"
 `;
 
@@ -6554,11 +6554,11 @@ interface Props {
   items: string[];
 }
 
-export default {
+export default defineComponent({
   name: \\"nested-show\\",
 
   props: [\\"conditionA\\", \\"items\\"],
-};
+});
 </script>"
 `;
 
@@ -6568,9 +6568,9 @@ exports[`Vue > jsx > Typescript Test > spreadAttrs 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>"
 `;
 
@@ -6580,11 +6580,11 @@ exports[`Vue > jsx > Typescript Test > spreadNestedProps 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
 
   props: [\\"nested\\"],
-};
+});
 </script>"
 `;
 
@@ -6594,9 +6594,9 @@ exports[`Vue > jsx > Typescript Test > spreadProps 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-basic-component\\",
-};
+});
 </script>"
 `;
 
@@ -6611,9 +6611,9 @@ exports[`Vue > jsx > Typescript Test > styleClassAndCss 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -6633,10 +6633,10 @@ exports[`Vue > jsx > Typescript Test > subComponent 1`] = `
 <script lang=\\"ts\\">
 import Foo from \\"./foo-sub-component.vue\\";
 
-export default {
+export default defineComponent({
   name: \\"sub-component\\",
   components: { Foo: Foo },
-};
+});
 </script>"
 `;
 
@@ -6667,9 +6667,9 @@ exports[`Vue > jsx > Typescript Test > svgComponent 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"svg-component\\",
-};
+});
 </script>"
 `;
 
@@ -6687,11 +6687,11 @@ export type TypeDependencyProps = {
 import { Foo } from \\"./foo-type\\";
 import { Foo as Foo2 } from \\"./type-export.vue\\";
 
-export default {
+export default defineComponent({
   name: \\"type-dependency\\",
 
   props: [\\"foo\\"],
-};
+});
 </script>"
 `;
 
@@ -6701,9 +6701,9 @@ exports[`Vue > jsx > Typescript Test > use-style 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -6722,9 +6722,9 @@ exports[`Vue > jsx > Typescript Test > use-style-and-css 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -6746,9 +6746,9 @@ exports[`Vue > jsx > Typescript Test > use-style-outside-component 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -6770,13 +6770,13 @@ exports[`Vue > svelte > Javascript Test > basic 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { name: \\"Steve\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -6825,13 +6825,13 @@ exports[`Vue > svelte > Javascript Test > bindGroup 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { tortilla: \\"Plain\\", fillings: [] };
   },
-};
+});
 </script>"
 `;
 
@@ -6841,13 +6841,13 @@ exports[`Vue > svelte > Javascript Test > bindProperty 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { value: \\"hello\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -6863,7 +6863,7 @@ exports[`Vue > svelte > Javascript Test > classDirective 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   props: { disabled: { default: undefined } },
@@ -6885,7 +6885,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -6895,7 +6895,7 @@ exports[`Vue > svelte > Javascript Test > context 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
@@ -6911,7 +6911,7 @@ export default {
   inject: {
     disabled: \\"disabled\\",
   },
-};
+});
 </script>"
 `;
 
@@ -6923,13 +6923,13 @@ exports[`Vue > svelte > Javascript Test > each 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
   },
-};
+});
 </script>"
 `;
 
@@ -6943,7 +6943,7 @@ exports[`Vue > svelte > Javascript Test > eventHandlers 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   methods: {
@@ -6951,7 +6951,7 @@ export default {
       console.log(msg);
     },
   },
-};
+});
 </script>"
 `;
 
@@ -6961,13 +6961,13 @@ exports[`Vue > svelte > Javascript Test > html 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { html: \\"<b>bold</b>\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -6978,7 +6978,7 @@ exports[`Vue > svelte > Javascript Test > ifElse 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
@@ -6990,7 +6990,7 @@ export default {
       this.show = !this.show;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -7004,14 +7004,14 @@ exports[`Vue > svelte > Javascript Test > imports 1`] = `
 <script>
 import Button from \\"./Button.vue\\";
 
-export default {
+export default defineComponent({
   name: \\"my-component\\",
   components: { Button: Button },
 
   data() {
     return { disabled: false };
   },
-};
+});
 </script>"
 `;
 
@@ -7021,7 +7021,7 @@ exports[`Vue > svelte > Javascript Test > lifecycleHooks 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   mounted() {
@@ -7034,7 +7034,7 @@ export default {
   unmounted() {
     console.log(\\"onDestroy\\");
   },
-};
+});
 </script>"
 `;
 
@@ -7044,7 +7044,7 @@ exports[`Vue > svelte > Javascript Test > reactive 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
@@ -7056,7 +7056,7 @@ export default {
       return this.name.toLowerCase();
     },
   },
-};
+});
 </script>"
 `;
 
@@ -7073,7 +7073,7 @@ exports[`Vue > svelte > Javascript Test > reactiveWithFn 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
@@ -7103,7 +7103,7 @@ export default {
       this.result = a_ * b_;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -7115,9 +7115,9 @@ exports[`Vue > svelte > Javascript Test > slots 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>"
 `;
 
@@ -7127,9 +7127,9 @@ exports[`Vue > svelte > Javascript Test > style 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -7155,13 +7155,13 @@ exports[`Vue > svelte > Javascript Test > textExpressions 1`] = `
 </template>
 
 <script>
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { a: 5, b: 12 };
   },
-};
+});
 </script>"
 `;
 
@@ -7174,13 +7174,13 @@ exports[`Vue > svelte > Typescript Test > basic 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { name: \\"Steve\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -7229,13 +7229,13 @@ exports[`Vue > svelte > Typescript Test > bindGroup 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { tortilla: \\"Plain\\", fillings: [] };
   },
-};
+});
 </script>"
 `;
 
@@ -7245,13 +7245,13 @@ exports[`Vue > svelte > Typescript Test > bindProperty 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { value: \\"hello\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -7267,7 +7267,7 @@ exports[`Vue > svelte > Typescript Test > classDirective 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   props: { disabled: { default: undefined } },
@@ -7289,7 +7289,7 @@ export default {
       return obj;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -7299,7 +7299,7 @@ exports[`Vue > svelte > Typescript Test > context 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
@@ -7315,7 +7315,7 @@ export default {
   inject: {
     disabled: \\"disabled\\",
   },
-};
+});
 </script>"
 `;
 
@@ -7327,13 +7327,13 @@ exports[`Vue > svelte > Typescript Test > each 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
   },
-};
+});
 </script>"
 `;
 
@@ -7347,7 +7347,7 @@ exports[`Vue > svelte > Typescript Test > eventHandlers 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   methods: {
@@ -7355,7 +7355,7 @@ export default {
       console.log(msg);
     },
   },
-};
+});
 </script>"
 `;
 
@@ -7365,13 +7365,13 @@ exports[`Vue > svelte > Typescript Test > html 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { html: \\"<b>bold</b>\\" };
   },
-};
+});
 </script>"
 `;
 
@@ -7382,7 +7382,7 @@ exports[`Vue > svelte > Typescript Test > ifElse 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
@@ -7394,7 +7394,7 @@ export default {
       this.show = !this.show;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -7408,14 +7408,14 @@ exports[`Vue > svelte > Typescript Test > imports 1`] = `
 <script lang=\\"ts\\">
 import Button from \\"./Button.vue\\";
 
-export default {
+export default defineComponent({
   name: \\"my-component\\",
   components: { Button: Button },
 
   data() {
     return { disabled: false };
   },
-};
+});
 </script>"
 `;
 
@@ -7425,7 +7425,7 @@ exports[`Vue > svelte > Typescript Test > lifecycleHooks 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   mounted() {
@@ -7438,7 +7438,7 @@ export default {
   unmounted() {
     console.log(\\"onDestroy\\");
   },
-};
+});
 </script>"
 `;
 
@@ -7448,7 +7448,7 @@ exports[`Vue > svelte > Typescript Test > reactive 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
@@ -7460,7 +7460,7 @@ export default {
       return this.name.toLowerCase();
     },
   },
-};
+});
 </script>"
 `;
 
@@ -7477,7 +7477,7 @@ exports[`Vue > svelte > Typescript Test > reactiveWithFn 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
@@ -7507,7 +7507,7 @@ export default {
       this.result = a_ * b_;
     },
   },
-};
+});
 </script>"
 `;
 
@@ -7519,9 +7519,9 @@ exports[`Vue > svelte > Typescript Test > slots 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>"
 `;
 
@@ -7531,9 +7531,9 @@ exports[`Vue > svelte > Typescript Test > style 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
-};
+});
 </script>
 
 <style scoped>
@@ -7559,12 +7559,12 @@ exports[`Vue > svelte > Typescript Test > textExpressions 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export default {
+export default defineComponent({
   name: \\"my-component\\",
 
   data() {
     return { a: 5, b: 12 };
   },
-};
+});
 </script>"
 `;
