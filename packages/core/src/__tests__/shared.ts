@@ -234,6 +234,7 @@ const SHOW_TESTS: Tests = {
   rootShow: getRawFile('./data/blocks/rootShow.raw.tsx'),
   nestedShow: getRawFile('./data/show/nested-show.raw.tsx'),
   showWithFor: getRawFile('./data/show/show-with-for.raw.tsx'),
+  showWithRootText: getRawFile('./data/show/show-with-root-text.raw.tsx'),
 };
 
 const ADVANCED_REF: Tests = {
