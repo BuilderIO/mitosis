@@ -1,22 +1,11 @@
-import { flow, pipe } from 'fp-ts/lib/function';
-import { pickBy, size, uniq } from 'lodash';
 import { format } from 'prettier/standalone';
-import traverse from 'traverse';
-import { convertTypeScriptToJS } from '../../helpers/babel-transform';
-import { createSingleBinding } from '../../helpers/bindings';
+import { collectCss } from '../../helpers/styles/collect-css';
 import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
-import { getProps } from '../../helpers/get-props';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { mapRefs } from '../../helpers/map-refs';
-import { mergeOptions } from '../../helpers/merge-options';
-import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { processHttpRequests } from '../../helpers/process-http-requests';
 import { renderPreComponent } from '../../helpers/render-imports';
-import { replaceStateIdentifier } from '../../helpers/replace-identifiers';
-import { isSlotProperty } from '../../helpers/slots';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { collectCss } from '../../helpers/styles/collect-css';
+import { getProps } from '../../helpers/get-props';
+import { MitosisComponent } from '../../types/mitosis-component';
 import {
   Plugin,
   runPostCodePlugins,
@@ -24,14 +13,25 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import traverse from 'traverse';
+import { pickBy, size, uniq } from 'lodash';
+import { processHttpRequests } from '../../helpers/process-http-requests';
 import { TranspilerGenerator } from '../../types/transpiler';
+import { pipe, flow } from 'fp-ts/lib/function';
+import { isSlotProperty } from '../../helpers/slots';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
-import { blockToVue } from './blocks';
-import { generateCompositionApiScript } from './compositionApi';
 import { getOnUpdateHookName, processBinding, renameMitosisComponentsToKebabCase } from './helpers';
-import { generateOptionsApiScript } from './optionsApi';
 import { ToVueOptions, VueOptsWithoutVersion } from './types';
+import { generateOptionsApiScript } from './optionsApi';
+import { generateCompositionApiScript } from './compositionApi';
+import { blockToVue } from './blocks';
+import { mergeOptions } from '../../helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
+import { createSingleBinding } from '../../helpers/bindings';
+import { replaceStateIdentifier } from '../../helpers/replace-identifiers';
+import { convertTypeScriptToJS } from '../../helpers/babel-transform';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
