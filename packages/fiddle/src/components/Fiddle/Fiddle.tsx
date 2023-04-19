@@ -572,7 +572,7 @@ export default function Fiddle() {
                 'a > span': {
                   color: 'white',
                   textDecoration: 'none',
-                }
+                },
               }}
             >
               <Button
