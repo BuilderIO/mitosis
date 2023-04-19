@@ -3298,13 +3298,13 @@ exports[`Vue > jsx > Typescript Test > Basic 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export interface MyBasicComponentProps {
-  id: string;
-}
-
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
+
+export interface MyBasicComponentProps {
+  id: string;
+}
 
 export default {
   name: \\"my-basic-component\\",
@@ -3507,12 +3507,12 @@ exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+
 type Props = {
   children: any;
   type: string;
 };
-
-import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
 export default {
   name: \\"my-boolean-attribute\\",
@@ -3674,10 +3674,6 @@ exports[`Vue > jsx > Typescript Test > BasicRefPrevious 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export interface Props {
-  showInput: boolean;
-}
-
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
@@ -3689,6 +3685,10 @@ export function usePrevious<T>(value: T) {
   // Return previous value (happens before update in useEffect above)
 
   return ref;
+}
+
+export interface Props {
+  showInput: boolean;
 }
 
 export default {
@@ -3848,12 +3848,12 @@ exports[`Vue > jsx > Typescript Test > ContentSlotHtml 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { JSX } from \\"../../../../jsx-runtime\\";
+
 type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
-
-import { JSX } from \\"../../../../jsx-runtime\\";
 
 export default {
   name: \\"content-slot-code\\",
@@ -3883,11 +3883,11 @@ exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { JSX } from \\"../../../../jsx-runtime\\";
+
 type Props = {
   [key: string]: string | JSX.Element;
 };
-
-import { JSX } from \\"../../../../jsx-runtime\\";
 
 export default {
   name: \\"content-slot-jsx-code\\",
@@ -4156,6 +4156,12 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
 export interface FormProps {
   attributes?: any;
   name?: string;
@@ -4179,12 +4185,6 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
 
 export default {
   name: \\"form-component\\",
@@ -4620,6 +4620,8 @@ exports[`Vue > jsx > Typescript Test > Img 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { Builder } from \\"@builder.io/sdk\\";
+
 export interface ImgProps {
   attributes?: any;
   imgSrc?: string;
@@ -4636,8 +4638,6 @@ export interface ImgProps {
     | \\"bottom left\\"
     | \\"bottom right\\";
 }
-
-import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
   name: \\"img-component\\",
@@ -4668,6 +4668,8 @@ exports[`Vue > jsx > Typescript Test > Input 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { Builder } from \\"@builder.io/sdk\\";
+
 export interface FormInputProps {
   type?: string;
   attributes?: any;
@@ -4677,8 +4679,6 @@ export interface FormInputProps {
   defaultValue?: string;
   required?: boolean;
 }
-
-import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
   name: \\"form-input-component\\",
@@ -4818,6 +4818,8 @@ exports[`Vue > jsx > Typescript Test > Select 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { Builder } from \\"@builder.io/sdk\\";
+
 export interface FormSelectProps {
   options?: {
     name?: string;
@@ -4828,8 +4830,6 @@ export interface FormSelectProps {
   value?: string;
   defaultValue?: string;
 }
-
-import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
   name: \\"select-component\\",
@@ -4871,11 +4871,11 @@ exports[`Vue > jsx > Typescript Test > SlotHtml 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
 type Props = {
   [key: string]: string;
 };
-
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
@@ -4892,11 +4892,11 @@ exports[`Vue > jsx > Typescript Test > SlotJsx 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
 type Props = {
   [key: string]: string;
 };
-
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
@@ -4967,13 +4967,13 @@ exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
 type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
-
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
 
 export default {
   name: \\"smile-reviews\\",
@@ -5077,6 +5077,8 @@ exports[`Vue > jsx > Typescript Test > Text 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { Builder } from \\"@builder.io/sdk\\";
+
 export interface TextProps {
   attributes?: any;
   rtlMode: boolean;
@@ -5084,8 +5086,6 @@ export interface TextProps {
   content?: string;
   builderBlock?: any;
 }
-
-import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
   name: \\"text\\",
@@ -5405,12 +5405,12 @@ exports[`Vue > jsx > Typescript Test > className 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { JSX } from \\"../../../../jsx-runtime\\";
+
 type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
-
-import { JSX } from \\"../../../../jsx-runtime\\";
 
 export default {
   name: \\"class-name-code\\",
@@ -5485,12 +5485,12 @@ exports[`Vue > jsx > Typescript Test > componentWithContext 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
 export interface ComponentWithContextProps {
   content: string;
 }
-
-import Context1 from \\"@dummy/1\\";
-import Context2 from \\"@dummy/2\\";
 
 export default {
   name: \\"component-with-context\\",
@@ -5645,12 +5645,12 @@ exports[`Vue > jsx > Typescript Test > defaultValsWithTypes 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-type Props = {
-  name: string;
-};
-
 const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
+};
+
+type Props = {
+  name: string;
 };
 
 export default {
@@ -5695,14 +5695,14 @@ exports[`Vue > jsx > Typescript Test > import types 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
 type RenderContentProps = {
   options?: GetContentOptions;
   content: BuilderContent;
   renderContentProps: RenderBlockProps;
 };
-
-import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
-import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 export default {
   name: \\"render-content\\",
@@ -5900,12 +5900,12 @@ exports[`Vue > jsx > Typescript Test > onInit 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-type Props = {
-  name: string;
-};
-
 export const defaultValues = {
   name: \\"PatrickJS\\",
+};
+
+type Props = {
+  name: string;
 };
 
 export default {
@@ -6013,6 +6013,12 @@ exports[`Vue > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
 type Types = {
   s: any[];
 };
@@ -6022,12 +6028,6 @@ interface IPost {
 export interface MyBasicComponentProps {
   id: string;
 }
-
-const b = 3;
-const foo = () => {};
-export const a = 3;
-export const bar = () => {};
-export function run<T>(value: T) {}
 
 export default {
   name: \\"my-basic-component\\",
@@ -6194,11 +6194,6 @@ exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export type RenderBlockProps = {
-  block: BuilderBlock;
-  context: BuilderContextInterface;
-};
-
 import {
   BuilderContextInterface,
   RegisteredComponent,
@@ -6221,6 +6216,11 @@ import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.vue\\";
 import RenderComponent from \\"./render-component.vue\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+
+export type RenderBlockProps = {
+  block: BuilderBlock;
+  context: BuilderContextInterface;
+};
 
 export default {
   name: \\"render-block\\",
@@ -6422,14 +6422,6 @@ exports[`Vue > jsx > Typescript Test > renderContentExample 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};
-
 import {
   sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
@@ -6437,6 +6429,14 @@ import {
 } from \\"@dummy/injection-js\\";
 import BuilderContext from \\"@dummy/context.vue\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
 
 export default {
   name: \\"render-content\\",
@@ -6715,13 +6715,13 @@ exports[`Vue > jsx > Typescript Test > typeDependency 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { Foo } from \\"./foo-type\\";
+import { Foo as Foo2 } from \\"./type-export.vue\\";
+
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
 };
-
-import { Foo } from \\"./foo-type\\";
-import { Foo as Foo2 } from \\"./type-export.vue\\";
 
 export default {
   name: \\"type-dependency\\",
