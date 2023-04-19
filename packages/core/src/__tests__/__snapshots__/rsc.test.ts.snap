@@ -87,7 +87,7 @@ export default MyBasicComponent;
 exports[`RSC > jsx > Javascript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
   const _context = { ...props[\\"_context\\"] };
@@ -216,8 +216,8 @@ export default MyBooleanAttribute;
 
 exports[`RSC > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
   const _context = { ...props[\\"_context\\"] };
@@ -678,11 +678,13 @@ export default CustomCode;
 
 exports[`RSC > jsx > Javascript Test > Form 1`] = `
 "import * as React from \\"react\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 function FormComponent(props) {
   const _context = { ...props[\\"_context\\"] };
@@ -924,7 +926,7 @@ function FormComponent(props) {
         ) : null}{\\" \\"}
         {state.submissionState === \\"error\\" && state.responseData ? (
           <>
-            <pre className=\\"builder-form-error-text pre-6954dc8d\\">
+            <pre className=\\"builder-form-error-text pre-c9b30bac\\">
               {\\" \\"}
               {JSON.stringify(state.responseData, null, 2)}{\\" \\"}
             </pre>
@@ -940,7 +942,7 @@ function FormComponent(props) {
           </>
         ) : null}{\\" \\"}
       </form>{\\" \\"}
-      <style>{\`.pre-6954dc8d {   padding: 10px;   color: red;   text-align: center; }\`}</style>{\\" \\"}
+      <style>{\`.pre-c9b30bac {   padding: 10px;   color: red;   text-align: center; }\`}</style>{\\" \\"}
     </>
   );
 }
@@ -1241,8 +1243,7 @@ export default SlotCode;
 
 exports[`RSC > jsx > Javascript Test > Stamped.io 1`] = `
 "import * as React from \\"react\\";
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props) {
   const _context = { ...props[\\"_context\\"] };
@@ -1267,18 +1268,18 @@ function SmileReviews(props) {
         {state.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-6472731e\\" />
+            <input placeholder=\\"Title\\" className=\\"input-f8ac9898\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-6472731e\\"
+              className=\\"textarea-f8ac9898\\"
             />
-            <button className=\\"button-6472731e\\">Submit</button>
+            <button className=\\"button-f8ac9898\\">Submit</button>
           </>
         ) : null}
 
         {state.reviews?.map((review, index) => (
-          <div className=\\"review-6472731e\\" key={review.id}>
-            <img className=\\"img-6472731e\\" src={review.avatar} />
+          <div className=\\"review-f8ac9898\\" key={review.id}>
+            <img className=\\"img-f8ac9898\\" src={review.avatar} />
 
             <div
               className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
@@ -1295,20 +1296,20 @@ function SmileReviews(props) {
           </div>
         ))}
       </div>
-      <style>{\`.input-6472731e {
+      <style>{\`.input-f8ac9898 {
   display: block;
-}.textarea-6472731e {
+}.textarea-f8ac9898 {
   display: block;
-}.button-6472731e {
+}.button-f8ac9898 {
   display: block;
-}.review-6472731e {
+}.review-f8ac9898 {
   margin: 10px;
   padding: 10px;
   background: white;
   display: flex;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}.img-6472731e {
+}.img-f8ac9898 {
   height: 30px;
   width: 30px;
   margin-right: 10px;
@@ -2189,20 +2190,20 @@ export default OnUpdate;
 
 exports[`RSC > jsx > Javascript Test > renderBlock 1`] = `
 "import * as React from \\"react\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
 
 function RenderBlock(props) {
   const _context = { ...props[\\"_context\\"] };
@@ -2454,12 +2455,12 @@ export default RenderBlock;
 
 exports[`RSC > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 function RenderContent(props) {
@@ -2476,10 +2477,10 @@ function RenderContent(props) {
 
   return (
     <>
-      <div className=\\"div-1d089efe\\">
+      <div className=\\"div-a5d04216\\">
         <RenderBlocks blocks={props.content.blocks} _context={_context} />
       </div>
-      <style>{\`.div-1d089efe {
+      <style>{\`.div-a5d04216 {
   display: flex;
   flex-direction: columns;
 }\`}</style>
@@ -2966,7 +2967,7 @@ export default MyBasicComponent;
 exports[`RSC > jsx > Typescript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
@@ -3105,8 +3106,8 @@ export default MyBooleanAttribute;
 
 exports[`RSC > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
@@ -3646,11 +3647,13 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 function FormComponent(props: FormProps) {
   const _context = { ...props[\\"_context\\"] };
@@ -3899,7 +3902,7 @@ function FormComponent(props: FormProps) {
         ) : null}{\\" \\"}
         {state.submissionState === \\"error\\" && state.responseData ? (
           <>
-            <pre className=\\"builder-form-error-text pre-130b1ba3\\">
+            <pre className=\\"builder-form-error-text pre-45f04c13\\">
               {\\" \\"}
               {JSON.stringify(state.responseData, null, 2)}{\\" \\"}
             </pre>
@@ -3915,7 +3918,7 @@ function FormComponent(props: FormProps) {
           </>
         ) : null}{\\" \\"}
       </form>{\\" \\"}
-      <style>{\`.pre-130b1ba3 {   padding: 10px;   color: red;   text-align: center; }\`}</style>{\\" \\"}
+      <style>{\`.pre-45f04c13 {   padding: 10px;   color: red;   text-align: center; }\`}</style>{\\" \\"}
     </>
   );
 }
@@ -4308,8 +4311,7 @@ type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props: SmileReviewsProps) {
   const _context = { ...props[\\"_context\\"] };
@@ -4334,18 +4336,18 @@ function SmileReviews(props: SmileReviewsProps) {
         {state.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-000d4b30\\" />
+            <input placeholder=\\"Title\\" className=\\"input-febc9f24\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-000d4b30\\"
+              className=\\"textarea-febc9f24\\"
             />
-            <button className=\\"button-000d4b30\\">Submit</button>
+            <button className=\\"button-febc9f24\\">Submit</button>
           </>
         ) : null}
 
         {state.reviews?.map((review, index) => (
-          <div className=\\"review-000d4b30\\" key={review.id}>
-            <img className=\\"img-000d4b30\\" src={review.avatar} />
+          <div className=\\"review-febc9f24\\" key={review.id}>
+            <img className=\\"img-febc9f24\\" src={review.avatar} />
 
             <div
               className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
@@ -4362,20 +4364,20 @@ function SmileReviews(props: SmileReviewsProps) {
           </div>
         ))}
       </div>
-      <style>{\`.input-000d4b30 {
+      <style>{\`.input-febc9f24 {
   display: block;
-}.textarea-000d4b30 {
+}.textarea-febc9f24 {
   display: block;
-}.button-000d4b30 {
+}.button-febc9f24 {
   display: block;
-}.review-000d4b30 {
+}.review-febc9f24 {
   margin: 10px;
   padding: 10px;
   background: white;
   display: flex;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}.img-000d4b30 {
+}.img-febc9f24 {
   height: 30px;
   width: 30px;
   margin-right: 10px;
@@ -5415,28 +5417,28 @@ export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
 };
+import { TARGET } from \\"../../constants/target.js\\";
 import {
   BuilderContextInterface,
   RegisteredComponent,
 } from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import { BuilderBlock } from \\"../../types/builder-block.js\\";
 import { Nullable } from \\"../../types/typescript.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import { RenderComponentProps } from \\"./render-component.lite\\";
-import { RepeatData } from \\"./types.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import { RenderComponentProps } from \\"./render-component.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import { RepeatData } from \\"./types.js\\";
 
 function RenderBlock(props: RenderBlockProps) {
   const _context = { ...props[\\"_context\\"] };
@@ -5696,12 +5698,12 @@ type Props = {
     id: string;
   };
 };
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 function RenderContent(props: Props) {
@@ -5718,10 +5720,10 @@ function RenderContent(props: Props) {
 
   return (
     <>
-      <div className=\\"div-a387715c\\">
+      <div className=\\"div-328c5324\\">
         <RenderBlocks blocks={props.content.blocks} _context={_context} />
       </div>
-      <style>{\`.div-a387715c {
+      <style>{\`.div-328c5324 {
   display: flex;
   flex-direction: columns;
 }\`}</style>

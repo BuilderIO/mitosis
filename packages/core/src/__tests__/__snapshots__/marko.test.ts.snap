@@ -168,7 +168,7 @@ exports[`Marko > jsx > Javascript Test > Basic 2`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > Basic Context 1`] = `
-"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+"import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 class {
   onChange = function onChange() {
@@ -261,8 +261,8 @@ class {}
 `;
 
 exports[`Marko > jsx > Javascript Test > BasicChildComponent 1`] = `
-"import MyBasicComponent from \\"./basic.raw\\";
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+"import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 class {
   onCreate() {
@@ -651,11 +651,13 @@ exports[`Marko > jsx > Javascript Test > Embed 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > Form 1`] = `
-"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+"import { Builder, builder } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 class {
   get submissionState() {
@@ -892,7 +894,7 @@ class {
 }
 
 style { 
-  .pre-ac3abc3e {
+  .pre-e452ea2c {
     padding: 10px;
     color: red;
     text-align: center;
@@ -927,7 +929,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-ac3abc3e\\">
+    <pre class=\\"builder-form-error-text pre-e452ea2c\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -1176,8 +1178,7 @@ exports[`Marko > jsx > Javascript Test > SlotNamed 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > Stamped.io 1`] = `
-"import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+"import { kebabCase, snakeCase } from \\"lodash\\";
 
 class {
   kebabCaseValue() {
@@ -1205,16 +1206,16 @@ class {
 }
 
 style { 
-  .input-39aef911 {
+  .input-7d77b666 {
     display: block;
   }
-  .textarea-39aef911 {
+  .textarea-7d77b666 {
     display: block;
   }
-  .button-39aef911 {
+  .button-7d77b666 {
     display: block;
   }
-  .review-39aef911 {
+  .review-7d77b666 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -1222,7 +1223,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-39aef911 {
+  .img-7d77b666 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -1235,13 +1236,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-39aef911\\" />
+    <input placeholder=\\"Title\\" class=\\"input-7d77b666\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-39aef911\\"
+      class=\\"textarea-7d77b666\\"
     ></textarea>
     <button
-      class=\\"button-39aef911\\"
+      class=\\"button-7d77b666\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -1251,8 +1252,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-39aef911\\" key=(review.id)>
-      <img class=\\"img-39aef911\\" src=(review.avatar) />
+    <div class=\\"review-7d77b666\\" key=(review.id)>
+      <img class=\\"img-7d77b666\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -1841,20 +1842,20 @@ exports[`Marko > jsx > Javascript Test > referencingFunInsideHook 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > renderBlock 1`] = `
-"import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+"import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.marko\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.marko\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.marko\\";
 import RenderComponent from \\"./render-component.marko\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.marko\\";
 
 class {
   get component() {
@@ -2075,12 +2076,12 @@ class {
 `;
 
 exports[`Marko > jsx > Javascript Test > renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
+"import BuilderContext from \\"@dummy/context.marko\\";
+import {
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.marko\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 class {
@@ -2094,12 +2095,12 @@ class {
 }
 
 style { 
-  .div-5ac3500e {
+  .div-59ffb32c {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-5ac3500e\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-59ffb32c\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -2413,7 +2414,7 @@ exports[`Marko > jsx > Typescript Test > Basic 2`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > Basic Context 1`] = `
-"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+"import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 class {
   onChange = function onChange() {
@@ -2506,8 +2507,8 @@ class {}
 `;
 
 exports[`Marko > jsx > Typescript Test > BasicChildComponent 1`] = `
-"import MyBasicComponent from \\"./basic.raw\\";
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+"import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 class {
   onCreate() {
@@ -2900,11 +2901,13 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > Form 1`] = `
-"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+"import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 class {
   get submissionState() {
@@ -3148,7 +3151,7 @@ class {
 }
 
 style { 
-  .pre-e91d89fc {
+  .pre-b9cd19fc {
     padding: 10px;
     color: red;
     text-align: center;
@@ -3183,7 +3186,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-e91d89fc\\">
+    <pre class=\\"builder-form-error-text pre-b9cd19fc\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -3432,8 +3435,7 @@ exports[`Marko > jsx > Typescript Test > SlotNamed 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > Stamped.io 1`] = `
-"import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+"import { kebabCase, snakeCase } from \\"lodash\\";
 
 class {
   kebabCaseValue() {
@@ -3461,16 +3463,16 @@ class {
 }
 
 style { 
-  .input-c3470f28 {
+  .input-07941bd0 {
     display: block;
   }
-  .textarea-c3470f28 {
+  .textarea-07941bd0 {
     display: block;
   }
-  .button-c3470f28 {
+  .button-07941bd0 {
     display: block;
   }
-  .review-c3470f28 {
+  .review-07941bd0 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -3478,7 +3480,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-c3470f28 {
+  .img-07941bd0 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -3491,13 +3493,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-c3470f28\\" />
+    <input placeholder=\\"Title\\" class=\\"input-07941bd0\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-c3470f28\\"
+      class=\\"textarea-07941bd0\\"
     ></textarea>
     <button
-      class=\\"button-c3470f28\\"
+      class=\\"button-07941bd0\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -3507,8 +3509,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-c3470f28\\" key=(review.id)>
-      <img class=\\"img-c3470f28\\" src=(review.avatar) />
+    <div class=\\"review-07941bd0\\" key=(review.id)>
+      <img class=\\"img-07941bd0\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -4100,28 +4102,28 @@ exports[`Marko > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > renderBlock 1`] = `
-"import {
+"import { TARGET } from \\"../../constants/target.js\\";
+import {
   BuilderContextInterface,
   RegisteredComponent,
 } from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import { BuilderBlock } from \\"../../types/builder-block.js\\";
 import { Nullable } from \\"../../types/typescript.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
 import BlockStyles from \\"./block-styles.marko\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import { RenderComponentProps } from \\"./render-component.marko\\";
-import { RepeatData } from \\"./types.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.marko\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.marko\\";
+import { RenderComponentProps } from \\"./render-component.marko\\";
 import RenderComponent from \\"./render-component.marko\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.marko\\";
+import { RepeatData } from \\"./types.js\\";
 
 class {
   get component() {
@@ -4342,12 +4344,12 @@ class {
 `;
 
 exports[`Marko > jsx > Typescript Test > renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
+"import BuilderContext from \\"@dummy/context.marko\\";
+import {
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.marko\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 class {
@@ -4361,12 +4363,12 @@ class {
 }
 
 style { 
-  .div-c8eb54c0 {
+  .div-372e97d3 {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-c8eb54c0\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-372e97d3\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
