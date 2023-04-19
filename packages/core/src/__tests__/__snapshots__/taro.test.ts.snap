@@ -2159,7 +2159,8 @@ function NestedStyles(props) {
       <style jsx>{\`
         .view {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .view {
@@ -2169,8 +2170,17 @@ function NestedStyles(props) {
         .view:hover {
           display: flex;
         }
+        .view:active {
+          display: inline;
+        }
         .view .nested-selector {
           display: grid;
+        }
+        .view .nested-selector:hover {
+          display: block;
+        }
+        .view.nested-selector:active {
+          display: inline-block;
         }
       \`}</style>
     </>
@@ -2446,8 +2456,8 @@ function RenderBlock(props) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -2663,7 +2673,9 @@ function RenderBlock(props) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -2853,6 +2865,20 @@ function NestedShow(props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function ShowRootText(props) {
+  return (
+    <>{props.conditionA ? <>ContentA</> : <View>else-condition-A</View>}</>
+  );
+}
+
+export default ShowRootText;
 "
 `;
 
@@ -5556,7 +5582,8 @@ function NestedStyles(props: any) {
       <style jsx>{\`
         .view {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .view {
@@ -5566,8 +5593,17 @@ function NestedStyles(props: any) {
         .view:hover {
           display: flex;
         }
+        .view:active {
+          display: inline;
+        }
         .view .nested-selector {
           display: grid;
+        }
+        .view .nested-selector:hover {
+          display: block;
+        }
+        .view.nested-selector:active {
+          display: inline-block;
         }
       \`}</style>
     </>
@@ -5905,8 +5941,8 @@ function RenderBlock(props: RenderBlockProps) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -6122,7 +6158,9 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -6339,6 +6377,25 @@ function NestedShow(props: Props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+import { View, Text } from \\"@tarojs/components\\";
+
+function ShowRootText(props: Props) {
+  return (
+    <>{props.conditionA ? <>ContentA</> : <View>else-condition-A</View>}</>
+  );
+}
+
+export default ShowRootText;
 "
 `;
 

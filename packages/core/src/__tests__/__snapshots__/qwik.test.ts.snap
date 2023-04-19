@@ -589,7 +589,7 @@ export const Image = function Image(props) {
         .map((size) => {
           return updateQueryParam(webpImage, \\"width\\", size) + \\" \\" + size + \\"w\\";
         })
-        .concat([tryAppendWidth(image)])
+        .concat(tryAppendWidth(image))
         .join(\\",\\");
       imgProps.srcset = srcset;
       jsx = jsx = [
@@ -635,9 +635,9 @@ export const Image = function Image(props) {
     const match = url.match(/[?&]width=(\\\\d+)/);
     const width = match && match[1];
     if (width) {
-      return url + \\" \\" + width + \\"w\\";
+      return [url + \\" \\" + width + \\"w\\"];
     }
-    return url;
+    return [];
   }
 };
 export const __passThroughProps__ = function __passThroughProps__(
@@ -823,7 +823,7 @@ export const Image = function Image(props) {
         .map((size) => {
           return updateQueryParam(webpImage, \\"width\\", size) + \\" \\" + size + \\"w\\";
         })
-        .concat([tryAppendWidth(image)])
+        .concat(tryAppendWidth(image))
         .join(\\",\\");
       imgProps.srcset = srcset;
       jsx = jsx = [
@@ -869,9 +869,9 @@ export const Image = function Image(props) {
     const match = url.match(/[?&]width=(\\\\d+)/);
     const width = match && match[1];
     if (width) {
-      return url + \\" \\" + width + \\"w\\";
+      return [url + \\" \\" + width + \\"w\\"];
     }
-    return url;
+    return [];
   }
 };
 export const __passThroughProps__ = function __passThroughProps__(
@@ -3848,7 +3848,8 @@ export default NestedStyles;
 export const STYLES = \`
 .div-NestedStyles {
   display: flex;
-  foo: var(--bar);
+  --bar: red;
+  color: var(--bar);
 }
 @media (max-width: env(--mobile)) {
   .div-NestedStyles {
@@ -3858,8 +3859,17 @@ export const STYLES = \`
 .div-NestedStyles:hover {
   display: flex;
 }
+.div-NestedStyles:active {
+  display: inline;
+}
 .div-NestedStyles .nested-selector {
   display: grid;
+}
+.div-NestedStyles .nested-selector:hover {
+  display: block;
+}
+.div-NestedStyles.nested-selector:active {
+  display: inline-block;
 }
 \`;
 "
@@ -4484,6 +4494,17 @@ export const NestedShow = component$((props) => {
 });
 
 export default NestedShow;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > showWithRootText 1`] = `
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const ShowRootText = component$((props) => {
+  return <>{props.conditionA ? <>ContentA</> : <div>else-condition-A</div>}</>;
+});
+
+export default ShowRootText;
 "
 `;
 
@@ -7070,7 +7091,8 @@ export default NestedStyles;
 export const STYLES = \`
 .div-NestedStyles {
   display: flex;
-  foo: var(--bar);
+  --bar: red;
+  color: var(--bar);
 }
 @media (max-width: env(--mobile)) {
   .div-NestedStyles {
@@ -7080,8 +7102,17 @@ export const STYLES = \`
 .div-NestedStyles:hover {
   display: flex;
 }
+.div-NestedStyles:active {
+  display: inline;
+}
 .div-NestedStyles .nested-selector {
   display: grid;
+}
+.div-NestedStyles .nested-selector:hover {
+  display: block;
+}
+.div-NestedStyles.nested-selector:active {
+  display: inline-block;
 }
 \`;
 "
@@ -7786,6 +7817,20 @@ export default NestedShow;
 "
 `;
 
+exports[`qwik > jsx > Typescript Test > showWithRootText 1`] = `
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+interface Props {
+  conditionA: boolean;
+}
+export const ShowRootText = component$((props: Props) => {
+  return <>{props.conditionA ? <>ContentA</> : <div>else-condition-A</div>}</>;
+});
+
+export default ShowRootText;
+"
+`;
+
 exports[`qwik > jsx > Typescript Test > spreadAttrs 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
@@ -8398,7 +8443,7 @@ export const Image = function Image(props) {
         .map((size) => {
           return updateQueryParam(webpImage, \\"width\\", size) + \\" \\" + size + \\"w\\";
         })
-        .concat([tryAppendWidth(image)])
+        .concat(tryAppendWidth(image))
         .join(\\",\\");
       imgProps.srcset = srcset;
       jsx = jsx = [
@@ -8444,9 +8489,9 @@ export const Image = function Image(props) {
     const match = url.match(/[?&]width=(\\\\d+)/);
     const width = match && match[1];
     if (width) {
-      return url + \\" \\" + width + \\"w\\";
+      return [url + \\" \\" + width + \\"w\\"];
     }
-    return url;
+    return [];
   }
 };
 export const __proxyMerge__ = function __proxyMerge__(state, local) {

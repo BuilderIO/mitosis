@@ -1212,35 +1212,35 @@ exports[`Svelte > jsx > Javascript Test > SlotHtml 1`] = `
 
 exports[`Svelte > jsx > Javascript Test > SlotJsx 1`] = `
 "<script >
-  
-  
 
-  
+
+
+
 import ContentSlotCode from './content-slot-jsx.raw';
 
 
 
 
-  
-  
-  
-  
 
-  
-  
 
-  
 
-  
-  
 
-  
 
-  
 
-  
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 <div >
@@ -1851,7 +1851,8 @@ exports[`Svelte > jsx > Javascript Test > nestedStyles 1`] = `
 <style>
   .div {
     display: flex;
-    foo: var(--bar);
+    --bar: red;
+    color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
     .div {
@@ -1861,8 +1862,17 @@ exports[`Svelte > jsx > Javascript Test > nestedStyles 1`] = `
   .div:hover {
     display: flex;
   }
+  .div:active {
+    display: inline;
+  }
   .div .nested-selector {
     display: grid;
+  }
+  .div .nested-selector:hover {
+    display: block;
+  }
+  .div.nested-selector:active {
+    display: inline-block;
   }
 </style>"
 `;
@@ -2052,8 +2062,8 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-        Could not find a registered component named \\"\${componentName}\\". 
-        If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -2383,6 +2393,18 @@ exports[`Svelte > jsx > Javascript Test > showWithFor 1`] = `
   {#each items as item, idx (idx)}
     <div>{item}</div>
   {/each}
+{:else}
+  <div>else-condition-A</div>
+{/if}"
+`;
+
+exports[`Svelte > jsx > Javascript Test > showWithRootText 1`] = `
+"<script>
+  export let conditionA;
+</script>
+
+{#if conditionA}
+  ContentA
 {:else}
   <div>else-condition-A</div>
 {/if}"
@@ -3980,35 +4002,35 @@ exports[`Svelte > jsx > Typescript Test > SlotJsx 1`] = `
 
     
 <script lang='ts'>
-  
-  
 
-  
+
+
+
 import ContentSlotCode from './content-slot-jsx.raw';
 
 
 
 
-  
-  
-  
-  
 
-  
-  
 
-  
 
-  
-  
 
-  
 
-  
 
-  
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 <div >
@@ -4781,7 +4803,8 @@ exports[`Svelte > jsx > Typescript Test > nestedStyles 1`] = `
 <style>
   .div {
     display: flex;
-    foo: var(--bar);
+    --bar: red;
+    color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
     .div {
@@ -4791,8 +4814,17 @@ exports[`Svelte > jsx > Typescript Test > nestedStyles 1`] = `
   .div:hover {
     display: flex;
   }
+  .div:active {
+    display: inline;
+  }
   .div .nested-selector {
     display: grid;
+  }
+  .div .nested-selector:hover {
+    display: block;
+  }
+  .div.nested-selector:active {
+    display: inline-block;
   }
 </style>"
 `;
@@ -5063,8 +5095,8 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-        Could not find a registered component named \\"\${componentName}\\". 
-        If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -5426,6 +5458,24 @@ exports[`Svelte > jsx > Typescript Test > showWithFor 1`] = `
   {#each items as item, idx (idx)}
     <div>{item}</div>
   {/each}
+{:else}
+  <div>else-condition-A</div>
+{/if}"
+`;
+
+exports[`Svelte > jsx > Typescript Test > showWithRootText 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  interface Props {
+    conditionA: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let conditionA: Props[\\"conditionA\\"];
+</script>
+
+{#if conditionA}
+  ContentA
 {:else}
   <div>else-condition-A</div>
 {/if}"

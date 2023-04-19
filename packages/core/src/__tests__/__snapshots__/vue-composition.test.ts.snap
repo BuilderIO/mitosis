@@ -2054,7 +2054,8 @@ exports[`Vue > jsx > Javascript Test > nestedStyles 1`] = `
 <style scoped>
 .div {
   display: flex;
-  foo: var(--bar);
+  --bar: red;
+  color: var(--bar);
 }
 @media (max-width: env(--mobile)) {
   .div {
@@ -2064,8 +2065,17 @@ exports[`Vue > jsx > Javascript Test > nestedStyles 1`] = `
 .div:hover {
   display: flex;
 }
+.div:active {
+  display: inline;
+}
 .div .nested-selector {
   display: grid;
+}
+.div .nested-selector:hover {
+  display: block;
+}
+.div.nested-selector:active {
+  display: inline-block;
 }
 </style>"
 `;
@@ -2330,8 +2340,8 @@ const component = computed(() => {
   if (!ref) {
     // TODO: Public doc page with more info about this message
     console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
     return undefined;
   } else {
     return ref;
@@ -2628,6 +2638,20 @@ exports[`Vue > jsx > Javascript Test > showWithFor 1`] = `
 
 <script setup>
 const props = defineProps([\\"conditionA\\", \\"items\\"]);
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > showWithRootText 1`] = `
+"<template>
+  <template v-if=\\"conditionA\\"> ContentA </template>
+
+  <template v-else>
+    <div>else-condition-A</div>
+  </template>
+</template>
+
+<script setup>
+const props = defineProps([\\"conditionA\\"]);
 </script>"
 `;
 
@@ -5070,7 +5094,8 @@ exports[`Vue > jsx > Typescript Test > nestedStyles 1`] = `
 <style scoped>
 .div {
   display: flex;
-  foo: var(--bar);
+  --bar: red;
+  color: var(--bar);
 }
 @media (max-width: env(--mobile)) {
   .div {
@@ -5080,8 +5105,17 @@ exports[`Vue > jsx > Typescript Test > nestedStyles 1`] = `
 .div:hover {
   display: flex;
 }
+.div:active {
+  display: inline;
+}
 .div .nested-selector {
   display: grid;
+}
+.div .nested-selector:hover {
+  display: block;
+}
+.div.nested-selector:active {
+  display: inline-block;
 }
 </style>"
 `;
@@ -5401,8 +5435,8 @@ const component = computed(() => {
   if (!ref) {
     // TODO: Public doc page with more info about this message
     console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
     return undefined;
   } else {
     return ref;
@@ -5719,6 +5753,24 @@ exports[`Vue > jsx > Typescript Test > showWithFor 1`] = `
 interface Props {
   conditionA: boolean;
   items: string[];
+}
+
+const props = defineProps<Props>();
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > showWithRootText 1`] = `
+"<template>
+  <template v-if=\\"conditionA\\"> ContentA </template>
+
+  <template v-else>
+    <div>else-condition-A</div>
+  </template>
+</template>
+
+<script setup lang=\\"ts\\">
+interface Props {
+  conditionA: boolean;
 }
 
 const props = defineProps<Props>();

@@ -603,7 +603,8 @@ exports[`Liquid > jsx > Javascript Test > nestedStyles 1`] = `
 <style>
   .div {
     display: flex;
-    foo: var(--bar);
+    --bar: red;
+    color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
     .div {
@@ -613,8 +614,17 @@ exports[`Liquid > jsx > Javascript Test > nestedStyles 1`] = `
   .div:hover {
     display: flex;
   }
+  .div:active {
+    display: inline;
+  }
   .div .nested-selector {
     display: grid;
+  }
+  .div .nested-selector:hover {
+    display: block;
+  }
+  .div.nested-selector:active {
+    display: inline-block;
   }
 </style>
 "
@@ -722,6 +732,11 @@ exports[`Liquid > jsx > Javascript Test > showWithFor 1`] = `
 "{% if conditionA %} {% for item in items %}
 <div key=\\"{{idx}}\\">{{item}}</div>
 {% endfor %} {% endif %}
+"
+`;
+
+exports[`Liquid > jsx > Javascript Test > showWithRootText 1`] = `
+"{% if conditionA %} ContentA {% endif %}
 "
 `;
 
@@ -1434,7 +1449,8 @@ exports[`Liquid > jsx > Typescript Test > nestedStyles 1`] = `
 <style>
   .div {
     display: flex;
-    foo: var(--bar);
+    --bar: red;
+    color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
     .div {
@@ -1444,8 +1460,17 @@ exports[`Liquid > jsx > Typescript Test > nestedStyles 1`] = `
   .div:hover {
     display: flex;
   }
+  .div:active {
+    display: inline;
+  }
   .div .nested-selector {
     display: grid;
+  }
+  .div .nested-selector:hover {
+    display: block;
+  }
+  .div.nested-selector:active {
+    display: inline-block;
   }
 </style>
 "
@@ -1553,6 +1578,11 @@ exports[`Liquid > jsx > Typescript Test > showWithFor 1`] = `
 "{% if conditionA %} {% for item in items %}
 <div key=\\"{{idx}}\\">{{item}}</div>
 {% endfor %} {% endif %}
+"
+`;
+
+exports[`Liquid > jsx > Typescript Test > showWithRootText 1`] = `
+"{% if conditionA %} ContentA {% endif %}
 "
 `;
 

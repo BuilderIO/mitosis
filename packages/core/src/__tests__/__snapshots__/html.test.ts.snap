@@ -4136,7 +4136,8 @@ exports[`Html > jsx > Javascript Test > nestedStyles 1`] = `
 <style>
   .div {
     display: flex;
-    foo: var(--bar);
+    --bar: red;
+    color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
     .div {
@@ -4146,8 +4147,17 @@ exports[`Html > jsx > Javascript Test > nestedStyles 1`] = `
   .div:hover {
     display: flex;
   }
+  .div:active {
+    display: inline;
+  }
   .div .nested-selector {
     display: grid;
+  }
+  .div .nested-selector:hover {
+    display: block;
+  }
+  .div.nested-selector:active {
+    display: inline-block;
   }
 </style>
 "
@@ -5476,6 +5486,70 @@ exports[`Html > jsx > Javascript Test > showWithFor 1`] = `
           return value;
         }
       } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > showWithRootText 1`] = `
+"<template data-el=\\"show\\">ContentA</template>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
     }
   })();
 </script>
@@ -9912,7 +9986,8 @@ exports[`Html > jsx > Typescript Test > nestedStyles 1`] = `
 <style>
   .div {
     display: flex;
-    foo: var(--bar);
+    --bar: red;
+    color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
     .div {
@@ -9922,8 +9997,17 @@ exports[`Html > jsx > Typescript Test > nestedStyles 1`] = `
   .div:hover {
     display: flex;
   }
+  .div:active {
+    display: inline;
+  }
   .div .nested-selector {
     display: grid;
+  }
+  .div .nested-selector:hover {
+    display: block;
+  }
+  .div.nested-selector:active {
+    display: inline-block;
   }
 </style>
 "
@@ -11255,6 +11339,70 @@ exports[`Html > jsx > Typescript Test > showWithFor 1`] = `
           return value;
         }
       } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > showWithRootText 1`] = `
+"<template data-el=\\"show\\">ContentA</template>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
     }
   })();
 </script>

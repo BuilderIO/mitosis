@@ -1,6 +1,6 @@
-import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../../helpers/styles/collect-css';
+import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
 import { mapRefs } from '../../helpers/map-refs';
 import { renderPreComponent } from '../../helpers/render-imports';
@@ -99,6 +99,7 @@ const BASE_OPTIONS: ToVueOptions = {
   plugins: [],
   vueVersion: 2,
   api: 'options',
+  defineComponent: true,
 };
 
 const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
@@ -192,6 +193,9 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     let vueImports: string[] = [];
     if (options.vueVersion >= 3 && options.asyncComponentImports) {
       vueImports.push('defineAsyncComponent');
+    }
+    if (options.api === 'options' && options.defineComponent) {
+      vueImports.push('defineComponent');
     }
     if (options.api === 'composition') {
       onUpdateWithDeps.length && vueImports.push('watch');

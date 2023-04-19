@@ -296,20 +296,21 @@ export default function Fiddle() {
 
         const { parseSvelte, parseJsx } = await mitosisCore();
 
+        const commonOptions: { typescript: boolean } = {
+          typescript: state.options.typescript === 'true',
+        };
+
         switch (state.inputTab) {
           case 'svelte':
             json = await parseSvelte(state.code);
             break;
           case 'jsx':
           default:
-            json = parseJsx(state.code);
+            json = parseJsx(state.code, {
+              typescript: commonOptions.typescript,
+            });
             break;
         }
-
-        const commonOptions: { typescript: boolean } = {
-          typescript: state.options.typescript === 'true',
-        };
-
         const generateOptions = () => {
           switch (state.outputTab) {
             case 'alpine':

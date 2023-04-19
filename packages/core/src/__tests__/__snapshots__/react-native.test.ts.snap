@@ -2523,9 +2523,13 @@ function NestedStyles(props) {
 const styles = StyleSheet.create({
   view1: {
     display: \\"flex\\",
-    foo: \\"var(--bar)\\",
+    \\"--bar\\": \\"red\\",
+    color: \\"var(--bar)\\",
     \\"&:hover\\": { display: \\"flex\\" },
+    \\":active\\": { display: \\"inline\\" },
     \\".nested-selector\\": { display: \\"grid\\" },
+    \\".nested-selector:hover\\": { display: \\"block\\" },
+    \\"&.nested-selector:active\\": { display: \\"inline-block\\" },
   },
 });
 
@@ -2885,8 +2889,8 @@ function RenderBlock(props) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -3102,7 +3106,9 @@ function RenderBlock(props) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -3340,6 +3346,37 @@ function NestedShow(props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function ShowRootText(props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          <Text>ContentA</Text>
+        </>
+      ) : (
+        <View>
+          <Text>else-condition-A</Text>
+        </View>
+      )}
+    </>
+  );
+}
+
+export default ShowRootText;
 "
 `;
 
@@ -6442,9 +6479,13 @@ function NestedStyles(props: any) {
 const styles = StyleSheet.create({
   view1: {
     display: \\"flex\\",
-    foo: \\"var(--bar)\\",
+    \\"--bar\\": \\"red\\",
+    color: \\"var(--bar)\\",
     \\"&:hover\\": { display: \\"flex\\" },
+    \\":active\\": { display: \\"inline\\" },
     \\".nested-selector\\": { display: \\"grid\\" },
+    \\".nested-selector:hover\\": { display: \\"block\\" },
+    \\"&.nested-selector:active\\": { display: \\"inline-block\\" },
   },
 });
 
@@ -6863,8 +6904,8 @@ function RenderBlock(props: RenderBlockProps) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -7080,7 +7121,9 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -7342,6 +7385,41 @@ function NestedShow(props: Props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowRootText(props: Props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          <Text>ContentA</Text>
+        </>
+      ) : (
+        <View>
+          <Text>else-condition-A</Text>
+        </View>
+      )}
+    </>
+  );
+}
+
+export default ShowRootText;
 "
 `;
 
