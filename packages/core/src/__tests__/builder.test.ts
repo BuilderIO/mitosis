@@ -226,27 +226,7 @@ describe('Builder', () => {
     const mitosis = componentToMitosis(mitosisOptions)({
       component: backToMitosis,
     });
-    expect(mitosis.trim()).toEqual(dedent`
-      import { For } from "@builder.io/mitosis";
-
-      export default function MyComponent(props) {
-        return (
-          <For each={state.submenusItem.menuItems}>
-            {(item, index) => (
-              <div
-                block-id="builder-ID"
-                class="class-id"
-                css={{
-                  padding: "2px",
-                }}
-              >
-                text-content
-              </div>
-            )}
-          </For>
-        );
-      }
-    `);
+    expect(mitosis.trim()).toMatchSnapshot();
   });
 
   test('Regenerate custom Hero', () => {
