@@ -180,7 +180,7 @@ export function generateOptionsApiScript(
   };
 
   return `
-        export default {
+        export default ${options.defineComponent ? 'defineComponent(' : ''} {
         ${
           !component.name
             ? ''
@@ -271,5 +271,6 @@ export function generateOptionsApiScript(
         ${Object.entries(component.meta.vueConfig || {})
           .map(([k, v]) => `${k}: ${v}`)
           .join(',')}
-      }`;
+        }
+        ${options.defineComponent ? ')' : ''}`;
 }

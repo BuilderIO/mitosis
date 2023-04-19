@@ -2,6 +2,7 @@ import { camelCase, upperFirst } from 'lodash';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
+import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { getForArguments } from '../../helpers/nodes/for';
 import { isSlotProperty } from '../../helpers/slots';
 import { selfClosingTags } from '../../parsers/jsx';
@@ -105,7 +106,7 @@ const NODE_MAPPERS: {
     ))}`;
   },
   Show(json, options, component) {
-    const wrap = wrapInFragment(json);
+    const wrap = wrapInFragment(json) || isRootTextNode(json);
     const wrapElse =
       json.meta.else &&
       (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
