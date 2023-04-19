@@ -223,7 +223,6 @@ describe('Builder', () => {
       },
     } as BuilderComponent;
     const backToMitosis = builderContentToMitosisComponent(builderJson);
-    console.log(JSON.stringify(backToMitosis, null, 2));
     const mitosis = componentToMitosis(mitosisOptions)({
       component: backToMitosis,
     });
