@@ -225,13 +225,14 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
 
     <script ${options.api === 'composition' ? 'setup' : ''} ${tsLangAttribute}>
       ${vueImports.length ? `import { ${uniq(vueImports).sort().join(', ')} } from "vue"` : ''}
-      ${(options.typescript && component.types?.join('\n')) || ''}
-
+      
       ${renderPreComponent({
         component,
         target: 'vue',
         asyncComponentImports: options.asyncComponentImports,
       })}
+      
+      ${(options.typescript && component.types?.join('\n')) || ''}
 
       ${
         options.api === 'composition'
