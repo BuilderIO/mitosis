@@ -528,16 +528,6 @@ export default function Fiddle() {
             {
               backgroundColor: 'transparent !important',
             },
-
-          'a > span': {
-            color: 'white',
-            textDecoration: 'none',
-          },
-          
-          '.monaco-editor a>span':{
-            color:textColor
-          }
-          ,
         }}
       >
         <div
@@ -580,6 +570,10 @@ export default function Fiddle() {
             <div
               css={{
                 display: 'flex',
+                'a > span': {
+                  color: 'white',
+                  textDecoration: 'none',
+                }
               }}
             >
               <Button
