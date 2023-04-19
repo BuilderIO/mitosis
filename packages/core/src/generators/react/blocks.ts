@@ -1,8 +1,8 @@
 import { camelCase, upperFirst } from 'lodash';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
-import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
+import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
 import { getForArguments } from '../../helpers/nodes/for';
 import { isSlotProperty } from '../../helpers/slots';
 import { selfClosingTags } from '../../parsers/jsx';
