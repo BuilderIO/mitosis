@@ -3859,8 +3859,17 @@ export const STYLES = \`
 .div-NestedStyles:hover {
   display: flex;
 }
+.div-NestedStyles:active {
+  display: inline;
+}
 .div-NestedStyles .nested-selector {
   display: grid;
+}
+.div-NestedStyles .nested-selector:hover {
+  display: block;
+}
+.div-NestedStyles.nested-selector:active {
+  display: inline-block;
 }
 \`;
 "
@@ -4485,6 +4494,17 @@ export const NestedShow = component$((props) => {
 });
 
 export default NestedShow;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > showWithRootText 1`] = `
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const ShowRootText = component$((props) => {
+  return <>{props.conditionA ? <>ContentA</> : <div>else-condition-A</div>}</>;
+});
+
+export default ShowRootText;
 "
 `;
 
@@ -7082,8 +7102,17 @@ export const STYLES = \`
 .div-NestedStyles:hover {
   display: flex;
 }
+.div-NestedStyles:active {
+  display: inline;
+}
 .div-NestedStyles .nested-selector {
   display: grid;
+}
+.div-NestedStyles .nested-selector:hover {
+  display: block;
+}
+.div-NestedStyles.nested-selector:active {
+  display: inline-block;
 }
 \`;
 "
@@ -7785,6 +7814,20 @@ export const NestedShow = component$((props: Props) => {
 });
 
 export default NestedShow;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > showWithRootText 1`] = `
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+interface Props {
+  conditionA: boolean;
+}
+export const ShowRootText = component$((props: Props) => {
+  return <>{props.conditionA ? <>ContentA</> : <div>else-condition-A</div>}</>;
+});
+
+export default ShowRootText;
 "
 `;
 
