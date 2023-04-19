@@ -1,8 +1,9 @@
+import hash from 'object-hash';
 import traverse from 'traverse';
 import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisNode } from '../../types/mitosis-node';
 import { dashCase } from '../dash-case';
 import { isMitosisNode } from '../is-mitosis-node';
-import hash from 'object-hash';
 import {
   ClassStyleMap,
   getNestedSelectors,
@@ -11,7 +12,6 @@ import {
   parseCssObject,
   styleMapToCss,
 } from './helpers';
-import { MitosisNode } from '../../types/mitosis-node';
 
 type CollectStyleOptions = {
   prefix?: string;

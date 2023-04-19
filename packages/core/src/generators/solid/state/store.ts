@@ -1,10 +1,10 @@
 import { types } from '@babel/core';
+import { pipe } from 'fp-ts/lib/function';
 import { babelTransformExpression } from '../../../helpers/babel-transform';
 import { capitalize } from '../../../helpers/capitalize';
+import { prefixWithFunction, replaceGetterWithFunction } from '../../../helpers/patterns';
 import { MitosisComponent, MitosisState, StateValue } from '../../../types/mitosis-component';
 import { ToSolidOptions } from '../types';
-import { pipe } from 'fp-ts/lib/function';
-import { prefixWithFunction, replaceGetterWithFunction } from '../../../helpers/patterns';
 import { getStateSetterName, updateStateCode } from './helpers';
 
 const collectUsedStateAndPropsInFunction = (fnValue: string) => {

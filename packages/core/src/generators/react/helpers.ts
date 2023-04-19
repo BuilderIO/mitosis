@@ -1,6 +1,6 @@
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 
 import { ToReactOptions } from './types';
 

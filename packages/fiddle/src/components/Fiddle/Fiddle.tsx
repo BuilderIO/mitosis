@@ -16,9 +16,10 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';
-import React, { useRef, useState } from 'react';
 import Image from 'next/image';
+import { useRef, useState } from 'react';
 
+import stringify from 'fast-json-stable-stringify';
 import { adapt } from 'webcomponents-in-react';
 import { breakpoints } from '../../constants/breakpoints';
 import { colors } from '../../constants/colors';
@@ -37,7 +38,6 @@ import { useEventListener } from '../../hooks/use-event-listener';
 import { useReaction } from '../../hooks/use-reaction';
 import { Show } from '../Show';
 import { TextLink } from '../TextLink';
-import stringify from 'fast-json-stable-stringify';
 
 import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
 import { JsxCodeEditor } from '../JsxCodeEditor';

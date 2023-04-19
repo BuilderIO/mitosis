@@ -1,39 +1,39 @@
+import { flow, pipe } from 'fp-ts/lib/function';
+import { isString, kebabCase, uniq } from 'lodash';
 import { format } from 'prettier/standalone';
+import { VALID_HTML_TAGS } from '../constants/html_tags';
 import { dedent } from '../helpers/dedent';
-import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
+import { getComponentsUsed } from '../helpers/get-components-used';
+import { getCustomImports } from '../helpers/get-custom-imports';
+import { getPropFunctions } from '../helpers/get-prop-functions';
+import { getProps } from '../helpers/get-props';
+import { getPropsRef } from '../helpers/get-props-ref';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { indent } from '../helpers/indent';
+import isChildren from '../helpers/is-children';
+import { isUpperCase } from '../helpers/is-upper-case';
 import { mapRefs } from '../helpers/map-refs';
+import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { renderPreComponent } from '../helpers/render-imports';
+import { replaceIdentifiers } from '../helpers/replace-identifiers';
+import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import {
   DO_NOT_USE_VARS_TRANSFORMS,
   stripStateAndPropsRefs,
 } from '../helpers/strip-state-and-props-refs';
-import { selfClosingTags } from '../parsers/jsx';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { collectCss } from '../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import isChildren from '../helpers/is-children';
-import { getProps } from '../helpers/get-props';
-import { getPropsRef } from '../helpers/get-props-ref';
-import { getPropFunctions } from '../helpers/get-prop-functions';
-import { isString, kebabCase, uniq } from 'lodash';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { selfClosingTags } from '../parsers/jsx';
+import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { indent } from '../helpers/indent';
-import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
-import { getCustomImports } from '../helpers/get-custom-imports';
-import { getComponentsUsed } from '../helpers/get-components-used';
-import { isUpperCase } from '../helpers/is-upper-case';
-import { replaceIdentifiers } from '../helpers/replace-identifiers';
-import { VALID_HTML_TAGS } from '../constants/html_tags';
-import { flow, pipe } from 'fp-ts/lib/function';
 
 import { MitosisComponent } from '..';
 import { mergeOptions } from '../helpers/merge-options';

@@ -1,21 +1,21 @@
-import { pipe, identity } from 'fp-ts/lib/function';
-import { Dictionary } from '../../helpers/typescript';
+import { identity, pipe } from 'fp-ts/lib/function';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { checkIsDefined } from '../../helpers/nullable';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
+import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
+import { Dictionary } from '../../helpers/typescript';
 import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisNode, ForNode, Binding, SpreadType } from '../../types/mitosis-node';
+import { Binding, ForNode, MitosisNode, SpreadType } from '../../types/mitosis-node';
 import {
-  encodeQuotes,
   addBindingsToJson,
   addPropertiesToJson,
+  encodeQuotes,
   invertBooleanExpression,
 } from './helpers';
 import { ToVueOptions } from './types';
-import { checkIsDefined } from '../../helpers/nullable';
 
 const SPECIAL_PROPERTIES = {
   V_IF: 'v-if',

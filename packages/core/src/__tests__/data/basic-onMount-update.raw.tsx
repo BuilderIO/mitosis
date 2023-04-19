@@ -1,4 +1,4 @@
-import { useStore, onInit, onMount } from '@builder.io/mitosis';
+import { onInit, onMount, useStore } from '@builder.io/mitosis';
 
 export interface Props {
   hi: string;

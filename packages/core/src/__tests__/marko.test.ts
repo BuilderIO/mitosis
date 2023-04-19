@@ -1,8 +1,8 @@
 import {
   componentToMarko,
   markoFormatHtml,
-  preprocessHtml,
   postprocessHtml,
+  preprocessHtml,
 } from '../generators/marko';
 import { runTestsForTarget } from './shared';
 

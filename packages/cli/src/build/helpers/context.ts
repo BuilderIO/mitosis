@@ -1,16 +1,16 @@
 import {
+  contextToQwik,
   contextToReact,
   contextToRsc,
   contextToSolid,
   contextToSvelte,
   contextToVue,
-  contextToQwik,
   MitosisConfig,
   parseContext,
   Target,
 } from '@builder.io/mitosis';
 import { readFile } from 'fs-extra';
-import { upperFirst, camelCase, last } from 'lodash';
+import { camelCase, last, upperFirst } from 'lodash';
 
 export const generateContextFile = async ({
   path,

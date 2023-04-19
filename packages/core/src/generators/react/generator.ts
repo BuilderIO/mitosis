@@ -1,23 +1,30 @@
+import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { TranspilerGenerator } from '../../types/transpiler';
-import { collectCss } from '../../helpers/styles/collect-css';
+import { createSingleBinding } from '../../helpers/bindings';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
-import { getRefs } from '../../helpers/get-refs';
 import { getPropsRef } from '../../helpers/get-props-ref';
+import { getRefs } from '../../helpers/get-refs';
 import {
-  stringifyContextValue,
   getStateObjectStringFromComponent,
+  stringifyContextValue,
 } from '../../helpers/get-state-object-string';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { handleMissingState } from '../../helpers/handle-missing-state';
+import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { mapRefs } from '../../helpers/map-refs';
+import { mergeOptions } from '../../helpers/merge-options';
 import { processHttpRequests } from '../../helpers/process-http-requests';
 import { processTagReferences } from '../../helpers/process-tag-references';
 import { renderPreComponent } from '../../helpers/render-imports';
+import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
+import { checkHasState } from '../../helpers/state';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { collectCss } from '../../helpers/styles/collect-css';
+import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
+import { hasCss } from '../../helpers/styles/helpers';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -25,20 +32,13 @@ import {
   runPreJsonPlugins,
 } from '../../modules/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
+import { TranspilerGenerator } from '../../types/transpiler';
 import { hasContext } from '../helpers/context';
 import { collectReactNativeStyles } from '../react-native';
-import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
-import { hasCss } from '../../helpers/styles/helpers';
-import { checkHasState } from '../../helpers/state';
-import { ToReactOptions } from './types';
-import { getUseStateCode, processHookCode, updateStateSetters } from './state';
-import { closeFrag, openFrag, processBinding, wrapInFragment } from './helpers';
-import hash from 'hash-sum';
-import { createSingleBinding } from '../../helpers/bindings';
 import { blockToReact } from './blocks';
-import { mergeOptions } from '../../helpers/merge-options';
-import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
-import { isRootTextNode } from '../../helpers/is-root-text-node';
+import { closeFrag, openFrag, processBinding, wrapInFragment } from './helpers';
+import { getUseStateCode, processHookCode, updateStateSetters } from './state';
+import { ToReactOptions } from './types';
 
 export const contextPropDrillingKey = '_context';
 

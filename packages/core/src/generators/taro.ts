@@ -1,15 +1,15 @@
 import json5 from 'json5';
 import { camelCase, size } from 'lodash';
 import traverse from 'traverse';
-import { fastClone } from '../helpers/fast-clone';
-import { ClassStyleMap } from '../helpers/styles/helpers';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
-import { componentToReact, ToReactOptions } from './react';
-import { TranspilerGenerator } from '../types/transpiler';
 import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
+import { fastClone } from '../helpers/fast-clone';
+import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { mergeOptions } from '../helpers/merge-options';
+import { ClassStyleMap } from '../helpers/styles/helpers';
+import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
+import { TranspilerGenerator } from '../types/transpiler';
+import { componentToReact, ToReactOptions } from './react';
 
 // @tarojs/components
 export const DEFAULT_Component_SET = new Set<string>([

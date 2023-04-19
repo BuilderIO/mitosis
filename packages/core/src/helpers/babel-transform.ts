@@ -1,9 +1,9 @@
-import tsPreset from '@babel/preset-typescript';
 import * as babel from '@babel/core';
-import tsPlugin from '@babel/plugin-syntax-typescript';
 import decorators from '@babel/plugin-syntax-decorators';
+import tsPlugin from '@babel/plugin-syntax-typescript';
+import tsPreset from '@babel/preset-typescript';
 import type { Visitor } from '@babel/traverse';
-import { pipe, identity } from 'fp-ts/lib/function';
+import { identity, pipe } from 'fp-ts/lib/function';
 import { checkIsGetter, replaceFunctionWithGetter, replaceGetterWithFunction } from './patterns';
 
 const handleErrorOrExpression = <VisitorContextType = any>({

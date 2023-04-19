@@ -1,12 +1,12 @@
 import { camelCase, upperFirst } from 'lodash';
-import isChildren from '../../helpers/is-children';
-import { isSlotProperty } from '../../helpers/slots';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import isChildren from '../../helpers/is-children';
 import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
 import { getForArguments } from '../../helpers/nodes/for';
+import { isSlotProperty } from '../../helpers/slots';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode, ForNode, checkIsForNode } from '../../types/mitosis-node';
+import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
 import { closeFrag, getFragment, openFrag, processBinding, wrapInFragment } from './helpers';
 import { updateStateSettersInCode } from './state';
 import { ToReactOptions } from './types';

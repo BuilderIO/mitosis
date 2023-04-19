@@ -4,7 +4,10 @@ import {
 } from '../../plugins/compile-away-builder-components';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
+import { DIRECTIVES } from './directives';
 import { renderHandlers } from './helpers/handlers';
+import { stableJSONserialize } from './helpers/stable-serialize';
+import { collectStyles, CssStyles, renderStyles } from './helpers/styles';
 import { renderJSXNodes } from './jsx';
 import {
   arrowFnValue,
@@ -15,9 +18,6 @@ import {
   SrcBuilder,
   SrcBuilderOptions,
 } from './src-generator';
-import { stableJSONserialize } from './helpers/stable-serialize';
-import { collectStyles, CssStyles, renderStyles } from './helpers/styles';
-import { DIRECTIVES } from './directives';
 
 export type QwikOptions = {
   qwikLib?: string;

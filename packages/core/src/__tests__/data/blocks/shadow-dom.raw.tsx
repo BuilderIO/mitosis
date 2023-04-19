@@ -1,4 +1,4 @@
-import { useMetadata, useStore, onMount, For, Show } from '@builder.io/mitosis';
+import { For, onMount, Show, useMetadata, useStore } from '@builder.io/mitosis';
 
 useMetadata({ isAttachedToShadowDom: true });
 
