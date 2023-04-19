@@ -13,6 +13,7 @@ import embed from './data/blocks/embed.raw.tsx?raw';
 import image from './data/blocks/image.raw.tsx?raw';
 import columns from './data/blocks/columns.raw.tsx?raw';
 import lazyLoadSection from './data/builder/lazy-load-section.json?raw';
+import { BuilderComponent } from '@builder.io/react';
 
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
@@ -192,6 +193,61 @@ describe('Builder', () => {
       component: backToMitosis,
     });
     expect(mitosis.trim()).toEqual(code.trim());
+  });
+
+  test('Regenerate loop with Text node when using CSS', () => {
+    const builderJson: BuilderComponent = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element',
+            '@version': 2,
+            repeat: {
+              collection: 'state.submenusItem.menuItems',
+            },
+            id: 'builder-ID',
+            class: 'class-id',
+            component: {
+              name: 'Text',
+              options: {
+                text: 'text-content',
+              },
+            },
+            responsiveStyles: {
+              large: {
+                padding: '2px',
+              },
+            },
+          },
+        ],
+      },
+    } as BuilderComponent;
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    console.log(JSON.stringify(backToMitosis, null, 2));
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
+    });
+    expect(mitosis.trim()).toEqual(dedent`
+      import { For } from "@builder.io/mitosis";
+
+      export default function MyComponent(props) {
+        return (
+          <For each={state.submenusItem.menuItems}>
+            {(item, index) => (
+              <div
+                block-id="builder-ID"
+                class="class-id"
+                css={{
+                  padding: "2px",
+                }}
+              >
+                text-content
+              </div>
+            )}
+          </For>
+        );
+      }
+    `);
   });
 
   test('Regenerate custom Hero', () => {
