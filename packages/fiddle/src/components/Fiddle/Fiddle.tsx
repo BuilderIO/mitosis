@@ -517,7 +517,6 @@ export default function Fiddle() {
       whiteSpace: 'nowrap',
       ...(isDarkMode ? null : { backgroundColor: 'white' }),
     };
-    const textColor = isDarkMode?"white":"black";
     return (
       <div
         css={{
