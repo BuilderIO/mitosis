@@ -99,6 +99,7 @@ const BASE_OPTIONS: ToVueOptions = {
   plugins: [],
   vueVersion: 2,
   api: 'options',
+  defineComponent: true,
 };
 
 const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
@@ -193,6 +194,9 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     if (options.vueVersion >= 3 && options.asyncComponentImports) {
       vueImports.push('defineAsyncComponent');
     }
+    if (options.api === 'options' && options.defineComponent) {
+      vueImports.push('defineComponent');
+    }
     if (options.api === 'composition') {
       onUpdateWithDeps.length && vueImports.push('watch');
       component.hooks.onMount?.code && vueImports.push('onMounted');
@@ -221,13 +225,14 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
 
     <script ${options.api === 'composition' ? 'setup' : ''} ${tsLangAttribute}>
       ${vueImports.length ? `import { ${uniq(vueImports).sort().join(', ')} } from "vue"` : ''}
-      ${(options.typescript && component.types?.join('\n')) || ''}
-
+      
       ${renderPreComponent({
         component,
         target: 'vue',
         asyncComponentImports: options.asyncComponentImports,
       })}
+      
+      ${(options.typescript && component.types?.join('\n')) || ''}
 
       ${
         options.api === 'composition'

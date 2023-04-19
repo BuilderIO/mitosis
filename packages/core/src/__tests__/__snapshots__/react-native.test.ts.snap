@@ -2526,7 +2526,10 @@ const styles = StyleSheet.create({
     \\"--bar\\": \\"red\\",
     color: \\"var(--bar)\\",
     \\"&:hover\\": { display: \\"flex\\" },
+    \\":active\\": { display: \\"inline\\" },
     \\".nested-selector\\": { display: \\"grid\\" },
+    \\".nested-selector:hover\\": { display: \\"block\\" },
+    \\"&.nested-selector:active\\": { display: \\"inline-block\\" },
   },
 });
 
@@ -3343,6 +3346,37 @@ function NestedShow(props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function ShowRootText(props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          <Text>ContentA</Text>
+        </>
+      ) : (
+        <View>
+          <Text>else-condition-A</Text>
+        </View>
+      )}
+    </>
+  );
+}
+
+export default ShowRootText;
 "
 `;
 
@@ -6448,7 +6482,10 @@ const styles = StyleSheet.create({
     \\"--bar\\": \\"red\\",
     color: \\"var(--bar)\\",
     \\"&:hover\\": { display: \\"flex\\" },
+    \\":active\\": { display: \\"inline\\" },
     \\".nested-selector\\": { display: \\"grid\\" },
+    \\".nested-selector:hover\\": { display: \\"block\\" },
+    \\"&.nested-selector:active\\": { display: \\"inline-block\\" },
   },
 });
 
@@ -7348,6 +7385,41 @@ function NestedShow(props: Props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowRootText(props: Props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          <Text>ContentA</Text>
+        </>
+      ) : (
+        <View>
+          <Text>else-condition-A</Text>
+        </View>
+      )}
+    </>
+  );
+}
+
+export default ShowRootText;
 "
 `;
 

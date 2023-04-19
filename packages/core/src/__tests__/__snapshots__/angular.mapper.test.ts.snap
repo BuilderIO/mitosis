@@ -2881,8 +2881,17 @@ import { Component } from \\"@angular/core\\";
       .div:hover {
         display: flex;
       }
+      .div:active {
+        display: inline;
+      }
       .div .nested-selector {
         display: grid;
+      }
+      .div .nested-selector:hover {
+        display: block;
+      }
+      .div.nested-selector:active {
+        display: inline-block;
       }
     \`,
   ],
@@ -3757,6 +3766,32 @@ export class NestedShow {
   bootstrap: [SomeOtherComponent],
 })
 export class NestedShowModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > showWithRootText 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"show-root-text, ShowRootText\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+  \`,
+})
+export class ShowRootText {
+  @Input() conditionA: any;
+}
+
+@NgModule({
+  declarations: [ShowRootText],
+  imports: [CommonModule],
+  exports: [ShowRootText],
+  bootstrap: [SomeOtherComponent],
+})
+export class ShowRootTextModule {}
 "
 `;
 
@@ -7296,8 +7331,17 @@ import { Component } from \\"@angular/core\\";
       .div:hover {
         display: flex;
       }
+      .div:active {
+        display: inline;
+      }
       .div .nested-selector {
         display: grid;
+      }
+      .div .nested-selector:hover {
+        display: block;
+      }
+      .div.nested-selector:active {
+        display: inline-block;
       }
     \`,
   ],
@@ -8255,6 +8299,36 @@ export class NestedShow {
   bootstrap: [SomeOtherComponent],
 })
 export class NestedShowModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > showWithRootText 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+@Component({
+  selector: \\"show-root-text, ShowRootText\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+  \`,
+})
+export class ShowRootText {
+  @Input() conditionA: Props[\\"conditionA\\"];
+}
+
+@NgModule({
+  declarations: [ShowRootText],
+  imports: [CommonModule],
+  exports: [ShowRootText],
+  bootstrap: [SomeOtherComponent],
+})
+export class ShowRootTextModule {}
 "
 `;
 
