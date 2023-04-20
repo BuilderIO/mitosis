@@ -48,9 +48,7 @@ describe('Angular standalone component', () => {
 
   test('Standalone option should prevent NgModule generation when used whith sub-components', () => {
     const subComponentNgModule = mockNgModule('SubComponent', ['Foo']);
-    const standaloneComponentMetadata = mockStandaloneComponentMetadata('SubComponent', [
-      'Foo',
-    ]);
+    const standaloneComponentMetadata = mockStandaloneComponentMetadata('SubComponent', ['Foo']);
     const component = parseJsx(subComponentExample);
 
     const nonStandaloneComponent = componentToAngular({ standalone: false })({ component });
