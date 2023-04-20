@@ -127,9 +127,9 @@ const command: GluegunCommand = {
           case 'builder':
             json = builderContentToMitosisComponent(JSON.parse(data!));
             break;
-            
+
           case 'svelte':
-            json = parseSvelte(data!)
+            json = parseSvelte(data!);
             break;
           default:
             print.error(`${from_} is not a valid input type`);
