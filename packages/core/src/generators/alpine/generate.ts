@@ -22,6 +22,8 @@ import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
 import { renderMountHook } from './render-mount-hook';
 import { babelTransformCode } from '../../helpers/babel-transform';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { CAMEL_CASE_PLUGIN } from 'src/helpers/plugins/map-camel-cased-attributes';
+import { mergeOptions } from 'src/helpers/merge-options';
 
 export interface ToAlpineOptions extends BaseTranspilerOptions {
   /**
@@ -190,9 +192,14 @@ const blockToAlpine = (json: MitosisNode | ForNode, options: ToAlpineOptions = {
       }>`;
 };
 
+const DEFAULT_OPTIONS:ToAlpineOptions = {
+  plugins: [CAMEL_CASE_PLUGIN]
+}
+
 export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
-  (options = {}) =>
+  (userOptions = {}) =>
   ({ component }) => {
+    const options = mergeOptions(DEFAULT_OPTIONS, userOptions)
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);

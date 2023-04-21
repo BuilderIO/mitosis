@@ -27,15 +27,13 @@ import { flow, pipe } from 'fp-ts/lib/function';
 import { hasGetContext, hasSetContext } from '../helpers/context';
 import { isSlotProperty } from '../../helpers/slots';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
+import {CAMEL_CASE_PLUGIN} from '../../helpers/plugins/map-camel-cased-attributes'
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { stripStateAndProps } from './helpers';
 import { ToSvelteOptions } from './types';
 import { blockToSvelte } from './blocks';
 import { stripGetter } from '../../helpers/patterns';
-import { isFirstLetterLowerCase } from '../../helpers/is-first-letter-lower-case'
-import { mapCamelCasedHtmlAttributes } from 'src/helpers/map-camel-cased-html-attributes';
-import { MitosisNode } from 'src/types/mitosis-node';
 
 const getContextCode = (json: MitosisComponent) => {
   const contextGetters = json.context.get;
@@ -110,7 +108,7 @@ const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
 const DEFAULT_OPTIONS: ToSvelteOptions = {
   stateType: 'variables',
   prettier: true,
-  plugins: [FUNCTION_HACK_PLUGIN],
+  plugins: [FUNCTION_HACK_PLUGIN, CAMEL_CASE_PLUGIN],
 };
 
 export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
@@ -149,8 +147,6 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       .filter((x) => !props.includes(x));
 
     json = runPostJsonPlugins(json, options.plugins);
-    //@ts-ignore
-    mapCamelCasedHtmlAttributes(json)
     
     const css = collectCss(json);
     stripMetaProperties(json);

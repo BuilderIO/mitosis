@@ -33,6 +33,7 @@ import { hasGetContext } from '../helpers/context';
 import { blockToSolid } from './blocks';
 import { createSingleBinding } from '../../helpers/bindings';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
+import { CAMEL_CASE_PLUGIN } from 'src/helpers/plugins/map-camel-cased-attributes';
 
 // Transform <foo.bar key={value} /> to <Dynamic compnent={foo.bar} key={value} />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
@@ -88,7 +89,7 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
 const DEFAULT_OPTIONS: ToSolidOptions = {
   state: 'signals',
   stylesType: 'styled-components',
-  plugins: [],
+  plugins: [CAMEL_CASE_PLUGIN],
 };
 
 export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =

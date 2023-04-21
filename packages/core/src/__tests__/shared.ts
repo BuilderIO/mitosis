@@ -23,6 +23,7 @@ const expressionState = getRawFile('./data/expression-state.raw.tsx');
 const contentState = getRawFile('./data/context-state.raw.tsx');
 
 const basic = getRawFile('./data/basic.raw.tsx');
+const camelCasedAttributes = getRawFile('./data/map-camel-cased-attributes.raw.tsx')
 const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
 const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw.tsx');
 const basicChildComponent = getRawFile('./data/basic-child-component.raw.tsx');
@@ -199,6 +200,7 @@ const BASIC_TESTS: Tests = {
   referencingFunInsideHook,
   svgComponent,
   renderBlock,
+  camelCasedAttributes
 };
 
 const SLOTS_TESTS: Tests = {

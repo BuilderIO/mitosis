@@ -22,6 +22,8 @@ import { collectCss } from '../../helpers/styles/collect-css';
 import { indent } from '../../helpers/indent';
 import { mapRefs } from '../../helpers/map-refs';
 import { getForArguments } from '../../helpers/nodes/for';
+import { CAMEL_CASE_PLUGIN } from 'src/helpers/plugins/map-camel-cased-attributes';
+import { mergeOptions } from 'src/helpers/merge-options';
 
 export interface ToStencilOptions extends BaseTranspilerOptions {}
 
@@ -96,9 +98,14 @@ function processBinding(code: string) {
   return stripStateAndPropsRefs(code, { replaceWith: 'this.' });
 }
 
+const DEFAULT_OPTIONS:ToStencilOptions = {
+  plugins: [CAMEL_CASE_PLUGIN]
+}
+
 export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
-  (options = {}) =>
+  (userOptions = {}) =>
   ({ component }) => {
+    const options = mergeOptions(DEFAULT_OPTIONS, userOptions)
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);

@@ -13,12 +13,13 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
+import {CAMEL_CASE_PLUGIN} from '../../helpers/plugins/map-camel-cased-attributes'
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { pickBy, size, uniq } from 'lodash';
 import { processHttpRequests } from '../../helpers/process-http-requests';
-import { TranspilerGenerator } from '../../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { pipe } from 'fp-ts/lib/function';
 import { isSlotProperty } from '../../helpers/slots';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
@@ -276,11 +277,31 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     return str;
   };
 
-export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>
-  componentToVue({ ...vueOptions, vueVersion: 2 });
 
-export const componentToVue3 = (vueOptions?: VueOptsWithoutVersion) =>
-  componentToVue({ ...vueOptions, vueVersion: 3 });
+const DEFAULT_OPTIONS_VUE_2: ToVueOptions = {
+  api: 'options',
+  vueVersion: 2,
+  prettier: true,
+  plugins: [CAMEL_CASE_PLUGIN],
+};
+export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>{
+  const options = mergeOptions<ToVueOptions>(DEFAULT_OPTIONS_VUE_2, { ...vueOptions, vueVersion: 2 })
+  return componentToVue(options);
+}
+
+const DEFAULT_OPTIONS_VUE_3: ToVueOptions = {
+  api: 'composition',
+  vueVersion: 3,
+  prettier: true,
+  plugins: [CAMEL_CASE_PLUGIN],
+};
+
+export const componentToVue3 = (vueOptions?: VueOptsWithoutVersion) =>{
+  const options = mergeOptions<ToVueOptions>(DEFAULT_OPTIONS_VUE_3, { ...vueOptions, vueVersion: 3 })
+  return componentToVue(options);
+}
+
+
 
 // Remove unused artifacts like empty script or style tags
 const removePatterns = [

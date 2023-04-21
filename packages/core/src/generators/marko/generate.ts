@@ -25,6 +25,8 @@ import { getRefs } from '../../helpers/get-refs';
 import { camelCase } from 'lodash';
 import hash from 'hash-sum';
 import { getForArguments } from '../../helpers/nodes/for';
+import { mergeOptions } from 'src/helpers/merge-options';
+import { CAMEL_CASE_PLUGIN } from 'src/helpers/plugins/map-camel-cased-attributes';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
 
@@ -147,14 +149,20 @@ function processBinding(
   }
 }
 
+
 export const componentToMarko: TranspilerGenerator<ToMarkoOptions> =
   (userOptions = {}) =>
   ({ component }) => {
+    const DEFAULT_OPTIONS:InternalToMarkoOptions = {
+      component,
+      plugins: [CAMEL_CASE_PLUGIN]
+    }
     let json = fastClone(component);
-    const options: InternalToMarkoOptions = {
-      ...userOptions,
-      component: json,
-    };
+    // const options: InternalToMarkoOptions = {
+    //   ...userOptions,
+    //   component: json,
+    // };
+    const options: InternalToMarkoOptions = mergeOptions(DEFAULT_OPTIONS, userOptions);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }

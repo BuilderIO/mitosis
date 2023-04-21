@@ -25,6 +25,8 @@ import { getRefs } from '../../helpers/get-refs';
 import { camelCase, some } from 'lodash';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { has } from '../../helpers/has';
+import { CAMEL_CASE_PLUGIN } from 'src/helpers/plugins/map-camel-cased-attributes';
+import { mergeOptions } from 'src/helpers/merge-options';
 
 const getCustomTagName = (name: string, options: ToLitOptions) => {
   if (!name || !isUpperCase(name[0])) {
@@ -127,8 +129,14 @@ function processBinding(code: string) {
 }
 
 export const componentToLit: TranspilerGenerator<ToLitOptions> =
-  (options = {}) =>
+  (userOptions = {}) =>
   ({ component }) => {
+    const DEFAULT_OPTIONS:ToLitOptions = {
+      plugins: [CAMEL_CASE_PLUGIN]
+    }
+
+    const options = mergeOptions(DEFAULT_OPTIONS, userOptions)
+
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
