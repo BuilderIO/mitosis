@@ -1,0 +1,143 @@
+diff a/packages/core/src/__tests__/__snapshots__/qwik.test.ts.snap b/packages/core/src/__tests__/__snapshots__/qwik.test.ts.snap	(rejected hunks)
+@@ -1469,46 +1475,49 @@ export const lowerCaseName = function lowerCaseName(
+   return state.name.toLowerCase();
+ };
+ export const MyBasicRefComponent = component$((props) => {
+-  useStylesScoped$(STYLES);
+-
+   const inputRef = useRef();
+   const inputNoArgRef = useRef();
+   const state = useStore({ name: \\"PatrickJS\\" });
+ 
+   return (
+     <div>
++      <div></div>
+       {props.showInput ? (
+         <Fragment>
++          <div></div>
+           <input
+-            class=\\"input-MyBasicRefComponent\\"
+-            ref={inputRef}
+-            value={state.name}
+-            onBlur$={(event) => state.onBlur()}
+-            onChange$={(event) => (state.name = event.target.value)}
++            onblur={state.onBlur()}
++            onchange={(() => {
++              state.name = event.target.value;
++            })()}
+           />
+-          <label for=\\"cars\\" ref={inputNoArgRef}>
+-            Choose a car:
++          <div></div>
++          <label>
++            <div></div>
+           </label>
+-          <select name=\\"cars\\" id=\\"cars\\">
+-            <option value=\\"supra\\">GR Supra</option>
+-            <option value=\\"86\\">GR 86</option>
++          <div></div>
++          <select name=\\"cars\\">
++            <div></div>
++            <option>
++              <div></div>
++            </option>
++            <div></div>
++            <option>
++              <div></div>
++            </option>
++            <div></div>
+           </select>
++          <div></div>
+         </Fragment>
+       ) : null}
+-      Hello
+-      {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+-      Component!
++      <div></div>
++      <div></div>
++      <div></div>
+     </div>
+   );
+ });
+ 
+ export default MyBasicRefComponent;
+-
+-export const STYLES = \`
+-.input-MyBasicRefComponent {
+-  color: red;
+-}
+-\`;
+ "
+ `;
+ 
+@@ -4464,46 +4431,49 @@ export const lowerCaseName = function lowerCaseName(
+   return state.name.toLowerCase();
+ };
+ export const MyBasicRefComponent = component$((props: Props) => {
+-  useStylesScoped$(STYLES);
+-
+   const inputRef = useRef();
+   const inputNoArgRef = useRef();
+   const state = useStore<any>({ name: \\"PatrickJS\\" });
+ 
+   return (
+     <div>
++      <div></div>
+       {props.showInput ? (
+         <Fragment>
++          <div></div>
+           <input
+-            class=\\"input-MyBasicRefComponent\\"
+-            ref={inputRef}
+-            value={state.name}
+-            onBlur$={(event) => state.onBlur()}
+-            onChange$={(event) => (state.name = event.target.value)}
++            onblur={state.onBlur()}
++            onchange={(() => {
++              state.name = event.target.value;
++            })()}
+           />
+-          <label for=\\"cars\\" ref={inputNoArgRef}>
+-            Choose a car:
++          <div></div>
++          <label>
++            <div></div>
+           </label>
+-          <select name=\\"cars\\" id=\\"cars\\">
+-            <option value=\\"supra\\">GR Supra</option>
+-            <option value=\\"86\\">GR 86</option>
++          <div></div>
++          <select name=\\"cars\\">
++            <div></div>
++            <option>
++              <div></div>
++            </option>
++            <div></div>
++            <option>
++              <div></div>
++            </option>
++            <div></div>
+           </select>
++          <div></div>
+         </Fragment>
+       ) : null}
+-      Hello
+-      {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+-      Component!
++      <div></div>
++      <div></div>
++      <div></div>
+     </div>
+   );
+ });
+ 
+ export default MyBasicRefComponent;
+-
+-export const STYLES = \`
+-.input-MyBasicRefComponent {
+-  color: red;
+-}
+-\`;
+ "
+ `;
+ 

@@ -1162,13 +1162,7 @@ export const MyComponent = componentQrl(
 `;
 
 exports[`qwik > jsx > Javascript Test > Basic 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
@@ -1177,59 +1171,61 @@ export const underscore_fn_name = function underscore_fn_name(props, state) {
   return \\"bar\\";
 };
 export const MyBasicComponent = component$((props) => {
-  useStylesScoped$(STYLES);
-
   const state = useStore({ age: 1, name: \\"Steve\\", sports: [\\"\\"] });
 
   return (
-    <div class=\\"test div-MyBasicComponent\\">
+    <div>
+      <div></div>
       <input
-        value={DEFAULT_VALUES.name || state.name}
-        onChange$={(event) => (state.name = myEvent.target.value)}
+        onchange={(() => {
+          state.name = myEvent.target.value;
+        })()}
       />
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicComponent;
-
-export const STYLES = \`
-.div-MyBasicComponent {
-  padding: 10px;
-}
-\`;
 "
 `;
 
 exports[`qwik > jsx > Javascript Test > Basic 2`] = `
-"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+"Error: SyntaxError: ',' expected. (6:8)
+  4 |
+  5 | return (<div><div></div>{(state.names||[]).map(function(person){return(person === state.name?<><div></div><input onchange={{
+> 6 |   state.name = event.target.value + ' and ' + person;
+    |        ^
+  7 | }} /><div></div><div></div><div></div></>:null);})}<div></div></div>)});
+  8 |
+  9 | export default MyBasicForShowComponent;
+========================================================================
+import{Fragment,component$,h,useStore}from\\"@builder.io/qwik\\";
 
-export const MyBasicForShowComponent = component$((props) => {
-  const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
+export const MyBasicForShowComponent=component$((props)=>{const state=useStore({\\"name\\":'PatrickJS',\\"names\\":['Steve', 'PatrickJS']});
 
-  return (
-    <div>
-      {(state.names || []).map(function (person) {
-        return person === state.name ? (
-          <>
-            <input
-              value={state.name}
-              onChange$={(event) => {
-                state.name = event.target.value + \\" and \\" + person;
-              }}
-            />
-            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-            or Liquid!
-          </>
-        ) : null;
-      })}
-    </div>
-  );
-});
+return (<div><div></div>{(state.names||[]).map(function(person){return(person === state.name?<><div></div><input onchange={{
+  state.name = event.target.value + ' and ' + person;
+}} /><div></div><div></div><div></div></>:null);})}<div></div></div>)});
 
 export default MyBasicForShowComponent;
-"
+
+========================================================================
+    at File.toString (C:/projects/mitosis/packages/core/src/generators/qwik/src-generator.ts:84:15)
+    at C:/projects/mitosis/packages/core/src/generators/qwik/component-generator.ts:104:27
+    at getOutput (C:/projects/mitosis/packages/core/src/__tests__/shared.ts:500:62)
+    at C:/projects/mitosis/packages/core/src/__tests__/shared.ts:502:28
+    at async runTest (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:417:7)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runFiles (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:646:5)
+    at async startTestsNode (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:664:3)
+    at async C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:96:11
+    at async Module.withEnv (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:162:5)
+    at async run (C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:89:7)
+    at async file:///C:/projects/mitosis/packages/core/node_modules/tinypool/dist/esm/worker.js:109:20"
 `;
 
 exports[`qwik > jsx > Javascript Test > Basic Context 1`] = `
@@ -1265,9 +1261,11 @@ export const MyBasicComponent = component$((props) => {
 
   return (
     <div>
-      {myService.method(\\"hello\\") + state.name}
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      <input onChange$={(event) => state.onChange} />
+      <div></div>
+      <div></div>
+      <div></div>
+      <input onchange={state.onChange} />
+      <div></div>
     </div>
   );
 });
@@ -1295,7 +1293,12 @@ export const MyBasicOnMountUpdateComponent = component$((props) => {
     state.name = \\"PatrickJS onInit\\" + props.hi;
   });
 
-  return <div>Hello {state.name}</div>;
+  return (
+    <div>
+      <div></div>
+      <div></div>
+    </div>
+  );
 });
 
 export default MyBasicOnMountUpdateComponent;
@@ -1352,7 +1355,7 @@ exports[`qwik > jsx > Javascript Test > BasicAttribute 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props) => {
-  return <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />;
+  return <input />;
 });
 
 export default MyComponent;
@@ -1362,16 +1365,22 @@ export default MyComponent;
 exports[`qwik > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 "import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
+import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBooleanAttribute = component$((props) => {
   return (
     <div>
-      <Slot></Slot>
-      {props.type}
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
+      <div></div>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
+      <div></div>
       <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
+      <div></div>
     </div>
   );
 });
@@ -1392,13 +1401,18 @@ export const MyBasicChildComponent = component$((props) => {
 
   return (
     <div>
+      <div></div>
       <MyBasicComponent id={state.dev}></MyBasicComponent>
+      <div></div>
       <div>
+        <div></div>
         <MyBasicOnMountUpdateComponent
           hi={state.name}
           bye={state.dev}
         ></MyBasicOnMountUpdateComponent>
+        <div></div>
       </div>
+      <div></div>
     </div>
   );
 });
@@ -1408,53 +1422,45 @@ export default MyBasicChildComponent;
 `;
 
 exports[`qwik > jsx > Javascript Test > BasicFor 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useClientEffect$,
-  useStore,
-} from \\"@builder.io/qwik\\";
+"Error: SyntaxError: ',' expected. (6:8)
+  4 |
+  5 | return (<div><div></div>{(state.names||[]).map(function(person){return(<Fragment><div></div><input onchange={{
+> 6 |   state.name = event.target.value + ' and ' + person;
+    |        ^
+  7 | }} /><div></div><div></div><div></div></Fragment>);})}<div></div></div>)});
+  8 |
+  9 | export default MyBasicForComponent;
+========================================================================
+import{Fragment,component$,h,useClientEffect$,useStore}from\\"@builder.io/qwik\\";
 
-export const MyBasicForComponent = component$((props) => {
-  const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
-  useClientEffect$(() => {
-    console.log(\\"onMount code\\");
-  });
+export const MyBasicForComponent=component$((props)=>{const state=useStore({\\"name\\":'PatrickJS',\\"names\\":['Steve', 'PatrickJS']});useClientEffect$(()=>{console.log('onMount code')});
 
-  return (
-    <div>
-      {(state.names || []).map(function (person) {
-        return (
-          <Fragment>
-            <input
-              value={state.name}
-              onChange$={(event) => {
-                state.name = event.target.value + \\" and \\" + person;
-              }}
-            />
-            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-            or Liquid!
-          </Fragment>
-        );
-      })}
-    </div>
-  );
-});
+return (<div><div></div>{(state.names||[]).map(function(person){return(<Fragment><div></div><input onchange={{
+  state.name = event.target.value + ' and ' + person;
+}} /><div></div><div></div><div></div></Fragment>);})}<div></div></div>)});
 
 export default MyBasicForComponent;
-"
+
+========================================================================
+    at File.toString (C:/projects/mitosis/packages/core/src/generators/qwik/src-generator.ts:84:15)
+    at C:/projects/mitosis/packages/core/src/generators/qwik/component-generator.ts:104:27
+    at getOutput (C:/projects/mitosis/packages/core/src/__tests__/shared.ts:500:62)
+    at C:/projects/mitosis/packages/core/src/__tests__/shared.ts:502:28
+    at async runTest (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:417:7)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runFiles (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:646:5)
+    at async startTestsNode (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:664:3)
+    at async C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:96:11
+    at async Module.withEnv (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:162:5)
+    at async run (C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:89:7)
+    at async file:///C:/projects/mitosis/packages/core/node_modules/tinypool/dist/esm/worker.js:109:20"
 `;
 
 exports[`qwik > jsx > Javascript Test > BasicRef 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useRef,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useRef, useStore } from \\"@builder.io/qwik\\";
 
 export const onBlur = function onBlur(props, state, inputRef, inputNoArgRef) {
   // Maintain focus
@@ -1531,7 +1537,11 @@ export const MyBasicRefAssignmentComponent = component$((props) => {
 
   return (
     <div>
-      <button onClick$={(event) => state.handlerClick(evt)}>Click</button>
+      <div></div>
+      <button onclick={state.handlerClick(evt)}>
+        <div></div>
+      </button>
+      <div></div>
     </div>
   );
 });
@@ -1572,10 +1582,23 @@ export const MyPreviousComponent = component$((props) => {
 
   return (
     <div>
+      <div></div>
       <h1>
-        Now: {state.count}, before: {prevCount}
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </h1>
-      <button onClick$={(event) => (state.count += 1)}>Increment</button>
+      <div></div>
+      <button
+        onclick={(() => {
+          state.count += 1;
+        })()}
+      >
+        <div></div>
+      </button>
+      <div></div>
     </div>
   );
 });
@@ -1590,20 +1613,31 @@ exports[`qwik > jsx > Javascript Test > Button 1`] = `
 export const Button = component$((props) => {
   return (
     <div>
+      <div></div>
       {props.link ? (
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
+        <>
+          <div></div>
+          <a>
+            <div></div>
+            <div></div>
+            <div></div>
+          </a>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {!props.link ? (
-        <button type=\\"button\\" {...props.attributes}>
-          {props.text}
-        </button>
+        <>
+          <div></div>
+          <button>
+            <div></div>
+            <div></div>
+            <div></div>
+          </button>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </div>
   );
 });
@@ -1613,7 +1647,7 @@ export default Button;
 `;
 
 exports[`qwik > jsx > Javascript Test > Columns 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const getColumns = function getColumns(props, state) {
   return props.columns || [];
@@ -1636,47 +1670,28 @@ export const getColumnCssWidth = function getColumnCssWidth(
   return \`calc(\${getWidth(props, state, index)}% - \${subtractWidth}px)\`;
 };
 export const Column = component$((props) => {
-  useStylesScoped$(STYLES);
-
   const state = {};
 
   return (
-    <div class=\\"builder-columns div-Column\\">
+    <div>
+      <div></div>
       {(props.columns || []).map(function (column, index) {
         return (
-          <div class=\\"builder-column div-Column-2\\">
-            {column.content}
-            {index}
+          <div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
         );
       })}
+      <div></div>
     </div>
   );
 });
 
 export default Column;
-
-export const STYLES = \`
-.div-Column {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  line-height: normal;
-}
-@media (max-width: 999px) {
-  .div-Column {
-    flex-direction: row;
-  }
-}
-@media (max-width: 639px) {
-  .div-Column {
-    flex-direction: row-reverse;
-  }
-}
-.div-Column-2 {
-  flex-grow: 1;
-}
-\`;
 "
 `;
 
@@ -1688,13 +1703,21 @@ import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 export const ContentSlotCode = component$((props) => {
   return (
     <div>
+      <div></div>
       <Slot name={props.slotTesting}></Slot>
+      <div></div>
       <div>
+        <div></div>
         <hr />
+        <div></div>
       </div>
+      <div></div>
       <div>
+        <div></div>
         <Slot></Slot>
+        <div></div>
       </div>
+      <div></div>
     </div>
   );
 });
@@ -1706,7 +1729,7 @@ export default ContentSlotCode;
 exports[`qwik > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "import { Slot } from \\"./med.js\\";
 
-import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
+import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const cls = function cls(props, state) {
   return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
@@ -1720,23 +1743,36 @@ export const ContentSlotJsxCode = component$((props) => {
   return (
     <>
       {props.slotReference ? (
-        <div
-          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-          {...props.attributes}
-          onClick$={(event) => show(props, state)}
-          class={props.slotContent ? \`\${state.name}-content\` : \\"\\"}
-        >
-          {state.showContent && props.slotContent ? (
-            <Slot name=\\"content\\">{props.content}</Slot>
-          ) : null}
-          <div>
-            <hr />
+        <>
+          <div></div>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            onclick={show(props, state)}
+          >
+            <div></div>
+            {state.showContent && props.slotContent ? (
+              <>
+                <div></div>
+                <Slot name=\\"content\\">
+                  <div></div>
+                </Slot>
+                <div></div>
+              </>
+            ) : null}
+            <div></div>
+            <div>
+              <div></div>
+              <hr />
+              <div></div>
+            </div>
+            <div></div>
+            <div>
+              <div></div>
+            </div>
+            <div></div>
           </div>
-          <div>
-            <Slot></Slot>
-          </div>
-        </div>
+          <div></div>
+        </>
       ) : null}
     </>
   );
@@ -1808,15 +1844,7 @@ export const CustomCode = component$((props) => {
     findAndRunScripts(props, state, elem);
   });
 
-  return (
-    <div
-      ref={elem}
-      class={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={props.code}
-    ></div>
-  );
+  return <div innerhtml={props.code}></div>;
 });
 
 export default CustomCode;
@@ -1885,15 +1913,7 @@ export const CustomCode = component$((props) => {
     findAndRunScripts(props, state, elem);
   });
 
-  return (
-    <div
-      ref={elem}
-      class={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={props.code}
-    ></div>
-  );
+  return <div innerhtml={props.code}></div>;
 });
 
 export default CustomCode;
@@ -1901,14 +1921,7 @@ export default CustomCode;
 `;
 
 exports[`qwik > jsx > Javascript Test > Form 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useRef,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useRef, useStore } from \\"@builder.io/qwik\\";
 
 import { Builder, builder } from \\"@builder.io/sdk\\";
 
@@ -2136,8 +2149,6 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
   }
 };
 export const FormComponent = component$((props) => {
-  useStylesScoped$(STYLES);
-
   const formRef = useRef();
   const state = useStore({
     formErrorMessage: \\"\\",
@@ -2146,19 +2157,12 @@ export const FormComponent = component$((props) => {
   });
 
   return (
-    <form
-      validate={props.validate}
-      ref={formRef}
-      action={(() => {
-        !props.sendWithJs && props.action;
-      })()}
-      method={props.method}
-      name={props.name}
-      onSubmit$={(event) => onSubmit(props, state, formRef, event)}
-      {...props.attributes}
-    >
-      {props.builderBlock && props.builderBlock.children
-        ? (props.builderBlock?.children || []).map(function (block, index) {
+    <form name={props.name} onsubmit={onSubmit(props, state, formRef, event)}>
+      <div></div>
+      {props.builderBlock && props.builderBlock.children ? (
+        <>
+          <div></div>
+          {(props.builderBlock?.children || []).map(function (block, index) {
             return (
               <BuilderBlockComponent
                 key={block.id}
@@ -2166,59 +2170,74 @@ export const FormComponent = component$((props) => {
                 index={index}
               ></BuilderBlockComponent>
             );
-          })
-        : null}
+          })}
+          <div></div>
+        </>
+      ) : null}
+      <div></div>
       {submissionState(props, state, formRef) === \\"error\\" ? (
-        <BuilderBlocks
-          dataPath=\\"errorMessage\\"
-          blocks={props.errorMessage}
-        ></BuilderBlocks>
+        <>
+          <div></div>
+          <BuilderBlocks
+            dataPath=\\"errorMessage\\"
+            blocks={props.errorMessage}
+          ></BuilderBlocks>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {submissionState(props, state, formRef) === \\"sending\\" ? (
-        <BuilderBlocks
-          dataPath=\\"sendingMessage\\"
-          blocks={props.sendingMessage}
-        ></BuilderBlocks>
+        <>
+          <div></div>
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          ></BuilderBlocks>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {submissionState(props, state, formRef) === \\"error\\" &&
       state.responseData ? (
-        <pre class=\\"builder-form-error-text pre-FormComponent\\">
-          {JSON.stringify(state.responseData, null, 2)}
-        </pre>
+        <>
+          <div></div>
+          <pre>
+            <div></div>
+            <div></div>
+            <div></div>
+          </pre>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {submissionState(props, state, formRef) === \\"success\\" ? (
-        <BuilderBlocks
-          dataPath=\\"successMessage\\"
-          blocks={props.successMessage}
-        ></BuilderBlocks>
+        <>
+          <div></div>
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          ></BuilderBlocks>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </form>
   );
 });
 
 export default FormComponent;
-
-export const STYLES = \`
-.pre-FormComponent {
-  padding: 10px;
-  color: red;
-  text-align: center;
-}
-\`;
 "
 `;
 
 exports[`qwik > jsx > Javascript Test > Image 1`] = `
 "import {
   Fragment,
-  Slot,
   component$,
   h,
   useCleanup$,
   useClientEffect$,
   useRef,
   useStore,
-  useStylesScoped$,
 } from \\"@builder.io/qwik\\";
 
 export const setLoaded = function setLoaded(props, state, pictureRef) {
@@ -2238,8 +2257,6 @@ export const isBrowser = function isBrowser(props, state, pictureRef) {
   );
 };
 export const Image = component$((props) => {
-  useStylesScoped$(STYLES);
-
   const pictureRef = useRef();
   const state = useStore({
     imageLoaded: false,
@@ -2278,39 +2295,31 @@ export const Image = component$((props) => {
 
   return (
     <div>
-      <picture ref={pictureRef}>
+      <div></div>
+      <picture>
+        <div></div>
         {!useLazyLoading(props, state, pictureRef) || state.load ? (
-          <img
-            alt={props.altText}
-            aria-role={props.altText ? \\"presentation\\" : undefined}
-            class={
-              \\"builder-image\\" +
-              (props._class ? \\" \\" + props._class : \\"\\") +
-              \\" img-Image\\"
-            }
-            src={props.image}
-            onLoad$={(event) => setLoaded(props, state, pictureRef)}
-            srcset={props.srcset}
-            sizes={props.sizes}
-          />
+          <>
+            <div></div>
+            <img
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              onload={setLoaded(props, state, pictureRef)}
+            />
+            <div></div>
+          </>
         ) : null}
-        <source srcset={props.srcset} />
+        <div></div>
+        <source />
+        <div></div>
       </picture>
-      <Slot></Slot>
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
   );
 });
 
 export default Image;
-
-export const STYLES = \`
-.img-Image {
-  opacity: 1;
-  transition: opacity 0.2s ease-in-out;
-  object-fit: cover;
-  object-position: center;
-}
-\`;
 "
 `;
 
@@ -2325,13 +2334,17 @@ export const ImgStateComponent = component$((props) => {
 
   return (
     <div>
+      <div></div>
       {(state.images || []).map(function (item, itemIndex) {
         return (
           <Fragment>
-            <img class=\\"custom-class\\" src={item} key={itemIndex} />
+            <div></div>
+            <img />
+            <div></div>
           </Fragment>
         );
       })}
+      <div></div>
     </div>
   );
 });
@@ -2346,18 +2359,7 @@ exports[`qwik > jsx > Javascript Test > Img 1`] = `
 import { Builder } from \\"@builder.io/sdk\\";
 
 export const ImgComponent = component$((props) => {
-  return (
-    <img
-      style={{
-        objectFit: props.backgroundSize || \\"cover\\",
-        objectPosition: props.backgroundPosition || \\"center\\",
-      }}
-      {...props.attributes}
-      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
-      alt={props.altText}
-      src={props.imgSrc}
-    />
-  );
+  return <img />;
 });
 
 export default ImgComponent;
@@ -2370,22 +2372,7 @@ exports[`qwik > jsx > Javascript Test > Input 1`] = `
 import { Builder } from \\"@builder.io/sdk\\";
 
 export const FormInputComponent = component$((props) => {
-  return (
-    <input
-      {...props.attributes}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      placeholder={props.placeholder}
-      type={props.type}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-      required={props.required}
-    />
-  );
+  return <input name={props.name} defaultvalue={props.defaultValue} />;
 });
 
 export default FormInputComponent;
@@ -2396,12 +2383,7 @@ exports[`qwik > jsx > Javascript Test > RawText 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const RawText = component$((props) => {
-  return (
-    <span
-      class={props.attributes?.class || props.attributes?.className}
-      dangerouslySetInnerHTML={props.text || \\"\\"}
-    ></span>
-  );
+  return <span innerhtml={props.text || \\"\\"}></span>;
 });
 
 export default RawText;
@@ -2409,21 +2391,14 @@ export default RawText;
 `;
 
 exports[`qwik > jsx > Javascript Test > Section 1`] = `
-"import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const SectionComponent = component$((props) => {
   return (
-    <section
-      {...props.attributes}
-      style={(() => {
-        props.maxWidth && typeof props.maxWidth === \\"number\\"
-          ? {
-              maxWidth: props.maxWidth,
-            }
-          : undefined;
-      })()}
-    >
-      <Slot></Slot>
+    <section>
+      <div></div>
+      <div></div>
+      <div></div>
     </section>
   );
 });
@@ -2433,27 +2408,28 @@ export default SectionComponent;
 `;
 
 exports[`qwik > jsx > Javascript Test > Section 2`] = `
-"import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const SectionStateComponent = component$((props) => {
   const state = useStore({ items: [42], max: 42 });
 
   return (
     <>
-      {state.max
-        ? (state.items || []).map(function (item) {
+      {state.max ? (
+        <>
+          <div></div>
+          {(state.items || []).map(function (item) {
             return (
-              <section
-                {...props.attributes}
-                style={{
-                  maxWidth: item + state.max,
-                }}
-              >
-                <Slot></Slot>
+              <section>
+                <div></div>
+                <div></div>
+                <div></div>
               </section>
             );
-          })
-        : null}
+          })}
+          <div></div>
+        </>
+      ) : null}
     </>
   );
 });
@@ -2469,24 +2445,18 @@ import { Builder } from \\"@builder.io/sdk\\";
 
 export const SelectComponent = component$((props) => {
   return (
-    <select
-      {...props.attributes}
-      value={props.value}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      defaultValue={props.defaultValue}
-      name={props.name}
-    >
+    <select name={props.name} defaultvalue={props.defaultValue}>
+      <div></div>
       {(props.options || []).map(function (option, index) {
         return (
-          <option value={option.value} data-index={index}>
-            {option.name || option.value}
+          <option data-index={index}>
+            <div></div>
+            <div></div>
+            <div></div>
           </option>
         );
       })}
+      <div></div>
     </select>
   );
 });
@@ -2503,9 +2473,15 @@ import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 export const SlotCode = component$((props) => {
   return (
     <div>
+      <div></div>
       <Slot>
-        <div class=\\"default-slot\\">Default content</div>
+        <div></div>
+        <div>
+          <div></div>
+        </div>
+        <div></div>
       </Slot>
+      <div></div>
     </div>
   );
 });
@@ -2524,13 +2500,17 @@ import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 export const SlotCode = component$((props) => {
   return (
     <div>
+      <div></div>
       <ContentSlotCode>
+        <div></div>
         <Slot
           testing={(() => {
             <div>Hello</div>;
           })()}
         ></Slot>
+        <div></div>
       </ContentSlotCode>
+      <div></div>
     </div>
   );
 });
@@ -2547,11 +2527,13 @@ import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 export const SlotCode = component$((props) => {
   return (
     <div>
+      <div></div>
       <ContentSlotCode
         slotTesting={(() => {
           <div>Hello</div>;
         })()}
       ></ContentSlotCode>
+      <div></div>
     </div>
   );
 });
@@ -2568,9 +2550,17 @@ import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 export const SlotCode = component$((props) => {
   return (
     <div>
+      <div></div>
       <Slot name=\\"top\\"></Slot>
-      <Slot name=\\"left\\">Default left</Slot>
-      <Slot>Default Child</Slot>
+      <div></div>
+      <Slot name=\\"left\\">
+        <div></div>
+      </Slot>
+      <div></div>
+      <Slot>
+        <div></div>
+      </Slot>
+      <div></div>
     </div>
   );
 });
@@ -2580,111 +2570,50 @@ export default SlotCode;
 `;
 
 exports[`qwik > jsx > Javascript Test > Stamped.io 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useClientEffect$,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"Error: SyntaxError: ',' expected. (14:8)
+  12 |
+  13 | return (<div data-user={state.name}><div></div><button onclick={(()=>{state.showReviewPrompt = true})()}><div></div></button><div></div>{state.showReviewPrompt || 'asdf'?<><div></div><input /><div></div><input /><div></div><textarea></textarea><div></div><button onclick={{
+> 14 |   event.preventDefault();
+     |        ^
+  15 |   state.showReviewPrompt = false;
+  16 | }}><div></div></button><div></div></>:null}<div></div>{(state.reviews||[]).map(function(review,index){return(<div><div></div><img /><div></div><div><div></div><div><div></div><div></div></div><div></div><div><div></div></div><div></div><div><div></div></div><div></div></div><div></div></div>);})}<div></div></div>)});
+  17 |
+========================================================================
+import{Fragment,component$,h,useClientEffect$,useStore}from\\"@builder.io/qwik\\";
 
-import { kebabCase, snakeCase } from \\"lodash\\";
+import{kebabCase,snakeCase}from\\"lodash\\";
 
-export const kebabCaseValue = function kebabCaseValue(props, state) {
-  return kebabCase(\\"testThat\\");
-};
-export const snakeCaseValue = function snakeCaseValue(props, state) {
-  return snakeCase(\\"testThis\\");
-};
-export const SmileReviews = component$((props) => {
-  useStylesScoped$(STYLES);
+export const kebabCaseValue=function  kebabCaseValue(props, state) {
+  return kebabCase('testThat');
+};export const snakeCaseValue=function  snakeCaseValue(props, state) {
+  return snakeCase('testThis');
+};export const SmileReviews=component$((props)=>{const state=useStore({\\"name\\":'test',\\"reviews\\":[],\\"showReviewPrompt\\":false});useClientEffect$(()=>{fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+    state.reviews = data.data;
+  })});
 
-  const state = useStore({
-    name: \\"test\\",
-    reviews: [],
-    showReviewPrompt: false,
-  });
-  useClientEffect$(() => {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${props.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        state.reviews = data.data;
-      });
-  });
-
-  return (
-    <div data-user={state.name}>
-      <button onClick$={(event) => (state.showReviewPrompt = true)}>
-        Write a review
-      </button>
-      {state.showReviewPrompt || \\"asdf\\" ? (
-        <>
-          <input placeholder=\\"Email\\" />
-          <input placeholder=\\"Title\\" class=\\"input-SmileReviews\\" />
-          <textarea
-            placeholder=\\"How was your experience?\\"
-            class=\\"textarea-SmileReviews\\"
-          ></textarea>
-          <button
-            preventdefault:click=\\"\\"
-            class=\\"button-SmileReviews\\"
-            onClick$={(event) => {
-              event.preventDefault();
-              state.showReviewPrompt = false;
-            }}
-          >
-            Submit
-          </button>
-        </>
-      ) : null}
-      {(state.reviews || []).map(function (review, index) {
-        return (
-          <div class=\\"review-SmileReviews\\" key={review.id}>
-            <img class=\\"img-SmileReviews\\" src={review.avatar} />
-            <div class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>N: {index}</div>
-              <div>{review.author}</div>
-              <div>{review.reviewMessage}</div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-});
+return (<div data-user={state.name}><div></div><button onclick={(()=>{state.showReviewPrompt = true})()}><div></div></button><div></div>{state.showReviewPrompt || 'asdf'?<><div></div><input /><div></div><input /><div></div><textarea></textarea><div></div><button onclick={{
+  event.preventDefault();
+  state.showReviewPrompt = false;
+}}><div></div></button><div></div></>:null}<div></div>{(state.reviews||[]).map(function(review,index){return(<div><div></div><img /><div></div><div><div></div><div><div></div><div></div></div><div></div><div><div></div></div><div></div><div><div></div></div><div></div></div><div></div></div>);})}<div></div></div>)});
 
 export default SmileReviews;
 
-export const STYLES = \`
-.input-SmileReviews {
-  display: block;
-}
-.textarea-SmileReviews {
-  display: block;
-}
-.button-SmileReviews {
-  display: block;
-}
-.review-SmileReviews {
-  margin: 10px;
-  padding: 10px;
-  background: white;
-  display: flex;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.img-SmileReviews {
-  height: 30px;
-  width: 30px;
-  margin-right: 10px;
-}
-\`;
-"
+========================================================================
+    at File.toString (C:/projects/mitosis/packages/core/src/generators/qwik/src-generator.ts:84:15)
+    at C:/projects/mitosis/packages/core/src/generators/qwik/component-generator.ts:104:27
+    at getOutput (C:/projects/mitosis/packages/core/src/__tests__/shared.ts:500:62)
+    at C:/projects/mitosis/packages/core/src/__tests__/shared.ts:502:28
+    at async runTest (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:417:7)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runFiles (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:646:5)
+    at async startTestsNode (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:664:3)
+    at async C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:96:11
+    at async Module.withEnv (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:162:5)
+    at async run (C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:89:7)
+    at async file:///C:/projects/mitosis/packages/core/node_modules/tinypool/dist/esm/worker.js:109:20"
 `;
 
 exports[`qwik > jsx > Javascript Test > Submit 1`] = `
@@ -2692,8 +2621,10 @@ exports[`qwik > jsx > Javascript Test > Submit 1`] = `
 
 export const SubmitButton = component$((props) => {
   return (
-    <button type=\\"submit\\" {...props.attributes}>
-      {props.text}
+    <button>
+      <div></div>
+      <div></div>
+      <div></div>
     </button>
   );
 });
@@ -2712,11 +2643,11 @@ export const Text = component$((props) => {
 
   return (
     <div
-      contentEditable={allowEditingText || undefined}
       data-name={{
         test: state.name || \\"any name\\",
       }}
-      dangerouslySetInnerHTML={
+      contenteditable={allowEditingText || undefined}
+      innerhtml={
         props.text ||
         props.content ||
         state.name ||
@@ -2735,13 +2666,7 @@ exports[`qwik > jsx > Javascript Test > Textarea 1`] = `
 
 export const Textarea = component$((props) => {
   return (
-    <textarea
-      {...props.attributes}
-      placeholder={props.placeholder}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-    ></textarea>
+    <textarea name={props.name} defaultvalue={props.defaultValue}></textarea>
   );
 });
 
@@ -2753,28 +2678,7 @@ exports[`qwik > jsx > Javascript Test > Video 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const Video = component$((props) => {
-  return (
-    <video
-      preload=\\"none\\"
-      {...props.attributes}
-      style={{
-        width: \\"100%\\",
-        height: \\"100%\\",
-        ...props.attributes?.style,
-        objectFit: props.fit,
-        objectPosition: props.position,
-        // Hack to get object fit to work as expected and
-        // not have the video overflow
-        borderRadius: 1,
-      }}
-      key={props.video || \\"no-src\\"}
-      poster={props.posterImage}
-      autoplay={props.autoPlay}
-      muted={props.muted}
-      controls={props.controls}
-      loop={props.loop}
-    ></video>
-  );
+  return <video></video>;
 });
 
 export default Video;
@@ -2797,7 +2701,12 @@ export const updateNameWithArrowFn = function updateNameWithArrowFn(
 export const MyComponent = component$((props) => {
   const state = useStore({ name: \\"steve\\" });
 
-  return <div>Hello {state.name}</div>;
+  return (
+    <div>
+      <div></div>
+      <div></div>
+    </div>
+  );
 });
 
 export default MyComponent;
@@ -2805,143 +2714,114 @@ export default MyComponent;
 `;
 
 exports[`qwik > jsx > Javascript Test > basicForwardRef 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const MyBasicForwardRefComponent = component$((props) => {
-  useStylesScoped$(STYLES);
-
   const state = useStore({ name: \\"PatrickJS\\" });
 
   return (
     <div>
+      <div></div>
       <input
-        class=\\"input-MyBasicForwardRefComponent\\"
-        ref={props.inputRef}
-        value={state.name}
-        onChange$={(event) => (state.name = event.target.value)}
+        onchange={(() => {
+          state.name = event.target.value;
+        })()}
       />
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicForwardRefComponent;
-
-export const STYLES = \`
-.input-MyBasicForwardRefComponent {
-  color: red;
-}
-\`;
 "
 `;
 
 exports[`qwik > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const MyBasicForwardRefComponent = component$((props) => {
-  useStylesScoped$(STYLES);
-
   const state = useStore({ name: \\"PatrickJS\\" });
 
   return (
     <div>
+      <div></div>
       <input
-        class=\\"input-MyBasicForwardRefComponent\\"
-        ref={props.inputRef}
-        value={state.name}
-        onChange$={(event) => (state.name = event.target.value)}
+        onchange={(() => {
+          state.name = event.target.value;
+        })()}
       />
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicForwardRefComponent;
+"
+`;
 
-export const STYLES = \`
-.input-MyBasicForwardRefComponent {
-  color: red;
-}
-\`;
+exports[`qwik > jsx > Javascript Test > camelCasedAttributes 1`] = `
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+
+import React from \\"@builder.io/react\\";
+
+export const MyComponent = component$((props) => {
+  const state = useStore({ name: \\"Steve\\" });
+
+  return (
+    <div>
+      <div></div>
+      <img srcset=\\"http://example.com\\" />
+      <div></div>
+    </div>
+  );
+});
+
+export default MyComponent;
 "
 `;
 
 exports[`qwik > jsx > Javascript Test > class + ClassName + css 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props) => {
-  useStylesScoped$(STYLES);
-
   return (
-    <div class=\\"test2 test div-MyBasicComponent\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicComponent;
-
-export const STYLES = \`
-.div-MyBasicComponent {
-  padding: 10px;
-}
-\`;
 "
 `;
 
 exports[`qwik > jsx > Javascript Test > class + css 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props) => {
-  useStylesScoped$(STYLES);
-
   return (
-    <div class=\\"test div-MyBasicComponent\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicComponent;
-
-export const STYLES = \`
-.div-MyBasicComponent {
-  padding: 10px;
-}
-\`;
 "
 `;
 
 exports[`qwik > jsx > Javascript Test > className + css 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props) => {
-  useStylesScoped$(STYLES);
-
   return (
-    <div class=\\"test div-MyBasicComponent\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicComponent;
-
-export const STYLES = \`
-.div-MyBasicComponent {
-  padding: 10px;
-}
-\`;
 "
 `;
 
@@ -2953,8 +2833,17 @@ export const ClassNameCode = component$((props) => {
 
   return (
     <div>
-      <div class=\\"no binding\\">Without Binding</div>
-      <div class={state.bindings}>With binding</div>
+      <div></div>
+      <div></div>
+      <div>
+        <div></div>
+      </div>
+      <div></div>
+      <div></div>
+      <div>
+        <div></div>
+      </div>
+      <div></div>
     </div>
   );
 });
@@ -2964,17 +2853,9 @@ export default ClassNameCode;
 `;
 
 exports[`qwik > jsx > Javascript Test > classState 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props) => {
-  useStylesScoped$(STYLES);
-
   const state = useStore({
     classState: \\"testClassName\\",
     styleState: {
@@ -2983,22 +2864,13 @@ export const MyBasicComponent = component$((props) => {
   });
 
   return (
-    <div
-      class={state.classState + \\" div-MyBasicComponent\\"}
-      style={state.styleState}
-    >
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicComponent;
-
-export const STYLES = \`
-.div-MyBasicComponent {
-  padding: 10px;
-}
-\`;
 "
 `;
 
@@ -3022,7 +2894,11 @@ export const RenderContent = component$((props) => {
     })
   );
 
-  return <div>setting context</div>;
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
 });
 
 export default RenderContent;
@@ -3035,24 +2911,31 @@ exports[`qwik > jsx > Javascript Test > defaultProps 1`] = `
 export const Button = component$((props) => {
   return (
     <div>
+      <div></div>
       {props.link ? (
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
+        <>
+          <div></div>
+          <a>
+            <div></div>
+            <div></div>
+            <div></div>
+          </a>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {!props.link ? (
-        <button
-          type=\\"button\\"
-          {...props.attributes}
-          onClick$={(event) => props.onClick(event)}
-        >
-          {props.buttonText}
-        </button>
+        <>
+          <div></div>
+          <button onclick={props.onClick(event)}>
+            <div></div>
+            <div></div>
+            <div></div>
+          </button>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </div>
   );
 });
@@ -3067,24 +2950,31 @@ exports[`qwik > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 export const Button = component$((props) => {
   return (
     <div>
+      <div></div>
       {props.link ? (
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
+        <>
+          <div></div>
+          <a>
+            <div></div>
+            <div></div>
+            <div></div>
+          </a>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {!props.link ? (
-        <button
-          type=\\"button\\"
-          {...props.attributes}
-          onClick$={(event) => props.onClick(event)}
-        >
-          {props.text}
-        </button>
+        <>
+          <div></div>
+          <button onclick={props.onClick(event)}>
+            <div></div>
+            <div></div>
+            <div></div>
+          </button>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </div>
   );
 });
@@ -3100,7 +2990,12 @@ export const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 export const ComponentWithTypes = component$((props) => {
-  return <div> Hello {props.name || DEFAULT_VALUES.name}</div>;
+  return (
+    <div>
+      <div></div>
+      <div></div>
+    </div>
+  );
 });
 
 export default ComponentWithTypes;
@@ -3117,7 +3012,11 @@ export const MyComponent = component$((props) => {
       : null,
   });
 
-  return <div>{state.refToUse}</div>;
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
 });
 
 export default MyComponent;
@@ -3218,7 +3117,7 @@ export const MyBasicComponent = component$((props) => {
     },
   });
 
-  return <input {...state.attrs} {...props} />;
+  return <input />;
 });
 
 export default MyBasicComponent;
@@ -3232,13 +3131,27 @@ export const NestedShow = component$((props) => {
   return (
     <>
       {props.conditionA ? (
-        !props.conditionB ? (
-          <div>if condition A and condition B</div>
-        ) : (
-          <div>else-condition-B</div>
-        )
+        <>
+          <div></div>
+          {!props.conditionB ? (
+            <>
+              <div></div>
+              <div>
+                <div></div>
+              </div>
+              <div></div>
+            </>
+          ) : (
+            <div>
+              <div></div>
+            </div>
+          )}
+          <div></div>
+        </>
       ) : (
-        <div>else-condition-A</div>
+        <div>
+          <div></div>
+        </div>
       )}
     </>
   );
@@ -3249,33 +3162,17 @@ export default NestedShow;
 `;
 
 exports[`qwik > jsx > Javascript Test > nestedStyles 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const NestedStyles = component$((props) => {
-  useStylesScoped$(STYLES);
-
-  return <div class=\\"div-NestedStyles\\">Hello world</div>;
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
 });
 
 export default NestedStyles;
-
-export const STYLES = \`
-.div-NestedStyles {
-  display: flex;
-  foo: var(--bar);
-}
-@media (max-width: env(--mobile)) {
-  .div-NestedStyles {
-    display: block;
-  }
-}
-.div-NestedStyles:hover {
-  display: flex;
-}
-.div-NestedStyles .nested-selector {
-  display: grid;
-}
-\`;
 "
 `;
 
@@ -3316,7 +3213,12 @@ export const OnInit = component$((props) => {
     console.log(\\"set defaults with props\\");
   });
 
-  return <div>Default name defined by parent {state.name}</div>;
+  return (
+    <div>
+      <div></div>
+      <div></div>
+    </div>
+  );
 });
 
 export default OnInit;
@@ -3402,7 +3304,10 @@ exports[`qwik > jsx > Javascript Test > preserveTyping 1`] = `
 
 export const MyBasicComponent = component$((props) => {
   return (
-    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
+    <div>
+      <div></div>
+      <div></div>
+    </div>
   );
 });
 
@@ -3411,16 +3316,18 @@ export default MyBasicComponent;
 `;
 
 exports[`qwik > jsx > Javascript Test > propsDestructure 1`] = `
-"import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props) => {
   const state = useStore({ name: \\"Decadef20\\" });
 
   return (
     <div>
-      <Slot></Slot>
-      {props.type}
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
   );
 });
@@ -3434,7 +3341,10 @@ exports[`qwik > jsx > Javascript Test > propsInterface 1`] = `
 
 export const MyBasicComponent = component$((props) => {
   return (
-    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
+    <div>
+      <div></div>
+      <div></div>
+    </div>
   );
 });
 
@@ -3447,7 +3357,10 @@ exports[`qwik > jsx > Javascript Test > propsType 1`] = `
 
 export const MyBasicComponent = component$((props) => {
   return (
-    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
+    <div>
+      <div></div>
+      <div></div>
+    </div>
   );
 });
 
@@ -3698,15 +3611,21 @@ export const RenderBlock = component$((props) => {
     <>
       {shouldWrap(props, state) ? (
         <>
+          <div></div>
+          <div></div>
           {isEmptyHtmlElement(tag(props, state)) ? (
-            <state.tag
-              {...attributes(props, state)}
-              {...actions(props, state)}
-            ></state.tag>
+            <>
+              <div></div>
+              <state.tag></state.tag>
+              <div></div>
+            </>
           ) : null}
+          <div></div>
           {!isEmptyHtmlElement(tag(props, state)) &&
-          repeatItemData(props, state)
-            ? (repeatItemData(props, state) || []).map(function (data, index) {
+          repeatItemData(props, state) ? (
+            <>
+              <div></div>
+              {(repeatItemData(props, state) || []).map(function (data, index) {
                 return (
                   <RenderRepeatedBlock
                     key={index}
@@ -3714,38 +3633,51 @@ export const RenderBlock = component$((props) => {
                     block={data.block}
                   ></RenderRepeatedBlock>
                 );
-              })
-            : null}
+              })}
+              <div></div>
+            </>
+          ) : null}
+          <div></div>
           {!isEmptyHtmlElement(tag(props, state)) &&
           !repeatItemData(props, state) ? (
-            <state.tag {...attributes(props, state)} {...actions(props, state)}>
-              <state.renderComponentTag
-                {...renderComponentProps(props, state)}
-              ></state.renderComponentTag>
-              {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child) {
-                  return (
-                    <RenderBlock
-                      key={\\"render-block-\\" + child.id}
-                      block={child}
-                      context={childrenContext(props, state)}
-                    ></RenderBlock>
-                  );
-                }
-              )}
-              {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child) {
-                  return (
-                    <BlockStyles
-                      key={\\"block-style-\\" + child.id}
-                      block={child}
-                      context={childrenContext(props, state)}
-                    ></BlockStyles>
-                  );
-                }
-              )}
-            </state.tag>
+            <>
+              <div></div>
+              <state.tag>
+                <div></div>
+                <state.renderComponentTag
+                  {...renderComponentProps(props, state)}
+                ></state.renderComponentTag>
+                <div></div>
+                <div></div>
+                {(childrenWithoutParentComponent(props, state) || []).map(
+                  function (child) {
+                    return (
+                      <RenderBlock
+                        key={\\"render-block-\\" + child.id}
+                        block={child}
+                        context={childrenContext(props, state)}
+                      ></RenderBlock>
+                    );
+                  }
+                )}
+                <div></div>
+                {(childrenWithoutParentComponent(props, state) || []).map(
+                  function (child) {
+                    return (
+                      <BlockStyles
+                        key={\\"block-style-\\" + child.id}
+                        block={child}
+                        context={childrenContext(props, state)}
+                      ></BlockStyles>
+                    );
+                  }
+                )}
+                <div></div>
+              </state.tag>
+              <div></div>
+            </>
           ) : null}
+          <div></div>
         </>
       ) : (
         <state.renderComponentTag
@@ -3768,7 +3700,6 @@ exports[`qwik > jsx > Javascript Test > renderContentExample 1`] = `
   useClientEffect$,
   useContextProvider,
   useStore,
-  useStylesScoped$,
   useTask$,
 } from \\"@builder.io/qwik\\";
 
@@ -3783,8 +3714,6 @@ import {
 } from \\"@dummy/injection-js\\";
 
 export const RenderContent = component$((props) => {
-  useStylesScoped$(STYLES);
-
   useContextProvider(
     BuilderContext,
     useStore({
@@ -3805,23 +3734,15 @@ export const RenderContent = component$((props) => {
   });
 
   return (
-    <div
-      class=\\"div-RenderContent\\"
-      onClick$={(event) => trackClick(props.content.id)}
-    >
+    <div onclick={trackClick(props.content.id)}>
+      <div></div>
       <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
+      <div></div>
     </div>
   );
 });
 
 export default RenderContent;
-
-export const STYLES = \`
-.div-RenderContent {
-  display: flex;
-  flex-direction: columns;
-}
-\`;
 "
 `;
 
@@ -3831,20 +3752,31 @@ exports[`qwik > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
 export const Button = component$((props) => {
   return (
     <Fragment>
+      <div></div>
       {props.link ? (
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
+        <>
+          <div></div>
+          <a>
+            <div></div>
+            <div></div>
+            <div></div>
+          </a>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {!props.link ? (
-        <button type=\\"button\\" {...props.attributes}>
-          {props.text}
-        </button>
+        <>
+          <div></div>
+          <button>
+            <div></div>
+            <div></div>
+            <div></div>
+          </button>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </Fragment>
   );
 });
@@ -3857,7 +3789,23 @@ exports[`qwik > jsx > Javascript Test > rootShow 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const RenderStyles = component$((props) => {
-  return <>{props.foo === \\"bar\\" ? <div>Bar</div> : <div>Foo</div>}</>;
+  return (
+    <>
+      {props.foo === \\"bar\\" ? (
+        <>
+          <div></div>
+          <div>
+            <div></div>
+          </div>
+          <div></div>
+        </>
+      ) : (
+        <div>
+          <div></div>
+        </div>
+      )}
+    </>
+  );
 });
 
 export default RenderStyles;
@@ -3870,10 +3818,17 @@ exports[`qwik > jsx > Javascript Test > self-referencing component 1`] = `
 export const MyComponent = component$((props) => {
   return (
     <div>
-      {props.name}
+      <div></div>
+      <div></div>
+      <div></div>
       {props.name === \\"Batman\\" ? (
-        <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+        <>
+          <div></div>
+          <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </div>
   );
 });
@@ -3883,18 +3838,30 @@ export default MyComponent;
 `;
 
 exports[`qwik > jsx > Javascript Test > self-referencing component with children 1`] = `
-"import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props) => {
   return (
     <div>
-      {props.name}
-      <Slot></Slot>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
       {props.name === \\"Batman\\" ? (
-        <MyComponent name=\\"Bruce\\">
-          <div>Wayne</div>
-        </MyComponent>
+        <>
+          <div></div>
+          <MyComponent name=\\"Bruce\\">
+            <div></div>
+            <div>
+              <div></div>
+            </div>
+            <div></div>
+          </MyComponent>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </div>
   );
 });
@@ -3910,11 +3877,21 @@ export const NestedShow = component$((props) => {
   return (
     <>
       {props.conditionA ? (
-        (props.items || []).map(function (item, idx) {
-          return <div key={idx}>{item}</div>;
-        })
+        <>
+          <div></div>
+          {(props.items || []).map(function (item, idx) {
+            return (
+              <div>
+                <div></div>
+              </div>
+            );
+          })}
+          <div></div>
+        </>
       ) : (
-        <div>else-condition-A</div>
+        <div>
+          <div></div>
+        </div>
       )}
     </>
   );
@@ -3928,7 +3905,7 @@ exports[`qwik > jsx > Javascript Test > spreadAttrs 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props) => {
-  return <input {...attrs} />;
+  return <input />;
 });
 
 export default MyBasicComponent;
@@ -3939,7 +3916,7 @@ exports[`qwik > jsx > Javascript Test > spreadNestedProps 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props) => {
-  return <input {...props.nested} />;
+  return <input />;
 });
 
 export default MyBasicComponent;
@@ -3950,7 +3927,7 @@ exports[`qwik > jsx > Javascript Test > spreadProps 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props) => {
-  return <input {...props} />;
+  return <input />;
 });
 
 export default MyBasicComponent;
@@ -3958,30 +3935,13 @@ export default MyBasicComponent;
 `;
 
 exports[`qwik > jsx > Javascript Test > styleClassAndCss 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props) => {
-  useStylesScoped$(STYLES);
-
-  return (
-    <div
-      class=\\"builder-column div-MyComponent\\"
-      style={{
-        width: \\"100%\\",
-      }}
-    ></div>
-  );
+  return <div></div>;
 });
 
 export default MyComponent;
-
-export const STYLES = \`
-.div-MyComponent {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-\`;
 "
 `;
 
@@ -4003,27 +3963,22 @@ exports[`qwik > jsx > Javascript Test > svgComponent 1`] = `
 
 export const SvgComponent = component$((props) => {
   return (
-    <svg
-      fill=\\"none\\"
-      role=\\"img\\"
-      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
-      width={42}
-      height={42}
-    >
+    <svg viewbox={\\"0 0 \\" + 42 + \\" \\" + 42}>
+      <div></div>
       <defs>
-        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
-          <feFlood result=\\"BackgroundImageFix\\"></feFlood>
-          <feBlend
-            in=\\"SourceGraphic\\"
-            in2=\\"BackgroundImageFix\\"
-            result=\\"shape\\"
-          ></feBlend>
-          <feGaussianBlur
-            result=\\"effect1_foregroundBlur\\"
-            stdDeviation={7}
-          ></feGaussianBlur>
+        <div></div>
+        <filter filterunits=\\"userSpaceOnUse\\">
+          <div></div>
+          <feFlood></feFlood>
+          <div></div>
+          <feBlend></feBlend>
+          <div></div>
+          <feGaussianBlur stddeviation={7}></feGaussianBlur>
+          <div></div>
         </filter>
+        <div></div>
       </defs>
+      <div></div>
     </svg>
   );
 });
@@ -4036,7 +3991,11 @@ exports[`qwik > jsx > Javascript Test > typeDependency 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const TypeDependency = component$((props) => {
-  return <div>{props.foo}</div>;
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
 });
 
 export default TypeDependency;
@@ -4049,7 +4008,11 @@ exports[`qwik > jsx > Javascript Test > use-style 1`] = `
 export const MyComponent = component$((props) => {
   useStylesScoped$(STYLES);
 
-  return <button type=\\"button\\">Button</button>;
+  return (
+    <button>
+      <div></div>
+    </button>
+  );
 });
 
 export default MyComponent;
@@ -4072,8 +4035,8 @@ export const MyComponent = component$((props) => {
   useStylesScoped$(STYLES);
 
   return (
-    <button type=\\"button\\" class=\\"button-MyComponent\\">
-      Button
+    <button>
+      <div></div>
     </button>
   );
 });
@@ -4081,11 +4044,6 @@ export const MyComponent = component$((props) => {
 export default MyComponent;
 
 export const STYLES = \`
-.button-MyComponent {
-  background: blue;
-  color: white;
-}
-
 button {
   font-size: 12px;
   outline: 1px solid black;
@@ -4100,7 +4058,11 @@ exports[`qwik > jsx > Javascript Test > use-style-outside-component 1`] = `
 export const MyComponent = component$((props) => {
   useStylesScoped$(STYLES);
 
-  return <button type=\\"button\\">Button</button>;
+  return (
+    <button>
+      <div></div>
+    </button>
+  );
 });
 
 export default MyComponent;
@@ -4124,7 +4086,9 @@ export const MyBasicComponent = component$((props) => {
 
   return (
     <div>
-      Hello {state.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
   );
 });
@@ -4134,13 +4098,7 @@ export default MyBasicComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > Basic 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export interface MyBasicComponentProps {
   id: string;
@@ -4152,62 +4110,61 @@ export const underscore_fn_name = function underscore_fn_name(props, state) {
   return \\"bar\\";
 };
 export const MyBasicComponent = component$((props: MyBasicComponentProps) => {
-  useStylesScoped$(STYLES);
-
   const state = useStore<any>({ age: 1, name: \\"Steve\\", sports: [\\"\\"] });
 
   return (
-    <div class=\\"test div-MyBasicComponent\\">
+    <div>
+      <div></div>
       <input
-        value={DEFAULT_VALUES.name || state.name}
-        onChange$={(event) => (state.name = myEvent.target.value)}
+        onchange={(() => {
+          state.name = myEvent.target.value;
+        })()}
       />
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicComponent;
-
-export const STYLES = \`
-.div-MyBasicComponent {
-  padding: 10px;
-}
-\`;
 "
 `;
 
 exports[`qwik > jsx > Typescript Test > Basic 2`] = `
-"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+"Error: SyntaxError: ',' expected. (6:8)
+  4 |
+  5 | return (<div><div></div>{(state.names||[]).map(function(person){return(person === state.name?<><div></div><input onchange={{
+> 6 |   state.name = event.target.value + ' and ' + person;
+    |        ^
+  7 | }} /><div></div><div></div><div></div></>:null);})}<div></div></div>)});
+  8 |
+  9 | export default MyBasicForShowComponent;
+========================================================================
+import{Fragment,component$,h,useStore}from\\"@builder.io/qwik\\";
 
-export const MyBasicForShowComponent = component$((props: any) => {
-  const state = useStore<any>({
-    name: \\"PatrickJS\\",
-    names: [\\"Steve\\", \\"PatrickJS\\"],
-  });
+export const MyBasicForShowComponent=component$((props:any)=>{const state=useStore<any>({\\"name\\":'PatrickJS',\\"names\\":['Steve', 'PatrickJS']});
 
-  return (
-    <div>
-      {(state.names || []).map(function (person) {
-        return person === state.name ? (
-          <>
-            <input
-              value={state.name}
-              onChange$={(event) => {
-                state.name = event.target.value + \\" and \\" + person;
-              }}
-            />
-            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-            or Liquid!
-          </>
-        ) : null;
-      })}
-    </div>
-  );
-});
+return (<div><div></div>{(state.names||[]).map(function(person){return(person === state.name?<><div></div><input onchange={{
+  state.name = event.target.value + ' and ' + person;
+}} /><div></div><div></div><div></div></>:null);})}<div></div></div>)});
 
 export default MyBasicForShowComponent;
-"
+
+========================================================================
+    at File.toString (C:/projects/mitosis/packages/core/src/generators/qwik/src-generator.ts:84:15)
+    at C:/projects/mitosis/packages/core/src/generators/qwik/component-generator.ts:104:27
+    at getOutput (C:/projects/mitosis/packages/core/src/__tests__/shared.ts:500:62)
+    at C:/projects/mitosis/packages/core/src/__tests__/shared.ts:502:28
+    at async runTest (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:417:7)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runFiles (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:646:5)
+    at async startTestsNode (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:664:3)
+    at async C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:96:11
+    at async Module.withEnv (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:162:5)
+    at async run (C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:89:7)
+    at async file:///C:/projects/mitosis/packages/core/node_modules/tinypool/dist/esm/worker.js:109:20"
 `;
 
 exports[`qwik > jsx > Typescript Test > Basic Context 1`] = `
@@ -4243,9 +4200,11 @@ export const MyBasicComponent = component$((props: any) => {
 
   return (
     <div>
-      {myService.method(\\"hello\\") + state.name}
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      <input onChange$={(event) => state.onChange} />
+      <div></div>
+      <div></div>
+      <div></div>
+      <input onchange={state.onChange} />
+      <div></div>
     </div>
   );
 });
@@ -4280,7 +4239,12 @@ export const MyBasicOnMountUpdateComponent = component$((props: Props) => {
     state.name = \\"PatrickJS onInit\\" + props.hi;
   });
 
-  return <div>Hello {state.name}</div>;
+  return (
+    <div>
+      <div></div>
+      <div></div>
+    </div>
+  );
 });
 
 export default MyBasicOnMountUpdateComponent;
@@ -4337,7 +4301,7 @@ exports[`qwik > jsx > Typescript Test > BasicAttribute 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props: any) => {
-  return <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />;
+  return <input />;
 });
 
 export default MyComponent;
@@ -4347,7 +4311,7 @@ export default MyComponent;
 exports[`qwik > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 "import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
+import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 type Props = {
   children: any;
@@ -4356,11 +4320,17 @@ type Props = {
 export const MyBooleanAttribute = component$((props: Props) => {
   return (
     <div>
-      <Slot></Slot>
-      {props.type}
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
+      <div></div>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
+      <div></div>
       <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
+      <div></div>
     </div>
   );
 });
@@ -4381,13 +4351,18 @@ export const MyBasicChildComponent = component$((props: any) => {
 
   return (
     <div>
+      <div></div>
       <MyBasicComponent id={state.dev}></MyBasicComponent>
+      <div></div>
       <div>
+        <div></div>
         <MyBasicOnMountUpdateComponent
           hi={state.name}
           bye={state.dev}
         ></MyBasicOnMountUpdateComponent>
+        <div></div>
       </div>
+      <div></div>
     </div>
   );
 });
@@ -4397,56 +4372,45 @@ export default MyBasicChildComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > BasicFor 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useClientEffect$,
-  useStore,
-} from \\"@builder.io/qwik\\";
+"Error: SyntaxError: ',' expected. (6:8)
+  4 |
+  5 | return (<div><div></div>{(state.names||[]).map(function(person){return(<Fragment><div></div><input onchange={{
+> 6 |   state.name = event.target.value + ' and ' + person;
+    |        ^
+  7 | }} /><div></div><div></div><div></div></Fragment>);})}<div></div></div>)});
+  8 |
+  9 | export default MyBasicForComponent;
+========================================================================
+import{Fragment,component$,h,useClientEffect$,useStore}from\\"@builder.io/qwik\\";
 
-export const MyBasicForComponent = component$((props: any) => {
-  const state = useStore<any>({
-    name: \\"PatrickJS\\",
-    names: [\\"Steve\\", \\"PatrickJS\\"],
-  });
-  useClientEffect$(() => {
-    console.log(\\"onMount code\\");
-  });
+export const MyBasicForComponent=component$((props:any)=>{const state=useStore<any>({\\"name\\":'PatrickJS',\\"names\\":['Steve', 'PatrickJS']});useClientEffect$(()=>{console.log('onMount code')});
 
-  return (
-    <div>
-      {(state.names || []).map(function (person) {
-        return (
-          <Fragment>
-            <input
-              value={state.name}
-              onChange$={(event) => {
-                state.name = event.target.value + \\" and \\" + person;
-              }}
-            />
-            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-            or Liquid!
-          </Fragment>
-        );
-      })}
-    </div>
-  );
-});
+return (<div><div></div>{(state.names||[]).map(function(person){return(<Fragment><div></div><input onchange={{
+  state.name = event.target.value + ' and ' + person;
+}} /><div></div><div></div><div></div></Fragment>);})}<div></div></div>)});
 
 export default MyBasicForComponent;
-"
+
+========================================================================
+    at File.toString (C:/projects/mitosis/packages/core/src/generators/qwik/src-generator.ts:84:15)
+    at C:/projects/mitosis/packages/core/src/generators/qwik/component-generator.ts:104:27
+    at getOutput (C:/projects/mitosis/packages/core/src/__tests__/shared.ts:500:62)
+    at C:/projects/mitosis/packages/core/src/__tests__/shared.ts:502:28
+    at async runTest (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:417:7)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runFiles (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:646:5)
+    at async startTestsNode (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:664:3)
+    at async C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:96:11
+    at async Module.withEnv (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:162:5)
+    at async run (C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:89:7)
+    at async file:///C:/projects/mitosis/packages/core/node_modules/tinypool/dist/esm/worker.js:109:20"
 `;
 
 exports[`qwik > jsx > Typescript Test > BasicRef 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useRef,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useRef, useStore } from \\"@builder.io/qwik\\";
 
 export interface Props {
   showInput: boolean;
@@ -4529,7 +4493,11 @@ export const MyBasicRefAssignmentComponent = component$((props: Props) => {
 
   return (
     <div>
-      <button onClick$={(event) => state.handlerClick(evt)}>Click</button>
+      <div></div>
+      <button onclick={state.handlerClick(evt)}>
+        <div></div>
+      </button>
+      <div></div>
     </div>
   );
 });
@@ -4573,10 +4541,23 @@ export const MyPreviousComponent = component$((props: Props) => {
 
   return (
     <div>
+      <div></div>
       <h1>
-        Now: {state.count}, before: {prevCount}
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </h1>
-      <button onClick$={(event) => (state.count += 1)}>Increment</button>
+      <div></div>
+      <button
+        onclick={(() => {
+          state.count += 1;
+        })()}
+      >
+        <div></div>
+      </button>
+      <div></div>
     </div>
   );
 });
@@ -4597,20 +4578,31 @@ export interface ButtonProps {
 export const Button = component$((props: ButtonProps) => {
   return (
     <div>
+      <div></div>
       {props.link ? (
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
+        <>
+          <div></div>
+          <a>
+            <div></div>
+            <div></div>
+            <div></div>
+          </a>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {!props.link ? (
-        <button type=\\"button\\" {...props.attributes}>
-          {props.text}
-        </button>
+        <>
+          <div></div>
+          <button>
+            <div></div>
+            <div></div>
+            <div></div>
+          </button>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </div>
   );
 });
@@ -4620,7 +4612,7 @@ export default Button;
 `;
 
 exports[`qwik > jsx > Typescript Test > Columns 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 type Column = {
   content: any; // TODO: Implement this when support for dynamic CSS lands
@@ -4657,47 +4649,28 @@ export const getColumnCssWidth = function getColumnCssWidth(
   return \`calc(\${getWidth(props, state, index)}% - \${subtractWidth}px)\`;
 };
 export const Column = component$((props: ColumnProps) => {
-  useStylesScoped$(STYLES);
-
   const state: any = {};
 
   return (
-    <div class=\\"builder-columns div-Column\\">
+    <div>
+      <div></div>
       {(props.columns || []).map(function (column, index) {
         return (
-          <div class=\\"builder-column div-Column-2\\">
-            {column.content}
-            {index}
+          <div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
         );
       })}
+      <div></div>
     </div>
   );
 });
 
 export default Column;
-
-export const STYLES = \`
-.div-Column {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  line-height: normal;
-}
-@media (max-width: 999px) {
-  .div-Column {
-    flex-direction: row;
-  }
-}
-@media (max-width: 639px) {
-  .div-Column {
-    flex-direction: row-reverse;
-  }
-}
-.div-Column-2 {
-  flex-grow: 1;
-}
-\`;
 "
 `;
 
@@ -4713,13 +4686,21 @@ type Props = {
 export const ContentSlotCode = component$((props: Props) => {
   return (
     <div>
+      <div></div>
       <Slot name={props.slotTesting}></Slot>
+      <div></div>
       <div>
+        <div></div>
         <hr />
+        <div></div>
       </div>
+      <div></div>
       <div>
+        <div></div>
         <Slot></Slot>
+        <div></div>
       </div>
+      <div></div>
     </div>
   );
 });
@@ -4731,7 +4712,7 @@ export default ContentSlotCode;
 exports[`qwik > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "import { Slot } from \\"./med.js\\";
 
-import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
+import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -4748,23 +4729,36 @@ export const ContentSlotJsxCode = component$((props: Props) => {
   return (
     <>
       {props.slotReference ? (
-        <div
-          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-          {...props.attributes}
-          onClick$={(event) => show(props, state)}
-          class={props.slotContent ? \`\${state.name}-content\` : \\"\\"}
-        >
-          {state.showContent && props.slotContent ? (
-            <Slot name=\\"content\\">{props.content}</Slot>
-          ) : null}
-          <div>
-            <hr />
+        <>
+          <div></div>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            onclick={show(props, state)}
+          >
+            <div></div>
+            {state.showContent && props.slotContent ? (
+              <>
+                <div></div>
+                <Slot name=\\"content\\">
+                  <div></div>
+                </Slot>
+                <div></div>
+              </>
+            ) : null}
+            <div></div>
+            <div>
+              <div></div>
+              <hr />
+              <div></div>
+            </div>
+            <div></div>
+            <div>
+              <div></div>
+            </div>
+            <div></div>
           </div>
-          <div>
-            <Slot></Slot>
-          </div>
-        </div>
+          <div></div>
+        </>
       ) : null}
     </>
   );
@@ -4840,15 +4834,7 @@ export const CustomCode = component$((props: CustomCodeProps) => {
     findAndRunScripts(props, state, elem);
   });
 
-  return (
-    <div
-      ref={elem}
-      class={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={props.code}
-    ></div>
-  );
+  return <div innerhtml={props.code}></div>;
 });
 
 export default CustomCode;
@@ -4921,15 +4907,7 @@ export const CustomCode = component$((props: CustomCodeProps) => {
     findAndRunScripts(props, state, elem);
   });
 
-  return (
-    <div
-      ref={elem}
-      class={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={props.code}
-    ></div>
-  );
+  return <div innerhtml={props.code}></div>;
 });
 
 export default CustomCode;
@@ -4937,14 +4915,7 @@ export default CustomCode;
 `;
 
 exports[`qwik > jsx > Typescript Test > Form 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useRef,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useRef, useStore } from \\"@builder.io/qwik\\";
 
 import { Builder, builder } from \\"@builder.io/sdk\\";
 
@@ -5205,8 +5176,6 @@ export const onSubmit = function onSubmit(
   }
 };
 export const FormComponent = component$((props: FormProps) => {
-  useStylesScoped$(STYLES);
-
   const formRef = useRef();
   const state = useStore<any>({
     formErrorMessage: \\"\\",
@@ -5215,19 +5184,12 @@ export const FormComponent = component$((props: FormProps) => {
   });
 
   return (
-    <form
-      validate={props.validate}
-      ref={formRef}
-      action={(() => {
-        !props.sendWithJs && props.action;
-      })()}
-      method={props.method}
-      name={props.name}
-      onSubmit$={(event) => onSubmit(props, state, formRef, event)}
-      {...props.attributes}
-    >
-      {props.builderBlock && props.builderBlock.children
-        ? (props.builderBlock?.children || []).map(function (block, index) {
+    <form name={props.name} onsubmit={onSubmit(props, state, formRef, event)}>
+      <div></div>
+      {props.builderBlock && props.builderBlock.children ? (
+        <>
+          <div></div>
+          {(props.builderBlock?.children || []).map(function (block, index) {
             return (
               <BuilderBlockComponent
                 key={block.id}
@@ -5235,59 +5197,74 @@ export const FormComponent = component$((props: FormProps) => {
                 index={index}
               ></BuilderBlockComponent>
             );
-          })
-        : null}
+          })}
+          <div></div>
+        </>
+      ) : null}
+      <div></div>
       {submissionState(props, state, formRef) === \\"error\\" ? (
-        <BuilderBlocks
-          dataPath=\\"errorMessage\\"
-          blocks={props.errorMessage}
-        ></BuilderBlocks>
+        <>
+          <div></div>
+          <BuilderBlocks
+            dataPath=\\"errorMessage\\"
+            blocks={props.errorMessage}
+          ></BuilderBlocks>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {submissionState(props, state, formRef) === \\"sending\\" ? (
-        <BuilderBlocks
-          dataPath=\\"sendingMessage\\"
-          blocks={props.sendingMessage}
-        ></BuilderBlocks>
+        <>
+          <div></div>
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          ></BuilderBlocks>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {submissionState(props, state, formRef) === \\"error\\" &&
       state.responseData ? (
-        <pre class=\\"builder-form-error-text pre-FormComponent\\">
-          {JSON.stringify(state.responseData, null, 2)}
-        </pre>
+        <>
+          <div></div>
+          <pre>
+            <div></div>
+            <div></div>
+            <div></div>
+          </pre>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {submissionState(props, state, formRef) === \\"success\\" ? (
-        <BuilderBlocks
-          dataPath=\\"successMessage\\"
-          blocks={props.successMessage}
-        ></BuilderBlocks>
+        <>
+          <div></div>
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          ></BuilderBlocks>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </form>
   );
 });
 
 export default FormComponent;
-
-export const STYLES = \`
-.pre-FormComponent {
-  padding: 10px;
-  color: red;
-  text-align: center;
-}
-\`;
 "
 `;
 
 exports[`qwik > jsx > Typescript Test > Image 1`] = `
 "import {
   Fragment,
-  Slot,
   component$,
   h,
   useCleanup$,
   useClientEffect$,
   useRef,
   useStore,
-  useStylesScoped$,
 } from \\"@builder.io/qwik\\";
 
 // TODO: AMP Support?
@@ -5325,8 +5302,6 @@ export const isBrowser = function isBrowser(props, state, pictureRef) {
   );
 };
 export const Image = component$((props: ImageProps) => {
-  useStylesScoped$(STYLES);
-
   const pictureRef = useRef();
   const state = useStore<any>({
     imageLoaded: false,
@@ -5365,39 +5340,31 @@ export const Image = component$((props: ImageProps) => {
 
   return (
     <div>
-      <picture ref={pictureRef}>
+      <div></div>
+      <picture>
+        <div></div>
         {!useLazyLoading(props, state, pictureRef) || state.load ? (
-          <img
-            alt={props.altText}
-            aria-role={props.altText ? \\"presentation\\" : undefined}
-            class={
-              \\"builder-image\\" +
-              (props._class ? \\" \\" + props._class : \\"\\") +
-              \\" img-Image\\"
-            }
-            src={props.image}
-            onLoad$={(event) => setLoaded(props, state, pictureRef)}
-            srcset={props.srcset}
-            sizes={props.sizes}
-          />
+          <>
+            <div></div>
+            <img
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              onload={setLoaded(props, state, pictureRef)}
+            />
+            <div></div>
+          </>
         ) : null}
-        <source srcset={props.srcset} />
+        <div></div>
+        <source />
+        <div></div>
       </picture>
-      <Slot></Slot>
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
   );
 });
 
 export default Image;
-
-export const STYLES = \`
-.img-Image {
-  opacity: 1;
-  transition: opacity 0.2s ease-in-out;
-  object-fit: cover;
-  object-position: center;
-}
-\`;
 "
 `;
 
@@ -5412,13 +5379,17 @@ export const ImgStateComponent = component$((props: any) => {
 
   return (
     <div>
+      <div></div>
       {(state.images || []).map(function (item, itemIndex) {
         return (
           <Fragment>
-            <img class=\\"custom-class\\" src={item} key={itemIndex} />
+            <div></div>
+            <img />
+            <div></div>
           </Fragment>
         );
       })}
+      <div></div>
     </div>
   );
 });
@@ -5449,18 +5420,7 @@ export interface ImgProps {
     | \\"bottom right\\";
 }
 export const ImgComponent = component$((props: ImgProps) => {
-  return (
-    <img
-      style={{
-        objectFit: props.backgroundSize || \\"cover\\",
-        objectPosition: props.backgroundPosition || \\"center\\",
-      }}
-      {...props.attributes}
-      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
-      alt={props.altText}
-      src={props.imgSrc}
-    />
-  );
+  return <img />;
 });
 
 export default ImgComponent;
@@ -5482,22 +5442,7 @@ export interface FormInputProps {
   required?: boolean;
 }
 export const FormInputComponent = component$((props: FormInputProps) => {
-  return (
-    <input
-      {...props.attributes}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      placeholder={props.placeholder}
-      type={props.type}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-      required={props.required}
-    />
-  );
+  return <input name={props.name} defaultvalue={props.defaultValue} />;
 });
 
 export default FormInputComponent;
@@ -5512,12 +5457,7 @@ export interface RawTextProps {
   text?: string; // builderBlock?: any;
 }
 export const RawText = component$((props: RawTextProps) => {
-  return (
-    <span
-      class={props.attributes?.class || props.attributes?.className}
-      dangerouslySetInnerHTML={props.text || \\"\\"}
-    ></span>
-  );
+  return <span innerhtml={props.text || \\"\\"}></span>;
 });
 
 export default RawText;
@@ -5525,7 +5465,7 @@ export default RawText;
 `;
 
 exports[`qwik > jsx > Typescript Test > Section 1`] = `
-"import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -5534,17 +5474,10 @@ export interface SectionProps {
 }
 export const SectionComponent = component$((props: SectionProps) => {
   return (
-    <section
-      {...props.attributes}
-      style={(() => {
-        props.maxWidth && typeof props.maxWidth === \\"number\\"
-          ? {
-              maxWidth: props.maxWidth,
-            }
-          : undefined;
-      })()}
-    >
-      <Slot></Slot>
+    <section>
+      <div></div>
+      <div></div>
+      <div></div>
     </section>
   );
 });
@@ -5554,7 +5487,7 @@ export default SectionComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > Section 2`] = `
-"import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -5566,20 +5499,21 @@ export const SectionStateComponent = component$((props: SectionProps) => {
 
   return (
     <>
-      {state.max
-        ? (state.items || []).map(function (item) {
+      {state.max ? (
+        <>
+          <div></div>
+          {(state.items || []).map(function (item) {
             return (
-              <section
-                {...props.attributes}
-                style={{
-                  maxWidth: item + state.max,
-                }}
-              >
-                <Slot></Slot>
+              <section>
+                <div></div>
+                <div></div>
+                <div></div>
               </section>
             );
-          })
-        : null}
+          })}
+          <div></div>
+        </>
+      ) : null}
     </>
   );
 });
@@ -5605,24 +5539,18 @@ export interface FormSelectProps {
 }
 export const SelectComponent = component$((props: FormSelectProps) => {
   return (
-    <select
-      {...props.attributes}
-      value={props.value}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      defaultValue={props.defaultValue}
-      name={props.name}
-    >
+    <select name={props.name} defaultvalue={props.defaultValue}>
+      <div></div>
       {(props.options || []).map(function (option, index) {
         return (
-          <option value={option.value} data-index={index}>
-            {option.name || option.value}
+          <option data-index={index}>
+            <div></div>
+            <div></div>
+            <div></div>
           </option>
         );
       })}
+      <div></div>
     </select>
   );
 });
@@ -5642,9 +5570,15 @@ type Props = {
 export const SlotCode = component$((props: Props) => {
   return (
     <div>
+      <div></div>
       <Slot>
-        <div class=\\"default-slot\\">Default content</div>
+        <div></div>
+        <div>
+          <div></div>
+        </div>
+        <div></div>
       </Slot>
+      <div></div>
     </div>
   );
 });
@@ -5666,13 +5600,17 @@ type Props = {
 export const SlotCode = component$((props: Props) => {
   return (
     <div>
+      <div></div>
       <ContentSlotCode>
+        <div></div>
         <Slot
           testing={(() => {
             <div>Hello</div>;
           })()}
         ></Slot>
+        <div></div>
       </ContentSlotCode>
+      <div></div>
     </div>
   );
 });
@@ -5692,11 +5630,13 @@ type Props = {
 export const SlotCode = component$((props: Props) => {
   return (
     <div>
+      <div></div>
       <ContentSlotCode
         slotTesting={(() => {
           <div>Hello</div>;
         })()}
       ></ContentSlotCode>
+      <div></div>
     </div>
   );
 });
@@ -5716,9 +5656,17 @@ type Props = {
 export const SlotCode = component$((props: Props) => {
   return (
     <div>
+      <div></div>
       <Slot name=\\"top\\"></Slot>
-      <Slot name=\\"left\\">Default left</Slot>
-      <Slot>Default Child</Slot>
+      <div></div>
+      <Slot name=\\"left\\">
+        <div></div>
+      </Slot>
+      <div></div>
+      <Slot>
+        <div></div>
+      </Slot>
+      <div></div>
     </div>
   );
 });
@@ -5728,115 +5676,54 @@ export default SlotCode;
 `;
 
 exports[`qwik > jsx > Typescript Test > Stamped.io 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useClientEffect$,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"Error: SyntaxError: ',' expected. (18:8)
+  16 |
+  17 | return (<div data-user={state.name}><div></div><button onclick={(()=>{state.showReviewPrompt = true})()}><div></div></button><div></div>{state.showReviewPrompt || 'asdf'?<><div></div><input /><div></div><input /><div></div><textarea></textarea><div></div><button onclick={{
+> 18 |   event.preventDefault();
+     |        ^
+  19 |   state.showReviewPrompt = false;
+  20 | }}><div></div></button><div></div></>:null}<div></div>{(state.reviews||[]).map(function(review,index){return(<div><div></div><img /><div></div><div><div></div><div><div></div><div></div></div><div></div><div><div></div></div><div></div><div><div></div></div><div></div></div><div></div></div>);})}<div></div></div>)});
+  21 |
+========================================================================
+import{Fragment,component$,h,useClientEffect$,useStore}from\\"@builder.io/qwik\\";
 
-import { kebabCase, snakeCase } from \\"lodash\\";
+import{kebabCase,snakeCase}from\\"lodash\\";
 
 type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
-export const kebabCaseValue = function kebabCaseValue(props, state) {
-  return kebabCase(\\"testThat\\");
-};
-export const snakeCaseValue = function snakeCaseValue(props, state) {
-  return snakeCase(\\"testThis\\");
-};
-export const SmileReviews = component$((props: SmileReviewsProps) => {
-  useStylesScoped$(STYLES);
+export const kebabCaseValue=function kebabCaseValue(props,state,) {
+  return kebabCase('testThat');
+};export const snakeCaseValue=function snakeCaseValue(props,state,) {
+  return snakeCase('testThis');
+};export const SmileReviews=component$((props:SmileReviewsProps)=>{const state=useStore<any>({\\"name\\":'test',\\"reviews\\":[],\\"showReviewPrompt\\":false});useClientEffect$(()=>{fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+    state.reviews = data.data;
+  })});
 
-  const state = useStore<any>({
-    name: \\"test\\",
-    reviews: [],
-    showReviewPrompt: false,
-  });
-  useClientEffect$(() => {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${props.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        state.reviews = data.data;
-      });
-  });
-
-  return (
-    <div data-user={state.name}>
-      <button onClick$={(event) => (state.showReviewPrompt = true)}>
-        Write a review
-      </button>
-      {state.showReviewPrompt || \\"asdf\\" ? (
-        <>
-          <input placeholder=\\"Email\\" />
-          <input placeholder=\\"Title\\" class=\\"input-SmileReviews\\" />
-          <textarea
-            placeholder=\\"How was your experience?\\"
-            class=\\"textarea-SmileReviews\\"
-          ></textarea>
-          <button
-            preventdefault:click=\\"\\"
-            class=\\"button-SmileReviews\\"
-            onClick$={(event) => {
-              event.preventDefault();
-              state.showReviewPrompt = false;
-            }}
-          >
-            Submit
-          </button>
-        </>
-      ) : null}
-      {(state.reviews || []).map(function (review, index) {
-        return (
-          <div class=\\"review-SmileReviews\\" key={review.id}>
-            <img class=\\"img-SmileReviews\\" src={review.avatar} />
-            <div class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>N: {index}</div>
-              <div>{review.author}</div>
-              <div>{review.reviewMessage}</div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-});
+return (<div data-user={state.name}><div></div><button onclick={(()=>{state.showReviewPrompt = true})()}><div></div></button><div></div>{state.showReviewPrompt || 'asdf'?<><div></div><input /><div></div><input /><div></div><textarea></textarea><div></div><button onclick={{
+  event.preventDefault();
+  state.showReviewPrompt = false;
+}}><div></div></button><div></div></>:null}<div></div>{(state.reviews||[]).map(function(review,index){return(<div><div></div><img /><div></div><div><div></div><div><div></div><div></div></div><div></div><div><div></div></div><div></div><div><div></div></div><div></div></div><div></div></div>);})}<div></div></div>)});
 
 export default SmileReviews;
 
-export const STYLES = \`
-.input-SmileReviews {
-  display: block;
-}
-.textarea-SmileReviews {
-  display: block;
-}
-.button-SmileReviews {
-  display: block;
-}
-.review-SmileReviews {
-  margin: 10px;
-  padding: 10px;
-  background: white;
-  display: flex;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.img-SmileReviews {
-  height: 30px;
-  width: 30px;
-  margin-right: 10px;
-}
-\`;
-"
+========================================================================
+    at File.toString (C:/projects/mitosis/packages/core/src/generators/qwik/src-generator.ts:84:15)
+    at C:/projects/mitosis/packages/core/src/generators/qwik/component-generator.ts:104:27
+    at getOutput (C:/projects/mitosis/packages/core/src/__tests__/shared.ts:500:62)
+    at C:/projects/mitosis/packages/core/src/__tests__/shared.ts:502:28
+    at async runTest (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:417:7)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runSuite (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:512:15)
+    at async runFiles (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:646:5)
+    at async startTestsNode (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:664:3)
+    at async C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:96:11
+    at async Module.withEnv (C:/projects/mitosis/packages/core/node_modules/vitest/dist/chunk-runtime-setup.ab6b6274.js:162:5)
+    at async run (C:/projects/mitosis/packages/core/node_modules/vitest/dist/entry.js:89:7)
+    at async file:///C:/projects/mitosis/packages/core/node_modules/tinypool/dist/esm/worker.js:109:20"
 `;
 
 exports[`qwik > jsx > Typescript Test > Submit 1`] = `
@@ -5848,8 +5735,10 @@ export interface ButtonProps {
 }
 export const SubmitButton = component$((props: ButtonProps) => {
   return (
-    <button type=\\"submit\\" {...props.attributes}>
-      {props.text}
+    <button>
+      <div></div>
+      <div></div>
+      <div></div>
     </button>
   );
 });
@@ -5875,11 +5764,11 @@ export const Text = component$((props: TextProps) => {
 
   return (
     <div
-      contentEditable={allowEditingText || undefined}
       data-name={{
         test: state.name || \\"any name\\",
       }}
-      dangerouslySetInnerHTML={
+      contenteditable={allowEditingText || undefined}
+      innerhtml={
         props.text ||
         props.content ||
         state.name ||
@@ -5905,13 +5794,7 @@ export interface TextareaProps {
 }
 export const Textarea = component$((props: TextareaProps) => {
   return (
-    <textarea
-      {...props.attributes}
-      placeholder={props.placeholder}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-    ></textarea>
+    <textarea name={props.name} defaultvalue={props.defaultValue}></textarea>
   );
 });
 
@@ -5948,28 +5831,7 @@ export interface VideoProps {
   lazyLoad?: boolean;
 }
 export const Video = component$((props: VideoProps) => {
-  return (
-    <video
-      preload=\\"none\\"
-      {...props.attributes}
-      style={{
-        width: \\"100%\\",
-        height: \\"100%\\",
-        ...props.attributes?.style,
-        objectFit: props.fit,
-        objectPosition: props.position,
-        // Hack to get object fit to work as expected and
-        // not have the video overflow
-        borderRadius: 1,
-      }}
-      key={props.video || \\"no-src\\"}
-      poster={props.posterImage}
-      autoplay={props.autoPlay}
-      muted={props.muted}
-      controls={props.controls}
-      loop={props.loop}
-    ></video>
-  );
+  return <video></video>;
 });
 
 export default Video;
@@ -5992,7 +5854,12 @@ export const updateNameWithArrowFn = function updateNameWithArrowFn(
 export const MyComponent = component$((props: any) => {
   const state = useStore<any>({ name: \\"steve\\" });
 
-  return <div>Hello {state.name}</div>;
+  return (
+    <div>
+      <div></div>
+      <div></div>
+    </div>
+  );
 });
 
 export default MyComponent;
@@ -6000,151 +5867,122 @@ export default MyComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > basicForwardRef 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
 }
 export const MyBasicForwardRefComponent = component$((props: Props) => {
-  useStylesScoped$(STYLES);
-
   const state = useStore<any>({ name: \\"PatrickJS\\" });
 
   return (
     <div>
+      <div></div>
       <input
-        class=\\"input-MyBasicForwardRefComponent\\"
-        ref={props.inputRef}
-        value={state.name}
-        onChange$={(event) => (state.name = event.target.value)}
+        onchange={(() => {
+          state.name = event.target.value;
+        })()}
       />
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicForwardRefComponent;
-
-export const STYLES = \`
-.input-MyBasicForwardRefComponent {
-  color: red;
-}
-\`;
 "
 `;
 
 exports[`qwik > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
 }
 export const MyBasicForwardRefComponent = component$((props: Props) => {
-  useStylesScoped$(STYLES);
-
   const state = useStore<any>({ name: \\"PatrickJS\\" });
 
   return (
     <div>
+      <div></div>
       <input
-        class=\\"input-MyBasicForwardRefComponent\\"
-        ref={props.inputRef}
-        value={state.name}
-        onChange$={(event) => (state.name = event.target.value)}
+        onchange={(() => {
+          state.name = event.target.value;
+        })()}
       />
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicForwardRefComponent;
+"
+`;
 
-export const STYLES = \`
-.input-MyBasicForwardRefComponent {
-  color: red;
-}
-\`;
+exports[`qwik > jsx > Typescript Test > camelCasedAttributes 1`] = `
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+
+import React from \\"@builder.io/react\\";
+
+export const MyComponent = component$((props: any) => {
+  const state = useStore<any>({ name: \\"Steve\\" });
+
+  return (
+    <div>
+      <div></div>
+      <img srcset=\\"http://example.com\\" />
+      <div></div>
+    </div>
+  );
+});
+
+export default MyComponent;
 "
 `;
 
 exports[`qwik > jsx > Typescript Test > class + ClassName + css 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props: any) => {
-  useStylesScoped$(STYLES);
-
   return (
-    <div class=\\"test2 test div-MyBasicComponent\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicComponent;
-
-export const STYLES = \`
-.div-MyBasicComponent {
-  padding: 10px;
-}
-\`;
 "
 `;
 
 exports[`qwik > jsx > Typescript Test > class + css 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props: any) => {
-  useStylesScoped$(STYLES);
-
   return (
-    <div class=\\"test div-MyBasicComponent\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicComponent;
-
-export const STYLES = \`
-.div-MyBasicComponent {
-  padding: 10px;
-}
-\`;
 "
 `;
 
 exports[`qwik > jsx > Typescript Test > className + css 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props: any) => {
-  useStylesScoped$(STYLES);
-
   return (
-    <div class=\\"test div-MyBasicComponent\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicComponent;
-
-export const STYLES = \`
-.div-MyBasicComponent {
-  padding: 10px;
-}
-\`;
 "
 `;
 
@@ -6160,8 +5998,17 @@ export const ClassNameCode = component$((props: Props) => {
 
   return (
     <div>
-      <div class=\\"no binding\\">Without Binding</div>
-      <div class={state.bindings}>With binding</div>
+      <div></div>
+      <div></div>
+      <div>
+        <div></div>
+      </div>
+      <div></div>
+      <div></div>
+      <div>
+        <div></div>
+      </div>
+      <div></div>
     </div>
   );
 });
@@ -6171,17 +6018,9 @@ export default ClassNameCode;
 `;
 
 exports[`qwik > jsx > Typescript Test > classState 1`] = `
-"import {
-  Fragment,
-  component$,
-  h,
-  useStore,
-  useStylesScoped$,
-} from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props: any) => {
-  useStylesScoped$(STYLES);
-
   const state = useStore<any>({
     classState: \\"testClassName\\",
     styleState: {
@@ -6190,22 +6029,13 @@ export const MyBasicComponent = component$((props: any) => {
   });
 
   return (
-    <div
-      class={state.classState + \\" div-MyBasicComponent\\"}
-      style={state.styleState}
-    >
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <div></div>
     </div>
   );
 });
 
 export default MyBasicComponent;
-
-export const STYLES = \`
-.div-MyBasicComponent {
-  padding: 10px;
-}
-\`;
 "
 `;
 
@@ -6229,7 +6059,11 @@ export const RenderContent = component$((props: any) => {
     })
   );
 
-  return <div>setting context</div>;
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
 });
 
 export default RenderContent;
@@ -6251,24 +6085,31 @@ export interface ButtonProps {
 export const Button = component$((props: ButtonProps) => {
   return (
     <div>
+      <div></div>
       {props.link ? (
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
+        <>
+          <div></div>
+          <a>
+            <div></div>
+            <div></div>
+            <div></div>
+          </a>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {!props.link ? (
-        <button
-          type=\\"button\\"
-          {...props.attributes}
-          onClick$={(event) => props.onClick(event)}
-        >
-          {props.buttonText}
-        </button>
+        <>
+          <div></div>
+          <button onclick={props.onClick(event)}>
+            <div></div>
+            <div></div>
+            <div></div>
+          </button>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </div>
   );
 });
@@ -6290,24 +6131,31 @@ export interface ButtonProps {
 export const Button = component$((props: ButtonProps) => {
   return (
     <div>
+      <div></div>
       {props.link ? (
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
+        <>
+          <div></div>
+          <a>
+            <div></div>
+            <div></div>
+            <div></div>
+          </a>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {!props.link ? (
-        <button
-          type=\\"button\\"
-          {...props.attributes}
-          onClick$={(event) => props.onClick(event)}
-        >
-          {props.text}
-        </button>
+        <>
+          <div></div>
+          <button onclick={props.onClick(event)}>
+            <div></div>
+            <div></div>
+            <div></div>
+          </button>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </div>
   );
 });
@@ -6326,7 +6174,12 @@ export const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 export const ComponentWithTypes = component$((props: Props) => {
-  return <div> Hello {props.name || DEFAULT_VALUES.name}</div>;
+  return (
+    <div>
+      <div></div>
+      <div></div>
+    </div>
+  );
 });
 
 export default ComponentWithTypes;
@@ -6343,7 +6196,11 @@ export const MyComponent = component$((props: any) => {
       : null,
   });
 
-  return <div>{state.refToUse}</div>;
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
 });
 
 export default MyComponent;
@@ -6449,7 +6306,7 @@ export const MyBasicComponent = component$((props: any) => {
     },
   });
 
-  return <input {...state.attrs} {...props} />;
+  return <input />;
 });
 
 export default MyBasicComponent;
@@ -6467,13 +6324,27 @@ export const NestedShow = component$((props: Props) => {
   return (
     <>
       {props.conditionA ? (
-        !props.conditionB ? (
-          <div>if condition A and condition B</div>
-        ) : (
-          <div>else-condition-B</div>
-        )
+        <>
+          <div></div>
+          {!props.conditionB ? (
+            <>
+              <div></div>
+              <div>
+                <div></div>
+              </div>
+              <div></div>
+            </>
+          ) : (
+            <div>
+              <div></div>
+            </div>
+          )}
+          <div></div>
+        </>
       ) : (
-        <div>else-condition-A</div>
+        <div>
+          <div></div>
+        </div>
       )}
     </>
   );
@@ -6484,33 +6355,17 @@ export default NestedShow;
 `;
 
 exports[`qwik > jsx > Typescript Test > nestedStyles 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const NestedStyles = component$((props: any) => {
-  useStylesScoped$(STYLES);
-
-  return <div class=\\"div-NestedStyles\\">Hello world</div>;
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
 });
 
 export default NestedStyles;
-
-export const STYLES = \`
-.div-NestedStyles {
-  display: flex;
-  foo: var(--bar);
-}
-@media (max-width: env(--mobile)) {
-  .div-NestedStyles {
-    display: block;
-  }
-}
-.div-NestedStyles:hover {
-  display: flex;
-}
-.div-NestedStyles .nested-selector {
-  display: grid;
-}
-\`;
 "
 `;
 
@@ -6554,7 +6409,12 @@ export const OnInit = component$((props: Props) => {
     console.log(\\"set defaults with props\\");
   });
 
-  return <div>Default name defined by parent {state.name}</div>;
+  return (
+    <div>
+      <div></div>
+      <div></div>
+    </div>
+  );
 });
 
 export default OnInit;
@@ -6664,7 +6524,10 @@ export interface MyBasicComponentProps {
 }
 export const MyBasicComponent = component$((props: MyBasicComponentProps) => {
   return (
-    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
+    <div>
+      <div></div>
+      <div></div>
+    </div>
   );
 });
 
@@ -6673,7 +6536,7 @@ export default MyBasicComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > propsDestructure 1`] = `
-"import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 type Props = {
   children: any;
@@ -6684,9 +6547,11 @@ export const MyBasicComponent = component$((props: Props) => {
 
   return (
     <div>
-      <Slot></Slot>
-      {props.type}
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
   );
 });
@@ -6704,7 +6569,10 @@ interface Person {
 }
 export const MyBasicComponent = component$((props: Person | never) => {
   return (
-    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
+    <div>
+      <div></div>
+      <div></div>
+    </div>
   );
 });
 
@@ -6721,7 +6589,10 @@ type Person = {
 };
 export const MyBasicComponent = component$((props: Person) => {
   return (
-    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
+    <div>
+      <div></div>
+      <div></div>
+    </div>
   );
 });
 
@@ -6984,15 +6855,21 @@ export const RenderBlock = component$((props: RenderBlockProps) => {
     <>
       {shouldWrap(props, state) ? (
         <>
+          <div></div>
+          <div></div>
           {isEmptyHtmlElement(tag(props, state)) ? (
-            <state.tag
-              {...attributes(props, state)}
-              {...actions(props, state)}
-            ></state.tag>
+            <>
+              <div></div>
+              <state.tag></state.tag>
+              <div></div>
+            </>
           ) : null}
+          <div></div>
           {!isEmptyHtmlElement(tag(props, state)) &&
-          repeatItemData(props, state)
-            ? (repeatItemData(props, state) || []).map(function (data, index) {
+          repeatItemData(props, state) ? (
+            <>
+              <div></div>
+              {(repeatItemData(props, state) || []).map(function (data, index) {
                 return (
                   <RenderRepeatedBlock
                     key={index}
@@ -7000,38 +6877,51 @@ export const RenderBlock = component$((props: RenderBlockProps) => {
                     block={data.block}
                   ></RenderRepeatedBlock>
                 );
-              })
-            : null}
+              })}
+              <div></div>
+            </>
+          ) : null}
+          <div></div>
           {!isEmptyHtmlElement(tag(props, state)) &&
           !repeatItemData(props, state) ? (
-            <state.tag {...attributes(props, state)} {...actions(props, state)}>
-              <state.renderComponentTag
-                {...renderComponentProps(props, state)}
-              ></state.renderComponentTag>
-              {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child) {
-                  return (
-                    <RenderBlock
-                      key={\\"render-block-\\" + child.id}
-                      block={child}
-                      context={childrenContext(props, state)}
-                    ></RenderBlock>
-                  );
-                }
-              )}
-              {(childrenWithoutParentComponent(props, state) || []).map(
-                function (child) {
-                  return (
-                    <BlockStyles
-                      key={\\"block-style-\\" + child.id}
-                      block={child}
-                      context={childrenContext(props, state)}
-                    ></BlockStyles>
-                  );
-                }
-              )}
-            </state.tag>
+            <>
+              <div></div>
+              <state.tag>
+                <div></div>
+                <state.renderComponentTag
+                  {...renderComponentProps(props, state)}
+                ></state.renderComponentTag>
+                <div></div>
+                <div></div>
+                {(childrenWithoutParentComponent(props, state) || []).map(
+                  function (child) {
+                    return (
+                      <RenderBlock
+                        key={\\"render-block-\\" + child.id}
+                        block={child}
+                        context={childrenContext(props, state)}
+                      ></RenderBlock>
+                    );
+                  }
+                )}
+                <div></div>
+                {(childrenWithoutParentComponent(props, state) || []).map(
+                  function (child) {
+                    return (
+                      <BlockStyles
+                        key={\\"block-style-\\" + child.id}
+                        block={child}
+                        context={childrenContext(props, state)}
+                      ></BlockStyles>
+                    );
+                  }
+                )}
+                <div></div>
+              </state.tag>
+              <div></div>
+            </>
           ) : null}
+          <div></div>
         </>
       ) : (
         <state.renderComponentTag
@@ -7054,7 +6944,6 @@ exports[`qwik > jsx > Typescript Test > renderContentExample 1`] = `
   useClientEffect$,
   useContextProvider,
   useStore,
-  useStylesScoped$,
   useTask$,
 } from \\"@builder.io/qwik\\";
 
@@ -7076,8 +6965,6 @@ type Props = {
   };
 };
 export const RenderContent = component$((props: Props) => {
-  useStylesScoped$(STYLES);
-
   useContextProvider(
     BuilderContext,
     useStore({
@@ -7098,23 +6985,15 @@ export const RenderContent = component$((props: Props) => {
   });
 
   return (
-    <div
-      class=\\"div-RenderContent\\"
-      onClick$={(event) => trackClick(props.content.id)}
-    >
+    <div onclick={trackClick(props.content.id)}>
+      <div></div>
       <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
+      <div></div>
     </div>
   );
 });
 
 export default RenderContent;
-
-export const STYLES = \`
-.div-RenderContent {
-  display: flex;
-  flex-direction: columns;
-}
-\`;
 "
 `;
 
@@ -7130,20 +7009,31 @@ export interface ButtonProps {
 export const Button = component$((props: ButtonProps) => {
   return (
     <Fragment>
+      <div></div>
       {props.link ? (
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
+        <>
+          <div></div>
+          <a>
+            <div></div>
+            <div></div>
+            <div></div>
+          </a>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
       {!props.link ? (
-        <button type=\\"button\\" {...props.attributes}>
-          {props.text}
-        </button>
+        <>
+          <div></div>
+          <button>
+            <div></div>
+            <div></div>
+            <div></div>
+          </button>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </Fragment>
   );
 });
@@ -7159,7 +7049,23 @@ export interface RenderStylesProps {
   foo: string;
 }
 export const RenderStyles = component$((props: RenderStylesProps) => {
-  return <>{props.foo === \\"bar\\" ? <div>Bar</div> : <div>Foo</div>}</>;
+  return (
+    <>
+      {props.foo === \\"bar\\" ? (
+        <>
+          <div></div>
+          <div>
+            <div></div>
+          </div>
+          <div></div>
+        </>
+      ) : (
+        <div>
+          <div></div>
+        </div>
+      )}
+    </>
+  );
 });
 
 export default RenderStyles;
@@ -7172,10 +7078,17 @@ exports[`qwik > jsx > Typescript Test > self-referencing component 1`] = `
 export const MyComponent = component$((props: any) => {
   return (
     <div>
-      {props.name}
+      <div></div>
+      <div></div>
+      <div></div>
       {props.name === \\"Batman\\" ? (
-        <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+        <>
+          <div></div>
+          <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </div>
   );
 });
@@ -7185,18 +7098,30 @@ export default MyComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > self-referencing component with children 1`] = `
-"import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props: any) => {
   return (
     <div>
-      {props.name}
-      <Slot></Slot>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
       {props.name === \\"Batman\\" ? (
-        <MyComponent name=\\"Bruce\\">
-          <div>Wayne</div>
-        </MyComponent>
+        <>
+          <div></div>
+          <MyComponent name=\\"Bruce\\">
+            <div></div>
+            <div>
+              <div></div>
+            </div>
+            <div></div>
+          </MyComponent>
+          <div></div>
+        </>
       ) : null}
+      <div></div>
     </div>
   );
 });
@@ -7216,11 +7141,21 @@ export const NestedShow = component$((props: Props) => {
   return (
     <>
       {props.conditionA ? (
-        (props.items || []).map(function (item, idx) {
-          return <div key={idx}>{item}</div>;
-        })
+        <>
+          <div></div>
+          {(props.items || []).map(function (item, idx) {
+            return (
+              <div>
+                <div></div>
+              </div>
+            );
+          })}
+          <div></div>
+        </>
       ) : (
-        <div>else-condition-A</div>
+        <div>
+          <div></div>
+        </div>
       )}
     </>
   );
@@ -7234,7 +7169,7 @@ exports[`qwik > jsx > Typescript Test > spreadAttrs 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props: any) => {
-  return <input {...attrs} />;
+  return <input />;
 });
 
 export default MyBasicComponent;
@@ -7245,7 +7180,7 @@ exports[`qwik > jsx > Typescript Test > spreadNestedProps 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props: any) => {
-  return <input {...props.nested} />;
+  return <input />;
 });
 
 export default MyBasicComponent;
@@ -7256,7 +7191,7 @@ exports[`qwik > jsx > Typescript Test > spreadProps 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props: any) => {
-  return <input {...props} />;
+  return <input />;
 });
 
 export default MyBasicComponent;
@@ -7264,30 +7199,13 @@ export default MyBasicComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > styleClassAndCss 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props: any) => {
-  useStylesScoped$(STYLES);
-
-  return (
-    <div
-      class=\\"builder-column div-MyComponent\\"
-      style={{
-        width: \\"100%\\",
-      }}
-    ></div>
-  );
+  return <div></div>;
 });
 
 export default MyComponent;
-
-export const STYLES = \`
-.div-MyComponent {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-\`;
 "
 `;
 
@@ -7309,27 +7227,22 @@ exports[`qwik > jsx > Typescript Test > svgComponent 1`] = `
 
 export const SvgComponent = component$((props: any) => {
   return (
-    <svg
-      fill=\\"none\\"
-      role=\\"img\\"
-      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
-      width={42}
-      height={42}
-    >
+    <svg viewbox={\\"0 0 \\" + 42 + \\" \\" + 42}>
+      <div></div>
       <defs>
-        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
-          <feFlood result=\\"BackgroundImageFix\\"></feFlood>
-          <feBlend
-            in=\\"SourceGraphic\\"
-            in2=\\"BackgroundImageFix\\"
-            result=\\"shape\\"
-          ></feBlend>
-          <feGaussianBlur
-            result=\\"effect1_foregroundBlur\\"
-            stdDeviation={7}
-          ></feGaussianBlur>
+        <div></div>
+        <filter filterunits=\\"userSpaceOnUse\\">
+          <div></div>
+          <feFlood></feFlood>
+          <div></div>
+          <feBlend></feBlend>
+          <div></div>
+          <feGaussianBlur stddeviation={7}></feGaussianBlur>
+          <div></div>
         </filter>
+        <div></div>
       </defs>
+      <div></div>
     </svg>
   );
 });
@@ -7348,7 +7261,11 @@ export type TypeDependencyProps = {
   foo2: Foo2;
 };
 export const TypeDependency = component$((props: TypeDependencyProps) => {
-  return <div>{props.foo}</div>;
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
 });
 
 export default TypeDependency;
@@ -7361,7 +7278,11 @@ exports[`qwik > jsx > Typescript Test > use-style 1`] = `
 export const MyComponent = component$((props: any) => {
   useStylesScoped$(STYLES);
 
-  return <button type=\\"button\\">Button</button>;
+  return (
+    <button>
+      <div></div>
+    </button>
+  );
 });
 
 export default MyComponent;
@@ -7384,8 +7305,8 @@ export const MyComponent = component$((props: any) => {
   useStylesScoped$(STYLES);
 
   return (
-    <button type=\\"button\\" class=\\"button-MyComponent\\">
-      Button
+    <button>
+      <div></div>
     </button>
   );
 });
@@ -7393,11 +7314,6 @@ export const MyComponent = component$((props: any) => {
 export default MyComponent;
 
 export const STYLES = \`
-.button-MyComponent {
-  background: blue;
-  color: white;
-}
-
 button {
   font-size: 12px;
   outline: 1px solid black;
@@ -7412,7 +7328,11 @@ exports[`qwik > jsx > Typescript Test > use-style-outside-component 1`] = `
 export const MyComponent = component$((props: any) => {
   useStylesScoped$(STYLES);
 
-  return <button type=\\"button\\">Button</button>;
+  return (
+    <button>
+      <div></div>
+    </button>
+  );
 });
 
 export default MyComponent;
@@ -7742,10 +7662,11 @@ export const MyComponent = component$((props) => {
   return (
     <div>
       <input
-        onChange$={(event) => (state.name = event.target.value)}
-        value={state.name}
+        onchange={(() => {
+          state.name = event.target.value;
+        })()}
       />
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      <div></div>
     </div>
   );
 });
@@ -7763,65 +7684,50 @@ export const MyComponent = component$((props) => {
   return (
     <div>
       <input
-        type=\\"radio\\"
-        value=\\"Plain\\"
-        checked={(() => {
-          state.tortilla === \\"Plain\\";
+        onchange={(() => {
+          state.tortilla = event.target.value;
         })()}
-        onChange$={(event) => (state.tortilla = event.target.value)}
       />
       <input
-        type=\\"radio\\"
-        value=\\"Whole wheat\\"
-        checked={(() => {
-          state.tortilla === \\"Whole wheat\\";
+        onchange={(() => {
+          state.tortilla = event.target.value;
         })()}
-        onChange$={(event) => (state.tortilla = event.target.value)}
       />
       <input
-        type=\\"radio\\"
-        value=\\"Spinach\\"
-        checked={(() => {
-          state.tortilla === \\"Spinach\\";
+        onchange={(() => {
+          state.tortilla = event.target.value;
         })()}
-        onChange$={(event) => (state.tortilla = event.target.value)}
       />
       <br />
       <br />
       <input
-        type=\\"checkbox\\"
-        value=\\"Rice\\"
-        checked={(() => {
-          state.fillings === \\"Rice\\";
+        onchange={(() => {
+          state.fillings = event.target.value;
         })()}
-        onChange$={(event) => (state.fillings = event.target.value)}
       />
       <input
-        type=\\"checkbox\\"
-        value=\\"Beans\\"
-        checked={(() => {
-          state.fillings === \\"Beans\\";
+        onchange={(() => {
+          state.fillings = event.target.value;
         })()}
-        onChange$={(event) => (state.fillings = event.target.value)}
       />
       <input
-        type=\\"checkbox\\"
-        value=\\"Cheese\\"
-        checked={(() => {
-          state.fillings === \\"Cheese\\";
+        onchange={(() => {
+          state.fillings = event.target.value;
         })()}
-        onChange$={(event) => (state.fillings = event.target.value)}
       />
       <input
-        type=\\"checkbox\\"
-        value=\\"Guac (extra)\\"
-        checked={(() => {
-          state.fillings === \\"Guac (extra)\\";
+        onchange={(() => {
+          state.fillings = event.target.value;
         })()}
-        onChange$={(event) => (state.fillings = event.target.value)}
       />
-      <p>Tortilla: {state.tortilla}</p>
-      <p>Fillings: {state.fillings}</p>
+      <p>
+        <div></div>
+        <div></div>
+      </p>
+      <p>
+        <div></div>
+        <div></div>
+      </p>
     </div>
   );
 });
@@ -7836,7 +7742,7 @@ exports[`qwik > svelte > Javascript Test > bindProperty 1`] = `
 export const MyComponent = component$((props) => {
   const state = useStore({ value: \\"hello\\" });
 
-  return <input value={state.value} />;
+  return <input />;
 });
 
 export default MyComponent;
@@ -7849,13 +7755,7 @@ exports[`qwik > svelte > Javascript Test > classDirective 1`] = `
 export const MyComponent = component$((props) => {
   const state = useStore({ focus: true });
 
-  return (
-    <input
-      class={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
-        state.focus ? \\"focus\\" : \\"\\"
-      }\`}
-    />
-  );
+  return <input />;
 });
 
 export default MyComponent;
@@ -7877,7 +7777,11 @@ export const MyComponent = component$((props) => {
   const state = useStore({ activeTab: 0 });
   useContextProvider(\\"activeTab\\", useStore({}));
 
-  return <div>{state.activeTab}</div>;
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
 });
 
 export default MyComponent;
@@ -7893,7 +7797,11 @@ export const MyComponent = component$((props) => {
   return (
     <ul>
       {(state.numbers || []).map(function (num) {
-        return <li>{num}</li>;
+        return (
+          <li>
+            <div></div>
+          </li>
+        );
       })}
     </ul>
   );
@@ -7914,9 +7822,15 @@ export const MyComponent = component$((props) => {
 
   return (
     <div>
-      <button onClick$={(event) => state.log(\\"hi\\")}>Log</button>
-      <button onClick$={(event) => state.log(event)}>Log</button>
-      <button onClick$={(event) => state.log(event)}>Log</button>
+      <button onclick={state.log(\\"hi\\")}>
+        <div></div>
+      </button>
+      <button onclick={state.log(event)}>
+        <div></div>
+      </button>
+      <button onclick={state.log(event)}>
+        <div></div>
+      </button>
     </div>
   );
 });
@@ -7931,7 +7845,7 @@ exports[`qwik > svelte > Javascript Test > html 1`] = `
 export const MyComponent = component$((props) => {
   const state = useStore({ html: \\"<b>bold</b>\\" });
 
-  return <div dangerouslySetInnerHTML={state.html}></div>;
+  return <div innerhtml={state.html}></div>;
 });
 
 export default MyComponent;
@@ -7950,9 +7864,13 @@ export const MyComponent = component$((props) => {
   return (
     <>
       {state.show ? (
-        <button onClick$={(event) => state.toggle(event)}> Hide </button>
+        <button onclick={state.toggle(event)}>
+          <div></div>
+        </button>
       ) : (
-        <button onClick$={(event) => state.toggle(event)}> Show </button>
+        <button onclick={state.toggle(event)}>
+          <div></div>
+        </button>
       )}
     </>
   );
@@ -8024,8 +7942,9 @@ export const MyComponent = component$((props) => {
 
   return (
     <div>
-      <input value={state.name} />
-      Lowercase: {lowercaseName(props, state)}
+      <input />
+      <div></div>
+      <div></div>
     </div>
   );
 });
@@ -8051,16 +7970,17 @@ export const MyComponent = component$((props) => {
   return (
     <div>
       <input
-        type=\\"number\\"
-        onChange$={(event) => (state.a = event.target.value)}
-        value={state.a}
+        onchange={(() => {
+          state.a = event.target.value;
+        })()}
       />
       <input
-        type=\\"number\\"
-        onChange$={(event) => (state.b = event.target.value)}
-        value={state.b}
+        onchange={(() => {
+          state.b = event.target.value;
+        })()}
       />
-      Result: {state.result}
+      <div></div>
+      <div></div>
     </div>
   );
 });
@@ -8077,9 +7997,13 @@ import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props) => {
   return (
     <div>
-      <Slot>default</Slot>
+      <Slot>
+        <div></div>
+      </Slot>
       <Slot name=\\"Test\\">
-        <div>default</div>
+        <div>
+          <div></div>
+        </div>
       </Slot>
     </div>
   );
@@ -8095,7 +8019,7 @@ exports[`qwik > svelte > Javascript Test > style 1`] = `
 export const MyComponent = component$((props) => {
   useStylesScoped$(STYLES);
 
-  return <input class=\\"form-input\\" />;
+  return <input />;
 });
 
 export default MyComponent;
@@ -8121,11 +8045,11 @@ export const MyComponent = component$((props) => {
 
   return (
     <div>
-      normal:
-      {state.a + state.b}
+      <div></div>
+      <div></div>
       <br />
-      conditional
-      {state.a > 2 ? \\"hello\\" : \\"bye\\"}
+      <div></div>
+      <div></div>
     </div>
   );
 });
@@ -8143,10 +8067,11 @@ export const MyComponent = component$((props: any) => {
   return (
     <div>
       <input
-        onChange$={(event) => (state.name = event.target.value)}
-        value={state.name}
+        onchange={(() => {
+          state.name = event.target.value;
+        })()}
       />
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      <div></div>
     </div>
   );
 });
@@ -8164,65 +8089,50 @@ export const MyComponent = component$((props: any) => {
   return (
     <div>
       <input
-        type=\\"radio\\"
-        value=\\"Plain\\"
-        checked={(() => {
-          state.tortilla === \\"Plain\\";
+        onchange={(() => {
+          state.tortilla = event.target.value;
         })()}
-        onChange$={(event) => (state.tortilla = event.target.value)}
       />
       <input
-        type=\\"radio\\"
-        value=\\"Whole wheat\\"
-        checked={(() => {
-          state.tortilla === \\"Whole wheat\\";
+        onchange={(() => {
+          state.tortilla = event.target.value;
         })()}
-        onChange$={(event) => (state.tortilla = event.target.value)}
       />
       <input
-        type=\\"radio\\"
-        value=\\"Spinach\\"
-        checked={(() => {
-          state.tortilla === \\"Spinach\\";
+        onchange={(() => {
+          state.tortilla = event.target.value;
         })()}
-        onChange$={(event) => (state.tortilla = event.target.value)}
       />
       <br />
       <br />
       <input
-        type=\\"checkbox\\"
-        value=\\"Rice\\"
-        checked={(() => {
-          state.fillings === \\"Rice\\";
+        onchange={(() => {
+          state.fillings = event.target.value;
         })()}
-        onChange$={(event) => (state.fillings = event.target.value)}
       />
       <input
-        type=\\"checkbox\\"
-        value=\\"Beans\\"
-        checked={(() => {
-          state.fillings === \\"Beans\\";
+        onchange={(() => {
+          state.fillings = event.target.value;
         })()}
-        onChange$={(event) => (state.fillings = event.target.value)}
       />
       <input
-        type=\\"checkbox\\"
-        value=\\"Cheese\\"
-        checked={(() => {
-          state.fillings === \\"Cheese\\";
+        onchange={(() => {
+          state.fillings = event.target.value;
         })()}
-        onChange$={(event) => (state.fillings = event.target.value)}
       />
       <input
-        type=\\"checkbox\\"
-        value=\\"Guac (extra)\\"
-        checked={(() => {
-          state.fillings === \\"Guac (extra)\\";
+        onchange={(() => {
+          state.fillings = event.target.value;
         })()}
-        onChange$={(event) => (state.fillings = event.target.value)}
       />
-      <p>Tortilla: {state.tortilla}</p>
-      <p>Fillings: {state.fillings}</p>
+      <p>
+        <div></div>
+        <div></div>
+      </p>
+      <p>
+        <div></div>
+        <div></div>
+      </p>
     </div>
   );
 });
@@ -8237,7 +8147,7 @@ exports[`qwik > svelte > Typescript Test > bindProperty 1`] = `
 export const MyComponent = component$((props: any) => {
   const state = useStore<any>({ value: \\"hello\\" });
 
-  return <input value={state.value} />;
+  return <input />;
 });
 
 export default MyComponent;
@@ -8250,13 +8160,7 @@ exports[`qwik > svelte > Typescript Test > classDirective 1`] = `
 export const MyComponent = component$((props: any) => {
   const state = useStore<any>({ focus: true });
 
-  return (
-    <input
-      class={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
-        state.focus ? \\"focus\\" : \\"\\"
-      }\`}
-    />
-  );
+  return <input />;
 });
 
 export default MyComponent;
@@ -8278,7 +8182,11 @@ export const MyComponent = component$((props: any) => {
   const state = useStore<any>({ activeTab: 0 });
   useContextProvider(\\"activeTab\\", useStore({}));
 
-  return <div>{state.activeTab}</div>;
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
 });
 
 export default MyComponent;
@@ -8294,7 +8202,11 @@ export const MyComponent = component$((props: any) => {
   return (
     <ul>
       {(state.numbers || []).map(function (num) {
-        return <li>{num}</li>;
+        return (
+          <li>
+            <div></div>
+          </li>
+        );
       })}
     </ul>
   );
@@ -8315,9 +8227,15 @@ export const MyComponent = component$((props: any) => {
 
   return (
     <div>
-      <button onClick$={(event) => state.log(\\"hi\\")}>Log</button>
-      <button onClick$={(event) => state.log(event)}>Log</button>
-      <button onClick$={(event) => state.log(event)}>Log</button>
+      <button onclick={state.log(\\"hi\\")}>
+        <div></div>
+      </button>
+      <button onclick={state.log(event)}>
+        <div></div>
+      </button>
+      <button onclick={state.log(event)}>
+        <div></div>
+      </button>
     </div>
   );
 });
@@ -8332,7 +8250,7 @@ exports[`qwik > svelte > Typescript Test > html 1`] = `
 export const MyComponent = component$((props: any) => {
   const state = useStore<any>({ html: \\"<b>bold</b>\\" });
 
-  return <div dangerouslySetInnerHTML={state.html}></div>;
+  return <div innerhtml={state.html}></div>;
 });
 
 export default MyComponent;
@@ -8351,9 +8269,13 @@ export const MyComponent = component$((props: any) => {
   return (
     <>
       {state.show ? (
-        <button onClick$={(event) => state.toggle(event)}> Hide </button>
+        <button onclick={state.toggle(event)}>
+          <div></div>
+        </button>
       ) : (
-        <button onClick$={(event) => state.toggle(event)}> Show </button>
+        <button onclick={state.toggle(event)}>
+          <div></div>
+        </button>
       )}
     </>
   );
@@ -8425,8 +8347,9 @@ export const MyComponent = component$((props: any) => {
 
   return (
     <div>
-      <input value={state.name} />
-      Lowercase: {lowercaseName(props, state)}
+      <input />
+      <div></div>
+      <div></div>
     </div>
   );
 });
@@ -8452,16 +8375,17 @@ export const MyComponent = component$((props: any) => {
   return (
     <div>
       <input
-        type=\\"number\\"
-        onChange$={(event) => (state.a = event.target.value)}
-        value={state.a}
+        onchange={(() => {
+          state.a = event.target.value;
+        })()}
       />
       <input
-        type=\\"number\\"
-        onChange$={(event) => (state.b = event.target.value)}
-        value={state.b}
+        onchange={(() => {
+          state.b = event.target.value;
+        })()}
       />
-      Result: {state.result}
+      <div></div>
+      <div></div>
     </div>
   );
 });
@@ -8478,9 +8402,13 @@ import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props: any) => {
   return (
     <div>
-      <Slot>default</Slot>
+      <Slot>
+        <div></div>
+      </Slot>
       <Slot name=\\"Test\\">
-        <div>default</div>
+        <div>
+          <div></div>
+        </div>
       </Slot>
     </div>
   );
@@ -8496,7 +8424,7 @@ exports[`qwik > svelte > Typescript Test > style 1`] = `
 export const MyComponent = component$((props: any) => {
   useStylesScoped$(STYLES);
 
-  return <input class=\\"form-input\\" />;
+  return <input />;
 });
 
 export default MyComponent;
@@ -8522,11 +8450,11 @@ export const MyComponent = component$((props: any) => {
 
   return (
     <div>
-      normal:
-      {state.a + state.b}
+      <div></div>
+      <div></div>
       <br />
-      conditional
-      {state.a > 2 ? \\"hello\\" : \\"bye\\"}
+      <div></div>
+      <div></div>
     </div>
   );
 });
