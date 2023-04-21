@@ -9971,7 +9971,7 @@ type Props = {
   slotTesting: JSX.Element;
 };
 
-import { JSX } from \\"../../../../jsx-runtime\\";
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 @Component({
   selector: \\"content-slot-code, ContentSlotCode\\",
@@ -10012,7 +10012,7 @@ type Props = {
   slotTesting: JSX.Element;
 };
 
-import { JSX } from \\"../../../../jsx-runtime\\";
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 @Component({
   selector: \\"content-slot-code, ContentSlotCode\\",
@@ -10058,7 +10058,7 @@ const defaultProps = {
   slotContent: undefined,
 };
 
-import { JSX } from \\"../../../../jsx-runtime\\";
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 @Component({
   selector: \\"content-slot-jsx-code, ContentSlotJsxCode\\",
@@ -10122,7 +10122,7 @@ const defaultProps = {
   slotContent: undefined,
 };
 
-import { JSX } from \\"../../../../jsx-runtime\\";
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 @Component({
   selector: \\"content-slot-jsx-code, ContentSlotJsxCode\\",
@@ -13590,7 +13590,7 @@ type Props = {
   slotTesting: JSX.Element;
 };
 
-import { JSX } from \\"../../../../jsx-runtime\\";
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 @Component({
   selector: \\"class-name-code, ClassNameCode\\",
@@ -13627,7 +13627,7 @@ type Props = {
   slotTesting: JSX.Element;
 };
 
-import { JSX } from \\"../../../../jsx-runtime\\";
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 @Component({
   selector: \\"class-name-code, ClassNameCode\\",
@@ -15720,8 +15720,7 @@ export type RenderBlockProps = {
   context: BuilderContextInterface;
 };
 
-import { TARGET } from \\"../../constants/target.js\\";
-import {
+import type {
   BuilderContextInterface,
   RegisteredComponent,
 } from \\"../../context/types.js\\";
@@ -15732,11 +15731,14 @@ import { getBlockComponentOptions } from \\"../../functions/get-block-component-
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-import { BuilderBlock } from \\"../../types/builder-block.js\\";
-import { Nullable } from \\"../../types/typescript.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import { RepeatData } from \\"./types.js\\";
+import type { RepeatData } from \\"./types.js\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 
 @Component({
   selector: \\"render-block, RenderBlock\\",
@@ -15986,8 +15988,7 @@ export type RenderBlockProps = {
   context: BuilderContextInterface;
 };
 
-import { TARGET } from \\"../../constants/target.js\\";
-import {
+import type {
   BuilderContextInterface,
   RegisteredComponent,
 } from \\"../../context/types.js\\";
@@ -15998,11 +15999,16 @@ import { getBlockComponentOptions } from \\"../../functions/get-block-component-
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-import { BuilderBlock } from \\"../../types/builder-block.js\\";
-import { Nullable } from \\"../../types/typescript.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
 import BlockStyles from \\"./block-styles\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import type { RenderComponentProps } from \\"./render-component\\";
+import type { RepeatData } from \\"./types.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context\\";
 import { RenderComponentProps } from \\"./render-component\\";
 import RenderComponent from \\"./render-component\\";
@@ -17193,7 +17199,7 @@ export type TypeDependencyProps = {
   foo2: Foo2;
 };
 
-import { Foo } from \\"./foo-type\\";
+import type { Foo } from \\"./foo-type\\";
 
 @Component({
   selector: \\"type-dependency, TypeDependency\\",
@@ -17226,8 +17232,8 @@ export type TypeDependencyProps = {
   foo2: Foo2;
 };
 
-import { Foo } from \\"./foo-type\\";
-import { Foo as Foo2 } from \\"./type-export\\";
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
 
 @Component({
   selector: \\"type-dependency, TypeDependency\\",

@@ -510,13 +510,13 @@ export default function Fiddle() {
   );
 
   return useObserver(() => {
-    const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
+    const isDarkMode = theme.darkMode;
+    const monacoTheme = isDarkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
       overflow: 'auto',
       whiteSpace: 'nowrap',
-      ...(theme.darkMode ? null : { backgroundColor: 'white' }),
+      ...(isDarkMode ? null : { backgroundColor: 'white' }),
     };
-
     return (
       <div
         css={{
@@ -527,11 +527,6 @@ export default function Fiddle() {
             {
               backgroundColor: 'transparent !important',
             },
-
-          'a > span': {
-            color: 'white',
-            textDecoration: 'none',
-          },
         }}
       >
         <div
@@ -574,6 +569,10 @@ export default function Fiddle() {
             <div
               css={{
                 display: 'flex',
+                'a > span': {
+                  color: 'white',
+                  textDecoration: 'none',
+                },
               }}
             >
               <Button

@@ -1218,7 +1218,7 @@ exports[`Svelte > jsx > Javascript Test > SlotJsx 1`] = `
 
 
 
-import ContentSlotCode from './content-slot-jsx.raw';
+import  ContentSlotCode from './content-slot-jsx.raw';
 
 
 
@@ -3068,7 +3068,7 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotHtml 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  import { JSX } from \\"../../../../jsx-runtime\\";
+  import type { JSX } from \\"../../../../jsx-runtime\\";
 </script>
 
 <div>
@@ -3090,7 +3090,7 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotJSX 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  import { JSX } from \\"../../../../jsx-runtime\\";
+  import type { JSX } from \\"../../../../jsx-runtime\\";
 
   export let attributes: Props[\\"attributes\\"];
   export let content: Props[\\"content\\"] = \\"\\";
@@ -4009,7 +4009,7 @@ exports[`Svelte > jsx > Typescript Test > SlotJsx 1`] = `
 
 
 
-import ContentSlotCode from './content-slot-jsx.raw';
+import  ContentSlotCode from './content-slot-jsx.raw';
 
 
 
@@ -4447,7 +4447,7 @@ exports[`Svelte > jsx > Typescript Test > className 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  import { JSX } from \\"../../../../jsx-runtime\\";
+  import type { JSX } from \\"../../../../jsx-runtime\\";
 
   let bindings = \\"a binding\\";
 </script>
@@ -5054,8 +5054,7 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  import { TARGET } from \\"../../constants/target.js\\";
-  import {
+  import type {
     BuilderContextInterface,
     RegisteredComponent,
   } from \\"../../context/types.js\\";
@@ -5066,11 +5065,16 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
   import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
   import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
   import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-  import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-  import { BuilderBlock } from \\"../../types/builder-block.js\\";
-  import { Nullable } from \\"../../types/typescript.js\\";
+  import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+  import type { Nullable } from \\"../../types/typescript.js\\";
+  import { evaluate } from \\"../../functions/evaluate.js\\";
   import BlockStyles from \\"./block-styles.svelte\\";
   import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+  import type { RenderComponentProps } from \\"./render-component.svelte\\";
+  import type { RepeatData } from \\"./types.js\\";
+  import RenderRepeatedBlock from \\"./render-repeated-block.svelte\\";
+  import { TARGET } from \\"../../constants/target.js\\";
+  import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
   import RenderComponentWithContext from \\"./render-component-with-context.svelte\\";
   import { RenderComponentProps } from \\"./render-component.svelte\\";
   import RenderComponent from \\"./render-component.svelte\\";
@@ -5572,8 +5576,8 @@ exports[`Svelte > jsx > Typescript Test > typeDependency 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  import { Foo } from \\"./foo-type\\";
-  import { Foo as Foo2 } from \\"./type-export.svelte\\";
+  import type { Foo } from \\"./foo-type\\";
+  import type { Foo as Foo2 } from \\"./type-export.svelte\\";
 
   export let foo: TypeDependencyProps[\\"foo\\"];
 </script>
