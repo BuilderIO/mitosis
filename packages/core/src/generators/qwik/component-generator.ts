@@ -17,8 +17,9 @@ import {
 } from '../../modules/plugins';
 import traverse from 'traverse';
 import { stableInject } from './stable-inject';
+import { mergeOptions } from 'src/helpers/merge-options';
+import { CAMEL_CASE_PLUGIN } from 'src/helpers/plugins/map-camel-cased-attributes';
 
-Error.stackTraceLimit = 9999;
 
 // TODO(misko): styles are not processed.
 
@@ -45,19 +46,26 @@ type StateValue = any;
  */
 type StateValues = Record<PropertyName, StateValue>;
 
+const DEFAULT_OPTIONS:ToQwikOptions = {
+  plugins: [CAMEL_CASE_PLUGIN]
+}
+
 export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
   (userOptions = {}) =>
   ({ component: _component, path }): string => {
     // Make a copy we can safely mutate, similar to babel's toolchain
     let component = fastClone(_component);
-    if (userOptions.plugins) {
-      component = runPreJsonPlugins(component, userOptions.plugins);
+
+    const options = mergeOptions(DEFAULT_OPTIONS, userOptions)
+
+    if (options.plugins) {
+      component = runPreJsonPlugins(component, options.plugins);
     }
     addPreventDefault(component);
-    if (userOptions.plugins) {
-      component = runPostJsonPlugins(component, userOptions.plugins);
+    if (options.plugins) {
+      component = runPostJsonPlugins(component, options.plugins);
     }
-    const isTypeScript = !!userOptions.typescript;
+    const isTypeScript = !!options.typescript;
     const file = new File(
       component.name + (isTypeScript ? '.ts' : '.js'),
       {
@@ -115,9 +123,9 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       emitStyles(file, css);
       DEBUG && file.exportConst('COMPONENT', JSON.stringify(component));
       let sourceFile = file.toString();
-      if (userOptions.plugins) {
-        sourceFile = runPreCodePlugins(sourceFile, userOptions.plugins);
-        sourceFile = runPostCodePlugins(sourceFile, userOptions.plugins);
+      if (options.plugins) {
+        sourceFile = runPreCodePlugins(sourceFile, options.plugins);
+        sourceFile = runPostCodePlugins(sourceFile, options.plugins);
       }
       return sourceFile;
     } catch (e) {
