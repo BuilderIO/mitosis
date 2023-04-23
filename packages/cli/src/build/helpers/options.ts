@@ -10,5 +10,5 @@ export const checkShouldOutputTypeScript = ({
   target: Target;
   options: MitosisConfig;
 }): boolean => {
-  return !!options.options[target]?.typescript;
+  return !!options.options[target]?.typescript ? options.options[target].typescript : options.commonOptions?.typescript
 };
