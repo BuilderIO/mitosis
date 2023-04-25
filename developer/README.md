@@ -48,29 +48,13 @@ PS: don't worry about failing imports in the raw test TSX files. These are not a
 - add your component to the [e2e-app component map](e2e/e2e-app/src/component-map.ts)
 - add an integration test in [e2e/e2e-app/tests](e2e/e2e-app/tests) that makes sure your component works as expected
 - this integration test will run against every server that exists in [e2e/](e2e/).
+- run `yarn ci:e2e-prep` to install playwright browsers
+- run `yarn ci:e2e` to run the integration tests against all servers
 
-### test your changes
+### Test your changes
 
 From there, you can keep iterating until the snapshots look as expected, and the integration tests pass!
 
-### formatting
+### Pre-submit
 
-- run `yarn run fmt:prettier` in the root directory.
-
-## Pre-submit: run the CI locally, including E2E tests
-
-Before submitting a change, run roughly the same process as in CI, including
-Playwright E2E tests.
-
-```bash
-yarn
-yarn ci
-```
-
-Playwright is in `devDependencies` only at the top level `package.json`, to
-ensure only a single copy is installed for the whole project. See the
-`README.md` for each E2E test harness for commands to run just one.
-
-The E2E tests, run by the above command, will also update the E2E status table
-in the project-level README - please let this happen, rather than manually
-updating that table.
+- format: `yarn run fmt:prettier`
