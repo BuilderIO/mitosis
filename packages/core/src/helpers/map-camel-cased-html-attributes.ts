@@ -1,5 +1,6 @@
 import {isFirstLetterLowerCase} from './is-first-letter-lower-case'
 import { MitosisNode } from '../types/mitosis-node';
+import fs from 'fs'
 /*
  * This function does side-effects on `json`
  */
@@ -12,10 +13,12 @@ export const mapCamelCasedHtmlAttributes = (json: MitosisNode) => {
 
   for (let key in json.bindings) {
     const isBuiltInHtmlAttrName = !key.includes('-')
+
     if (!isBuiltInHtmlAttrName) continue
+
     const newKey = key.toLowerCase() as keyof MitosisNode['bindings']
-    if(newKey in json) {
-      console.warn(`${newKey} already exists in json`)
+
+    if(newKey in json.bindings) {
       continue
     }
     json.bindings[newKey] = json.bindings[key];
@@ -30,8 +33,7 @@ export const mapCamelCasedHtmlAttributes = (json: MitosisNode) => {
 
     const newKey = key.toLowerCase()
 
-    if(newKey in json) {
-      console.warn(`${newKey} already exists in json`)
+    if(newKey in json.properties) {
       continue
     }
 
