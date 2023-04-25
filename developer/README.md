@@ -37,17 +37,17 @@ In `core`, we use vitest snapshots & integeration tests for test coverage. If yo
 ### Snapshot test
 
 - copy your fiddle component into a file in `packages/core/src/__tests__/data`. See [packages/core/src/**tests**/data/basic.raw.tsx](/packages/core/src/__tests__/data/basic.raw.tsx) as an example.
-- add that test to the [test generator](packages/core/src/__tests__/test-generator.ts), most likely in `BASIC_TESTS`.
+- add that test to the [test generator](/packages/core/src/__tests__/test-generator.ts), most likely in `BASIC_TESTS`.
 - run `yarn test:watch` in the `packages/core` directory to run the snapshot tests in watch mode
 
 PS: don't worry about failing imports in the raw test TSX files. These are not an issue, since the files are standalone and don't actually belong to a cohesive project.
 
 ### Integration test
 
-- copy your fiddle component into a `.lite.tsx` Mitosis component in the [e2e app](e2e/e2e-app/src)
-- add your component to the [e2e-app component map](e2e/e2e-app/src/component-map.ts)
-- add an integration test in [e2e/e2e-app/tests](e2e/e2e-app/tests) that makes sure your component works as expected
-- this integration test will run against every server that exists in [e2e/](e2e/).
+- copy your fiddle component into a `.lite.tsx` Mitosis component in the [e2e app](/e2e/e2e-app/src)
+- add your component to the [e2e-app component map](/e2e/e2e-app/src/component-map.ts)
+- add an integration test in [e2e/e2e-app/tests](/e2e/e2e-app/tests) that makes sure your component works as expected
+- this integration test will run against every server that exists in [e2e/](/e2e/).
 - run `yarn ci:e2e-prep` to install playwright browsers
 - run `yarn ci:e2e` to run the integration tests against all servers
 
