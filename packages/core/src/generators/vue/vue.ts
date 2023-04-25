@@ -96,7 +96,7 @@ const onUpdatePlugin: Plugin = (options) => ({
 });
 
 const BASE_OPTIONS: ToVueOptions = {
-  plugins: [],
+  plugins: [CAMEL_CASE_PLUGIN],
   vueVersion: 2,
   api: 'options',
 };
@@ -278,26 +278,14 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
   };
 
 
-const DEFAULT_OPTIONS_VUE_2: ToVueOptions = {
-  api: 'options',
-  vueVersion: 2,
-  prettier: true,
-  plugins: [CAMEL_CASE_PLUGIN],
-};
 export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>{
-  const options = mergeOptions<ToVueOptions>(DEFAULT_OPTIONS_VUE_2, { ...vueOptions, vueVersion: 2 })
+  const options = mergeOptions<ToVueOptions>(BASE_OPTIONS, { ...vueOptions, vueVersion: 2 })
   return componentToVue(options);
 }
 
-const DEFAULT_OPTIONS_VUE_3: ToVueOptions = {
-  api: 'composition',
-  vueVersion: 3,
-  prettier: true,
-  plugins: [CAMEL_CASE_PLUGIN],
-};
 
 export const componentToVue3 = (vueOptions?: VueOptsWithoutVersion) =>{
-  const options = mergeOptions<ToVueOptions>(DEFAULT_OPTIONS_VUE_3, { ...vueOptions, vueVersion: 3 })
+  const options = mergeOptions<ToVueOptions>(BASE_OPTIONS, { ...vueOptions, vueVersion: 3 })
   return componentToVue(options);
 }
 
