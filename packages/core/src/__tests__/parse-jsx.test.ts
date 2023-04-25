@@ -1,7 +1,7 @@
 import { parseStateObjectToMitosisState } from '../parsers/jsx/state';
 import { parseJsx } from '../parsers/jsx';
 import { SPEC } from './data/jsx-json.spec';
-import { runTestsForJsx } from './shared';
+import { runTestsForJsx } from './test-generator';
 
 import buttonWithMetadata from './data/blocks/button-with-metadata.raw.tsx?raw';
 import basicPropsRaw from './data/basic-props.raw.tsx?raw';

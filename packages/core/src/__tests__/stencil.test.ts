@@ -1,5 +1,5 @@
 import { componentToStencil } from '../generators/stencil';
-import { runTestsForTarget } from './shared';
+import { runTestsForTarget } from './test-generator';
 
 describe('Stencil', () => {
   runTestsForTarget({
