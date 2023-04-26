@@ -17,10 +17,11 @@ const getCompositionPropDefinition = ({
   component: MitosisComponent;
   props: string[];
 }) => {
+  const isTs = options.typescript;
   let str = 'const props = ';
 
   if (component.defaultProps) {
-    const generic = options.typescript ? `<${component.propsTypeRef}>` : '';
+    const generic = isTs ? `<${component.propsTypeRef}>` : '';
     const defalutPropsString = props
       .map((prop) => {
         const value = component.defaultProps!.hasOwnProperty(prop)
@@ -30,7 +31,7 @@ const getCompositionPropDefinition = ({
       })
       .join(',');
     str += `withDefaults(defineProps${generic}(), {${defalutPropsString}})`;
-  } else if (options.typescript && component.propsTypeRef && component.propsTypeRef !== 'any') {
+  } else if (isTs && component.propsTypeRef && component.propsTypeRef !== 'any') {
     str += `defineProps<${component.propsTypeRef}>()`;
   } else {
     str += `defineProps(${json5.stringify(props)})`;
@@ -46,13 +47,14 @@ export function generateCompositionApiScript(
   onUpdateWithDeps: extendedHook[],
   onUpdateWithoutDeps: extendedHook[],
 ) {
+  const isTs = options.typescript;
   let refs = getStateObjectStringFromComponent(component, {
     data: true,
     functions: false,
     getters: false,
     format: 'variables',
     valueMapper: (code, _, typeParameter) =>
-      options.typescript && typeParameter ? `ref<${typeParameter}>(${code})` : `ref(${code})`,
+      isTs && typeParameter ? `ref<${typeParameter}>(${code})` : `ref(${code})`,
     keyPrefix: 'const',
   });
 
@@ -64,8 +66,8 @@ export function generateCompositionApiScript(
   });
 
   if (template.includes('_classStringToObject')) {
-    methods += ` function _classStringToObject(str) {
-      const obj = {};
+    methods += ` function _classStringToObject(str${isTs ? ': string' : ''}) {
+      const obj${isTs ? ': Record<string, boolean>' : ''} = {};
       if (typeof str !== 'string') { return obj }
       const classNames = str.trim().split(/\\s+/);
       for (const name of classNames) {
@@ -98,7 +100,7 @@ export function generateCompositionApiScript(
 
     ${Object.keys(component.refs)
       ?.map((key) => {
-        if (options.typescript) {
+        if (isTs) {
           return `const ${key} = ref<${component.refs[key].typeParameter}>()`;
         } else {
           return `const ${key} = ref(null)`;

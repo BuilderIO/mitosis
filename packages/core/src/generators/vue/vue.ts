@@ -225,13 +225,13 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
 
     <script ${options.api === 'composition' ? 'setup' : ''} ${tsLangAttribute}>
       ${vueImports.length ? `import { ${uniq(vueImports).sort().join(', ')} } from "vue"` : ''}
-      
+
       ${renderPreComponent({
         component,
         target: 'vue',
         asyncComponentImports: options.asyncComponentImports,
       })}
-      
+
       ${(options.typescript && component.types?.join('\n')) || ''}
 
       ${
@@ -265,7 +265,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     }
   `;
 
-    str = runPreCodePlugins(str, options.plugins);
+    str = runPreCodePlugins(str, options.plugins, { json: component });
     if (true || options.prettier !== false) {
       try {
         str = format(str, {
