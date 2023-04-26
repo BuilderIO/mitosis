@@ -75,7 +75,7 @@ export function generateOptionsApiScript(
   const { exports: localExports } = component;
   const localVarAsData: string[] = [];
   const localVarAsFunc: string[] = [];
-  const isTs = options.typescript
+  const isTs = options.typescript;
   if (localExports) {
     Object.keys(localExports).forEach((key) => {
       if (localExports[key].usedInLocal) {

@@ -17,7 +17,7 @@ const getCompositionPropDefinition = ({
   component: MitosisComponent;
   props: string[];
 }) => {
-  const isTs = options.typescript
+  const isTs = options.typescript;
   let str = 'const props = ';
 
   if (component.defaultProps) {
@@ -47,7 +47,7 @@ export function generateCompositionApiScript(
   onUpdateWithDeps: extendedHook[],
   onUpdateWithoutDeps: extendedHook[],
 ) {
-  const isTs = options.typescript
+  const isTs = options.typescript;
   let refs = getStateObjectStringFromComponent(component, {
     data: true,
     functions: false,
