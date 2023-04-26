@@ -1,6 +1,6 @@
 import { parseJsx } from '..';
 import { componentToCustomElement } from '../generators/html';
-import { runTestsForTarget } from './shared';
+import { runTestsForTarget } from './test-generator';
 
 import shadowDom from './data/blocks/shadow-dom.raw.tsx?raw';
 

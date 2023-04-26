@@ -1,5 +1,5 @@
 import { componentToAlpine, ToAlpineOptions } from '../generators/alpine';
-import { runTestsForTarget } from './shared';
+import { runTestsForTarget } from './test-generator';
 
 describe('Alpine.js', () => {
   const possibleOptions: ToAlpineOptions[] = [
