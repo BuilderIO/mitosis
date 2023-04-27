@@ -14,7 +14,7 @@ import {
   convertBuilderContentToSymbolHierarchy,
   convertBuilderElementToMitosisComponent,
 } from '../symbols/symbol-processor';
-import { runTestsForTarget } from './shared';
+import { runTestsForTarget } from './test-generator';
 
 import todo from '../../../../examples/todo/src/components/todo.lite.tsx?raw';
 import todos from '../../../../examples/todo/src/components/todos.lite.tsx?raw';
