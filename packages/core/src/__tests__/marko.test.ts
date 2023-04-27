@@ -4,7 +4,7 @@ import {
   preprocessHtml,
   postprocessHtml,
 } from '../generators/marko';
-import { runTestsForTarget } from './shared';
+import { runTestsForTarget } from './test-generator';
 
 describe('Marko', () => {
   test('formatting', () => {

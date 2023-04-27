@@ -1,5 +1,5 @@
 import { componentToAngular } from '../generators/angular';
-import { runTestsForTarget } from './shared';
+import { runTestsForTarget } from './test-generator';
 
 describe('Angular with Import Mapper Tests', () => {
   runTestsForTarget({

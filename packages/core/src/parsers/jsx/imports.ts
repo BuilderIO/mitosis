@@ -26,6 +26,7 @@ export const handleImportDeclaration = ({
   const importObject: MitosisImport = {
     imports: {},
     path: path.node.source.value,
+    importKind: path.node.importKind,
   };
   for (const specifier of path.node.specifiers) {
     if (types.isImportSpecifier(specifier)) {

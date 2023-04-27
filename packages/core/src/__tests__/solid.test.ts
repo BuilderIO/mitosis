@@ -1,5 +1,5 @@
 import { componentToSolid } from '../generators/solid';
-import { runTestsForTarget } from './shared';
+import { runTestsForTarget } from './test-generator';
 
 describe('Solid', () => {
   runTestsForTarget({ options: {}, target: 'solid', generator: componentToSolid });
