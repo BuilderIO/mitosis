@@ -75,6 +75,7 @@ export function generateOptionsApiScript(
   const { exports: localExports } = component;
   const localVarAsData: string[] = [];
   const localVarAsFunc: string[] = [];
+  const isTs = options.typescript;
   if (localExports) {
     Object.keys(localExports).forEach((key) => {
       if (localExports[key].usedInLocal) {
@@ -120,8 +121,8 @@ export function generateOptionsApiScript(
   if (includeClassMapHelper) {
     functionsString = functionsString.replace(
       /}\s*$/,
-      `_classStringToObject(str) {
-        const obj = {};
+      `_classStringToObject(str${isTs ? ': string' : ''}) {
+        const obj${isTs ? ': Record<string, boolean>' : ''} = {};
         if (typeof str !== 'string') { return obj }
         const classNames = str.trim().split(/\\s+/);
         for (const name of classNames) {

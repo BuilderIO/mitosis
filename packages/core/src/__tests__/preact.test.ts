@@ -1,5 +1,5 @@
 import { componentToReact } from '../generators/react';
-import { runTestsForTarget } from './shared';
+import { runTestsForTarget } from './test-generator';
 
 describe('Preact', () => {
   runTestsForTarget({

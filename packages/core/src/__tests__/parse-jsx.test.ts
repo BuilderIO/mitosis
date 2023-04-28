@@ -1,7 +1,7 @@
 import { parseJsx } from '../parsers/jsx';
 import { parseStateObjectToMitosisState } from '../parsers/jsx/state';
 import { SPEC } from './data/jsx-json.spec';
-import { runTestsForJsx } from './shared';
+import { runTestsForJsx } from './test-generator';
 
 import basicBooleanAttribute from './data/basic-boolean-attribute.raw.tsx?raw';
 import basicPropsDestructureRaw from './data/basic-props-destructure.raw.tsx?raw';

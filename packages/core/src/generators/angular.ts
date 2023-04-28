@@ -569,8 +569,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
   `;
 
-    str = generateNgModule(str, json.name, componentsUsed, json, options.bootstrapMapper);
-
+    if (options.standalone !== true) {
+      str = generateNgModule(str, json.name, componentsUsed, json, options.bootstrapMapper);
+    }
     if (options.plugins) {
       str = runPreCodePlugins(str, options.plugins);
     }
