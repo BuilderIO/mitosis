@@ -34,6 +34,7 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
 import { getFrameworkImports } from './react/imports';
 import { format } from 'prettier/standalone';
+import {getNodeMappers} from "./react/blocks";
 
 export const openFrag = () => getFragment('open');
 export const closeFrag = () => getFragment('close');
@@ -105,6 +106,12 @@ export const componentToPreact: TranspilerGenerator<Partial<ToPreactOptions>> =
     }
     return str;
   };
+
+const PREACT_NODE_MAPPERS = getNodeMappers({
+  getFragment,
+  openFrag,
+  closeFrag
+})
 
 const _componentToPreact = (
   json: MitosisComponent,
@@ -182,7 +189,7 @@ const _componentToPreact = (
 
     return (
       ${wrap ? openFrag() : ''}
-      ${json.children.map((item) => blockToReact(item, _options, json, [])).join('\n')}
+      ${json.children.map((item) => blockToReact(item, _options, json, PREACT_NODE_MAPPERS, [])).join('\n')}
       ${
         componentHasStyles && options.stylesType === 'styled-jsx'
           ? `<style jsx>{\`${css}\`}</style>`

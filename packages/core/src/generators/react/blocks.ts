@@ -8,121 +8,130 @@ import { getForArguments } from '../../helpers/nodes/for';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode, ForNode, checkIsForNode } from '../../types/mitosis-node';
-import { closeFrag, getFragment, openFrag, processBinding, wrapInFragment } from './helpers';
+import { processBinding, wrapInFragment } from './helpers';
 import { updateStateSettersInCode } from './state';
 import { ToReactOptions } from './types';
 
-const NODE_MAPPERS: {
-  [key: string]: (
-    json: MitosisNode,
-    options: ToReactOptions,
-    component: MitosisComponent,
-    parentSlots?: any[],
-  ) => string;
-} = {
-  Slot(json, options, component, parentSlots) {
-    const slotName = json.bindings.name?.code || json.properties.name;
+interface Fns {
+  closeFrag: () => string;
+  openFrag: () => string;
+  getFragment: (type: 'open' | 'close') => string;
+}
 
-    const hasChildren = json.children.length;
+export const getNodeMappers = (fns: Fns) => {
+  const MAPPERS: {
+    [key: string]: (
+      json: MitosisNode,
+      options: ToReactOptions,
+      component: MitosisComponent,
+      parentSlots?: any[],
+    ) => string;
+  } = ({
+    Slot(json, options, component, parentSlots) {
+      const slotName = json.bindings.name?.code || json.properties.name;
 
-    const renderChildren = () => {
-      const childrenStr = json.children
-        ?.map((item) => blockToReact(item, options, component))
-        .join('\n')
-        .trim();
-      /**
-       * Ad-hoc way of figuring out if the children defaultProp is:
-       * - a JSX element, e.g. `<div>foo</div>`
-       * - a JS expression, e.g. `true`, `false`
-       * - a string, e.g. `'Default text'`
-       *
-       * and correctly wrapping it in quotes when appropriate.
-       */
-      if (childrenStr.startsWith(`<`) && childrenStr.endsWith(`>`)) {
-        return childrenStr;
-      } else if (['false', 'true', 'null', 'undefined'].includes(childrenStr)) {
-        return childrenStr;
-      } else {
-        return `"${childrenStr}"`;
+      const hasChildren = json.children.length;
+
+      const renderChildren = () => {
+        const childrenStr = json.children
+          ?.map((item) => blockToReact(item, options, component, MAPPERS))
+          .join('\n')
+          .trim();
+        /**
+         * Ad-hoc way of figuring out if the children defaultProp is:
+         * - a JSX element, e.g. `<div>foo</div>`
+         * - a JS expression, e.g. `true`, `false`
+         * - a string, e.g. `'Default text'`
+         *
+         * and correctly wrapping it in quotes when appropriate.
+         */
+        if (childrenStr.startsWith(`<`) && childrenStr.endsWith(`>`)) {
+          return childrenStr;
+        } else if (['false', 'true', 'null', 'undefined'].includes(childrenStr)) {
+          return childrenStr;
+        } else {
+          return `"${childrenStr}"`;
+        }
+      };
+
+      if (!slotName) {
+        // TODO: update MitosisNode for simple code
+        const key = Object.keys(json.bindings).find(Boolean);
+        if (key && parentSlots) {
+          const propKey = camelCase('Slot' + key[0].toUpperCase() + key.substring(1));
+          parentSlots.push({key: propKey, value: json.bindings[key]?.code});
+          return '';
+        }
+
+        if (hasChildren) {
+          component.defaultProps = {
+            ...(component.defaultProps || {}),
+            children: {
+              code: renderChildren(),
+              type: 'property',
+            },
+          };
+        }
+        return `{${processBinding('props.children', options)}}`;
       }
-    };
 
-    if (!slotName) {
-      // TODO: update MitosisNode for simple code
-      const key = Object.keys(json.bindings).find(Boolean);
-      if (key && parentSlots) {
-        const propKey = camelCase('Slot' + key[0].toUpperCase() + key.substring(1));
-        parentSlots.push({ key: propKey, value: json.bindings[key]?.code });
-        return '';
+      let slotProp = processBinding(slotName as string, options).replace('name=', '');
+
+      if (!slotProp.startsWith('props.slot')) {
+        slotProp = `props.slot${upperFirst(camelCase(slotProp))}`;
       }
 
       if (hasChildren) {
         component.defaultProps = {
           ...(component.defaultProps || {}),
-          children: {
+          [slotProp.replace('props.', '')]: {
             code: renderChildren(),
             type: 'property',
           },
         };
       }
-      return `{${processBinding('props.children', options)}}`;
-    }
-
-    let slotProp = processBinding(slotName as string, options).replace('name=', '');
-
-    if (!slotProp.startsWith('props.slot')) {
-      slotProp = `props.slot${upperFirst(camelCase(slotProp))}`;
-    }
-
-    if (hasChildren) {
-      component.defaultProps = {
-        ...(component.defaultProps || {}),
-        [slotProp.replace('props.', '')]: {
-          code: renderChildren(),
-          type: 'property',
-        },
-      };
-    }
-    return `{${slotProp}}`;
-  },
-  Fragment(json, options, component) {
-    const wrap = wrapInFragment(json);
-    return `${wrap ? getFragment('open') : ''}${json.children
-      .map((item) => blockToReact(item, options, component))
-      .join('\n')}${wrap ? getFragment('close') : ''}`;
-  },
-  For(_json, options, component) {
-    const json = _json as ForNode;
-    const wrap = wrapInFragment(json);
-    const forArguments = getForArguments(json).join(', ');
-    return `{${processBinding(
-      json.bindings.each?.code as string,
-      options,
-    )}?.map((${forArguments}) => (
-      ${wrap ? openFrag() : ''}${json.children
-      .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options, component))
-      .join('\n')}${wrap ? closeFrag() : ''}
-    ))}`;
-  },
-  Show(json, options, component) {
-    const wrap = wrapInFragment(json) || isRootTextNode(json);
-    const wrapElse =
-      json.meta.else &&
-      (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
-    return `{${processBinding(json.bindings.when?.code as string, options)} ? (
-      ${wrap ? openFrag() : ''}${json.children
-      .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options, component))
-      .join('\n')}${wrap ? closeFrag() : ''}
-    ) : ${
-      !json.meta.else
-        ? 'null'
-        : (wrapElse ? openFrag() : '') +
-          blockToReact(json.meta.else as any, options, component) +
-          (wrapElse ? closeFrag() : '')
-    }}`;
-  },
+      return `{${slotProp}}`;
+    },
+    Fragment(json, options, component) {
+      const wrap = wrapInFragment(json);
+      return `${wrap ? fns.getFragment('open') : ''}${json.children
+        .map((item) => blockToReact(item, options, component, MAPPERS))
+        .join('\n')}${wrap ? fns.getFragment('close') : ''}`;
+    },
+    For(_json, options, component) {
+      const json = _json as ForNode;
+      const wrap = wrapInFragment(json);
+      const forArguments = getForArguments(json).join(', ');
+      return `{${processBinding(
+        json.bindings.each?.code as string,
+        options,
+      )}?.map((${forArguments}) => (
+        ${wrap ? fns.openFrag() : ''}${json.children
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToReact(item, options, component, MAPPERS))
+        .join('\n')}${wrap ? fns.closeFrag() : ''}
+      ))}`;
+    },
+    Show(json, options, component) {
+      const wrap = wrapInFragment(json) || isRootTextNode(json);
+      const wrapElse =
+        json.meta.else &&
+        (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
+      return `{${processBinding(json.bindings.when?.code as string, options)} ? (
+        ${wrap ? fns.openFrag() : ''}${json.children
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToReact(item, options, component, MAPPERS))
+        .join('\n')}${wrap ? fns.closeFrag() : ''}
+      ) : ${
+        !json.meta.else
+          ? 'null'
+          : (wrapElse ? fns.openFrag() : '') +
+          blockToReact(json.meta.else as any, options, component, MAPPERS) +
+          (wrapElse ? fns.closeFrag() : '')
+      }}`;
+    },
+  });
+  return MAPPERS;
 };
 
 const ATTTRIBUTE_MAPPERS: { [key: string]: string } = {
@@ -159,10 +168,11 @@ export const blockToReact = (
   json: MitosisNode,
   options: ToReactOptions,
   component: MitosisComponent,
+  nodeMappers: ReturnType<typeof getNodeMappers>,
   parentSlots?: any[],
 ) => {
-  if (NODE_MAPPERS[json.name]) {
-    return NODE_MAPPERS[json.name](json, options, component, parentSlots);
+  if (nodeMappers[json.name]) {
+    return nodeMappers[json.name](json, options, component, parentSlots);
   }
 
   if (json.properties._text) {
@@ -263,7 +273,7 @@ export const blockToReact = (
   let childrenNodes = '';
   if (json.children) {
     childrenNodes = json.children
-      .map((item) => blockToReact(item, options, component, needsToRenderSlots))
+      .map((item) => blockToReact(item, options, component, nodeMappers, needsToRenderSlots))
       .join('\n');
   }
   if (needsToRenderSlots.length) {
