@@ -9,7 +9,7 @@ import { componentToAlpine as alpine } from './generators/alpine';
 import { componentToMitosis as mitosis } from './generators/mitosis';
 import { componentToLiquid as liquid } from './generators/liquid';
 import { componentToReact as react } from './generators/react';
-import { componentToPreact as preact } from './generators/react';
+import { componentToPreact as preact } from './generators/preact';
 import { componentToReactNative as reactNative } from './generators/react-native';
 import { componentToSolid as solid } from './generators/solid';
 import { componentToSvelte as svelte } from './generators/svelte';

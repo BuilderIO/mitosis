@@ -5,7 +5,6 @@ export interface ToReactOptions extends BaseTranspilerOptions {
   stateType: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder' | 'variables';
   format?: 'lite' | 'safe';
   type: 'dom' | 'native' | 'taro';
-  preact?: boolean;
   forwardRef?: string;
   experimental?: any;
   /**

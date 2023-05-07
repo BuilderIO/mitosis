@@ -87,9 +87,9 @@ const NODE_MAPPERS: {
   },
   Fragment(json, options, component) {
     const wrap = wrapInFragment(json);
-    return `${wrap ? getFragment('open', options) : ''}${json.children
+    return `${wrap ? getFragment('open') : ''}${json.children
       .map((item) => blockToReact(item, options, component))
-      .join('\n')}${wrap ? getFragment('close', options) : ''}`;
+      .join('\n')}${wrap ? getFragment('close') : ''}`;
   },
   For(_json, options, component) {
     const json = _json as ForNode;
@@ -99,10 +99,10 @@ const NODE_MAPPERS: {
       json.bindings.each?.code as string,
       options,
     )}?.map((${forArguments}) => (
-      ${wrap ? openFrag(options) : ''}${json.children
+      ${wrap ? openFrag() : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options, component))
-      .join('\n')}${wrap ? closeFrag(options) : ''}
+      .join('\n')}${wrap ? closeFrag() : ''}
     ))}`;
   },
   Show(json, options, component) {
@@ -111,16 +111,16 @@ const NODE_MAPPERS: {
       json.meta.else &&
       (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
-      ${wrap ? openFrag(options) : ''}${json.children
+      ${wrap ? openFrag() : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options, component))
-      .join('\n')}${wrap ? closeFrag(options) : ''}
+      .join('\n')}${wrap ? closeFrag() : ''}
     ) : ${
       !json.meta.else
         ? 'null'
-        : (wrapElse ? openFrag(options) : '') +
+        : (wrapElse ? openFrag() : '') +
           blockToReact(json.meta.else as any, options, component) +
-          (wrapElse ? closeFrag(options) : '')
+          (wrapElse ? closeFrag() : '')
     }}`;
   },
 };

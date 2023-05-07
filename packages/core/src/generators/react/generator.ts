@@ -2,15 +2,10 @@ import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import { TranspilerGenerator } from '../../types/transpiler';
 import { collectCss } from '../../helpers/styles/collect-css';
-import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
-import { getRefs } from '../../helpers/get-refs';
 import { getPropsRef } from '../../helpers/get-props-ref';
-import {
-  stringifyContextValue,
-  getStateObjectStringFromComponent,
-} from '../../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { handleMissingState } from '../../helpers/handle-missing-state';
 import { mapRefs } from '../../helpers/map-refs';
@@ -25,140 +20,38 @@ import {
   runPreJsonPlugins,
 } from '../../modules/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { hasContext } from '../helpers/context';
 import { collectReactNativeStyles } from '../react-native';
 import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
 import { hasCss } from '../../helpers/styles/helpers';
 import { checkHasState } from '../../helpers/state';
 import { ToReactOptions } from './types';
-import { getUseStateCode, processHookCode, updateStateSetters } from './state';
-import { closeFrag, openFrag, processBinding, wrapInFragment } from './helpers';
+import {
+  getContextString,
+  getHooksCode,
+  getRefsString,
+  getUseStateCode,
+  updateStateSetters,
+} from './state';
+import { closeFrag, isRootSpecialNode, openFrag, processBinding, wrapInFragment } from './helpers';
 import hash from 'hash-sum';
-import { createSingleBinding } from '../../helpers/bindings';
 import { blockToReact } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
+import { provideContext } from './context';
+import { getFrameworkImports } from './imports';
 
 export const contextPropDrillingKey = '_context';
-
-/**
- * If the root Mitosis component only has 1 child, and it is a `Show`/`For` node, then we need to wrap it in a fragment.
- * Otherwise, we end up with invalid React render code.
- */
-const isRootSpecialNode = (json: MitosisComponent) =>
-  json.children.length === 1 && ['Show', 'For'].includes(json.children[0].name);
-
-const getRefsString = (json: MitosisComponent, refs: string[], options: ToReactOptions) => {
-  let hasStateArgument = false;
-  let code = '';
-  const domRefs = getRefs(json);
-
-  for (const ref of refs) {
-    const typeParameter = json['refs'][ref]?.typeParameter || '';
-    // domRefs must have null argument
-    const argument = json['refs'][ref]?.argument || (domRefs.has(ref) ? 'null' : '');
-    hasStateArgument = /state\./.test(argument);
-    code += `\nconst ${ref} = useRef${
-      typeParameter && options.typescript ? `<${typeParameter}>` : ''
-    }(${processHookCode({
-      str: argument,
-      options,
-    })});`;
-  }
-
-  return [hasStateArgument, code];
-};
-
-function provideContext(json: MitosisComponent, options: ToReactOptions): string | void {
-  if (options.contextType === 'prop-drill') {
-    let str = '';
-    for (const key in json.context.set) {
-      const { name, ref, value } = json.context.set[key];
-      if (value) {
-        str += `
-          ${contextPropDrillingKey}.${name} = ${stringifyContextValue(value)};
-        `;
-      }
-      // TODO: support refs. I'm not sure what those are so unclear how to support them
-    }
-    return str;
-  } else {
-    for (const key in json.context.set) {
-      const { name, ref, value } = json.context.set[key];
-      if (value) {
-        json.children = [
-          createMitosisNode({
-            name: `${name}.Provider`,
-            children: json.children,
-            ...(value && {
-              bindings: {
-                value: createSingleBinding({
-                  code: stringifyContextValue(value),
-                }),
-              },
-            }),
-          }),
-        ];
-      } else if (ref) {
-        json.children = [
-          createMitosisNode({
-            name: 'Context.Provider',
-            children: json.children,
-            ...(ref && {
-              bindings: {
-                value: createSingleBinding({ code: ref }),
-              },
-            }),
-          }),
-        ];
-      }
-    }
-  }
-}
-
-function getContextString(component: MitosisComponent, options: ToReactOptions) {
-  let str = '';
-  for (const key in component.context.get) {
-    if (options.contextType === 'prop-drill') {
-      str += `
-        const ${key} = ${contextPropDrillingKey}['${component.context.get[key].name}'];
-      `;
-    } else {
-      str += `
-        const ${key} = useContext(${component.context.get[key].name});
-      `;
-    }
-  }
-
-  return str;
-}
 
 const getInitCode = (json: MitosisComponent, options: ToReactOptions): string => {
   return processBinding(json.hooks.init?.code || '', options);
 };
-
-type ReactExports =
-  | 'useState'
-  | 'useRef'
-  | 'useCallback'
-  | 'useEffect'
-  | 'useContext'
-  | 'forwardRef';
 
 const DEFAULT_OPTIONS: ToReactOptions = {
   stateType: 'useState',
   stylesType: 'styled-jsx',
   type: 'dom',
 };
-
-export const componentToPreact: TranspilerGenerator<Partial<ToReactOptions>> = (
-  reactOptions = {},
-) =>
-  componentToReact({
-    ...reactOptions,
-    preact: true,
-  });
 
 export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
   (reactOptions = {}) =>
@@ -203,13 +96,8 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
 
 // TODO: import target components when they are required
 const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): string => {
-  const { preact, type } = options;
-  if (preact) {
-    return `
-    /** @jsx h */
-    import { h, Fragment } from 'preact';
-    `;
-  }
+  const { type } = options;
+
   if (type === 'native') {
     return `
     import * as React from 'react';
@@ -303,26 +191,14 @@ const _componentToReact = (
     stripMetaProperties(json);
   }
 
-  const reactLibImports: Set<ReactExports> = new Set();
-  if (useStateCode.includes('useState')) {
-    reactLibImports.add('useState');
-  }
-  if (hasContext(json) && options.contextType !== 'prop-drill') {
-    reactLibImports.add('useContext');
-  }
-  if (allRefs.length) {
-    reactLibImports.add('useRef');
-  }
+  const reactLibImports = getFrameworkImports(json, {
+    allRefs,
+    useStateCode,
+    dontUseContext: options.contextType === 'prop-drill',
+  });
+
   if (hasPropRef) {
     reactLibImports.add('forwardRef');
-  }
-  if (
-    json.hooks.onMount?.code ||
-    json.hooks.onUnMount?.code ||
-    json.hooks.onUpdate?.length ||
-    json.hooks.onInit?.code
-  ) {
-    reactLibImports.add('useEffect');
   }
 
   const wrap =
@@ -373,55 +249,10 @@ const _componentToReact = (
     ${getInitCode(json, options)}
     ${contextStr || ''}
 
-    ${
-      json.hooks.onInit?.code
-        ? `
-        useEffect(() => {
-          ${processHookCode({
-            str: json.hooks.onInit.code,
-            options,
-          })}
-        }, [])
-        `
-        : ''
-    }
-    ${
-      json.hooks.onMount?.code
-        ? `useEffect(() => {
-          ${processHookCode({
-            str: json.hooks.onMount.code,
-            options,
-          })}
-        }, [])`
-        : ''
-    }
-
-    ${
-      json.hooks.onUpdate
-        ?.map(
-          (hook) => `useEffect(() => {
-          ${processHookCode({ str: hook.code, options })}
-        },
-        ${hook.deps ? processHookCode({ str: hook.deps, options }) : ''})`,
-        )
-        .join(';') ?? ''
-    }
-
-    ${
-      json.hooks.onUnMount?.code
-        ? `useEffect(() => {
-          return () => {
-            ${processHookCode({
-              str: json.hooks.onUnMount.code,
-              options,
-            })}
-          }
-        }, [])`
-        : ''
-    }
+    ${getHooksCode(json, options)}
 
     return (
-      ${wrap ? openFrag(options) : ''}
+      ${wrap ? openFrag() : ''}
       ${json.children.map((item) => blockToReact(item, options, json, [])).join('\n')}
       ${
         componentHasStyles && options.stylesType === 'styled-jsx'
@@ -430,20 +261,14 @@ const _componentToReact = (
           ? `<style>{\`${css}\`}</style>`
           : ''
       }
-      ${wrap ? closeFrag(options) : ''}
+      ${wrap ? closeFrag() : ''}
     );
   `;
 
   const str = dedent`
   ${getDefaultImport(json, options)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
-  ${
-    reactLibImports.size
-      ? `import { ${Array.from(reactLibImports).join(', ')} } from '${
-          options.preact ? 'preact/hooks' : 'react'
-        }'`
-      : ''
-  }
+  ${reactLibImports.size ? `import { ${Array.from(reactLibImports).join(', ')} } from 'react'` : ''}
   ${
     componentHasStyles && options.stylesType === 'emotion' && options.format !== 'lite'
       ? `/** @jsx jsx */

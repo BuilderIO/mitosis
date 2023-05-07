@@ -72,6 +72,7 @@ export * from './generators/svelte';
 export * from './generators/stencil';
 export * from './generators/marko';
 export * from './generators/mitosis';
+export * from './generators/preact';
 export * from './generators/template';
 export * from './generators/swift-ui';
 export * from './generators/lit';

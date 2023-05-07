@@ -4,7 +4,7 @@ import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs
 
 import { ToReactOptions } from './types';
 
-export const processBinding = (str: string, options: ToReactOptions) => {
+export const processBinding = (str: string, options: Pick<ToReactOptions, 'stateType'>) => {
   if (options.stateType !== 'useState') {
     return str;
   }
@@ -15,10 +15,16 @@ export const processBinding = (str: string, options: ToReactOptions) => {
   });
 };
 
-export const openFrag = (options: ToReactOptions) => getFragment('open', options);
-export const closeFrag = (options: ToReactOptions) => getFragment('close', options);
-export function getFragment(type: 'open' | 'close', options: ToReactOptions) {
-  const tagName = options.preact ? 'Fragment' : '';
-  return type === 'open' ? `<${tagName}>` : `</${tagName}>`;
+export const openFrag = () => getFragment('open');
+export const closeFrag = () => getFragment('close');
+export function getFragment(type: 'open' | 'close') {
+  return type === 'open' ? `<>` : `</>`;
 }
 export const wrapInFragment = (json: MitosisComponent | MitosisNode) => json.children.length !== 1;
+
+/**
+ * If the root Mitosis component only has 1 child, and it is a `Show`/`For` node, then we need to wrap it in a fragment.
+ * Otherwise, we end up with invalid React render code.
+ */
+export const isRootSpecialNode = (json: MitosisComponent) =>
+  json.children.length === 1 && ['Show', 'For'].includes(json.children[0].name);
