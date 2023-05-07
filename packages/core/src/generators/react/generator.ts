@@ -40,6 +40,7 @@ import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strin
 import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { provideContext } from './context';
 import { getFrameworkImports } from './imports';
+import {getPropsDefinition} from "./props";
 
 const REACT_NODE_MAPPERS = getNodeMappers(REACT_BINDING_MAPPERS, {
   getFragment,
@@ -118,19 +119,6 @@ const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): stri
   }
 
   return "import * as React from 'react';";
-};
-
-const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
-  if (!json.defaultProps) return '';
-  const defaultPropsString = Object.keys(json.defaultProps)
-    .map((prop) => {
-      const value = json.defaultProps!.hasOwnProperty(prop)
-        ? json.defaultProps![prop]?.code
-        : 'undefined';
-      return `${prop}: ${value}`;
-    })
-    .join(',');
-  return `${json.name}.defaultProps = {${defaultPropsString}};`;
 };
 
 const _componentToReact = (

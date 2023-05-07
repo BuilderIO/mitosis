@@ -35,6 +35,7 @@ import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings'
 import { getFrameworkImports } from './react/imports';
 import { format } from 'prettier/standalone';
 import {ATTTRIBUTE_MAPPERS, BindingMapper, getNodeMappers} from "./react/blocks";
+import {getPropsDefinition} from "./react/props";
 
 export const openFrag = () => getFragment('open');
 export const closeFrag = () => getFragment('close');
@@ -227,6 +228,9 @@ const _componentToPreact = (
     function ${json.name}(${componentArgs}) {
     ${componentBody}
   }
+
+    ${getPropsDefinition({ json })}
+
 
     ${isSubComponent ? '' : `export default ${json.name};`}
 
