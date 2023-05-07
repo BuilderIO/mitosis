@@ -1,10 +1,10 @@
-import { componentToReact } from '../generators/react';
+import { componentToPreact } from '../generators/preact';
 import { runTestsForTarget } from './test-generator';
 
 describe('Preact', () => {
   runTestsForTarget({
-    options: { preact: true },
-    target: 'react',
-    generator: componentToReact,
+    options: {},
+    target: 'preact',
+    generator: componentToPreact,
   });
 });
