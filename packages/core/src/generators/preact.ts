@@ -34,13 +34,24 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
 import { getFrameworkImports } from './react/imports';
 import { format } from 'prettier/standalone';
-import {getNodeMappers} from "./react/blocks";
+import {ATTTRIBUTE_MAPPERS, BindingMapper, getNodeMappers} from "./react/blocks";
 
 export const openFrag = () => getFragment('open');
 export const closeFrag = () => getFragment('close');
 export function getFragment(type: 'open' | 'close') {
   return type === 'open' ? `<Fragment>` : `</Fragment>`;
 }
+
+// TODO: Maybe in the future allow defining `string | function` as values
+const PREACT_BINDING_MAPPERS: {
+  [key: string]: BindingMapper
+} = {
+  innerHTML(_key, value) {
+    return ['dangerouslySetInnerHTML', `{__html: ${value.replace(/\s+/g, ' ')}}`];
+  },
+  ...ATTTRIBUTE_MAPPERS,
+};
+
 
 export interface ToPreactOptions extends BaseTranspilerOptions {
   stylesType: 'styled-jsx' | 'style-tag';
@@ -107,7 +118,7 @@ export const componentToPreact: TranspilerGenerator<Partial<ToPreactOptions>> =
     return str;
   };
 
-const PREACT_NODE_MAPPERS = getNodeMappers({
+const PREACT_NODE_MAPPERS = getNodeMappers(PREACT_BINDING_MAPPERS, {
   getFragment,
   openFrag,
   closeFrag
@@ -189,7 +200,7 @@ const _componentToPreact = (
 
     return (
       ${wrap ? openFrag() : ''}
-      ${json.children.map((item) => blockToReact(item, _options, json, PREACT_NODE_MAPPERS, [])).join('\n')}
+      ${json.children.map((item) => blockToReact(item, _options, json, PREACT_NODE_MAPPERS, PREACT_BINDING_MAPPERS, [])).join('\n')}
       ${
         componentHasStyles && options.stylesType === 'styled-jsx'
           ? `<style jsx>{\`${css}\`}</style>`

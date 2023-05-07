@@ -14,7 +14,7 @@ import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { blockToReact, componentToReact } from './react';
 import { checkHasState } from '../helpers/state';
 import { isRootTextNode } from '../helpers/is-root-text-node';
-import {getNodeMappers} from "./react/blocks";
+import {getNodeMappers, REACT_BINDING_MAPPERS} from "./react/blocks";
 import {closeFrag, getFragment, openFrag} from "./react/helpers";
 
 export interface ToMitosisOptions extends BaseTranspilerOptions {
@@ -54,7 +54,8 @@ export const blockToMitosis = (
         prettier: options.prettier,
       },
       component,
-      REACT_NODE_MAPPERS
+      REACT_NODE_MAPPERS,
+      REACT_BINDING_MAPPERS
     );
   }
 

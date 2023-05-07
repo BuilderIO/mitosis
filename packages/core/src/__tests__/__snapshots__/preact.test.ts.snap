@@ -612,12 +612,6 @@ function ContentSlotJsxCode(props) {
   );
 }
 
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: \\"{props.content}\\",
-};
-
 export default ContentSlotJsxCode;
 "
 `;
@@ -1304,10 +1298,6 @@ function SlotCode(props) {
   return <div>{props.children}</div>;
 }
 
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
-
 export default SlotCode;
 "
 `;
@@ -1361,8 +1351,6 @@ function SlotCode(props) {
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -1608,31 +1596,29 @@ export default MyComponent;
 exports[`Preact > jsx > Javascript Test > basicForwardRef 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
+import { useState } from \\"preact/hooks\\";
 
-const MyBasicForwardRefComponent = forwardRef(
-  function MyBasicForwardRefComponent(props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
+function MyBasicForwardRefComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
 
-    return (
-      <Fragment>
-        <div>
-          <input
-            className=\\"input\\"
-            ref={inputRef}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </div>
-        <style jsx>{\`
-          .input {
-            color: red;
-          }
-        \`}</style>
-      </Fragment>
-    );
-  }
-);
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
 
 export default MyBasicForwardRefComponent;
 "
@@ -1641,31 +1627,29 @@ export default MyBasicForwardRefComponent;
 exports[`Preact > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
+import { useState } from \\"preact/hooks\\";
 
-const MyBasicForwardRefComponent = forwardRef(
-  function MyBasicForwardRefComponent(props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
+function MyBasicForwardRefComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
 
-    return (
-      <Fragment>
-        <div>
-          <input
-            className=\\"input\\"
-            ref={inputRef}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </div>
-        <style jsx>{\`
-          .input {
-            color: red;
-          }
-        \`}</style>
-      </Fragment>
-    );
-  }
-);
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
 
 export default MyBasicForwardRefComponent;
 "
@@ -1959,15 +1943,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -2005,13 +1980,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -2491,8 +2459,8 @@ function RenderBlock(props) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-          Could not find a registered component named \\"\${componentName}\\".
-          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+       Could not find a registered component named \\"\${componentName}\\". 
+       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -3141,7 +3109,6 @@ exports[`Preact > jsx > Typescript Test > AdvancedRef 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useRef, useEffect } from \\"preact/hooks\\";
-
 export interface Props {
   showInput: boolean;
 }
@@ -3209,7 +3176,6 @@ exports[`Preact > jsx > Typescript Test > Basic 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
-
 export interface MyBasicComponentProps {
   id: string;
 }
@@ -3296,7 +3262,6 @@ exports[`Preact > jsx > Typescript Test > Basic OnMount Update 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
-
 export interface Props {
   hi: string;
   bye: string;
@@ -3477,7 +3442,6 @@ exports[`Preact > jsx > Typescript Test > BasicRef 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useRef } from \\"preact/hooks\\";
-
 export interface Props {
   showInput: boolean;
 }
@@ -3541,7 +3505,6 @@ exports[`Preact > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useRef } from \\"preact/hooks\\";
-
 export interface Props {
   showInput: boolean;
 }
@@ -3569,7 +3532,6 @@ exports[`Preact > jsx > Typescript Test > BasicRefPrevious 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useRef, useEffect } from \\"preact/hooks\\";
-
 export interface Props {
   showInput: boolean;
 }
@@ -3766,7 +3728,6 @@ exports[`Preact > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
-
 type Props = {
   [key: string]: string | JSX.Element;
 };
@@ -3812,12 +3773,6 @@ function ContentSlotJsxCode(props: Props) {
   );
 }
 
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: \\"{props.content}\\",
-};
-
 export default ContentSlotJsxCode;
 "
 `;
@@ -3826,7 +3781,6 @@ exports[`Preact > jsx > Typescript Test > CustomCode 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useRef, useEffect } from \\"preact/hooks\\";
-
 export interface CustomCodeProps {
   code: string;
   replaceNodes?: boolean;
@@ -3903,7 +3857,6 @@ exports[`Preact > jsx > Typescript Test > Embed 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useRef, useEffect } from \\"preact/hooks\\";
-
 export interface CustomCodeProps {
   code: string;
   replaceNodes?: boolean;
@@ -3980,7 +3933,6 @@ exports[`Preact > jsx > Typescript Test > Form 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useRef } from \\"preact/hooks\\";
-
 export interface FormProps {
   attributes?: any;
   name?: string;
@@ -4287,7 +4239,6 @@ exports[`Preact > jsx > Typescript Test > Image 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useRef, useEffect } from \\"preact/hooks\\";
-
 // TODO: AMP Support?
 export interface ImageProps {
   _class?: string;
@@ -4620,10 +4571,6 @@ function SlotCode(props: Props) {
   return <div>{props.children}</div>;
 }
 
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
-
 export default SlotCode;
 "
 `;
@@ -4690,8 +4637,6 @@ function SlotCode(props: Props) {
   );
 }
 
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
-
 export default SlotCode;
 "
 `;
@@ -4700,7 +4645,6 @@ exports[`Preact > jsx > Typescript Test > Stamped.io 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
-
 type SmileReviewsProps = {
   productId: string;
   apiKey: string;
@@ -4836,7 +4780,6 @@ exports[`Preact > jsx > Typescript Test > Text 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
-
 export interface TextProps {
   attributes?: any;
   rtlMode: boolean;
@@ -4989,36 +4932,33 @@ export default MyComponent;
 exports[`Preact > jsx > Typescript Test > basicForwardRef 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
-
+import { useState } from \\"preact/hooks\\";
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
 }
 
-const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
+function MyBasicForwardRefComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
 
-    return (
-      <Fragment>
-        <div>
-          <input
-            className=\\"input\\"
-            ref={inputRef}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </div>
-        <style jsx>{\`
-          .input {
-            color: red;
-          }
-        \`}</style>
-      </Fragment>
-    );
-  }
-);
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
 
 export default MyBasicForwardRefComponent;
 "
@@ -5027,36 +4967,33 @@ export default MyBasicForwardRefComponent;
 exports[`Preact > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
-
+import { useState } from \\"preact/hooks\\";
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
 }
 
-const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
+function MyBasicForwardRefComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
 
-    return (
-      <Fragment>
-        <div>
-          <input
-            className=\\"input\\"
-            ref={inputRef}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </div>
-        <style jsx>{\`
-          .input {
-            color: red;
-          }
-        \`}</style>
-      </Fragment>
-    );
-  }
-);
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
 
 export default MyBasicForwardRefComponent;
 "
@@ -5172,7 +5109,6 @@ exports[`Preact > jsx > Typescript Test > className 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
-
 type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
@@ -5229,7 +5165,6 @@ exports[`Preact > jsx > Typescript Test > componentWithContext 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useContext } from \\"preact/hooks\\";
-
 export interface ComponentWithContextProps {
   content: string;
 }
@@ -5269,7 +5204,6 @@ exports[`Preact > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useContext } from \\"preact/hooks\\";
-
 export interface ComponentWithContextProps {
   content: string;
 }
@@ -5376,15 +5310,6 @@ function Button(props: ButtonProps) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -5430,13 +5355,6 @@ function Button(props: ButtonProps) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -5690,7 +5608,6 @@ exports[`Preact > jsx > Typescript Test > onInit 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
-
 type Props = {
   name: string;
 };
@@ -5763,7 +5680,6 @@ exports[`Preact > jsx > Typescript Test > onUpdateWithDeps 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
-
 type Props = {
   size: string;
 };
@@ -5846,7 +5762,6 @@ exports[`Preact > jsx > Typescript Test > propsDestructure 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
-
 type Props = {
   children: any;
   type: string;
@@ -5945,7 +5860,6 @@ exports[`Preact > jsx > Typescript Test > renderBlock 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
-
 export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
@@ -5991,8 +5905,8 @@ function RenderBlock(props: RenderBlockProps) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-          Could not find a registered component named \\"\${componentName}\\".
-          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+       Could not find a registered component named \\"\${componentName}\\". 
+       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -6225,7 +6139,6 @@ exports[`Preact > jsx > Typescript Test > renderContentExample 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useContext, useEffect } from \\"preact/hooks\\";
-
 type Props = {
   customComponents: string[];
   content: {
@@ -6776,8 +6689,6 @@ function MyComponent(props) {
   );
 }
 
-MyComponent.defaultProps = {};
-
 export default MyComponent;
 "
 `;
@@ -7017,11 +6928,6 @@ function MyComponent(props) {
   );
 }
 
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <div>default</div>,
-};
-
 export default MyComponent;
 "
 `;
@@ -7200,8 +7106,6 @@ function MyComponent(props: any) {
     />
   );
 }
-
-MyComponent.defaultProps = {};
 
 export default MyComponent;
 "
@@ -7441,11 +7345,6 @@ function MyComponent(props: any) {
     </div>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <div>default</div>,
-};
 
 export default MyComponent;
 "

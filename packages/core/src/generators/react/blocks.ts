@@ -12,13 +12,17 @@ import { processBinding, wrapInFragment } from './helpers';
 import { updateStateSettersInCode } from './state';
 import { ToReactOptions } from './types';
 
+export type BindingMapper =
+  | string
+  | ((key: string, value: string, options?: ToReactOptions) => [string, string]);
+
 interface Fns {
   closeFrag: () => string;
   openFrag: () => string;
   getFragment: (type: 'open' | 'close') => string;
 }
 
-export const getNodeMappers = (fns: Fns) => {
+export const getNodeMappers = (bindingMappers: Record<string, BindingMapper>, fns: Fns) => {
   const MAPPERS: {
     [key: string]: (
       json: MitosisNode,
@@ -34,7 +38,7 @@ export const getNodeMappers = (fns: Fns) => {
 
       const renderChildren = () => {
         const childrenStr = json.children
-          ?.map((item) => blockToReact(item, options, component, MAPPERS))
+          ?.map((item) => blockToReact(item, options, component, MAPPERS, bindingMappers))
           .join('\n')
           .trim();
         /**
@@ -95,7 +99,7 @@ export const getNodeMappers = (fns: Fns) => {
     Fragment(json, options, component) {
       const wrap = wrapInFragment(json);
       return `${wrap ? fns.getFragment('open') : ''}${json.children
-        .map((item) => blockToReact(item, options, component, MAPPERS))
+        .map((item) => blockToReact(item, options, component, MAPPERS, bindingMappers))
         .join('\n')}${wrap ? fns.getFragment('close') : ''}`;
     },
     For(_json, options, component) {
@@ -108,7 +112,7 @@ export const getNodeMappers = (fns: Fns) => {
       )}?.map((${forArguments}) => (
         ${wrap ? fns.openFrag() : ''}${json.children
         .filter(filterEmptyTextNodes)
-        .map((item) => blockToReact(item, options, component, MAPPERS))
+        .map((item) => blockToReact(item, options, component, MAPPERS, bindingMappers))
         .join('\n')}${wrap ? fns.closeFrag() : ''}
       ))}`;
     },
@@ -120,13 +124,13 @@ export const getNodeMappers = (fns: Fns) => {
       return `{${processBinding(json.bindings.when?.code as string, options)} ? (
         ${wrap ? fns.openFrag() : ''}${json.children
         .filter(filterEmptyTextNodes)
-        .map((item) => blockToReact(item, options, component, MAPPERS))
+        .map((item) => blockToReact(item, options, component, MAPPERS, bindingMappers))
         .join('\n')}${wrap ? fns.closeFrag() : ''}
       ) : ${
         !json.meta.else
           ? 'null'
           : (wrapElse ? fns.openFrag() : '') +
-          blockToReact(json.meta.else as any, options, component, MAPPERS) +
+          blockToReact(json.meta.else as any, options, component, MAPPERS, bindingMappers) +
           (wrapElse ? fns.closeFrag() : '')
       }}`;
     },
@@ -134,7 +138,7 @@ export const getNodeMappers = (fns: Fns) => {
   return MAPPERS;
 };
 
-const ATTTRIBUTE_MAPPERS: { [key: string]: string } = {
+export const ATTTRIBUTE_MAPPERS: { [key: string]: string } = {
   spellcheck: 'spellCheck',
   autocapitalize: 'autoCapitalize',
   autocomplete: 'autoComplete',
@@ -142,10 +146,8 @@ const ATTTRIBUTE_MAPPERS: { [key: string]: string } = {
 };
 
 // TODO: Maybe in the future allow defining `string | function` as values
-const BINDING_MAPPERS: {
-  [key: string]:
-    | string
-    | ((key: string, value: string, options?: ToReactOptions) => [string, string]);
+export const REACT_BINDING_MAPPERS: {
+  [key: string]: BindingMapper
 } = {
   ref(ref, value, options) {
     const regexp = /(.+)?props\.(.+)( |\)|;|\()?$/m;
@@ -169,6 +171,7 @@ export const blockToReact = (
   options: ToReactOptions,
   component: MitosisComponent,
   nodeMappers: ReturnType<typeof getNodeMappers>,
+  bindingMappers: Record<string, BindingMapper>,
   parentSlots?: any[],
 ) => {
   if (nodeMappers[json.name]) {
@@ -203,13 +206,13 @@ export const blockToReact = (
 
     if (key === 'class') {
       str = `${str.trim()} className="${value}" `;
-    } else if (BINDING_MAPPERS[key]) {
-      const mapper = BINDING_MAPPERS[key];
+    } else if (bindingMappers[key]) {
+      const mapper = bindingMappers[key];
       if (typeof mapper === 'function') {
         const [newKey, newValue] = mapper(key, value, options);
         str += ` ${newKey}={${newValue}} `;
       } else {
-        str += ` ${BINDING_MAPPERS[key]}="${value}" `;
+        str += ` ${bindingMappers[key]}="${value}" `;
       }
     } else {
       if (isValidAttributeName(key)) {
@@ -240,13 +243,13 @@ export const blockToReact = (
       str += ` ${key}={${value}} `;
     } else if (key === 'class') {
       str += ` className={${useBindingValue}} `;
-    } else if (BINDING_MAPPERS[key]) {
-      const mapper = BINDING_MAPPERS[key];
+    } else if (bindingMappers[key]) {
+      const mapper = bindingMappers[key];
       if (typeof mapper === 'function') {
         const [newKey, newValue] = mapper(key, useBindingValue, options);
         str += ` ${newKey}={${newValue}} `;
       } else {
-        str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
+        str += ` ${bindingMappers[key]}={${useBindingValue}} `;
       }
     } else if (key === 'style' && options.type === 'native' && json.name === 'ScrollView') {
       // React Native's ScrollView has a different prop for styles: `contentContainerStyle`
@@ -273,7 +276,7 @@ export const blockToReact = (
   let childrenNodes = '';
   if (json.children) {
     childrenNodes = json.children
-      .map((item) => blockToReact(item, options, component, nodeMappers, needsToRenderSlots))
+      .map((item) => blockToReact(item, options, component, nodeMappers, bindingMappers, needsToRenderSlots))
       .join('\n');
   }
   if (needsToRenderSlots.length) {
