@@ -32,22 +32,28 @@ import {
   getUseStateCode,
   updateStateSetters,
 } from './state';
-import { closeFrag, getFragment, isRootSpecialNode, openFrag, processBinding, wrapInFragment } from './helpers';
+import {
+  closeFrag,
+  getFragment,
+  isRootSpecialNode,
+  openFrag,
+  processBinding,
+  wrapInFragment,
+} from './helpers';
 import hash from 'hash-sum';
-import {blockToReact, getNodeMappers, REACT_BINDING_MAPPERS} from './blocks';
+import { blockToReact, getNodeMappers, REACT_BINDING_MAPPERS } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { provideContext } from './context';
 import { getFrameworkImports } from './imports';
-import {getPropsDefinition} from "./props";
+import { getPropsDefinition } from './props';
 
 const REACT_NODE_MAPPERS = getNodeMappers(REACT_BINDING_MAPPERS, {
   getFragment,
   openFrag,
-  closeFrag
-})
-
+  closeFrag,
+});
 
 export const contextPropDrillingKey = '_context';
 
@@ -248,7 +254,11 @@ const _componentToReact = (
 
     return (
       ${wrap ? openFrag() : ''}
-      ${json.children.map((item) => blockToReact(item, options, json, REACT_NODE_MAPPERS, REACT_BINDING_MAPPERS, [])).join('\n')}
+      ${json.children
+        .map((item) =>
+          blockToReact(item, options, json, REACT_NODE_MAPPERS, REACT_BINDING_MAPPERS, []),
+        )
+        .join('\n')}
       ${
         componentHasStyles && options.stylesType === 'styled-jsx'
           ? `<style jsx>{\`${css}\`}</style>`

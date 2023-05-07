@@ -54,6 +54,7 @@ export * from './parsers/context';
 export * from './generators/vue';
 export * from './generators/alpine';
 export * from './generators/angular';
+export * from './generators/context/preact';
 export * from './generators/context/react';
 export * from './generators/context/qwik';
 export * from './generators/context/rsc';

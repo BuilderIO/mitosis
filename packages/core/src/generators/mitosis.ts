@@ -14,8 +14,8 @@ import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { blockToReact, componentToReact } from './react';
 import { checkHasState } from '../helpers/state';
 import { isRootTextNode } from '../helpers/is-root-text-node';
-import {getNodeMappers, REACT_BINDING_MAPPERS} from "./react/blocks";
-import {closeFrag, getFragment, openFrag} from "./react/helpers";
+import { getNodeMappers, REACT_BINDING_MAPPERS } from './react/blocks';
+import { closeFrag, getFragment, openFrag } from './react/helpers';
 
 export interface ToMitosisOptions extends BaseTranspilerOptions {
   format: 'react' | 'legacy';
@@ -38,11 +38,11 @@ export const blockToMitosis = (
     ...toMitosisOptions,
   };
   if (options.format === 'react') {
-    const REACT_NODE_MAPPERS = getNodeMappers({
+    const REACT_NODE_MAPPERS = getNodeMappers(REACT_BINDING_MAPPERS, {
       getFragment,
       openFrag,
-      closeFrag
-    })
+      closeFrag,
+    });
 
     return blockToReact(
       json,
@@ -55,7 +55,7 @@ export const blockToMitosis = (
       },
       component,
       REACT_NODE_MAPPERS,
-      REACT_BINDING_MAPPERS
+      REACT_BINDING_MAPPERS,
     );
   }
 

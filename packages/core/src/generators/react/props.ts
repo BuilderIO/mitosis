@@ -1,4 +1,4 @@
-import {MitosisComponent} from "@builder.io/mitosis";
+import { MitosisComponent } from '@builder.io/mitosis';
 
 export const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
   if (!json.defaultProps) return '';

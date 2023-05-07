@@ -30,7 +30,7 @@ export const getNodeMappers = (bindingMappers: Record<string, BindingMapper>, fn
       component: MitosisComponent,
       parentSlots?: any[],
     ) => string;
-  } = ({
+  } = {
     Slot(json, options, component, parentSlots) {
       const slotName = json.bindings.name?.code || json.properties.name;
 
@@ -63,7 +63,7 @@ export const getNodeMappers = (bindingMappers: Record<string, BindingMapper>, fn
         const key = Object.keys(json.bindings).find(Boolean);
         if (key && parentSlots) {
           const propKey = camelCase('Slot' + key[0].toUpperCase() + key.substring(1));
-          parentSlots.push({key: propKey, value: json.bindings[key]?.code});
+          parentSlots.push({ key: propKey, value: json.bindings[key]?.code });
           return '';
         }
 
@@ -130,11 +130,11 @@ export const getNodeMappers = (bindingMappers: Record<string, BindingMapper>, fn
         !json.meta.else
           ? 'null'
           : (wrapElse ? fns.openFrag() : '') +
-          blockToReact(json.meta.else as any, options, component, MAPPERS, bindingMappers) +
-          (wrapElse ? fns.closeFrag() : '')
+            blockToReact(json.meta.else as any, options, component, MAPPERS, bindingMappers) +
+            (wrapElse ? fns.closeFrag() : '')
       }}`;
     },
-  });
+  };
   return MAPPERS;
 };
 
@@ -147,7 +147,7 @@ export const ATTTRIBUTE_MAPPERS: { [key: string]: string } = {
 
 // TODO: Maybe in the future allow defining `string | function` as values
 export const REACT_BINDING_MAPPERS: {
-  [key: string]: BindingMapper
+  [key: string]: BindingMapper;
 } = {
   ref(ref, value, options) {
     const regexp = /(.+)?props\.(.+)( |\)|;|\()?$/m;
@@ -276,7 +276,9 @@ export const blockToReact = (
   let childrenNodes = '';
   if (json.children) {
     childrenNodes = json.children
-      .map((item) => blockToReact(item, options, component, nodeMappers, bindingMappers, needsToRenderSlots))
+      .map((item) =>
+        blockToReact(item, options, component, nodeMappers, bindingMappers, needsToRenderSlots),
+      )
       .join('\n');
   }
   if (needsToRenderSlots.length) {

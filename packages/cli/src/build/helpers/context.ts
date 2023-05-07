@@ -8,6 +8,7 @@ import {
   MitosisConfig,
   parseContext,
   Target,
+  contextToPreact,
 } from '@builder.io/mitosis';
 import { readFile } from 'fs-extra';
 import { upperFirst, camelCase, last } from 'lodash';
@@ -37,8 +38,11 @@ export const generateContextFile = async ({
         return contextToVue(options.options[target])({ context });
       case 'solid':
         return contextToSolid()({ context });
-      case 'react':
       case 'preact':
+        return contextToPreact({ typescript: checkShouldOutputTypeScript({ options, target }) })({
+          context,
+        });
+      case 'react':
       case 'reactNative':
         return contextToReact({ typescript: checkShouldOutputTypeScript({ options, target }) })({
           context,
