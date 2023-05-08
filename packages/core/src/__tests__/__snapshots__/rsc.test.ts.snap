@@ -519,7 +519,7 @@ function ContentSlotJsxCode(props) {
             className={state.cls}
           >
             {state.showContent && props.slotContent ? (
-              <>{props.slotContent}</>
+              <>{props.slotContent || \\"{props.content}\\"}</>
             ) : null}
 
             <div>
@@ -537,7 +537,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -1228,12 +1228,10 @@ function SlotCode(props) {
     <div slotContext={_context}>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\" };
 
 export default SlotCode;
 "
@@ -3453,7 +3451,7 @@ function ContentSlotJsxCode(props: Props) {
             className={state.cls}
           >
             {state.showContent && props.slotContent ? (
-              <>{props.slotContent}</>
+              <>{props.slotContent || \\"{props.content}\\"}</>
             ) : null}
 
             <div>
@@ -3471,7 +3469,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -4290,12 +4288,10 @@ function SlotCode(props: Props) {
     <div slotContext={_context}>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\" };
 
 export default SlotCode;
 "
@@ -6424,10 +6420,10 @@ exports[`RSC > svelte > Javascript Test > slots 1`] = `
 function MyComponent(props) {
   const _context = { ...props[\\"_context\\"] };
 
-  return <div slotContext={_context}>{props.slotTest}</div>;
+  return (
+    <div slotContext={_context}>{props.slotTest || <div>default</div>}</div>
+  );
 }
-
-MyComponent.defaultProps = { slotTest: <div>default</div> };
 
 export default MyComponent;
 "
@@ -6788,10 +6784,10 @@ exports[`RSC > svelte > Typescript Test > slots 1`] = `
 function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  return <div slotContext={_context}>{props.slotTest}</div>;
+  return (
+    <div slotContext={_context}>{props.slotTest || <div>default</div>}</div>
+  );
 }
-
-MyComponent.defaultProps = { slotTest: <div>default</div> };
 
 export default MyComponent;
 "

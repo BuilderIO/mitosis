@@ -597,7 +597,7 @@ function ContentSlotJsxCode(props) {
             className={cls()}
           >
             {showContent && props.slotContent ? (
-              <Fragment>{props.slotContent}</Fragment>
+              <Fragment>{props.slotContent || \\"{props.content}\\"}</Fragment>
             ) : null}
 
             <div>
@@ -615,7 +615,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -1301,12 +1301,12 @@ exports[`Preact > jsx > Javascript Test > SlotDefault 1`] = `
 import { h, Fragment } from \\"preact\\";
 
 function SlotCode(props) {
-  return <div>{props.children}</div>;
+  return (
+    <div>
+      {props.children || <div className=\\"default-slot\\">Default content</div>}
+    </div>
+  );
 }
-
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
 
 export default SlotCode;
 "
@@ -1355,14 +1355,12 @@ function SlotCode(props) {
     <div>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -3797,7 +3795,7 @@ function ContentSlotJsxCode(props: Props) {
             className={cls()}
           >
             {showContent && props.slotContent ? (
-              <Fragment>{props.slotContent}</Fragment>
+              <Fragment>{props.slotContent || \\"{props.content}\\"}</Fragment>
             ) : null}
 
             <div>
@@ -3815,7 +3813,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -4617,12 +4615,12 @@ type Props = {
 };
 
 function SlotCode(props: Props) {
-  return <div>{props.children}</div>;
+  return (
+    <div>
+      {props.children || <div className=\\"default-slot\\">Default content</div>}
+    </div>
+  );
 }
-
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
 
 export default SlotCode;
 "
@@ -4683,14 +4681,12 @@ function SlotCode(props: Props) {
     <div>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -7011,16 +7007,11 @@ import { h, Fragment } from \\"preact\\";
 function MyComponent(props) {
   return (
     <div>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <div>default</div>}
     </div>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <div>default</div>,
-};
 
 export default MyComponent;
 "
@@ -7436,16 +7427,11 @@ import { h, Fragment } from \\"preact\\";
 function MyComponent(props: any) {
   return (
     <div>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <div>default</div>}
     </div>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <div>default</div>,
-};
 
 export default MyComponent;
 "

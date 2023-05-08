@@ -696,7 +696,9 @@ function ContentSlotJsxCode(props) {
             {...props.attributes}
             onClick={(event) => show()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || <Text>{props.content}</Text>}</>
+            ) : null}
 
             <View>
               <View />
@@ -713,7 +715,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: <Text>{props.content}</Text>,
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -1436,16 +1438,16 @@ import {
 } from \\"react-native\\";
 
 function SlotCode(props) {
-  return <View>{props.children}</View>;
-}
-
-SlotCode.defaultProps = {
-  children: (
+  return (
     <View>
-      <Text>Default content</Text>
+      {props.children || (
+        <View>
+          <Text>Default content</Text>
+        </View>
+      )}
     </View>
-  ),
-};
+  );
+}
 
 export default SlotCode;
 "
@@ -1515,17 +1517,12 @@ function SlotCode(props) {
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || <Text>Default left</Text>}
 
-      {props.children}
+      {props.children || <Text>Default Child</Text>}
     </View>
   );
 }
-
-SlotCode.defaultProps = {
-  slotLeft: <Text>Default left</Text>,
-  children: <Text>Default Child</Text>,
-};
 
 export default SlotCode;
 "
@@ -4411,7 +4408,9 @@ function ContentSlotJsxCode(props: Props) {
             {...props.attributes}
             onClick={(event) => show()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || <Text>{props.content}</Text>}</>
+            ) : null}
 
             <View>
               <View />
@@ -4428,7 +4427,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: <Text>{props.content}</Text>,
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -5267,16 +5266,16 @@ type Props = {
 };
 
 function SlotCode(props: Props) {
-  return <View>{props.children}</View>;
-}
-
-SlotCode.defaultProps = {
-  children: (
+  return (
     <View>
-      <Text>Default content</Text>
+      {props.children || (
+        <View>
+          <Text>Default content</Text>
+        </View>
+      )}
     </View>
-  ),
-};
+  );
+}
 
 export default SlotCode;
 "
@@ -5358,17 +5357,12 @@ function SlotCode(props: Props) {
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || <Text>Default left</Text>}
 
-      {props.children}
+      {props.children || <Text>Default Child</Text>}
     </View>
   );
 }
-
-SlotCode.defaultProps = {
-  slotLeft: <Text>Default left</Text>,
-  children: <Text>Default Child</Text>,
-};
 
 export default SlotCode;
 "
@@ -8139,20 +8133,15 @@ import {
 function MyComponent(props) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || <Text>default</Text>}
+      {props.slotTest || (
+        <View>
+          <Text>default</Text>
+        </View>
+      )}
     </View>
   );
 }
-
-MyComponent.defaultProps = {
-  children: <Text>default</Text>,
-  slotTest: (
-    <View>
-      <Text>default</Text>
-    </View>
-  ),
-};
 
 export default MyComponent;
 "
@@ -8676,20 +8665,15 @@ import {
 function MyComponent(props: any) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || <Text>default</Text>}
+      {props.slotTest || (
+        <View>
+          <Text>default</Text>
+        </View>
+      )}
     </View>
   );
 }
-
-MyComponent.defaultProps = {
-  children: <Text>default</Text>,
-  slotTest: (
-    <View>
-      <Text>default</Text>
-    </View>
-  ),
-};
 
 export default MyComponent;
 "
