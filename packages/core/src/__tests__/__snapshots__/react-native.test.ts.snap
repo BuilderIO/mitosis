@@ -1809,13 +1809,13 @@ import {
 import { useState, forwardRef } from \\"react\\";
 
 const MyBasicForwardRefComponent = forwardRef(
-  function MyBasicForwardRefComponent(props, inputRef) {
+  function MyBasicForwardRefComponent(props, ref) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
       <View>
         <View
-          ref={inputRef}
+          ref={ref}
           value={name}
           onChange={(event) => setName(event.target.value)}
           style={styles.view1}
@@ -2304,6 +2304,39 @@ function ComponentWithTypes(props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > dontForwardRef 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function DontForwardRefComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <View>
+      <View
+        ref={props.inputRef}
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        style={styles.view1}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+
+export default DontForwardRefComponent;
 "
 `;
 
@@ -5706,17 +5739,17 @@ import { useState, forwardRef } from \\"react\\";
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 
-const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
+const MyBasicForwardRefComponent = forwardRef<Props[\\"ref\\"]>(
+  function MyBasicForwardRefComponent(props: Props, ref) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
       <View>
         <View
-          ref={inputRef}
+          ref={ref}
           value={name}
           onChange={(event) => setName(event.target.value)}
           style={styles.view1}
@@ -6248,6 +6281,44 @@ function ComponentWithTypes(props: Props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > dontForwardRef 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+function DontForwardRefComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <View>
+      <View
+        ref={props.inputRef}
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        style={styles.view1}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+
+export default DontForwardRefComponent;
 "
 `;
 

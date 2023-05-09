@@ -1728,7 +1728,7 @@ exports[`Stencil > jsx > Javascript Test > basicForwardRef 1`] = `
 \`,
 })
 export default class MyBasicForwardRefComponent {
-  @Prop() inputRef: any;
+  @Prop() ref: any;
 
   @State() name = \\"PatrickJS\\";
 
@@ -1737,7 +1737,7 @@ export default class MyBasicForwardRefComponent {
       <div>
         <input
           class=\\"input\\"
-          ref={(el) => (this.props.inputRef = el)}
+          ref={(el) => (this.props.ref = el)}
           value={this.name}
           onInput={(event) => (this.name = event.target.value)}
         />
@@ -2116,6 +2116,38 @@ export default class ComponentWithTypes {
         {\\" \\"}
         Hello
         {this.name || DEFAULT_VALUES.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > dontForwardRef 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"dont-forward-ref-component\\",
+  styles: \`
+        .input {
+          color: red;
+        }
+\`,
+})
+export default class DontForwardRefComponent {
+  @Prop() inputRef: any;
+
+  @State() name = \\"PatrickJS\\";
+
+  render() {
+    return (
+      <div>
+        <input
+          class=\\"input\\"
+          ref={(el) => (this.props.inputRef = el)}
+          value={this.name}
+          onInput={(event) => (this.name = event.target.value)}
+        />
       </div>
     );
   }
@@ -4600,7 +4632,7 @@ exports[`Stencil > jsx > Typescript Test > basicForwardRef 1`] = `
 \`,
 })
 export default class MyBasicForwardRefComponent {
-  @Prop() inputRef: any;
+  @Prop() ref: any;
 
   @State() name = \\"PatrickJS\\";
 
@@ -4609,7 +4641,7 @@ export default class MyBasicForwardRefComponent {
       <div>
         <input
           class=\\"input\\"
-          ref={(el) => (this.props.inputRef = el)}
+          ref={(el) => (this.props.ref = el)}
           value={this.name}
           onInput={(event) => (this.name = event.target.value)}
         />
@@ -4990,6 +5022,38 @@ export default class ComponentWithTypes {
         {\\" \\"}
         Hello
         {this.name || DEFAULT_VALUES.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > dontForwardRef 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"dont-forward-ref-component\\",
+  styles: \`
+        .input {
+          color: red;
+        }
+\`,
+})
+export default class DontForwardRefComponent {
+  @Prop() inputRef: any;
+
+  @State() name = \\"PatrickJS\\";
+
+  render() {
+    return (
+      <div>
+        <input
+          class=\\"input\\"
+          ref={(el) => (this.props.inputRef = el)}
+          value={this.name}
+          onInput={(event) => (this.name = event.target.value)}
+        />
       </div>
     );
   }

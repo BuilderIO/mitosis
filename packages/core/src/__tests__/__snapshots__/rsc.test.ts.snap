@@ -1477,6 +1477,7 @@ export default MyBasicForwardRefComponent;
 
 exports[`RSC > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 "import * as React from \\"react\\";
+import { forwardRef } from \\"react\\";
 
 const MyBasicForwardRefComponent = forwardRef(
   function MyBasicForwardRefComponent(props, inputRef) {
@@ -1823,6 +1824,30 @@ function ComponentWithTypes(props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`RSC > jsx > Javascript Test > dontForwardRef 1`] = `
+"import * as React from \\"react\\";
+
+function DontForwardRefComponent(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { name: \\"PatrickJS\\" };
+
+  return (
+    <>
+      <div>
+        <input className=\\"input-0f920d02\\" value={state.name} />
+      </div>
+      <style>{\`.input-0f920d02 {
+  color: red;
+}\`}</style>
+    </>
+  );
+}
+
+export default DontForwardRefComponent;
 "
 `;
 
@@ -4571,7 +4596,7 @@ exports[`RSC > jsx > Typescript Test > basicForwardRef 1`] = `
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 
 function MyBasicForwardRefComponent(props: Props) {
@@ -4582,9 +4607,9 @@ function MyBasicForwardRefComponent(props: Props) {
   return (
     <>
       <div>
-        <input className=\\"input-346a570f\\" value={state.name} />
+        <input className=\\"input-50884ee0\\" value={state.name} />
       </div>
-      <style>{\`.input-346a570f {
+      <style>{\`.input-50884ee0 {
   color: red;
 }\`}</style>
     </>
@@ -4597,13 +4622,14 @@ export default MyBasicForwardRefComponent;
 
 exports[`RSC > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 "import * as React from \\"react\\";
+import { forwardRef } from \\"react\\";
 
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
 }
 
-const MyBasicForwardRefComponent = forwardRef(
+const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
   function MyBasicForwardRefComponent(props: Props, inputRef) {
     const _context = { ...props[\\"_context\\"] };
 
@@ -4986,6 +5012,35 @@ function ComponentWithTypes(props: Props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > dontForwardRef 1`] = `
+"import * as React from \\"react\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+function DontForwardRefComponent(props: Props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { name: \\"PatrickJS\\" };
+
+  return (
+    <>
+      <div>
+        <input className=\\"input-0d4c0c8e\\" value={state.name} />
+      </div>
+      <style>{\`.input-0d4c0c8e {
+  color: red;
+}\`}</style>
+    </>
+  );
+}
+
+export default DontForwardRefComponent;
 "
 `;
 

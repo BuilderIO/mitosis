@@ -146,7 +146,7 @@ const BINDING_MAPPERS: {
     if (regexp.test(value)) {
       const match = regexp.exec(value);
       const prop = match?.[2];
-      if (prop) {
+      if (prop && options?.forwardRef === prop) {
         return [ref, prop];
       }
     }

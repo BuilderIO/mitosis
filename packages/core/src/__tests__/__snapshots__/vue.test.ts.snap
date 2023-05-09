@@ -1845,7 +1845,7 @@ exports[`Vue > jsx > Javascript Test > basicForwardRef 1`] = `
   <div>
     <input
       class=\\"input\\"
-      ref=\\"inputRef\\"
+      ref=\\"ref\\"
       :value=\\"name\\"
       @input=\\"name = $event.target.value\\"
     />
@@ -1858,7 +1858,7 @@ import { defineComponent } from \\"vue\\";
 export default defineComponent({
   name: \\"my-basic-forward-ref-component\\",
 
-  props: [\\"inputRef\\"],
+  props: [\\"ref\\"],
 
   data() {
     return { name: \\"PatrickJS\\" };
@@ -2265,6 +2265,39 @@ export default defineComponent({
   },
 });
 </script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > dontForwardRef 1`] = `
+"<template>
+  <div>
+    <input
+      class=\\"input\\"
+      ref=\\"inputRef\\"
+      :value=\\"name\\"
+      @input=\\"name = $event.target.value\\"
+    />
+  </div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"dont-forward-ref-component\\",
+
+  props: [\\"inputRef\\"],
+
+  data() {
+    return { name: \\"PatrickJS\\" };
+  },
+});
+</script>
+
+<style scoped>
+.input {
+  color: red;
+}
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > expressionState 1`] = `
@@ -5480,7 +5513,7 @@ exports[`Vue > jsx > Typescript Test > basicForwardRef 1`] = `
   <div>
     <input
       class=\\"input\\"
-      ref=\\"inputRef\\"
+      ref=\\"ref\\"
       :value=\\"name\\"
       @input=\\"name = $event.target.value\\"
     />
@@ -5492,13 +5525,13 @@ import { defineComponent } from \\"vue\\";
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 
 export default defineComponent({
   name: \\"my-basic-forward-ref-component\\",
 
-  props: [\\"inputRef\\"],
+  props: [\\"ref\\"],
 
   data() {
     return { name: \\"PatrickJS\\" };
@@ -5943,6 +5976,44 @@ export default defineComponent({
   },
 });
 </script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > dontForwardRef 1`] = `
+"<template>
+  <div>
+    <input
+      class=\\"input\\"
+      ref=\\"inputRef\\"
+      :value=\\"name\\"
+      @input=\\"name = $event.target.value\\"
+    />
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+export default defineComponent({
+  name: \\"dont-forward-ref-component\\",
+
+  props: [\\"inputRef\\"],
+
+  data() {
+    return { name: \\"PatrickJS\\" };
+  },
+});
+</script>
+
+<style scoped>
+.input {
+  color: red;
+}
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > expressionState 1`] = `

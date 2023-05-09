@@ -2,10 +2,10 @@ import { useStore } from '@builder.io/mitosis';
 
 export interface Props {
   showInput: boolean;
-  ref: HTMLInputElement;
+  inputRef: HTMLInputElement;
 }
 
-export default function MyBasicForwardRefComponent(props: Props) {
+export default function DontForwardRefComponent(props: Props) {
   const state = useStore({
     name: 'PatrickJS',
   });
@@ -13,7 +13,7 @@ export default function MyBasicForwardRefComponent(props: Props) {
   return (
     <div>
       <input
-        ref={props.ref}
+        ref={props.inputRef}
         css={{
           color: 'red',
         }}

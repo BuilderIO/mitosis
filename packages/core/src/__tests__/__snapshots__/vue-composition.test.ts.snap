@@ -1583,7 +1583,7 @@ exports[`Vue > jsx > Javascript Test > basicForwardRef 1`] = `
   <div>
     <input
       class=\\"input\\"
-      ref=\\"inputRef\\"
+      ref=\\"ref\\"
       :value=\\"name\\"
       @input=\\"name = $event.target.value\\"
     />
@@ -1593,7 +1593,7 @@ exports[`Vue > jsx > Javascript Test > basicForwardRef 1`] = `
 <script setup>
 import { ref } from \\"vue\\";
 
-const props = defineProps([\\"inputRef\\"]);
+const props = defineProps([\\"ref\\"]);
 const name = ref(\\"PatrickJS\\");
 </script>
 
@@ -1919,6 +1919,32 @@ const DEFAULT_VALUES = {
 
 const props = defineProps([\\"name\\"]);
 </script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > dontForwardRef 1`] = `
+"<template>
+  <div>
+    <input
+      class=\\"input\\"
+      ref=\\"inputRef\\"
+      :value=\\"name\\"
+      @input=\\"name = $event.target.value\\"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const props = defineProps([\\"inputRef\\"]);
+const name = ref(\\"PatrickJS\\");
+</script>
+
+<style scoped>
+.input {
+  color: red;
+}
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > expressionState 1`] = `
@@ -4583,7 +4609,7 @@ exports[`Vue > jsx > Typescript Test > basicForwardRef 1`] = `
   <div>
     <input
       class=\\"input\\"
-      ref=\\"inputRef\\"
+      ref=\\"ref\\"
       :value=\\"name\\"
       @input=\\"name = $event.target.value\\"
     />
@@ -4595,7 +4621,7 @@ import { ref } from \\"vue\\";
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 
 const props = defineProps<Props>();
@@ -4966,6 +4992,37 @@ type Props = {
 
 const props = defineProps<Props>();
 </script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > dontForwardRef 1`] = `
+"<template>
+  <div>
+    <input
+      class=\\"input\\"
+      ref=\\"inputRef\\"
+      :value=\\"name\\"
+      @input=\\"name = $event.target.value\\"
+    />
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+const props = defineProps<Props>();
+const name = ref(\\"PatrickJS\\");
+</script>
+
+<style scoped>
+.input {
+  color: red;
+}
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > expressionState 1`] = `

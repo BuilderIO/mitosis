@@ -4789,6 +4789,75 @@ export class ComponentWithTypes {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > dontForwardRef 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"dont-forward-ref-component, DontForwardRefComponent\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export class DontForwardRefComponent {
+  name = \\"PatrickJS\\";
+}
+
+@NgModule({
+  declarations: [DontForwardRefComponent],
+  imports: [CommonModule],
+  exports: [DontForwardRefComponent],
+})
+export class DontForwardRefComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > dontForwardRef 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"dont-forward-ref-component, DontForwardRefComponent\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export class DontForwardRefComponent {
+  name = \\"PatrickJS\\";
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > expressionState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11792,7 +11861,7 @@ import { Component } from \\"@angular/core\\";
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 
 @Component({
@@ -11833,7 +11902,7 @@ import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 
 @Component({
@@ -12800,6 +12869,85 @@ export class ComponentWithTypes {
   DEFAULT_VALUES = DEFAULT_VALUES;
 
   @Input() name: Props[\\"name\\"];
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > dontForwardRef 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+@Component({
+  selector: \\"dont-forward-ref-component, DontForwardRefComponent\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export class DontForwardRefComponent {
+  name = \\"PatrickJS\\";
+}
+
+@NgModule({
+  declarations: [DontForwardRefComponent],
+  imports: [CommonModule],
+  exports: [DontForwardRefComponent],
+})
+export class DontForwardRefComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > dontForwardRef 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+@Component({
+  selector: \\"dont-forward-ref-component, DontForwardRefComponent\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export class DontForwardRefComponent {
+  name = \\"PatrickJS\\";
 }
 "
 `;

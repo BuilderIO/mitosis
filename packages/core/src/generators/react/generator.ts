@@ -6,7 +6,6 @@ import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
 import { getRefs } from '../../helpers/get-refs';
-import { getPropsRef } from '../../helpers/get-props-ref';
 import {
   stringifyContextValue,
   getStateObjectStringFromComponent,
@@ -39,6 +38,7 @@ import { blockToReact } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
+import { getReactPropsRef } from './refs';
 
 export const contextPropDrillingKey = '_context';
 
@@ -263,15 +263,15 @@ const _componentToReact = (
 
   let hasState = checkHasState(json);
 
-  const [forwardRef, hasPropRef] = getPropsRef(json);
+  const [forwardRef, hasPropRef] = getReactPropsRef(json);
   const isForwardRef = !options.preact && Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
   if (isForwardRef) {
     const meta = json.meta.useMetadata?.forwardRef as string;
     options.forwardRef = meta || forwardRef;
   }
   const forwardRefType =
-    options.typescript && json.propsTypeRef && forwardRef && json.propsTypeRef !== 'any'
-      ? `<${json.propsTypeRef}["${forwardRef}"]>`
+    options.typescript && json.propsTypeRef && options.forwardRef && json.propsTypeRef !== 'any'
+      ? `<${json.propsTypeRef}["${options.forwardRef}"]>`
       : '';
 
   if (options.stateType === 'builder') {
@@ -313,7 +313,7 @@ const _componentToReact = (
   if (allRefs.length) {
     reactLibImports.add('useRef');
   }
-  if (!options.preact && hasPropRef) {
+  if (!options.preact && options.forwardRef) {
     reactLibImports.add('forwardRef');
   }
   if (

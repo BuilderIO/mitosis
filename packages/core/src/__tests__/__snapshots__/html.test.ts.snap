@@ -3233,7 +3233,7 @@ exports[`Html > jsx > Javascript Test > basicForwardRef 1`] = `
     class=\\"input\\"
     data-el=\\"input-1\\"
     data-dom-state=\\"input-2\\"
-    data-ref=\\"undefined-props.inputRef\\"
+    data-ref=\\"undefined-props.ref\\"
   />
 </div>
 <style>
@@ -3971,6 +3971,68 @@ exports[`Html > jsx > Javascript Test > defaultValsWithTypes 1`] = `
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > dontForwardRef 1`] = `
+"<div>
+  <input
+    class=\\"input\\"
+    data-el=\\"input-1\\"
+    data-dom-state=\\"input-2\\"
+    data-ref=\\"undefined-props.inputRef\\"
+  />
+</div>
+<style>
+  .input {
+    color: red;
+  }
+</style>
+<script>
+  (() => {
+    const state = { name: \\"PatrickJS\\" };
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.value = state.name;
+
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.name = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
   })();
 </script>
 "
@@ -9083,7 +9145,7 @@ exports[`Html > jsx > Typescript Test > basicForwardRef 1`] = `
     class=\\"input\\"
     data-el=\\"input-1\\"
     data-dom-state=\\"input-2\\"
-    data-ref=\\"undefined-props.inputRef\\"
+    data-ref=\\"undefined-props.ref\\"
   />
 </div>
 <style>
@@ -9821,6 +9883,68 @@ exports[`Html > jsx > Typescript Test > defaultValsWithTypes 1`] = `
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > dontForwardRef 1`] = `
+"<div>
+  <input
+    class=\\"input\\"
+    data-el=\\"input-1\\"
+    data-dom-state=\\"input-2\\"
+    data-ref=\\"undefined-props.inputRef\\"
+  />
+</div>
+<style>
+  .input {
+    color: red;
+  }
+</style>
+<script>
+  (() => {
+    const state = { name: \\"PatrickJS\\" };
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.value = state.name;
+
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.name = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
   })();
 </script>
 "

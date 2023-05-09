@@ -1579,7 +1579,7 @@ import { useState, forwardRef } from \\"react\\";
 import { View, Input } from \\"@tarojs/components\\";
 
 const MyBasicForwardRefComponent = forwardRef(
-  function MyBasicForwardRefComponent(props, inputRef) {
+  function MyBasicForwardRefComponent(props, ref) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
@@ -1587,7 +1587,7 @@ const MyBasicForwardRefComponent = forwardRef(
         <View>
           <Input
             className=\\"input\\"
-            ref={inputRef}
+            ref={ref}
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
@@ -2003,6 +2003,37 @@ function ComponentWithTypes(props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > dontForwardRef 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Input } from \\"@tarojs/components\\";
+
+function DontForwardRefComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <>
+      <View>
+        <Input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </View>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default DontForwardRefComponent;
 "
 `;
 
@@ -4937,13 +4968,13 @@ import { useState, forwardRef } from \\"react\\";
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 
 import { View, Input } from \\"@tarojs/components\\";
 
-const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
+const MyBasicForwardRefComponent = forwardRef<Props[\\"ref\\"]>(
+  function MyBasicForwardRefComponent(props: Props, ref) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
@@ -4951,7 +4982,7 @@ const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
         <View>
           <Input
             className=\\"input\\"
-            ref={inputRef}
+            ref={ref}
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
@@ -5413,6 +5444,43 @@ function ComponentWithTypes(props: Props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > dontForwardRef 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+import { View, Input } from \\"@tarojs/components\\";
+
+function DontForwardRefComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <>
+      <View>
+        <Input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </View>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default DontForwardRefComponent;
 "
 `;
 

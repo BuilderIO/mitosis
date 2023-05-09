@@ -1618,7 +1618,7 @@ function MyBasicForwardRefComponent(props) {
       <div>
         <input
           className=\\"input\\"
-          ref={props.inputRef}
+          ref={props.ref}
           value={name}
           onChange={(event) => setName(event.target.value)}
         />
@@ -2032,6 +2032,37 @@ function ComponentWithTypes(props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > dontForwardRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function DontForwardRefComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default DontForwardRefComponent;
 "
 `;
 
@@ -4989,7 +5020,7 @@ import { useState } from \\"preact/hooks\\";
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 
 function MyBasicForwardRefComponent(props: Props) {
@@ -5000,7 +5031,7 @@ function MyBasicForwardRefComponent(props: Props) {
       <div>
         <input
           className=\\"input\\"
-          ref={props.inputRef}
+          ref={props.ref}
           value={name}
           onChange={(event) => setName(event.target.value)}
         />
@@ -5457,6 +5488,42 @@ function ComponentWithTypes(props: Props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > dontForwardRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+function DontForwardRefComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default DontForwardRefComponent;
 "
 `;
 
