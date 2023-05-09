@@ -3346,6 +3346,70 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import { For, createSignal } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = createSignal(\\"VincentW\\");
+
+  return (
+    <div>
+      Hello
+      {name()}
+      <For each={props.actions}>
+        {(action, _index) => {
+          const index = _index();
+          return (
+            <div>
+              <Dynamic component={action.icon}></Dynamic>
+              <span>{action.text}</span>
+            </div>
+          );
+        }}
+      </For>
+    </div>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > basicForNoTagReference 2`] = `
+"import { For, createSignal } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = createSignal(\\"VincentW\\");
+
+  return (
+    <>
+      <div>
+        Hello
+        {name()}
+        <For each={props.actions}>
+          {(action, _index) => {
+            const index = _index();
+            return (
+              <div>
+                <Dynamic component={action.icon}></Dynamic>
+                <span>{action.text}</span>
+              </div>
+            );
+          }}
+        </For>
+      </div>
+    </>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
@@ -9917,6 +9981,70 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import { For, createSignal } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = createSignal(\\"VincentW\\");
+
+  return (
+    <div>
+      Hello
+      {name()}
+      <For each={props.actions}>
+        {(action, _index) => {
+          const index = _index();
+          return (
+            <div>
+              <Dynamic component={action.icon}></Dynamic>
+              <span>{action.text}</span>
+            </div>
+          );
+        }}
+      </For>
+    </div>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > basicForNoTagReference 2`] = `
+"import { For, createSignal } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = createSignal(\\"VincentW\\");
+
+  return (
+    <>
+      <div>
+        Hello
+        {name()}
+        <For each={props.actions}>
+          {(action, _index) => {
+            const index = _index();
+            return (
+              <div>
+                <Dynamic component={action.icon}></Dynamic>
+                <span>{action.text}</span>
+              </div>
+            );
+          }}
+        </For>
+      </div>
+    </>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 

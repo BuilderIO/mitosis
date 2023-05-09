@@ -3863,6 +3863,73 @@ export class MyComponent {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-no-tag-ref-component, MyBasicForNoTagRefComponent\\",
+  template: \`
+    <div>
+      Hello {{name}}
+
+      <ng-container *ngFor=\\"let action of actions\\">
+        <div>
+          <action.icon></action.icon>
+
+          <span>{{action.text}}</span>
+        </div>
+      </ng-container>
+    </div>
+  \`,
+})
+export class MyBasicForNoTagRefComponent {
+  @Input() actions: any;
+
+  name = \\"VincentW\\";
+}
+
+@NgModule({
+  declarations: [MyBasicForNoTagRefComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForNoTagRefComponent],
+})
+export class MyBasicForNoTagRefComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > basicForNoTagReference 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-basic-for-no-tag-ref-component, MyBasicForNoTagRefComponent\\",
+  template: \`
+    <div>
+      Hello {{name}}
+
+      <ng-container *ngFor=\\"let action of actions\\">
+        <div>
+          <action.icon></action.icon>
+
+          <span>{{action.text}}</span>
+        </div>
+      </ng-container>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyBasicForNoTagRefComponent {
+  @Input() actions: any;
+
+  name = \\"VincentW\\";
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > basicForwardRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11780,6 +11847,73 @@ export class MyComponent {
   updateNameWithArrowFn(value) {
     this.name = value;
   }
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-no-tag-ref-component, MyBasicForNoTagRefComponent\\",
+  template: \`
+    <div>
+      Hello {{name}}
+
+      <ng-container *ngFor=\\"let action of actions\\">
+        <div>
+          <action.icon></action.icon>
+
+          <span>{{action.text}}</span>
+        </div>
+      </ng-container>
+    </div>
+  \`,
+})
+export class MyBasicForNoTagRefComponent {
+  @Input() actions: any;
+
+  name = \\"VincentW\\";
+}
+
+@NgModule({
+  declarations: [MyBasicForNoTagRefComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForNoTagRefComponent],
+})
+export class MyBasicForNoTagRefComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > basicForNoTagReference 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-basic-for-no-tag-ref-component, MyBasicForNoTagRefComponent\\",
+  template: \`
+    <div>
+      Hello {{name}}
+
+      <ng-container *ngFor=\\"let action of actions\\">
+        <div>
+          <action.icon></action.icon>
+
+          <span>{{action.text}}</span>
+        </div>
+      </ng-container>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyBasicForNoTagRefComponent {
+  @Input() actions: any;
+
+  name = \\"VincentW\\";
 }
 "
 `;
