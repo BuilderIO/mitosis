@@ -52,13 +52,13 @@ export default function MyComponent() {
 
 <details>
 
-In React you may need to wrap your component with `forwardRef` to provide direct access to an element (`input` for example). You can do this by using using a `prop` value as the `ref`
+In React you may need to wrap your component with `forwardRef` to pass a `ref` property to a component. You can do this by naming one of your Mitosis `prop`s `ref`
 
 _Mitosis input_
 
 ```typescript
 export default function MyInput(props) {
-  return <input ref={props.inputRef} />;
+  return <input ref={props.ref} />;
 }
 ```
 
@@ -67,8 +67,8 @@ _Mitosis output_
 ```typescript
 import { forwardRef } from 'react';
 
-export default forwardRef(function MyInput(props, inputRef) {
-  return <input ref={inputRef} />;
+export default forwardRef(function MyInput(props, ref) {
+  return <input ref={ref} />;
 });
 ```
 
