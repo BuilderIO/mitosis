@@ -3412,6 +3412,31 @@ export default MyComponent;
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+
+export const MyBasicForNoTagRefComponent = component$((props) => {
+  const state = useStore({ name: \\"VincentW\\" });
+
+  return (
+    <div>
+      Hello {state.name}
+      {(props.actions || []).map(function (action) {
+        return (
+          <div>
+            <action.icon></action.icon>
+            <span>{action.text}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+});
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > basicForwardRef 1`] = `
 "import {
   Fragment,
@@ -6605,6 +6630,31 @@ export const MyComponent = component$((props: any) => {
 });
 
 export default MyComponent;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+
+export const MyBasicForNoTagRefComponent = component$((props: any) => {
+  const state = useStore<any>({ name: \\"VincentW\\" });
+
+  return (
+    <div>
+      Hello {state.name}
+      {(props.actions || []).map(function (action) {
+        return (
+          <div>
+            <action.icon></action.icon>
+            <span>{action.text}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+});
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
