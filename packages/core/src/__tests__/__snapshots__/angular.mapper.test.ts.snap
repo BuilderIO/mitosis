@@ -2109,6 +2109,44 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-no-tag-ref-component, MyBasicForNoTagRefComponent\\",
+  template: \`
+    <div>
+      Hello {{name}}
+
+      <ng-container *ngFor=\\"let action of actions\\">
+        <div>
+          <action.icon></action.icon>
+
+          <span>{{action.text}}</span>
+        </div>
+      </ng-container>
+    </div>
+  \`,
+})
+export class MyBasicForNoTagRefComponent {
+  @Input() actions: any;
+
+  name = \\"VincentW\\";
+}
+
+@NgModule({
+  declarations: [MyBasicForNoTagRefComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForNoTagRefComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicForNoTagRefComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > basicForwardRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -6490,6 +6528,44 @@ export class MyComponent {
   bootstrap: [SomeOtherComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-no-tag-ref-component, MyBasicForNoTagRefComponent\\",
+  template: \`
+    <div>
+      Hello {{name}}
+
+      <ng-container *ngFor=\\"let action of actions\\">
+        <div>
+          <action.icon></action.icon>
+
+          <span>{{action.text}}</span>
+        </div>
+      </ng-container>
+    </div>
+  \`,
+})
+export class MyBasicForNoTagRefComponent {
+  @Input() actions: any;
+
+  name = \\"VincentW\\";
+}
+
+@NgModule({
+  declarations: [MyBasicForNoTagRefComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForNoTagRefComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicForNoTagRefComponentModule {}
 "
 `;
 
