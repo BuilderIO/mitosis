@@ -6679,7 +6679,13 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = { name: \\"VincentW\\", TagName: \\"div\\" };
+    this.state = {
+      name: \\"VincentW\\",
+      TagName: \\"div\\",
+      get TagNameGetter() {
+        return \\"span\\";
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
@@ -6717,7 +6723,7 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <state.TagName>
+      <state.TagNameGetter>
         Hello
         <template data-el=\\"div-my-basic-for-no-tag-ref-component-1\\">
           <!-- state.name -->
@@ -6734,7 +6740,7 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
             </span>
           </state.TagName>
         </template>
-      </state.TagName>\`;
+      </state.TagNameGetter>\`;
     this.pendingUpdate = true;
 
     this.render();
@@ -19491,7 +19497,13 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = { name: \\"VincentW\\", TagName: \\"div\\" };
+    this.state = {
+      name: \\"VincentW\\",
+      TagName: \\"div\\",
+      get TagNameGetter() {
+        return \\"span\\";
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
@@ -19529,7 +19541,7 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <state.TagName>
+      <state.TagNameGetter>
         Hello
         <template data-el=\\"div-my-basic-for-no-tag-ref-component-1\\">
           <!-- state.name -->
@@ -19546,7 +19558,7 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
             </span>
           </state.TagName>
         </template>
-      </state.TagName>\`;
+      </state.TagNameGetter>\`;
     this.pendingUpdate = true;
 
     this.render();

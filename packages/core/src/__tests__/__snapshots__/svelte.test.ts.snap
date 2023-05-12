@@ -1462,11 +1462,15 @@ exports[`Svelte > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "<script>
   export let actions;
 
+  $: TagNameGetter = () => {
+    return \\"span\\";
+  };
+
   let name = \\"VincentW\\";
   let TagName = \\"div\\";
 </script>
 
-<svelte:component this={TagName}>
+<svelte:component this={TagNameGetter()}>
   Hello {name}
 
   {#each actions as action}
@@ -4343,11 +4347,15 @@ exports[`Svelte > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "<script lang=\\"ts\\">
   export let actions;
 
+  $: TagNameGetter = () => {
+    return \\"span\\";
+  };
+
   let name = \\"VincentW\\";
   let TagName = \\"div\\";
 </script>
 
-<svelte:component this={TagName}>
+<svelte:component this={TagNameGetter()}>
   Hello {name}
 
   {#each actions as action}

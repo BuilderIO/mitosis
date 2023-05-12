@@ -1,6 +1,6 @@
-import { camelCase, last, upperFirst, get } from 'lodash';
+import { upperFirst } from 'lodash';
 import traverse from 'traverse';
-import { MitosisComponent, StateValueType } from '../../types/mitosis-component';
+import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
@@ -27,7 +27,7 @@ export function getFragment(type: 'open' | 'close', options: ToReactOptions) {
 export const wrapInFragment = (json: MitosisComponent | MitosisNode) => json.children.length !== 1;
 
 function getRefName(path: string) {
-  return upperFirst(camelCase(last(path.split('.')))) + 'Ref';
+  return upperFirst(path) + 'Ref';
 }
 
 export function getCode(str: string = '', options: ToReactOptions): string {
@@ -38,26 +38,29 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
   const namesFound = new Set<string>();
 
   traverse(json).forEach((el) => {
-    if (isMitosisNode(el)) {
-      const type: Omit<StateValueType, 'property'> & string = get(json, `${el.name}.type`, '');
-      const isUseRef = ['getter', 'method', 'function'].includes(type);
+    if (!isMitosisNode(el)) {
+      return;
+    }
 
-      if (isUseRef && el.name.includes('.')) {
-        if (!namesFound.has(el.name)) {
-          namesFound.add(el.name);
-          if (typeof json.hooks.init?.code !== 'string') {
-            json.hooks.init = { code: '' };
-          }
+    const processedRefName = processBinding(el.name, options);
 
-          json.hooks.init.code += `
-            const ${getRefName(el.name)} = ${el.name};
-          `;
-        }
+    const isGetterState =
+      el.name.includes('state.') && json.state[processedRefName]?.type === 'getter';
 
-        if (isUseRef) {
-          el.name = getRefName(el.name);
-        }
+    const refName = getRefName(processedRefName);
+    if (isGetterState) {
+      if (!namesFound.has(el.name)) {
+        namesFound.add(el.name);
+        json.hooks.init = {
+          ...json.hooks.init,
+          code: `
+          ${json.hooks.init?.code || ''}
+          const ${refName} = ${el.name};
+          `,
+        };
       }
+
+      el.name = refName;
     }
   });
 }
