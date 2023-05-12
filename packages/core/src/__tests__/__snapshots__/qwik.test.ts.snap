@@ -3416,20 +3416,20 @@ exports[`qwik > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const MyBasicForNoTagRefComponent = component$((props) => {
-  const state = useStore({ name: \\"VincentW\\" });
+  const state = useStore({ TagName: \\"div\\", name: \\"VincentW\\" });
 
   return (
-    <div>
+    <state.TagName>
       Hello {state.name}
       {(props.actions || []).map(function (action) {
         return (
-          <div>
+          <state.TagName>
             <action.icon></action.icon>
             <span>{action.text}</span>
-          </div>
+          </state.TagName>
         );
       })}
-    </div>
+    </state.TagName>
   );
 });
 
@@ -6637,20 +6637,20 @@ exports[`qwik > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const MyBasicForNoTagRefComponent = component$((props: any) => {
-  const state = useStore<any>({ name: \\"VincentW\\" });
+  const state = useStore<any>({ TagName: \\"div\\", name: \\"VincentW\\" });
 
   return (
-    <div>
+    <state.TagName>
       Hello {state.name}
       {(props.actions || []).map(function (action) {
         return (
-          <div>
+          <state.TagName>
             <action.icon></action.icon>
             <span>{action.text}</span>
-          </div>
+          </state.TagName>
         );
       })}
-    </div>
+    </state.TagName>
   );
 });
 
