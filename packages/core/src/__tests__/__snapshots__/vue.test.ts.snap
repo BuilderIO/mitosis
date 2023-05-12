@@ -1842,13 +1842,13 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "<template>
-  <div>
+  <component :is=\\"TagNameGetter\\">
     Hello {{ name }}
-    <div v-for=\\"(action, index) in actions\\" :key=\\"index\\">
+    <component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\">
       <component :is=\\"action.icon\\"></component>
       <span>{{ action.text }}</span>
-    </div>
-  </div>
+    </component>
+  </component>
 </template>
 
 <script>
@@ -1860,7 +1860,13 @@ export default defineComponent({
   props: [\\"actions\\"],
 
   data() {
-    return { name: \\"VincentW\\" };
+    return { name: \\"VincentW\\", TagName: \\"div\\" };
+  },
+
+  computed: {
+    TagNameGetter() {
+      return \\"span\\";
+    },
   },
 });
 </script>"
@@ -5569,13 +5575,13 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "<template>
-  <div>
+  <component :is=\\"TagNameGetter\\">
     Hello {{ name }}
-    <div v-for=\\"(action, index) in actions\\" :key=\\"index\\">
+    <component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\">
       <component :is=\\"action.icon\\"></component>
       <span>{{ action.text }}</span>
-    </div>
-  </div>
+    </component>
+  </component>
 </template>
 
 <script lang=\\"ts\\">
@@ -5587,7 +5593,13 @@ export default defineComponent({
   props: [\\"actions\\"],
 
   data() {
-    return { name: \\"VincentW\\" };
+    return { name: \\"VincentW\\", TagName: \\"div\\" };
+  },
+
+  computed: {
+    TagNameGetter() {
+      return \\"span\\";
+    },
   },
 });
 </script>"

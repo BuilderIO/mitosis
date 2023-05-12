@@ -6679,7 +6679,13 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = { name: \\"VincentW\\" };
+    this.state = {
+      name: \\"VincentW\\",
+      TagName: \\"div\\",
+      get TagNameGetter() {
+        return \\"span\\";
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
@@ -6717,14 +6723,14 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <div>
+      <state.TagNameGetter>
         Hello
         <template data-el=\\"div-my-basic-for-no-tag-ref-component-1\\">
           <!-- state.name -->
         </template>
       
         <template data-el=\\"for-my-basic-for-no-tag-ref-component\\">
-          <div>
+          <state.TagName>
             <action.icon></action.icon>
       
             <span>
@@ -6732,9 +6738,9 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
                 <!-- action.text -->
               </template>
             </span>
-          </div>
+          </state.TagName>
         </template>
-      </div>\`;
+      </state.TagNameGetter>\`;
     this.pendingUpdate = true;
 
     this.render();
@@ -19491,7 +19497,13 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = { name: \\"VincentW\\" };
+    this.state = {
+      name: \\"VincentW\\",
+      TagName: \\"div\\",
+      get TagNameGetter() {
+        return \\"span\\";
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
@@ -19529,14 +19541,14 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <div>
+      <state.TagNameGetter>
         Hello
         <template data-el=\\"div-my-basic-for-no-tag-ref-component-1\\">
           <!-- state.name -->
         </template>
       
         <template data-el=\\"for-my-basic-for-no-tag-ref-component\\">
-          <div>
+          <state.TagName>
             <action.icon></action.icon>
       
             <span>
@@ -19544,9 +19556,9 @@ class MyBasicForNoTagRefComponent extends HTMLElement {
                 <!-- action.text -->
               </template>
             </span>
-          </div>
+          </state.TagName>
         </template>
-      </div>\`;
+      </state.TagNameGetter>\`;
     this.pendingUpdate = true;
 
     this.render();
