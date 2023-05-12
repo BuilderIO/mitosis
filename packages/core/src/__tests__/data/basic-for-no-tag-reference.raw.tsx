@@ -3,19 +3,20 @@ import { useStore, For } from '@builder.io/mitosis';
 export default function MyBasicForNoTagRefComponent() {
   const state = useStore({
     name: 'VincentW',
+    TagName: 'div',
   });
 
   return (
-    <div>
+    <state.TagName>
       Hello {state.name}
       <For each={props.actions}>
         {(action) => (
-          <div>
+          <state.TagName>
             <action.icon />
             <span>{action.text}</span>
-          </div>
+          </state.TagName>
         )}
       </For>
-    </div>
+    </state.TagName>
   );
 }
