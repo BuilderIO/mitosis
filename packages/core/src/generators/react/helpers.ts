@@ -47,8 +47,8 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
     const isGetterState =
       el.name.includes('state.') && json.state[processedRefName]?.type === 'getter';
 
-    const refName = getRefName(processedRefName);
     if (isGetterState) {
+      const refName = getRefName(processedRefName);
       if (!namesFound.has(el.name)) {
         namesFound.add(el.name);
         json.hooks.init = {
@@ -61,6 +61,8 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
       }
 
       el.name = refName;
+    } else {
+      el.name = processedRefName;
     }
   });
 }
