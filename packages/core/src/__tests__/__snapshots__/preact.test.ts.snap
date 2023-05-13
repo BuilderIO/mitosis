@@ -1611,18 +1611,26 @@ import { useState } from \\"preact/hooks\\";
 function MyBasicForNoTagRefComponent(props) {
   const [name, setName] = useState(() => \\"VincentW\\");
 
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const TagNameGetterRef = TagNameGetter();
+
   return (
-    <div>
+    <TagNameGetterRef>
       Hello
       {name}
       {props.actions?.map((action) => (
-        <div>
+        <TagName>
           <action.icon />
 
           <span>{action.text}</span>
-        </div>
+        </TagName>
       ))}
-    </div>
+    </TagNameGetterRef>
   );
 }
 
@@ -5017,18 +5025,26 @@ import { useState } from \\"preact/hooks\\";
 function MyBasicForNoTagRefComponent(props: any) {
   const [name, setName] = useState(() => \\"VincentW\\");
 
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const TagNameGetterRef = TagNameGetter();
+
   return (
-    <div>
+    <TagNameGetterRef>
       Hello
       {name}
       {props.actions?.map((action) => (
-        <div>
+        <TagName>
           <action.icon />
 
           <span>{action.text}</span>
-        </div>
+        </TagName>
       ))}
-    </div>
+    </TagNameGetterRef>
   );
 }
 

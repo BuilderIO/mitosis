@@ -1455,20 +1455,26 @@ exports[`RSC > jsx > Javascript Test > basicForNoTagReference 1`] = `
 function MyBasicForNoTagRefComponent(props) {
   const _context = { ...props[\\"_context\\"] };
 
-  const state = { name: \\"VincentW\\" };
+  const state = {
+    name: \\"VincentW\\",
+    TagName: \\"div\\",
+    get TagNameGetter() {
+      return \\"span\\";
+    },
+  };
 
   return (
-    <div>
+    <state.TagNameGetter _context={_context}>
       Hello
       {state.name}
       {props.actions?.map((action) => (
-        <div>
+        <state.TagName _context={_context}>
           <action.icon />
 
           <span>{action.text}</span>
-        </div>
+        </state.TagName>
       ))}
-    </div>
+    </state.TagNameGetter>
   );
 }
 
@@ -2408,16 +2414,13 @@ function RenderBlock(props) {
     componentInfo: null,
   };
 
-  const RenderComponentTagRef = state.renderComponentTag;
-  const TagRef = state.tag;
-
   return (
     <>
       {state.shouldWrap ? (
         <>
           {isEmptyHtmlElement(state.tag) ? (
             <>
-              <TagRef {...state.attributes} {...state.actions} />
+              <state.tag {...state.attributes} {...state.actions} />
             </>
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
@@ -2434,8 +2437,8 @@ function RenderBlock(props) {
           ) : null}
           {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
             <>
-              <TagRef {...state.attributes} {...state.actions}>
-                <RenderComponentTagRef
+              <state.tag {...state.attributes} {...state.actions}>
+                <state.renderComponentTag
                   {...state.renderComponentProps}
                   _context={_context}
                 />
@@ -2457,13 +2460,13 @@ function RenderBlock(props) {
                     _context={_context}
                   />
                 ))}
-              </TagRef>
+              </state.tag>
             </>
           ) : null}
         </>
       ) : (
         <>
-          <RenderComponentTagRef
+          <state.renderComponentTag
             {...state.renderComponentProps}
             _context={_context}
           />
@@ -4595,20 +4598,26 @@ exports[`RSC > jsx > Typescript Test > basicForNoTagReference 1`] = `
 function MyBasicForNoTagRefComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  const state = { name: \\"VincentW\\" };
+  const state = {
+    name: \\"VincentW\\",
+    TagName: \\"div\\",
+    get TagNameGetter() {
+      return \\"span\\";
+    },
+  };
 
   return (
-    <div>
+    <state.TagNameGetter _context={_context}>
       Hello
       {state.name}
       {props.actions?.map((action) => (
-        <div>
+        <state.TagName _context={_context}>
           <action.icon />
 
           <span>{action.text}</span>
-        </div>
+        </state.TagName>
       ))}
-    </div>
+    </state.TagNameGetter>
   );
 }
 
@@ -5667,16 +5676,13 @@ function RenderBlock(props: RenderBlockProps) {
     componentInfo: null,
   };
 
-  const RenderComponentTagRef = state.renderComponentTag;
-  const TagRef = state.tag;
-
   return (
     <>
       {state.shouldWrap ? (
         <>
           {isEmptyHtmlElement(state.tag) ? (
             <>
-              <TagRef {...state.attributes} {...state.actions} />
+              <state.tag {...state.attributes} {...state.actions} />
             </>
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
@@ -5693,8 +5699,8 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
           {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
             <>
-              <TagRef {...state.attributes} {...state.actions}>
-                <RenderComponentTagRef
+              <state.tag {...state.attributes} {...state.actions}>
+                <state.renderComponentTag
                   {...state.renderComponentProps}
                   _context={_context}
                 />
@@ -5716,13 +5722,13 @@ function RenderBlock(props: RenderBlockProps) {
                     _context={_context}
                   />
                 ))}
-              </TagRef>
+              </state.tag>
             </>
           ) : null}
         </>
       ) : (
         <>
-          <RenderComponentTagRef
+          <state.renderComponentTag
             {...state.renderComponentProps}
             _context={_context}
           />

@@ -1462,19 +1462,24 @@ exports[`Svelte > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "<script>
   export let actions;
 
+  $: TagNameGetter = () => {
+    return \\"span\\";
+  };
+
   let name = \\"VincentW\\";
+  let TagName = \\"div\\";
 </script>
 
-<div>
+<svelte:component this={TagNameGetter()}>
   Hello {name}
 
   {#each actions as action}
-    <div>
+    <svelte:component this={TagName}>
       <svelte:component this={action.icon} />
       <span>{action.text}</span>
-    </div>
+    </svelte:component>
   {/each}
-</div>"
+</svelte:component>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > basicForwardRef 1`] = `
@@ -4342,19 +4347,24 @@ exports[`Svelte > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "<script lang=\\"ts\\">
   export let actions;
 
+  $: TagNameGetter = () => {
+    return \\"span\\";
+  };
+
   let name = \\"VincentW\\";
+  let TagName = \\"div\\";
 </script>
 
-<div>
+<svelte:component this={TagNameGetter()}>
   Hello {name}
 
   {#each actions as action}
-    <div>
+    <svelte:component this={TagName}>
       <svelte:component this={action.icon} />
       <span>{action.text}</span>
-    </div>
+    </svelte:component>
   {/each}
-</div>"
+</svelte:component>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
