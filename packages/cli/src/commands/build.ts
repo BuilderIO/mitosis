@@ -1,7 +1,11 @@
 import { GluegunCommand, GluegunParameters } from 'gluegun';
 import { MitosisConfig, Target } from '@builder.io/mitosis';
+import merge from 'lodash/merge';
+import pick from 'lodash/pick';
 import { build } from '../build/build';
 import { getMitosisConfig } from '../helpers/get-mitosis-config';
+
+const ConfigKeys = ['files'];
 
 const getTargets = (mitosisConfig: MitosisConfig, cliOpts: GluegunParameters['options']) => {
   const targetsFromCli: Target[] = (cliOpts.targets || '').split(',');
@@ -18,6 +22,14 @@ const getTargets = (mitosisConfig: MitosisConfig, cliOpts: GluegunParameters['op
   return targets;
 };
 
+const mergeConfig = (
+  originConfig: MitosisConfig,
+  confgiPatch: Record<string, any>,
+  configKeys: string[] = ConfigKeys,
+): MitosisConfig => {
+  return merge(originConfig, pick(confgiPatch, configKeys));
+};
+
 const command: GluegunCommand = {
   name: 'build',
   alias: 'b',
@@ -31,7 +43,7 @@ const command: GluegunCommand = {
     }
     const targets = getTargets(config, opts);
     await build({
-      ...config,
+      ...mergeConfig(config, opts),
       targets,
     });
   },
