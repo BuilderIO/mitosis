@@ -1,4 +1,5 @@
 import { MitosisComponent } from './mitosis-component';
+import { TranspilerGenerator } from './transpiler';
 
 export type Format = 'esm' | 'cjs';
 export type Language = 'js' | 'ts';
@@ -13,6 +14,37 @@ export type GeneratorOptions = {
     transpiler?: TranspilerOptions;
   };
 };
+
+export interface TargetContext {
+  target: Target;
+  generator: TranspilerGenerator<NonNullable<MitosisConfig['options'][Target]>>;
+  outputPath: string;
+}
+
+export interface OutputFiles {
+  outputDir: string;
+  outputFilePath: string;
+}
+
+export interface MitosisPlugin {
+  name: string;
+  order: number;
+  [HookType.BeforeBuild]: (TargetContexts: TargetContext[]) => void | Promise<void>;
+  [HookType.Afterbuild]: (
+    TargetContext: TargetContext,
+    files: {
+      componentFiles: OutputFiles[];
+      nonComponentFiles: OutputFiles[];
+    },
+  ) => void | Promise<void>;
+}
+
+export type MitosisPluginFn = () => Partial<MitosisPlugin>;
+
+export enum HookType {
+  BeforeBuild = 'beforeBuild',
+  Afterbuild = 'afterbuild',
+}
 
 export type MitosisConfig = {
   /**
@@ -58,6 +90,14 @@ export type MitosisConfig = {
    * ```
    */
   options: Partial<GeneratorOptions>;
+
+  /**
+   * hooks
+   */
+  plugins?:
+    | Partial<MitosisPlugin>
+    | (() => Partial<MitosisPlugin>)
+    | Array<Partial<MitosisPlugin> | MitosisPluginFn>;
   /**
    * Configure a custom parser function which takes a string and returns MitosisJSON
    * Defaults to the JSXParser of this project (src/parsers/jsx)
