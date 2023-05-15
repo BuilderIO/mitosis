@@ -15,7 +15,6 @@ import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { handleMissingState } from '../../helpers/handle-missing-state';
 import { mapRefs } from '../../helpers/map-refs';
 import { processHttpRequests } from '../../helpers/process-http-requests';
-import { processTagReferences } from '../../helpers/process-tag-references';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import {
@@ -32,7 +31,7 @@ import { hasCss } from '../../helpers/styles/helpers';
 import { checkHasState } from '../../helpers/state';
 import { ToReactOptions } from './types';
 import { getUseStateCode, processHookCode, updateStateSetters } from './state';
-import { closeFrag, openFrag, processBinding, wrapInFragment } from './helpers';
+import { closeFrag, openFrag, wrapInFragment, processTagReferences, getCode } from './helpers';
 import hash from 'hash-sum';
 import { createSingleBinding } from '../../helpers/bindings';
 import { blockToReact } from './blocks';
@@ -133,10 +132,6 @@ function getContextString(component: MitosisComponent, options: ToReactOptions) 
 
   return str;
 }
-
-const getInitCode = (json: MitosisComponent, options: ToReactOptions): string => {
-  return processBinding(json.hooks.init?.code || '', options);
-};
 
 type ReactExports =
   | 'useState'
@@ -245,7 +240,7 @@ const _componentToReact = (
 ) => {
   processHttpRequests(json);
   handleMissingState(json);
-  processTagReferences(json);
+  processTagReferences(json, options);
   const contextStr = provideContext(json, options);
   const componentHasStyles = hasCss(json);
   if (options.stateType === 'useState') {
@@ -264,7 +259,7 @@ const _componentToReact = (
   let hasState = checkHasState(json);
 
   const [forwardRef, hasPropRef] = getPropsRef(json);
-  const isForwardRef = Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
+  const isForwardRef = !options.preact && Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
   if (isForwardRef) {
     const meta = json.meta.useMetadata?.forwardRef as string;
     options.forwardRef = meta || forwardRef;
@@ -313,7 +308,7 @@ const _componentToReact = (
   if (allRefs.length) {
     reactLibImports.add('useRef');
   }
-  if (hasPropRef) {
+  if (!options.preact && hasPropRef) {
     reactLibImports.add('forwardRef');
   }
   if (
@@ -370,7 +365,7 @@ const _componentToReact = (
     }
     ${hasStateArgument ? refsString : ''}
     ${getContextString(json, options)}
-    ${getInitCode(json, options)}
+    ${getCode(json.hooks.init?.code, options)}
     ${contextStr || ''}
 
     ${

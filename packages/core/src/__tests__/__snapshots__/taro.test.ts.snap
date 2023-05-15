@@ -593,7 +593,9 @@ function ContentSlotJsxCode(props) {
             {...props.attributes}
             onClick={(event) => show()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || \\"{props.content}\\"}</>
+            ) : null}
 
             <View>
               <View />
@@ -610,7 +612,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -1271,10 +1273,8 @@ exports[`Taro > jsx > Javascript Test > SlotDefault 1`] = `
 import { View, Text } from \\"@tarojs/components\\";
 
 function SlotCode(props) {
-  return <View>{props.children}</View>;
+  return <View>{props.children || <View>Default content</View>}</View>;
 }
-
-SlotCode.defaultProps = { children: <View>Default content</View> };
 
 export default SlotCode;
 "
@@ -1323,14 +1323,12 @@ function SlotCode(props) {
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </View>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -1570,6 +1568,41 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      Hello
+      {name}
+      {props.actions?.map((action) => (
+        <TagName>
+          <View />
+
+          <Text>{action.text}</Text>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
@@ -3762,7 +3795,9 @@ function ContentSlotJsxCode(props: Props) {
             {...props.attributes}
             onClick={(event) => show()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || \\"{props.content}\\"}</>
+            ) : null}
 
             <View>
               <View />
@@ -3779,7 +3814,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -4561,10 +4596,8 @@ type Props = {
 import { View, Text } from \\"@tarojs/components\\";
 
 function SlotCode(props: Props) {
-  return <View>{props.children}</View>;
+  return <View>{props.children || <View>Default content</View>}</View>;
 }
-
-SlotCode.defaultProps = { children: <View>Default content</View> };
 
 export default SlotCode;
 "
@@ -4625,14 +4658,12 @@ function SlotCode(props: Props) {
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </View>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -4928,6 +4959,41 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      Hello
+      {name}
+      {props.actions?.map((action) => (
+        <TagName>
+          <View />
+
+          <Text>{action.text}</Text>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
@@ -6955,16 +7021,11 @@ import { View, Text } from \\"@tarojs/components\\";
 function MyComponent(props) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <View>default</View>}
     </View>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <View>default</View>,
-};
 
 export default MyComponent;
 "
@@ -7374,16 +7435,11 @@ import { View, Text } from \\"@tarojs/components\\";
 function MyComponent(props: any) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <View>default</View>}
     </View>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <View>default</View>,
-};
 
 export default MyComponent;
 "

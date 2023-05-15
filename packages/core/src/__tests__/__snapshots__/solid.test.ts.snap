@@ -3346,6 +3346,82 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import { For, createSignal } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = createSignal(\\"VincentW\\");
+
+  const [TagName, setTagName] = createSignal(\\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  return (
+    <Dynamic component={TagNameGetter()}>
+      Hello
+      {name()}
+      <For each={props.actions}>
+        {(action, _index) => {
+          const index = _index();
+          return (
+            <Dynamic component={TagName()}>
+              <Dynamic component={action.icon}></Dynamic>
+              <span>{action.text}</span>
+            </Dynamic>
+          );
+        }}
+      </For>
+    </Dynamic>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > basicForNoTagReference 2`] = `
+"import { For, createSignal } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = createSignal(\\"VincentW\\");
+
+  const [TagName, setTagName] = createSignal(\\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  return (
+    <>
+      <Dynamic component={TagNameGetter()}>
+        Hello
+        {name()}
+        <For each={props.actions}>
+          {(action, _index) => {
+            const index = _index();
+            return (
+              <Dynamic component={TagName()}>
+                <Dynamic component={action.icon}></Dynamic>
+                <span>{action.text}</span>
+              </Dynamic>
+            );
+          }}
+        </For>
+      </Dynamic>
+    </>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
@@ -9917,6 +9993,82 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import { For, createSignal } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = createSignal(\\"VincentW\\");
+
+  const [TagName, setTagName] = createSignal(\\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  return (
+    <Dynamic component={TagNameGetter()}>
+      Hello
+      {name()}
+      <For each={props.actions}>
+        {(action, _index) => {
+          const index = _index();
+          return (
+            <Dynamic component={TagName()}>
+              <Dynamic component={action.icon}></Dynamic>
+              <span>{action.text}</span>
+            </Dynamic>
+          );
+        }}
+      </For>
+    </Dynamic>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > basicForNoTagReference 2`] = `
+"import { For, createSignal } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = createSignal(\\"VincentW\\");
+
+  const [TagName, setTagName] = createSignal(\\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  return (
+    <>
+      <Dynamic component={TagNameGetter()}>
+        Hello
+        {name()}
+        <For each={props.actions}>
+          {(action, _index) => {
+            const index = _index();
+            return (
+              <Dynamic component={TagName()}>
+                <Dynamic component={action.icon}></Dynamic>
+                <span>{action.text}</span>
+              </Dynamic>
+            );
+          }}
+        </For>
+      </Dynamic>
+    </>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 

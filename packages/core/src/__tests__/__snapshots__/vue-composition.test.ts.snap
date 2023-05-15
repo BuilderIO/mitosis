@@ -1578,6 +1578,32 @@ function updateNameWithArrowFn(value) {
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"<template>
+  <component :is=\\"TagNameGetter\\">
+    Hello {{ name }}
+    <template :key=\\"index\\" v-for=\\"(action, index) in actions\\">
+      <component :is=\\"TagName\\">
+        <component :is=\\"action.icon\\"></component>
+        <span>{{ action.text }}</span>
+      </component>
+    </template>
+  </component>
+</template>
+
+<script setup>
+import { computed, ref } from \\"vue\\";
+
+const props = defineProps([\\"actions\\"]);
+const name = ref(\\"VincentW\\");
+const TagName = ref(\\"div\\");
+
+const TagNameGetter = computed(() => {
+  return \\"span\\";
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > basicForwardRef 1`] = `
 "<template>
   <div>
@@ -4575,6 +4601,32 @@ function setName(value) {
 function updateNameWithArrowFn(value) {
   name.value = value;
 }
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"<template>
+  <component :is=\\"TagNameGetter\\">
+    Hello {{ name }}
+    <template :key=\\"index\\" v-for=\\"(action, index) in actions\\">
+      <component :is=\\"TagName\\">
+        <component :is=\\"action.icon\\"></component>
+        <span>{{ action.text }}</span>
+      </component>
+    </template>
+  </component>
+</template>
+
+<script setup lang=\\"ts\\">
+import { computed, ref } from \\"vue\\";
+
+const props = defineProps([\\"actions\\"]);
+const name = ref(\\"VincentW\\");
+const TagName = ref(\\"div\\");
+
+const TagNameGetter = computed(() => {
+  return \\"span\\";
+});
 </script>"
 `;
 
