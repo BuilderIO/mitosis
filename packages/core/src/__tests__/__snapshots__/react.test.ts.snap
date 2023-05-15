@@ -579,7 +579,9 @@ function ContentSlotJsxCode(props) {
             onClick={(event) => show()}
             className={cls()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || \\"{props.content}\\"}</>
+            ) : null}
 
             <div>
               <hr />
@@ -596,7 +598,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -1271,12 +1273,12 @@ exports[`React > jsx > Javascript Test > SlotDefault 1`] = `
 "import * as React from \\"react\\";
 
 function SlotCode(props) {
-  return <div>{props.children}</div>;
+  return (
+    <div>
+      {props.children || <div className=\\"default-slot\\">Default content</div>}
+    </div>
+  );
 }
-
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
 
 export default SlotCode;
 "
@@ -1322,14 +1324,12 @@ function SlotCode(props) {
     <div>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -3715,7 +3715,9 @@ function ContentSlotJsxCode(props: Props) {
             onClick={(event) => show()}
             className={cls()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || \\"{props.content}\\"}</>
+            ) : null}
 
             <div>
               <hr />
@@ -3732,7 +3734,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -4523,12 +4525,12 @@ type Props = {
 };
 
 function SlotCode(props: Props) {
-  return <div>{props.children}</div>;
+  return (
+    <div>
+      {props.children || <div className=\\"default-slot\\">Default content</div>}
+    </div>
+  );
 }
-
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
 
 export default SlotCode;
 "
@@ -4586,14 +4588,12 @@ function SlotCode(props: Props) {
     <div>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -7078,16 +7078,11 @@ exports[`React > svelte > Javascript Test > slots 1`] = `
 function MyComponent(props) {
   return (
     <div>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <div>default</div>}
     </div>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <div>default</div>,
-};
 
 export default MyComponent;
 "
@@ -7487,16 +7482,11 @@ exports[`React > svelte > Typescript Test > slots 1`] = `
 function MyComponent(props: any) {
   return (
     <div>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <div>default</div>}
     </div>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <div>default</div>,
-};
 
 export default MyComponent;
 "
