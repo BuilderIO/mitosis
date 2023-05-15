@@ -4,6 +4,7 @@ export default function MyBasicForNoTagRefComponent() {
   const state = useStore({
     name: 'VincentW',
     TagName: 'div',
+    tag: 'span',
     get TagNameGetter() {
       return 'span';
     },
@@ -11,7 +12,7 @@ export default function MyBasicForNoTagRefComponent() {
 
   return (
     <state.TagNameGetter>
-      Hello {state.name}
+      Hello <state.tag>{state.name}</state.tag>
       <For each={props.actions}>
         {(action) => (
           <state.TagName>
