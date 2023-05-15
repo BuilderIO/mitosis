@@ -122,6 +122,9 @@ const BINDING_MAPPERS: {
     | ((key: string, value: string, options?: ToReactOptions) => [string, string]);
 } = {
   ref(ref, value, options) {
+    if (options?.preact) {
+      return [ref, value];
+    }
     const regexp = /(.+)?props\.(.+)( |\)|;|\()?$/m;
     if (regexp.test(value)) {
       const match = regexp.exec(value);
