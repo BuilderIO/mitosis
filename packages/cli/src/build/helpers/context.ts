@@ -37,8 +37,14 @@ export const generateContextFile = async ({
         return contextToVue(options.options[target])({ context });
       case 'solid':
         return contextToSolid()({ context });
-      case 'react':
       case 'preact':
+        return contextToReact({
+          preact: true,
+          typescript: checkShouldOutputTypeScript({ options, target }),
+        })({
+          context,
+        });
+      case 'react':
       case 'reactNative':
         return contextToReact({ typescript: checkShouldOutputTypeScript({ options, target }) })({
           context,
