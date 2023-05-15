@@ -1840,6 +1840,38 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"<template>
+  <component :is=\\"TagNameGetter\\">
+    Hello {{ name }}
+    <component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\">
+      <component :is=\\"action.icon\\"></component>
+      <span>{{ action.text }}</span>
+    </component>
+  </component>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"my-basic-for-no-tag-ref-component\\",
+
+  props: [\\"actions\\"],
+
+  data() {
+    return { name: \\"VincentW\\", TagName: \\"div\\" };
+  },
+
+  computed: {
+    TagNameGetter() {
+      return \\"span\\";
+    },
+  },
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > basicForwardRef 1`] = `
 "<template>
   <div>
@@ -2132,7 +2164,43 @@ export default defineComponent({
 </script>"
 `;
 
-exports[`Vue > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `"Vue 2 template should have a single root element"`;
+exports[`Vue > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"<template>
+  <div>
+    {{ foo.value }}
+    <div>other</div>
+  </div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default defineComponent({
+  name: \\"component-with-context\\",
+
+  props: [\\"content\\"],
+
+  provide() {
+    const _this = this;
+    return {
+      [Context1.key]: {
+        foo: \\"bar\\",
+        content() {
+          return _this.content;
+        },
+      },
+      [Context2.key]: { bar: \\"baz\\" },
+    };
+  },
+  inject: {
+    foo: Context1.key,
+  },
+});
+</script>"
+`;
 
 exports[`Vue > jsx > Javascript Test > contentState 1`] = `
 "<template>
@@ -3088,7 +3156,37 @@ export default defineComponent({
 </style>"
 `;
 
-exports[`Vue > jsx > Javascript Test > rootFragmentMultiNode 1`] = `"Vue 2 template should have a single root element"`;
+exports[`Vue > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
+"<template>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
+      >
+        {{ text }}
+      </a>
+    </template>
+
+    <template v-if=\\"!link\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"button\\",
+
+  props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
+});
+</script>"
+`;
 
 exports[`Vue > jsx > Javascript Test > rootShow 1`] = `
 "<template>
@@ -5508,6 +5606,38 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"<template>
+  <component :is=\\"TagNameGetter\\">
+    Hello {{ name }}
+    <component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\">
+      <component :is=\\"action.icon\\"></component>
+      <span>{{ action.text }}</span>
+    </component>
+  </component>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"my-basic-for-no-tag-ref-component\\",
+
+  props: [\\"actions\\"],
+
+  data() {
+    return { name: \\"VincentW\\", TagName: \\"div\\" };
+  },
+
+  computed: {
+    TagNameGetter() {
+      return \\"span\\";
+    },
+  },
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > basicForwardRef 1`] = `
 "<template>
   <div>
@@ -5821,7 +5951,47 @@ export default defineComponent({
 </script>"
 `;
 
-exports[`Vue > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `"Vue 2 template should have a single root element"`;
+exports[`Vue > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"<template>
+  <div>
+    {{ foo.value }}
+    <div>other</div>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+export default defineComponent({
+  name: \\"component-with-context\\",
+
+  props: [\\"content\\"],
+
+  provide() {
+    const _this = this;
+    return {
+      [Context1.key]: {
+        foo: \\"bar\\",
+        content() {
+          return _this.content;
+        },
+      },
+      [Context2.key]: { bar: \\"baz\\" },
+    };
+  },
+  inject: {
+    foo: Context1.key,
+  },
+});
+</script>"
+`;
 
 exports[`Vue > jsx > Typescript Test > contentState 1`] = `
 "<template>
@@ -6883,7 +7053,44 @@ export default defineComponent({
 </style>"
 `;
 
-exports[`Vue > jsx > Typescript Test > rootFragmentMultiNode 1`] = `"Vue 2 template should have a single root element"`;
+exports[`Vue > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
+"<template>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
+      >
+        {{ text }}
+      </a>
+    </template>
+
+    <template v-if=\\"!link\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default defineComponent({
+  name: \\"button\\",
+
+  props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
+});
+</script>"
+`;
 
 exports[`Vue > jsx > Typescript Test > rootShow 1`] = `
 "<template>

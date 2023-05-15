@@ -27,6 +27,7 @@ const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
 const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw.tsx');
 const basicChildComponent = getRawFile('./data/basic-child-component.raw.tsx');
 const basicFor = getRawFile('./data/basic-for.raw.tsx');
+const basicForNoTagReference = getRawFile('./data/basic-for-no-tag-reference.raw');
 const basicRef = getRawFile('./data/basic-ref.raw.tsx');
 const basicForwardRef = getRawFile('./data/basic-forwardRef.raw.tsx');
 const dontForwardRef = getRawFile('./data/dont-forwardRef.raw.tsx');
@@ -141,6 +142,7 @@ const BASIC_TESTS: Tests = {
   BasicRefAssignment: basicRefAssignment,
   BasicChildComponent: basicChildComponent,
   BasicFor: basicFor,
+  basicForNoTagReference: basicForNoTagReference,
   Input: inputBlock,
   Submit: submitButtonBlock,
   Select: selectBlock,

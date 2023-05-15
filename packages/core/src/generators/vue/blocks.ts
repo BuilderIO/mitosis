@@ -50,10 +50,20 @@ const NODE_MAPPERS: {
 } = {
   Fragment(json, options, scope) {
     const children = json.children.filter(filterEmptyTextNodes);
-    if (options.vueVersion === 2 && scope?.isRootNode && children.length > 1) {
-      throw new Error('Vue 2 template should have a single root element');
+    const shouldAddDivFallback =
+      options.vueVersion === 2 && scope?.isRootNode && children.length > 1;
+
+    const childrenStr = children.map((item) => blockToVue(item, options)).join('\n');
+
+    if (shouldAddDivFallback) {
+      console.warn(
+        'WARNING: Vue 2 forbids multiple root elements. You provided a root Fragment with multiple elements. Wrapping elements in div as a workaround.',
+      );
+
+      return `<div>${childrenStr}</div>`;
+    } else {
+      return childrenStr;
     }
-    return children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(_json, options) {
     const json = _json as ForNode;

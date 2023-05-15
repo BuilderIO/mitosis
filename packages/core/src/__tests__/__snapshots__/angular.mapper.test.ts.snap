@@ -2109,6 +2109,48 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-no-tag-ref-component, MyBasicForNoTagRefComponent\\",
+  template: \`
+    <state.TagNameGetter>
+      Hello {{name}}
+
+      <ng-container *ngFor=\\"let action of actions\\">
+        <state.TagName>
+          <action.icon></action.icon>
+
+          <span>{{action.text}}</span>
+        </state.TagName>
+      </ng-container>
+    </state.TagNameGetter>
+  \`,
+})
+export class MyBasicForNoTagRefComponent {
+  @Input() actions: any;
+
+  name = \\"VincentW\\";
+  TagName = \\"div\\";
+  get TagNameGetter() {
+    return \\"span\\";
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicForNoTagRefComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForNoTagRefComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicForNoTagRefComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > basicForwardRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -6529,6 +6571,48 @@ export class MyComponent {
   bootstrap: [SomeOtherComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-no-tag-ref-component, MyBasicForNoTagRefComponent\\",
+  template: \`
+    <state.TagNameGetter>
+      Hello {{name}}
+
+      <ng-container *ngFor=\\"let action of actions\\">
+        <state.TagName>
+          <action.icon></action.icon>
+
+          <span>{{action.text}}</span>
+        </state.TagName>
+      </ng-container>
+    </state.TagNameGetter>
+  \`,
+})
+export class MyBasicForNoTagRefComponent {
+  @Input() actions: any;
+
+  name = \\"VincentW\\";
+  TagName = \\"div\\";
+  get TagNameGetter() {
+    return \\"span\\";
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicForNoTagRefComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForNoTagRefComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicForNoTagRefComponentModule {}
 "
 `;
 
