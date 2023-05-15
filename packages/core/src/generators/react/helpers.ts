@@ -44,23 +44,29 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
 
     const processedRefName = processBinding(el.name, options);
 
-    const isGetterState =
-      el.name.includes('state.') && json.state[processedRefName]?.type === 'getter';
+    if (el.name.includes('state.')) {
+      switch (json.state[processedRefName]?.type) {
+        case 'getter':
+          const refName = getRefName(processedRefName);
+          if (!namesFound.has(el.name)) {
+            namesFound.add(el.name);
+            json.hooks.init = {
+              ...json.hooks.init,
+              code: `
+            ${json.hooks.init?.code || ''}
+            const ${refName} = ${el.name};
+            `,
+            };
+          }
 
-    if (isGetterState) {
-      const refName = getRefName(processedRefName);
-      if (!namesFound.has(el.name)) {
-        namesFound.add(el.name);
-        json.hooks.init = {
-          ...json.hooks.init,
-          code: `
-          ${json.hooks.init?.code || ''}
-          const ${refName} = ${el.name};
-          `,
-        };
+          el.name = refName;
+          break;
+        case 'method':
+        case 'function':
+        case 'property':
+          el.name = upperFirst(processedRefName);
+          break;
       }
-
-      el.name = refName;
     } else {
       el.name = processedRefName;
     }
