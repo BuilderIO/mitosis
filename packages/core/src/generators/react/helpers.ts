@@ -68,7 +68,17 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
         case 'function':
 
         case 'property':
-          el.name = upperFirst(processedRefName);
+          const capitalizedName = upperFirst(processedRefName);
+
+          if (capitalizedName !== processedRefName) {
+            el.name = capitalizedName;
+            json.state[capitalizedName] = { ...json.state[processedRefName]! };
+
+            delete json.state[processedRefName];
+          } else {
+            el.name = processedRefName;
+          }
+
           break;
       }
     } else {
