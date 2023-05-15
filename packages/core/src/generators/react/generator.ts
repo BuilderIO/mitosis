@@ -259,7 +259,7 @@ const _componentToReact = (
   let hasState = checkHasState(json);
 
   const [forwardRef, hasPropRef] = getPropsRef(json);
-  const isForwardRef = Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
+  const isForwardRef = !options.preact && Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
   if (isForwardRef) {
     const meta = json.meta.useMetadata?.forwardRef as string;
     options.forwardRef = meta || forwardRef;
@@ -308,7 +308,7 @@ const _componentToReact = (
   if (allRefs.length) {
     reactLibImports.add('useRef');
   }
-  if (hasPropRef) {
+  if (!options.preact && hasPropRef) {
     reactLibImports.add('forwardRef');
   }
   if (
