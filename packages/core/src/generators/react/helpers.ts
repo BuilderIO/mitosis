@@ -61,8 +61,12 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
 
           el.name = refName;
           break;
+
+        // NOTE: technically, it should be impossible for the tag to be a method or a function in Mitosis JSX syntax,
+        // as that will fail JSX parsing.
         case 'method':
         case 'function':
+
         case 'property':
           el.name = upperFirst(processedRefName);
           break;
