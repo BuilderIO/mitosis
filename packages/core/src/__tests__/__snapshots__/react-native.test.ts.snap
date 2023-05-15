@@ -1821,13 +1821,13 @@ function MyBasicForNoTagRefComponent(props) {
   return (
     <TagNameGetterRef>
       <Text>Hello </Text>
-      <View>
+      <Tag>
         <Text>{name}</Text>
-      </View>
+      </Tag>
 
       {props.actions?.map((action) => (
         <TagName>
-          <View />
+          <action.icon />
 
           <View>
             <Text>{action.text}</Text>
@@ -3106,6 +3106,7 @@ function RenderBlock(props) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
 
   return (
     <>
@@ -3113,7 +3114,7 @@ function RenderBlock(props) {
         <>
           {isEmptyHtmlElement(tag()) ? (
             <>
-              <View {...attributes()} {...actions()} />
+              <TagRef {...attributes()} {...actions()} />
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
@@ -3129,7 +3130,7 @@ function RenderBlock(props) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
             <>
-              <View {...attributes()} {...actions()}>
+              <TagRef {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
                 {childrenWithoutParentComponent()?.map((child) => (
@@ -3147,7 +3148,7 @@ function RenderBlock(props) {
                     context={childrenContext()}
                   />
                 ))}
-              </View>
+              </TagRef>
             </>
           ) : null}
         </>
@@ -5763,13 +5764,13 @@ function MyBasicForNoTagRefComponent(props: any) {
   return (
     <TagNameGetterRef>
       <Text>Hello </Text>
-      <View>
+      <Tag>
         <Text>{name}</Text>
-      </View>
+      </Tag>
 
       {props.actions?.map((action) => (
         <TagName>
-          <View />
+          <action.icon />
 
           <View>
             <Text>{action.text}</Text>
@@ -7167,6 +7168,7 @@ function RenderBlock(props: RenderBlockProps) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
 
   return (
     <>
@@ -7174,7 +7176,7 @@ function RenderBlock(props: RenderBlockProps) {
         <>
           {isEmptyHtmlElement(tag()) ? (
             <>
-              <View {...attributes()} {...actions()} />
+              <TagRef {...attributes()} {...actions()} />
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
@@ -7190,7 +7192,7 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
             <>
-              <View {...attributes()} {...actions()}>
+              <TagRef {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
                 {childrenWithoutParentComponent()?.map((child) => (
@@ -7208,7 +7210,7 @@ function RenderBlock(props: RenderBlockProps) {
                     context={childrenContext()}
                   />
                 ))}
-              </View>
+              </TagRef>
             </>
           ) : null}
         </>
