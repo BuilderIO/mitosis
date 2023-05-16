@@ -167,7 +167,7 @@ import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
 
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
@@ -386,8 +386,8 @@ import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
 
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 @Component({
   selector: \\"my-basic-child-component, MyBasicChildComponent\\",
@@ -982,11 +982,13 @@ import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
 
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 @Component({
   selector: \\"form-component, FormComponent\\",
@@ -1784,8 +1786,7 @@ import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
 
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 @Component({
   selector: \\"smile-reviews, SmileReviews\\",
@@ -3263,20 +3264,20 @@ import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
 
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
 
 @Component({
   selector: \\"render-block, RenderBlock\\",
@@ -3520,12 +3521,12 @@ import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
 
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 @Component({
@@ -4263,7 +4264,7 @@ import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
 
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
@@ -4492,8 +4493,8 @@ import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
 
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 @Component({
   selector: \\"my-basic-child-component, MyBasicChildComponent\\",
@@ -5168,11 +5169,13 @@ export interface FormProps {
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 @Component({
   selector: \\"form-component, FormComponent\\",
@@ -6072,8 +6075,7 @@ type SmileReviewsProps = {
   apiKey: string;
 };
 
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 @Component({
   selector: \\"smile-reviews, SmileReviews\\",
@@ -7084,11 +7086,6 @@ import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
 
-import Button1 from \\"./blocks/button.raw\\";
-import Button2 from \\"./blocks/button.raw\\";
-import * as Button3 from \\"./blocks/button.raw\\";
-import * as Button4 from \\"./blocks/button.raw.lite\\";
-
 @Component({
   selector: \\"my-import-component, MyImportComponent\\",
   template: \`
@@ -7713,28 +7710,28 @@ export type RenderBlockProps = {
   context: BuilderContextInterface;
 };
 
+import { TARGET } from \\"../../constants/target.js\\";
 import type {
   BuilderContextInterface,
   RegisteredComponent,
 } from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import type { RenderComponentProps } from \\"./render-component.lite\\";
-import type { RepeatData } from \\"./types.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import type { RenderComponentProps } from \\"./render-component.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import type { RepeatData } from \\"./types.js\\";
 
 @Component({
   selector: \\"render-block, RenderBlock\\",
@@ -7986,12 +7983,12 @@ type Props = {
   };
 };
 
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 @Component({

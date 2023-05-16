@@ -1,27 +1,27 @@
 import { format } from 'prettier/standalone';
+import { dashCase } from '../../helpers/dash-case';
 import { dedent } from '../../helpers/dedent';
+import { fastClone } from '../../helpers/fast-clone';
+import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import { getProps } from '../../helpers/get-props';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
+import { indent } from '../../helpers/indent';
+import { mapRefs } from '../../helpers/map-refs';
+import { getForArguments } from '../../helpers/nodes/for';
 import { renderPreComponent } from '../../helpers/render-imports';
-import { selfClosingTags } from '../../parsers/jsx';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { collectCss } from '../../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { fastClone } from '../../helpers/fast-clone';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { selfClosingTags } from '../../parsers/jsx';
+import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { collectClassString } from './collect-class-string';
-import { getProps } from '../../helpers/get-props';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import { dashCase } from '../../helpers/dash-case';
-import { collectCss } from '../../helpers/styles/collect-css';
-import { indent } from '../../helpers/indent';
-import { mapRefs } from '../../helpers/map-refs';
-import { getForArguments } from '../../helpers/nodes/for';
 
 export interface ToStencilOptions extends BaseTranspilerOptions {}
 

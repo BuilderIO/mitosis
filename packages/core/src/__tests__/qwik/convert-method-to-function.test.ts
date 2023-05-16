@@ -1,5 +1,5 @@
-import { MethodMap } from '../../generators/qwik/helpers/state';
 import { convertMethodToFunction } from '../../generators/qwik/helpers/convert-method-to-function';
+import { MethodMap } from '../../generators/qwik/helpers/state';
 
 describe('convertMethodToFunction', () => {
   const methodMap: MethodMap = {

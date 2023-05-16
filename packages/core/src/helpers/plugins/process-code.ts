@@ -1,6 +1,6 @@
-import { Plugin } from '../../types/plugins';
 import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
+import { Plugin } from '../../types/plugins';
 import { checkIsDefined } from '../nullable';
 import { traverseNodes } from '../traverse-nodes';
 

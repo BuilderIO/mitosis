@@ -1,6 +1,6 @@
-import { Linter as ESLinter } from 'eslint';
-import { rules, configs as lintConfigs } from '@builder.io/eslint-plugin-mitosis';
+import { configs as lintConfigs, rules } from '@builder.io/eslint-plugin-mitosis';
 import { parse } from '@typescript-eslint/typescript-estree';
+import { Linter as ESLinter } from 'eslint';
 
 const Linter: typeof ESLinter = require('eslint/lib/linter/linter').Linter;
 const linter = new Linter();

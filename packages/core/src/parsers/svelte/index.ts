@@ -1,12 +1,12 @@
-import { parse, preprocess } from 'svelte/compiler';
-import preprocessor from 'svelte-preprocess';
 import { omit } from 'lodash';
+import preprocessor from 'svelte-preprocess';
+import { parse, preprocess } from 'svelte/compiler';
 
-import { parseModule } from './module';
-import { parseInstance } from './instance';
 import { parseCss } from './css';
-import { parseHtml } from './html';
 import { postProcess } from './helpers/post-process';
+import { parseHtml } from './html';
+import { parseInstance } from './instance';
+import { parseModule } from './module';
 import { collectTypes, isTypeScriptComponent } from './typescript';
 
 import type { Ast } from 'svelte/types/compiler/interfaces';

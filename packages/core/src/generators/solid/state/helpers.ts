@@ -1,11 +1,11 @@
 import { types } from '@babel/core';
-import { stripStateAndPropsRefs } from '../../../helpers/strip-state-and-props-refs';
-import { MitosisComponent } from '../../../types/mitosis-component';
-import { ToSolidOptions } from '../types';
 import { flow, identity } from 'fp-ts/lib/function';
-import { transformStateSetters } from '../../../helpers/transform-state-setters';
 import { capitalize } from '../../../helpers/capitalize';
 import { replaceStateIdentifier } from '../../../helpers/replace-identifiers';
+import { stripStateAndPropsRefs } from '../../../helpers/strip-state-and-props-refs';
+import { transformStateSetters } from '../../../helpers/transform-state-setters';
+import { MitosisComponent } from '../../../types/mitosis-component';
+import { ToSolidOptions } from '../types';
 
 export const getStateSetterName = (stateName: string) => `set${capitalize(stateName)}`;
 

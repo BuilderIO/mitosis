@@ -1,17 +1,17 @@
 import { format } from 'prettier/standalone';
-import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
-import { selfClosingTags } from '../parsers/jsx';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { collectCss } from '../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { selfClosingTags } from '../parsers/jsx';
+import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToLiquidOptions extends BaseTranspilerOptions {
