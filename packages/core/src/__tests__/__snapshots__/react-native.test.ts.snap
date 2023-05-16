@@ -696,7 +696,9 @@ function ContentSlotJsxCode(props) {
             {...props.attributes}
             onClick={(event) => show()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || <Text>{props.content}</Text>}</>
+            ) : null}
 
             <View>
               <View />
@@ -713,7 +715,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: <Text>{props.content}</Text>,
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -1438,16 +1440,16 @@ import {
 } from \\"react-native\\";
 
 function SlotCode(props) {
-  return <View>{props.children}</View>;
-}
-
-SlotCode.defaultProps = {
-  children: (
+  return (
     <View>
-      <Text>Default content</Text>
+      {props.children || (
+        <View>
+          <Text>Default content</Text>
+        </View>
+      )}
     </View>
-  ),
-};
+  );
+}
 
 export default SlotCode;
 "
@@ -1517,17 +1519,12 @@ function SlotCode(props) {
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || <Text>Default left</Text>}
 
-      {props.children}
+      {props.children || <Text>Default Child</Text>}
     </View>
   );
 }
-
-SlotCode.defaultProps = {
-  slotLeft: <Text>Default left</Text>,
-  children: <Text>Default Child</Text>,
-};
 
 export default SlotCode;
 "
@@ -1794,6 +1791,55 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      <Text>Hello </Text>
+      <Tag>
+        <Text>{name}</Text>
+      </Tag>
+
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <View>
+            <Text>{action.text}</Text>
+          </View>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
@@ -3061,6 +3107,7 @@ function RenderBlock(props) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
 
   return (
     <>
@@ -3068,7 +3115,7 @@ function RenderBlock(props) {
         <>
           {isEmptyHtmlElement(tag()) ? (
             <>
-              <View {...attributes()} {...actions()} />
+              <TagRef {...attributes()} {...actions()} />
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
@@ -3084,7 +3131,7 @@ function RenderBlock(props) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
             <>
-              <View {...attributes()} {...actions()}>
+              <TagRef {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
                 {childrenWithoutParentComponent()?.map((child) => (
@@ -3102,7 +3149,7 @@ function RenderBlock(props) {
                     context={childrenContext()}
                   />
                 ))}
-              </View>
+              </TagRef>
             </>
           ) : null}
         </>
@@ -4412,7 +4459,9 @@ function ContentSlotJsxCode(props: Props) {
             {...props.attributes}
             onClick={(event) => show()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || <Text>{props.content}</Text>}</>
+            ) : null}
 
             <View>
               <View />
@@ -4429,7 +4478,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: <Text>{props.content}</Text>,
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -5270,16 +5319,16 @@ type Props = {
 };
 
 function SlotCode(props: Props) {
-  return <View>{props.children}</View>;
-}
-
-SlotCode.defaultProps = {
-  children: (
+  return (
     <View>
-      <Text>Default content</Text>
+      {props.children || (
+        <View>
+          <Text>Default content</Text>
+        </View>
+      )}
     </View>
-  ),
-};
+  );
+}
 
 export default SlotCode;
 "
@@ -5361,17 +5410,12 @@ function SlotCode(props: Props) {
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || <Text>Default left</Text>}
 
-      {props.children}
+      {props.children || <Text>Default Child</Text>}
     </View>
   );
 }
-
-SlotCode.defaultProps = {
-  slotLeft: <Text>Default left</Text>,
-  children: <Text>Default Child</Text>,
-};
 
 export default SlotCode;
 "
@@ -5691,6 +5735,55 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      <Text>Hello </Text>
+      <Tag>
+        <Text>{name}</Text>
+      </Tag>
+
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <View>
+            <Text>{action.text}</Text>
+          </View>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
@@ -7077,6 +7170,7 @@ function RenderBlock(props: RenderBlockProps) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
 
   return (
     <>
@@ -7084,7 +7178,7 @@ function RenderBlock(props: RenderBlockProps) {
         <>
           {isEmptyHtmlElement(tag()) ? (
             <>
-              <View {...attributes()} {...actions()} />
+              <TagRef {...attributes()} {...actions()} />
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
@@ -7100,7 +7194,7 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
             <>
-              <View {...attributes()} {...actions()}>
+              <TagRef {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
                 {childrenWithoutParentComponent()?.map((child) => (
@@ -7118,7 +7212,7 @@ function RenderBlock(props: RenderBlockProps) {
                     context={childrenContext()}
                   />
                 ))}
-              </View>
+              </TagRef>
             </>
           ) : null}
         </>
@@ -8141,20 +8235,15 @@ import {
 function MyComponent(props) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || <Text>default</Text>}
+      {props.slotTest || (
+        <View>
+          <Text>default</Text>
+        </View>
+      )}
     </View>
   );
 }
-
-MyComponent.defaultProps = {
-  children: <Text>default</Text>,
-  slotTest: (
-    <View>
-      <Text>default</Text>
-    </View>
-  ),
-};
 
 export default MyComponent;
 "
@@ -8678,20 +8767,15 @@ import {
 function MyComponent(props: any) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || <Text>default</Text>}
+      {props.slotTest || (
+        <View>
+          <Text>default</Text>
+        </View>
+      )}
     </View>
   );
 }
-
-MyComponent.defaultProps = {
-  children: <Text>default</Text>,
-  slotTest: (
-    <View>
-      <Text>default</Text>
-    </View>
-  ),
-};
 
 export default MyComponent;
 "

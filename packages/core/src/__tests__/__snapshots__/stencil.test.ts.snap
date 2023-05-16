@@ -1717,6 +1717,42 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-for-no-tag-ref-component\\",
+})
+export default class MyBasicForNoTagRefComponent {
+  @Prop() actions: any;
+
+  @State() name = \\"VincentW\\";
+  @State() TagName = \\"div\\";
+  @State() tag = \\"span\\";
+
+  get TagNameGetter() {
+    return \\"span\\";
+  }
+
+  render() {
+    return (
+      <state.TagNameGetter>
+        Hello
+        <state.tag>{this.name}</state.tag>
+        {this.actions?.map((action) => (
+          <state.TagName>
+            <action.icon></action.icon>
+
+            <span>{action.text}</span>
+          </state.TagName>
+        ))}
+      </state.TagNameGetter>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > basicForwardRef 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -4584,6 +4620,42 @@ export default class MyComponent {
         Hello
         {this.name}
       </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-for-no-tag-ref-component\\",
+})
+export default class MyBasicForNoTagRefComponent {
+  @Prop() actions: any;
+
+  @State() name = \\"VincentW\\";
+  @State() TagName = \\"div\\";
+  @State() tag = \\"span\\";
+
+  get TagNameGetter() {
+    return \\"span\\";
+  }
+
+  render() {
+    return (
+      <state.TagNameGetter>
+        Hello
+        <state.tag>{this.name}</state.tag>
+        {this.actions?.map((action) => (
+          <state.TagName>
+            <action.icon></action.icon>
+
+            <span>{action.text}</span>
+          </state.TagName>
+        ))}
+      </state.TagNameGetter>
     );
   }
 }

@@ -519,7 +519,7 @@ function ContentSlotJsxCode(props) {
             className={state.cls}
           >
             {state.showContent && props.slotContent ? (
-              <>{props.slotContent}</>
+              <>{props.slotContent || \\"{props.content}\\"}</>
             ) : null}
 
             <div>
@@ -537,7 +537,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -1230,12 +1230,10 @@ function SlotCode(props) {
     <div slotContext={_context}>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\" };
 
 export default SlotCode;
 "
@@ -1449,6 +1447,40 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`RSC > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    name: \\"VincentW\\",
+    TagName: \\"div\\",
+    tag: \\"span\\",
+    get TagNameGetter() {
+      return \\"span\\";
+    },
+  };
+
+  return (
+    <state.TagNameGetter _context={_context}>
+      Hello
+      <state.tag>{state.name}</state.tag>
+      {props.actions?.map((action) => (
+        <state.TagName _context={_context}>
+          <action.icon />
+
+          <span>{action.text}</span>
+        </state.TagName>
+      ))}
+    </state.TagNameGetter>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
@@ -2384,16 +2416,13 @@ function RenderBlock(props) {
     componentInfo: null,
   };
 
-  const RenderComponentTagRef = state.renderComponentTag;
-  const TagRef = state.tag;
-
   return (
     <>
       {state.shouldWrap ? (
         <>
           {isEmptyHtmlElement(state.tag) ? (
             <>
-              <TagRef {...state.attributes} {...state.actions} />
+              <state.tag {...state.attributes} {...state.actions} />
             </>
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
@@ -2410,8 +2439,8 @@ function RenderBlock(props) {
           ) : null}
           {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
             <>
-              <TagRef {...state.attributes} {...state.actions}>
-                <RenderComponentTagRef
+              <state.tag {...state.attributes} {...state.actions}>
+                <state.renderComponentTag
                   {...state.renderComponentProps}
                   _context={_context}
                 />
@@ -2433,13 +2462,13 @@ function RenderBlock(props) {
                     _context={_context}
                   />
                 ))}
-              </TagRef>
+              </state.tag>
             </>
           ) : null}
         </>
       ) : (
         <>
-          <RenderComponentTagRef
+          <state.renderComponentTag
             {...state.renderComponentProps}
             _context={_context}
           />
@@ -3454,7 +3483,7 @@ function ContentSlotJsxCode(props: Props) {
             className={state.cls}
           >
             {state.showContent && props.slotContent ? (
-              <>{props.slotContent}</>
+              <>{props.slotContent || \\"{props.content}\\"}</>
             ) : null}
 
             <div>
@@ -3472,7 +3501,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -4293,12 +4322,10 @@ function SlotCode(props: Props) {
     <div slotContext={_context}>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\" };
 
 export default SlotCode;
 "
@@ -4565,6 +4592,40 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    name: \\"VincentW\\",
+    TagName: \\"div\\",
+    tag: \\"span\\",
+    get TagNameGetter() {
+      return \\"span\\";
+    },
+  };
+
+  return (
+    <state.TagNameGetter _context={_context}>
+      Hello
+      <state.tag>{state.name}</state.tag>
+      {props.actions?.map((action) => (
+        <state.TagName _context={_context}>
+          <action.icon />
+
+          <span>{action.text}</span>
+        </state.TagName>
+      ))}
+    </state.TagNameGetter>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
@@ -5619,16 +5680,13 @@ function RenderBlock(props: RenderBlockProps) {
     componentInfo: null,
   };
 
-  const RenderComponentTagRef = state.renderComponentTag;
-  const TagRef = state.tag;
-
   return (
     <>
       {state.shouldWrap ? (
         <>
           {isEmptyHtmlElement(state.tag) ? (
             <>
-              <TagRef {...state.attributes} {...state.actions} />
+              <state.tag {...state.attributes} {...state.actions} />
             </>
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
@@ -5645,8 +5703,8 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
           {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
             <>
-              <TagRef {...state.attributes} {...state.actions}>
-                <RenderComponentTagRef
+              <state.tag {...state.attributes} {...state.actions}>
+                <state.renderComponentTag
                   {...state.renderComponentProps}
                   _context={_context}
                 />
@@ -5668,13 +5726,13 @@ function RenderBlock(props: RenderBlockProps) {
                     _context={_context}
                   />
                 ))}
-              </TagRef>
+              </state.tag>
             </>
           ) : null}
         </>
       ) : (
         <>
-          <RenderComponentTagRef
+          <state.renderComponentTag
             {...state.renderComponentProps}
             _context={_context}
           />
@@ -6426,10 +6484,10 @@ exports[`RSC > svelte > Javascript Test > slots 1`] = `
 function MyComponent(props) {
   const _context = { ...props[\\"_context\\"] };
 
-  return <div slotContext={_context}>{props.slotTest}</div>;
+  return (
+    <div slotContext={_context}>{props.slotTest || <div>default</div>}</div>
+  );
 }
-
-MyComponent.defaultProps = { slotTest: <div>default</div> };
 
 export default MyComponent;
 "
@@ -6790,10 +6848,10 @@ exports[`RSC > svelte > Typescript Test > slots 1`] = `
 function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  return <div slotContext={_context}>{props.slotTest}</div>;
+  return (
+    <div slotContext={_context}>{props.slotTest || <div>default</div>}</div>
+  );
 }
-
-MyComponent.defaultProps = { slotTest: <div>default</div> };
 
 export default MyComponent;
 "

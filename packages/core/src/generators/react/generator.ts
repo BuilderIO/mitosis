@@ -1,30 +1,22 @@
-import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { createSingleBinding } from '../../helpers/bindings';
+import { TranspilerGenerator } from '../../types/transpiler';
+import { collectCss } from '../../helpers/styles/collect-css';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
-import { getPropsRef } from '../../helpers/get-props-ref';
 import { getRefs } from '../../helpers/get-refs';
+import { getPropsRef } from '../../helpers/get-props-ref';
 import {
-  getStateObjectStringFromComponent,
   stringifyContextValue,
+  getStateObjectStringFromComponent,
 } from '../../helpers/get-state-object-string';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { handleMissingState } from '../../helpers/handle-missing-state';
-import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { mapRefs } from '../../helpers/map-refs';
-import { mergeOptions } from '../../helpers/merge-options';
 import { processHttpRequests } from '../../helpers/process-http-requests';
-import { processTagReferences } from '../../helpers/process-tag-references';
 import { renderPreComponent } from '../../helpers/render-imports';
-import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
-import { checkHasState } from '../../helpers/state';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { collectCss } from '../../helpers/styles/collect-css';
-import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
-import { hasCss } from '../../helpers/styles/helpers';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -32,13 +24,20 @@ import {
   runPreJsonPlugins,
 } from '../../modules/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { TranspilerGenerator } from '../../types/transpiler';
 import { hasContext } from '../helpers/context';
 import { collectReactNativeStyles } from '../react-native';
-import { blockToReact } from './blocks';
-import { closeFrag, openFrag, processBinding, wrapInFragment } from './helpers';
-import { getUseStateCode, processHookCode, updateStateSetters } from './state';
+import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
+import { hasCss } from '../../helpers/styles/helpers';
+import { checkHasState } from '../../helpers/state';
 import { ToReactOptions } from './types';
+import { getUseStateCode, processHookCode, updateStateSetters } from './state';
+import { closeFrag, openFrag, wrapInFragment, processTagReferences, getCode } from './helpers';
+import hash from 'hash-sum';
+import { createSingleBinding } from '../../helpers/bindings';
+import { blockToReact } from './blocks';
+import { mergeOptions } from '../../helpers/merge-options';
+import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
+import { isRootTextNode } from '../../helpers/is-root-text-node';
 
 export const contextPropDrillingKey = '_context';
 
@@ -133,10 +132,6 @@ function getContextString(component: MitosisComponent, options: ToReactOptions) 
 
   return str;
 }
-
-const getInitCode = (json: MitosisComponent, options: ToReactOptions): string => {
-  return processBinding(json.hooks.init?.code || '', options);
-};
 
 type ReactExports =
   | 'useState'
@@ -245,7 +240,7 @@ const _componentToReact = (
 ) => {
   processHttpRequests(json);
   handleMissingState(json);
-  processTagReferences(json);
+  processTagReferences(json, options);
   const contextStr = provideContext(json, options);
   const componentHasStyles = hasCss(json);
   if (options.stateType === 'useState') {
@@ -264,7 +259,7 @@ const _componentToReact = (
   let hasState = checkHasState(json);
 
   const [forwardRef, hasPropRef] = getPropsRef(json);
-  const isForwardRef = Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
+  const isForwardRef = !options.preact && Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
   if (isForwardRef) {
     const meta = json.meta.useMetadata?.forwardRef as string;
     options.forwardRef = meta || forwardRef;
@@ -313,7 +308,7 @@ const _componentToReact = (
   if (allRefs.length) {
     reactLibImports.add('useRef');
   }
-  if (hasPropRef) {
+  if (!options.preact && hasPropRef) {
     reactLibImports.add('forwardRef');
   }
   if (
@@ -370,7 +365,7 @@ const _componentToReact = (
     }
     ${hasStateArgument ? refsString : ''}
     ${getContextString(json, options)}
-    ${getInitCode(json, options)}
+    ${getCode(json.hooks.init?.code, options)}
     ${contextStr || ''}
 
     ${

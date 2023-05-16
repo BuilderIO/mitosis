@@ -13,6 +13,7 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { componentToReact } from '../react';
 import { sanitizeReactNativeBlockStyles } from './sanitize-react-native-block-styles';
+import { VALID_HTML_TAGS } from '../../constants/html_tags';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType: 'emotion' | 'react-native';
@@ -102,7 +103,7 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           // TODO: handle TextInput, Image, etc
           if (isChildren({ node })) {
             node.name = '';
-          } else if (node.name.toLowerCase() === node.name) {
+          } else if (node.name.toLowerCase() === node.name && VALID_HTML_TAGS.includes(node.name)) {
             node.name = 'View';
           } else if (
             node.properties._text?.trim().length ||

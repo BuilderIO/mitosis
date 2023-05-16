@@ -56,16 +56,8 @@ const NODE_MAPPERS: {
         return '';
       }
 
-      if (hasChildren) {
-        component.defaultProps = {
-          ...(component.defaultProps || {}),
-          children: {
-            code: renderChildren(),
-            type: 'property',
-          },
-        };
-      }
-      return `{${processBinding('props.children', options)}}`;
+      const children = processBinding('props.children', options);
+      return `{${children} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
     }
 
     let slotProp = processBinding(slotName as string, options).replace('name=', '');
@@ -74,16 +66,7 @@ const NODE_MAPPERS: {
       slotProp = `props.slot${upperFirst(camelCase(slotProp))}`;
     }
 
-    if (hasChildren) {
-      component.defaultProps = {
-        ...(component.defaultProps || {}),
-        [slotProp.replace('props.', '')]: {
-          code: renderChildren(),
-          type: 'property',
-        },
-      };
-    }
-    return `{${slotProp}}`;
+    return `{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
   },
   Fragment(json, options, component) {
     const wrap = wrapInFragment(json);
@@ -139,6 +122,9 @@ const BINDING_MAPPERS: {
     | ((key: string, value: string, options?: ToReactOptions) => [string, string]);
 } = {
   ref(ref, value, options) {
+    if (options?.preact) {
+      return [ref, value];
+    }
     const regexp = /(.+)?props\.(.+)( |\)|;|\()?$/m;
     if (regexp.test(value)) {
       const match = regexp.exec(value);

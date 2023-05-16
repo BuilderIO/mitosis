@@ -37,11 +37,7 @@ const processStateValue = (options: ToReactOptions) => {
       return '';
     }
     const getDefaultCase = () =>
-      pipe(
-        value,
-        mapValue,
-        (x) => `const [${key}, ${getSetStateFnName(key)}] = useState(() => (${x}))`,
-      );
+      `const [${key}, ${getSetStateFnName(key)}] = useState(() => (${mapValue(value)}))`;
 
     const value = stateVal.code || '';
     const type = stateVal.type;
