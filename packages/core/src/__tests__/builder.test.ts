@@ -7,13 +7,13 @@ import { builderContentToMitosisComponent, extractStateHook } from '../parsers/b
 import { parseJsx } from '../parsers/jsx';
 import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
 
+import { BuilderComponent } from '@builder.io/react';
 import columns from './data/blocks/columns.raw.tsx?raw';
 import customCode from './data/blocks/custom-code.raw.tsx?raw';
 import embed from './data/blocks/embed.raw.tsx?raw';
 import image from './data/blocks/image.raw.tsx?raw';
 import stamped from './data/blocks/stamped-io.raw.tsx?raw';
 import lazyLoadSection from './data/builder/lazy-load-section.json?raw';
-import { BuilderComponent } from '@builder.io/react';
 
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
