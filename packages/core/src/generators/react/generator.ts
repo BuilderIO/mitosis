@@ -320,11 +320,17 @@ const _componentToReact = (
     reactLibImports.add('useEffect');
   }
 
+  const hasCustomStyles = !!json.style?.length;
+  const shouldInjectCustomStyles =
+    hasCustomStyles &&
+    (options.stylesType === 'styled-components' || options.stylesType === 'emotion');
+
   const wrap =
     wrapInFragment(json) ||
     isRootTextNode(json) ||
     (componentHasStyles &&
       (options.stylesType === 'styled-jsx' || options.stylesType === 'style-tag')) ||
+    shouldInjectCustomStyles ||
     isRootSpecialNode(json);
 
   const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
@@ -421,10 +427,14 @@ const _componentToReact = (
       ${
         componentHasStyles && options.stylesType === 'styled-jsx'
           ? `<style jsx>{\`${css}\`}</style>`
-          : componentHasStyles && options.stylesType === 'style-tag'
+          : ''
+      }
+      ${
+        componentHasStyles && options.stylesType === 'style-tag'
           ? `<style>{\`${css}\`}</style>`
           : ''
       }
+      ${shouldInjectCustomStyles ? `<style>{\`${json.style}\`}</style>` : ''}
       ${wrap ? closeFrag(options) : ''}
     );
   `;
