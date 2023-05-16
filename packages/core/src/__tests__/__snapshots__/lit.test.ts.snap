@@ -2058,6 +2058,48 @@ export default class MyComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-for-no-tag-ref-component\\")
+export default class MyBasicForNoTagRefComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() actions: any;
+
+  @state() name = \\"VincentW\\";
+  @state() TagName = \\"div\\";
+  @state() tag = \\"span\\";
+
+  get TagNameGetter() {
+    return \\"span\\";
+  }
+
+  render() {
+    return html\`
+
+          <state.TagNameGetter>
+          Hello
+          <state.tag>\${this.name}</state.tag>
+
+          \${this.actions?.map(
+            (action, index) => html\`<state.TagName>
+          <action.icon></action.icon>
+
+          <span>\${action.text}</span> </state.TagName
+        >\`
+          )}
+        </state.TagNameGetter>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > basicForwardRef 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -6231,6 +6273,48 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>Hello \${this.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-for-no-tag-ref-component\\")
+export default class MyBasicForNoTagRefComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() actions: any;
+
+  @state() name = \\"VincentW\\";
+  @state() TagName = \\"div\\";
+  @state() tag = \\"span\\";
+
+  get TagNameGetter() {
+    return \\"span\\";
+  }
+
+  render() {
+    return html\`
+
+          <state.TagNameGetter>
+          Hello
+          <state.tag>\${this.name}</state.tag>
+
+          \${this.actions?.map(
+            (action, index) => html\`<state.TagName>
+          <action.icon></action.icon>
+
+          <span>\${action.text}</span> </state.TagName
+        >\`
+          )}
+        </state.TagNameGetter>
 
         \`;
   }
