@@ -13,6 +13,7 @@ export default function MyBasicForNoTagRefComponent() {
   return (
     <state.TagNameGetter>
       Hello <state.tag>{state.name}</state.tag>
+      <state.tag>{state.name}</state.tag>
       <For each={props.actions}>
         {(action) => (
           <state.TagName>
