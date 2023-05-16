@@ -231,7 +231,7 @@ const FOR_SHOW_TESTS: Tests = {
 const FORWARD_REF_TESTS: Tests = {
   basicForwardRef,
   basicForwardRefMetadata,
-  dontForwardRef
+  dontForwardRef,
 };
 
 const SHOW_TESTS: Tests = {

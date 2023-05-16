@@ -2,7 +2,10 @@ import traverse from 'traverse';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 
-export function getReactPropsRef(json: MitosisComponent, shouldRemove?: boolean): [string, boolean] {
+export function getReactPropsRef(
+  json: MitosisComponent,
+  shouldRemove?: boolean,
+): [string, boolean] {
   let has = false;
   let prop = '';
   traverse(json).forEach(function (item) {
