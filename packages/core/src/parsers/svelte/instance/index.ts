@@ -127,6 +127,17 @@ export function parseInstance(ast: Ast, json: SveltosisComponent) {
         case 'ExpressionStatement':
           handleExpressionStatement(json, node as ExpressionStatement, parent);
           break;
+        case 'ArrowFunctionExpression':
+          if (parent.type === 'VariableDeclarator') {
+            // Convert ArrowFunctions into regular FunctionDeclarations
+            // TODO 1: Converting might change the meaning of "this"!
+            // TODO 2: Figure out a way if the ArrowFunction does not contain a BlockStatement!
+            node.type = 'FunctionDeclaration'
+            node.id = parent.id // Name the created function after the variable!
+            handleFunctionDeclaration(json, node as FunctionDeclaration);
+          }
+          // Do nothing if this was an IIFE
+          break;
         case 'FunctionDeclaration':
           handleFunctionDeclaration(json, node as FunctionDeclaration);
           break;
