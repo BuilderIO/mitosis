@@ -130,6 +130,7 @@ const SVELTE_SYNTAX_TESTS: Tests = {
   slots: getRawFile('./syntax/svelte/slots.raw.svelte'),
   style: getRawFile('./syntax/svelte/style.raw.svelte'),
   textExpressions: getRawFile('./syntax/svelte/text-expressions.raw.svelte'),
+  fatArrowFunctions: getRawFile('./syntax/svelte/fat-arrow.raw.svelte'),
 };
 
 const BASIC_TESTS: Tests = {

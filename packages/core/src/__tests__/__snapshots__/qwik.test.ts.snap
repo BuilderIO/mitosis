@@ -8811,6 +8811,30 @@ export default MyComponent;
 "
 `;
 
+exports[`qwik > svelte > Javascript Test > fatArrowFunctions 1`] = `
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const clickHandler1 = function clickHandler1(props, state, event) {
+  console.log(\\"do something 1\\");
+};
+export const clickHandler2 = function clickHandler2(props, state, event) {
+  console.log(\\"do something 2\\");
+};
+export const MyComponent = component$((props) => {
+  const state = {};
+
+  return (
+    <Fragment>
+      <button onClick$={(event) => state.clickHandler1(event)}>Button 1</button>
+      <button onClick$={(event) => state.clickHandler2(event)}>Button 2</button>
+    </Fragment>
+  );
+});
+
+export default MyComponent;
+"
+`;
+
 exports[`qwik > svelte > Javascript Test > html 1`] = `
 "import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
@@ -9206,6 +9230,30 @@ export const MyComponent = component$((props: any) => {
       <button onClick$={(event) => state.log(event)}>Log</button>
       <button onClick$={(event) => state.log(event)}>Log</button>
     </div>
+  );
+});
+
+export default MyComponent;
+"
+`;
+
+exports[`qwik > svelte > Typescript Test > fatArrowFunctions 1`] = `
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const clickHandler1 = function clickHandler1(props, state, event) {
+  console.log(\\"do something 1\\");
+};
+export const clickHandler2 = function clickHandler2(props, state, event) {
+  console.log(\\"do something 2\\");
+};
+export const MyComponent = component$((props: any) => {
+  const state: any = {};
+
+  return (
+    <Fragment>
+      <button onClick$={(event) => state.clickHandler1(event)}>Button 1</button>
+      <button onClick$={(event) => state.clickHandler2(event)}>Button 2</button>
+    </Fragment>
   );
 });
 
