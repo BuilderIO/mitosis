@@ -1,5 +1,5 @@
-import { Rule } from 'eslint';
 import * as types from '@babel/types';
+import { Rule } from 'eslint';
 import isMitosisPath from '../helpers/isMitosisPath';
 
 export const staticControlFlow: Rule.RuleModule = {

@@ -128,7 +128,7 @@ exports[`Vue > jsx > Javascript Test > Basic Context 1`] = `
 <script setup>
 import { inject, onMounted, provide, ref } from \\"vue\\";
 
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 const name = ref(\\"PatrickJS\\");
 
@@ -250,8 +250,8 @@ exports[`Vue > jsx > Javascript Test > BasicChildComponent 1`] = `
 <script setup>
 import { ref } from \\"vue\\";
 
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 const name = ref(\\"Steve\\");
 const dev = ref(\\"PatrickJS\\");
@@ -761,11 +761,13 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
 <script setup>
 import { computed, ref } from \\"vue\\";
 
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 const props = defineProps([
   \\"previewState\\",
@@ -1400,8 +1402,7 @@ exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
 <script setup>
 import { onMounted, ref } from \\"vue\\";
 
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 const props = defineProps([\\"apiKey\\", \\"productId\\"]);
 const reviews = ref([]);
@@ -2333,20 +2334,20 @@ exports[`Vue > jsx > Javascript Test > renderBlock 1`] = `
 <script setup>
 import { computed } from \\"vue\\";
 
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.vue\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.vue\\";
 import RenderComponent from \\"./render-component.vue\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
 
 const props = defineProps([\\"block\\", \\"context\\"]);
 
@@ -2535,12 +2536,12 @@ exports[`Vue > jsx > Javascript Test > renderContentExample 1`] = `
 <script setup>
 import { onMounted, provide, watch } from \\"vue\\";
 
+import BuilderContext from \\"@dummy/context.vue\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.vue\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 const props = defineProps([\\"content\\", \\"customComponents\\"]);
@@ -2974,7 +2975,7 @@ exports[`Vue > jsx > Typescript Test > Basic Context 1`] = `
 <script setup lang=\\"ts\\">
 import { inject, onMounted, provide, ref } from \\"vue\\";
 
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 const name = ref(\\"PatrickJS\\");
 
@@ -3106,8 +3107,8 @@ exports[`Vue > jsx > Typescript Test > BasicChildComponent 1`] = `
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 const name = ref(\\"Steve\\");
 const dev = ref(\\"PatrickJS\\");
@@ -3674,11 +3675,13 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
 <script setup lang=\\"ts\\">
 import { computed, ref } from \\"vue\\";
 
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 export interface FormProps {
   attributes?: any;
@@ -4391,8 +4394,7 @@ exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
 
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 type SmileReviewsProps = {
   productId: string;
@@ -5465,28 +5467,28 @@ exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
 <script setup lang=\\"ts\\">
 import { computed } from \\"vue\\";
 
+import { TARGET } from \\"../../constants/target.js\\";
 import type {
   BuilderContextInterface,
   RegisteredComponent,
 } from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
 import BlockStyles from \\"./block-styles.vue\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import type { RenderComponentProps } from \\"./render-component.vue\\";
-import type { RepeatData } from \\"./types.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.vue\\";
+import type { RenderComponentProps } from \\"./render-component.vue\\";
 import RenderComponent from \\"./render-component.vue\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
+import type { RepeatData } from \\"./types.js\\";
 
 export type RenderBlockProps = {
   block: BuilderBlock;
@@ -5680,12 +5682,12 @@ exports[`Vue > jsx > Typescript Test > renderContentExample 1`] = `
 <script setup lang=\\"ts\\">
 import { onMounted, provide, watch } from \\"vue\\";
 
+import BuilderContext from \\"@dummy/context.vue\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.vue\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 type Props = {

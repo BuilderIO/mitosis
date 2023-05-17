@@ -1,38 +1,38 @@
+import { uniq } from 'fp-ts/lib/Array';
+import * as S from 'fp-ts/string';
+import hash from 'hash-sum';
 import { format } from 'prettier/standalone';
+import traverse from 'traverse';
+import { createSingleBinding } from '../../helpers/bindings';
+import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { dedent } from '../../helpers/dedent';
-import { hasCss } from '../../helpers/styles/helpers';
+import { fastClone } from '../../helpers/fast-clone';
+import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import { getComponentsUsed } from '../../helpers/get-components-used';
 import { getRefs } from '../../helpers/get-refs';
+import { stringifyContextValue } from '../../helpers/get-state-object-string';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { isRootTextNode } from '../../helpers/is-root-text-node';
+import { mergeOptions } from '../../helpers/merge-options';
+import { checkIsDefined } from '../../helpers/nullable';
+import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { renderPreComponent } from '../../helpers/render-imports';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { collectCss } from '../../helpers/styles/collect-css';
+import { hasCss } from '../../helpers/styles/helpers';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { fastClone } from '../../helpers/fast-clone';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { getComponentsUsed } from '../../helpers/get-components-used';
-import traverse from 'traverse';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { MitosisComponent } from '../../types/mitosis-component';
 import { TranspilerGenerator } from '../../types/transpiler';
-import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import { createMitosisNode } from '../../helpers/create-mitosis-node';
-import { ToSolidOptions } from './types';
-import { getState } from './state';
-import { checkIsDefined } from '../../helpers/nullable';
-import { stringifyContextValue } from '../../helpers/get-state-object-string';
-import { collectCss } from '../../helpers/styles/collect-css';
-import hash from 'hash-sum';
-import { uniq } from 'fp-ts/lib/Array';
-import * as S from 'fp-ts/string';
-import { updateStateCode } from './state/helpers';
-import { mergeOptions } from '../../helpers/merge-options';
-import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { hasGetContext } from '../helpers/context';
 import { blockToSolid } from './blocks';
-import { createSingleBinding } from '../../helpers/bindings';
-import { isRootTextNode } from '../../helpers/is-root-text-node';
+import { getState } from './state';
+import { updateStateCode } from './state/helpers';
+import { ToSolidOptions } from './types';
 
 // Transform <foo.bar key={value} /> to <Dynamic compnent={foo.bar} key={value} />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {

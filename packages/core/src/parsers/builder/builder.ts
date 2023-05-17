@@ -3,20 +3,20 @@ import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, merge, omit, omitBy, sortBy, upperFirst } from 'lodash';
-import { fastClone } from '../../helpers/fast-clone';
 import traverse from 'traverse';
+import { hashCodeAsString, MitosisComponent, MitosisState } from '../..';
 import { Size, sizeNames, sizes } from '../../constants/media-sizes';
+import { createSingleBinding } from '../../helpers/bindings';
 import { capitalize } from '../../helpers/capitalize';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
+import { fastClone } from '../../helpers/fast-clone';
+import { isExpression, parseCode } from '../../helpers/parsers';
+import { Dictionary } from '../../helpers/typescript';
 import { Binding, MitosisNode } from '../../types/mitosis-node';
 import { parseJsx } from '../jsx';
-import { parseCode, isExpression } from '../../helpers/parsers';
-import { hashCodeAsString, MitosisComponent, MitosisState } from '../..';
-import { mapBuilderContentStateToMitosisState } from './helpers';
 import { parseStateObjectToMitosisState } from '../jsx/state';
-import { createSingleBinding } from '../../helpers/bindings';
-import { Dictionary } from '../../helpers/typescript';
+import { mapBuilderContentStateToMitosisState } from './helpers';
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (keyof CSSStyleDeclaration | 'backgroundRepeatX' | 'backgroundRepeatY')[] = [

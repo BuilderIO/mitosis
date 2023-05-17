@@ -1,14 +1,14 @@
 import * as babel from '@babel/core';
 
-import { MitosisComponent, MitosisState, StateValue } from '../../types/mitosis-component';
+import { MitosisNode } from '@builder.io/mitosis';
+import { pipe } from 'fp-ts/lib/function';
 import traverse from 'traverse';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { MitosisComponent, MitosisState, StateValue } from '../../types/mitosis-component';
 import { parseCode, uncapitalize } from './helpers';
-import { pipe } from 'fp-ts/lib/function';
-import { MitosisNode } from '@builder.io/mitosis';
 
 const { types } = babel;
 

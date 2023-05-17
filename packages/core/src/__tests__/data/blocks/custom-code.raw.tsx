@@ -1,4 +1,4 @@
-import { useStore, useRef, onMount } from '@builder.io/mitosis';
+import { onMount, useRef, useStore } from '@builder.io/mitosis';
 
 export interface CustomCodeProps {
   code: string;

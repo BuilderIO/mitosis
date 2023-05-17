@@ -1,7 +1,7 @@
-import { MitosisComponent, MitosisState, StateValue } from '../../../types/mitosis-component';
-import { ToSolidOptions } from '../types';
 import { pipe } from 'fp-ts/lib/function';
 import { prefixWithFunction, replaceGetterWithFunction } from '../../../helpers/patterns';
+import { MitosisComponent, MitosisState, StateValue } from '../../../types/mitosis-component';
+import { ToSolidOptions } from '../types';
 import { getStateSetterName, updateStateCode } from './helpers';
 
 const processSignalStateValue = ({

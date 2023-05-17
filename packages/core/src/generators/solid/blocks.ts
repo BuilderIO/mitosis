@@ -5,7 +5,7 @@ import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { objectHasKey } from '../../helpers/typescript';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
+import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { collectClassString } from './helpers/styles';
 import { ToSolidOptions } from './types';
 
