@@ -1,17 +1,18 @@
 import json5 from 'json5';
 import { camelCase, size } from 'lodash';
-import { fastClone } from '../../helpers/fast-clone';
 import traverse from 'traverse';
-import { ClassStyleMap } from '../../helpers/styles/helpers';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { componentToReact } from '../react';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { MitosisNode, Plugin } from '../..';
+import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { createSingleBinding } from '../../helpers/bindings';
-import { Dictionary } from '../../helpers/typescript';
-import { mergeOptions } from '../../helpers/merge-options';
+import { fastClone } from '../../helpers/fast-clone';
 import isChildren from '../../helpers/is-children';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { mergeOptions } from '../../helpers/merge-options';
+import { ClassStyleMap } from '../../helpers/styles/helpers';
+import { Dictionary } from '../../helpers/typescript';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
+import { componentToReact } from '../react';
 import { sanitizeReactNativeBlockStyles } from './sanitize-react-native-block-styles';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
@@ -102,7 +103,7 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           // TODO: handle TextInput, Image, etc
           if (isChildren({ node })) {
             node.name = '';
-          } else if (node.name.toLowerCase() === node.name) {
+          } else if (node.name.toLowerCase() === node.name && VALID_HTML_TAGS.includes(node.name)) {
             node.name = 'View';
           } else if (
             node.properties._text?.trim().length ||

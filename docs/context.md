@@ -29,8 +29,8 @@ export default createContext({
 Then you can use it in your components:
 
 ```tsx
+import { setContext, useContext } from '@builder.io/mitosis';
 import Context from './simple.context.lite';
-import { useContext, setContext } from '@builder.io/mitosis';
 
 export default function ComponentWithContext(props: { content: string }) {
   // you can access the context using `useContext`

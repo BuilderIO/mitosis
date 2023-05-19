@@ -1,27 +1,27 @@
+import { camelCase, curry, flow, flowRight as compose } from 'lodash';
 import { format } from 'prettier/standalone';
-import { collectCss } from '../../helpers/styles/collect-css';
+import { babelTransformCode } from '../../helpers/babel-transform';
+import { dashCase } from '../../helpers/dash-case';
 import { fastClone } from '../../helpers/fast-clone';
+import { getRefs } from '../../helpers/get-refs';
+import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
+import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
+import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { selfClosingTags } from '../../parsers/jsx';
-import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
+import { collectCss } from '../../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
-import { dashCase } from '../../helpers/dash-case';
-import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { camelCase, curry, flow, flowRight as compose } from 'lodash';
-import { getRefs } from '../../helpers/get-refs';
+import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
+import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { renderMountHook } from './render-mount-hook';
-import { babelTransformCode } from '../../helpers/babel-transform';
-import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
 
 export interface ToAlpineOptions extends BaseTranspilerOptions {
   /**

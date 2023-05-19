@@ -1,4 +1,4 @@
-import { useStore, useMetadata } from '@builder.io/mitosis';
+import { useMetadata, useStore } from '@builder.io/mitosis';
 
 export interface Props {
   showInput: boolean;

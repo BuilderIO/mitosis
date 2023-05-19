@@ -1,5 +1,5 @@
-import { createMitosisNode } from '../helpers/mitosis-node';
 import { parseChildren } from '../helpers/children';
+import { createMitosisNode } from '../helpers/mitosis-node';
 
 import type { TemplateNode } from 'svelte/types/compiler/interfaces';
 import type { SveltosisComponent } from '../types';

@@ -1,28 +1,27 @@
 import { NodePath, types } from '@babel/core';
-import { camelCase } from 'lodash';
-import { kebabCase } from 'lodash';
+import { camelCase, kebabCase } from 'lodash';
 import { format } from 'prettier/standalone';
-import { hasProps } from '../helpers/has-props';
-import { hasStatefulDom } from '../helpers/has-stateful-dom';
-import { getRefs } from '../helpers/get-refs';
-import { mapRefs } from '../helpers/map-refs';
 import traverse from 'traverse';
 import { babelTransformExpression } from '../helpers/babel-transform';
-import { collectCss } from '../helpers/styles/collect-css';
 import { dashCase } from '../helpers/dash-case';
 import { fastClone } from '../helpers/fast-clone';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { hasComponent } from '../helpers/has-component';
-import { hasBindingsText } from '../helpers/has-bindings-text';
-import { isComponent } from '../helpers/is-component';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { isHtmlAttribute } from '../helpers/is-html-attribute';
+import { getPropFunctions } from '../helpers/get-prop-functions';
 import { getProps } from '../helpers/get-props';
 import { getPropsRef } from '../helpers/get-props-ref';
-import { getPropFunctions } from '../helpers/get-prop-functions';
-import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { getRefs } from '../helpers/get-refs';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { hasBindingsText } from '../helpers/has-bindings-text';
+import { hasComponent } from '../helpers/has-component';
+import { hasProps } from '../helpers/has-props';
+import { hasStatefulDom } from '../helpers/has-stateful-dom';
+import isChildren from '../helpers/is-children';
+import { isComponent } from '../helpers/is-component';
+import { isHtmlAttribute } from '../helpers/is-html-attribute';
+import { isMitosisNode } from '../helpers/is-mitosis-node';
+import { mapRefs } from '../helpers/map-refs';
+import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { renderPreComponent } from '../helpers/render-imports';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import {
   DO_NOT_USE_ARGS,
   DO_NOT_USE_CONTEXT_VARS_TRANSFORMS,
@@ -30,20 +29,20 @@ import {
   stripStateAndPropsRefs,
   StripStateAndPropsRefsOptions,
 } from '../helpers/strip-state-and-props-refs';
+import { collectCss } from '../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import isChildren from '../helpers/is-children';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { renderPreComponent } from '../helpers/render-imports';
+import { selfClosingTags } from '../parsers/jsx';
+import { MitosisComponent } from '../types/mitosis-component';
+import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { getForArguments } from '../helpers/nodes/for';
 import { pipe } from 'fp-ts/lib/function';
+import { getForArguments } from '../helpers/nodes/for';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
   format?: 'class' | 'script';

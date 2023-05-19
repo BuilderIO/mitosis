@@ -2,8 +2,8 @@ import generate from '@babel/generator';
 import * as parser from '@babel/parser';
 import * as types from '@babel/types';
 
-import type { MitosisNode } from '../../../types/mitosis-node';
 import type { extendedHook, StateValue } from '../../../types/mitosis-component';
+import type { MitosisNode } from '../../../types/mitosis-node';
 import type { SveltosisComponent } from '../types';
 import { processBindings } from './bindings';
 

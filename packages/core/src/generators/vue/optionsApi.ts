@@ -1,12 +1,12 @@
 import json5 from 'json5';
-import { uniq, kebabCase, size } from 'lodash';
+import { kebabCase, size, uniq } from 'lodash';
+import { DefaultProps, PropsDefinition } from 'vue/types/options';
 import { getComponentsUsed } from '../../helpers/get-components-used';
 import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
-import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
-import { PropsDefinition, DefaultProps } from 'vue/types/options';
+import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
 import { encodeQuotes, getContextKey, getContextValue, getOnUpdateHookName } from './helpers';
 import { ToVueOptions } from './types';
 
