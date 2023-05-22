@@ -1,6 +1,6 @@
 import { generate } from 'astring';
-import { createSingleBinding } from '../../../helpers/bindings';
 import type { TemplateNode } from 'svelte/types/compiler/interfaces';
+import { createSingleBinding } from '../../../helpers/bindings';
 import { createMitosisNode } from '../helpers/mitosis-node';
 
 export function parseMustacheTag(node: TemplateNode) {

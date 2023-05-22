@@ -1,16 +1,16 @@
 import { format } from 'prettier/standalone';
-import { collectCss } from '../helpers/styles/collect-css';
+import { dedent } from '../helpers/dedent';
 import { fastClone } from '../helpers/fast-clone';
-import { selfClosingTags } from '../parsers/jsx';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { collectCss } from '../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { dedent } from '../helpers/dedent';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { selfClosingTags } from '../parsers/jsx';
+import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToTemplateOptions extends BaseTranspilerOptions {}

@@ -1,11 +1,11 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { checkIsDefined } from '../../helpers/nullable';
-import { createMitosisNode } from '../../helpers/create-mitosis-node';
-import { ForNode, MitosisNode } from '../../types/mitosis-node';
 import { pipe } from 'fp-ts/lib/function';
-import { transformAttributeName } from './helpers';
 import { createSingleBinding } from '../../helpers/bindings';
+import { createMitosisNode } from '../../helpers/create-mitosis-node';
+import { checkIsDefined } from '../../helpers/nullable';
+import { ForNode, MitosisNode } from '../../types/mitosis-node';
+import { transformAttributeName } from './helpers';
 
 const { types } = babel;
 

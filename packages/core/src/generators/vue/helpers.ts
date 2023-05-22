@@ -1,11 +1,10 @@
-import { Nullable } from '../../helpers/nullable';
-import { stringifyContextValue } from '../../helpers/get-state-object-string';
-import { ContextGetInfo, ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode } from '../../types/mitosis-node';
-import { ToVueOptions } from './types';
-import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
+import { pipe } from 'fp-ts/lib/function';
 import { pickBy } from 'lodash';
+import { VALID_HTML_TAGS } from '../../constants/html_tags';
+import { babelTransformExpression } from '../../helpers/babel-transform';
+import { stringifyContextValue } from '../../helpers/get-state-object-string';
+import { Nullable } from '../../helpers/nullable';
 import { stripGetter } from '../../helpers/patterns';
 import {
   replaceIdentifiers,
@@ -13,8 +12,9 @@ import {
   replaceStateIdentifier,
 } from '../../helpers/replace-identifiers';
 import { isSlotProperty, replaceSlotsInString } from '../../helpers/slots';
-import { VALID_HTML_TAGS } from '../../constants/html_tags';
-import { pipe } from 'fp-ts/lib/function';
+import { ContextGetInfo, ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
+import { MitosisNode } from '../../types/mitosis-node';
+import { ToVueOptions } from './types';
 
 export const addPropertiesToJson =
   (properties: MitosisNode['properties']) =>
