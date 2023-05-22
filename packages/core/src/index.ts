@@ -1,4 +1,4 @@
-import { JSX } from '@builder.io/mitosis/jsx-runtime';
+import { JSX } from '../jsx-runtime';
 
 export * from './flow';
 export * from './generators/alpine';
