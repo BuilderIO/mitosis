@@ -1,4 +1,5 @@
 import { JSX } from '@builder.io/mitosis/jsx-runtime';
+import type { Targets } from './targets';
 
 export * from './flow';
 
@@ -45,6 +46,13 @@ export const useMetadata = (obj: object) => {
 };
 export const useDefaultProps = <T = { [key: string]: any }>(value: T): T => null as unknown as T;
 export const useStyle = (value: string) => null as any;
+
+// TO-DO: better type strictness that guarantees `Target` is a subset of `Targets`
+export const useTarget = <Return, Target extends Targets>(
+  dict: Partial<{
+    [T in Target & 'default']?: () => Return;
+  }>,
+): Return => null as unknown as Return;
 
 export * from './parsers/jsx';
 export * from './parsers/svelte';

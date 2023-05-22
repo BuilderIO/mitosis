@@ -5,4 +5,5 @@ export const HOOKS = {
   REF: 'useRef',
   DEFAULT_PROPS: 'useDefaultProps',
   STYLE: 'useStyle',
+  TARGET: 'useTarget',
 } as const;
