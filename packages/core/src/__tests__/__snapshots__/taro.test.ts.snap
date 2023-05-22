@@ -108,7 +108,7 @@ export default MyBasicComponent;
 exports[`Taro > jsx > Javascript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 import { View, Text, Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
@@ -256,8 +256,8 @@ export default MyBooleanAttribute;
 exports[`Taro > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 import { View } from \\"@tarojs/components\\";
 
 function MyBasicChildComponent(props) {
@@ -750,11 +750,13 @@ export default CustomCode;
 exports[`Taro > jsx > Javascript Test > Form 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef } from \\"react\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 import { Form, View, Text } from \\"@tarojs/components\\";
 
 function FormComponent(props) {
@@ -1337,8 +1339,7 @@ export default SlotCode;
 exports[`Taro > jsx > Javascript Test > Stamped.io 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 import { View, Button, Text, Input, Textarea, Image } from \\"@tarojs/components\\";
 
 function SmileReviews(props) {
@@ -1581,6 +1582,8 @@ function MyBasicForNoTagRefComponent(props) {
 
   const [TagName, setTagName] = useState(() => \\"div\\");
 
+  const [tag, setTag] = useState(() => \\"span\\");
+
   function TagNameGetter() {
     return \\"span\\";
   }
@@ -1590,7 +1593,7 @@ function MyBasicForNoTagRefComponent(props) {
   return (
     <TagNameGetterRef>
       Hello
-      {name}
+      <View>{name}</View>
       {props.actions?.map((action) => (
         <TagName>
           <View />
@@ -2455,20 +2458,20 @@ export default OnUpdate;
 exports[`Taro > jsx > Javascript Test > renderBlock 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
 import { View } from \\"@tarojs/components\\";
 
 function RenderBlock(props) {
@@ -2721,12 +2724,12 @@ export default RenderBlock;
 exports[`Taro > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { useContext, useEffect } from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 import { View } from \\"@tarojs/components\\";
 
@@ -3249,7 +3252,7 @@ export default MyBasicComponent;
 exports[`Taro > jsx > Typescript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 import { View, Text, Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
@@ -3408,8 +3411,8 @@ export default MyBooleanAttribute;
 exports[`Taro > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 import { View } from \\"@tarojs/components\\";
 
 function MyBasicChildComponent(props: any) {
@@ -3988,11 +3991,13 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 import { Form, View, Text } from \\"@tarojs/components\\";
 
 function FormComponent(props: FormProps) {
@@ -4677,8 +4682,7 @@ type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 import { View, Button, Text, Input, Textarea, Image } from \\"@tarojs/components\\";
 
 function SmileReviews(props: SmileReviewsProps) {
@@ -4972,6 +4976,8 @@ function MyBasicForNoTagRefComponent(props: any) {
 
   const [TagName, setTagName] = useState(() => \\"div\\");
 
+  const [tag, setTag] = useState(() => \\"span\\");
+
   function TagNameGetter() {
     return \\"span\\";
   }
@@ -4981,7 +4987,7 @@ function MyBasicForNoTagRefComponent(props: any) {
   return (
     <TagNameGetterRef>
       Hello
-      {name}
+      <View>{name}</View>
       {props.actions?.map((action) => (
         <TagName>
           <View />
@@ -5965,28 +5971,28 @@ export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
 };
+import { TARGET } from \\"../../constants/target.js\\";
 import type {
   BuilderContextInterface,
   RegisteredComponent,
 } from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import type { RenderComponentProps } from \\"./render-component.lite\\";
-import type { RepeatData } from \\"./types.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import type { RenderComponentProps } from \\"./render-component.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import type { RepeatData } from \\"./types.js\\";
 import { View } from \\"@tarojs/components\\";
 
 function RenderBlock(props: RenderBlockProps) {
@@ -6247,12 +6253,12 @@ type Props = {
     id: string;
   };
 };
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 import { View } from \\"@tarojs/components\\";
 

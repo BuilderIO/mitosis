@@ -1,8 +1,8 @@
-import { getStyles, setStyles } from '../helpers/get-styles';
-import { MitosisComponent } from '../types/mitosis-component';
 import { TraverseContext } from 'traverse';
-import { MitosisStyles } from '../types/mitosis-styles';
+import { getStyles, setStyles } from '../helpers/get-styles';
 import { traverseNodes } from '../helpers/traverse-nodes';
+import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisStyles } from '../types/mitosis-styles';
 
 type MapStylesOptions = {
   map: (styles: MitosisStyles, context: TraverseContext) => MitosisStyles;

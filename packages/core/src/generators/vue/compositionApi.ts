@@ -2,11 +2,10 @@ import json5 from 'json5';
 import { pickBy } from 'lodash';
 import { dedent } from '../../helpers/dedent';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
-import { getContextKey, getContextValue } from './helpers';
-import { ToVueOptions } from './types';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { processBinding } from './helpers';
+import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
+import { getContextKey, getContextValue, processBinding } from './helpers';
+import { ToVueOptions } from './types';
 
 const getCompositionPropDefinition = ({
   options,

@@ -1,8 +1,8 @@
+import { pipe } from 'fp-ts/lib/function';
 import { getMemberObjectString } from '../../../helpers/get-state-object-string';
+import { checkHasState } from '../../../helpers/state';
 import { MitosisComponent, MitosisState } from '../../../types/mitosis-component';
 import { ToSolidOptions } from '../types';
-import { pipe } from 'fp-ts/lib/function';
-import { checkHasState } from '../../../helpers/state';
 import { getStateTypeForValue } from './helpers';
 import { getSignalsCode } from './signals';
 import { getStoreCode } from './store';

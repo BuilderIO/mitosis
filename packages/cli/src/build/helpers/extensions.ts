@@ -31,6 +31,7 @@ export const getFileExtensionForTarget = ({
 
     // all JSX frameworks
     case 'solid':
+    case 'preact':
     case 'qwik':
     case 'react':
     case 'reactNative':

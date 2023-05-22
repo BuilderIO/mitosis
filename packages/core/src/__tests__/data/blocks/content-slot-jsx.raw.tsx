@@ -1,5 +1,5 @@
+import { Show, Slot, useDefaultProps, useStore } from '@builder.io/mitosis';
 import type { JSX } from '../../../../jsx-runtime';
-import { Show, useStore, useDefaultProps, Slot } from '@builder.io/mitosis';
 
 type Props = {
   [key: string]: string | JSX.Element;

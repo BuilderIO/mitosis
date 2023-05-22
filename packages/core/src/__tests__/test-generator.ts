@@ -1,7 +1,7 @@
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { Target } from '../types/config';
-import { parseJsx } from '../parsers/jsx';
 import { MitosisComponent, parseSvelte } from '..';
+import { parseJsx } from '../parsers/jsx';
+import { Target } from '../types/config';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 const getRawFile = (path: string) => import(`${path}?raw`).then((x) => x.default as string);
 

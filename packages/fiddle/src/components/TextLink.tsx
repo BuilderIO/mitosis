@@ -1,4 +1,4 @@
-import React, { AnchorHTMLAttributes } from 'react';
+import { AnchorHTMLAttributes } from 'react';
 import { colors } from '../constants/colors';
 
 export function TextLink(props: AnchorHTMLAttributes<HTMLAnchorElement>) {

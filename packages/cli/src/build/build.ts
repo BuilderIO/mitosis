@@ -4,28 +4,28 @@ import {
   componentToCustomElement,
   componentToHtml,
   componentToLiquid,
+  componentToLit,
   componentToMarko,
   componentToMitosis,
   componentToPreact,
-  componentToLit,
   componentToQwik,
   componentToReact,
-  componentToRsc,
   componentToReactNative,
+  componentToRsc,
   componentToSolid,
   componentToStencil,
   componentToSvelte,
   componentToSwift,
+  componentToTaro,
   componentToTemplate,
   componentToVue2,
   componentToVue3,
-  componentToTaro,
   MitosisComponent,
   MitosisConfig,
   parseJsx,
+  parseSvelte,
   Target,
   TranspilerGenerator,
-  parseSvelte,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import { flow, pipe } from 'fp-ts/lib/function';
@@ -101,7 +101,9 @@ const getRequiredParsers = (
 ): { javascript: boolean; typescript: boolean } => {
   const targetsOptions = Object.values(options.options);
 
-  const targetsRequiringTypeScript = targetsOptions.filter((option) => option.typescript).length;
+  const targetsRequiringTypeScript = targetsOptions.filter(
+    (option) => option.typescript || options.commonOptions?.typescript,
+  ).length;
   const needsTypeScript = targetsRequiringTypeScript > 0;
 
   /**

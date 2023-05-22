@@ -1,28 +1,28 @@
-import { walk } from 'svelte/compiler';
 import { generate } from 'astring';
+import { walk } from 'svelte/compiler';
 
-import { parseAfterUpdate, parseOnDestroy, parseOnMount } from './hooks';
-import { parseFunctions } from './functions';
 import { parseGetContext, parseHasContext, parseSetContext } from './context';
+import { parseMemberExpression } from './expressions';
+import { parseFunctions } from './functions';
+import { parseAfterUpdate, parseOnDestroy, parseOnMount } from './hooks';
 import { parseImports } from './imports';
 import { parseProperties } from './properties';
 import { parseReactive } from './reactive';
 import { parseReferences } from './references';
 import { parseStatementAtProgramLevel } from './statements';
-import { parseMemberExpression } from './expressions';
 
-import type { Ast } from 'svelte/types/compiler/interfaces';
 import type {
   BaseNode,
-  ImportDeclaration,
   ExportNamedDeclaration,
   ExpressionStatement,
   FunctionDeclaration,
-  VariableDeclaration,
-  LabeledStatement,
   Identifier,
+  ImportDeclaration,
+  LabeledStatement,
   Statement,
+  VariableDeclaration,
 } from 'estree';
+import type { Ast } from 'svelte/types/compiler/interfaces';
 
 import type { SveltosisComponent } from '../types';
 

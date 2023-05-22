@@ -3399,6 +3399,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@builder.io/e2e-app-qwik@workspace:*, @builder.io/e2e-app-qwik@workspace:e2e/e2e-app/output/qwik":
+  version: 0.0.0-use.local
+  resolution: "@builder.io/e2e-app-qwik@workspace:e2e/e2e-app/output/qwik"
+  dependencies:
+    "@builder.io/e2e-app": "workspace:*"
+    "@builder.io/qwik": ^0.16.2
+    "@types/node": latest
+    typescript: ^4
+    vite: ^3.0.4
+  languageName: unknown
+  linkType: soft
+
 "@builder.io/e2e-app@workspace:*, @builder.io/e2e-app@workspace:e2e/e2e-app":
   version: 0.0.0-use.local
   resolution: "@builder.io/e2e-app@workspace:e2e/e2e-app"
@@ -3406,7 +3418,7 @@ __metadata:
     "@builder.io/mitosis": "workspace:*"
     "@builder.io/mitosis-cli": "workspace:*"
     "@builder.io/qwik": 0.10.0
-    "@playwright/test": ^1.31.2
+    "@playwright/test": ^1.34.0
     concurrently: ^7.3.0
     react: ^18.2.0
     react-dom: ^18.2.0
@@ -3431,9 +3443,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@builder.io/e2e-qwik@workspace:e2e/e2e-qwikcity"
   dependencies:
+    "@builder.io/e2e-app-qwik": "workspace:*"
     "@builder.io/qwik": 0.21.0
     "@builder.io/qwik-city": 0.5.3
-    "@e2e-app/qwik": "workspace:*"
     "@types/eslint": 8.21.1
     "@types/node": ^18.14.0
     "@types/node-fetch": latest
@@ -3660,6 +3672,7 @@ __metadata:
     npm-run-all: ^4.1.5
     nx: 15.4.5
     prettier: ^2.3.2
+    prettier-plugin-organize-imports: ^3.2.2
     typescript: ^4.8.4
     vite: ^4.0.1
     vite-plugin-eslint: ^1.8.1
@@ -4041,18 +4054,6 @@ __metadata:
   checksum: 2176d301cc258ea5c2324402997cf8134ebb212469c0d397591636cea8d3c02f2b3cf9fd58dcb748c7a0dade77ebdc1b10284fa63e608c033a1db52fddc69918
   languageName: node
   linkType: hard
-
-"@e2e-app/qwik@workspace:*, @e2e-app/qwik@workspace:e2e/e2e-app/output/qwik":
-  version: 0.0.0-use.local
-  resolution: "@e2e-app/qwik@workspace:e2e/e2e-app/output/qwik"
-  dependencies:
-    "@builder.io/e2e-app": "workspace:*"
-    "@builder.io/qwik": ^0.16.2
-    "@types/node": latest
-    typescript: ^4
-    vite: ^3.0.4
-  languageName: unknown
-  linkType: soft
 
 "@e2e-app/vue-2@workspace:e2e/e2e-app/output/vue/packages/_vue2":
   version: 0.0.0-use.local
@@ -5524,19 +5525,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.31.2":
-  version: 1.31.2
-  resolution: "@playwright/test@npm:1.31.2"
+"@playwright/test@npm:^1.34.0":
+  version: 1.34.0
+  resolution: "@playwright/test@npm:1.34.0"
   dependencies:
     "@types/node": "*"
     fsevents: 2.3.2
-    playwright-core: 1.31.2
+    playwright-core: 1.34.0
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     playwright: cli.js
-  checksum: 5459ee0ce15b9a54337f4c26e2ee2d29c11e67e6207c167158eb180a4bea6659c988a2897f51dbebf591fc879f0d81f417e70936b9d8a001448c957939882588
+  checksum: 269074a9b58370633575b99d95135edcd8b5351c19f82b88392f9fc6b0f2dc3687e631d59864aa0cffa382534dd83163069569e67972b4fc63d1bef3fb7372d8
   languageName: node
   linkType: hard
 
@@ -18810,12 +18811,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.31.2":
-  version: 1.31.2
-  resolution: "playwright-core@npm:1.31.2"
-  bin:
-    playwright: cli.js
-  checksum: bf1257b7d80b9d027c99cbfa7ab9d47a2110ec804422b3e3d623bbb3c43e06df7bec4764ca1d852a6d62c76e35c8776efb19941f42ce738db9bc92e7f1b6281c
+"playwright-core@npm:1.34.0":
+  version: 1.34.0
+  resolution: "playwright-core@npm:1.34.0"
+  checksum: 1821ab254b3c756e52c144c26cae7250dd5a1c779277cdd583bd289501d45cceaea40a8185ebf7eaa56b8291e4a042e3eef65f511da2306349c275794c9a582d
   languageName: node
   linkType: hard
 
@@ -19417,6 +19416,23 @@ __metadata:
     prettier: ">=2.0"
     typescript: ">=2.9"
   checksum: 2298fcae0f16fd1a095cc3a33ba5d51b679b291518d404ad5eaca56fdcfbd55d35e26c5adffcb8664bfb45c2339b551b385cf03f48888c46d0348843d96024e1
+  languageName: node
+  linkType: hard
+
+"prettier-plugin-organize-imports@npm:^3.2.2":
+  version: 3.2.2
+  resolution: "prettier-plugin-organize-imports@npm:3.2.2"
+  peerDependencies:
+    "@volar/vue-language-plugin-pug": ^1.0.4
+    "@volar/vue-typescript": ^1.0.4
+    prettier: ">=2.0"
+    typescript: ">=2.9"
+  peerDependenciesMeta:
+    "@volar/vue-language-plugin-pug":
+      optional: true
+    "@volar/vue-typescript":
+      optional: true
+  checksum: 28620ea73a0a518c93200c7ea17d38a26132db3f55a75954983dff3422d4dd2155515518422b7a68935736aa333b0406a51778053bd30133a57718090272bb5d
   languageName: node
   linkType: hard
 

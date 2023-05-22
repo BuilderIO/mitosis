@@ -1,4 +1,4 @@
-import { useStore, useState } from '@builder.io/mitosis';
+import { useState, useStore } from '@builder.io/mitosis';
 
 export const DEFAULT_VALUES = {
   name: 'Steve',
