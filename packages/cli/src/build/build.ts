@@ -101,7 +101,9 @@ const getRequiredParsers = (
 ): { javascript: boolean; typescript: boolean } => {
   const targetsOptions = Object.values(options.options);
 
-  const targetsRequiringTypeScript = targetsOptions.filter((option) => option.typescript).length;
+  const targetsRequiringTypeScript = targetsOptions.filter(
+    (option) => option.typescript || options.commonOptions?.typescript,
+  ).length;
   const needsTypeScript = targetsRequiringTypeScript > 0;
 
   /**
