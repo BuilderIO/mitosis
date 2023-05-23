@@ -3234,12 +3234,16 @@ exports[`Html > jsx > Javascript Test > basicForNoTagReference 1`] = `
     <template data-el=\\"div-1\\"><!-- state.name --></template>
   </state.tag>
 
+  <state.tag>
+    <template data-el=\\"div-2\\"><!-- state.name --></template>
+  </state.tag>
+
   <template data-el=\\"for\\">
     <state.TagName>
       <action.icon></action.icon>
 
       <span>
-        <template data-el=\\"div-2\\"><!-- action.text --></template>
+        <template data-el=\\"div-3\\"><!-- action.text --></template>
       </span>
     </state.TagName>
   </template>
@@ -3278,12 +3282,16 @@ exports[`Html > jsx > Javascript Test > basicForNoTagReference 1`] = `
         renderTextNode(el, state.name);
       });
 
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, state.name);
+      });
+
       document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = props.actions;
         renderLoop(el, array, \\"action\\");
       });
 
-      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
         const action = getScope(el, \\"action\\");
         renderTextNode(el, action.text);
       });
@@ -9222,12 +9230,16 @@ exports[`Html > jsx > Typescript Test > basicForNoTagReference 1`] = `
     <template data-el=\\"div-1\\"><!-- state.name --></template>
   </state.tag>
 
+  <state.tag>
+    <template data-el=\\"div-2\\"><!-- state.name --></template>
+  </state.tag>
+
   <template data-el=\\"for\\">
     <state.TagName>
       <action.icon></action.icon>
 
       <span>
-        <template data-el=\\"div-2\\"><!-- action.text --></template>
+        <template data-el=\\"div-3\\"><!-- action.text --></template>
       </span>
     </state.TagName>
   </template>
@@ -9266,12 +9278,16 @@ exports[`Html > jsx > Typescript Test > basicForNoTagReference 1`] = `
         renderTextNode(el, state.name);
       });
 
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, state.name);
+      });
+
       document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = props.actions;
         renderLoop(el, array, \\"action\\");
       });
 
-      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
         const action = getScope(el, \\"action\\");
         renderTextNode(el, action.text);
       });

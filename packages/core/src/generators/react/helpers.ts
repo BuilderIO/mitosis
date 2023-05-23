@@ -35,7 +35,8 @@ export function getCode(str: string = '', options: ToReactOptions): string {
 }
 
 export function processTagReferences(json: MitosisComponent, options: ToReactOptions) {
-  const namesFound = new Set<string>();
+  const processedTagRefs = new Set<string>();
+  const capitalizedTagRefs = new Set<string>();
 
   traverse(json).forEach((el) => {
     if (!isMitosisNode(el)) {
@@ -45,11 +46,12 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
     const processedRefName = processBinding(el.name, options);
 
     if (el.name.includes('state.')) {
-      switch (json.state[processedRefName]?.type) {
+      const stateVal = json.state[processedRefName] || json.state[upperFirst(processedRefName)];
+      switch (stateVal?.type) {
         case 'getter':
           const refName = getRefName(processedRefName);
-          if (!namesFound.has(el.name)) {
-            namesFound.add(el.name);
+          if (!processedTagRefs.has(el.name)) {
+            processedTagRefs.add(el.name);
             json.hooks.init = {
               ...json.hooks.init,
               code: `
@@ -72,9 +74,13 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
 
           if (capitalizedName !== processedRefName) {
             el.name = capitalizedName;
-            json.state[capitalizedName] = { ...json.state[processedRefName]! };
 
-            delete json.state[processedRefName];
+            if (!capitalizedTagRefs.has(capitalizedName)) {
+              capitalizedTagRefs.add(capitalizedName);
+              json.state[capitalizedName] = { ...json.state[processedRefName]! };
+
+              delete json.state[processedRefName];
+            }
           } else {
             el.name = processedRefName;
           }
