@@ -1,6 +1,6 @@
 import * as babel from '@babel/core';
-import { MitosisContext } from '../types/mitosis-context';
 import { createMitosisContext } from '../helpers/create-mitosis-context';
+import { MitosisContext } from '../types/mitosis-context';
 import { parseStateObjectToMitosisState } from './jsx/state';
 
 const { types } = babel;

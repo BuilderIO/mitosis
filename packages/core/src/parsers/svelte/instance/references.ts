@@ -4,12 +4,12 @@ import { isString, some } from 'lodash';
 import { parseObjectExpression } from '../helpers/expressions';
 
 import type {
-  Identifier,
-  VariableDeclaration,
-  SimpleLiteral,
   Expression,
-  Pattern,
+  Identifier,
   ObjectExpression,
+  Pattern,
+  SimpleLiteral,
+  VariableDeclaration,
 } from 'estree';
 import type { SveltosisComponent } from '../types';
 

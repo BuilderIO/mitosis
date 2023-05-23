@@ -1,19 +1,19 @@
 import cssNoVars from './css-no-vars';
-import refNoCurrent from './ref-no-current';
-import noStateDestructuring from './no-state-destructuring';
 import jsxCallbackArgNameRule from './jsx-callback-arg-name';
-import noAssignPropsToState from './no-assign-props-to-state';
-import useStateVarDeclarator from './use-state-var-declarator';
-import noAsyncMethodsOnState from './no-async-methods-on-state';
-import notVarDeclarationInJSX from './no-var-declaration-in-jsx';
 import jsxCallbackArrowFunction from './jsx-callback-arrow-function';
+import noAssignPropsToState from './no-assign-props-to-state';
+import noAsyncMethodsOnState from './no-async-methods-on-state';
+import noConditionalLogicInComponentRender from './no-conditional-logic-in-component-render';
+import noMapFunctionInJsxReturnBody from './no-map-function-in-jsx-return-body';
+import noStateDestructuring from './no-state-destructuring';
+import notVarDeclarationInJSX from './no-var-declaration-in-jsx';
+import noVarDeclarationOrAssignmentInComponent from './no-var-declaration-or-assignment-in-component';
 import noVarNameSameAsPropName from './no-var-name-same-as-prop-name';
 import noVarNameSameAsStateProperty from './no-var-name-same-as-state-property';
 import onlyDefaultFunctionAndImports from './only-default-function-and-imports';
-import noConditionalLogicInComponentRender from './no-conditional-logic-in-component-render';
-import noVarDeclarationOrAssignmentInComponent from './no-var-declaration-or-assignment-in-component';
-import noMapFunctionInJsxReturnBody from './no-map-function-in-jsx-return-body';
+import refNoCurrent from './ref-no-current';
 import { staticControlFlow } from './static-control-flow';
+import useStateVarDeclarator from './use-state-var-declarator';
 
 export const rules = {
   'css-no-vars': cssNoVars,

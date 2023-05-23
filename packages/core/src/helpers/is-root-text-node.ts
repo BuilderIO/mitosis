@@ -1,5 +1,5 @@
-import { MitosisNode } from '../types/mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisNode } from '../types/mitosis-node';
 
 export function isRootTextNode(json: MitosisComponent | MitosisNode) {
   const firstChild = json.children[0];

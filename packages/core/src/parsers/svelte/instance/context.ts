@@ -2,10 +2,10 @@ import { generate } from 'astring';
 
 import type {
   BaseCallExpression,
-  Identifier,
-  VariableDeclaration,
-  SimpleLiteral,
   ExpressionStatement,
+  Identifier,
+  SimpleLiteral,
+  VariableDeclaration,
 } from 'estree';
 
 import { stripQuotes } from '../helpers/string';

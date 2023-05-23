@@ -1,7 +1,7 @@
+import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@monaco-editor/react';
+import prettierPluginSvelte from 'prettier-plugin-svelte';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
-import prettierPluginSvelte from 'prettier-plugin-svelte';
-import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@monaco-editor/react';
 
 type EditorRefArgs = Parameters<NonNullable<MonacoEditorProps['onMount']>>;
 type Editor = EditorRefArgs[0];

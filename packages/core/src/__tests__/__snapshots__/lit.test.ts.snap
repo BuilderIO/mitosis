@@ -145,7 +145,7 @@ export default class MyBasicForShowComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > Basic Context 1`] = `
-"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+"import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -341,8 +341,8 @@ export default class MyBooleanAttribute extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > BasicChildComponent 1`] = `
-"import MyBasicComponent from \\"./basic.raw\\";
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+"import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -934,11 +934,13 @@ export default class CustomCode extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > Form 1`] = `
-"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+"import { Builder, builder } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -1757,8 +1759,7 @@ export default class SlotCode extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > Stamped.io 1`] = `
-"import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+"import { kebabCase, snakeCase } from \\"lodash\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -2072,6 +2073,7 @@ export default class MyBasicForNoTagRefComponent extends LitElement {
 
   @state() name = \\"VincentW\\";
   @state() TagName = \\"div\\";
+  @state() tag = \\"span\\";
 
   get TagNameGetter() {
     return \\"span\\";
@@ -2081,14 +2083,16 @@ export default class MyBasicForNoTagRefComponent extends LitElement {
     return html\`
 
           <state.TagNameGetter>
-          Hello \${this.name} \${this.actions?.map(
-      (action, index) =>
-        html\`<state.TagName>
+          Hello
+          <state.tag>\${this.name}</state.tag>
+
+          \${this.actions?.map(
+            (action, index) => html\`<state.TagName>
           <action.icon></action.icon>
 
           <span>\${action.text}</span> </state.TagName
         >\`
-    )}
+          )}
         </state.TagNameGetter>
 
         \`;
@@ -3155,20 +3159,20 @@ export default class OnUpdate extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > renderBlock 1`] = `
-"import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+"import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import \\"./block-styles.js\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import \\"./render-repeated-block.js\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import \\"./render-component-with-context.js\\";
 import \\"./render-component.js\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import \\"./render-repeated-block.js\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -3429,12 +3433,12 @@ export default class RenderBlock extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
+"import \\"@dummy/context.js\\";
+import {
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import \\"@dummy/context.js\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 import { LitElement, html, css } from \\"lit\\";
@@ -4155,7 +4159,7 @@ export default class MyBasicForShowComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > Basic Context 1`] = `
-"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+"import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -4361,8 +4365,8 @@ export default class MyBooleanAttribute extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > BasicChildComponent 1`] = `
-"import MyBasicComponent from \\"./basic.raw\\";
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+"import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -5011,11 +5015,13 @@ export default class CustomCode extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > Form 1`] = `
-"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+"import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -5958,8 +5964,7 @@ export default class SlotCode extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > Stamped.io 1`] = `
-"import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+"import { kebabCase, snakeCase } from \\"lodash\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -6325,6 +6330,7 @@ export default class MyBasicForNoTagRefComponent extends LitElement {
 
   @state() name = \\"VincentW\\";
   @state() TagName = \\"div\\";
+  @state() tag = \\"span\\";
 
   get TagNameGetter() {
     return \\"span\\";
@@ -6334,14 +6340,16 @@ export default class MyBasicForNoTagRefComponent extends LitElement {
     return html\`
 
           <state.TagNameGetter>
-          Hello \${this.name} \${this.actions?.map(
-      (action, index) =>
-        html\`<state.TagName>
+          Hello
+          <state.tag>\${this.name}</state.tag>
+
+          \${this.actions?.map(
+            (action, index) => html\`<state.TagName>
           <action.icon></action.icon>
 
           <span>\${action.text}</span> </state.TagName
         >\`
-    )}
+          )}
         </state.TagNameGetter>
 
         \`;
@@ -7518,28 +7526,28 @@ export default class OnUpdate extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > renderBlock 1`] = `
-"import type {
+"import { TARGET } from \\"../../constants/target.js\\";
+import type {
   BuilderContextInterface,
   RegisteredComponent,
 } from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
 import \\"./block-styles.js\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import \\"./render-component.js\\";
-import type { RepeatData } from \\"./types.js\\";
-import \\"./render-repeated-block.js\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import \\"./render-component-with-context.js\\";
 import \\"./render-component.js\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import \\"./render-component.js\\";
+import \\"./render-repeated-block.js\\";
+import type { RepeatData } from \\"./types.js\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -7805,12 +7813,12 @@ export default class RenderBlock extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
+"import \\"@dummy/context.js\\";
+import {
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import \\"@dummy/context.js\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 import { LitElement, html, css } from \\"lit\\";

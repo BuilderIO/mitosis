@@ -1,9 +1,6 @@
-import { useStore, useRef, Show, For } from '@builder.io/mitosis';
-import { BuilderBlock as BuilderBlockComponent } from '@fake';
-import { BuilderElement, Builder, builder } from '@builder.io/sdk';
-import { BuilderBlocks } from '@fake';
-import { set } from '@fake';
-import { get } from '@fake';
+import { For, Show, useRef, useStore } from '@builder.io/mitosis';
+import { Builder, builder, BuilderElement } from '@builder.io/sdk';
+import { BuilderBlock as BuilderBlockComponent, BuilderBlocks, get, set } from '@fake';
 
 export interface FormProps {
   attributes?: any;

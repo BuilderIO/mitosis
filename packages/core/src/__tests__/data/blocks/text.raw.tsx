@@ -1,5 +1,5 @@
-import { Builder } from '@builder.io/sdk';
 import { useStore } from '@builder.io/mitosis';
+import { Builder } from '@builder.io/sdk';
 
 export interface TextProps {
   attributes?: any;

@@ -1,6 +1,6 @@
 import traverse from 'traverse';
-import { MitosisComponent } from '../../types/mitosis-component';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { MitosisComponent } from '../../types/mitosis-component';
 
 export function getReactPropsRef(
   json: MitosisComponent,
