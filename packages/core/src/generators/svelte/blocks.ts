@@ -2,15 +2,15 @@ import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseNode, Binding, ForNode, MitosisNode } from '../../types/mitosis-node';
 
-import isChildren from '../../helpers/is-children';
-import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
+import { createSingleBinding } from '../../helpers/bindings';
+import isChildren from '../../helpers/is-children';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { getForArguments } from '../../helpers/nodes/for';
-import { ToSvelteOptions } from './types';
+import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
+import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
 import { stripStateAndProps } from './helpers';
-import { createSingleBinding } from '../../helpers/bindings';
+import { ToSvelteOptions } from './types';
 
 /**
  * blockToSvelte executed after stripStateAndProps,

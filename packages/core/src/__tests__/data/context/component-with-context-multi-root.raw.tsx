@@ -1,6 +1,6 @@
+import { setContext, useContext } from '@builder.io/mitosis';
 import Context1 from '@dummy/1';
 import Context2 from '@dummy/2';
-import { useContext, setContext } from '@builder.io/mitosis';
 
 export default function ComponentWithContext(props: { content: string }) {
   const foo = useContext(Context1);

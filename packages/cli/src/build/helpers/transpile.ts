@@ -1,5 +1,5 @@
-import * as esbuild from 'esbuild';
 import { MitosisConfig, Target } from '@builder.io/mitosis';
+import * as esbuild from 'esbuild';
 import { getFileExtensionForTarget } from './extensions';
 import { checkIsMitosisComponentFilePath, INPUT_EXTENSION_IMPORT_REGEX } from './inputs-extensions';
 import { checkShouldOutputTypeScript } from './options';

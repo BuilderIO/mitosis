@@ -1,4 +1,4 @@
-import { useStore, onMount } from '@builder.io/mitosis';
+import { onMount, useStore } from '@builder.io/mitosis';
 
 export default function MyBasicOutputsComponent(props: any) {
   const state = useStore({

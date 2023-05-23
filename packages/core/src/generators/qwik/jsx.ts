@@ -1,8 +1,8 @@
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { Binding, MitosisNode } from '../../types/mitosis-node';
 import { DIRECTIVES } from './directives';
-import { File, invoke, SrcBuilder, quote, lastProperty } from './src-generator';
 import { CssStyles } from './helpers/styles';
+import { File, invoke, lastProperty, quote, SrcBuilder } from './src-generator';
 
 /**
  * Convert a Mitosis nodes to a JSX nodes.
@@ -158,7 +158,11 @@ function includedHelperDirectives(directive: string, directives: Map<string, str
 }
 
 function isSymbol(name: string): boolean {
-  return name.charAt(0) == name.charAt(0).toUpperCase();
+  return (
+    name.charAt(0) === name.charAt(0).toUpperCase() &&
+    // we want to exclude any property access, as that can't be a symbol
+    !name.includes('.')
+  );
 }
 
 function addClass(className: string, existingClass: string | undefined): string {

@@ -154,7 +154,7 @@ exports[`Vue > jsx > Javascript Test > Basic Context 1`] = `
 <script>
 import { defineComponent } from \\"vue\\";
 
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 export default defineComponent({
   name: \\"my-basic-component\\",
@@ -327,8 +327,8 @@ exports[`Vue > jsx > Javascript Test > BasicChildComponent 1`] = `
 <script>
 import { defineComponent } from \\"vue\\";
 
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 export default defineComponent({
   name: \\"my-basic-child-component\\",
@@ -912,11 +912,13 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
 <script>
 import { defineComponent } from \\"vue\\";
 
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 export default defineComponent({
   name: \\"form-component\\",
@@ -1628,8 +1630,7 @@ exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
 <script>
 import { defineComponent } from \\"vue\\";
 
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 export default defineComponent({
   name: \\"smile-reviews\\",
@@ -1834,6 +1835,38 @@ export default defineComponent({
     },
     updateNameWithArrowFn(value) {
       this.name = value;
+    },
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"<template>
+  <component :is=\\"TagNameGetter\\">
+    Hello <component :is=\\"tag\\">{{ name }}</component>
+    <component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\">
+      <component :is=\\"action.icon\\"></component>
+      <span>{{ action.text }}</span>
+    </component>
+  </component>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"my-basic-for-no-tag-ref-component\\",
+
+  props: [\\"actions\\"],
+
+  data() {
+    return { name: \\"VincentW\\", TagName: \\"div\\", tag: \\"span\\" };
+  },
+
+  computed: {
+    TagNameGetter() {
+      return \\"span\\";
     },
   },
 });
@@ -2132,7 +2165,43 @@ export default defineComponent({
 </script>"
 `;
 
-exports[`Vue > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `"Vue 2 template should have a single root element"`;
+exports[`Vue > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"<template>
+  <div>
+    {{ foo.value }}
+    <div>other</div>
+  </div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default defineComponent({
+  name: \\"component-with-context\\",
+
+  props: [\\"content\\"],
+
+  provide() {
+    const _this = this;
+    return {
+      [Context1.key]: {
+        foo: \\"bar\\",
+        content() {
+          return _this.content;
+        },
+      },
+      [Context2.key]: { bar: \\"baz\\" },
+    };
+  },
+  inject: {
+    foo: Context1.key,
+  },
+});
+</script>"
+`;
 
 exports[`Vue > jsx > Javascript Test > contentState 1`] = `
 "<template>
@@ -2776,20 +2845,20 @@ exports[`Vue > jsx > Javascript Test > renderBlock 1`] = `
 <script>
 import { defineComponent } from \\"vue\\";
 
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.vue\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.vue\\";
 import RenderComponent from \\"./render-component.vue\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
 
 export default defineComponent({
   name: \\"render-block\\",
@@ -2993,12 +3062,12 @@ exports[`Vue > jsx > Javascript Test > renderContentExample 1`] = `
 <script>
 import { defineComponent } from \\"vue\\";
 
+import BuilderContext from \\"@dummy/context.vue\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.vue\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 export default defineComponent({
@@ -3055,7 +3124,37 @@ export default defineComponent({
 </style>"
 `;
 
-exports[`Vue > jsx > Javascript Test > rootFragmentMultiNode 1`] = `"Vue 2 template should have a single root element"`;
+exports[`Vue > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
+"<template>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
+      >
+        {{ text }}
+      </a>
+    </template>
+
+    <template v-if=\\"!link\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"button\\",
+
+  props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
+});
+</script>"
+`;
 
 exports[`Vue > jsx > Javascript Test > rootShow 1`] = `
 "<template>
@@ -3549,7 +3648,7 @@ exports[`Vue > jsx > Typescript Test > Basic Context 1`] = `
 <script lang=\\"ts\\">
 import { defineComponent } from \\"vue\\";
 
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 export default defineComponent({
   name: \\"my-basic-component\\",
@@ -3732,8 +3831,8 @@ exports[`Vue > jsx > Typescript Test > BasicChildComponent 1`] = `
 <script lang=\\"ts\\">
 import { defineComponent } from \\"vue\\";
 
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 export default defineComponent({
   name: \\"my-basic-child-component\\",
@@ -4374,11 +4473,13 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
 <script lang=\\"ts\\">
 import { defineComponent } from \\"vue\\";
 
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 export interface FormProps {
   attributes?: any;
@@ -5211,8 +5312,7 @@ exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
 <script lang=\\"ts\\">
 import { defineComponent } from \\"vue\\";
 
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 type SmileReviewsProps = {
   productId: string;
@@ -5469,6 +5569,38 @@ export default defineComponent({
     },
     updateNameWithArrowFn(value) {
       this.name = value;
+    },
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"<template>
+  <component :is=\\"TagNameGetter\\">
+    Hello <component :is=\\"tag\\">{{ name }}</component>
+    <component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\">
+      <component :is=\\"action.icon\\"></component>
+      <span>{{ action.text }}</span>
+    </component>
+  </component>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"my-basic-for-no-tag-ref-component\\",
+
+  props: [\\"actions\\"],
+
+  data() {
+    return { name: \\"VincentW\\", TagName: \\"div\\", tag: \\"span\\" };
+  },
+
+  computed: {
+    TagNameGetter() {
+      return \\"span\\";
     },
   },
 });
@@ -5788,7 +5920,47 @@ export default defineComponent({
 </script>"
 `;
 
-exports[`Vue > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `"Vue 2 template should have a single root element"`;
+exports[`Vue > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"<template>
+  <div>
+    {{ foo.value }}
+    <div>other</div>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+export default defineComponent({
+  name: \\"component-with-context\\",
+
+  props: [\\"content\\"],
+
+  provide() {
+    const _this = this;
+    return {
+      [Context1.key]: {
+        foo: \\"bar\\",
+        content() {
+          return _this.content;
+        },
+      },
+      [Context2.key]: { bar: \\"baz\\" },
+    };
+  },
+  inject: {
+    foo: Context1.key,
+  },
+});
+</script>"
+`;
 
 exports[`Vue > jsx > Typescript Test > contentState 1`] = `
 "<template>
@@ -6512,28 +6684,28 @@ exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
 <script lang=\\"ts\\">
 import { defineComponent } from \\"vue\\";
 
+import { TARGET } from \\"../../constants/target.js\\";
 import type {
   BuilderContextInterface,
   RegisteredComponent,
 } from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
 import BlockStyles from \\"./block-styles.vue\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import type { RenderComponentProps } from \\"./render-component.vue\\";
-import type { RepeatData } from \\"./types.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.vue\\";
+import type { RenderComponentProps } from \\"./render-component.vue\\";
 import RenderComponent from \\"./render-component.vue\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
+import type { RepeatData } from \\"./types.js\\";
 
 export type RenderBlockProps = {
   block: BuilderBlock;
@@ -6742,12 +6914,12 @@ exports[`Vue > jsx > Typescript Test > renderContentExample 1`] = `
 <script lang=\\"ts\\">
 import { defineComponent } from \\"vue\\";
 
+import BuilderContext from \\"@dummy/context.vue\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.vue\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 type Props = {
@@ -6812,7 +6984,44 @@ export default defineComponent({
 </style>"
 `;
 
-exports[`Vue > jsx > Typescript Test > rootFragmentMultiNode 1`] = `"Vue 2 template should have a single root element"`;
+exports[`Vue > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
+"<template>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
+      >
+        {{ text }}
+      </a>
+    </template>
+
+    <template v-if=\\"!link\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default defineComponent({
+  name: \\"button\\",
+
+  props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
+});
+</script>"
+`;
 
 exports[`Vue > jsx > Typescript Test > rootShow 1`] = `
 "<template>

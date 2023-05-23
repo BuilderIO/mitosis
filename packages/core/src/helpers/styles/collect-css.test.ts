@@ -1,5 +1,5 @@
-import { collectCss } from './collect-css';
 import { parseJsx } from '../../parsers/jsx';
+import { collectCss } from './collect-css';
 
 import classRaw from '../../__tests__/data/styles/class.raw.tsx?raw';
 import classState from '../../__tests__/data/styles/classState.raw.tsx?raw';

@@ -1,13 +1,13 @@
 import { camelCase, upperFirst } from 'lodash';
-import isChildren from '../../helpers/is-children';
-import { isSlotProperty } from '../../helpers/slots';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
+import isChildren from '../../helpers/is-children';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
+import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
 import { getForArguments } from '../../helpers/nodes/for';
+import { isSlotProperty } from '../../helpers/slots';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode, ForNode, checkIsForNode } from '../../types/mitosis-node';
+import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
 import { closeFrag, getFragment, openFrag, processBinding, wrapInFragment } from './helpers';
 import { updateStateSettersInCode } from './state';
 import { ToReactOptions } from './types';
@@ -56,16 +56,8 @@ const NODE_MAPPERS: {
         return '';
       }
 
-      if (hasChildren) {
-        component.defaultProps = {
-          ...(component.defaultProps || {}),
-          children: {
-            code: renderChildren(),
-            type: 'property',
-          },
-        };
-      }
-      return `{${processBinding('props.children', options)}}`;
+      const children = processBinding('props.children', options);
+      return `{${children} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
     }
 
     let slotProp = processBinding(slotName as string, options).replace('name=', '');
@@ -74,16 +66,7 @@ const NODE_MAPPERS: {
       slotProp = `props.slot${upperFirst(camelCase(slotProp))}`;
     }
 
-    if (hasChildren) {
-      component.defaultProps = {
-        ...(component.defaultProps || {}),
-        [slotProp.replace('props.', '')]: {
-          code: renderChildren(),
-          type: 'property',
-        },
-      };
-    }
-    return `{${slotProp}}`;
+    return `{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
   },
   Fragment(json, options, component) {
     const wrap = wrapInFragment(json);
@@ -139,6 +122,9 @@ const BINDING_MAPPERS: {
     | ((key: string, value: string, options?: ToReactOptions) => [string, string]);
 } = {
   ref(ref, value, options) {
+    if (options?.preact) {
+      return [ref, value];
+    }
     const regexp = /(.+)?props\.(.+)( |\)|;|\()?$/m;
     if (regexp.test(value)) {
       const match = regexp.exec(value);
