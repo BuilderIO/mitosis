@@ -133,7 +133,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
-    const props = getProps(component);
+    const props = getProps(component, "lit");
     let css = collectCss(json);
 
     const domRefs = getRefs(json);
