@@ -1,4 +1,4 @@
-const {resolve} = require('path');
+const { resolve } = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 /**
  * @type {import('next').NextConfig}
@@ -18,7 +18,7 @@ const nextConfig = {
     config.resolve.alias['globby'] = false;
     config.resolve.alias['pnpapi'] = false;
 
-    config.resolve.alias['module'] = resolve(__dirname, "node_modules", "module");
+    config.resolve.alias['module'] = resolve(__dirname, 'node_modules', 'module');
 
     config.module.rules.push({
       test: /svelte-preprocess.+d\.ts/,
@@ -42,7 +42,7 @@ const nextConfig = {
     esmExternals: true,
     externalDir: true,
   },
-  transpilePackages: ['@builder.io/mitosis', '@builder.io/eslint-plugin-mitosis']
+  transpilePackages: ['@builder.io/mitosis', '@builder.io/eslint-plugin-mitosis'],
 };
 
 module.exports = nextConfig;
