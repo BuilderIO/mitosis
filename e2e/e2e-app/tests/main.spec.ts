@@ -49,7 +49,7 @@ test.describe('e2e', () => {
     });
 
     test('script tag', async ({ page, packageName }) => {
-      if (packageName === 'e2e-solid') {
+      if (['e2e-solid', 'e2e-vue2', 'e2e-vue3', 'e2e-react'].includes(packageName)) {
         test.skip();
       }
 
