@@ -140,7 +140,7 @@ const getTagName = ({
           ? // We have to obfuscate `"style"` due to a limitation in the svelte-preprocessor plugin.
             // https://github.com/sveltejs/vite-plugin-svelte/issues/315#issuecomment-1109000027
             `"sty" + "le"`
-          : json.name,
+          : `"${json.name}"`,
     });
 
     return SVELTE_SPECIAL_TAGS.ELEMENT;
