@@ -1,12 +1,12 @@
-import { createSingleBinding } from '../helpers/bindings';
 import traverse from 'traverse';
 import { Plugin } from '..';
+import { createSingleBinding } from '../helpers/bindings';
 import { fastClone } from '../helpers/fast-clone';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
+import { mergeOptions } from '../helpers/merge-options';
 import { MitosisComponent } from '../types/mitosis-component';
 import { TranspilerGenerator } from '../types/transpiler';
 import { componentToReact, contextPropDrillingKey, ToReactOptions } from './react';
-import { mergeOptions } from '../helpers/merge-options';
 
 export type ToRscOptions = ToReactOptions;
 

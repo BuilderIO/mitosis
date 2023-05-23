@@ -1,12 +1,11 @@
 import { format } from 'prettier/standalone';
+import { convertTypeScriptToJS } from '../../helpers/babel-transform';
 import { fastClone } from '../../helpers/fast-clone';
-import { collectCss } from '../../helpers/styles/collect-css';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
+import { mergeOptions } from '../../helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
+import { replaceIdentifiers, replaceStateIdentifier } from '../../helpers/replace-identifiers';
 import { checkHasState } from '../../helpers/state';
-import { addPreventDefault } from './helpers/add-prevent-default';
-import { renderJSXNodes } from './jsx';
-import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
+import { collectCss } from '../../helpers/styles/collect-css';
 import {
   Plugin,
   runPostCodePlugins,
@@ -14,12 +13,13 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
+import { addPreventDefault } from './helpers/add-prevent-default';
 import { stableInject } from './helpers/stable-inject';
-import { mergeOptions } from '../../helpers/merge-options';
 import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
-import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { replaceIdentifiers, replaceStateIdentifier } from '../../helpers/replace-identifiers';
-import { convertTypeScriptToJS } from '../../helpers/babel-transform';
+import { renderJSXNodes } from './jsx';
+import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 
 Error.stackTraceLimit = 9999;
 

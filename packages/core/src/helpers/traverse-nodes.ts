@@ -1,6 +1,6 @@
+import traverse, { TraverseContext } from 'traverse';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
-import traverse, { TraverseContext } from 'traverse';
 import { isMitosisNode } from './is-mitosis-node';
 
 export function traverseNodes(

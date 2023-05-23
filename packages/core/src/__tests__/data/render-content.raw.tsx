@@ -1,10 +1,10 @@
-import { setContext, onMount, onUpdate } from '@builder.io/mitosis';
+import { onMount, onUpdate, setContext } from '@builder.io/mitosis';
+import BuilderContext from '@dummy/context.lite';
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from '@dummy/injection-js';
-import BuilderContext from '@dummy/context.lite';
 import RenderBlocks from '@dummy/RenderBlocks.lite.tsx';
 
 type Props = {

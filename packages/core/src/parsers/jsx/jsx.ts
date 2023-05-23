@@ -1,25 +1,25 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
+import { pipe } from 'fp-ts/lib/function';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
+import { tryParseJson } from '../../helpers/json';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { tryParseJson } from '../../helpers/json';
 import { jsonToAst } from './ast';
+import { collectTypes, isTypeOrInterface } from './component-types';
+import { extractContextComponents } from './context';
+import { jsxElementToJson } from './element-parser';
+import { generateExports } from './exports';
+import { componentFunctionToJson } from './function-parser';
+import { isImportOrDefaultExport } from './helpers';
+import { collectModuleScopeHooks } from './hooks';
+import { handleImportDeclaration } from './imports';
+import { undoPropsDestructure } from './props';
 import { mapStateIdentifiers } from './state';
 import { Context, ParseMitosisOptions } from './types';
-import { collectModuleScopeHooks } from './hooks';
-import { extractContextComponents } from './context';
-import { isImportOrDefaultExport } from './helpers';
-import { collectTypes, isTypeOrInterface } from './component-types';
-import { undoPropsDestructure } from './props';
-import { generateExports } from './exports';
-import { pipe } from 'fp-ts/lib/function';
-import { handleImportDeclaration } from './imports';
-import { jsxElementToJson } from './element-parser';
-import { componentFunctionToJson } from './function-parser';
 
-import tsPreset from '@babel/preset-typescript';
 import tsPlugin from '@babel/plugin-syntax-typescript';
+import tsPreset from '@babel/preset-typescript';
 
 const { types } = babel;
 

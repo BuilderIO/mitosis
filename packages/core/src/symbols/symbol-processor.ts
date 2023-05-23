@@ -1,12 +1,12 @@
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import { forEach } from 'traverse';
+import { minify } from '../generators/minify';
 import {
   builderContentToMitosisComponent,
   createBuilderElement,
   isBuilderElement,
 } from '../parsers/builder';
 import { MitosisComponent } from '../types/mitosis-component';
-import { minify } from '../generators/minify';
 
 export type SymbolHierarchy = {
   // Reverse sorted symbols

@@ -3,14 +3,14 @@ import {
   compileAwayBuilderComponents,
   componentToBuilder,
   componentToMitosis,
+  componentToQwik,
   componentToReact,
   componentToSolid,
   componentToSvelte,
-  componentToQwik,
-  mapStyles,
-  parseJsx,
   componentToVue3,
+  mapStyles,
   MitosisComponent,
+  parseJsx,
 } from '@builder.io/mitosis';
 import { Typography } from '@material-ui/core';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';

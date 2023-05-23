@@ -1,5 +1,5 @@
-import { MitosisComponent } from '../types/mitosis-component';
 import traverse from 'traverse';
+import { MitosisComponent } from '../types/mitosis-component';
 import { isMitosisNode } from './is-mitosis-node';
 
 export function getComponentsUsed(json: MitosisComponent) {
