@@ -3,6 +3,7 @@ import { Rule } from 'eslint';
 import { match, not, when } from 'ts-pattern';
 import isMitosisPath from '../helpers/isMitosisPath';
 import noOp from '../helpers/noOp';
+import {JSXAttribute} from "../types";
 
 // ------------------------------------------------------------------------------
 // Rule Definition
@@ -35,7 +36,7 @@ const rule: Rule.RuleModule = {
     //
 
     const listener: Rule.RuleListener = {
-      JSXAttribute(node) {
+      JSXAttribute(node: JSXAttribute) {
         match(node)
           .with(
             {

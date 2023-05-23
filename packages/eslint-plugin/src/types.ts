@@ -10,7 +10,7 @@ interface JSXExpressionContainer extends NodeWithParent {
   expression: NodeExt;
 }
 
-interface JSXAttribute extends NodeWithParent {
+export interface JSXAttribute extends NodeWithParent {
   type: 'JSXAttribute';
   name: { name: {} };
   value: JSXExpressionContainer;
