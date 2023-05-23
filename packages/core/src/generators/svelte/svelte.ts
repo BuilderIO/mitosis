@@ -154,7 +154,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     gettersToFunctions(json);
 
-    const props = Array.from(getProps(json, "svelte")).filter((prop) => !isSlotProperty(prop));
+    const props = Array.from(getProps(json, 'svelte')).filter((prop) => !isSlotProperty(prop));
 
     const refs = Array.from(getRefs(json))
       .map(stripStateAndProps({ json, options }))

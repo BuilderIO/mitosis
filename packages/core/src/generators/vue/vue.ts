@@ -166,7 +166,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     }
 
     // need to run this before we process the component's code
-    const props = Array.from(getProps(component, "vue"));
+    const props = Array.from(getProps(component, 'vue'));
     const elementProps = props.filter((prop) => !isSlotProperty(prop));
     const slotsProps = props.filter((prop) => isSlotProperty(prop));
 

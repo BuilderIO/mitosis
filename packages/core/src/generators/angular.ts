@@ -357,7 +357,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
     const hasConstructor = Boolean(injectables.length || json.hooks?.onInit);
 
-    const props = getProps(json, "angular");
+    const props = getProps(json, 'angular');
     // prevent jsx props from showing up as @Input
     if (hasPropRef) {
       props.delete(forwardProp);
