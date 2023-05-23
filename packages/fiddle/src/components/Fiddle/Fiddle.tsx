@@ -1440,47 +1440,6 @@ export default function Fiddle() {
                   />
                 </RadioGroup>
               </div>
-              <Divider css={{ opacity: 0.6 }} />
-              <div
-                css={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
-                }}
-              >
-                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
-                  Inline:
-                </Typography>
-                <RadioGroup
-                  css={{
-                    flexDirection: 'row',
-                    marginRight: 10,
-                    '& .MuiFormControlLabel-label': {
-                      fontSize: 12,
-                    },
-                  }}
-                  aria-label="Alpine Component Type"
-                  name="alpineInline"
-                  value={state.options.alpineInline}
-                  onChange={(e) => {
-                    state.options.alpineInline = e.target.value;
-                    state.updateOutput();
-                  }}
-                >
-                  <FormControlLabel
-                    value="true"
-                    control={<Radio color="primary" />}
-                    labelPlacement="start"
-                    label="Inline"
-                  />
-                  <FormControlLabel
-                    value="false"
-                    labelPlacement="start"
-                    control={<Radio color="primary" />}
-                    label="Separate"
-                  />
-                </RadioGroup>
-              </div>
             </Show>
             <div css={{ flexGrow: 1 }}>
               <div css={{ paddingTop: 15, height: '100%' }}>
