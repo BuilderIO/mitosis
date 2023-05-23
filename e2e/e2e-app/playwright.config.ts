@@ -1,9 +1,10 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { PackageName } from './src/testConfig';
 
-export const targets = [
+export const targets: { packageName: PackageName }[] = [
   // { packageName: 'e2e-alpine' },
   // { packageName: 'e2e-angular' },
   { packageName: 'e2e-qwik' },

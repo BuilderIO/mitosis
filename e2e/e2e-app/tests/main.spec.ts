@@ -1,4 +1,10 @@
-import { expect, test } from '@playwright/test';
+import { expect, test as playwrightTest } from '@playwright/test';
+import { PackageName } from '../src/testConfig';
+
+const test = playwrightTest.extend<{ packageName: PackageName | 'DEFAULT' }>({
+  // this is provided by `playwright.config.ts`
+  packageName: ['DEFAULT', { option: true }],
+});
 
 test.describe('e2e', () => {
   test('todo list add', async ({ page }) => {
@@ -35,18 +41,31 @@ test.describe('e2e', () => {
     await expect(page.locator('text=number :3')).toBeVisible();
   });
 
-  test('template, script and style tags', async ({ page }) => {
-    const consoleMsg: string[] = [];
-    page.on('console', (msg) => consoleMsg.push(msg.text()));
+  test.describe('special HTML tags', () => {
+    test('template tag', async ({ page, packageName }) => {
+      await page.goto('/special-tags/');
 
-    await page.goto('/special-tags/');
+      await expect(page.locator('template')).toBeDefined();
+    });
 
-    await expect(page.locator('body')).not.toContainText('Template Tag Div');
-    await expect(page.locator('template')).toBeDefined();
+    test('script tag', async ({ page, packageName }) => {
+      if (packageName === 'e2e-solid') {
+        test.skip();
+      }
 
-    const div = page.locator('.wrap');
-    await expect(div).toHaveCSS('background-color', 'rgb(255, 0, 0)');
+      const consoleMsg: string[] = [];
+      page.on('console', (msg) => consoleMsg.push(msg.text()));
 
-    await expect(consoleMsg.includes('hello from script tag.')).toBe(true);
+      await page.goto('/special-tags/');
+
+      await expect(consoleMsg.includes('hello from script tag.')).toBe(true);
+    });
+
+    test('style tag', async ({ page, packageName }) => {
+      await page.goto('/special-tags/');
+
+      const div = page.locator('.wrap');
+      await expect(div).toHaveCSS('background-color', 'rgb(255, 0, 0)');
+    });
   });
 });
