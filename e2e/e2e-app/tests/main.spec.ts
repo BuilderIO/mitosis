@@ -34,4 +34,19 @@ test.describe('e2e', () => {
     await expect(page.locator('text=number :2')).toBeVisible();
     await expect(page.locator('text=number :3')).toBeVisible();
   });
+
+  test('template, script and style tags', async ({ page }) => {
+    const consoleMsg: string[] = [];
+    page.on('console', (msg) => consoleMsg.push(msg.text()));
+
+    await page.goto('/special-tags/');
+
+    await expect(page.locator('body')).not.toContainText('Template Tag Div');
+    await expect(page.locator('template')).toBeDefined();
+
+    const div = page.locator('.wrap');
+    await expect(div).toHaveCSS('background-color', 'rgb(255, 0, 0)');
+
+    await expect(consoleMsg.includes('hello from script tag.')).toBe(true);
+  });
 });
