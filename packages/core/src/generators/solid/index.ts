@@ -122,9 +122,12 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     }
     addProviderComponents(json, options);
     const componentHasStyles = hasCss(json);
+    const hasCustomStyles = !!json.style?.length;
+    const shouldInjectCustomStyles = hasCustomStyles && options.stylesType === 'styled-components';
     const addWrapper =
       json.children.filter(filterEmptyTextNodes).length !== 1 ||
       options.stylesType === 'style-tag' ||
+      shouldInjectCustomStyles ||
       isRootTextNode(json);
 
     // we need to run this before we run the code processor plugin, so the dynamic component variables are transformed
@@ -207,6 +210,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
               `<style jsx>{\`${css}\`}</style>`
             : ''
         }
+        ${shouldInjectCustomStyles ? `<style>{\`${json.style}\`}</style>` : ''}
         ${addWrapper ? '</>' : ''})
     }
 
