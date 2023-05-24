@@ -1,31 +1,31 @@
-import { flow, pipe } from 'fp-ts/lib/function';
-import { pickBy, size, uniq } from 'lodash';
-import { format } from 'prettier/standalone';
-import { FUNCTION_HACK_PLUGIN } from 'src/generators/helpers/functions';
-import { convertTypeScriptToJS } from 'src/helpers/babel-transform';
-import { createSingleBinding } from 'src/helpers/bindings';
-import { dedent } from 'src/helpers/dedent';
-import { fastClone } from 'src/helpers/fast-clone';
-import { getProps } from 'src/helpers/get-props';
-import { isMitosisNode } from 'src/helpers/is-mitosis-node';
-import { mapRefs } from 'src/helpers/map-refs';
-import { mergeOptions } from 'src/helpers/merge-options';
-import { CODE_PROCESSOR_PLUGIN } from 'src/helpers/plugins/process-code';
-import { processHttpRequests } from 'src/helpers/process-http-requests';
-import { renderPreComponent } from 'src/helpers/render-imports';
-import { replaceStateIdentifier } from 'src/helpers/replace-identifiers';
-import { isSlotProperty } from 'src/helpers/slots';
-import { stripMetaProperties } from 'src/helpers/strip-meta-properties';
-import { collectCss } from 'src/helpers/styles/collect-css';
+import { FUNCTION_HACK_PLUGIN } from 'core/generators/helpers/functions';
+import { convertTypeScriptToJS } from 'core/helpers/babel-transform';
+import { createSingleBinding } from 'core/helpers/bindings';
+import { dedent } from 'core/helpers/dedent';
+import { fastClone } from 'core/helpers/fast-clone';
+import { getProps } from 'core/helpers/get-props';
+import { isMitosisNode } from 'core/helpers/is-mitosis-node';
+import { mapRefs } from 'core/helpers/map-refs';
+import { mergeOptions } from 'core/helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from 'core/helpers/plugins/process-code';
+import { processHttpRequests } from 'core/helpers/process-http-requests';
+import { renderPreComponent } from 'core/helpers/render-imports';
+import { replaceStateIdentifier } from 'core/helpers/replace-identifiers';
+import { isSlotProperty } from 'core/helpers/slots';
+import { stripMetaProperties } from 'core/helpers/strip-meta-properties';
+import { collectCss } from 'core/helpers/styles/collect-css';
 import {
   Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from 'src/modules/plugins';
-import { MitosisComponent } from 'src/types/mitosis-component';
-import { TranspilerGenerator } from 'src/types/transpiler';
+} from 'core/modules/plugins';
+import { MitosisComponent } from 'core/types/mitosis-component';
+import { TranspilerGenerator } from 'core/types/transpiler';
+import { flow, pipe } from 'fp-ts/lib/function';
+import { pickBy, size, uniq } from 'lodash';
+import { format } from 'prettier/standalone';
 import traverse from 'traverse';
 import { blockToVue } from './blocks';
 import { generateCompositionApiScript } from './compositionApi';
