@@ -274,6 +274,7 @@ export default function Fiddle() {
       vueVersion: localStorageGet('options.vueVersion') || ('2' as '2' | '3'),
       alpineShorthandSyntax: localStorageGet('options.alpineShorthandSyntax') || 'false',
       alpineInline: localStorageGet('options.alpineInline') || 'false',
+      angularStandalone: localStorageGet('options.angularStandalone') || 'false',
     },
     applyPendingBuilderChange(update?: any) {
       const builderJson = update || state.pendingBuilderChange;
@@ -317,6 +318,10 @@ export default function Fiddle() {
               return {
                 useShorthandSyntax: this.options.alpineShorthandSyntax === 'true',
                 inlineState: this.options.alpineInline === 'true',
+              };
+            case 'angular':
+              return {
+                standalone: this.options.angularStandalone === 'true',
               };
             case 'react':
               return {
@@ -1390,6 +1395,48 @@ export default function Fiddle() {
                     labelPlacement="start"
                     control={<Radio color="primary" />}
                     label="Separate"
+                  />
+                </RadioGroup>
+              </div>
+            </Show>
+            <Show when={state.outputTab === 'angular'}>
+              <div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
+                }}
+              >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
+                  Standalone:
+                </Typography>
+                <RadioGroup
+                  css={{
+                    flexDirection: 'row',
+                    marginRight: 10,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: 12,
+                    },
+                  }}
+                  aria-label="Angular Standalone Selection"
+                  name="angularStandalone"
+                  value={state.options.angularStandalone}
+                  onChange={(e) => {
+                    state.options.angularStandalone = e.target.value;
+                    state.updateOutput();
+                  }}
+                >
+                  <FormControlLabel
+                    value="true"
+                    control={<Radio color="primary" />}
+                    labelPlacement="start"
+                    label="Standalone"
+                  />
+                  <FormControlLabel
+                    value="false"
+                    labelPlacement="start"
+                    control={<Radio color="primary" />}
+                    label="Modules"
                   />
                 </RadioGroup>
               </div>
