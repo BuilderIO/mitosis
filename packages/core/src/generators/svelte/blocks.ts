@@ -128,19 +128,41 @@ const getTagName = ({
     return SVELTE_SPECIAL_TAGS.SELF;
   }
 
+  /**
+   * These are special HTML tags that svelte requires `<svelte:element this={TAG}>`
+   */
+  const SPECIAL_HTML_TAGS = ['style', 'script', 'template'];
+
+  if (SPECIAL_HTML_TAGS.includes(json.name)) {
+    json.bindings.this = createSingleBinding({
+      code:
+        json.name === 'style'
+          ? // We have to obfuscate `"style"` due to a limitation in the svelte-preprocessor plugin.
+            // https://github.com/sveltejs/vite-plugin-svelte/issues/315#issuecomment-1109000027
+            `"sty" + "le"`
+          : `"${json.name}"`,
+    });
+
+    return SVELTE_SPECIAL_TAGS.ELEMENT;
+  }
+
   const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name);
+
   const isSpecialSvelteTag = json.name.startsWith('svelte:');
+
   // Check if any import matches `json.name`
   const hasMatchingImport = parentComponent.imports.some(({ imports }) =>
     Object.keys(imports).some((name) => name === json.name),
   );
 
-  // TO-DO: no way to decide between <svelte:component> and <svelte:element>...need to do that through metadata
-  // overrides for now
+  // If none of these are true, then we have some type of dynamic tag name
   if (!isValidHtmlTag && !isSpecialSvelteTag && !hasMatchingImport) {
     json.bindings.this = createSingleBinding({
       code: stripStateAndProps({ json: parentComponent, options })(json.name),
     });
+
+    // TO-DO: no way to perfectly decide between <svelte:component> and <svelte:element> for dynamic
+    // values...need to do that through metadata overrides for now.
     return SVELTE_SPECIAL_TAGS.COMPONENT;
   }
 
