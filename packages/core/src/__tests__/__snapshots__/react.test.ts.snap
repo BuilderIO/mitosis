@@ -1608,7 +1608,7 @@ exports[`React > jsx > Javascript Test > basicForwardRef 1`] = `
 import { useState, forwardRef } from \\"react\\";
 
 const MyBasicForwardRefComponent = forwardRef(
-  function MyBasicForwardRefComponent(props, inputRef) {
+  function MyBasicForwardRefComponent(props, ref) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
@@ -1616,7 +1616,7 @@ const MyBasicForwardRefComponent = forwardRef(
         <div>
           <input
             className=\\"input\\"
-            ref={inputRef}
+            ref={ref}
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
@@ -2020,6 +2020,36 @@ function ComponentWithTypes(props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`React > jsx > Javascript Test > dontForwardRef 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function DontForwardRefComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default DontForwardRefComponent;
 "
 `;
 
@@ -4929,11 +4959,11 @@ import { useState, forwardRef } from \\"react\\";
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 
-const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
+const MyBasicForwardRefComponent = forwardRef<Props[\\"ref\\"]>(
+  function MyBasicForwardRefComponent(props: Props, ref) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
@@ -4941,7 +4971,7 @@ const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
         <div>
           <input
             className=\\"input\\"
-            ref={inputRef}
+            ref={ref}
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
@@ -5388,6 +5418,41 @@ function ComponentWithTypes(props: Props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`React > jsx > Typescript Test > dontForwardRef 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+function DontForwardRefComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default DontForwardRefComponent;
 "
 `;
 

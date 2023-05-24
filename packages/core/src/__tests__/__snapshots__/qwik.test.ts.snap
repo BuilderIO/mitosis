@@ -3463,7 +3463,7 @@ export const MyBasicForwardRefComponent = component$((props) => {
     <div>
       <input
         class=\\"input-MyBasicForwardRefComponent\\"
-        ref={props.inputRef}
+        ref={props.ref}
         value={state.name}
         onChange$={(event) => (state.name = event.target.value)}
       />
@@ -3745,6 +3745,42 @@ export const ComponentWithTypes = component$((props) => {
 });
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > dontForwardRef 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useStore,
+  useStylesScoped$,
+} from \\"@builder.io/qwik\\";
+
+export const DontForwardRefComponent = component$((props) => {
+  useStylesScoped$(STYLES);
+
+  const state = useStore({ name: \\"PatrickJS\\" });
+
+  return (
+    <div>
+      <input
+        class=\\"input-DontForwardRefComponent\\"
+        ref={props.inputRef}
+        value={state.name}
+        onChange$={(event) => (state.name = event.target.value)}
+      />
+    </div>
+  );
+});
+
+export default DontForwardRefComponent;
+
+export const STYLES = \`
+.input-DontForwardRefComponent {
+  color: red;
+}
+\`;
 "
 `;
 
@@ -6689,7 +6725,7 @@ exports[`qwik > jsx > Typescript Test > basicForwardRef 1`] = `
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 export const MyBasicForwardRefComponent = component$((props: Props) => {
   useStylesScoped$(STYLES);
@@ -6700,7 +6736,7 @@ export const MyBasicForwardRefComponent = component$((props: Props) => {
     <div>
       <input
         class=\\"input-MyBasicForwardRefComponent\\"
-        ref={props.inputRef}
+        ref={props.ref}
         value={state.name}
         onChange$={(event) => (state.name = event.target.value)}
       />
@@ -7011,6 +7047,46 @@ export const ComponentWithTypes = component$((props: Props) => {
 });
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > dontForwardRef 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useStore,
+  useStylesScoped$,
+} from \\"@builder.io/qwik\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+export const DontForwardRefComponent = component$((props: Props) => {
+  useStylesScoped$(STYLES);
+
+  const state = useStore<any>({ name: \\"PatrickJS\\" });
+
+  return (
+    <div>
+      <input
+        class=\\"input-DontForwardRefComponent\\"
+        ref={props.inputRef}
+        value={state.name}
+        onChange$={(event) => (state.name = event.target.value)}
+      />
+    </div>
+  );
+});
+
+export default DontForwardRefComponent;
+
+export const STYLES = \`
+.input-DontForwardRefComponent {
+  color: red;
+}
+\`;
 "
 `;
 

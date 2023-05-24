@@ -2111,10 +2111,10 @@ export default class MyBasicForwardRefComponent extends LitElement {
     return this;
   }
 
-  @query('[ref=\\"props.inputRef\\"]')
-  propsInputRef!: HTMLElement;
+  @query('[ref=\\"props.ref\\"]')
+  propsRef!: HTMLElement;
 
-  @property() inputRef: any;
+  @property() ref: any;
 
   @state() name = \\"PatrickJS\\";
 
@@ -2125,7 +2125,7 @@ export default class MyBasicForwardRefComponent extends LitElement {
 }
 </style>
           <div>
-          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+          <input ref=\\"props.ref\\" .value=\${this.name} @input=\${(event) =>
       (this.name = event.target.value)} />
         </div>
 
@@ -2565,6 +2565,40 @@ export default class ComponentWithTypes extends LitElement {
     return html\`
 
           <div>Hello \${this.name || DEFAULT_VALUES.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > dontForwardRef 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"dont-forward-ref-component\\")
+export default class DontForwardRefComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @query('[ref=\\"props.inputRef\\"]')
+  propsInputRef!: HTMLElement;
+
+  @property() inputRef: any;
+
+  @state() name = \\"PatrickJS\\";
+
+  render() {
+    return html\`
+          <style>.input {
+  color: red;
+}
+</style>
+          <div>
+          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+      (this.name = event.target.value)} />
+        </div>
 
         \`;
   }
@@ -6330,7 +6364,7 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 
 @customElement(\\"my-basic-forward-ref-component\\")
@@ -6339,10 +6373,10 @@ export default class MyBasicForwardRefComponent extends LitElement {
     return this;
   }
 
-  @query('[ref=\\"props.inputRef\\"]')
-  propsInputRef!: HTMLElement;
+  @query('[ref=\\"props.ref\\"]')
+  propsRef!: HTMLElement;
 
-  @property() inputRef: any;
+  @property() ref: any;
 
   @state() name = \\"PatrickJS\\";
 
@@ -6353,7 +6387,7 @@ export default class MyBasicForwardRefComponent extends LitElement {
 }
 </style>
           <div>
-          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+          <input ref=\\"props.ref\\" .value=\${this.name} @input=\${(event) =>
       (this.name = event.target.value)} />
         </div>
 
@@ -6835,6 +6869,45 @@ export default class ComponentWithTypes extends LitElement {
     return html\`
 
           <div>Hello \${this.name || DEFAULT_VALUES.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > dontForwardRef 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+@customElement(\\"dont-forward-ref-component\\")
+export default class DontForwardRefComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @query('[ref=\\"props.inputRef\\"]')
+  propsInputRef!: HTMLElement;
+
+  @property() inputRef: any;
+
+  @state() name = \\"PatrickJS\\";
+
+  render() {
+    return html\`
+          <style>.input {
+  color: red;
+}
+</style>
+          <div>
+          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+      (this.name = event.target.value)} />
+        </div>
 
         \`;
   }

@@ -891,7 +891,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
     const childComponents = getChildComponents(json, useOptions);
     const componentHasProps = hasProps(json);
     const componentHasStatefulDom = hasStatefulDom(json);
-    const props = getProps(json);
+    const props = getProps(json, 'html');
     // prevent jsx props from showing up as @Input
     if (hasPropRef) {
       props.delete(forwardProp);

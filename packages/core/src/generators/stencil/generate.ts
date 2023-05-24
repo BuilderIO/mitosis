@@ -103,7 +103,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
-    const props = getProps(component);
+    const props = getProps(component, 'stencil');
     let css = collectCss(json);
 
     mapRefs(component, (refName) => `this.${refName}`);

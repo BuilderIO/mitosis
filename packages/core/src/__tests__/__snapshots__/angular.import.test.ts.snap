@@ -2627,6 +2627,44 @@ export class ComponentWithTypesModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > dontForwardRef 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"dont-forward-ref-component, DontForwardRefComponent\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export class DontForwardRefComponent {
+  name = \\"PatrickJS\\";
+}
+
+@NgModule({
+  declarations: [DontForwardRefComponent],
+  imports: [CommonModule],
+  exports: [DontForwardRefComponent],
+})
+export class DontForwardRefComponentModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > expressionState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -6458,7 +6496,7 @@ import { Component } from \\"@angular/core\\";
 
 export interface Props {
   showInput: boolean;
-  inputRef: HTMLInputElement;
+  ref: HTMLInputElement;
 }
 
 @Component({
@@ -7007,6 +7045,49 @@ export class ComponentWithTypes {
   exports: [ComponentWithTypes],
 })
 export class ComponentWithTypesModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > dontForwardRef 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+@Component({
+  selector: \\"dont-forward-ref-component, DontForwardRefComponent\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [attr.value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export class DontForwardRefComponent {
+  name = \\"PatrickJS\\";
+}
+
+@NgModule({
+  declarations: [DontForwardRefComponent],
+  imports: [CommonModule],
+  exports: [DontForwardRefComponent],
+})
+export class DontForwardRefComponentModule {}
 "
 `;
 

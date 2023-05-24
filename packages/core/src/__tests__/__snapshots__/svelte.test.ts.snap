@@ -1486,13 +1486,13 @@ exports[`Svelte > jsx > Javascript Test > basicForNoTagReference 1`] = `
 
 exports[`Svelte > jsx > Javascript Test > basicForwardRef 1`] = `
 "<script>
-  export let inputRef;
+  export let ref;
 
   let name = \\"PatrickJS\\";
 </script>
 
 <div>
-  <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
+  <input class=\\"input\\" bind:this={ref} bind:value={name} />
 </div>
 
 <style>
@@ -1772,6 +1772,24 @@ exports[`Svelte > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 </script>
 
 <div>Hello {name || DEFAULT_VALUES.name}</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > dontForwardRef 1`] = `
+"<script>
+  export let inputRef;
+
+  let name = \\"PatrickJS\\";
+</script>
+
+<div>
+  <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
+</div>
+
+<style>
+  .input {
+    color: red;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > expressionState 1`] = `
@@ -4375,18 +4393,18 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   export interface Props {
     showInput: boolean;
-    inputRef: HTMLInputElement;
+    ref: HTMLInputElement;
   }
 </script>
 
 <script lang=\\"ts\\">
-  export let inputRef: Props[\\"inputRef\\"];
+  export let ref: Props[\\"ref\\"];
 
   let name = \\"PatrickJS\\";
 </script>
 
 <div>
-  <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
+  <input class=\\"input\\" bind:this={ref} bind:value={name} />
 </div>
 
 <style>
@@ -4731,6 +4749,31 @@ exports[`Svelte > jsx > Typescript Test > defaultValsWithTypes 1`] = `
 </script>
 
 <div>Hello {name || DEFAULT_VALUES.name}</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > dontForwardRef 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface Props {
+    showInput: boolean;
+    inputRef: HTMLInputElement;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let inputRef: Props[\\"inputRef\\"];
+
+  let name = \\"PatrickJS\\";
+</script>
+
+<div>
+  <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
+</div>
+
+<style>
+  .input {
+    color: red;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > expressionState 1`] = `

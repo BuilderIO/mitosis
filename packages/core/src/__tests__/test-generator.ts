@@ -30,6 +30,7 @@ const basicFor = getRawFile('./data/basic-for.raw.tsx');
 const basicForNoTagReference = getRawFile('./data/basic-for-no-tag-reference.raw');
 const basicRef = getRawFile('./data/basic-ref.raw.tsx');
 const basicForwardRef = getRawFile('./data/basic-forwardRef.raw.tsx');
+const dontForwardRef = getRawFile('./data/dont-forwardRef.raw.tsx');
 const basicForwardRefMetadata = getRawFile('./data/basic-forwardRef-metadata.raw.tsx');
 const basicRefPrevious = getRawFile('./data/basic-ref-usePrevious.raw.tsx');
 const basicRefAssignment = getRawFile('./data/basic-ref-assignment.raw.tsx');
@@ -230,6 +231,7 @@ const FOR_SHOW_TESTS: Tests = {
 const FORWARD_REF_TESTS: Tests = {
   basicForwardRef,
   basicForwardRefMetadata,
+  dontForwardRef,
 };
 
 const SHOW_TESTS: Tests = {
