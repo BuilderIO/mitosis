@@ -11,8 +11,8 @@ import {
 } from '@builder.io/mitosis';
 import { GluegunCommand } from 'gluegun';
 import { join } from 'path';
-import { getMitosisConfig } from '../helpers/get-mitosis-config';
-import { UnionToIntersection } from '../types';
+import { getMitosisConfig } from 'src/helpers/get-mitosis-config';
+import { UnionToIntersection } from 'src/types';
 
 type GeneratorOpts = GeneratorOptions[Target];
 
