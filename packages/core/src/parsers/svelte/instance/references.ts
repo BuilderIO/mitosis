@@ -62,6 +62,12 @@ export function parseReferences(json: SveltosisComponent, node: VariableDeclarat
       code = parseObjectExpression(json, declaration.init);
       break;
     }
+    case 'ArrowFunctionExpression': {
+      code = generate(node);
+      type = 'function';
+
+      break;
+    }
     case 'FunctionExpression': {
       declaration.init.id = declaration.id as Identifier;
       code = generate(declaration.init);

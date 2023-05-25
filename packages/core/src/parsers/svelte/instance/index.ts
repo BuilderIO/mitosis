@@ -115,8 +115,12 @@ const handleStatement: InstanceHandler<Statement> = (json, node, parent) => {
 };
 
 export function parseInstance(ast: Ast, json: SveltosisComponent) {
+  const nodeList :BaseNode[] = []
+  let currentIndex :number = 0
   walk(ast.instance as BaseNode, {
     enter(node, parent) {
+      nodeList.push(node) // memorize node, for easier traversal
+      currentIndex++
       switch (node.type) {
         case 'ImportDeclaration':
           handleImportDeclaration(json, node as ImportDeclaration);
@@ -128,14 +132,9 @@ export function parseInstance(ast: Ast, json: SveltosisComponent) {
           handleExpressionStatement(json, node as ExpressionStatement, parent);
           break;
         case 'ArrowFunctionExpression':
-          if (parent.type === 'VariableDeclarator') {
-            // Convert ArrowFunctions into regular FunctionDeclarations
-            // TODO 1: Converting might change the meaning of "this"!
-            // TODO 2: Figure out a way if the ArrowFunction does not contain a BlockStatement!
-            node.type = 'FunctionDeclaration'
-            node.id = parent.id // Name the created function after the variable!
-            handleFunctionDeclaration(json, node as FunctionDeclaration);
-          }
+          const parentIndexModifier = 4
+            // TODO: May cause problems on VariableDeclarations like `const foo, bar = () => {}` or on destructured Variables..
+          parent.type === 'VariableDeclarator' && handleVariableDeclaration(json, nodeList[currentIndex - parentIndexModifier] as VariableDeclaration);
           // Do nothing if this was an IIFE
           break;
         case 'FunctionDeclaration':
