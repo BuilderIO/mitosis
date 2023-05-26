@@ -405,7 +405,7 @@ ignored by the compiler.
 _Mitosis input_
 
 ```typescript
-export default function MyComponent(props) {
+export default function MyComponent({ color = 'blue' }) {
   return <div>{color}</div>;
 }
 ```
@@ -413,7 +413,7 @@ export default function MyComponent(props) {
 _Mitosis output_
 
 ```typescript
-export default function MyComponent({ color = 'blue' }) {
+export default function MyComponent(props) {
   return <div>{color}</div>;
 }
 ```
