@@ -132,9 +132,9 @@ export function parseInstance(ast: Ast, json: SveltosisComponent) {
           handleExpressionStatement(json, node as ExpressionStatement, parent);
           break;
         case 'ArrowFunctionExpression':
-          const parentIndexModifier = 4
+          const parentIndexModifier :number = 3
             // TODO: May cause problems on VariableDeclarations like `const foo, bar = () => {}` or on destructured Variables..
-          parent.type === 'VariableDeclarator' && handleVariableDeclaration(json, nodeList[currentIndex - parentIndexModifier] as VariableDeclaration);
+          parent.type === 'VariableDeclarator' && handleFunctionDeclaration(json, nodeList[currentIndex - parentIndexModifier] as FunctionDeclaration);
           // Do nothing if this was an IIFE
           break;
         case 'FunctionDeclaration':
