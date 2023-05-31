@@ -4741,7 +4741,7 @@ exports[`Marko > svelte > Javascript Test > eventHandlers 1`] = `
 }
 
 <div>
-  <button on-click( => component.log('hi'))>Log</button>
+  <button on-click(a => component.log('hi'))>Log</button>
   <button on-click(event => component.log(event))>Log</button>
   <button on-click(event => component.log(event))>Log</button>
 </div>"
@@ -4749,14 +4749,13 @@ exports[`Marko > svelte > Javascript Test > eventHandlers 1`] = `
 
 exports[`Marko > svelte > Javascript Test > fatArrowFunctions 1`] = `
 "class {
-        clickHandler1 = \\"const state.clickHandler1 = event => {
-  console.log(\\\\\\"do something 1\\\\\\");
-};\\"
-clickHandler2 = function clickHandler2(event) {
- console.log(\\"do something 2\\");
+  clickHandler1 = (this.clickHandler1 = (event) => {
+    console.log(\\"do something 1\\");
+  });
+  clickHandler2 = function clickHandler2(event) {
+    console.log(\\"do something 2\\");
+  };
 }
-
-   }
 
 <button on-click(event => component.clickHandler1(event))>Button 1</button>
 <button on-click(event => component.clickHandler2(event))>Button 2</button>"
@@ -5034,7 +5033,7 @@ exports[`Marko > svelte > Typescript Test > eventHandlers 1`] = `
 }
 
 <div>
-  <button on-click( => component.log('hi'))>Log</button>
+  <button on-click(a => component.log('hi'))>Log</button>
   <button on-click(event => component.log(event))>Log</button>
   <button on-click(event => component.log(event))>Log</button>
 </div>"
@@ -5042,14 +5041,13 @@ exports[`Marko > svelte > Typescript Test > eventHandlers 1`] = `
 
 exports[`Marko > svelte > Typescript Test > fatArrowFunctions 1`] = `
 "class {
-        clickHandler1 = \\"const state.clickHandler1 = event => {
-  console.log(\\\\\\"do something 1\\\\\\");
-};\\"
-clickHandler2 = function clickHandler2(event) {
- console.log(\\"do something 2\\");
+  clickHandler1 = (this.clickHandler1 = (event) => {
+    console.log(\\"do something 1\\");
+  });
+  clickHandler2 = function clickHandler2(event) {
+    console.log(\\"do something 2\\");
+  };
 }
-
-   }
 
 <button on-click(event => component.clickHandler1(event))>Button 1</button>
 <button on-click(event => component.clickHandler2(event))>Button 2</button>"
