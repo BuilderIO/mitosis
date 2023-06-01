@@ -302,6 +302,8 @@ const NODE_MAPPERS: {
   },
 };
 
+const SPECIAL_HTML_TAGS = ['style', 'script'];
+
 const stringifyBinding =
   (node: MitosisNode) =>
   ([key, value]: [string, Binding]) => {
@@ -400,11 +402,10 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     return `<slot/>`;
   }
 
-  if (node.name === 'style') {
-    // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
-    // <component is="'style'">...</component>
+  if (SPECIAL_HTML_TAGS.includes(node.name)) {
+    // Vue doesn't allow style/script tags in templates, but does support them through dynamic components.
     node.name = 'component';
-    node.bindings.is = { code: "'style'", type: 'single' };
+    node.bindings.is = { code: `${node.name}`, type: 'single' };
   }
 
   if (node.properties._text) {
