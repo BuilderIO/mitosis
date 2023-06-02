@@ -404,8 +404,8 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   if (SPECIAL_HTML_TAGS.includes(node.name)) {
     // Vue doesn't allow style/script tags in templates, but does support them through dynamic components.
-    node.name = 'component';
     node.bindings.is = { code: `${node.name}`, type: 'single' };
+    node.name = 'component';
   }
 
   if (node.properties._text) {
