@@ -5,7 +5,7 @@ export default function SpecialTags() {
     get scriptStr(): string {
       return `console.log('hello from script tag.')`;
     },
-    styleStr: '.wrap { background-color: red; }',
+    styleStr: '.wrap { background-color: rgb(255, 0, 0); }',
   });
   return (
     <div>
