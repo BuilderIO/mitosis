@@ -107,8 +107,8 @@ export type MitosisComponent = {
     onUpdate?: extendedHook[];
   };
   targetCode?: {
-    code: TargetBlockCode[];
-    hooks: {
+    code?: TargetBlockCode[];
+    hooks?: {
       init?: TargetBlock<extendedHook>;
       onInit?: TargetBlock<extendedHook>;
       onMount?: TargetBlock<extendedHook>;

@@ -122,7 +122,7 @@ export function parseJsx(
                    * Plugin to find all `useTarget()` assignment calls inside of the component function body
                    * and replace them with a magic string.
                    */
-                  CallExpression(path, context) {
+                  CallExpression(path) {
                     if (!types.isVariableDeclarator(path.parent)) return;
                     if (!types.isCallExpression(path.node)) return;
                     if (!types.isIdentifier(path.node.callee)) return;
@@ -132,7 +132,14 @@ export function parseJsx(
 
                     if (!targetBlock) return;
 
+                    // replace the useTarget() call with a magic string
                     path.replaceWith(types.stringLiteral(targetBlock.id));
+
+                    // store the target block in the component
+                    context.builder.component.targetCode = {
+                      ...context.builder.component.targetCode,
+                      code: (context.builder.component.targetCode?.code || []).concat(targetBlock),
+                    };
                   },
                 });
                 path.replaceWith(jsonToAst(componentFunctionToJson(node, context)));
