@@ -20,6 +20,8 @@ import { Context, ParseMitosisOptions } from './types';
 
 import tsPlugin from '@babel/plugin-syntax-typescript';
 import tsPreset from '@babel/preset-typescript';
+import { HOOKS } from 'src/constants/hooks';
+import { getUseTargetStatements } from './hooks/useTarget';
 
 const { types } = babel;
 
@@ -115,6 +117,24 @@ export function parseJsx(
             if (types.isIdentifier(node.id)) {
               const name = node.id.name;
               if (name[0].toUpperCase() === name[0]) {
+                path.traverse({
+                  /**
+                   * Plugin to find all `useTarget()` assignment calls inside of the component function body
+                   * and replace them with a magic string.
+                   */
+                  CallExpression(path, context) {
+                    if (!types.isVariableDeclarator(path.parent)) return;
+                    if (!types.isCallExpression(path.node)) return;
+                    if (!types.isIdentifier(path.node.callee)) return;
+                    if (path.node.callee.name !== HOOKS.TARGET) return;
+
+                    const targetBlock = getUseTargetStatements(path.node);
+
+                    if (!targetBlock) return;
+
+                    path.replaceWith(types.stringLiteral(targetBlock.id));
+                  },
+                });
                 path.replaceWith(jsonToAst(componentFunctionToJson(node, context)));
               }
             }
@@ -143,15 +163,6 @@ export function parseJsx(
           },
           TSInterfaceDeclaration(path, context) {
             collectTypes(path, context);
-          },
-        },
-      }),
-      // Plugin to find all `useTarget()` assignment calls and replace them with a magic string
-      (): babel.PluginObj<Context> => ({
-        visitor: {
-          CallExpression(path, context) {
-            console.log('Found CallExpression', path.node);
-            throw new Error('Found CallExpression');
           },
         },
       }),

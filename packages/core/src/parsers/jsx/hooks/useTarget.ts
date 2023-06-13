@@ -20,12 +20,11 @@ export const getUseTargetStatements = (
 
   const obj = useTargetHook.arguments[0];
 
-  if (!(types.isFunctionExpression(obj) || types.isArrowFunctionExpression(obj))) return undefined;
-  if (!types.isObjectExpression(obj.body)) return undefined;
+  if (!types.isObjectExpression(obj)) return undefined;
 
   const targetBlock: TargetBlockCode = { id: uniqueId(USE_TARGET_MAGIC_STRING) };
 
-  obj.body.properties.forEach((prop) => {
+  obj.properties.forEach((prop) => {
     if (!types.isObjectProperty(prop)) {
       throw new Error('useTarget properties cannot be spread or references');
     }
