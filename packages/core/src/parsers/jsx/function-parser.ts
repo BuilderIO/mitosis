@@ -10,24 +10,11 @@ import { MitosisNode } from '../../types/mitosis-node';
 import { getPropsTypeRef } from './component-types';
 import { jsxElementToJson } from './element-parser';
 import { parseCode, parseCodeJson } from './helpers';
+import { generateUseStyleCode, parseDefaultPropsHook } from './hooks';
 import { parseStateObjectToMitosisState } from './state';
 import { Context } from './types';
 
 const { types } = babel;
-
-export function generateUseStyleCode(expression: babel.types.CallExpression) {
-  return generate(expression.arguments[0]).code.replace(/(^("|'|`)|("|'|`)$)/g, '');
-}
-
-export function parseDefaultPropsHook(
-  component: MitosisComponent,
-  expression: babel.types.CallExpression,
-) {
-  const firstArg = expression.arguments[0];
-  if (types.isObjectExpression(firstArg)) {
-    component.defaultProps = parseStateObjectToMitosisState(firstArg, false);
-  }
-}
 
 const processHookCode = (
   firstArg: babel.types.ArrowFunctionExpression | babel.types.FunctionExpression,
@@ -90,13 +77,13 @@ export const componentFunctionToJson = (
                 };
               }
             }
-          } else if (expression.callee.name === 'onMount') {
+          } else if (expression.callee.name === HOOKS.MOUNT) {
             const firstArg = expression.arguments[0];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = processHookCode(firstArg);
               hooks.onMount = { code };
             }
-          } else if (expression.callee.name === 'onUpdate') {
+          } else if (expression.callee.name === HOOKS.UPDATE) {
             const firstArg = expression.arguments[0];
             const secondArg = expression.arguments[1];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
@@ -116,13 +103,13 @@ export const componentFunctionToJson = (
                 ];
               }
             }
-          } else if (expression.callee.name === 'onUnMount') {
+          } else if (expression.callee.name === HOOKS.UNMOUNT) {
             const firstArg = expression.arguments[0];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = processHookCode(firstArg);
               hooks.onUnMount = { code };
             }
-          } else if (expression.callee.name === 'onInit') {
+          } else if (expression.callee.name === HOOKS.INIT) {
             const firstArg = expression.arguments[0];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = processHookCode(firstArg);

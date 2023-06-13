@@ -1,15 +1,15 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { HOOKS } from '../../constants/hooks';
-import { getHook } from './helpers/hooks';
-import { ParseMitosisOptions } from './types';
+import { HOOKS } from '../../../constants/hooks';
+import { ParseMitosisOptions } from '../types';
+import { getHook } from './helpers';
 
 const { types } = babel;
 
 /**
  * This function finds `useTarget()` and converts it our JSON representation
  */
-export const collectModuleScopeHooks = (
+export const getUseTargetStatements = (
   node: babel.types.Statement,
   options: ParseMitosisOptions,
 ) => {

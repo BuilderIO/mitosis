@@ -7,4 +7,8 @@ export const HOOKS = {
   STYLE: 'useStyle',
   TARGET: 'useTarget',
   METADATA: 'useMetadata',
+  MOUNT: 'onMount',
+  UNMOUNT: 'onUnMount',
+  UPDATE: 'onUpdate',
+  INIT: 'onInit',
 } as const;

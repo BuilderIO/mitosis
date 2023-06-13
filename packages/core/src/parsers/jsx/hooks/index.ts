@@ -1,12 +1,27 @@
 import * as babel from '@babel/core';
-import { HOOKS } from '../../constants/hooks';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { generateUseStyleCode, parseDefaultPropsHook } from './function-parser';
-import { parseCodeJson } from './helpers';
-import { getHook } from './helpers/hooks';
-import { ParseMitosisOptions } from './types';
+import generate from '@babel/generator';
+import { HOOKS } from '../../../constants/hooks';
+import { MitosisComponent } from '../../../types/mitosis-component';
+import { parseCodeJson } from '../helpers';
+import { parseStateObjectToMitosisState } from '../state';
+import { ParseMitosisOptions } from '../types';
+import { getHook } from './helpers';
 
 const { types } = babel;
+
+export function parseDefaultPropsHook(
+  component: MitosisComponent,
+  expression: babel.types.CallExpression,
+) {
+  const firstArg = expression.arguments[0];
+  if (types.isObjectExpression(firstArg)) {
+    component.defaultProps = parseStateObjectToMitosisState(firstArg, false);
+  }
+}
+
+export function generateUseStyleCode(expression: babel.types.CallExpression) {
+  return generate(expression.arguments[0]).code.replace(/(^("|'|`)|("|'|`)$)/g, '');
+}
 
 /**
  * Transform useMetadata({...}) onto the component JSON as
