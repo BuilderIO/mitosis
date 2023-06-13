@@ -99,8 +99,7 @@ export function parseJsx(
 
             const preComponentCode = pipe(
               path.node.body.filter((statement) => !isImportOrDefaultExport(statement)),
-              (statements) =>
-                collectModuleScopeHooks(statements, context.builder.component, options),
+              collectModuleScopeHooks(context.builder.component, options),
               types.program,
               generate,
               (generatorResult) => generatorResult.code,
@@ -147,10 +146,19 @@ export function parseJsx(
           },
         },
       }),
+      // Plugin to find all `useTarget()` assignment calls and replace them with a magic string
+      (): babel.PluginObj<Context> => ({
+        visitor: {
+          CallExpression(path, context) {
+            console.log('Found CallExpression', path.node);
+            throw new Error('Found CallExpression');
+          },
+        },
+      }),
     ],
   });
 
-  const toParse = stripNewlinesInStrings(
+  const stringifiedMitosisComponent = stripNewlinesInStrings(
     output!
       .code!.trim()
       // Occasional issues where comments get kicked to the top. Full fix should strip these sooner
@@ -161,12 +169,13 @@ export function parseJsx(
       .replace(/^\({/, '{')
       .replace(/}\);$/, '}'),
   );
-  const parsed = tryParseJson(toParse);
 
-  mapStateIdentifiers(parsed);
-  extractContextComponents(parsed);
+  const mitosisComponent = tryParseJson(stringifiedMitosisComponent);
 
-  parsed.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
+  mapStateIdentifiers(mitosisComponent);
+  extractContextComponents(mitosisComponent);
 
-  return parsed;
+  mitosisComponent.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
+
+  return mitosisComponent;
 }

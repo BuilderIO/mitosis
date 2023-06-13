@@ -1,44 +1,31 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
+import { uniqueId } from 'lodash';
+import { targets } from 'src/targets';
+import { TargetBlockCode } from 'src/types/mitosis-component';
 import { HOOKS } from '../../../constants/hooks';
-import { ParseMitosisOptions } from '../types';
-import { getHook } from './helpers';
 
 const { types } = babel;
+
+export const USE_TARGET_MAGIC_STRING = '$$USE_TARGET$$';
 
 /**
  * This function finds `useTarget()` and converts it our JSON representation
  */
 export const getUseTargetStatements = (
-  node: babel.types.Statement,
-  options: ParseMitosisOptions,
-) => {
-  const hook = getHook(node);
-  if (!hook) {
-    return undefined;
-  }
-  if (!types.isIdentifier(hook.callee)) {
-    return undefined;
-  }
+  useTargetHook: babel.types.CallExpression,
+): TargetBlockCode | undefined => {
+  if (!types.isIdentifier(useTargetHook.callee)) return undefined;
+  if (useTargetHook.callee.name !== HOOKS.TARGET) return undefined;
 
-  if (hook.callee.name !== HOOKS.TARGET) {
-    return undefined;
-  }
+  const obj = useTargetHook.arguments[0];
 
-  /**
-   * - get the object in useTarget(() => ({}))
-   * -
-   */
-
-  const obj = hook.arguments[0];
-
-  if (!types.isFunctionExpression(obj) && !types.isArrowFunctionExpression(obj)) {
-    return undefined;
-  }
-
+  if (!(types.isFunctionExpression(obj) || types.isArrowFunctionExpression(obj))) return undefined;
   if (!types.isObjectExpression(obj.body)) return undefined;
 
-  const useTargetContent = obj.body.properties.map((prop) => {
+  const targetBlock: TargetBlockCode = { id: uniqueId(USE_TARGET_MAGIC_STRING) };
+
+  obj.body.properties.forEach((prop) => {
     if (!types.isObjectProperty(prop)) {
       throw new Error('useTarget properties cannot be spread or references');
     }
@@ -46,22 +33,20 @@ export const getUseTargetStatements = (
       throw new Error('Expected an identifier, instead got: ' + prop.key);
     }
 
-    const targetCode = prop.value;
-    if (!types.isFunctionExpression(targetCode) && !types.isArrowFunctionExpression(targetCode)) {
-      return undefined;
+    if (!Object.keys(targets).concat('default').includes(prop.key.name)) {
+      throw new Error('Invalid target: ' + prop.key.name);
     }
 
-    return {
-      // TO-DO: validate `name` content against possible targets
-      target: prop.key.name,
+    const targetCode = prop.value;
+    if (!types.isExpression(targetCode)) return undefined;
 
-      code: types.isBlockStatement(targetCode.body)
-        ? // it's a function that needs to be called
-          generate(targetCode.body).code
-        : // expression that can be returned as-is
-          generate(targetCode.body).code,
+    targetBlock[prop.key.name as unknown as 'default'] = {
+      code: generate(targetCode).code,
     };
+
+    // TO-DO: replace the useTarget() call with a magic string
+    // this will be replaced with the actual target code later
   });
 
-  return useTargetContent;
+  return Object.keys(targetBlock).length ? targetBlock : undefined;
 };

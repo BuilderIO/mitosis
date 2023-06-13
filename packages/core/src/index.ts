@@ -1,5 +1,6 @@
 import { JSX } from '@builder.io/mitosis/jsx-runtime';
 import type { Targets } from './targets';
+import { TargetBlock } from './types/mitosis-component';
 
 export * from './flow';
 export * from './generators/alpine';
@@ -84,8 +85,5 @@ export const useDefaultProps = <T = { [key: string]: any }>(value: T): T => null
 export const useStyle = (value: string) => null as any;
 
 // TO-DO: better type strictness that guarantees `Target` is a subset of `Targets`
-export const useTarget = <Return, Target extends Targets>(
-  dict: Partial<{
-    [T in Target & 'default']?: () => Return;
-  }>,
-): Return => null as unknown as Return;
+export const useTarget = <Return, Target extends Targets>(dict: TargetBlock<Return>): Return =>
+  null as unknown as Return;

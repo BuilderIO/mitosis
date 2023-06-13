@@ -30,41 +30,33 @@ export function generateUseStyleCode(expression: babel.types.CallExpression) {
  * This function collects metadata and removes the statement from
  * the returned nodes array
  */
-export const collectModuleScopeHooks = (
-  nodes: babel.types.Statement[],
-  component: MitosisComponent,
-  options: ParseMitosisOptions,
-) => {
-  return nodes.filter((node) => {
-    const hook = getHook(node);
-    if (!hook) {
-      return true;
-    }
-    if (types.isIdentifier(hook.callee)) {
-      const metadataHooks = new Set((options.jsonHookNames || []).concat(HOOKS.METADATA));
-      if (metadataHooks.has(hook.callee.name)) {
-        try {
-          if (component.meta[hook.callee.name]) {
+export const collectModuleScopeHooks =
+  (component: MitosisComponent, options: ParseMitosisOptions) => (nodes: babel.types.Statement[]) =>
+    nodes.filter((node) => {
+      const hook = getHook(node);
+      if (!hook) {
+        return true;
+      }
+      if (types.isIdentifier(hook.callee)) {
+        const metadataHooks = new Set((options.jsonHookNames || []).concat(HOOKS.METADATA));
+        if (metadataHooks.has(hook.callee.name)) {
+          try {
             component.meta[hook.callee.name] = {
-              ...(component.meta[hook.callee.name] as Object),
+              ...((component.meta[hook.callee.name] as Object) || {}),
               ...parseCodeJson(hook.arguments[0]),
             };
-          } else {
-            component.meta[hook.callee.name] = parseCodeJson(hook.arguments[0]);
+            return false;
+          } catch (e) {
+            console.error(`Error parsing metadata hook ${hook.callee.name}`);
+            throw e;
           }
+        } else if (hook.callee.name === HOOKS.STYLE) {
+          component.style = generateUseStyleCode(hook);
           return false;
-        } catch (e) {
-          console.error(`Error parsing metadata hook ${hook.callee.name}`);
-          throw e;
+        } else if (hook.callee.name === HOOKS.DEFAULT_PROPS) {
+          parseDefaultPropsHook(component, hook);
         }
-      } else if (hook.callee.name === HOOKS.STYLE) {
-        component.style = generateUseStyleCode(hook);
-        return false;
-      } else if (hook.callee.name === HOOKS.DEFAULT_PROPS) {
-        parseDefaultPropsHook(component, hook);
       }
-    }
 
-    return true;
-  });
-};
+      return true;
+    });

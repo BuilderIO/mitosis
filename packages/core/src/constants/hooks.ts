@@ -11,4 +11,5 @@ export const HOOKS = {
   UNMOUNT: 'onUnMount',
   UPDATE: 'onUpdate',
   INIT: 'onInit',
+  SET_CONTEXT: 'setContext',
 } as const;
