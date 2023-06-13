@@ -4156,6 +4156,40 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > useTarget 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-show-component, MyBasicForShowComponent\\",
+  template: \`
+    <div>{{name}}</div>
+  \`,
+})
+export class MyBasicForShowComponent {
+  get name() {
+    const prefix = useTarget({
+      default: \\"Mr.\\",
+      react: \\"rct\\",
+      angular: \\"ng\\",
+      vue: \\"v\\",
+    });
+    return prefix + \\"foo\\";
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicForShowComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForShowComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicForShowComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Remove Internal mitosis package 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -8738,6 +8772,40 @@ export class MyComponent {}
   bootstrap: [SomeOtherComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > useTarget 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-show-component, MyBasicForShowComponent\\",
+  template: \`
+    <div>{{name}}</div>
+  \`,
+})
+export class MyBasicForShowComponent {
+  get name() {
+    const prefix = useTarget({
+      default: \\"Mr.\\",
+      react: \\"rct\\",
+      angular: \\"ng\\",
+      vue: \\"v\\",
+    });
+    return prefix + \\"foo\\";
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicForShowComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForShowComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicForShowComponentModule {}
 "
 `;
 

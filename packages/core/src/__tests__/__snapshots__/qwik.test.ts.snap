@@ -4755,6 +4755,27 @@ button {
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > useTarget 1`] = `
+"import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
+
+export const MyBasicForShowComponent = component$((props) => {
+  const state = {};
+  const name = useComputed$(() => {
+    const prefix = useTarget({
+      default: \\"Mr.\\",
+      react: \\"rct\\",
+      angular: \\"ng\\",
+      vue: \\"v\\",
+    });
+    return prefix + \\"foo\\";
+  });
+  return <div>{name.value}</div>;
+});
+
+export default MyBasicForShowComponent;
+"
+`;
+
 exports[`qwik > jsx > Remove Internal mitosis package 1`] = `
 "import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
@@ -8120,6 +8141,27 @@ button {
   outline: 1px solid black;
 }
 \`;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > useTarget 1`] = `
+"import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
+
+export const MyBasicForShowComponent = component$((props: any) => {
+  const state: any = {};
+  const name = useComputed$(() => {
+    const prefix = useTarget({
+      default: \\"Mr.\\",
+      react: \\"rct\\",
+      angular: \\"ng\\",
+      vue: \\"v\\",
+    });
+    return prefix + \\"foo\\";
+  });
+  return <div>{name.value}</div>;
+});
+
+export default MyBasicForShowComponent;
 "
 `;
 

@@ -3949,6 +3949,37 @@ export default class MyComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > useTarget 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-for-show-component\\")
+export default class MyBasicForShowComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  get name() {
+    const prefix = useTarget({
+      default: \\"Mr.\\",
+      react: \\"rct\\",
+      angular: \\"ng\\",
+      vue: \\"v\\",
+    });
+    return prefix + \\"foo\\";
+  }
+
+  render() {
+    return html\`
+
+          <div>\${this.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Remove Internal mitosis package 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -8319,6 +8350,37 @@ export default class MyComponent extends LitElement {
 }
 </style>
           <button type=\\"button\\">Button</button>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > useTarget 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-for-show-component\\")
+export default class MyBasicForShowComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  get name() {
+    const prefix = useTarget({
+      default: \\"Mr.\\",
+      react: \\"rct\\",
+      angular: \\"ng\\",
+      vue: \\"v\\",
+    });
+    return prefix + \\"foo\\";
+  }
+
+  render() {
+    return html\`
+
+          <div>\${this.name}</div>
 
         \`;
   }
