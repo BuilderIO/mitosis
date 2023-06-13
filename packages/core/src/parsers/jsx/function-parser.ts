@@ -11,22 +11,11 @@ import { getPropsTypeRef } from './component-types';
 import { jsxElementToJson } from './element-parser';
 import { parseCode, parseCodeJson } from './helpers';
 import { generateUseStyleCode, parseDefaultPropsHook } from './hooks';
+import { processHookCode } from './hooks/helpers';
 import { parseStateObjectToMitosisState } from './state';
 import { Context } from './types';
 
 const { types } = babel;
-
-const processHookCode = (
-  firstArg: babel.types.ArrowFunctionExpression | babel.types.FunctionExpression,
-) =>
-  generate(firstArg.body)
-    .code.trim()
-    // Remove arbitrary block wrapping if any
-    // AKA
-    //  { console.log('hi') } -> console.log('hi')
-    .replace(/^{/, '')
-    .replace(/}$/, '')
-    .trim();
 
 /**
  * Parses function declarations within the Mitosis copmonent's body to JSON
