@@ -1,9 +1,10 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { PackageName } from './src/testConfig';
 
-export const targets = [
+export const targets: { packageName: PackageName }[] = [
   // { packageName: 'e2e-alpine' },
   // { packageName: 'e2e-angular' },
   { packageName: 'e2e-qwik' },
@@ -69,6 +70,7 @@ const testConfig: PlaywrightTestConfig = {
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on',
+    screenshot: 'on',
 
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: `http://localhost`,

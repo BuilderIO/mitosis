@@ -1,8 +1,8 @@
 import * as babel from '@babel/core';
 
+import decorators from '@babel/plugin-syntax-decorators';
 import tsPlugin from '@babel/plugin-syntax-typescript';
 import tsPreset from '@babel/preset-typescript';
-import decorators from '@babel/plugin-syntax-decorators';
 
 export function parseCode(code: string) {
   const ast = babel.parse(code, {

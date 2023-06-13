@@ -1,10 +1,10 @@
 import { camelCase } from 'lodash';
+import hash from 'object-hash';
 import traverse from 'traverse';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { capitalize } from '../capitalize';
 import { isMitosisNode } from '../is-mitosis-node';
 import { isUpperCase } from '../is-upper-case';
-import hash from 'object-hash';
 import {
   getNestedSelectors,
   getStylesOnly,

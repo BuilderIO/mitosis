@@ -1,4 +1,4 @@
-import { useStore, For, Show } from '@builder.io/mitosis';
+import { For, Show, useStore } from '@builder.io/mitosis';
 
 export default function MyBasicForShowComponent() {
   const state = useStore({

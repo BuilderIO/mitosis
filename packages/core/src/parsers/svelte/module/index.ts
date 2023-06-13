@@ -1,8 +1,8 @@
-import { walk } from 'svelte/compiler';
 import { generate } from 'astring';
+import { walk } from 'svelte/compiler';
 
-import type { Ast } from 'svelte/types/compiler/interfaces';
 import type { BaseNode, ExportNamedDeclaration, Identifier, VariableDeclaration } from 'estree';
+import type { Ast } from 'svelte/types/compiler/interfaces';
 import type { SveltosisComponent } from '../types';
 
 function handleExportNamedDeclaration(json: SveltosisComponent, node: ExportNamedDeclaration) {

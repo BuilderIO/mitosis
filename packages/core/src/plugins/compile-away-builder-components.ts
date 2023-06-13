@@ -1,16 +1,16 @@
 import { Builder } from '@builder.io/react';
+import { BuilderElement } from '@builder.io/sdk';
+import json5, * as JSON5 from 'json5';
 import { omit, pick } from 'lodash';
 import traverse, { TraverseContext } from 'traverse';
+import { Plugin } from '..';
+import { createSingleBinding } from '../helpers/bindings';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
+import { builderElementToMitosisNode } from '../parsers/builder';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
-import json5, * as JSON5 from 'json5';
-import { BuilderElement } from '@builder.io/sdk';
-import { builderElementToMitosisNode } from '../parsers/builder';
-import { Plugin } from '..';
-import { createSingleBinding } from '../helpers/bindings';
 
 function getComponentInputNames(componentName: string): string[] {
   const componentInfo = Builder.components.find((item) => item.name === componentName);

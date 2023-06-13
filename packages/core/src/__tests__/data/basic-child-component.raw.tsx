@@ -1,6 +1,6 @@
 import { useStore } from '@builder.io/mitosis';
-import MyBasicComponent from './basic.raw';
 import MyBasicOnMountUpdateComponent from './basic-onMount-update.raw';
+import MyBasicComponent from './basic.raw';
 
 export default function MyBasicChildComponent() {
   const state = useStore({

@@ -1,5 +1,5 @@
-import { MitosisComponent } from '../types/mitosis-component';
 import traverse from 'traverse';
+import { MitosisComponent } from '../types/mitosis-component';
 
 /**
  * Map getters like `useStore({ get foo() { ... }})` from `state.foo` to `foo()`

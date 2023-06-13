@@ -1,18 +1,18 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { traceReferenceToModulePath } from '../../helpers/trace-reference-to-module-path';
+import { HOOKS } from '../../constants/hooks';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { getBindingsCode } from '../../helpers/get-bindings';
+import { traceReferenceToModulePath } from '../../helpers/trace-reference-to-module-path';
 import { JSONOrNode } from '../../types/json';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
-import { HOOKS } from '../../constants/hooks';
-import { parseStateObjectToMitosisState } from './state';
-import { Context } from './types';
-import { parseCode, parseCodeJson } from './helpers';
 import { getPropsTypeRef } from './component-types';
 import { jsxElementToJson } from './element-parser';
+import { parseCode, parseCodeJson } from './helpers';
 import { METADATA_HOOK_NAME } from './hooks';
+import { parseStateObjectToMitosisState } from './state';
+import { Context } from './types';
 
 const { types } = babel;
 

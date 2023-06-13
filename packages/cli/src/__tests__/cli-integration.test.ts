@@ -1,6 +1,6 @@
-import * as path from 'path';
 import { filesystem, system } from 'gluegun';
-import { test, expect } from 'vitest';
+import * as path from 'path';
+import { expect, test } from 'vitest';
 
 const { version } = require('../../package.json');
 

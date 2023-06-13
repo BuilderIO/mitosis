@@ -1781,6 +1781,7 @@ export declare namespace JSX {
     var: HTMLAttributes<HTMLElement>;
     video: VideoHTMLAttributes<HTMLVideoElement>;
     wbr: HTMLAttributes<HTMLElement>;
+    template: HTMLAttributes<HTMLTemplateElement>;
 
     // SVG
     svg: SvgSVGAttributes<SVGSVGElement>;

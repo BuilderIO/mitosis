@@ -1,21 +1,21 @@
-import { pipe, identity } from 'fp-ts/lib/function';
-import { Dictionary } from '../../helpers/typescript';
+import { identity, pipe } from 'fp-ts/lib/function';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { checkIsDefined } from '../../helpers/nullable';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
+import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
+import { Dictionary } from '../../helpers/typescript';
 import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisNode, ForNode, Binding, SpreadType } from '../../types/mitosis-node';
+import { Binding, ForNode, MitosisNode, SpreadType } from '../../types/mitosis-node';
 import {
-  encodeQuotes,
   addBindingsToJson,
   addPropertiesToJson,
+  encodeQuotes,
   invertBooleanExpression,
 } from './helpers';
 import { ToVueOptions } from './types';
-import { checkIsDefined } from '../../helpers/nullable';
 
 const SPECIAL_PROPERTIES = {
   V_IF: 'v-if',
@@ -302,6 +302,8 @@ const NODE_MAPPERS: {
   },
 };
 
+const SPECIAL_HTML_TAGS = ['style', 'script'];
+
 const stringifyBinding =
   (node: MitosisNode) =>
   ([key, value]: [string, Binding]) => {
@@ -400,11 +402,10 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     return `<slot/>`;
   }
 
-  if (node.name === 'style') {
-    // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
-    // <component is="'style'">...</component>
+  if (SPECIAL_HTML_TAGS.includes(node.name)) {
+    // Vue doesn't allow style/script tags in templates, but does support them through dynamic components.
+    node.bindings.is = { code: `'${node.name}'`, type: 'single' };
     node.name = 'component';
-    node.bindings.is = { code: "'style'", type: 'single' };
   }
 
   if (node.properties._text) {
