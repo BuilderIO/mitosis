@@ -5,23 +5,6 @@ import { objectHasKey } from '../../helpers/typescript';
 
 const { types } = babel;
 
-export const selfClosingTags = new Set([
-  'area',
-  'base',
-  'br',
-  'col',
-  'embed',
-  'hr',
-  'img',
-  'input',
-  'link',
-  'meta',
-  'param',
-  'source',
-  'track',
-  'wbr',
-]);
-
 export const uncapitalize = (str: string) => {
   if (!str) {
     return str;

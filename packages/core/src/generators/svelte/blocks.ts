@@ -1,4 +1,4 @@
-import { selfClosingTags } from '../../parsers/jsx';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseNode, Binding, ForNode, MitosisNode } from '../../types/mitosis-node';
 
@@ -264,7 +264,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     return str;
   }
 
-  if (selfClosingTags.has(tagName)) {
+  if (SELF_CLOSING_HTML_TAGS.has(tagName)) {
     return str + ' />';
   }
   str += '>';

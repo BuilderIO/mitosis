@@ -6,4 +6,5 @@ export const HOOKS = {
   DEFAULT_PROPS: 'useDefaultProps',
   STYLE: 'useStyle',
   TARGET: 'useTarget',
+  METADATA: 'useMetadata',
 } as const;

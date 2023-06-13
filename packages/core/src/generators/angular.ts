@@ -1,7 +1,7 @@
 import { flow, pipe } from 'fp-ts/lib/function';
 import { isString, kebabCase, uniq } from 'lodash';
 import { format } from 'prettier/standalone';
-import { VALID_HTML_TAGS } from '../constants/html_tags';
+import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../constants/html_tags';
 import { dedent } from '../helpers/dedent';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponentsUsed } from '../helpers/get-components-used';
@@ -31,7 +31,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { selfClosingTags } from '../parsers/jsx';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
@@ -218,7 +217,7 @@ export const blockToAngular = (
         str += `[${key}]="${code}" `;
       }
     }
-    if (selfClosingTags.has(json.name)) {
+    if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
       return str + ' />';
     }
     str += '>';

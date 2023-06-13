@@ -1,4 +1,5 @@
 import { identity, pipe } from 'fp-ts/lib/function';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
@@ -7,7 +8,6 @@ import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
 import { Dictionary } from '../../helpers/typescript';
-import { selfClosingTags } from '../../parsers/jsx';
 import { Binding, ForNode, MitosisNode, SpreadType } from '../../types/mitosis-node';
 import {
   addBindingsToJson,
@@ -424,7 +424,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   str += getBlockBindings(node);
 
-  if (selfClosingTags.has(node.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(node.name)) {
     return str + ' />';
   }
 

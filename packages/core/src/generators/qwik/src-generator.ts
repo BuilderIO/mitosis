@@ -1,6 +1,6 @@
 import { format } from 'prettier/standalone';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { convertExportDefaultToReturn } from '../../parsers/builder';
-import { selfClosingTags } from '../../parsers/jsx';
 import { stableJSONserialize } from './helpers/stable-serialize';
 export interface SrcBuilderOptions {
   isPretty: boolean;
@@ -380,7 +380,7 @@ export class SrcBuilder {
   }
 
   isSelfClosingTag(symbol: Symbol | string) {
-    return selfClosingTags.has(String(symbol));
+    return SELF_CLOSING_HTML_TAGS.has(String(symbol));
   }
 
   jsxEnd(symbol: Symbol | string) {

@@ -2,6 +2,7 @@ import { NodePath, types } from '@babel/core';
 import { camelCase, kebabCase } from 'lodash';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
+import { SELF_CLOSING_HTML_TAGS } from '../constants/html_tags';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { dashCase } from '../helpers/dash-case';
 import { fastClone } from '../helpers/fast-clone';
@@ -36,7 +37,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 
@@ -526,7 +526,7 @@ const blockToHtml = (
       );
     }
 
-    if (selfClosingTags.has(json.name)) {
+    if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
       return str + ' />';
     }
     str += '>';

@@ -1,24 +1,10 @@
 import * as babel from '@babel/core';
-import { HOOKS } from '../../constants/hooks';
-import { ParseMitosisOptions } from './types';
 import generate from '@babel/generator';
+import { HOOKS } from '../../constants/hooks';
+import { getHook } from './helpers/hooks';
+import { ParseMitosisOptions } from './types';
 
 const { types } = babel;
-
-const getHook = (node: babel.Node) => {
-  const item = node;
-  if (types.isExpressionStatement(item)) {
-    const expression = item.expression;
-    if (types.isCallExpression(expression)) {
-      if (types.isIdentifier(expression.callee)) {
-        return expression;
-      }
-    }
-  }
-  return null;
-};
-
-export const METADATA_HOOK_NAME = 'useMetadata';
 
 /**
  * This function finds `useTarget()` and converts it our JSON representation
@@ -66,7 +52,7 @@ export const collectModuleScopeHooks = (
     }
 
     return {
-      // validate `name` content against possible targets
+      // TO-DO: validate `name` content against possible targets
       target: prop.key.name,
 
       code: types.isBlockStatement(targetCode.body)

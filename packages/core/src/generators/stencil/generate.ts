@@ -1,4 +1,5 @@
 import { format } from 'prettier/standalone';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { dashCase } from '../../helpers/dash-case';
 import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
@@ -18,7 +19,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { selfClosingTags } from '../../parsers/jsx';
 import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { collectClassString } from './collect-class-string';
@@ -79,7 +79,7 @@ const blockToStencil = (json: MitosisNode, options: ToStencilOptions = {}): stri
       str += ` ${key}={${processBinding(code as string)}} `;
     }
   }
-  if (selfClosingTags.has(json.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
   str += '>';

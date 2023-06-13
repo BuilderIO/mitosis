@@ -10,7 +10,6 @@ import { MitosisNode } from '../../types/mitosis-node';
 import { getPropsTypeRef } from './component-types';
 import { jsxElementToJson } from './element-parser';
 import { parseCode, parseCodeJson } from './helpers';
-import { METADATA_HOOK_NAME } from './hooks';
 import { parseStateObjectToMitosisState } from './state';
 import { Context } from './types';
 
@@ -133,9 +132,9 @@ export const componentFunctionToJson = (
             parseDefaultPropsHook(context.builder.component, expression);
           } else if (expression.callee.name === HOOKS.STYLE) {
             context.builder.component.style = generateUseStyleCode(expression);
-          } else if (expression.callee.name === METADATA_HOOK_NAME) {
-            context.builder.component.meta[METADATA_HOOK_NAME] = {
-              ...context.builder.component.meta[METADATA_HOOK_NAME],
+          } else if (expression.callee.name === HOOKS.METADATA) {
+            context.builder.component.meta[HOOKS.METADATA] = {
+              ...context.builder.component.meta[HOOKS.METADATA],
               ...parseCodeJson(expression.arguments[0]),
             };
           }

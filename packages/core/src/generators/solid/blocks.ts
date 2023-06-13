@@ -1,9 +1,9 @@
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { objectHasKey } from '../../helpers/typescript';
-import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { collectClassString } from './helpers/styles';
@@ -109,7 +109,7 @@ export const blockToSolid = ({
       str += ` ${newKey}={${useValue}} `;
     }
   }
-  if (selfClosingTags.has(json.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
   str += '>';

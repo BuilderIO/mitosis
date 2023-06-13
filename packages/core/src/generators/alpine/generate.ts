@@ -1,5 +1,6 @@
 import { camelCase, curry, flow, flowRight as compose } from 'lodash';
 import { format } from 'prettier/standalone';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { babelTransformCode } from '../../helpers/babel-transform';
 import { dashCase } from '../../helpers/dash-case';
 import { fastClone } from '../../helpers/fast-clone';
@@ -16,7 +17,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
@@ -183,7 +183,7 @@ const blockToAlpine = (json: MitosisNode | ForNode, options: ToAlpineOptions = {
       str += ` ${bind}${bindingType === 'spread' ? '' : key}="${useValue}" `.replace(':=', '=');
     }
   }
-  return selfClosingTags.has(json.name)
+  return SELF_CLOSING_HTML_TAGS.has(json.name)
     ? `${str} />`
     : `${str}>${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('\n')}</${
         json.name
