@@ -1,6 +1,6 @@
 import { useStore, useTarget } from '@builder.io/mitosis';
 
-export default function MyBasicForShowComponent() {
+export default function UseTargetComponent() {
   const state = useStore({
     get name() {
       const prefix = useTarget<string | number | boolean>({

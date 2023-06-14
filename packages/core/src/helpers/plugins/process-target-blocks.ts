@@ -1,8 +1,9 @@
+import { pipe } from 'fp-ts/lib/function';
 import { MitosisComponent } from 'src/types/mitosis-component';
 import { USE_TARGET_MAGIC_REGEX, getIdFromMatch } from '../../parsers/jsx/hooks/use-target';
 import { Targets } from '../../targets';
 import { Plugin } from '../../types/plugins';
-import { CODE_PROCESSOR_PLUGIN } from './process-code';
+import { createCodeProcessorPlugin } from './process-code';
 
 const getBlockForTarget = ({
   target,
@@ -29,9 +30,8 @@ const getBlockForTarget = ({
  * Given a `codeProcessor` function, processes all code expressions within a Mitosis component.
  */
 export const processTargetBlocks = (target: Targets): Plugin =>
-  CODE_PROCESSOR_PLUGIN((_codeType, json) => {
-    return (code) => {
-      // find any instance of `$$USE_TARGET$$` followed by a uuid, and replace it with the actual target code.
+  pipe(
+    createCodeProcessorPlugin((_codeType, json) => (code) => {
       const matches = code.match(USE_TARGET_MAGIC_REGEX);
 
       if (!matches) return code;
@@ -44,47 +44,16 @@ export const processTargetBlocks = (target: Targets): Plugin =>
         // find the target block in the component, or the default target block
         const targetBlock = getBlockForTarget({ target, json, targetId });
 
-        console.log('targetBlock', { target, targetBlock });
         if (!targetBlock) continue;
 
-        code = code.replace(m, targetBlock.code);
+        console.log('targetBlock', { code, target, targetBlock });
+        code = code.replaceAll(m, targetBlock.code);
+
+        console.log('replaced with: ', code);
       }
 
       return code;
-    };
-  });
-// () => ({
-//   json: {
-//     post: (json) => {
-
-//       /**
-//        * process code in hooks
-//        */
-//       for (const key in json.hooks) {
-//         const typedKey = key as keyof typeof json.hooks;
-//         const hooks = json.hooks[typedKey];
-
-//         if (checkIsDefined(hooks)) {
-//           if (Array.isArray(hooks)) {
-//             for (const hook of hooks) {
-//               processHook(typedKey, hook);
-//             }
-//           } else {
-//             processHook(typedKey, hooks);
-//           }
-//         }
-//       }
-
-//       for (const key in json.state) {
-//         const state = json.state[key];
-//         if (state) {
-//           state.code = codeProcessor('state', json)(state.code, key);
-//         }
-//       }
-
-//       traverseNodes(json, (node) => {
-//         preProcessNodeCode({ json: node, codeProcessor, parentComponent: json });
-//       });
-//     },
-//   },
-// });
+    }),
+    (plugin): Plugin =>
+      () => ({ json: { pre: plugin } }),
+  );
