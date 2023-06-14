@@ -1,5 +1,6 @@
 import { camelCase, some } from 'lodash';
 import { format } from 'prettier/standalone';
+import { initializeOptions } from 'src/helpers/merge-options';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { dashCase } from '../../helpers/dash-case';
 import { dedent } from '../../helpers/dedent';
@@ -22,7 +23,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { collectClassString } from './collect-class-string';
 
@@ -127,8 +128,10 @@ function processBinding(code: string) {
 }
 
 export const componentToLit: TranspilerGenerator<ToLitOptions> =
-  (options = {}) =>
+  (_options = {}) =>
   ({ component }) => {
+    const options = initializeOptions('lit', _options);
+
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);

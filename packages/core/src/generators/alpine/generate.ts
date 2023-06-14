@@ -1,5 +1,6 @@
-import { camelCase, curry, flow, flowRight as compose } from 'lodash';
+import { camelCase, flowRight as compose, curry, flow } from 'lodash';
 import { format } from 'prettier/standalone';
+import { initializeOptions } from 'src/helpers/merge-options';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { babelTransformCode } from '../../helpers/babel-transform';
 import { dashCase } from '../../helpers/dash-case';
@@ -18,7 +19,7 @@ import {
   runPreJsonPlugins,
 } from '../../modules/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
+import { ForNode, MitosisNode, checkIsForNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { renderMountHook } from './render-mount-hook';
 import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
@@ -191,8 +192,10 @@ const blockToAlpine = (json: MitosisNode | ForNode, options: ToAlpineOptions = {
 };
 
 export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
-  (options = {}) =>
+  (_options = {}) =>
   ({ component }) => {
+    const options = initializeOptions('alpine', _options);
+
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);

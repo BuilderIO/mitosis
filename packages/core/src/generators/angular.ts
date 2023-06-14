@@ -31,11 +31,11 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 import { MitosisComponent } from '..';
-import { mergeOptions } from '../helpers/merge-options';
+import { initializeOptions } from '../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
 
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
@@ -260,14 +260,14 @@ const processAngularCode =
       (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
     );
 
+const DEFAULT_OPTIONS: ToAngularOptions = {
+  preserveImports: false,
+  preserveFileExtensions: false,
+};
+
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
   ({ component: _component }) => {
-    const DEFAULT_OPTIONS = {
-      preserveImports: false,
-      preserveFileExtensions: false,
-    };
-
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(_component);
 
@@ -276,7 +276,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
     const stateVars = Object.keys(json?.state || {});
 
-    const options = mergeOptions({ ...DEFAULT_OPTIONS, ...userOptions });
+    const options = initializeOptions('angular', DEFAULT_OPTIONS, userOptions);
     options.plugins = [
       ...(options.plugins || []),
       CODE_PROCESSOR_PLUGIN((codeType) => {

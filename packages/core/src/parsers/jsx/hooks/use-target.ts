@@ -1,31 +1,34 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { targets } from 'src/targets';
-import { TargetBlockCode } from 'src/types/mitosis-component';
-import { v4 as uuid } from 'uuid';
+import { MitosisComponent, TargetBlockCode } from 'src/types/mitosis-component';
 import { HOOKS } from '../../../constants/hooks';
 
 const { types } = babel;
 
-export const getTargetId = (block: TargetBlockCode) => uuid();
+export const getTargetId = (component: MitosisComponent) => {
+  const latestId = Object.keys(component.targetBlocks || {}).length;
+  const blockId = (latestId + 1).toString();
+  return blockId;
+};
 
 export const getMagicString = (targetId: string) => [USE_TARGET_MAGIC_STRING, targetId].join('');
 
 export const USE_TARGET_MAGIC_STRING = 'USE_TARGET_BLOCK_';
 // check for uuid.v4() format
-const uuidRegex = /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}/;
+const idRegex = /\d*/;
 
 const REGEX_BLOCK_NAME = 'blockId';
 
 export const USE_TARGET_MAGIC_REGEX = new RegExp(
   // make sure to capture the id of the target block
-  `"${USE_TARGET_MAGIC_STRING}\(?<${REGEX_BLOCK_NAME}>${uuidRegex.source}\)"`,
+  `"${USE_TARGET_MAGIC_STRING}\(?<${REGEX_BLOCK_NAME}>${idRegex.source}\)"`,
   'g',
 );
 
 export const getIdFromMatch = (match: string) => {
   const USE_TARGET_MAGIC_REGEX_WITHOUT_G = new RegExp(
-    `"${USE_TARGET_MAGIC_STRING}\(?<${REGEX_BLOCK_NAME}>${uuidRegex.source}\)"`,
+    `"${USE_TARGET_MAGIC_STRING}\(?<${REGEX_BLOCK_NAME}>${idRegex.source}\)"`,
   );
   const result = match.match(USE_TARGET_MAGIC_REGEX_WITHOUT_G);
   if (!result) return undefined;

@@ -73,6 +73,7 @@ export const componentToRsc: TranspilerGenerator<Partial<ToRscOptions>> =
       stylesType: 'style-tag',
       stateType: 'variables',
       contextType: 'prop-drill',
+      rsc: true,
     });
 
     return componentToReact(options)({ component: json, path });

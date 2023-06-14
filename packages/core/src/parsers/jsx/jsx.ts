@@ -132,7 +132,7 @@ export function parseJsx(
 
                     if (!targetBlock) return;
 
-                    const blockId = getTargetId(targetBlock);
+                    const blockId = getTargetId(context.builder.component);
 
                     // replace the useTarget() call with a magic string
                     path.replaceWith(types.stringLiteral(getMagicString(blockId)));

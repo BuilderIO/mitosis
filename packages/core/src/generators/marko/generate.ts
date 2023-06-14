@@ -1,6 +1,7 @@
 import hash from 'hash-sum';
 import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
+import { initializeOptions } from 'src/helpers/merge-options';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { dashCase } from '../../helpers/dash-case';
 import { dedent } from '../../helpers/dedent';
@@ -23,7 +24,7 @@ import {
   runPreJsonPlugins,
 } from '../../modules/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
@@ -151,10 +152,11 @@ export const componentToMarko: TranspilerGenerator<ToMarkoOptions> =
   (userOptions = {}) =>
   ({ component }) => {
     let json = fastClone(component);
-    const options: InternalToMarkoOptions = {
+    const options = initializeOptions<InternalToMarkoOptions>('marko', {
       ...userOptions,
       component: json,
-    };
+    });
+
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
