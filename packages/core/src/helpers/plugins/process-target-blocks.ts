@@ -46,10 +46,7 @@ export const processTargetBlocks = (target: Targets): Plugin =>
 
         if (!targetBlock) continue;
 
-        console.log('targetBlock', { code, target, targetBlock });
         code = code.replaceAll(m, targetBlock.code);
-
-        console.log('replaced with: ', code);
       }
 
       return code;
