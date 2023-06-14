@@ -1,7 +1,7 @@
 import { format } from 'prettier/standalone';
 import { convertTypeScriptToJS } from '../../helpers/babel-transform';
 import { fastClone } from '../../helpers/fast-clone';
-import { mergeOptions } from '../../helpers/merge-options';
+import { initializeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { replaceIdentifiers, replaceStateIdentifier } from '../../helpers/replace-identifiers';
 import { checkHasState } from '../../helpers/state';
@@ -87,7 +87,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
     // Make a copy we can safely mutate, similar to babel's toolchain
     let component = fastClone(_component);
 
-    const options = mergeOptions(DEFAULT_OPTIONS, userOptions);
+    const options = initializeOptions('qwik', DEFAULT_OPTIONS, userOptions);
 
     component = runPreJsonPlugins(component, options.plugins);
     component = runPostJsonPlugins(component, options.plugins);

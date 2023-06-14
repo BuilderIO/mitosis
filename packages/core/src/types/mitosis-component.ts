@@ -1,4 +1,5 @@
 import { Dictionary } from '../helpers/typescript';
+import { Target } from './config';
 import { JSONObject } from './json';
 import { MitosisNode } from './mitosis-node';
 
@@ -68,6 +69,14 @@ export type StateValue = {
 
 export type MitosisState = Dictionary<StateValue | undefined>;
 
+export type TargetBlock<Return, Targets extends Target = Target> = Partial<{
+  [T in Targets | 'default']?: Return;
+}>;
+
+export type TargetBlockCode = TargetBlock<{
+  code: string;
+}>;
+
 export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
   name: string;
@@ -97,6 +106,7 @@ export type MitosisComponent = {
     postComponent?: extendedHook;
     onUpdate?: extendedHook[];
   };
+  targetBlocks?: Dictionary<TargetBlockCode>;
   children: MitosisNode[];
   subComponents: MitosisComponent[];
   types?: string[];

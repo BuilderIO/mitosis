@@ -5930,6 +5930,67 @@ exports[`Html > jsx > Javascript Test > use-style-outside-component 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > useTarget 1`] = `
+"<div>
+  <template data-el=\\"div-1\\"><!-- state.name --></template>
+</div>
+<script>
+  (() => {
+    const state = {
+      get name() {
+        const prefix = \\"h\\";
+        return prefix + \\"foo\\";
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Remove Internal mitosis package 1`] = `
 "<div>
   Hello
@@ -11918,6 +11979,67 @@ exports[`Html > jsx > Typescript Test > use-style-outside-component 1`] = `
     outline: 1px solid black;
   }
 </style>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > useTarget 1`] = `
+"<div>
+  <template data-el=\\"div-1\\"><!-- state.name --></template>
+</div>
+<script>
+  (() => {
+    const state = {
+      get name() {
+        const prefix = \\"h\\";
+        return prefix + \\"foo\\";
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
 "
 `;
 

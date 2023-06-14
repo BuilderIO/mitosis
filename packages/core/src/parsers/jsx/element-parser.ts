@@ -92,7 +92,7 @@ export const jsxElementToJson = (
           else: jsxElementToJson(node.expression.alternate as any)!,
         },
         bindings: {
-          when: createSingleBinding({ code: generate(node.expression.test).code! }),
+          when: createSingleBinding({ code: generate(node.expression.test).code }),
         },
         children: [jsxElementToJson(node.expression.consequent as any)!],
       });
@@ -210,9 +210,7 @@ export const jsxElementToJson = (
 
         // boolean attribute
         if (value === null) {
-          memo[key] = createSingleBinding({
-            code: 'true',
-          });
+          memo[key] = createSingleBinding({ code: 'true' });
           return memo;
         }
         if (types.isJSXExpressionContainer(value) && !types.isStringLiteral(value.expression)) {

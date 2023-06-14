@@ -13,7 +13,7 @@ import { getRefs } from '../../helpers/get-refs';
 import { stringifyContextValue } from '../../helpers/get-state-object-string';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
-import { mergeOptions } from '../../helpers/merge-options';
+import { initializeOptions } from '../../helpers/merge-options';
 import { checkIsDefined } from '../../helpers/nullable';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { renderPreComponent } from '../../helpers/render-imports';
@@ -96,7 +96,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
   ({ component }) => {
     let json = fastClone(component);
 
-    const options = mergeOptions(DEFAULT_OPTIONS, passedOptions);
+    const options = initializeOptions('solid', DEFAULT_OPTIONS, passedOptions);
     options.plugins = [
       ...(options.plugins || []),
       CODE_PROCESSOR_PLUGIN((codeType) => {

@@ -1,5 +1,6 @@
 import { camelCase, some } from 'lodash';
 import { format } from 'prettier/standalone';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { dashCase } from '../../helpers/dash-case';
 import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
@@ -11,6 +12,7 @@ import { has } from '../../helpers/has';
 import { indent } from '../../helpers/indent';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { mapRefs } from '../../helpers/map-refs';
+import { initializeOptions } from '../../helpers/merge-options';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
@@ -21,7 +23,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { selfClosingTags } from '../../parsers/jsx';
 import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { collectClassString } from './collect-class-string';
@@ -109,7 +110,7 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
       }
     }
   }
-  if (selfClosingTags.has(json.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
   str += '>';
@@ -127,8 +128,10 @@ function processBinding(code: string) {
 }
 
 export const componentToLit: TranspilerGenerator<ToLitOptions> =
-  (options = {}) =>
+  (_options = {}) =>
   ({ component }) => {
+    const options = initializeOptions('lit', _options);
+
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);

@@ -9,7 +9,7 @@ import { fastClone } from '../../helpers/fast-clone';
 import { getProps } from '../../helpers/get-props';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { mapRefs } from '../../helpers/map-refs';
-import { mergeOptions } from '../../helpers/merge-options';
+import { initializeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { processHttpRequests } from '../../helpers/process-http-requests';
 import { renderPreComponent } from '../../helpers/render-imports';
@@ -105,7 +105,12 @@ const BASE_OPTIONS: ToVueOptions = {
 const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
   (userOptions) =>
   ({ component, path }) => {
-    const options = mergeOptions(BASE_OPTIONS, userOptions);
+    const options = initializeOptions(
+      userOptions?.vueVersion === 2 ? 'vue2' : 'vue3',
+      BASE_OPTIONS,
+      userOptions,
+    );
+
     options.plugins.unshift(
       CODE_PROCESSOR_PLUGIN((codeType) => {
         if (options.api === 'composition') {

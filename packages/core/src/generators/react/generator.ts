@@ -15,7 +15,7 @@ import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { handleMissingState } from '../../helpers/handle-missing-state';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { mapRefs } from '../../helpers/map-refs';
-import { mergeOptions } from '../../helpers/merge-options';
+import { initializeOptions } from '../../helpers/merge-options';
 import { processHttpRequests } from '../../helpers/process-http-requests';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
@@ -159,7 +159,18 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
   (reactOptions = {}) =>
   ({ component, path }) => {
     let json = fastClone(component);
-    const options: ToReactOptions = mergeOptions(DEFAULT_OPTIONS, reactOptions);
+
+    const target = reactOptions.preact
+      ? 'preact'
+      : reactOptions.type === 'native'
+      ? 'reactNative'
+      : reactOptions.type === 'taro'
+      ? 'taro'
+      : reactOptions.rsc
+      ? 'rsc'
+      : 'react';
+
+    const options = initializeOptions(target, DEFAULT_OPTIONS, reactOptions);
 
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);

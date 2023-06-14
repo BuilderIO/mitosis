@@ -12,7 +12,7 @@ import {
 } from '../../helpers/get-state-object-string';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { mergeOptions } from '../../helpers/merge-options';
+import { initializeOptions } from '../../helpers/merge-options';
 import { stripGetter } from '../../helpers/patterns';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { renderPreComponent } from '../../helpers/render-imports';
@@ -113,7 +113,7 @@ const DEFAULT_OPTIONS: ToSvelteOptions = {
 export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
   (userProvidedOptions) =>
   ({ component }) => {
-    const options = mergeOptions(DEFAULT_OPTIONS, userProvidedOptions);
+    const options = initializeOptions('svelte', DEFAULT_OPTIONS, userProvidedOptions);
 
     options.plugins = [
       ...(options.plugins || []),
