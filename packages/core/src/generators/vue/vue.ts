@@ -1,6 +1,7 @@
 import { flow, pipe } from 'fp-ts/lib/function';
 import { pickBy, size, uniq } from 'lodash';
 import { format } from 'prettier/standalone';
+import { processTargetBlocks } from 'src/helpers/plugins/process-target-blocks';
 import traverse from 'traverse';
 import { convertTypeScriptToJS } from '../../helpers/babel-transform';
 import { createSingleBinding } from '../../helpers/bindings';
@@ -107,6 +108,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
   ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
     options.plugins.unshift(
+      processTargetBlocks(options.vueVersion === 2 ? 'vue2' : 'vue3'),
       CODE_PROCESSOR_PLUGIN((codeType) => {
         if (options.api === 'composition') {
           switch (codeType) {
