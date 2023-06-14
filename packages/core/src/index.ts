@@ -1,5 +1,5 @@
 import { JSX } from '@builder.io/mitosis/jsx-runtime';
-import type { Targets } from './targets';
+import { Dictionary } from './helpers/typescript';
 import { TargetBlock } from './types/mitosis-component';
 
 export * from './flow';
@@ -45,44 +45,28 @@ export * from './types/mitosis-node';
 export * from './types/plugins';
 export * from './types/transpiler';
 
-function Provider<T>(props: { value: T; children: JSX.Element }): any {
-  return null;
-}
+declare function Provider<T>(props: { value: T; children: JSX.Element }): any;
 
 export type Context<T> = {
   Provider: typeof Provider<T>;
 };
 
 // These compile away
-export const useStore = <T>(obj: T): T => {
-  throw new Error('useStore: Mitosis hook should have been compiled away');
-};
-export const useState = <T>(obj: T): [T, (value: T) => void] => {
-  throw new Error('useState: Mitosis hook should have been compiled away');
-};
-export const useRef = <T>(obj?: null | void | T) => {
-  throw new Error('useRef: Mitosis hook should have been compiled away');
-};
-export const useContext = <T = { [key: string]: any }>(key: Context<T>): T => null as unknown as T;
-export const createContext = <T = { [key: string]: any }>(value: T): Context<T> =>
-  null as unknown as Context<T>;
-export const setContext = <T = { [key: string]: any }>(
-  key: Context<T>,
-  value: Partial<T>,
-): void => {};
-export const onMount = (fn: () => any) => {
-  throw new Error('onMount: Mitosis hook should have been compiled away');
-};
-export const onUpdate = (fn: () => any, deps?: any[]) => null as any;
-export const onInit = (fn: () => any) => null as any;
-export const onUnMount = (fn: () => any) => null as any;
-export const useDynamicTag = (fn: () => any) => null as any;
-export const onError = (fn: () => any) => null as any;
-export const useMetadata = (obj: object) => {
-  throw new Error('useMetadata: Mitosis hook should have been compiled away');
-};
-export const useDefaultProps = <T = { [key: string]: any }>(value: T): T => null as unknown as T;
-export const useStyle = (value: string) => null as any;
+export declare function useStore<T>(obj: T): T;
+export declare function useState<T>(obj: T): [T, (value: T) => void];
+export declare function useRef<T>(obj?: null | void | T): T;
+export declare function useContext<T = Dictionary<any>>(key: Context<T>): T;
+export declare function createContext<T = Dictionary<any>>(value: T): Context<T>;
+export declare function setContext<T = Dictionary<any>>(key: Context<T>, value: Partial<T>): void;
+export declare function onMount(fn: () => any): void;
+export declare function onUpdate(fn: () => any, deps?: any[]): void;
+export declare function onInit(fn: () => any): void;
+export declare function onUnMount(fn: () => any): void;
+export declare function useDynamicTag(fn: () => any): void;
+export declare function onError(fn: () => any): void;
+export declare function useMetadata(obj: object): void;
+export declare function useDefaultProps<T = Dictionary<any>>(value: T): T;
+export declare function useStyle(value: string): void;
 
 // TO-DO: better type strictness that guarantees `Target` is a subset of `Targets`
 export declare function useTarget<Return>(dict: TargetBlock<Return>): Return;
