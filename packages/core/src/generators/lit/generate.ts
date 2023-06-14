@@ -1,6 +1,5 @@
 import { camelCase, some } from 'lodash';
 import { format } from 'prettier/standalone';
-import { initializeOptions } from 'src/helpers/merge-options';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { dashCase } from '../../helpers/dash-case';
 import { dedent } from '../../helpers/dedent';
@@ -13,6 +12,7 @@ import { has } from '../../helpers/has';
 import { indent } from '../../helpers/indent';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { mapRefs } from '../../helpers/map-refs';
+import { initializeOptions } from '../../helpers/merge-options';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';

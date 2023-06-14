@@ -41,7 +41,7 @@ import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 
 import { pipe } from 'fp-ts/lib/function';
-import { initializeOptions } from 'src/helpers/merge-options';
+import { initializeOptions } from '../helpers/merge-options';
 import { getForArguments } from '../helpers/nodes/for';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 

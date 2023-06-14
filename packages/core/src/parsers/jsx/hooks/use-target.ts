@@ -1,8 +1,8 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { targets } from 'src/targets';
-import { MitosisComponent, TargetBlockCode } from 'src/types/mitosis-component';
 import { HOOKS } from '../../../constants/hooks';
+import { targets } from '../../../targets';
+import { MitosisComponent, TargetBlockCode } from '../../../types/mitosis-component';
 
 const { types } = babel;
 

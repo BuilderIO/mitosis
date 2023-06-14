@@ -1,7 +1,6 @@
 import hash from 'hash-sum';
 import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
-import { initializeOptions } from 'src/helpers/merge-options';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { dashCase } from '../../helpers/dash-case';
 import { dedent } from '../../helpers/dedent';
@@ -12,6 +11,7 @@ import { getStateObjectStringFromComponent } from '../../helpers/get-state-objec
 import { hasProps } from '../../helpers/has-props';
 import { indent } from '../../helpers/indent';
 import { mapRefs } from '../../helpers/map-refs';
+import { initializeOptions } from '../../helpers/merge-options';
 import { getForArguments } from '../../helpers/nodes/for';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';

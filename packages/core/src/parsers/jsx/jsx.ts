@@ -20,7 +20,7 @@ import { Context, ParseMitosisOptions } from './types';
 
 import tsPlugin from '@babel/plugin-syntax-typescript';
 import tsPreset from '@babel/preset-typescript';
-import { HOOKS } from 'src/constants/hooks';
+import { HOOKS } from '../../constants/hooks';
 import { getMagicString, getTargetId, getUseTargetStatements } from './hooks/use-target';
 
 const { types } = babel;

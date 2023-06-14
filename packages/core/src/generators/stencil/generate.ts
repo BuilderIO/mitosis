@@ -1,5 +1,4 @@
 import { format } from 'prettier/standalone';
-import { initializeOptions } from 'src/helpers/merge-options';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { dashCase } from '../../helpers/dash-case';
 import { dedent } from '../../helpers/dedent';
@@ -9,6 +8,7 @@ import { getProps } from '../../helpers/get-props';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { indent } from '../../helpers/indent';
 import { mapRefs } from '../../helpers/map-refs';
+import { initializeOptions } from '../../helpers/merge-options';
 import { getForArguments } from '../../helpers/nodes/for';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';

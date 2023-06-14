@@ -1,7 +1,7 @@
 import { pipe } from 'fp-ts/lib/function';
-import { MitosisComponent } from 'src/types/mitosis-component';
 import { USE_TARGET_MAGIC_REGEX, getIdFromMatch } from '../../parsers/jsx/hooks/use-target';
 import { Targets } from '../../targets';
+import { MitosisComponent } from '../../types/mitosis-component';
 import { Plugin } from '../../types/plugins';
 import { createCodeProcessorPlugin } from './process-code';
 
