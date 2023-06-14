@@ -9,7 +9,7 @@ import { mergeOptions } from '../helpers/merge-options';
 import { ClassStyleMap } from '../helpers/styles/helpers';
 import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 import { TranspilerGenerator } from '../types/transpiler';
-import { ToReactOptions, componentToReact } from './react';
+import { componentToReact, ToReactOptions } from './react';
 
 // @tarojs/components
 export const DEFAULT_Component_SET = new Set<string>([

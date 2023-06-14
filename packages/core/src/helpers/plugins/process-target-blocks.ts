@@ -1,5 +1,5 @@
 import { pipe } from 'fp-ts/lib/function';
-import { USE_TARGET_MAGIC_REGEX, getIdFromMatch } from '../../parsers/jsx/hooks/use-target';
+import { getIdFromMatch, USE_TARGET_MAGIC_REGEX } from '../../parsers/jsx/hooks/use-target';
 import { Targets } from '../../targets';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { Plugin } from '../../types/plugins';
