@@ -69,8 +69,8 @@ export type StateValue = {
 
 export type MitosisState = Dictionary<StateValue | undefined>;
 
-export type TargetBlock<Return> = Partial<{
-  [T in Target | 'default']?: Return;
+export type TargetBlock<Return, Targets extends Target = Target> = Partial<{
+  [T in Targets | 'default']?: Return;
 }>;
 
 export type TargetBlockCode = { id: string } & TargetBlock<{
