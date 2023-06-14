@@ -21,7 +21,7 @@ import { Context, ParseMitosisOptions } from './types';
 import tsPlugin from '@babel/plugin-syntax-typescript';
 import tsPreset from '@babel/preset-typescript';
 import { HOOKS } from 'src/constants/hooks';
-import { getUseTargetStatements } from './hooks/useTarget';
+import { getMagicString, getTargetId, getUseTargetStatements } from './hooks/use-target';
 
 const { types } = babel;
 
@@ -132,13 +132,15 @@ export function parseJsx(
 
                     if (!targetBlock) return;
 
+                    const blockId = getTargetId(targetBlock);
+
                     // replace the useTarget() call with a magic string
-                    path.replaceWith(types.stringLiteral(targetBlock.id));
+                    path.replaceWith(types.stringLiteral(getMagicString(blockId)));
 
                     // store the target block in the component
-                    context.builder.component.targetCode = {
-                      ...context.builder.component.targetCode,
-                      code: (context.builder.component.targetCode?.code || []).concat(targetBlock),
+                    context.builder.component.targetBlocks = {
+                      ...context.builder.component.targetBlocks,
+                      [blockId]: targetBlock,
                     };
                   },
                 });

@@ -73,7 +73,7 @@ export type TargetBlock<Return, Targets extends Target = Target> = Partial<{
   [T in Targets | 'default']?: Return;
 }>;
 
-export type TargetBlockCode = { id: string } & TargetBlock<{
+export type TargetBlockCode = TargetBlock<{
   code: string;
 }>;
 
@@ -106,18 +106,7 @@ export type MitosisComponent = {
     postComponent?: extendedHook;
     onUpdate?: extendedHook[];
   };
-  targetCode?: {
-    code?: TargetBlockCode[];
-    hooks?: {
-      init?: TargetBlock<extendedHook>;
-      onInit?: TargetBlock<extendedHook>;
-      onMount?: TargetBlock<extendedHook>;
-      onUnMount?: TargetBlock<extendedHook>;
-      preComponent?: TargetBlock<extendedHook>;
-      postComponent?: TargetBlock<extendedHook>;
-      onUpdate?: TargetBlock<extendedHook[]>;
-    };
-  };
+  targetBlocks?: Dictionary<TargetBlockCode>;
   children: MitosisNode[];
   subComponents: MitosisComponent[];
   types?: string[];

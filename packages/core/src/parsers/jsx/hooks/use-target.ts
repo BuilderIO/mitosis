@@ -1,13 +1,17 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { uniqueId } from 'lodash';
 import { targets } from 'src/targets';
 import { TargetBlockCode } from 'src/types/mitosis-component';
+import { v4 as uuid } from 'uuid';
 import { HOOKS } from '../../../constants/hooks';
 
 const { types } = babel;
 
 export const USE_TARGET_MAGIC_STRING = '$$USE_TARGET$$';
+
+export const getTargetId = (block: TargetBlockCode) => uuid();
+
+export const getMagicString = (targetId: string) => [USE_TARGET_MAGIC_STRING, targetId].join('');
 
 /**
  * This function finds `useTarget()` and converts it our JSON representation
@@ -22,7 +26,7 @@ export const getUseTargetStatements = (
 
   if (!types.isObjectExpression(obj)) return undefined;
 
-  const targetBlock: TargetBlockCode = { id: uniqueId(USE_TARGET_MAGIC_STRING) };
+  const targetBlock: TargetBlockCode = {};
 
   obj.properties.forEach((prop) => {
     if (!types.isObjectProperty(prop)) {
