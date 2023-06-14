@@ -27,7 +27,7 @@ const getBlockForTarget = ({
 };
 
 /**
- * Given a `codeProcessor` function, processes all code expressions within a Mitosis component.
+ * Processes `useTarget()` blocks for a given target.
  */
 export const processTargetBlocks = (target: Targets): Plugin =>
   pipe(
@@ -44,7 +44,11 @@ export const processTargetBlocks = (target: Targets): Plugin =>
         // find the target block in the component, or the default target block
         const targetBlock = getBlockForTarget({ target, json, targetId });
 
-        if (!targetBlock) continue;
+        if (!targetBlock) {
+          throw new Error(
+            `Could not find \`useTarget()\` value in "${json.name}" for target "${target}", and no default value was set.`,
+          );
+        }
 
         code = code.replaceAll(m, targetBlock.code);
       }
