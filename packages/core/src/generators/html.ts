@@ -27,8 +27,8 @@ import {
   DO_NOT_USE_ARGS,
   DO_NOT_USE_CONTEXT_VARS_TRANSFORMS,
   DO_NOT_USE_VARS_TRANSFORMS,
-  stripStateAndPropsRefs,
   StripStateAndPropsRefsOptions,
+  stripStateAndPropsRefs,
 } from '../helpers/strip-state-and-props-refs';
 import { collectCss } from '../helpers/styles/collect-css';
 import {
@@ -38,9 +38,10 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { MitosisComponent } from '../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 
 import { pipe } from 'fp-ts/lib/function';
+import { initializeOptions } from 'src/helpers/merge-options';
 import { getForArguments } from '../helpers/nodes/for';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
@@ -599,13 +600,13 @@ const htmlDecode = (html: string) => html.replace(/&quot;/gi, '"');
 export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
   (options = {}) =>
   ({ component }) => {
-    const useOptions: InternalToHtmlOptions = {
+    const useOptions: InternalToHtmlOptions = initializeOptions('html', {
       ...options,
       onChangeJsById: {},
       js: '',
       namesMap: {},
       format: 'script',
-    };
+    });
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
@@ -872,14 +873,14 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
     const ComponentName = component.name;
     const kebabName = kebabCase(ComponentName);
 
-    const useOptions: InternalToHtmlOptions = {
+    const useOptions: InternalToHtmlOptions = initializeOptions('customElement', {
       prefix: kebabName,
       ...options,
       onChangeJsById: {},
       js: '',
       namesMap: {},
       format: 'class',
-    };
+    });
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
