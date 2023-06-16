@@ -94,11 +94,11 @@ Object.assign(state, {
   getGutterSize() {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   },
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = state.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   },
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = state.getColumns();
     const gutterSize = state.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -115,11 +115,11 @@ useState({
   getGutterSize() {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   },
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = state.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   },
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = state.getColumns();
     const gutterSize = state.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -852,7 +852,7 @@ exports[`Builder > Regenerate Image 1`] = `
 import { useState } from \\"react\\";
 import { Image } from \\"@components\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props) {
   const [people, setPeople] = useState(() => [\\"Steve\\", \\"Sewell\\"]);
 
   return (
@@ -883,6 +883,8 @@ export default function MyComponent(props: any) {
     </>
   );
 }
+
+export default MyComponent;
 "
 `;
 
@@ -903,9 +905,11 @@ exports[`Builder > Regenerate custom Hero 1`] = `
   boxSizing: \\"border-box\\",
   marginTop: \\"200px\\"
 }",
+          "type": "single",
         },
         "height": {
           "code": "400",
+          "type": "single",
         },
       },
       "children": [],
@@ -928,6 +932,7 @@ exports[`Builder > Regenerate custom Hero 1`] = `
   "hooks": {},
   "imports": [
     {
+      "importKind": "value",
       "imports": {
         "Hero": "Hero",
       },
@@ -1036,10 +1041,44 @@ exports[`Builder > Regenerate custom Hero 3`] = `
 }
 `;
 
+exports[`Builder > Regenerate loop with Text node when using CSS 1`] = `
+"import { For } from \\"@builder.io/mitosis\\";
+
+export default function MyComponent(props) {
+  return (
+    <For each={state.submenusItem.menuItems}>
+      {(item, index) => (
+        <div
+          block-id=\\"builder-ID\\"
+          class=\\"class-id\\"
+          css={{
+            padding: \\"2px\\",
+          }}
+        >
+          text-content
+        </div>
+      )}
+    </For>
+  );
+}"
+`;
+
 exports[`Builder > Section 1`] = `
-"<div class=\\"div\\"><p>EAGER LOAD</p></div>
-<div class=\\"div-2\\" data-el=\\"div-1\\">
-  <section lazyLoad=\\"true\\" class=\\"section\\"><p>LAZY LOAD</p></section>
+"<div block-id=\\"builder-82a5c11482a644a8aa74dca341e3d6f1\\" class=\\"div\\">
+  <p>EAGER LOAD</p>
+</div>
+<div
+  block-id=\\"builder-6f37b822156149cc9033e4cbee511d2f\\"
+  class=\\"div-2\\"
+  data-el=\\"div-1\\"
+>
+  <section
+    block-id=\\"builder-6f37b822156149cc9033e4cbee511d2f\\"
+    lazyLoad=\\"true\\"
+    class=\\"section\\"
+  >
+    <p>LAZY LOAD</p>
+  </section>
 </div>
 <style>
   .div {
@@ -1085,7 +1124,13 @@ exports[`Builder > Section 1`] = `
 </style>
 <script>
   (() => {
-    const state = {};
+    const state = {
+      deviceSize: \\"large\\",
+      location: {
+        path: \\"\\",
+        query: {},
+      },
+    };
 
     let context = null;
     let nodesToDestroy = [];
@@ -1166,7 +1211,7 @@ exports[`Builder > Stamped 1`] = `
           {
             "@type": "@builder.io/sdk:Element",
             "bindings": {
-              "show": "state.showReviewPrompt",
+              "show": "state.showReviewPrompt || 'asdf'",
             },
             "children": [
               {
@@ -1520,7 +1565,7 @@ export default function MyComponent(props) {
       <button onClick={(event) => (state.showReviewPrompt = true)}>
         Write a review
       </button>
-      <Show when={state.showReviewPrompt}>
+      <Show when={state.showReviewPrompt || \\"asdf\\"}>
         <input placeholder=\\"Email\\" />
         <input
           placeholder=\\"Title\\"
@@ -1583,4 +1628,16 @@ export default function MyComponent(props) {
   );
 }
 "
+`;
+
+exports[`Builder > extractStateHook 1`] = `
+{
+  "code": "alert('hi');",
+  "state": {
+    "foo": {
+      "code": "'bar'",
+      "type": "property",
+    },
+  },
+}
 `;

@@ -1079,7 +1079,6 @@ export declare namespace JSX {
 
   interface ShapeElementSVGAttributes<T>
     extends CoreSVGAttributes<T>,
-      ShapeElementSVGAttributes<T>,
       Pick<
         PresentationSVGAttributes,
         | 'color'
@@ -1567,6 +1566,7 @@ export declare namespace JSX {
       FitToViewBoxSVGAttributes,
       ZoomAndPanSVGAttributes,
       Pick<PresentationSVGAttributes, 'display' | 'visibility'> {
+    xmlns?: string;
     version?: string;
     'base-profile'?: string;
     x?: number | string;
@@ -1653,6 +1653,7 @@ export declare namespace JSX {
     y?: number | string;
     width?: number | string;
     height?: number | string;
+    fill?: number | string;
   }
 
   interface ViewSVGAttributes<T>
@@ -1780,6 +1781,7 @@ export declare namespace JSX {
     var: HTMLAttributes<HTMLElement>;
     video: VideoHTMLAttributes<HTMLVideoElement>;
     wbr: HTMLAttributes<HTMLElement>;
+    template: HTMLAttributes<HTMLTemplateElement>;
 
     // SVG
     svg: SvgSVGAttributes<SVGSVGElement>;

@@ -1,17 +1,18 @@
-import { pipe } from 'fp-ts/lib/function';
-import { filter } from 'lodash';
+import { identity, pipe } from 'fp-ts/lib/function';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { checkIsDefined } from '../../helpers/nullable';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { replaceSlotsInString, stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
-import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisNode, ForNode, Binding } from '../../types/mitosis-node';
+import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
+import { Dictionary } from '../../helpers/typescript';
+import { Binding, ForNode, MitosisNode, SpreadType } from '../../types/mitosis-node';
 import {
-  encodeQuotes,
   addBindingsToJson,
   addPropertiesToJson,
+  encodeQuotes,
   invertBooleanExpression,
 } from './helpers';
 import { ToVueOptions } from './types';
@@ -21,7 +22,17 @@ const SPECIAL_PROPERTIES = {
   V_FOR: 'v-for',
   V_ELSE: 'v-else',
   V_ELSE_IF: 'v-else-if',
+  V_ON: 'v-on',
+  V_ON_AT: '@',
+  V_BIND: 'v-bind',
 } as const;
+
+/**
+ * blockToVue executed after processBinding,
+ * when processBinding is executed,
+ * SLOT_PREFIX from `slot` change to `$slots.`
+ */
+const SLOT_PREFIX = '$slots.';
 
 type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) => string;
 
@@ -38,14 +49,25 @@ const NODE_MAPPERS: {
   [key: string]: BlockRenderer | undefined;
 } = {
   Fragment(json, options, scope) {
-    if (options.vueVersion === 2 && scope?.isRootNode) {
-      throw new Error('Vue 2 template should have a single root element');
+    const children = json.children.filter(filterEmptyTextNodes);
+    const shouldAddDivFallback =
+      options.vueVersion === 2 && scope?.isRootNode && children.length > 1;
+
+    const childrenStr = children.map((item) => blockToVue(item, options)).join('\n');
+
+    if (shouldAddDivFallback) {
+      console.warn(
+        'WARNING: Vue 2 forbids multiple root elements. You provided a root Fragment with multiple elements. Wrapping elements in div as a workaround.',
+      );
+
+      return `<div>${childrenStr}</div>`;
+    } else {
+      return childrenStr;
     }
-    return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(_json, options) {
     const json = _json as ForNode;
-    const keyValue = json.bindings.key || { code: 'index' };
+    const keyValue = json.bindings.key || { code: 'index', type: 'single' };
     const forValue = `(${json.scope.forName}, index) in ${json.bindings.each?.code}`;
 
     if (options.vueVersion >= 3) {
@@ -75,10 +97,7 @@ const NODE_MAPPERS: {
       : '';
   },
   Show(json, options, scope) {
-    const ifValue = replaceSlotsInString(
-      json.bindings.when?.code || '',
-      (slotName) => `$slots.${slotName}`,
-    );
+    const ifValue = json.bindings.when?.code || '';
 
     const defaultShowTemplate = `
     <template ${SPECIAL_PROPERTIES.V_IF}="${encodeQuotes(ifValue)}">
@@ -256,30 +275,42 @@ const NODE_MAPPERS: {
     }
   },
   Slot(json, options) {
-    if (!json.bindings.name) {
+    const slotName = json.bindings.name?.code || json.properties.name;
+
+    const renderChildren = () => json.children?.map((item) => blockToVue(item, options)).join('\n');
+
+    if (!slotName) {
       const key = Object.keys(json.bindings).find(Boolean);
-      if (!key) return '<slot />';
+      if (!key) {
+        if (!json.children?.length) {
+          return '<slot/>';
+        }
+        return `<slot>${renderChildren()}</slot>`;
+      }
 
       return `
         <template #${key}>
-        ${json.bindings[key]?.code}
+          ${json.bindings[key]?.code}
         </template>
       `;
     }
 
-    return `<slot name="${stripSlotPrefix(json.bindings.name.code).toLowerCase()}">${json.children
-      ?.map((item) => blockToVue(item, options))
-      .join('\n')}</slot>`;
+    return `<slot name="${stripSlotPrefix(
+      slotName,
+      SLOT_PREFIX,
+    ).toLowerCase()}">${renderChildren()}</slot>`;
   },
 };
 
+const SPECIAL_HTML_TAGS = ['style', 'script'];
+
 const stringifyBinding =
   (node: MitosisNode) =>
-  ([key, value]: [string, Binding | undefined]) => {
-    if (node.bindings[key]?.type === 'spread') {
+  ([key, value]: [string, Binding]) => {
+    if (value.type === 'spread') {
       return ''; // we handle this after
     } else if (key === 'class') {
-      return ` :class="_classStringToObject(${value?.code})" `;
+      return `:class="_classStringToObject(${value?.code})"`;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
     } else {
@@ -293,29 +324,74 @@ const stringifyBinding =
           event = 'input';
         }
         const isAssignmentExpression = useValue.includes('=');
-        const valueWRenamedEvent = replaceIdentifiers({
-          code: useValue,
-          from: cusArgs[0],
-          to: '$event',
-        });
 
-        // TODO: proper babel transform to replace. Util for this
-        if (isAssignmentExpression) {
-          return ` @${event}="${encodeQuotes(removeSurroundingBlock(valueWRenamedEvent))}" `;
-        } else {
-          return ` @${event}="${encodeQuotes(
-            removeSurroundingBlock(removeSurroundingBlock(valueWRenamedEvent)),
-          )}" `;
-        }
+        const eventHandlerValue = pipe(
+          replaceIdentifiers({
+            code: useValue,
+            from: cusArgs[0],
+            to: '$event',
+          }),
+          isAssignmentExpression ? identity : removeSurroundingBlock,
+          removeSurroundingBlock,
+          encodeQuotes,
+        );
+
+        const eventHandlerKey = `${SPECIAL_PROPERTIES.V_ON_AT}${event}`;
+
+        return `${eventHandlerKey}="${eventHandlerValue}"`;
       } else if (key === 'ref') {
-        return ` ref="${encodeQuotes(useValue)}" `;
+        return `ref="${encodeQuotes(useValue)}"`;
       } else if (BINDING_MAPPERS[key]) {
-        return ` ${BINDING_MAPPERS[key]}="${encodeQuotes(useValue.replace(/"/g, "\\'"))}" `;
+        return `${BINDING_MAPPERS[key]}="${encodeQuotes(useValue.replace(/"/g, "\\'"))}"`;
       } else {
-        return ` :${key}="${encodeQuotes(useValue)}" `;
+        return `:${key}="${encodeQuotes(useValue)}"`;
       }
     }
   };
+
+const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType: SpreadType }) => {
+  const spreads = Object.values(node.bindings)
+    .filter(checkIsDefined)
+    .filter((binding) => binding.type === 'spread' && binding.spreadType === spreadType)
+    .map((value) => (value!.code === 'props' ? '$props' : value!.code));
+
+  if (spreads.length === 0) {
+    return '';
+  }
+
+  const stringifiedValue =
+    spreads.length > 1 ? `{${spreads.map((spread) => `...${spread}`).join(', ')}}` : spreads[0];
+
+  const key = spreadType === 'normal' ? SPECIAL_PROPERTIES.V_BIND : SPECIAL_PROPERTIES.V_ON;
+
+  return ` ${key}="${encodeQuotes(stringifiedValue)}" `;
+};
+
+const getBlockBindings = (node: MitosisNode) => {
+  const stringifiedProperties = Object.entries(node.properties)
+    .map(([key, value]) => {
+      if (key === 'className') {
+        return '';
+      } else if (key === SPECIAL_PROPERTIES.V_ELSE) {
+        return `${key}`;
+      } else if (typeof value === 'string') {
+        return `${key}="${encodeQuotes(value)}"`;
+      }
+    })
+    .join(' ');
+
+  const stringifiedBindings = Object.entries(node.bindings as Dictionary<Binding>)
+    .map(stringifyBinding(node))
+    .join(' ');
+
+  return [
+    stringifiedProperties,
+    stringifiedBindings,
+    stringifySpreads({ node, spreadType: 'normal' }),
+    stringifySpreads({ node, spreadType: 'event-handlers' }),
+  ].join(' ');
+};
+
 export const blockToVue: BlockRenderer = (node, options, scope) => {
   const nodeMapper = NODE_MAPPERS[node.name];
   if (nodeMapper) {
@@ -326,11 +402,10 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     return `<slot/>`;
   }
 
-  if (node.name === 'style') {
-    // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
-    // <component is="'style'">...</component>
+  if (SPECIAL_HTML_TAGS.includes(node.name)) {
+    // Vue doesn't allow style/script tags in templates, but does support them through dynamic components.
+    node.bindings.is = { code: `'${node.name}'`, type: 'single' };
     node.name = 'component';
-    node.bindings.is = { code: "'style'" };
   }
 
   if (node.properties._text) {
@@ -339,48 +414,17 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   const textCode = node.bindings._text?.code;
   if (textCode) {
-    if (isSlotProperty(textCode)) {
-      return `<slot name="${stripSlotPrefix(textCode).toLowerCase()}"/>`;
+    if (isSlotProperty(textCode, SLOT_PREFIX)) {
+      return `<slot name="${stripSlotPrefix(textCode, SLOT_PREFIX).toLowerCase()}"/>`;
     }
     return `{{${textCode}}}`;
   }
 
-  let str = '';
+  let str = `<${node.name} `;
 
-  str += `<${node.name} `;
+  str += getBlockBindings(node);
 
-  for (const key in node.properties) {
-    const value = node.properties[key];
-
-    if (key === 'className') {
-      continue;
-    } else if (key === SPECIAL_PROPERTIES.V_ELSE) {
-      str += ` ${key} `;
-    } else if (typeof value === 'string') {
-      str += ` ${key}="${encodeQuotes(value)}" `;
-    }
-  }
-
-  const stringifiedBindings = Object.entries(node.bindings).map(stringifyBinding(node)).join('');
-
-  str += stringifiedBindings;
-
-  // spreads
-
-  let spreads = filter(node.bindings, (binding) => binding?.type === 'spread').map(
-    (value) => value?.code,
-  );
-
-  if (spreads?.length) {
-    if (spreads.length > 1) {
-      let spreadsString = `{...${spreads.join(', ...')}}`;
-      str += ` v-bind="${encodeQuotes(spreadsString)}"`;
-    } else {
-      str += ` v-bind="${encodeQuotes(spreads.join(''))}"`;
-    }
-  }
-
-  if (selfClosingTags.has(node.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(node.name)) {
     return str + ' />';
   }
 

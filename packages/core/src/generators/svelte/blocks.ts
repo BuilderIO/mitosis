@@ -1,15 +1,23 @@
-import { selfClosingTags } from '../../parsers/jsx';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseNode, Binding, ForNode, MitosisNode } from '../../types/mitosis-node';
 
-import isChildren from '../../helpers/is-children';
-import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
+import { createSingleBinding } from '../../helpers/bindings';
+import isChildren from '../../helpers/is-children';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { getForArguments } from '../../helpers/nodes/for';
-import { ToSvelteOptions } from './types';
+import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
+import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
 import { stripStateAndProps } from './helpers';
+import { ToSvelteOptions } from './types';
+
+/**
+ * blockToSvelte executed after stripStateAndProps,
+ * when stripStateAndProps is executed,
+ * SLOT_PREFIX from `slot` change to `$$slots.`
+ */
+const SLOT_PREFIX = '$$slots.';
 
 const mappers: {
   For: BlockToSvelte<ForNode>;
@@ -66,9 +74,21 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
 {/if}`;
   },
   Slot({ json, options, parentComponent }) {
-    if (!json.bindings.name) {
+    const slotName = json.bindings.name?.code || json.properties.name;
+
+    const renderChildren = () =>
+      json.children
+        ?.map((item) => blockToSvelte({ json: item, options, parentComponent }))
+        .join('\n');
+
+    if (!slotName) {
       const key = Object.keys(json.bindings).find(Boolean);
-      if (!key) return '<slot />';
+      if (!key) {
+        if (!json.children?.length) {
+          return '<slot/>';
+        }
+        return `<slot>${renderChildren()}</slot>`;
+      }
 
       return `
         <span #${key}>
@@ -77,9 +97,10 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
       `;
     }
 
-    return `<slot name="${stripSlotPrefix(json.bindings.name.code).toLowerCase()}">${json.children
-      ?.map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('\n')}</slot>`;
+    return `<slot name="${stripSlotPrefix(
+      slotName,
+      SLOT_PREFIX,
+    ).toLowerCase()}">${renderChildren()}</slot>`;
   },
 };
 
@@ -107,19 +128,41 @@ const getTagName = ({
     return SVELTE_SPECIAL_TAGS.SELF;
   }
 
+  /**
+   * These are special HTML tags that svelte requires `<svelte:element this={TAG}>`
+   */
+  const SPECIAL_HTML_TAGS = ['style', 'script', 'template'];
+
+  if (SPECIAL_HTML_TAGS.includes(json.name)) {
+    json.bindings.this = createSingleBinding({
+      code:
+        json.name === 'style'
+          ? // We have to obfuscate `"style"` due to a limitation in the svelte-preprocessor plugin.
+            // https://github.com/sveltejs/vite-plugin-svelte/issues/315#issuecomment-1109000027
+            `"sty" + "le"`
+          : `"${json.name}"`,
+    });
+
+    return SVELTE_SPECIAL_TAGS.ELEMENT;
+  }
+
   const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name);
+
   const isSpecialSvelteTag = json.name.startsWith('svelte:');
+
   // Check if any import matches `json.name`
   const hasMatchingImport = parentComponent.imports.some(({ imports }) =>
     Object.keys(imports).some((name) => name === json.name),
   );
 
-  // TO-DO: no way to decide between <svelte:component> and <svelte:element>...need to do that through metadata
-  // overrides for now
+  // If none of these are true, then we have some type of dynamic tag name
   if (!isValidHtmlTag && !isSpecialSvelteTag && !hasMatchingImport) {
-    json.bindings.this = {
+    json.bindings.this = createSingleBinding({
       code: stripStateAndProps({ json: parentComponent, options })(json.name),
-    };
+    });
+
+    // TO-DO: no way to perfectly decide between <svelte:component> and <svelte:element> for dynamic
+    // values...need to do that through metadata overrides for now.
     return SVELTE_SPECIAL_TAGS.COMPONENT;
   }
 
@@ -184,8 +227,8 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   const textCode = json.bindings._text?.code;
 
   if (textCode) {
-    if (isSlotProperty(textCode)) {
-      return `<slot name="${stripSlotPrefix(textCode).toLowerCase()}"/>`;
+    if (isSlotProperty(textCode, SLOT_PREFIX)) {
+      return `<slot name="${stripSlotPrefix(textCode, SLOT_PREFIX).toLowerCase()}"/>`;
     }
     return `{${textCode}}`;
   }
@@ -221,7 +264,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     return str;
   }
 
-  if (selfClosingTags.has(tagName)) {
+  if (SELF_CLOSING_HTML_TAGS.has(tagName)) {
     return str + ' />';
   }
   str += '>';

@@ -1,11 +1,10 @@
 import { types } from '@babel/core';
-import json5 from 'json5';
+import { pipe } from 'fp-ts/lib/function';
 import { babelTransformExpression } from '../../../helpers/babel-transform';
 import { capitalize } from '../../../helpers/capitalize';
+import { prefixWithFunction, replaceGetterWithFunction } from '../../../helpers/patterns';
 import { MitosisComponent, MitosisState, StateValue } from '../../../types/mitosis-component';
 import { ToSolidOptions } from '../types';
-import { pipe } from 'fp-ts/lib/function';
-import { prefixWithFunction, replaceGetterWithFunction } from '../../../helpers/patterns';
 import { getStateSetterName, updateStateCode } from './helpers';
 
 const collectUsedStateAndPropsInFunction = (fnValue: string) => {
@@ -43,13 +42,17 @@ export const getStoreCode = ({
     key: string,
     stateVal: StateValue | undefined,
   ]): string => {
+    if (!stateVal) {
+      return '';
+    }
+
     const getCreateStoreStr = (initialValue: string) =>
       `const [${key}, ${getStateSetterName(key)}] = createStore(${initialValue})`;
 
-    const getDefaultCase = () => pipe(value, json5.stringify, mapValue, getCreateStoreStr);
+    const getDefaultCase = () => pipe(value, mapValue, getCreateStoreStr);
 
-    const value = stateVal?.code;
-    const type = stateVal?.type;
+    const value = stateVal.code;
+    const type = stateVal.type;
     if (typeof value === 'string') {
       switch (type) {
         case 'getter':

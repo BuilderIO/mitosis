@@ -1,14 +1,16 @@
 import { Builder } from '@builder.io/react';
+import { BuilderElement } from '@builder.io/sdk';
+import json5, * as JSON5 from 'json5';
 import { omit, pick } from 'lodash';
 import traverse, { TraverseContext } from 'traverse';
+import { Plugin } from '..';
+import { createSingleBinding } from '../helpers/bindings';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
+import { builderElementToMitosisNode } from '../parsers/builder';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
-import * as JSON5 from 'json5';
-import { BuilderElement } from '@builder.io/sdk';
-import { builderElementToMitosisNode } from '../parsers/builder';
 
 function getComponentInputNames(componentName: string): string[] {
   const componentInfo = Builder.components.find((item) => item.name === componentName);
@@ -54,6 +56,16 @@ export const components: CompileAwayComponentsMap = {
     const properties: Record<string, string> = {};
     const bindings: Record<string, string> = {};
 
+    if (!node.properties.href && node.bindings.css) {
+      const css = json5.parse(node.bindings.css.code);
+      // When using button tag ensure we have all: unset and
+      // be sure that is the first style in the list
+      node.bindings.css.code = json5.stringify({
+        all: 'unset',
+        ...css,
+      });
+    }
+
     if ('link' in node.properties) {
       properties.href = node.properties.link!;
     }
@@ -61,10 +73,22 @@ export const components: CompileAwayComponentsMap = {
       bindings.href = node.properties.link!;
     }
     if ('text' in node.properties) {
-      properties.innerHTML = node.properties.text!;
+      node.children = [
+        createMitosisNode({
+          properties: {
+            _text: node.properties.text!,
+          },
+        }),
+      ];
     }
     if ('text' in node.bindings) {
-      bindings.innerHTML = node.properties.text!;
+      node.children = [
+        createMitosisNode({
+          bindings: {
+            _text: node.bindings.text!,
+          },
+        }),
+      ];
     }
     if ('openInNewTab' in node.bindings) {
       bindings.target = `${node.bindings.openInNewTab} ? '_blank' : '_self'`;
@@ -77,7 +101,7 @@ export const components: CompileAwayComponentsMap = {
     return createMitosisNode({
       ...node,
       // TODO: use 'button' tag for no link, and add `all: unset` to CSS string only then
-      name: hasLink ? 'a' : node.properties.$tagName || 'span',
+      name: hasLink ? 'a' : 'button',
       properties: {
         ...omit(node.properties, omitFields),
         ...properties,
@@ -196,7 +220,7 @@ export const components: CompileAwayComponentsMap = {
           }),
         },
         bindings: {
-          css: {
+          css: createSingleBinding({
             code: JSON.stringify({
               width: '100%',
               alignSelf: 'stretch',
@@ -211,7 +235,7 @@ export const components: CompileAwayComponentsMap = {
               marginLeft: 'auto',
               marginRight: 'auto',
             }),
-          },
+          }),
         },
         children: node.children,
       }),
@@ -243,7 +267,7 @@ export const components: CompileAwayComponentsMap = {
           class: 'builder-columns',
         },
         bindings: {
-          css: {
+          css: createSingleBinding({
             code: JSON.stringify({
               display: 'flex',
               ...(properties.stackColumnsAt === 'never'
@@ -259,7 +283,7 @@ export const components: CompileAwayComponentsMap = {
                       },
                   }),
             }),
-          },
+          }),
         },
         children: columns.map((col, index) => {
           return createMitosisNode({
@@ -269,7 +293,7 @@ export const components: CompileAwayComponentsMap = {
               class: 'builder-column',
             },
             bindings: {
-              css: {
+              css: createSingleBinding({
                 code: JSON.stringify({
                   display: 'flex',
                   flexDirection: 'column',
@@ -288,7 +312,7 @@ export const components: CompileAwayComponentsMap = {
                         },
                       }),
                 }),
-              },
+              }),
             },
             children: col.children,
           });
@@ -331,7 +355,7 @@ export const components: CompileAwayComponentsMap = {
       bindings: noUndefined({
         src: node.bindings.image?.code && { code: node.bindings.image?.code },
         sizes: node.bindings.sizes?.code && { code: node.bindings.sizes?.code },
-        css: {
+        css: createSingleBinding({
           code: JSON.stringify({
             objectFit: backgroundSize || 'cover',
             objectPosition: backgroundPosition || 'cover',
@@ -345,7 +369,7 @@ export const components: CompileAwayComponentsMap = {
                 }
               : {}),
           }),
-        },
+        }),
       }),
     });
 
@@ -363,14 +387,14 @@ export const components: CompileAwayComponentsMap = {
           class: 'builder-image-sizer',
         },
         bindings: {
-          css: {
+          css: createSingleBinding({
             code: JSON.stringify({
               width: '100%',
               paddingTop: aspectRatio * 100 + '%',
               pointerEvents: 'none',
               fontSize: '0',
             }),
-          },
+          }),
         },
       });
 
@@ -383,7 +407,7 @@ export const components: CompileAwayComponentsMap = {
           $name: 'image-contents',
         },
         bindings: {
-          css: {
+          css: createSingleBinding({
             code: JSON.stringify({
               display: 'flex',
               flexDirection: 'column',
@@ -394,7 +418,7 @@ export const components: CompileAwayComponentsMap = {
               width: '100%',
               height: '100%',
             }),
-          },
+          }),
         },
         children: node.children,
       });
@@ -413,7 +437,7 @@ export const components: CompileAwayComponentsMap = {
         },
         bindings: hrefBinding
           ? {
-              href: { code: hrefBinding },
+              href: createSingleBinding({ code: hrefBinding }),
             }
           : undefined,
         children: imageNodes,
@@ -462,7 +486,7 @@ export const components: CompileAwayComponentsMap = {
             code: node.bindings.playsInline?.code,
           },
           loop: node.bindings.loop?.code && { code: node.bindings.loop?.code },
-          css: {
+          css: createSingleBinding({
             code: JSON.stringify({
               width: '100%',
               height: '100%',
@@ -471,7 +495,7 @@ export const components: CompileAwayComponentsMap = {
               borderRadius: '1',
               position: aspectRatio ? 'absolute' : '',
             }),
-          },
+          }),
         }),
         children: [
           createMitosisNode({
@@ -498,14 +522,14 @@ export const components: CompileAwayComponentsMap = {
             $name: 'builder-video-sizer',
           },
           bindings: {
-            css: {
+            css: createSingleBinding({
               code: JSON.stringify({
                 width: '100%',
                 paddingTop: aspectRatio * 100 + '%',
                 pointerEvents: 'none',
                 fontSize: '0',
               }),
-            },
+            }),
           },
         }),
       );
@@ -519,7 +543,7 @@ export const components: CompileAwayComponentsMap = {
             $name: 'image-contents',
           },
           bindings: {
-            css: {
+            css: createSingleBinding({
               code: JSON.stringify({
                 display: 'flex',
                 flexDirection: 'column',
@@ -530,7 +554,7 @@ export const components: CompileAwayComponentsMap = {
                 width: '100%',
                 height: '100%',
               }),
-            },
+            }),
           },
           children: node.children,
         }),
@@ -542,7 +566,7 @@ export const components: CompileAwayComponentsMap = {
         $name: 'video-container',
       },
       bindings: {
-        css: { code: JSON.stringify({ position: 'relative' }) },
+        css: createSingleBinding({ code: JSON.stringify({ position: 'relative' }) }),
       },
       children: videoContainerNodes,
     });
@@ -574,7 +598,7 @@ export const compileAwayBuilderComponentsFromTree = (
 
 export const compileAwayBuilderComponents = (
   pluginOptions: CompileAwayBuilderComponentsOptions = {},
-) => {
+): Plugin => {
   let obj = components;
   if (pluginOptions.omit) {
     obj = omit(obj, pluginOptions.omit);

@@ -1,12 +1,13 @@
-import { useObserver } from 'mobx-react-lite';
-import React from 'react';
 import { createTheme, ThemeProvider } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { useObserver } from 'mobx-react-lite';
+import React from 'react';
 import { colors } from '../constants/colors';
-import Fiddle from './Fiddle';
 import { theme } from '../constants/theme';
+import Fiddle from './Fiddle';
+import Talk from './Talk';
 
-export default function App() {
+export default function App({ talk }: { talk?: boolean }) {
   return useObserver(() => {
     const muiTheme = createTheme({
       palette: {
@@ -14,6 +15,7 @@ export default function App() {
         primary: { main: colors.primary },
       },
     });
+
     return (
       <React.StrictMode>
         <ThemeProvider theme={muiTheme}>
@@ -23,7 +25,7 @@ export default function App() {
               background-color: ${colors.background};
             }
           `}</style>
-          <Fiddle />
+          {talk ? <Talk /> : <Fiddle />}
         </ThemeProvider>
       </React.StrictMode>
     );

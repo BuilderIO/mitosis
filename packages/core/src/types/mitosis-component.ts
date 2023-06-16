@@ -1,5 +1,6 @@
 import { Dictionary } from '../helpers/typescript';
-import { _JSON, JSONObject } from './json';
+import { Target } from './config';
+import { JSONObject } from './json';
 import { MitosisNode } from './mitosis-node';
 
 /**
@@ -28,6 +29,7 @@ export interface MitosisImport {
   imports: {
     [key: string]: string | undefined;
   };
+  importKind?: 'type' | 'typeof' | 'value' | null;
 }
 
 export type ContextType = 'normal' | 'reactive' | 'reactive-proxy';
@@ -64,31 +66,21 @@ export interface MitosisExport {
 
 export type StateValueType = 'function' | 'getter' | 'method' | 'property';
 
-export type StateCode = _JSON;
-
-type CodeValue = {
+export type StateValue = {
   code: string;
-  type: Exclude<StateValueType, 'property'>;
+  type: StateValueType;
+  typeParameter?: string;
 };
-
-export const checkIsCodeValue = (value: unknown): value is CodeValue => {
-  return typeof value === 'object' &&
-    value &&
-    Object.keys(value).length === 2 &&
-    'type' in value &&
-    'code' in value
-    ? ['function', 'getter', 'method'].includes((value as any).type)
-    : false;
-};
-
-export type StateValue =
-  | CodeValue
-  | {
-      code: StateCode;
-      type: Extract<StateValueType, 'property'>;
-    };
 
 export type MitosisState = Dictionary<StateValue | undefined>;
+
+export type TargetBlock<Return, Targets extends Target = Target> = Partial<{
+  [T in Targets | 'default']?: Return;
+}>;
+
+export type TargetBlockCode = TargetBlock<{
+  code: string;
+}>;
 
 export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
@@ -119,10 +111,11 @@ export type MitosisComponent = {
     postComponent?: extendedHook;
     onUpdate?: extendedHook[];
   };
+  targetBlocks?: Dictionary<TargetBlockCode>;
   children: MitosisNode[];
   subComponents: MitosisComponent[];
   types?: string[];
   propsTypeRef?: string;
-  defaultProps?: JSONObject;
+  defaultProps?: MitosisState;
   style?: string;
 };

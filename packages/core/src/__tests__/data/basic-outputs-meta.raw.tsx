@@ -1,9 +1,13 @@
-import { useStore, useMetadata, onMount } from '@builder.io/mitosis';
+import { onMount, useMetadata, useStore } from '@builder.io/mitosis';
 
 useMetadata({
   outputs: ['onMessage', 'onEvent'],
 });
 export default function MyBasicOutputsComponent(props: any) {
+  useMetadata({
+    baz: 'metadata inside component',
+  });
+
   const state = useStore({
     name: 'PatrickJS',
   });

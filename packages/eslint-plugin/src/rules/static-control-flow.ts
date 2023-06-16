@@ -1,5 +1,5 @@
-import { Rule } from 'eslint';
 import * as types from '@babel/types';
+import { Rule } from 'eslint';
 import isMitosisPath from '../helpers/isMitosisPath';
 
 export const staticControlFlow: Rule.RuleModule = {
@@ -18,24 +18,6 @@ export const staticControlFlow: Rule.RuleModule = {
               node: node as any,
               message: 'Destructuring the state object is currently not supported',
             });
-          }
-        }
-      },
-
-      CallExpression(node) {
-        if (types.isCallExpression(node)) {
-          if (types.isIdentifier(node.callee) && node.callee.name === 'useEffect') {
-            const useEffectMessage =
-              'Only useEffect with an empty array second argument is allowed. E.g. useEffect(...) must be useEffect(..., [])';
-            const secondArg = node.arguments[1];
-            if (
-              !(secondArg && types.isArrayExpression(secondArg) && secondArg.elements.length === 0)
-            ) {
-              context.report({
-                node: node,
-                message: useEffectMessage,
-              });
-            }
           }
         }
       },

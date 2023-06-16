@@ -1,14 +1,13 @@
 import { types } from '@babel/core';
-import json5 from 'json5';
+import { pipe } from 'fp-ts/lib/function';
 import traverse from 'traverse';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { MitosisComponent, StateValue } from '../../types/mitosis-component';
-import { pipe } from 'fp-ts/lib/function';
-import { ToReactOptions } from './types';
-import { processBinding } from './helpers';
 import { prefixWithFunction, replaceGetterWithFunction } from '../../helpers/patterns';
 import { transformStateSetters } from '../../helpers/transform-state-setters';
+import { MitosisComponent, StateValue } from '../../types/mitosis-component';
+import { processBinding } from './helpers';
+import { ToReactOptions } from './types';
 
 /**
  * Removes all `this.` references.
@@ -34,16 +33,14 @@ const processStateValue = (options: ToReactOptions) => {
   const mapValue = valueMapper(options);
 
   return ([key, stateVal]: [key: string, stateVal: StateValue | undefined]) => {
+    if (!stateVal) {
+      return '';
+    }
     const getDefaultCase = () =>
-      pipe(
-        value,
-        json5.stringify,
-        mapValue,
-        (x) => `const [${key}, ${getSetStateFnName(key)}] = useState(() => (${x}))`,
-      );
+      `const [${key}, ${getSetStateFnName(key)}] = useState(() => (${mapValue(value)}))`;
 
-    const value = stateVal?.code;
-    const type = stateVal?.type;
+    const value = stateVal.code || '';
+    const type = stateVal.type;
     if (typeof value === 'string') {
       switch (type) {
         case 'getter':
@@ -75,13 +72,12 @@ export const updateStateSetters = (json: MitosisComponent, options: ToReactOptio
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
-        let values = item.bindings[key];
+        let values = item.bindings[key]!;
         const newValue = updateStateSettersInCode(values?.code as string, options);
         if (newValue !== values?.code) {
           item.bindings[key] = {
+            ...values,
             code: newValue,
-            arguments: values?.arguments,
-            type: values?.type,
           };
         }
       }

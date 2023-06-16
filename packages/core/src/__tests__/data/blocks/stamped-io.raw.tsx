@@ -1,6 +1,5 @@
-import { useStore, onMount, For, Show } from '@builder.io/mitosis';
-import { kebabCase } from 'lodash';
-import { snakeCase } from 'lodash';
+import { For, onMount, Show, useStore } from '@builder.io/mitosis';
+import { kebabCase, snakeCase } from 'lodash';
 
 type SmileReviewsProps = {
   productId: string;
@@ -36,7 +35,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
   return (
     <div data-user={state.name}>
       <button onClick={() => (state.showReviewPrompt = true)}>Write a review</button>
-      <Show when={state.showReviewPrompt}>
+      <Show when={state.showReviewPrompt || 'asdf'}>
         <input placeholder="Email" />
 
         <input css={{ display: 'block' }} placeholder="Title" />

@@ -53,7 +53,7 @@ What happens if you want a plugin to only apply to a specific set of components?
 This is where our `useMetadata` hook comes in handy. All you need to do is import and use the hook (you can use it anywhere in your mitosis component file, even at the top root level!):
 
 ```tsx
-import { useMetadata, useStore, onMount, For, Show } from '@builder.io/mitosis';
+import { useMetadata } from '@builder.io/mitosis';
 
 useMetadata({ mySpecialComponentType: 'ABC' });
 

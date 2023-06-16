@@ -20,6 +20,9 @@
   <a href="https://www.npmjs.com/package/@builder.io/mitosis" rel="nofollow"><img src="https://img.shields.io/npm/v/@builder.io/mitosis.svg?sanitize=true"></a>
 </p>
 
+_PS: We are actively looking for folks interested in becoming contributors to Mitosis. Given its large surface area, there is a ton of room for any engineer to make a large and sustained impact on the project. We invest a ton of time in helping newcomers get onboarded, and teach them how to make changes to the codebase (see the following examples: [#847](https://github.com/BuilderIO/mitosis/issues/847#issuecomment-1307439504), [#372](https://github.com/BuilderIO/mitosis/issues/372#issuecomment-1133471614), [#734](https://github.com/BuilderIO/mitosis/issues/734#issuecomment-1255453702)). If interested, look at our list of [good first issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or reach out on our [Discord](https://discord.gg/SNusEyNGsx)_
+
+
 ## Table of contents
 
 - [Quick Start Guide](#quick-start-guide)
@@ -45,6 +48,7 @@ npm install @builder.io/mitosis-cli @builder.io/mitosis
 ### Setup `mitosis.config.js`
 
 ```js
+/** @type {import('@builder.io/mitosis').MitosisConfig} */
 module.exports = {
   files: 'src/**',
   targets: ['vue3', 'solid', 'svelte', 'react'],
@@ -112,6 +116,9 @@ Here are some helpful resources on trying out Mitosis:
 
 ## What is Mitosis?
 
+- [this talk](https://portal.gitnation.org/contents/its-time-to-de-fragment-the-web) by Sami Jaber at React Day Berlin is a great intro to Mitosis. It gives a good overview of the impetus behind Mitosis, and a high-level understanding of its different pieces.
+
+- The below video is a brief introduction by Steve Sewell.
 [![Mitosis Video](https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffa5c422309ce4fbea9eaa133fa471877)](https://www.youtube.com/watch?v=XQIuv34-K_8 'Mitosis Video')
 
 ## Docs
@@ -152,6 +159,7 @@ Also similarly to LLVM, multiple syntaxes can compile to Mitosis. Our out-of-the
 
 | Target  | 01 one component   | 02 two components  |
 | ------- | ------------------ | ------------------ |
+| alpine  | :white_check_mark: | :white_check_mark: |
 | angular | :white_check_mark: | :white_check_mark: |
 | qwik    | :white_check_mark: | :white_check_mark: |
 | react   | :white_check_mark: | :white_check_mark: |
@@ -180,6 +188,13 @@ Once you're ready, checkout our [issues](https://github.com/BuilderIO/mitosis/is
 - [Qwik](https://github.com/BuilderIO/qwik): An open-source framework designed for best possible time to interactive, by focusing on resumability of server-side-rendering of HTML, and fine-grained lazy-loading of code.
 - [Partytown](https://github.com/BuilderIO/partytown): Relocate resource intensive third-party scripts off of the main thread and into a web worker. 🎉
 
+<br>
+<br>
 <p align="center">
-  Made with ❤️ by <a target="_blank" href="https://www.builder.io/">Builder.io</a>
+   <a href="https://www.builder.io/m/developers">
+      <picture>
+         <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/844291/230786554-eb225eeb-2f6b-4286-b8c2-535b1131744a.png">
+         <img width="250" alt="Made with love by Builder.io" src="https://user-images.githubusercontent.com/844291/230786555-a58479e4-75f3-4222-a6eb-74c5af953eac.png">
+       </picture>
+   </a>
 </p>

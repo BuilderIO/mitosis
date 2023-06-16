@@ -1,0 +1,5755 @@
+// Vitest Snapshot v1
+
+exports[`Alpine.js > jsx > Javascript Test > AdvancedRef 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"myBasicRefComponent()\\">
+  <template x-if=\\"showInput\\">
+    <div>
+      <input
+        class=\\"input\\"
+        x-ref=\\"inputRef\\"
+        x-bind:value=\\"name\\"
+        x-on:blur=\\"onBlur()\\"
+        x-on:change=\\"name = $event.target.value\\"
+      />
+
+      <label for=\\"cars\\" x-ref=\\"inputNoArgRef\\">Choose a car:</label>
+
+      <select name=\\"cars\\" id=\\"cars\\">
+        <option value=\\"supra\\">GR Supra</option>
+
+        <option value=\\"86\\">GR 86</option>
+      </select>
+    </div>
+  </template>
+
+  Hello
+
+  <span x-html=\\"lowerCaseName()\\"></span>
+  ! I can run in React, Qwik, Vue, Solid, or Web Component!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicRefComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      onBlur: function onBlur() {
+        // Maintain focus
+        this.$refs.inputRef.focus();
+      },
+      lowerCaseName: function lowerCaseName() {
+        return this.name.toLowerCase();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Basic 1`] = `
+"<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<div class=\\"test div\\" x-data=\\"myBasicComponent()\\">
+  <input
+    x-bind:value=\\"DEFAULT_VALUES.name || name\\"
+    x-on:change=\\"name = myEvent.target.value\\"
+  />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({
+      name: \\"Steve\\",
+
+      underscore_fn_name() {
+        return \\"bar\\";
+      },
+
+      age: 1,
+      sports: [\\"\\"],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Basic 2`] = `
+"<div x-data=\\"myBasicForShowComponent()\\">
+  <template x-for=\\"person in names\\">
+    <template x-if=\\"person === name\\">
+      <input
+        x-bind:value=\\"name\\"
+        x-on:change=\\"name = $event.target.value + ' and ' + person\\"
+      />
+
+      Hello
+      <span x-html=\\"person\\"></span>
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    </template>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForShowComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      names: [\\"Steve\\", \\"PatrickJS\\"],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Basic Context 1`] = `
+"<div x-data=\\"myBasicComponent()\\">
+  <span x-html=\\"myService.method('hello') + name\\"></span>
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+
+  <input x-on:change=\\"onChange\\" />
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      onChange: function onChange() {
+        const change = myService.method(\\"change\\");
+        console.log(change);
+      },
+
+      init() {
+        const bye = myService.method(\\"hi\\");
+        console.log(bye);
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Basic OnMount Update 1`] = `
+"<div x-data=\\"myBasicOnMountUpdateComponent()\\">
+  Hello
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicOnMountUpdateComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      names: [\\"Steve\\", \\"PatrickJS\\"],
+
+      init() {
+        this.name = \\"PatrickJS onMount\\" + props.bye;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Basic Outputs 1`] = `
+"<div x-data=\\"myBasicOutputsComponent()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicOutputsComponent\\", () => ({
+      name: \\"PatrickJS\\",
+
+      init() {
+        props.onMessage(this.name);
+        props.onEvent(props.message);
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Basic Outputs Meta 1`] = `
+"<div x-data=\\"myBasicOutputsComponent()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicOutputsComponent\\", () => ({
+      name: \\"PatrickJS\\",
+
+      init() {
+        props.onMessage(this.name);
+        props.onEvent(props.message);
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > BasicAttribute 1`] = `
+"<input
+  autocapitalize=\\"on\\"
+  autocomplete=\\"on\\"
+  x-data=\\"myComponent()\\"
+  x-bind:spellcheck=\\"true\\"
+/>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
+"<div x-data=\\"myBooleanAttribute()\\">
+  <span x-html=\\"children\\"></span>
+
+  <span x-html=\\"type\\"></span>
+
+  <MyBooleanAttributeComponent
+    x-bind:toggle=\\"true\\"
+  ></MyBooleanAttributeComponent>
+
+  <MyBooleanAttributeComponent
+    x-bind:toggle=\\"true\\"
+  ></MyBooleanAttributeComponent>
+
+  <MyBooleanAttributeComponent x-bind:list=\\"null\\"></MyBooleanAttributeComponent>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBooleanAttribute\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > BasicChildComponent 1`] = `
+"<div x-data=\\"myBasicChildComponent()\\">
+  <MyBasicComponent x-bind:id=\\"dev\\"></MyBasicComponent>
+
+  <div>
+    <MyBasicOnMountUpdateComponent
+      x-bind:hi=\\"name\\"
+      x-bind:bye=\\"dev\\"
+    ></MyBasicOnMountUpdateComponent>
+  </div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicChildComponent\\", () => ({
+      name: \\"Steve\\",
+      dev: \\"PatrickJS\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > BasicFor 1`] = `
+"<div x-data=\\"myBasicForComponent()\\">
+  <template x-for=\\"person in names\\">
+    <div>
+      <input
+        x-bind:value=\\"name\\"
+        x-on:change=\\"name = $event.target.value + ' and ' + person\\"
+      />
+
+      Hello
+      <span x-html=\\"person\\"></span>
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    </div>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      names: [\\"Steve\\", \\"PatrickJS\\"],
+
+      init() {
+        console.log(\\"onMount code\\");
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > BasicRef 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"myBasicRefComponent()\\">
+  <template x-if=\\"showInput\\">
+    <div>
+      <input
+        class=\\"input\\"
+        x-ref=\\"inputRef\\"
+        x-bind:value=\\"name\\"
+        x-on:blur=\\"onBlur()\\"
+        x-on:change=\\"name = $event.target.value\\"
+      />
+
+      <label for=\\"cars\\" x-ref=\\"inputNoArgRef\\">Choose a car:</label>
+
+      <select name=\\"cars\\" id=\\"cars\\">
+        <option value=\\"supra\\">GR Supra</option>
+
+        <option value=\\"86\\">GR 86</option>
+      </select>
+    </div>
+  </template>
+
+  Hello
+
+  <span x-html=\\"lowerCaseName()\\"></span>
+  ! I can run in React, Qwik, Vue, Solid, or Web Component!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicRefComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      onBlur: function onBlur() {
+        // Maintain focus
+        this.$refs.inputRef.focus();
+      },
+      lowerCaseName: function lowerCaseName() {
+        return this.name.toLowerCase();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > BasicRefAssignment 1`] = `
+"<div x-data=\\"myBasicRefAssignmentComponent()\\">
+  <button x-on:click=\\"handlerClick(evt)\\">Click</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicRefAssignmentComponent\\", () => ({
+      handlerClick: function handlerClick(event) {
+        event.preventDefault();
+        console.log(\\"current value\\", holdValueRef);
+        holdValueRef = holdValueRef + \\"JS\\";
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > BasicRefPrevious 1`] = `
+"<div x-data=\\"myPreviousComponent()\\">
+  <h1>
+    Now:
+    <span x-html=\\"count\\"></span>
+    , before:
+    <span x-html=\\"prevCount\\"></span>
+  </h1>
+
+  <button x-on:click=\\"count += 1\\">Increment</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myPreviousComponent\\", () => ({
+      count: 0,
+
+      init() {
+        this.$watch(\\"count\\", (value, oldValue) => {
+          prevCount = this.count;
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Button 1`] = `
+"<div x-data=\\"button()\\">
+  <template x-if=\\"link\\">
+    <a
+      x-bind=\\"attributes\\"
+      x-bind:href=\\"link\\"
+      x-bind:target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+    >
+      <span x-html=\\"text\\"></span>
+    </a>
+  </template>
+
+  <template x-if=\\"!link\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\">
+      <span x-html=\\"text\\"></span>
+    </button>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"button\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Columns 1`] = `
+"<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+  }
+  @media (max-width: 999px) {
+    .div {
+      flex-direction: row;
+    }
+  }
+  @media (max-width: 639px) {
+    .div {
+      flex-direction: row-reverse;
+    }
+  }
+  .div-2 {
+    flex-grow: 1;
+  }
+</style>
+<div class=\\"builder-columns div\\" x-data=\\"column()\\">
+  <template x-for=\\"column in columns\\">
+    <div class=\\"builder-column div-2\\">
+      <span x-html=\\"column.content\\"></span>
+
+      <span x-html=\\"index\\"></span>
+    </div>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"column\\", () => ({
+      getColumns() {
+        return props.columns || [];
+      },
+
+      getGutterSize() {
+        return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+      },
+
+      getWidth(index) {
+        const columns = this.getColumns();
+        return (columns[index] && columns[index].width) || 100 / columns.length;
+      },
+
+      getColumnCssWidth(index) {
+        const columns = this.getColumns();
+        const gutterSize = this.getGutterSize();
+        const subtractWidth =
+          (gutterSize * (columns.length - 1)) / columns.length;
+        return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > ContentSlotHtml 1`] = `
+"<div x-data=\\"contentSlotCode()\\">
+  <slot x-bind:name=\\"slotTesting\\"></slot>
+
+  <div>
+    <hr />
+  </div>
+
+  <div>
+    <slot></slot>
+  </div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"contentSlotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > ContentSlotJSX 1`] = `
+"<template x-if=\\"slotReference\\">
+  <div
+    x-bind:name=\\"slotContent ? 'name1' : 'name2'\\"
+    x-bind:title=\\"slotContent ? 'title1' : 'title2'\\"
+    x-bind=\\"attributes\\"
+    x-on:click=\\"show()\\"
+    x-bind:class=\\"cls\\"
+  >
+    <template x-if=\\"showContent && slotContent\\">
+      <slot name=\\"content\\"><span x-html=\\"content\\"></span></slot>
+    </template>
+
+    <div>
+      <hr />
+    </div>
+
+    <div><span x-html=\\"children\\"></span></div>
+  </div>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"contentSlotJsxCode\\", () => ({
+      name: \\"king\\",
+      showContent: false,
+
+      get cls() {
+        return props.slotContent && props.children
+          ? \`\${this.name}-content\`
+          : \\"\\";
+      },
+
+      show() {
+        props.slotContent ? 1 : \\"\\";
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > CustomCode 1`] = `
+"<div
+  x-data=\\"customCode()\\"
+  x-ref=\\"elem\\"
+  x-bind:class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
+  x-bind:innerHTML=\\"code\\"
+></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"customCode\\", () => ({
+      scriptsInserted: [],
+      scriptsRun: [],
+
+      findAndRunScripts() {
+        // TODO: Move this function to standalone one in '@builder.io/utils'
+        if (this.$refs.elem && typeof window !== \\"undefined\\") {
+          /** @type {HTMLScriptElement[]} */
+          const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
+
+          for (let i = 0; i < scripts.length; i++) {
+            const script = scripts[i];
+
+            if (script.src) {
+              if (this.scriptsInserted.includes(script.src)) {
+                continue;
+              }
+
+              this.scriptsInserted.push(script.src);
+              const newScript = document.createElement(\\"script\\");
+              newScript.async = true;
+              newScript.src = script.src;
+              document.head.appendChild(newScript);
+            } else if (
+              !script.type ||
+              [
+                \\"text/javascript\\",
+                \\"application/javascript\\",
+                \\"application/ecmascript\\",
+              ].includes(script.type)
+            ) {
+              if (this.scriptsRun.includes(script.innerText)) {
+                continue;
+              }
+
+              try {
+                this.scriptsRun.push(script.innerText);
+                new Function(script.innerText)();
+              } catch (error) {
+                console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+              }
+            }
+          }
+        }
+      },
+
+      init() {
+        this.findAndRunScripts();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Embed 1`] = `
+"<div
+  x-data=\\"customCode()\\"
+  x-ref=\\"elem\\"
+  x-bind:class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
+  x-bind:innerHTML=\\"code\\"
+></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"customCode\\", () => ({
+      scriptsInserted: [],
+      scriptsRun: [],
+
+      findAndRunScripts() {
+        // TODO: Move this function to standalone one in '@builder.io/utils'
+        if (this.$refs.elem && typeof window !== \\"undefined\\") {
+          /** @type {HTMLScriptElement[]} */
+          const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
+
+          for (let i = 0; i < scripts.length; i++) {
+            const script = scripts[i];
+
+            if (script.src) {
+              if (this.scriptsInserted.includes(script.src)) {
+                continue;
+              }
+
+              this.scriptsInserted.push(script.src);
+              const newScript = document.createElement(\\"script\\");
+              newScript.async = true;
+              newScript.src = script.src;
+              document.head.appendChild(newScript);
+            } else if (
+              !script.type ||
+              [
+                \\"text/javascript\\",
+                \\"application/javascript\\",
+                \\"application/ecmascript\\",
+              ].includes(script.type)
+            ) {
+              if (this.scriptsRun.includes(script.innerText)) {
+                continue;
+              }
+
+              try {
+                this.scriptsRun.push(script.innerText);
+                new Function(script.innerText)();
+              } catch (error) {
+                console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+              }
+            }
+          }
+        }
+      },
+
+      init() {
+        this.findAndRunScripts();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Form 1`] = `
+"<style>
+  .pre {
+    padding: 10px;
+    color: red;
+    text-align: center;
+  }
+</style>
+<form
+  x-data=\\"formComponent()\\"
+  x-bind:validate=\\"validate\\"
+  x-ref=\\"formRef\\"
+  x-bind:action=\\"!sendWithJs && action\\"
+  x-bind:method=\\"method\\"
+  x-bind:name=\\"name\\"
+  x-on:submit=\\"onSubmit($event)\\"
+  x-bind=\\"attributes\\"
+>
+  <template x-if=\\"builderBlock && builderBlock.children\\">
+    <template x-for=\\"block in builderBlock?.children\\">
+      <BuilderBlockComponent
+        x-bind:key=\\"block.id\\"
+        x-bind:block=\\"block\\"
+        x-bind:index=\\"index\\"
+      ></BuilderBlockComponent>
+    </template>
+  </template>
+
+  <template x-if=\\"submissionState === 'error'\\">
+    <BuilderBlocks
+      dataPath=\\"errorMessage\\"
+      x-bind:blocks=\\"errorMessage\\"
+    ></BuilderBlocks>
+  </template>
+
+  <template x-if=\\"submissionState === 'sending'\\">
+    <BuilderBlocks
+      dataPath=\\"sendingMessage\\"
+      x-bind:blocks=\\"sendingMessage\\"
+    ></BuilderBlocks>
+  </template>
+
+  <template x-if=\\"submissionState === 'error' && responseData\\">
+    <pre class=\\"builder-form-error-text pre\\">
+          
+<span x-html=\\"JSON.stringify(responseData, null, 2)\\"></span>
+
+        </pre>
+  </template>
+
+  <template x-if=\\"submissionState === 'success'\\">
+    <BuilderBlocks
+      dataPath=\\"successMessage\\"
+      x-bind:blocks=\\"successMessage\\"
+    ></BuilderBlocks>
+  </template>
+</form>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"formComponent\\", () => ({
+      formState: \\"unsubmitted\\",
+      responseData: null,
+      formErrorMessage: \\"\\",
+
+      get submissionState() {
+        return (Builder.isEditing && props.previewState) || this.formState;
+      },
+
+      onSubmit(event) {
+        const sendWithJs =
+          props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+        if (props.sendSubmissionsTo === \\"zapier\\") {
+          event.preventDefault();
+        } else if (sendWithJs) {
+          if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+            event.preventDefault();
+            return;
+          }
+
+          event.preventDefault();
+          const el = event.currentTarget;
+          const headers = props.customHeaders || {};
+          let body;
+          const formData = new FormData(el); // TODO: maybe support null
+
+          const formPairs = Array.from(
+            event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+          )
+            .filter((el) => !!el.name)
+            .map((el) => {
+              let value;
+              const key = el.name;
+
+              if (el instanceof HTMLInputElement) {
+                if (el.type === \\"radio\\") {
+                  if (el.checked) {
+                    value = el.name;
+                    return {
+                      key,
+                      value,
+                    };
+                  }
+                } else if (el.type === \\"checkbox\\") {
+                  value = el.checked;
+                } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+                  const num = el.valueAsNumber;
+
+                  if (!isNaN(num)) {
+                    value = num;
+                  }
+                } else if (el.type === \\"file\\") {
+                  // TODO: one vs multiple files
+                  value = el.files;
+                } else {
+                  value = el.value;
+                }
+              } else {
+                value = el.value;
+              }
+
+              return {
+                key,
+                value,
+              };
+            });
+          let contentType = props.contentType;
+
+          if (props.sendSubmissionsTo === \\"email\\") {
+            contentType = \\"multipart/form-data\\";
+          }
+
+          Array.from(formPairs).forEach(({ value }) => {
+            if (
+              value instanceof File ||
+              (Array.isArray(value) && value[0] instanceof File) ||
+              value instanceof FileList
+            ) {
+              contentType = \\"multipart/form-data\\";
+            }
+          }); // TODO: send as urlEncoded or multipart by default
+          // because of ease of use and reliability in browser API
+          // for encoding the form?
+
+          if (contentType !== \\"application/json\\") {
+            body = formData;
+          } else {
+            // Json
+            const json = {};
+            Array.from(formPairs).forEach(({ value, key }) => {
+              set(json, key, value);
+            });
+            body = JSON.stringify(json);
+          }
+
+          if (contentType && contentType !== \\"multipart/form-data\\") {
+            if (
+              /* Zapier doesn't allow content-type header to be sent from browsers */
+              !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+            ) {
+              headers[\\"content-type\\"] = contentType;
+            }
+          }
+
+          const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+            detail: {
+              body,
+            },
+          });
+
+          if (this.$refs.formRef) {
+            this.$refs.formRef.dispatchEvent(presubmitEvent);
+
+            if (presubmitEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          this.formState = \\"sending\\";
+          const formUrl = \`\${
+            builder.env === \\"dev\\"
+              ? \\"http://localhost:5000\\"
+              : \\"https://builder.io\\"
+          }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+            props.sendSubmissionsToEmail || \\"\\"
+          )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+          fetch(
+            props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+            /* TODO: throw error if no action URL */
+            {
+              body,
+              headers,
+              method: props.method || \\"post\\",
+            }
+          ).then(
+            async (res) => {
+              let body;
+              const contentType = res.headers.get(\\"content-type\\");
+
+              if (
+                contentType &&
+                contentType.indexOf(\\"application/json\\") !== -1
+              ) {
+                body = await res.json();
+              } else {
+                body = await res.text();
+              }
+
+              if (!res.ok && props.errorMessagePath) {
+                /* TODO: allow supplying an error formatter function */
+                let message = get(body, props.errorMessagePath);
+
+                if (message) {
+                  if (typeof message !== \\"string\\") {
+                    /* TODO: ideally convert json to yaml so it woul dbe like
+                 error: - email has been taken */
+                    message = JSON.stringify(message);
+                  }
+
+                  this.formErrorMessage = message;
+                }
+              }
+
+              this.responseData = body;
+              this.formState = res.ok ? \\"success\\" : \\"error\\";
+
+              if (res.ok) {
+                const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+                  detail: {
+                    res,
+                    body,
+                  },
+                });
+
+                if (this.$refs.formRef) {
+                  this.$refs.formRef.dispatchEvent(submitSuccessEvent);
+
+                  if (submitSuccessEvent.defaultPrevented) {
+                    return;
+                  }
+                  /* TODO: option to turn this on/off? */
+
+                  if (props.resetFormOnSubmit !== false) {
+                    this.$refs.formRef.reset();
+                  }
+                }
+                /* TODO: client side route event first that can be preventDefaulted */
+
+                if (props.successUrl) {
+                  if (this.$refs.formRef) {
+                    const event = new CustomEvent(\\"route\\", {
+                      detail: {
+                        url: props.successUrl,
+                      },
+                    });
+                    this.$refs.formRef.dispatchEvent(event);
+
+                    if (!event.defaultPrevented) {
+                      location.href = props.successUrl;
+                    }
+                  } else {
+                    location.href = props.successUrl;
+                  }
+                }
+              }
+            },
+            (err) => {
+              const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+                detail: {
+                  error: err,
+                },
+              });
+
+              if (this.$refs.formRef) {
+                this.$refs.formRef.dispatchEvent(submitErrorEvent);
+
+                if (submitErrorEvent.defaultPrevented) {
+                  return;
+                }
+              }
+
+              this.responseData = err;
+              this.formState = \\"error\\";
+            }
+          );
+        }
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Image 1`] = `
+"<style>
+  .img {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    object-fit: cover;
+    object-position: center;
+  }
+</style>
+<div x-data=\\"image()\\">
+  <picture x-ref=\\"pictureRef\\">
+    <template x-if=\\"!useLazyLoading() || load\\">
+      <img
+        x-bind:alt=\\"altText\\"
+        x-bind:aria-role=\\"altText ? 'presentation' : undefined\\"
+        x-bind:class=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
+        x-bind:src=\\"image\\"
+        x-on:load=\\"setLoaded()\\"
+        x-bind:srcset=\\"srcset\\"
+        x-bind:sizes=\\"sizes\\"
+      />
+    </template>
+
+    <source x-bind:srcset=\\"srcset\\" />
+  </picture>
+
+  <span x-html=\\"children\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"image\\", () => ({
+      scrollListener: null,
+      imageLoaded: false,
+
+      setLoaded() {
+        this.imageLoaded = true;
+      },
+
+      useLazyLoading() {
+        // TODO: Add more checks here, like testing for real web browsers
+        return !!props.lazy && isBrowser();
+      },
+
+      isBrowser: function isBrowser() {
+        return (
+          typeof window !== \\"undefined\\" &&
+          window.navigator.product != \\"ReactNative\\"
+        );
+      },
+      load: false,
+
+      init() {
+        if (this.useLazyLoading()) {
+          // throttled scroll capture listener
+          const listener = () => {
+            if (pictureRef) {
+              const rect = pictureRef.getBoundingClientRect();
+              const buffer = window.innerHeight / 2;
+
+              if (rect.top < window.innerHeight + buffer) {
+                setLoad(true);
+                this.scrollListener = null;
+                window.removeEventListener(\\"scroll\\", listener);
+              }
+            }
+          };
+
+          this.scrollListener = listener;
+          window.addEventListener(\\"scroll\\", listener, {
+            capture: true,
+            passive: true,
+          });
+          listener();
+        }
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Image State 1`] = `
+"<div x-data=\\"imgStateComponent()\\">
+  <template x-for=\\"item in images\\">
+    <div>
+      <img class=\\"custom-class\\" x-bind:src=\\"item\\" x-bind:key=\\"itemIndex\\" />
+    </div>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"imgStateComponent\\", () => ({
+      canShow: true,
+      images: [\\"http://example.com/qwik.png\\"],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Img 1`] = `
+"<img
+  x-data=\\"imgComponent()\\"
+  x-bind:style=\\"{
+  objectFit: backgroundSize || 'cover',
+  objectPosition: backgroundPosition || 'center'
+}\\"
+  x-bind=\\"attributes\\"
+  x-bind:key=\\"Builder.isEditing && imgSrc || 'default-key'\\"
+  x-bind:alt=\\"altText\\"
+  x-bind:src=\\"imgSrc\\"
+/>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"imgComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Input 1`] = `
+"<input
+  x-data=\\"formInputComponent()\\"
+  x-bind=\\"attributes\\"
+  x-bind:key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+  x-bind:placeholder=\\"placeholder\\"
+  x-bind:type=\\"type\\"
+  x-bind:name=\\"name\\"
+  x-bind:value=\\"value\\"
+  x-bind:defaultValue=\\"defaultValue\\"
+  x-bind:required=\\"required\\"
+/>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"formInputComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > RawText 1`] = `
+"<span
+  x-data=\\"rawText()\\"
+  x-bind:class=\\"attributes?.class || attributes?.className\\"
+  x-bind:innerHTML=\\"text || ''\\"
+></span>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"rawText\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Section 1`] = `
+"<section
+  x-data=\\"sectionComponent()\\"
+  x-bind=\\"attributes\\"
+  x-bind:style=\\"maxWidth && typeof maxWidth === 'number' ? {
+  maxWidth: maxWidth
+} : undefined\\"
+>
+  <span x-html=\\"children\\"></span>
+</section>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"sectionComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Section 2`] = `
+"<template x-if=\\"max\\">
+  <template x-for=\\"item in items\\">
+    <section
+      x-bind=\\"attributes\\"
+      x-bind:style=\\"{
+  maxWidth: item + max
+}\\"
+    >
+      <span x-html=\\"children\\"></span>
+    </section>
+  </template>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"sectionStateComponent\\", () => ({
+      max: 42,
+      items: [42],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Select 1`] = `
+"<select
+  x-data=\\"selectComponent()\\"
+  x-bind=\\"attributes\\"
+  x-bind:value=\\"value\\"
+  x-bind:key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+  x-bind:defaultValue=\\"defaultValue\\"
+  x-bind:name=\\"name\\"
+>
+  <template x-for=\\"option in options\\">
+    <option x-bind:value=\\"option.value\\" x-bind:data-index=\\"index\\">
+      <span x-html=\\"option.name || option.value\\"></span>
+    </option>
+  </template>
+</select>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"selectComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > SlotDefault 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > SlotHtml 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <ContentSlotCode>
+    <slot x-bind:testing=\\"<div>Hello</div>\\"></slot>
+  </ContentSlotCode>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > SlotJsx 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <ContentSlotCode x-bind:slotTesting=\\"<div>Hello</div>\\"></ContentSlotCode>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > SlotNamed 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Stamped.io 1`] = `
+"<style>
+  .input {
+    display: block;
+  }
+  .textarea {
+    display: block;
+  }
+  .button {
+    display: block;
+  }
+  .review {
+    margin: 10px;
+    padding: 10px;
+    background: white;
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .img {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+</style>
+<div x-data=\\"smileReviews()\\" x-bind:data-user=\\"name\\">
+  <button x-on:click=\\"showReviewPrompt = true\\">Write a review</button>
+
+  <template x-if=\\"showReviewPrompt || 'asdf'\\">
+    <input placeholder=\\"Email\\" />
+
+    <input placeholder=\\"Title\\" class=\\"input\\" />
+
+    <textarea
+      placeholder=\\"How was your experience?\\"
+      class=\\"textarea\\"
+    ></textarea>
+
+    <button
+      class=\\"button\\"
+      x-on:click=\\"$event.preventDefault();
+showReviewPrompt = false\\"
+    >
+      Submit
+    </button>
+  </template>
+
+  <template x-for=\\"review in reviews\\">
+    <div class=\\"review\\" x-bind:key=\\"review.id\\">
+      <img class=\\"img\\" x-bind:src=\\"review.avatar\\" />
+
+      <div x-bind:class=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
+        <div>
+          N:
+          <span x-html=\\"index\\"></span>
+        </div>
+
+        <div><span x-html=\\"review.author\\"></span></div>
+
+        <div><span x-html=\\"review.reviewMessage\\"></span></div>
+      </div>
+    </div>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"smileReviews\\", () => ({
+      reviews: [],
+      name: \\"test\\",
+      showReviewPrompt: false,
+
+      kebabCaseValue() {
+        return kebabCase(\\"testThat\\");
+      },
+
+      snakeCaseValue() {
+        return snakeCase(\\"testThis\\");
+      },
+
+      init() {
+        fetch(
+          \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+            props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+          }&productId=\${props.productId || \\"2410511106127\\"}\`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            this.reviews = data.data;
+          });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Submit 1`] = `
+"<button type=\\"submit\\" x-data=\\"submitButton()\\" x-bind=\\"attributes\\">
+  <span x-html=\\"text\\"></span>
+</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"submitButton\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Text 1`] = `
+"<div  x-data=\\"text()\\"  x-bind:contentEditable=\\"allowEditingText || undefined\\"  x-bind:data-name=\\"{
+  test: name || 'any name'
+}\\"  x-bind:innerHTML=\\"text || content || name || '<p class=\\"text-lg\\">my name</p>'\\" ></div><script>
+          document.addEventListener('alpine:init', () => {
+  Alpine.data('text', () => ({
+    name: 'Decadef20'
+  }));
+});
+        </script>"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Textarea 1`] = `
+"<textarea
+  x-data=\\"textarea()\\"
+  x-bind=\\"attributes\\"
+  x-bind:placeholder=\\"placeholder\\"
+  x-bind:name=\\"name\\"
+  x-bind:value=\\"value\\"
+  x-bind:defaultValue=\\"defaultValue\\"
+></textarea>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"textarea\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > Video 1`] = `
+"<video
+  preload=\\"none\\"
+  x-data=\\"video()\\"
+  x-bind=\\"attributes\\"
+  x-bind:style=\\"{
+  width: '100%',
+  height: '100%',
+  ...attributes?.style,
+  objectFit: fit,
+  objectPosition: position,
+  // Hack to get object fit to work as expected and
+  // not have the video overflow
+  borderRadius: 1
+}\\"
+  x-bind:key=\\"video || 'no-src'\\"
+  x-bind:poster=\\"posterImage\\"
+  x-bind:autoplay=\\"autoPlay\\"
+  x-bind:muted=\\"muted\\"
+  x-bind:controls=\\"controls\\"
+  x-bind:loop=\\"loop\\"
+></video>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"video\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
+"<div x-data=\\"myComponent()\\">
+  Hello
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"steve\\",
+
+      setName(value) {
+        this.name = value;
+      },
+
+      updateNameWithArrowFn(value) {
+        this.name = value;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"<state.TagNameGetter x-data=\\"myBasicForNoTagRefComponent()\\">
+  Hello
+  <state.tag><span x-html=\\"name\\"></span></state.tag>
+
+  <template x-for=\\"action in actions\\">
+    <state.TagName>
+      <action.icon></action.icon>
+
+      <span><span x-html=\\"action.text\\"></span></span>
+    </state.TagName>
+  </template>
+</state.TagNameGetter>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForNoTagRefComponent\\", () => ({
+      name: \\"VincentW\\",
+      TagName: \\"div\\",
+      tag: \\"span\\",
+
+      get TagNameGetter() {
+        return \\"span\\";
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > basicForwardRef 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"myBasicForwardRefComponent()\\">
+  <input
+    class=\\"input\\"
+    x-ref=\\"inputRef\\"
+    x-bind:value=\\"name\\"
+    x-on:change=\\"name = $event.target.value\\"
+  />
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForwardRefComponent\\", () => ({
+      name: \\"PatrickJS\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"myBasicForwardRefComponent()\\">
+  <input
+    class=\\"input\\"
+    x-ref=\\"inputRef\\"
+    x-bind:value=\\"name\\"
+    x-on:change=\\"name = $event.target.value\\"
+  />
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForwardRefComponent\\", () => ({
+      name: \\"PatrickJS\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
+"<div x-data=\\"myBasicOnUpdateReturnComponent()\\">
+  Hello!
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicOnUpdateReturnComponent\\", () => ({
+      name: \\"PatrickJS\\",
+
+      init() {
+        this.$watch(\\"name\\", (value, oldValue) => {
+          const controller = new AbortController();
+          const signal = controller.signal;
+          fetch(\\"https://patrickjs.com/api/resource.json\\", {
+            signal,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              this.name = data.name;
+            });
+          return () => {
+            if (!signal.aborted) {
+              controller.abort();
+            }
+          };
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > class + ClassName + css 1`] = `
+"<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<div class=\\"test2 test div\\" x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > class + css 1`] = `
+"<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<div class=\\"test div\\" x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > className + css 1`] = `
+"<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<div class=\\"test div\\" x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > className 1`] = `
+"<div x-data=\\"classNameCode()\\">
+  <div class=\\"no binding\\">Without Binding</div>
+
+  <div x-bind:class=\\"bindings\\">With binding</div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"classNameCode\\", () => ({
+      bindings: \\"a binding\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > classState 1`] = `
+"<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<div
+  x-data=\\"myBasicComponent()\\"
+  x-bind:class=\\"classState + ' div'\\"
+  x-bind:style=\\"styleState\\"
+>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({
+      classState: \\"testClassName\\",
+      styleState: {
+        color: \\"red\\",
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > componentWithContext 1`] = `
+"<div x-data=\\"componentWithContext()\\">
+  <div><span x-html=\\"foo.value\\"></span></div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"componentWithContext\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"<div x-data=\\"componentWithContext()\\">
+  <div><span x-html=\\"foo.value\\"></span></div>
+
+  <div>other</div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"componentWithContext\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > contentState 1`] = `
+"<div x-data=\\"renderContent()\\">setting context</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderContent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > defaultProps 1`] = `
+"<div x-data=\\"button()\\">
+  <template x-if=\\"link\\">
+    <a
+      x-bind=\\"attributes\\"
+      x-bind:href=\\"link\\"
+      x-bind:target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+    >
+      <span x-html=\\"text\\"></span>
+    </a>
+  </template>
+
+  <template x-if=\\"!link\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick($event)\\">
+      <span x-html=\\"buttonText\\"></span>
+    </button>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"button\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
+"<div x-data=\\"button()\\">
+  <template x-if=\\"link\\">
+    <a
+      x-bind=\\"attributes\\"
+      x-bind:href=\\"link\\"
+      x-bind:target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+    >
+      <span x-html=\\"text\\"></span>
+    </a>
+  </template>
+
+  <template x-if=\\"!link\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick($event)\\">
+      <span x-html=\\"text\\"></span>
+    </button>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"button\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > defaultValsWithTypes 1`] = `
+"<div x-data=\\"componentWithTypes()\\">
+  Hello
+  <span x-html=\\"name || DEFAULT_VALUES.name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"componentWithTypes\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > expressionState 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"refToUse\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      refToUse: !(props.componentRef instanceof Function)
+        ? props.componentRef
+        : null,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > import types 1`] = `
+"<RenderBlock
+  x-data=\\"renderContent()\\"
+  x-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
+></RenderBlock>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderContent\\", () => ({
+      getRenderContentProps(block, index) {
+        return {
+          block: block,
+          index: index,
+        };
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > multipleOnUpdate 1`] = `
+"unknown: Unexpected token (2:54)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('multipleOnUpdate', () => ({,
+    |                                                       ^
+  3 | onUpdate() {
+  4 |         console.log('Runs on every update/rerender');
+  5 | console.log('Runs on every update/rerender as well');"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
+"<div x-data=\\"multipleOnUpdateWithDeps()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"multipleOnUpdateWithDeps\\", () => ({
+      a: \\"a\\",
+      b: \\"b\\",
+      c: \\"c\\",
+      d: \\"d\\",
+
+      init() {
+        this.$watch(\\"a\\", (value, oldValue) => {
+          console.log(\\"Runs when a or b changes\\", this.a, this.b);
+
+          if (this.a === \\"a\\") {
+            this.a = \\"b\\";
+          }
+        });
+        this.$watch(\\"b\\", (value, oldValue) => {
+          console.log(\\"Runs when a or b changes\\", this.a, this.b);
+
+          if (this.a === \\"a\\") {
+            this.a = \\"b\\";
+          }
+        });
+        this.$watch(\\"c\\", (value, oldValue) => {
+          console.log(\\"Runs when c or d changes\\", this.c, this.d);
+
+          if (this.a === \\"a\\") {
+            this.a = \\"b\\";
+          }
+        });
+        this.$watch(\\"d\\", (value, oldValue) => {
+          console.log(\\"Runs when c or d changes\\", this.c, this.d);
+
+          if (this.a === \\"a\\") {
+            this.a = \\"b\\";
+          }
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > multipleSpreads 1`] = `
+"<input x-data=\\"myBasicComponent()\\" x-bind=\\"attrs\\" x-bind=\\"props\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({
+      attrs: {
+        hello: \\"world\\",
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > nestedShow 1`] = `
+"<template x-if=\\"conditionA\\">
+  <template x-if=\\"!conditionB\\">
+    <div>if condition A and condition B</div>
+  </template>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"nestedShow\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > nestedStyles 1`] = `
+"<style>
+  .div {
+    display: flex;
+    --bar: red;
+    color: var(--bar);
+  }
+  @media (max-width: env(--mobile)) {
+    .div {
+      display: block;
+    }
+  }
+  .div:hover {
+    display: flex;
+  }
+  .div:active {
+    display: inline;
+  }
+  .div .nested-selector {
+    display: grid;
+  }
+  .div .nested-selector:hover {
+    display: block;
+  }
+  .div.nested-selector:active {
+    display: inline-block;
+  }
+</style>
+<div class=\\"div\\" x-data=\\"nestedStyles()\\">Hello world</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"nestedStyles\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > onInit & onMount 1`] = `
+"unknown: Unexpected token (2:44)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('onInit', () => ({, init() {
+    |                                             ^
+  3 |       
+  4 |       console.log('onMount');
+  5 |     }}))"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > onInit 1`] = `
+"<div x-data=\\"onInit()\\">
+  Default name defined by parent
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onInit\\", () => ({
+      name: \\"\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > onMount 1`] = `
+"unknown: Unexpected token (2:42)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('comp', () => ({, init() {
+    |                                           ^
+  3 |       
+  4 |       console.log('Runs on mount');
+  5 |     }}))"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > onUpdate 1`] = `
+"unknown: Unexpected token (2:46)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('onUpdate', () => ({,
+    |                                               ^
+  3 | onUpdate() {
+  4 |         console.log('Runs on every update/rerender');
+  5 |     }}))"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > onUpdateWithDeps 1`] = `
+"<div x-data=\\"onUpdateWithDeps()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onUpdateWithDeps\\", () => ({
+      a: \\"a\\",
+      b: \\"b\\",
+
+      init() {
+        this.$watch(\\"a\\", (value, oldValue) => {
+          console.log(
+            \\"Runs when a, b or size changes\\",
+            this.a,
+            this.b,
+            props.size
+          );
+        });
+        this.$watch(\\"b\\", (value, oldValue) => {
+          console.log(
+            \\"Runs when a, b or size changes\\",
+            this.a,
+            this.b,
+            props.size
+          );
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
+"<div x-data=\\"myBasicComponent()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > preserveTyping 1`] = `
+"<div x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > propsDestructure 1`] = `
+"<div x-data=\\"myBasicComponent()\\">
+  <span x-html=\\"children\\"></span>
+
+  <span x-html=\\"type\\"></span>
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({
+      name: \\"Decadef20\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > propsInterface 1`] = `
+"<div x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > propsType 1`] = `
+"<div x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"<div x-data=\\"onUpdate()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onUpdate\\", () => ({
+      foo: function foo(params) {},
+      bar: function bar() {},
+      zoo: function zoo() {
+        const params = {
+          cb: this.bar,
+        };
+      },
+
+      onUpdate() {
+        foo({
+          someOption: bar,
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > renderBlock 1`] = `
+"<template x-if=\\"shouldWrap\\">
+  <template x-if=\\"isEmptyHtmlElement(tag)\\">
+    <state.tag x-bind=\\"attributes\\" x-bind=\\"actions\\"></state.tag>
+  </template>
+
+  <template x-if=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
+    <template x-for=\\"data in repeatItemData\\">
+      <RenderRepeatedBlock
+        x-bind:key=\\"index\\"
+        x-bind:repeatContext=\\"data.context\\"
+        x-bind:block=\\"data.block\\"
+      ></RenderRepeatedBlock>
+    </template>
+  </template>
+
+  <template x-if=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
+    <state.tag x-bind=\\"attributes\\" x-bind=\\"actions\\">
+      <state.renderComponentTag
+        x-bind=\\"renderComponentProps\\"
+      ></state.renderComponentTag>
+
+      <template x-for=\\"child in childrenWithoutParentComponent\\">
+        <RenderBlock
+          x-bind:key=\\"'render-block-' + child.id\\"
+          x-bind:block=\\"child\\"
+          x-bind:context=\\"childrenContext\\"
+        ></RenderBlock>
+      </template>
+
+      <template x-for=\\"child in childrenWithoutParentComponent\\">
+        <BlockStyles
+          x-bind:key=\\"'block-style-' + child.id\\"
+          x-bind:block=\\"child\\"
+          x-bind:context=\\"childrenContext\\"
+        ></BlockStyles>
+      </template>
+    </state.tag>
+  </template>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderBlock\\", () => ({
+      get component() {
+        const componentName = getProcessedBlock({
+          block: props.block,
+          state: props.context.state,
+          context: props.context.context,
+          shouldEvaluateBindings: false,
+        }).component?.name;
+
+        if (!componentName) {
+          return null;
+        }
+
+        const ref = props.context.registeredComponents[componentName];
+
+        if (!ref) {
+          // TODO: Public doc page with more info about this message
+          console.warn(\`
+          Could not find a registered component named \\"\${componentName}\\". 
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          return undefined;
+        } else {
+          return ref;
+        }
+      },
+
+      get tag() {
+        return getBlockTag(this.useBlock);
+      },
+
+      get useBlock() {
+        return this.repeatItemData
+          ? props.block
+          : getProcessedBlock({
+              block: props.block,
+              state: props.context.state,
+              context: props.context.context,
+              shouldEvaluateBindings: true,
+            });
+      },
+
+      get actions() {
+        return getBlockActions({
+          block: this.useBlock,
+          state: props.context.state,
+          context: props.context.context,
+        });
+      },
+
+      get attributes() {
+        const blockProperties = getBlockProperties(this.useBlock);
+        return {
+          ...blockProperties,
+          ...(TARGET === \\"reactNative\\"
+            ? {
+                style: getReactNativeBlockStyles({
+                  block: this.useBlock,
+                  context: props.context,
+                  blockStyles: blockProperties.style,
+                }),
+              }
+            : {}),
+        };
+      },
+
+      get shouldWrap() {
+        return !this.component?.noWrap;
+      },
+
+      get renderComponentProps() {
+        return {
+          blockChildren: this.useChildren,
+          componentRef: this.component?.component,
+          componentOptions: {
+            ...getBlockComponentOptions(this.useBlock),
+
+            /**
+             * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+             * they are provided to the component itself directly.
+             */
+            ...(this.shouldWrap
+              ? {}
+              : {
+                  attributes: { ...this.attributes, ...this.actions },
+                }),
+            customBreakpoints: this.childrenContext?.content?.meta?.breakpoints,
+          },
+          context: this.childrenContext,
+        };
+      },
+
+      get useChildren() {
+        // TO-DO: When should \`canHaveChildren\` dictate rendering?
+        // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+        // but still receive and need to render children.
+        // return this.componentInfo?.canHaveChildren ? this.useBlock.children : [];
+        return this.useBlock.children ?? [];
+      },
+
+      get childrenWithoutParentComponent() {
+        /**
+         * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+         * we render them outside of \`componentRef\`.
+         * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+         * blocks, and the children will be repeated within those blocks.
+         */
+        const shouldRenderChildrenOutsideRef =
+          !this.component?.component && !this.repeatItemData;
+        return shouldRenderChildrenOutsideRef ? this.useChildren : [];
+      },
+
+      get repeatItemData() {
+        /**
+         * we don't use \`this.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
+         * which will not work if there is a repeat.
+         */
+        const { repeat, ...blockWithoutRepeat } = props.block;
+
+        if (!repeat?.collection) {
+          return undefined;
+        }
+
+        const itemsArray = evaluate({
+          code: repeat.collection,
+          state: props.context.state,
+          context: props.context.context,
+        });
+
+        if (!Array.isArray(itemsArray)) {
+          return undefined;
+        }
+
+        const collectionName = repeat.collection.split(\\".\\").pop();
+        const itemNameToUse =
+          repeat.itemName ||
+          (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+        const repeatArray = itemsArray.map((item, index) => ({
+          context: {
+            ...props.context,
+            state: {
+              ...props.context.state,
+              $index: index,
+              $item: item,
+              [itemNameToUse]: item,
+              [\`$\${itemNameToUse}Index\`]: index,
+            },
+          },
+          block: blockWithoutRepeat,
+        }));
+        return repeatArray;
+      },
+
+      get inheritedTextStyles() {
+        if (TARGET !== \\"reactNative\\") {
+          return {};
+        }
+
+        const styles = getReactNativeBlockStyles({
+          block: this.useBlock,
+          context: props.context,
+          blockStyles: this.attributes.style,
+        });
+        return extractTextStyles(styles);
+      },
+
+      get childrenContext() {
+        return {
+          apiKey: props.context.apiKey,
+          state: props.context.state,
+          content: props.context.content,
+          context: props.context.context,
+          registeredComponents: props.context.registeredComponents,
+          inheritedStyles: this.inheritedTextStyles,
+        };
+      },
+
+      get renderComponentTag() {
+        if (TARGET === \\"reactNative\\") {
+          return RenderComponentWithContext;
+        } else if (TARGET === \\"vue3\\") {
+          // vue3 expects a string for the component tag
+          return \\"RenderComponent\\";
+        } else {
+          return RenderComponent;
+        }
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > renderContentExample 1`] = `
+"unknown: Unexpected token (2:51)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('renderContent', () => ({, init() {
+    |                                                    ^
+  3 |       
+  4 |       sendComponentsToVisualEditor(props.customComponents);
+  5 |     }}))"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
+"<div x-data=\\"button()\\">
+  <template x-if=\\"link\\">
+    <a
+      x-bind=\\"attributes\\"
+      x-bind:href=\\"link\\"
+      x-bind:target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+    >
+      <span x-html=\\"text\\"></span>
+    </a>
+  </template>
+
+  <template x-if=\\"!link\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\">
+      <span x-html=\\"text\\"></span>
+    </button>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"button\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > rootShow 1`] = `
+"<template x-if=\\"foo === 'bar'\\">
+  <div>Bar</div>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderStyles\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > self-referencing component 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <span x-html=\\"name\\"></span>
+
+  <template x-if=\\"name === 'Batman'\\">
+    <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > self-referencing component with children 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <span x-html=\\"name\\"></span>
+
+  <span x-html=\\"children\\"></span>
+
+  <template x-if=\\"name === 'Batman'\\">
+    <MyComponent name=\\"Bruce\\">
+      <div>Wayne</div>
+    </MyComponent>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > showWithFor 1`] = `
+"<template x-if=\\"conditionA\\">
+  <template x-for=\\"item in items\\">
+    <div x-bind:key=\\"idx\\"><span x-html=\\"item\\"></span></div>
+  </template>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"nestedShow\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > showWithRootText 1`] = `
+"<template x-if=\\"conditionA\\">ContentA</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"showRootText\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > spreadAttrs 1`] = `
+"<input x-data=\\"myBasicComponent()\\" x-bind=\\"attrs\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > spreadNestedProps 1`] = `
+"<input x-data=\\"myBasicComponent()\\" x-bind=\\"nested\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > spreadProps 1`] = `
+"<input x-data=\\"myBasicComponent()\\" x-bind=\\"props\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > styleClassAndCss 1`] = `
+"<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>
+<div
+  class=\\"builder-column div\\"
+  x-data=\\"myComponent()\\"
+  x-bind:style=\\"{
+  width: '100%'
+}\\"
+></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > subComponent 1`] = `
+"<Foo x-data=\\"subComponent()\\"></Foo>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"subComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > svgComponent 1`] = `
+"<svg
+  fill=\\"none\\"
+  role=\\"img\\"
+  x-data=\\"svgComponent()\\"
+  x-bind:viewBox=\\"'0 0 ' + 42 + ' ' + 42\\"
+  x-bind:width=\\"42\\"
+  x-bind:height=\\"42\\"
+>
+  <defs>
+    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
+      <feBlend
+        in=\\"SourceGraphic\\"
+        in2=\\"BackgroundImageFix\\"
+        result=\\"shape\\"
+      ></feBlend>
+
+      <feGaussianBlur
+        result=\\"effect1_foregroundBlur\\"
+        x-bind:stdDeviation=\\"7\\"
+      ></feGaussianBlur>
+    </filter>
+  </defs>
+</svg>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"svgComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > typeDependency 1`] = `
+"<div x-data=\\"typeDependency()\\"><span x-html=\\"foo\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"typeDependency\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > use-style 1`] = `
+"<style>
+  button {
+    background: blue;
+    color: white;
+    font-size: 12px;
+    outline: 1px solid black;
+  }
+</style>
+<button type=\\"button\\" x-data=\\"myComponent()\\">Button</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > use-style-and-css 1`] = `
+"<style>
+  button {
+    font-size: 12px;
+    outline: 1px solid black;
+  }
+
+  .button {
+    background: blue;
+    color: white;
+  }
+</style>
+<button type=\\"button\\" class=\\"button\\" x-data=\\"myComponent()\\">Button</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > use-style-outside-component 1`] = `
+"<style>
+  button {
+    background: blue;
+    color: white;
+    font-size: 12px;
+    outline: 1px solid black;
+  }
+</style>
+<button type=\\"button\\" x-data=\\"myComponent()\\">Button</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > useTarget 1`] = `
+"<div x-data=\\"useTargetComponent()\\"><span x-html=\\"name\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"useTargetComponent\\", () => ({
+      get name() {
+        const prefix = \\"a\\";
+        return prefix + \\"foo\\";
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Remove Internal mitosis package 1`] = `
+"<div x-data=\\"myBasicComponent()\\">
+  Hello
+  <span x-html=\\"name\\"></span>
+  ! I can run in React, Qwik, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({
+      name: \\"PatrickJS\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > AdvancedRef 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"myBasicRefComponent()\\">
+  <template x-if=\\"showInput\\">
+    <div>
+      <input
+        class=\\"input\\"
+        x-ref=\\"inputRef\\"
+        x-bind:value=\\"name\\"
+        x-on:blur=\\"onBlur()\\"
+        x-on:change=\\"name = $event.target.value\\"
+      />
+
+      <label for=\\"cars\\" x-ref=\\"inputNoArgRef\\">Choose a car:</label>
+
+      <select name=\\"cars\\" id=\\"cars\\">
+        <option value=\\"supra\\">GR Supra</option>
+
+        <option value=\\"86\\">GR 86</option>
+      </select>
+    </div>
+  </template>
+
+  Hello
+
+  <span x-html=\\"lowerCaseName()\\"></span>
+  ! I can run in React, Qwik, Vue, Solid, or Web Component!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicRefComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      onBlur: function onBlur() {
+        // Maintain focus
+        this.$refs.inputRef.focus();
+      },
+      lowerCaseName: function lowerCaseName() {
+        return this.name.toLowerCase();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Basic 1`] = `
+"<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<div class=\\"test div\\" x-data=\\"myBasicComponent()\\">
+  <input
+    x-bind:value=\\"DEFAULT_VALUES.name || name\\"
+    x-on:change=\\"name = myEvent.target.value\\"
+  />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({
+      name: \\"Steve\\",
+
+      underscore_fn_name() {
+        return \\"bar\\";
+      },
+
+      age: 1,
+      sports: [\\"\\"],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Basic 2`] = `
+"<div x-data=\\"myBasicForShowComponent()\\">
+  <template x-for=\\"person in names\\">
+    <template x-if=\\"person === name\\">
+      <input
+        x-bind:value=\\"name\\"
+        x-on:change=\\"name = $event.target.value + ' and ' + person\\"
+      />
+
+      Hello
+      <span x-html=\\"person\\"></span>
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    </template>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForShowComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      names: [\\"Steve\\", \\"PatrickJS\\"],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Basic Context 1`] = `
+"<div x-data=\\"myBasicComponent()\\">
+  <span x-html=\\"myService.method('hello') + name\\"></span>
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+
+  <input x-on:change=\\"onChange\\" />
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      onChange: function onChange() {
+        const change = myService.method(\\"change\\");
+        console.log(change);
+      },
+
+      init() {
+        const bye = myService.method(\\"hi\\");
+        console.log(bye);
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Basic OnMount Update 1`] = `
+"<div x-data=\\"myBasicOnMountUpdateComponent()\\">
+  Hello
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicOnMountUpdateComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      names: [\\"Steve\\", \\"PatrickJS\\"],
+
+      init() {
+        this.name = \\"PatrickJS onMount\\" + props.bye;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Basic Outputs 1`] = `
+"<div x-data=\\"myBasicOutputsComponent()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicOutputsComponent\\", () => ({
+      name: \\"PatrickJS\\",
+
+      init() {
+        props.onMessage(this.name);
+        props.onEvent(props.message);
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Basic Outputs Meta 1`] = `
+"<div x-data=\\"myBasicOutputsComponent()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicOutputsComponent\\", () => ({
+      name: \\"PatrickJS\\",
+
+      init() {
+        props.onMessage(this.name);
+        props.onEvent(props.message);
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > BasicAttribute 1`] = `
+"<input
+  autocapitalize=\\"on\\"
+  autocomplete=\\"on\\"
+  x-data=\\"myComponent()\\"
+  x-bind:spellcheck=\\"true\\"
+/>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
+"<div x-data=\\"myBooleanAttribute()\\">
+  <span x-html=\\"children\\"></span>
+
+  <span x-html=\\"type\\"></span>
+
+  <MyBooleanAttributeComponent
+    x-bind:toggle=\\"true\\"
+  ></MyBooleanAttributeComponent>
+
+  <MyBooleanAttributeComponent
+    x-bind:toggle=\\"true\\"
+  ></MyBooleanAttributeComponent>
+
+  <MyBooleanAttributeComponent x-bind:list=\\"null\\"></MyBooleanAttributeComponent>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBooleanAttribute\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > BasicChildComponent 1`] = `
+"<div x-data=\\"myBasicChildComponent()\\">
+  <MyBasicComponent x-bind:id=\\"dev\\"></MyBasicComponent>
+
+  <div>
+    <MyBasicOnMountUpdateComponent
+      x-bind:hi=\\"name\\"
+      x-bind:bye=\\"dev\\"
+    ></MyBasicOnMountUpdateComponent>
+  </div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicChildComponent\\", () => ({
+      name: \\"Steve\\",
+      dev: \\"PatrickJS\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > BasicFor 1`] = `
+"<div x-data=\\"myBasicForComponent()\\">
+  <template x-for=\\"person in names\\">
+    <div>
+      <input
+        x-bind:value=\\"name\\"
+        x-on:change=\\"name = $event.target.value + ' and ' + person\\"
+      />
+
+      Hello
+      <span x-html=\\"person\\"></span>
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    </div>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      names: [\\"Steve\\", \\"PatrickJS\\"],
+
+      init() {
+        console.log(\\"onMount code\\");
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > BasicRef 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"myBasicRefComponent()\\">
+  <template x-if=\\"showInput\\">
+    <div>
+      <input
+        class=\\"input\\"
+        x-ref=\\"inputRef\\"
+        x-bind:value=\\"name\\"
+        x-on:blur=\\"onBlur()\\"
+        x-on:change=\\"name = $event.target.value\\"
+      />
+
+      <label for=\\"cars\\" x-ref=\\"inputNoArgRef\\">Choose a car:</label>
+
+      <select name=\\"cars\\" id=\\"cars\\">
+        <option value=\\"supra\\">GR Supra</option>
+
+        <option value=\\"86\\">GR 86</option>
+      </select>
+    </div>
+  </template>
+
+  Hello
+
+  <span x-html=\\"lowerCaseName()\\"></span>
+  ! I can run in React, Qwik, Vue, Solid, or Web Component!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicRefComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      onBlur: function onBlur() {
+        // Maintain focus
+        this.$refs.inputRef.focus();
+      },
+      lowerCaseName: function lowerCaseName() {
+        return this.name.toLowerCase();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > BasicRefAssignment 1`] = `
+"<div x-data=\\"myBasicRefAssignmentComponent()\\">
+  <button x-on:click=\\"handlerClick(evt)\\">Click</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicRefAssignmentComponent\\", () => ({
+      handlerClick: function handlerClick(event: Event) {
+        event.preventDefault();
+        console.log(\\"current value\\", holdValueRef);
+        holdValueRef = holdValueRef + \\"JS\\";
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > BasicRefPrevious 1`] = `
+"<div x-data=\\"myPreviousComponent()\\">
+  <h1>
+    Now:
+    <span x-html=\\"count\\"></span>
+    , before:
+    <span x-html=\\"prevCount\\"></span>
+  </h1>
+
+  <button x-on:click=\\"count += 1\\">Increment</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myPreviousComponent\\", () => ({
+      count: 0,
+
+      init() {
+        this.$watch(\\"count\\", (value, oldValue) => {
+          prevCount = this.count;
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Button 1`] = `
+"<div x-data=\\"button()\\">
+  <template x-if=\\"link\\">
+    <a
+      x-bind=\\"attributes\\"
+      x-bind:href=\\"link\\"
+      x-bind:target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+    >
+      <span x-html=\\"text\\"></span>
+    </a>
+  </template>
+
+  <template x-if=\\"!link\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\">
+      <span x-html=\\"text\\"></span>
+    </button>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"button\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Columns 1`] = `
+"<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+  }
+  @media (max-width: 999px) {
+    .div {
+      flex-direction: row;
+    }
+  }
+  @media (max-width: 639px) {
+    .div {
+      flex-direction: row-reverse;
+    }
+  }
+  .div-2 {
+    flex-grow: 1;
+  }
+</style>
+<div class=\\"builder-columns div\\" x-data=\\"column()\\">
+  <template x-for=\\"column in columns\\">
+    <div class=\\"builder-column div-2\\">
+      <span x-html=\\"column.content\\"></span>
+
+      <span x-html=\\"index\\"></span>
+    </div>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"column\\", () => ({
+      getColumns() {
+        return props.columns || [];
+      },
+
+      getGutterSize() {
+        return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+      },
+
+      getWidth(index: number) {
+        const columns = this.getColumns();
+        return (columns[index] && columns[index].width) || 100 / columns.length;
+      },
+
+      getColumnCssWidth(index: number) {
+        const columns = this.getColumns();
+        const gutterSize = this.getGutterSize();
+        const subtractWidth =
+          (gutterSize * (columns.length - 1)) / columns.length;
+        return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > ContentSlotHtml 1`] = `
+"<div x-data=\\"contentSlotCode()\\">
+  <slot x-bind:name=\\"slotTesting\\"></slot>
+
+  <div>
+    <hr />
+  </div>
+
+  <div>
+    <slot></slot>
+  </div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"contentSlotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > ContentSlotJSX 1`] = `
+"<template x-if=\\"slotReference\\">
+  <div
+    x-bind:name=\\"slotContent ? 'name1' : 'name2'\\"
+    x-bind:title=\\"slotContent ? 'title1' : 'title2'\\"
+    x-bind=\\"attributes\\"
+    x-on:click=\\"show()\\"
+    x-bind:class=\\"cls\\"
+  >
+    <template x-if=\\"showContent && slotContent\\">
+      <slot name=\\"content\\"><span x-html=\\"content\\"></span></slot>
+    </template>
+
+    <div>
+      <hr />
+    </div>
+
+    <div><span x-html=\\"children\\"></span></div>
+  </div>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"contentSlotJsxCode\\", () => ({
+      name: \\"king\\",
+      showContent: false,
+
+      get cls() {
+        return props.slotContent && props.children
+          ? \`\${this.name}-content\`
+          : \\"\\";
+      },
+
+      show() {
+        props.slotContent ? 1 : \\"\\";
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > CustomCode 1`] = `
+"<div
+  x-data=\\"customCode()\\"
+  x-ref=\\"elem\\"
+  x-bind:class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
+  x-bind:innerHTML=\\"code\\"
+></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"customCode\\", () => ({
+      scriptsInserted: [],
+      scriptsRun: [],
+
+      findAndRunScripts() {
+        // TODO: Move this function to standalone one in '@builder.io/utils'
+        if (this.$refs.elem && typeof window !== \\"undefined\\") {
+          /** @type {HTMLScriptElement[]} */
+          const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
+
+          for (let i = 0; i < scripts.length; i++) {
+            const script = scripts[i];
+
+            if (script.src) {
+              if (this.scriptsInserted.includes(script.src)) {
+                continue;
+              }
+
+              this.scriptsInserted.push(script.src);
+              const newScript = document.createElement(\\"script\\");
+              newScript.async = true;
+              newScript.src = script.src;
+              document.head.appendChild(newScript);
+            } else if (
+              !script.type ||
+              [
+                \\"text/javascript\\",
+                \\"application/javascript\\",
+                \\"application/ecmascript\\",
+              ].includes(script.type)
+            ) {
+              if (this.scriptsRun.includes(script.innerText)) {
+                continue;
+              }
+
+              try {
+                this.scriptsRun.push(script.innerText);
+                new Function(script.innerText)();
+              } catch (error) {
+                console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+              }
+            }
+          }
+        }
+      },
+
+      init() {
+        this.findAndRunScripts();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Embed 1`] = `
+"<div
+  x-data=\\"customCode()\\"
+  x-ref=\\"elem\\"
+  x-bind:class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
+  x-bind:innerHTML=\\"code\\"
+></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"customCode\\", () => ({
+      scriptsInserted: [],
+      scriptsRun: [],
+
+      findAndRunScripts() {
+        // TODO: Move this function to standalone one in '@builder.io/utils'
+        if (this.$refs.elem && typeof window !== \\"undefined\\") {
+          /** @type {HTMLScriptElement[]} */
+          const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
+
+          for (let i = 0; i < scripts.length; i++) {
+            const script = scripts[i];
+
+            if (script.src) {
+              if (this.scriptsInserted.includes(script.src)) {
+                continue;
+              }
+
+              this.scriptsInserted.push(script.src);
+              const newScript = document.createElement(\\"script\\");
+              newScript.async = true;
+              newScript.src = script.src;
+              document.head.appendChild(newScript);
+            } else if (
+              !script.type ||
+              [
+                \\"text/javascript\\",
+                \\"application/javascript\\",
+                \\"application/ecmascript\\",
+              ].includes(script.type)
+            ) {
+              if (this.scriptsRun.includes(script.innerText)) {
+                continue;
+              }
+
+              try {
+                this.scriptsRun.push(script.innerText);
+                new Function(script.innerText)();
+              } catch (error) {
+                console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+              }
+            }
+          }
+        }
+      },
+
+      init() {
+        this.findAndRunScripts();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Form 1`] = `
+"<style>
+  .pre {
+    padding: 10px;
+    color: red;
+    text-align: center;
+  }
+</style>
+<form
+  x-data=\\"formComponent()\\"
+  x-bind:validate=\\"validate\\"
+  x-ref=\\"formRef\\"
+  x-bind:action=\\"!sendWithJs && action\\"
+  x-bind:method=\\"method\\"
+  x-bind:name=\\"name\\"
+  x-on:submit=\\"onSubmit($event)\\"
+  x-bind=\\"attributes\\"
+>
+  <template x-if=\\"builderBlock && builderBlock.children\\">
+    <template x-for=\\"block in builderBlock?.children\\">
+      <BuilderBlockComponent
+        x-bind:key=\\"block.id\\"
+        x-bind:block=\\"block\\"
+        x-bind:index=\\"index\\"
+      ></BuilderBlockComponent>
+    </template>
+  </template>
+
+  <template x-if=\\"submissionState === 'error'\\">
+    <BuilderBlocks
+      dataPath=\\"errorMessage\\"
+      x-bind:blocks=\\"errorMessage!\\"
+    ></BuilderBlocks>
+  </template>
+
+  <template x-if=\\"submissionState === 'sending'\\">
+    <BuilderBlocks
+      dataPath=\\"sendingMessage\\"
+      x-bind:blocks=\\"sendingMessage!\\"
+    ></BuilderBlocks>
+  </template>
+
+  <template x-if=\\"submissionState === 'error' && responseData\\">
+    <pre class=\\"builder-form-error-text pre\\">
+          
+<span x-html=\\"JSON.stringify(responseData, null, 2)\\"></span>
+
+        </pre>
+  </template>
+
+  <template x-if=\\"submissionState === 'success'\\">
+    <BuilderBlocks
+      dataPath=\\"successMessage\\"
+      x-bind:blocks=\\"successMessage!\\"
+    ></BuilderBlocks>
+  </template>
+</form>
+<script>
+            document.addEventListener('alpine:init', () => {
+    Alpine.data('formComponent', () => ({
+      formState: 'unsubmitted',
+      responseData: null,
+      formErrorMessage: '',
+
+      get submissionState() {
+        return Builder.isEditing && props.previewState || this.formState;
+      },
+
+      onSubmit(event: Event & {
+        currentTarget: HTMLFormElement;
+      }) {
+        const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === 'email';
+
+        if (props.sendSubmissionsTo === 'zapier') {
+          event.preventDefault();
+        } else if (sendWithJs) {
+          if (!(props.action || props.sendSubmissionsTo === 'email')) {
+            event.preventDefault();
+            return;
+          }
+
+          event.preventDefault();
+          const el = event.currentTarget;
+          const headers = props.customHeaders || {};
+          let body: any;
+          const formData = new FormData(el); // TODO: maybe support null
+
+          const formPairs: {
+            key: string;
+            value: File | boolean | number | string | FileList;
+          }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!(el as HTMLInputElement).name).map(el => {
+            let value: any;
+            const key = (el as HTMLImageElement).name;
+
+            if (el instanceof HTMLInputElement) {
+              if (el.type === 'radio') {
+                if (el.checked) {
+                  value = el.name;
+                  return {
+                    key,
+                    value
+                  };
+                }
+              } else if (el.type === 'checkbox') {
+                value = el.checked;
+              } else if (el.type === 'number' || el.type === 'range') {
+                const num = el.valueAsNumber;
+
+                if (!isNaN(num)) {
+                  value = num;
+                }
+              } else if (el.type === 'file') {
+                // TODO: one vs multiple files
+                value = el.files;
+              } else {
+                value = el.value;
+              }
+            } else {
+              value = (el as HTMLInputElement).value;
+            }
+
+            return {
+              key,
+              value
+            };
+          });
+          let contentType = props.contentType;
+
+          if (props.sendSubmissionsTo === 'email') {
+            contentType = 'multipart/form-data';
+          }
+
+          Array.from(formPairs).forEach(({
+            value
+          }) => {
+            if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
+              contentType = 'multipart/form-data';
+            }
+          }); // TODO: send as urlEncoded or multipart by default
+          // because of ease of use and reliability in browser API
+          // for encoding the form?
+
+          if (contentType !== 'application/json') {
+            body = formData;
+          } else {
+            // Json
+            const json = {};
+            Array.from(formPairs).forEach(({
+              value,
+              key
+            }) => {
+              set(json, key, value);
+            });
+            body = JSON.stringify(json);
+          }
+
+          if (contentType && contentType !== 'multipart/form-data') {
+            if (
+            /* Zapier doesn't allow content-type header to be sent from browsers */
+            !(sendWithJs && props.action?.includes('zapier.com'))) {
+              headers['content-type'] = contentType;
+            }
+          }
+
+          const presubmitEvent = new CustomEvent('presubmit', {
+            detail: {
+              body
+            }
+          });
+
+          if (this.$refs.formRef) {
+            this.$refs.formRef.dispatchEvent(presubmitEvent);
+
+            if (presubmitEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          this.formState = 'sending';
+          const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`;
+          fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action!
+          /* TODO: throw error if no action URL */
+          , {
+            body,
+            headers,
+            method: props.method || 'post'
+          }).then(async res => {
+            let body;
+            const contentType = res.headers.get('content-type');
+
+            if (contentType && contentType.indexOf('application/json') !== -1) {
+              body = await res.json();
+            } else {
+              body = await res.text();
+            }
+
+            if (!res.ok && props.errorMessagePath) {
+              /* TODO: allow supplying an error formatter function */
+              let message = get(body, props.errorMessagePath);
+
+              if (message) {
+                if (typeof message !== 'string') {
+                  /* TODO: ideally convert json to yaml so it woul dbe like
+                   error: - email has been taken */
+                  message = JSON.stringify(message);
+                }
+
+                this.formErrorMessage = message;
+              }
+            }
+
+            this.responseData = body;
+            this.formState = res.ok ? 'success' : 'error';
+
+            if (res.ok) {
+              const submitSuccessEvent = new CustomEvent('submit:success', {
+                detail: {
+                  res,
+                  body
+                }
+              });
+
+              if (this.$refs.formRef) {
+                this.$refs.formRef.dispatchEvent(submitSuccessEvent);
+
+                if (submitSuccessEvent.defaultPrevented) {
+                  return;
+                }
+                /* TODO: option to turn this on/off? */
+
+
+                if (props.resetFormOnSubmit !== false) {
+                  this.$refs.formRef.reset();
+                }
+              }
+              /* TODO: client side route event first that can be preventDefaulted */
+
+
+              if (props.successUrl) {
+                if (this.$refs.formRef) {
+                  const event = new CustomEvent('route', {
+                    detail: {
+                      url: props.successUrl
+                    }
+                  });
+                  this.$refs.formRef.dispatchEvent(event);
+
+                  if (!event.defaultPrevented) {
+                    location.href = props.successUrl;
+                  }
+                } else {
+                  location.href = props.successUrl;
+                }
+              }
+            }
+          }, err => {
+            const submitErrorEvent = new CustomEvent('submit:error', {
+              detail: {
+                error: err
+              }
+            });
+
+            if (this.$refs.formRef) {
+              this.$refs.formRef.dispatchEvent(submitErrorEvent);
+
+              if (submitErrorEvent.defaultPrevented) {
+                return;
+              }
+            }
+
+            this.responseData = err;
+            this.formState = 'error';
+          });
+        }
+      }
+
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Image 1`] = `
+"<style>
+  .img {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    object-fit: cover;
+    object-position: center;
+  }
+</style>
+<div x-data=\\"image()\\">
+  <picture x-ref=\\"pictureRef\\">
+    <template x-if=\\"!useLazyLoading() || load\\">
+      <img
+        x-bind:alt=\\"altText\\"
+        x-bind:aria-role=\\"altText ? 'presentation' : undefined\\"
+        x-bind:class=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
+        x-bind:src=\\"image\\"
+        x-on:load=\\"setLoaded()\\"
+        x-bind:srcset=\\"srcset\\"
+        x-bind:sizes=\\"sizes\\"
+      />
+    </template>
+
+    <source x-bind:srcset=\\"srcset\\" />
+  </picture>
+
+  <span x-html=\\"children\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"image\\", () => ({
+      scrollListener: null,
+      imageLoaded: false,
+
+      setLoaded() {
+        this.imageLoaded = true;
+      },
+
+      useLazyLoading() {
+        // TODO: Add more checks here, like testing for real web browsers
+        return !!props.lazy && isBrowser();
+      },
+
+      isBrowser: function isBrowser() {
+        return (
+          typeof window !== \\"undefined\\" &&
+          window.navigator.product != \\"ReactNative\\"
+        );
+      },
+      load: false,
+
+      init() {
+        if (this.useLazyLoading()) {
+          // throttled scroll capture listener
+          const listener = () => {
+            if (pictureRef) {
+              const rect = pictureRef.getBoundingClientRect();
+              const buffer = window.innerHeight / 2;
+
+              if (rect.top < window.innerHeight + buffer) {
+                setLoad(true);
+                this.scrollListener = null;
+                window.removeEventListener(\\"scroll\\", listener);
+              }
+            }
+          };
+
+          this.scrollListener = listener;
+          window.addEventListener(\\"scroll\\", listener, {
+            capture: true,
+            passive: true,
+          });
+          listener();
+        }
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Image State 1`] = `
+"<div x-data=\\"imgStateComponent()\\">
+  <template x-for=\\"item in images\\">
+    <div>
+      <img class=\\"custom-class\\" x-bind:src=\\"item\\" x-bind:key=\\"itemIndex\\" />
+    </div>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"imgStateComponent\\", () => ({
+      canShow: true,
+      images: [\\"http://example.com/qwik.png\\"],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Img 1`] = `
+"<img
+  x-data=\\"imgComponent()\\"
+  x-bind:style=\\"{
+  objectFit: backgroundSize || 'cover',
+  objectPosition: backgroundPosition || 'center'
+}\\"
+  x-bind=\\"attributes\\"
+  x-bind:key=\\"Builder.isEditing && imgSrc || 'default-key'\\"
+  x-bind:alt=\\"altText\\"
+  x-bind:src=\\"imgSrc\\"
+/>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"imgComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Input 1`] = `
+"<input
+  x-data=\\"formInputComponent()\\"
+  x-bind=\\"attributes\\"
+  x-bind:key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+  x-bind:placeholder=\\"placeholder\\"
+  x-bind:type=\\"type\\"
+  x-bind:name=\\"name\\"
+  x-bind:value=\\"value\\"
+  x-bind:defaultValue=\\"defaultValue\\"
+  x-bind:required=\\"required\\"
+/>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"formInputComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > RawText 1`] = `
+"<span
+  x-data=\\"rawText()\\"
+  x-bind:class=\\"attributes?.class || attributes?.className\\"
+  x-bind:innerHTML=\\"text || ''\\"
+></span>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"rawText\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Section 1`] = `
+"<section
+  x-data=\\"sectionComponent()\\"
+  x-bind=\\"attributes\\"
+  x-bind:style=\\"maxWidth && typeof maxWidth === 'number' ? {
+  maxWidth: maxWidth
+} : undefined\\"
+>
+  <span x-html=\\"children\\"></span>
+</section>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"sectionComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Section 2`] = `
+"<template x-if=\\"max\\">
+  <template x-for=\\"item in items\\">
+    <section
+      x-bind=\\"attributes\\"
+      x-bind:style=\\"{
+  maxWidth: item + max
+}\\"
+    >
+      <span x-html=\\"children\\"></span>
+    </section>
+  </template>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"sectionStateComponent\\", () => ({
+      max: 42,
+      items: [42],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Select 1`] = `
+"<select
+  x-data=\\"selectComponent()\\"
+  x-bind=\\"attributes\\"
+  x-bind:value=\\"value\\"
+  x-bind:key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+  x-bind:defaultValue=\\"defaultValue\\"
+  x-bind:name=\\"name\\"
+>
+  <template x-for=\\"option in options\\">
+    <option x-bind:value=\\"option.value\\" x-bind:data-index=\\"index\\">
+      <span x-html=\\"option.name || option.value\\"></span>
+    </option>
+  </template>
+</select>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"selectComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > SlotDefault 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > SlotHtml 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <ContentSlotCode>
+    <slot x-bind:testing=\\"<div>Hello</div>\\"></slot>
+  </ContentSlotCode>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > SlotJsx 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <ContentSlotCode x-bind:slotTesting=\\"<div>Hello</div>\\"></ContentSlotCode>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > SlotNamed 1`] = `
+"<div x-data=\\"slotCode()\\">
+  <slot name=\\"top\\"></slot>
+
+  <slot name=\\"left\\">Default left</slot>
+
+  <slot>Default Child</slot>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"slotCode\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Stamped.io 1`] = `
+"<style>
+  .input {
+    display: block;
+  }
+  .textarea {
+    display: block;
+  }
+  .button {
+    display: block;
+  }
+  .review {
+    margin: 10px;
+    padding: 10px;
+    background: white;
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .img {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+</style>
+<div x-data=\\"smileReviews()\\" x-bind:data-user=\\"name\\">
+  <button x-on:click=\\"showReviewPrompt = true\\">Write a review</button>
+
+  <template x-if=\\"showReviewPrompt || 'asdf'\\">
+    <input placeholder=\\"Email\\" />
+
+    <input placeholder=\\"Title\\" class=\\"input\\" />
+
+    <textarea
+      placeholder=\\"How was your experience?\\"
+      class=\\"textarea\\"
+    ></textarea>
+
+    <button
+      class=\\"button\\"
+      x-on:click=\\"$event.preventDefault();
+showReviewPrompt = false\\"
+    >
+      Submit
+    </button>
+  </template>
+
+  <template x-for=\\"review in reviews\\">
+    <div class=\\"review\\" x-bind:key=\\"review.id\\">
+      <img class=\\"img\\" x-bind:src=\\"review.avatar\\" />
+
+      <div x-bind:class=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
+        <div>
+          N:
+          <span x-html=\\"index\\"></span>
+        </div>
+
+        <div><span x-html=\\"review.author\\"></span></div>
+
+        <div><span x-html=\\"review.reviewMessage\\"></span></div>
+      </div>
+    </div>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"smileReviews\\", () => ({
+      reviews: [],
+      name: \\"test\\",
+      showReviewPrompt: false,
+
+      kebabCaseValue() {
+        return kebabCase(\\"testThat\\");
+      },
+
+      snakeCaseValue() {
+        return snakeCase(\\"testThis\\");
+      },
+
+      init() {
+        fetch(
+          \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+            props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+          }&productId=\${props.productId || \\"2410511106127\\"}\`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            this.reviews = data.data;
+          });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Submit 1`] = `
+"<button type=\\"submit\\" x-data=\\"submitButton()\\" x-bind=\\"attributes\\">
+  <span x-html=\\"text\\"></span>
+</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"submitButton\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Text 1`] = `
+"<div  x-data=\\"text()\\"  x-bind:contentEditable=\\"allowEditingText || undefined\\"  x-bind:data-name=\\"{
+  test: name || 'any name'
+}\\"  x-bind:innerHTML=\\"text || content || name || '<p class=\\"text-lg\\">my name</p>'\\" ></div><script>
+          document.addEventListener('alpine:init', () => {
+  Alpine.data('text', () => ({
+    name: 'Decadef20'
+  }));
+});
+        </script>"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Textarea 1`] = `
+"<textarea
+  x-data=\\"textarea()\\"
+  x-bind=\\"attributes\\"
+  x-bind:placeholder=\\"placeholder\\"
+  x-bind:name=\\"name\\"
+  x-bind:value=\\"value\\"
+  x-bind:defaultValue=\\"defaultValue\\"
+></textarea>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"textarea\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Video 1`] = `
+"<video
+  preload=\\"none\\"
+  x-data=\\"video()\\"
+  x-bind=\\"attributes\\"
+  x-bind:style=\\"{
+  width: '100%',
+  height: '100%',
+  ...attributes?.style,
+  objectFit: fit,
+  objectPosition: position,
+  // Hack to get object fit to work as expected and
+  // not have the video overflow
+  borderRadius: 1
+}\\"
+  x-bind:key=\\"video || 'no-src'\\"
+  x-bind:poster=\\"posterImage\\"
+  x-bind:autoplay=\\"autoPlay\\"
+  x-bind:muted=\\"muted\\"
+  x-bind:controls=\\"controls\\"
+  x-bind:loop=\\"loop\\"
+></video>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"video\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
+"<div x-data=\\"myComponent()\\">
+  Hello
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"steve\\",
+
+      setName(value) {
+        this.name = value;
+      },
+
+      updateNameWithArrowFn(value) {
+        this.name = value;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"<state.TagNameGetter x-data=\\"myBasicForNoTagRefComponent()\\">
+  Hello
+  <state.tag><span x-html=\\"name\\"></span></state.tag>
+
+  <template x-for=\\"action in actions\\">
+    <state.TagName>
+      <action.icon></action.icon>
+
+      <span><span x-html=\\"action.text\\"></span></span>
+    </state.TagName>
+  </template>
+</state.TagNameGetter>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForNoTagRefComponent\\", () => ({
+      name: \\"VincentW\\",
+      TagName: \\"div\\",
+      tag: \\"span\\",
+
+      get TagNameGetter() {
+        return \\"span\\";
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > basicForwardRef 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"myBasicForwardRefComponent()\\">
+  <input
+    class=\\"input\\"
+    x-ref=\\"inputRef\\"
+    x-bind:value=\\"name\\"
+    x-on:change=\\"name = $event.target.value\\"
+  />
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForwardRefComponent\\", () => ({
+      name: \\"PatrickJS\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"myBasicForwardRefComponent()\\">
+  <input
+    class=\\"input\\"
+    x-ref=\\"inputRef\\"
+    x-bind:value=\\"name\\"
+    x-on:change=\\"name = $event.target.value\\"
+  />
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForwardRefComponent\\", () => ({
+      name: \\"PatrickJS\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
+"<div x-data=\\"myBasicOnUpdateReturnComponent()\\">
+  Hello!
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicOnUpdateReturnComponent\\", () => ({
+      name: \\"PatrickJS\\",
+
+      init() {
+        this.$watch(\\"name\\", (value, oldValue) => {
+          const controller = new AbortController();
+          const signal = controller.signal;
+          fetch(\\"https://patrickjs.com/api/resource.json\\", {
+            signal,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              this.name = data.name;
+            });
+          return () => {
+            if (!signal.aborted) {
+              controller.abort();
+            }
+          };
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > class + ClassName + css 1`] = `
+"<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<div class=\\"test2 test div\\" x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > class + css 1`] = `
+"<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<div class=\\"test div\\" x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > className + css 1`] = `
+"<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<div class=\\"test div\\" x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > className 1`] = `
+"<div x-data=\\"classNameCode()\\">
+  <div class=\\"no binding\\">Without Binding</div>
+
+  <div x-bind:class=\\"bindings\\">With binding</div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"classNameCode\\", () => ({
+      bindings: \\"a binding\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > classState 1`] = `
+"<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<div
+  x-data=\\"myBasicComponent()\\"
+  x-bind:class=\\"classState + ' div'\\"
+  x-bind:style=\\"styleState\\"
+>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({
+      classState: \\"testClassName\\",
+      styleState: {
+        color: \\"red\\",
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > componentWithContext 1`] = `
+"<div x-data=\\"componentWithContext()\\">
+  <div><span x-html=\\"foo.value\\"></span></div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"componentWithContext\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"<div x-data=\\"componentWithContext()\\">
+  <div><span x-html=\\"foo.value\\"></span></div>
+
+  <div>other</div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"componentWithContext\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > contentState 1`] = `
+"<div x-data=\\"renderContent()\\">setting context</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderContent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > defaultProps 1`] = `
+"<div x-data=\\"button()\\">
+  <template x-if=\\"link\\">
+    <a
+      x-bind=\\"attributes\\"
+      x-bind:href=\\"link\\"
+      x-bind:target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+    >
+      <span x-html=\\"text\\"></span>
+    </a>
+  </template>
+
+  <template x-if=\\"!link\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick($event)\\">
+      <span x-html=\\"buttonText\\"></span>
+    </button>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"button\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
+"<div x-data=\\"button()\\">
+  <template x-if=\\"link\\">
+    <a
+      x-bind=\\"attributes\\"
+      x-bind:href=\\"link\\"
+      x-bind:target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+    >
+      <span x-html=\\"text\\"></span>
+    </a>
+  </template>
+
+  <template x-if=\\"!link\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick($event)\\">
+      <span x-html=\\"text\\"></span>
+    </button>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"button\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > defaultValsWithTypes 1`] = `
+"<div x-data=\\"componentWithTypes()\\">
+  Hello
+  <span x-html=\\"name || DEFAULT_VALUES.name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"componentWithTypes\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > expressionState 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"refToUse\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      refToUse: !(props.componentRef instanceof Function)
+        ? props.componentRef
+        : null,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > import types 1`] = `
+"<RenderBlock
+  x-data=\\"renderContent()\\"
+  x-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
+></RenderBlock>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderContent\\", () => ({
+      getRenderContentProps(block, index) {
+        return {
+          block: block,
+          index: index,
+        };
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > multipleOnUpdate 1`] = `
+"unknown: Unexpected token (2:54)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('multipleOnUpdate', () => ({,
+    |                                                       ^
+  3 | onUpdate() {
+  4 |         console.log('Runs on every update/rerender');
+  5 | console.log('Runs on every update/rerender as well');"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
+"<div x-data=\\"multipleOnUpdateWithDeps()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"multipleOnUpdateWithDeps\\", () => ({
+      a: \\"a\\",
+      b: \\"b\\",
+      c: \\"c\\",
+      d: \\"d\\",
+
+      init() {
+        this.$watch(\\"a\\", (value, oldValue) => {
+          console.log(\\"Runs when a or b changes\\", this.a, this.b);
+
+          if (this.a === \\"a\\") {
+            this.a = \\"b\\";
+          }
+        });
+        this.$watch(\\"b\\", (value, oldValue) => {
+          console.log(\\"Runs when a or b changes\\", this.a, this.b);
+
+          if (this.a === \\"a\\") {
+            this.a = \\"b\\";
+          }
+        });
+        this.$watch(\\"c\\", (value, oldValue) => {
+          console.log(\\"Runs when c or d changes\\", this.c, this.d);
+
+          if (this.a === \\"a\\") {
+            this.a = \\"b\\";
+          }
+        });
+        this.$watch(\\"d\\", (value, oldValue) => {
+          console.log(\\"Runs when c or d changes\\", this.c, this.d);
+
+          if (this.a === \\"a\\") {
+            this.a = \\"b\\";
+          }
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > multipleSpreads 1`] = `
+"<input x-data=\\"myBasicComponent()\\" x-bind=\\"attrs\\" x-bind=\\"props\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({
+      attrs: {
+        hello: \\"world\\",
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > nestedShow 1`] = `
+"<template x-if=\\"conditionA\\">
+  <template x-if=\\"!conditionB\\">
+    <div>if condition A and condition B</div>
+  </template>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"nestedShow\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > nestedStyles 1`] = `
+"<style>
+  .div {
+    display: flex;
+    --bar: red;
+    color: var(--bar);
+  }
+  @media (max-width: env(--mobile)) {
+    .div {
+      display: block;
+    }
+  }
+  .div:hover {
+    display: flex;
+  }
+  .div:active {
+    display: inline;
+  }
+  .div .nested-selector {
+    display: grid;
+  }
+  .div .nested-selector:hover {
+    display: block;
+  }
+  .div.nested-selector:active {
+    display: inline-block;
+  }
+</style>
+<div class=\\"div\\" x-data=\\"nestedStyles()\\">Hello world</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"nestedStyles\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > onInit & onMount 1`] = `
+"unknown: Unexpected token (2:44)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('onInit', () => ({, init() {
+    |                                             ^
+  3 |       
+  4 |       console.log('onMount');
+  5 |     }}))"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > onInit 1`] = `
+"<div x-data=\\"onInit()\\">
+  Default name defined by parent
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onInit\\", () => ({
+      name: \\"\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > onMount 1`] = `
+"unknown: Unexpected token (2:42)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('comp', () => ({, init() {
+    |                                           ^
+  3 |       
+  4 |       console.log('Runs on mount');
+  5 |     }}))"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > onUpdate 1`] = `
+"unknown: Unexpected token (2:46)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('onUpdate', () => ({,
+    |                                               ^
+  3 | onUpdate() {
+  4 |         console.log('Runs on every update/rerender');
+  5 |     }}))"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > onUpdateWithDeps 1`] = `
+"<div x-data=\\"onUpdateWithDeps()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onUpdateWithDeps\\", () => ({
+      a: \\"a\\",
+      b: \\"b\\",
+
+      init() {
+        this.$watch(\\"a\\", (value, oldValue) => {
+          console.log(
+            \\"Runs when a, b or size changes\\",
+            this.a,
+            this.b,
+            props.size
+          );
+        });
+        this.$watch(\\"b\\", (value, oldValue) => {
+          console.log(
+            \\"Runs when a, b or size changes\\",
+            this.a,
+            this.b,
+            props.size
+          );
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
+"<div x-data=\\"myBasicComponent()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > preserveTyping 1`] = `
+"<div x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > propsDestructure 1`] = `
+"<div x-data=\\"myBasicComponent()\\">
+  <span x-html=\\"children\\"></span>
+
+  <span x-html=\\"type\\"></span>
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({
+      name: \\"Decadef20\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > propsInterface 1`] = `
+"<div x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > propsType 1`] = `
+"<div x-data=\\"myBasicComponent()\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  <span x-html=\\"name\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"<div x-data=\\"onUpdate()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onUpdate\\", () => ({
+      foo: function foo(params) {},
+      bar: function bar() {},
+      zoo: function zoo() {
+        const params = {
+          cb: this.bar,
+        };
+      },
+
+      onUpdate() {
+        foo({
+          someOption: bar,
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > renderBlock 1`] = `
+"<template x-if=\\"shouldWrap\\">
+  <template x-if=\\"isEmptyHtmlElement(tag)\\">
+    <state.tag x-bind=\\"attributes\\" x-bind=\\"actions\\"></state.tag>
+  </template>
+
+  <template x-if=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
+    <template x-for=\\"data in repeatItemData\\">
+      <RenderRepeatedBlock
+        x-bind:key=\\"index\\"
+        x-bind:repeatContext=\\"data.context\\"
+        x-bind:block=\\"data.block\\"
+      ></RenderRepeatedBlock>
+    </template>
+  </template>
+
+  <template x-if=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
+    <state.tag x-bind=\\"attributes\\" x-bind=\\"actions\\">
+      <state.renderComponentTag
+        x-bind=\\"renderComponentProps\\"
+      ></state.renderComponentTag>
+
+      <template x-for=\\"child in childrenWithoutParentComponent\\">
+        <RenderBlock
+          x-bind:key=\\"'render-block-' + child.id\\"
+          x-bind:block=\\"child\\"
+          x-bind:context=\\"childrenContext\\"
+        ></RenderBlock>
+      </template>
+
+      <template x-for=\\"child in childrenWithoutParentComponent\\">
+        <BlockStyles
+          x-bind:key=\\"'block-style-' + child.id\\"
+          x-bind:block=\\"child\\"
+          x-bind:context=\\"childrenContext\\"
+        ></BlockStyles>
+      </template>
+    </state.tag>
+  </template>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderBlock\\", () => ({
+      get component() {
+        const componentName = getProcessedBlock({
+          block: props.block,
+          state: props.context.state,
+          context: props.context.context,
+          shouldEvaluateBindings: false,
+        }).component?.name;
+
+        if (!componentName) {
+          return null;
+        }
+
+        const ref = props.context.registeredComponents[componentName];
+
+        if (!ref) {
+          // TODO: Public doc page with more info about this message
+          console.warn(\`
+          Could not find a registered component named \\"\${componentName}\\". 
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          return undefined;
+        } else {
+          return ref;
+        }
+      },
+
+      get tag() {
+        return getBlockTag(this.useBlock);
+      },
+
+      get useBlock() {
+        return this.repeatItemData
+          ? props.block
+          : getProcessedBlock({
+              block: props.block,
+              state: props.context.state,
+              context: props.context.context,
+              shouldEvaluateBindings: true,
+            });
+      },
+
+      get actions() {
+        return getBlockActions({
+          block: this.useBlock,
+          state: props.context.state,
+          context: props.context.context,
+        });
+      },
+
+      get attributes() {
+        const blockProperties = getBlockProperties(this.useBlock);
+        return {
+          ...blockProperties,
+          ...(TARGET === \\"reactNative\\"
+            ? {
+                style: getReactNativeBlockStyles({
+                  block: this.useBlock,
+                  context: props.context,
+                  blockStyles: blockProperties.style,
+                }),
+              }
+            : {}),
+        };
+      },
+
+      get shouldWrap() {
+        return !this.component?.noWrap;
+      },
+
+      get renderComponentProps() {
+        return {
+          blockChildren: this.useChildren,
+          componentRef: this.component?.component,
+          componentOptions: {
+            ...getBlockComponentOptions(this.useBlock),
+
+            /**
+             * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+             * they are provided to the component itself directly.
+             */
+            ...(this.shouldWrap
+              ? {}
+              : {
+                  attributes: { ...this.attributes, ...this.actions },
+                }),
+            customBreakpoints: this.childrenContext?.content?.meta?.breakpoints,
+          },
+          context: this.childrenContext,
+        };
+      },
+
+      get useChildren() {
+        // TO-DO: When should \`canHaveChildren\` dictate rendering?
+        // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+        // but still receive and need to render children.
+        // return this.componentInfo?.canHaveChildren ? this.useBlock.children : [];
+        return this.useBlock.children ?? [];
+      },
+
+      get childrenWithoutParentComponent() {
+        /**
+         * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+         * we render them outside of \`componentRef\`.
+         * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+         * blocks, and the children will be repeated within those blocks.
+         */
+        const shouldRenderChildrenOutsideRef =
+          !this.component?.component && !this.repeatItemData;
+        return shouldRenderChildrenOutsideRef ? this.useChildren : [];
+      },
+
+      get repeatItemData() {
+        /**
+         * we don't use \`this.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
+         * which will not work if there is a repeat.
+         */
+        const { repeat, ...blockWithoutRepeat } = props.block;
+
+        if (!repeat?.collection) {
+          return undefined;
+        }
+
+        const itemsArray = evaluate({
+          code: repeat.collection,
+          state: props.context.state,
+          context: props.context.context,
+        });
+
+        if (!Array.isArray(itemsArray)) {
+          return undefined;
+        }
+
+        const collectionName = repeat.collection.split(\\".\\").pop();
+        const itemNameToUse =
+          repeat.itemName ||
+          (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+        const repeatArray =
+          itemsArray.map <
+          RepeatData >
+          ((item, index) => ({
+            context: {
+              ...props.context,
+              state: {
+                ...props.context.state,
+                $index: index,
+                $item: item,
+                [itemNameToUse]: item,
+                [\`$\${itemNameToUse}Index\`]: index,
+              },
+            },
+            block: blockWithoutRepeat,
+          }));
+        return repeatArray;
+      },
+
+      get inheritedTextStyles() {
+        if (TARGET !== \\"reactNative\\") {
+          return {};
+        }
+
+        const styles = getReactNativeBlockStyles({
+          block: this.useBlock,
+          context: props.context,
+          blockStyles: this.attributes.style,
+        });
+        return extractTextStyles(styles);
+      },
+
+      get childrenContext() {
+        return {
+          apiKey: props.context.apiKey,
+          state: props.context.state,
+          content: props.context.content,
+          context: props.context.context,
+          registeredComponents: props.context.registeredComponents,
+          inheritedStyles: this.inheritedTextStyles,
+        };
+      },
+
+      get renderComponentTag() {
+        if (TARGET === \\"reactNative\\") {
+          return RenderComponentWithContext;
+        } else if (TARGET === \\"vue3\\") {
+          // vue3 expects a string for the component tag
+          return \\"RenderComponent\\";
+        } else {
+          return RenderComponent;
+        }
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > renderContentExample 1`] = `
+"unknown: Unexpected token (2:51)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('renderContent', () => ({, init() {
+    |                                                    ^
+  3 |       
+  4 |       sendComponentsToVisualEditor(props.customComponents);
+  5 |     }}))"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
+"<div x-data=\\"button()\\">
+  <template x-if=\\"link\\">
+    <a
+      x-bind=\\"attributes\\"
+      x-bind:href=\\"link\\"
+      x-bind:target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+    >
+      <span x-html=\\"text\\"></span>
+    </a>
+  </template>
+
+  <template x-if=\\"!link\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\">
+      <span x-html=\\"text\\"></span>
+    </button>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"button\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > rootShow 1`] = `
+"<template x-if=\\"foo === 'bar'\\">
+  <div>Bar</div>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderStyles\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > self-referencing component 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <span x-html=\\"name\\"></span>
+
+  <template x-if=\\"name === 'Batman'\\">
+    <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > self-referencing component with children 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <span x-html=\\"name\\"></span>
+
+  <span x-html=\\"children\\"></span>
+
+  <template x-if=\\"name === 'Batman'\\">
+    <MyComponent name=\\"Bruce\\">
+      <div>Wayne</div>
+    </MyComponent>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > showWithFor 1`] = `
+"<template x-if=\\"conditionA\\">
+  <template x-for=\\"item in items\\">
+    <div x-bind:key=\\"idx\\"><span x-html=\\"item\\"></span></div>
+  </template>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"nestedShow\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > showWithRootText 1`] = `
+"<template x-if=\\"conditionA\\">ContentA</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"showRootText\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > spreadAttrs 1`] = `
+"<input x-data=\\"myBasicComponent()\\" x-bind=\\"attrs\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > spreadNestedProps 1`] = `
+"<input x-data=\\"myBasicComponent()\\" x-bind=\\"nested\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > spreadProps 1`] = `
+"<input x-data=\\"myBasicComponent()\\" x-bind=\\"props\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > styleClassAndCss 1`] = `
+"<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>
+<div
+  class=\\"builder-column div\\"
+  x-data=\\"myComponent()\\"
+  x-bind:style=\\"{
+  width: '100%'
+}\\"
+></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > subComponent 1`] = `
+"<Foo x-data=\\"subComponent()\\"></Foo>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"subComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > svgComponent 1`] = `
+"<svg
+  fill=\\"none\\"
+  role=\\"img\\"
+  x-data=\\"svgComponent()\\"
+  x-bind:viewBox=\\"'0 0 ' + 42 + ' ' + 42\\"
+  x-bind:width=\\"42\\"
+  x-bind:height=\\"42\\"
+>
+  <defs>
+    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+      <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
+      <feBlend
+        in=\\"SourceGraphic\\"
+        in2=\\"BackgroundImageFix\\"
+        result=\\"shape\\"
+      ></feBlend>
+
+      <feGaussianBlur
+        result=\\"effect1_foregroundBlur\\"
+        x-bind:stdDeviation=\\"7\\"
+      ></feGaussianBlur>
+    </filter>
+  </defs>
+</svg>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"svgComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > typeDependency 1`] = `
+"<div x-data=\\"typeDependency()\\"><span x-html=\\"foo\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"typeDependency\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > use-style 1`] = `
+"<style>
+  button {
+    background: blue;
+    color: white;
+    font-size: 12px;
+    outline: 1px solid black;
+  }
+</style>
+<button type=\\"button\\" x-data=\\"myComponent()\\">Button</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > use-style-and-css 1`] = `
+"<style>
+  button {
+    font-size: 12px;
+    outline: 1px solid black;
+  }
+
+  .button {
+    background: blue;
+    color: white;
+  }
+</style>
+<button type=\\"button\\" class=\\"button\\" x-data=\\"myComponent()\\">Button</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > use-style-outside-component 1`] = `
+"<style>
+  button {
+    background: blue;
+    color: white;
+    font-size: 12px;
+    outline: 1px solid black;
+  }
+</style>
+<button type=\\"button\\" x-data=\\"myComponent()\\">Button</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > useTarget 1`] = `
+"<div x-data=\\"useTargetComponent()\\"><span x-html=\\"name\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"useTargetComponent\\", () => ({
+      get name() {
+        const prefix = \\"a\\";
+        return prefix + \\"foo\\";
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > basic 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input x-on:change=\\"name = $event.target.value\\" x-bind:value=\\"name\\" />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"Steve\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > bindGroup 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    x-bind:checked=\\"tortilla === 'Plain'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    x-bind:checked=\\"tortilla === 'Whole wheat'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    x-bind:checked=\\"tortilla === 'Spinach'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    x-bind:checked=\\"fillings === 'Rice'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    x-bind:checked=\\"fillings === 'Beans'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    x-bind:checked=\\"fillings === 'Cheese'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    x-bind:checked=\\"fillings === 'Guac (extra)'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <p>
+    Tortilla:
+    <span x-html=\\"tortilla\\"></span>
+  </p>
+  <p>
+    Fillings:
+    <span x-html=\\"fillings\\"></span>
+  </p>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      tortilla: \\"Plain\\",
+      fillings: [],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > bindProperty 1`] = `
+"<input x-data=\\"myComponent()\\" x-bind:value=\\"value\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      value: \\"hello\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > classDirective 1`] = `
+"<input
+  x-data=\\"myComponent()\\"
+  x-bind:class=\\"\`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`\\"
+/>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      focus: true,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > context 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"activeTab\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      activeTab: 0,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > each 1`] = `
+"<ul x-data=\\"myComponent()\\">
+  <template x-for=\\"num in numbers\\">
+    <li><span x-html=\\"num\\"></span></li>
+  </template>
+</ul>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      numbers: [\\"one\\", \\"two\\", \\"three\\"],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > eventHandlers 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button x-on:click=\\"log('hi')\\">Log</button>
+  <button x-on:click=\\"log($event)\\">Log</button>
+  <button x-on:click=\\"log($event)\\">Log</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      log: function log(msg = \\"hello\\") {
+        console.log(msg);
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > html 1`] = `
+"<div x-data=\\"myComponent()\\" x-bind:innerHTML=\\"html\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      html: \\"<b>bold</b>\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > ifElse 1`] = `
+"<template x-if=\\"show\\">
+  <button x-on:click=\\"toggle($event)\\">Hide</button>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      show: true,
+      toggle: function toggle() {
+        this.show = !this.show;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > imports 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button type=\\"button\\" x-bind:disabled=\\"disabled\\"><slot></slot></button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      disabled: false,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > lifecycleHooks 1`] = `
+"unknown: Unexpected token (2:49)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('myComponent', () => ({, init() {
+    |                                                  ^
+  3 |       
+  4 |       
+  5 |   console.log('onMount');"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > reactive 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input x-bind:value=\\"name\\" />
+
+  Lowercase:
+  <span x-html=\\"lowercaseName\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"Steve\\",
+
+      get lowercaseName() {
+        return this.name.toLowerCase();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input type=\\"number\\" x-on:change=\\"a = $event.target.value\\" x-bind:value=\\"a\\" />
+  <input type=\\"number\\" x-on:change=\\"b = $event.target.value\\" x-bind:value=\\"b\\" />
+
+  Result:
+  <span x-html=\\"result\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        this.result = a_ * b_;
+      },
+
+      init() {
+        this.$watch(\\"a,this.b\\", (value, oldValue) => {
+          this.calculateResult(this.a, this.b);
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > slots 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <slot>default</slot>
+  <slot name=\\"Test\\"><div>default</div></slot>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > style 1`] = `
+"<style>
+  input {
+    color: red;
+    font-size: 12px;
+  }
+
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
+</style>
+<input class=\\"form-input\\" x-data=\\"myComponent()\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > textExpressions 1`] = `
+"<div x-data=\\"myComponent()\\">
+  normal:
+
+  <span x-html=\\"a + b\\"></span>
+  <br />
+
+  conditional
+
+  <span x-html=\\"a > 2 ? 'hello' : 'bye'\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 5,
+      b: 12,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > basic 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input x-on:change=\\"name = $event.target.value\\" x-bind:value=\\"name\\" />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"Steve\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > bindGroup 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    x-bind:checked=\\"tortilla === 'Plain'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    x-bind:checked=\\"tortilla === 'Whole wheat'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    x-bind:checked=\\"tortilla === 'Spinach'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    x-bind:checked=\\"fillings === 'Rice'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    x-bind:checked=\\"fillings === 'Beans'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    x-bind:checked=\\"fillings === 'Cheese'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    x-bind:checked=\\"fillings === 'Guac (extra)'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <p>
+    Tortilla:
+    <span x-html=\\"tortilla\\"></span>
+  </p>
+  <p>
+    Fillings:
+    <span x-html=\\"fillings\\"></span>
+  </p>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      tortilla: \\"Plain\\",
+      fillings: [],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > bindProperty 1`] = `
+"<input x-data=\\"myComponent()\\" x-bind:value=\\"value\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      value: \\"hello\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > classDirective 1`] = `
+"<input
+  x-data=\\"myComponent()\\"
+  x-bind:class=\\"\`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`\\"
+/>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      focus: true,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > context 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"activeTab\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      activeTab: 0,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > each 1`] = `
+"<ul x-data=\\"myComponent()\\">
+  <template x-for=\\"num in numbers\\">
+    <li><span x-html=\\"num\\"></span></li>
+  </template>
+</ul>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      numbers: [\\"one\\", \\"two\\", \\"three\\"],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > eventHandlers 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button x-on:click=\\"log('hi')\\">Log</button>
+  <button x-on:click=\\"log($event)\\">Log</button>
+  <button x-on:click=\\"log($event)\\">Log</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      log: function log(msg = \\"hello\\") {
+        console.log(msg);
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > html 1`] = `
+"<div x-data=\\"myComponent()\\" x-bind:innerHTML=\\"html\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      html: \\"<b>bold</b>\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > ifElse 1`] = `
+"<template x-if=\\"show\\">
+  <button x-on:click=\\"toggle($event)\\">Hide</button>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      show: true,
+      toggle: function toggle() {
+        this.show = !this.show;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > imports 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button type=\\"button\\" x-bind:disabled=\\"disabled\\"><slot></slot></button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      disabled: false,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > lifecycleHooks 1`] = `
+"unknown: Unexpected token (2:49)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('myComponent', () => ({, init() {
+    |                                                  ^
+  3 |       
+  4 |       
+  5 |   console.log('onMount');"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > reactive 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input x-bind:value=\\"name\\" />
+
+  Lowercase:
+  <span x-html=\\"lowercaseName\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"Steve\\",
+
+      get lowercaseName() {
+        return this.name.toLowerCase();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input type=\\"number\\" x-on:change=\\"a = $event.target.value\\" x-bind:value=\\"a\\" />
+  <input type=\\"number\\" x-on:change=\\"b = $event.target.value\\" x-bind:value=\\"b\\" />
+
+  Result:
+  <span x-html=\\"result\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        this.result = a_ * b_;
+      },
+
+      init() {
+        this.$watch(\\"a,this.b\\", (value, oldValue) => {
+          this.calculateResult(this.a, this.b);
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > slots 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <slot>default</slot>
+  <slot name=\\"Test\\"><div>default</div></slot>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > style 1`] = `
+"<style>
+  input {
+    color: red;
+    font-size: 12px;
+  }
+
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
+</style>
+<input class=\\"form-input\\" x-data=\\"myComponent()\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > textExpressions 1`] = `
+"<div x-data=\\"myComponent()\\">
+  normal:
+
+  <span x-html=\\"a + b\\"></span>
+  <br />
+
+  conditional
+
+  <span x-html=\\"a > 2 ? 'hello' : 'bye'\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 5,
+      b: 12,
+    }));
+  });
+</script>
+"
+`;

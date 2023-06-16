@@ -15,6 +15,7 @@ export type GeneratorOptions = {
 };
 
 export type MitosisConfig = {
+  commonOptions?: { typescript?: boolean };
   /**
    * List of targets to compile to.
    */
@@ -27,6 +28,11 @@ export type MitosisConfig = {
    * globs of files to transpile. Defaults to `src/*`.
    */
   files?: string | string[];
+
+  /**
+   * Optional list of globs to exclude from transpilation.
+   */
+  exclude?: string[];
   /**
    * The directory where overrides are stored. The structure of the override directory must match that of the source code,
    * with each target having its own sub-directory: `${overridesDir}/${target}/*`
@@ -53,11 +59,6 @@ export type MitosisConfig = {
    * ```
    */
   options: Partial<GeneratorOptions>;
-  /**
-   * Configure the extension of the files you want to compile
-   * Default value: 'lite.tsx'
-   */
-  extension: string;
   /**
    * Configure a custom parser function which takes a string and returns MitosisJSON
    * Defaults to the JSXParser of this project (src/parsers/jsx)

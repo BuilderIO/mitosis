@@ -1,0 +1,37 @@
+{
+  "name": "@e2e-app/vue",
+  "workspaces": [
+    "packages/**/*"
+  ],
+  "main": "./packages/_vue2/dist/index.js",
+  "module": "./packages/_vue2/dist/index.js",
+  "type": "module",
+  "files": [
+    "vue2/dist",
+    "vue3/dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./packages/_vue2/dist/index.js",
+      "require": "./packages/_vue2/dist/index.cjs"
+    },
+    "./vue2": {
+      "import": "./packages/_vue2/dist/index.js",
+      "require": "./packages/_vue2/dist/index.cjs"
+    },
+    "./vue2/css": "./packages/_vue2/dist/style.css",
+    "./vue3": {
+      "import": "./packages/_vue3/dist/index.js",
+      "require": "./packages/_vue3/dist/index.cjs"
+    },
+    "./vue3/css": "./packages/_vue3/dist/style.css"
+  },
+  "scripts": {
+    "add-debug": "bash ./scripts/add-debug.sh",
+    "remove-debug": "bash ./scripts/remove-debug.sh",
+    "build": "yarn workspaces foreach run build"
+  },
+  "peerDependencies": {
+    "vue": ">= 2.7"
+  }
+}

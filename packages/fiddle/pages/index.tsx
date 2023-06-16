@@ -39,16 +39,6 @@ export default () => {
         <meta property="og:url" content="https://mitosis.builder.io" />
         <link rel="canonical" href="https://mitosis.builder.io" />
         <title>Mitosis Fiddle - compile to common frameworks, import from popular tools</title>
-
-        <Script>
-          {`
-          if (location.hostname === 'jsx-lite-fiddle.web.app') {
-            var url = new URL(location.href);
-            url.hostname = 'mitosis.builder.io';
-            location.href = url.href;
-          }
-          `}
-        </Script>
       </Head>
       <noscript>You need to enable JavaScript to run this app.</noscript>
       <App />

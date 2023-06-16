@@ -1,5 +1,5 @@
-import { GluegunCommand, GluegunParameters } from 'gluegun';
 import { MitosisConfig, Target } from '@builder.io/mitosis';
+import { GluegunCommand, GluegunParameters } from 'gluegun';
 import { build } from '../build/build';
 import { getMitosisConfig } from '../helpers/get-mitosis-config';
 
@@ -26,6 +26,9 @@ const command: GluegunCommand = {
     const opts = parameters.options;
     const configRelPath = opts.config ?? opts.c;
     const config = getMitosisConfig(configRelPath);
+    if (!config) {
+      throw new Error(`No config file found for Mitosis.`);
+    }
     const targets = getTargets(config, opts);
     await build({
       ...config,

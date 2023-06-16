@@ -1,5 +1,6 @@
-import { MitosisComponent } from '../../types/mitosis-component';
+import { isSlotProperty, replaceSlotsInString } from '../../helpers/slots';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { MitosisComponent } from '../../types/mitosis-component';
 import { ToSvelteOptions } from './types';
 
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
@@ -31,5 +32,10 @@ export const stripStateAndProps =
   (code: string) =>
     stripStateAndPropsRefs(code, {
       includeState: options.stateType === 'variables',
-      replaceWith: (name) => (name === 'children' ? '$$slots.default' : name),
+      replaceWith: (name) =>
+        name === 'children'
+          ? '$$slots.default'
+          : isSlotProperty(name)
+          ? replaceSlotsInString(name, (x) => `$$slots.${x}`)
+          : name,
     });

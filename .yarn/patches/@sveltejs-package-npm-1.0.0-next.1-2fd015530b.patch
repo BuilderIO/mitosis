@@ -1,0 +1,22 @@
+diff --git a/src/index.js b/src/index.js
+index d751537bf1cff8a65be897172898406c44c55eeb..4de812ee92dbf8fcf300da6097900182bf7e655d 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -55,7 +55,7 @@ export async function build(config, cwd = process.cwd()) {
+ 		}
+ 	}
+ 
+-	write(join(dir, 'package.json'), JSON.stringify(pkg, null, 2));
++	write(join(dir, '--package.json'), JSON.stringify(pkg, null, 2));
+ 
+ 	for (const file of files) {
+ 		await process_file(config, file);
+@@ -156,7 +156,7 @@ export async function watch(config, cwd = process.cwd()) {
+ 
+ 			if (should_update_pkg) {
+ 				const pkg = generate_pkg(cwd, files);
+-				write(join(dir, 'package.json'), JSON.stringify(pkg, null, 2));
++				write(join(dir, '--package.json'), JSON.stringify(pkg, null, 2));
+ 				console.log('Updated package.json');
+ 			}
+ 

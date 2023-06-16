@@ -8,15 +8,14 @@ export const getFileExtensionForTarget = ({
   type: 'import' | 'filename';
   target: Target;
   options: MitosisConfig;
-}) => {
+}): string => {
   const isTs = !!options.options[target]?.typescript;
   switch (target) {
     case 'angular':
       return '.ts';
+    case 'alpine':
     case 'html':
       return '.html';
-    case 'solid':
-      return '.jsx';
     case 'svelte':
       return '.svelte';
     case 'swift':
@@ -29,9 +28,22 @@ export const getFileExtensionForTarget = ({
       return '.ts';
     case 'lit':
       return '.ts';
+
+    // all JSX frameworks
+    case 'solid':
+    case 'preact':
     case 'qwik':
     case 'react':
-      return isTs && type === 'filename' ? '.tsx' : '.jsx';
+    case 'reactNative':
+    case 'rsc':
+    case 'stencil':
+      switch (type) {
+        case 'import':
+          // we can't have `.jsx`/`.tsx` extensions in the import paths, so we stick with implicit file extensions.
+          return '';
+        case 'filename':
+          return isTs ? '.tsx' : '.jsx';
+      }
     case 'marko':
       return '.marko';
     default:

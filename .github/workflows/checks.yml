@@ -9,6 +9,9 @@ on:
   push:
   pull_request:
 
+env: 
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
 jobs:
   checks:
     runs-on: ubuntu-latest
@@ -51,6 +54,9 @@ jobs:
 
       - name: Build Core
         run: yarn ci:build:core
+      
+      - name: Build eslint-plugin
+        run: yarn ci:build:eslint-plugin
 
       - name: Build Fiddle
         run: yarn ci:build:fiddle
@@ -78,6 +84,3 @@ jobs:
 
       - name: Run E2E tests
         run: yarn ci:e2e
-
-      - name: Fail build if E2E output doesn't match computed output
-        run: git diff --exit-code README.MD

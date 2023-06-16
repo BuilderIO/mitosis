@@ -1,39 +1,44 @@
-import dedent from 'dedent';
-import json5 from 'json5';
+import { flow, pipe } from 'fp-ts/lib/function';
+import { isString, kebabCase, uniq } from 'lodash';
 import { format } from 'prettier/standalone';
-import { collectCss } from '../helpers/styles/collect-css';
+import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../constants/html_tags';
+import { dedent } from '../helpers/dedent';
 import { fastClone } from '../helpers/fast-clone';
+import { getComponentsUsed } from '../helpers/get-components-used';
+import { getCustomImports } from '../helpers/get-custom-imports';
+import { getPropFunctions } from '../helpers/get-prop-functions';
+import { getProps } from '../helpers/get-props';
+import { getPropsRef } from '../helpers/get-props-ref';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { indent } from '../helpers/indent';
+import isChildren from '../helpers/is-children';
+import { isUpperCase } from '../helpers/is-upper-case';
 import { mapRefs } from '../helpers/map-refs';
+import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { renderPreComponent } from '../helpers/render-imports';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
-import { selfClosingTags } from '../parsers/jsx';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { replaceIdentifiers } from '../helpers/replace-identifiers';
+import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
+import {
+  DO_NOT_USE_VARS_TRANSFORMS,
+  stripStateAndPropsRefs,
+} from '../helpers/strip-state-and-props-refs';
+import { collectCss } from '../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import isChildren from '../helpers/is-children';
-import { getProps } from '../helpers/get-props';
-import { getPropsRef } from '../helpers/get-props-ref';
-import { getPropFunctions } from '../helpers/get-prop-functions';
-import { kebabCase, uniq } from 'lodash';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { indent } from '../helpers/indent';
-import { isSlotProperty } from '../helpers/slots';
-import { getCustomImports } from '../helpers/get-custom-imports';
-import { getComponentsUsed } from '../helpers/get-components-used';
-import { isUpperCase } from '../helpers/is-upper-case';
-import { VALID_HTML_TAGS } from '../constants/html_tags';
 
 import { MitosisComponent } from '..';
+import { initializeOptions } from '../helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
 
-const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
+const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
@@ -44,39 +49,35 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
 }
 
 interface AngularBlockOptions {
-  contextVars?: string[];
-  outputVars?: string[];
   childComponents?: string[];
-  domRefs?: string[];
 }
 
 const mappers: {
-  [key: string]: (
-    json: MitosisNode,
-    options: ToAngularOptions,
-    blockOptions?: AngularBlockOptions,
-  ) => string;
+  [key: string]: (json: MitosisNode, options: ToAngularOptions) => string;
 } = {
-  Fragment: (json, options, blockOptions) => {
+  Fragment: (json, options) => {
     return `<ng-container>${json.children
-      .map((item) => blockToAngular(item, options, blockOptions))
+      .map((item) => blockToAngular(item, options))
       .join('\n')}</ng-container>`;
   },
-  Slot: (json, options, blockOptions) => {
-    return `<ng-content ${Object.keys(json.bindings)
-      .map((binding) => {
-        if (binding === 'name') {
-          const selector = kebabCase(json.bindings.name?.code?.replace('props.slot', ''));
+  Slot: (json, options) => {
+    const renderChildren = () =>
+      json.children?.map((item) => blockToAngular(item, options)).join('\n');
+
+    return `<ng-content ${Object.entries({ ...json.bindings, ...json.properties })
+      .map(([binding, value]) => {
+        if (value && binding === 'name') {
+          const selector = pipe(isString(value) ? value : value.code, stripSlotPrefix, kebabCase);
           return `select="[${selector}]"`;
         }
       })
-      .join('\n')}>${Object.keys(json.bindings)
-      .map((binding) => {
-        if (binding !== 'name') {
-          return `${json.bindings[binding]?.code}`;
+      .join('\n')}>${Object.entries(json.bindings)
+      .map(([binding, value]) => {
+        if (value && binding !== 'name') {
+          return value.code;
         }
       })
-      .join('\n')}</ng-content>`;
+      .join('\n')}${renderChildren()}</ng-content>`;
   },
 };
 
@@ -88,13 +89,13 @@ const generateNgModule = (
   bootstrapMapper: Function | null | undefined,
 ): string => {
   return `import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 
 ${content}
 
 @NgModule({
   declarations: [${name}],
-  imports: [BrowserModule${
+  imports: [CommonModule${
     componentsUsed.length ? ', ' + componentsUsed.map((comp) => `${comp}Module`).join(', ') : ''
   }],
   exports: [${name}],
@@ -114,14 +115,11 @@ export const blockToAngular = (
   options: ToAngularOptions = {},
   blockOptions: AngularBlockOptions = {},
 ): string => {
-  const contextVars = blockOptions?.contextVars || [];
-  const outputVars = blockOptions?.outputVars || [];
   const childComponents = blockOptions?.childComponents || [];
-  const domRefs = blockOptions?.domRefs || [];
   const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name.trim());
 
   if (mappers[json.name]) {
-    return mappers[json.name](json, options, blockOptions);
+    return mappers[json.name](json, options);
   }
 
   if (isChildren({ node: json })) {
@@ -131,18 +129,14 @@ export const blockToAngular = (
   if (json.properties._text) {
     return json.properties._text;
   }
-  if (/props\.slot/.test(json.bindings._text?.code as string)) {
-    const selector = kebabCase(json.bindings._text?.code?.replace('props.slot', ''));
-    return `<ng-content select="[${selector}]"></ng-content>`;
-  }
+  const textCode = json.bindings._text?.code;
+  if (textCode) {
+    if (isSlotProperty(textCode)) {
+      const selector = pipe(textCode, stripSlotPrefix, kebabCase);
+      return `<ng-content select="[${selector}]"></ng-content>`;
+    }
 
-  if (json.bindings._text?.code) {
-    return `{{${stripStateAndPropsRefs(json.bindings._text.code as string, {
-      // the context is the class
-      contextVars: [],
-      outputVars,
-      domRefs,
-    })}}}`;
+    return `{{${textCode}}}`;
   }
 
   let str = '';
@@ -151,22 +145,13 @@ export const blockToAngular = (
 
   if (checkIsForNode(json)) {
     const indexName = json.scope.indexName;
-    str += `<ng-container *ngFor="let ${json.scope.forName} of ${stripStateAndPropsRefs(
-      json.bindings.each?.code,
-      {
-        contextVars,
-        outputVars,
-        domRefs,
-      },
-    )}${indexName ? `; let ${indexName} = index` : ''}">`;
+    str += `<ng-container *ngFor="let ${json.scope.forName} of ${json.bindings.each?.code}${
+      indexName ? `; let ${indexName} = index` : ''
+    }">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
-    str += `<ng-container *ngIf="${stripStateAndPropsRefs(json.bindings.when?.code, {
-      contextVars,
-      outputVars,
-      domRefs,
-    })}">`;
+    str += `<ng-container *ngIf="${json.bindings.when?.code}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else {
@@ -199,14 +184,11 @@ export const blockToAngular = (
 
       const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
       // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(code as string, {
-        contextVars,
-        outputVars,
-        domRefs,
-      }).replace(/"/g, '&quot;');
 
       if (key.startsWith('on')) {
-        let event = key.replace('on', '').toLowerCase();
+        let event = key.replace('on', '');
+        event = event.charAt(0).toLowerCase() + event.slice(1);
+
         if (event === 'change' && json.name === 'input' /* todo: other tags */) {
           event = 'input';
         }
@@ -217,26 +199,25 @@ export const blockToAngular = (
           'g',
         );
         const replacer = '$1$event$2';
-        const finalValue = removeSurroundingBlock(useValue.replace(regexp, replacer));
+        const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
         str += ` (${event})="${finalValue}" `;
       } else if (key === 'class') {
-        str += ` [class]="${useValue}" `;
+        str += ` [class]="${code}" `;
       } else if (key === 'ref') {
-        str += ` #${useValue} `;
+        str += ` #${code} `;
       } else if (isSlotProperty(key)) {
-        const lowercaseKey =
-          key.replace('slot', '')[0].toLowerCase() + key.replace('slot', '').substring(1);
-        needsToRenderSlots.push(`${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
+        const lowercaseKey = pipe(key, stripSlotPrefix, (x) => x.toLowerCase());
+        needsToRenderSlots.push(`${code.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
-        str += ` [${BINDINGS_MAPPER[key]}]="${useValue}"  `;
+        str += ` [${BINDINGS_MAPPER[key]}]="${code}"  `;
       } else if (isValidHtmlTag || key.includes('-')) {
         // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
-        str += ` [attr.${key}]="${useValue}" `;
+        str += ` [attr.${key}]="${code}" `;
       } else {
-        str += `[${key}]="${useValue}" `;
+        str += `[${key}]="${code}" `;
       }
     }
-    if (selfClosingTags.has(json.name)) {
+    if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
       return str + ' />';
     }
     str += '>';
@@ -254,18 +235,92 @@ export const blockToAngular = (
   return str;
 };
 
+const processAngularCode =
+  ({
+    contextVars,
+    outputVars,
+    domRefs,
+    stateVars,
+    replaceWith,
+  }: {
+    contextVars: string[];
+    outputVars: string[];
+    domRefs: string[];
+    stateVars?: string[];
+    replaceWith?: string;
+  }) =>
+  (code: string) =>
+    pipe(
+      DO_NOT_USE_VARS_TRANSFORMS(code, {
+        contextVars,
+        domRefs,
+        outputVars,
+        stateVars,
+      }),
+      (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
+    );
+
+const DEFAULT_OPTIONS: ToAngularOptions = {
+  preserveImports: false,
+  preserveFileExtensions: false,
+};
+
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
   ({ component: _component }) => {
-    const DEFAULT_OPTIONS = {
-      preserveImports: false,
-      preserveFileExtensions: false,
-    };
-
-    const options = { ...DEFAULT_OPTIONS, ...userOptions };
-
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(_component);
+
+    const contextVars = Object.keys(json?.context?.get || {});
+    const metaOutputVars: string[] = (json.meta?.useMetadata?.outputs as string[]) || [];
+    const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
+    const stateVars = Object.keys(json?.state || {});
+
+    const options = initializeOptions('angular', DEFAULT_OPTIONS, userOptions);
+    options.plugins = [
+      ...(options.plugins || []),
+      CODE_PROCESSOR_PLUGIN((codeType) => {
+        switch (codeType) {
+          case 'hooks':
+            return flow(
+              processAngularCode({
+                replaceWith: 'this',
+                contextVars,
+                outputVars,
+                domRefs: Array.from(getRefs(json)),
+                stateVars,
+              }),
+              (code) => {
+                const allMethodNames = Object.entries(json.state)
+                  .filter(([_, value]) => value?.type === 'function' || value?.type === 'method')
+                  .map(([key]) => key);
+
+                return replaceIdentifiers({
+                  code,
+                  from: allMethodNames,
+                  to: (name) => `this.${name}`,
+                });
+              },
+            );
+
+          case 'bindings':
+            return (code) => {
+              const newLocal = processAngularCode({
+                contextVars: [],
+                outputVars,
+                domRefs: [], // the template doesn't need the this keyword.
+              })(code);
+              return newLocal.replace(/"/g, '&quot;');
+            };
+          case 'hooks-deps':
+          case 'state':
+          case 'properties':
+          case 'dynamic-jsx-elements':
+            return (x) => x;
+        }
+      }),
+    ];
+
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
@@ -289,8 +344,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       .filter((key) => localExports[key].usedInLocal)
       .map((key) => `${key} = ${key};`);
 
-    const metaOutputVars: string[] = (json.meta?.useMetadata?.outputs as string[]) || [];
-    const contextVars = Object.keys(json?.context?.get || {});
     const injectables: string[] = contextVars.map((variableName) => {
       const variableType = json?.context?.get[variableName].name;
       if (options?.experimental?.injectables) {
@@ -310,7 +363,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
     props.delete('children');
 
-    const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
     // remove props for outputs
     outputVars.forEach((variableName) => {
       props.delete(variableName);
@@ -324,12 +376,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
 
     const hasOnMount = Boolean(json.hooks?.onMount);
-
     const domRefs = getRefs(json);
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
-
-    const stateVars = Object.keys(json?.state || {});
-
     const componentsUsed = Array.from(getComponentsUsed(json)).filter((item) => {
       return item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item);
     });
@@ -347,15 +395,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       css = tryFormat(css, 'css');
     }
 
-    const blockOptions = {
-      contextVars,
-      outputVars,
-      domRefs: [], // the template doesn't need the this keyword.
-      childComponents,
-    };
-
     let template = json.children
-      .map((item) => blockToAngular(item, options, blockOptions))
+      .map((item) => blockToAngular(item, options, { childComponents }))
       .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
@@ -365,14 +406,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'class',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(code, {
-          replaceWith: 'this.',
-          contextVars,
-          outputVars,
-          domRefs: Array.from(domRefs),
-          stateVars,
-        }),
+      valueMapper: processAngularCode({
+        replaceWith: 'this',
+        contextVars,
+        outputVars,
+        domRefs: Array.from(domRefs),
+        stateVars,
+      }),
     });
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
@@ -397,6 +437,20 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     Object.entries(json.meta.angularConfig || {}).forEach(([key, value]) => {
       componentMetadata[key] = value;
     });
+
+    const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
+      if (!json.defaultProps) return '';
+      const defalutPropsString = Object.keys(json.defaultProps)
+        .map((prop) => {
+          const value = json.defaultProps!.hasOwnProperty(prop)
+            ? json.defaultProps![prop]?.code
+            : 'undefined';
+          return `${prop}: ${value}`;
+        })
+        .join(',');
+      return `const defaultProps = {${defalutPropsString}};\n`;
+    };
+
     let str = dedent`
     import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
       options?.experimental?.inject ? 'Inject, forwardRef,' : ''
@@ -406,7 +460,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
-    ${!json.defaultProps ? '' : `const defaultProps = ${json5.stringify(json.defaultProps)}\n`}
+    ${getPropsDefinition({ json })}
     ${renderPreComponent({
       component: json,
       target: 'angular',
@@ -451,13 +505,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           const typeParameter = json.refs[ref].typeParameter;
           return `private _${ref}${typeParameter ? `: ${typeParameter}` : ''}${
             argument
-              ? ` = ${stripStateAndPropsRefs(argument, {
+              ? ` = ${processAngularCode({
                   replaceWith: 'this.',
                   contextVars,
                   outputVars,
                   domRefs: Array.from(domRefs),
                   stateVars,
-                })}`
+                })(argument)}`
               : ''
           };`;
         })
@@ -471,11 +525,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
               !json.hooks?.onInit
                 ? ''
                 : `
-              ${stripStateAndPropsRefs(json.hooks.onInit?.code, {
-                replaceWith: 'this.',
-                contextVars,
-                outputVars,
-              })}
+              ${json.hooks.onInit?.code}
               `
             }
           }
@@ -490,13 +540,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
                 !json.hooks?.onMount
                   ? ''
                   : `
-                ${stripStateAndPropsRefs(json.hooks.onMount?.code, {
-                  replaceWith: 'this.',
-                  contextVars,
-                  outputVars,
-                  domRefs: Array.from(domRefs),
-                  stateVars,
-                })}
+                ${json.hooks.onMount?.code}
                 `
               }
             }`
@@ -507,13 +551,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           ? ''
           : `ngAfterContentChecked() {
               ${json.hooks.onUpdate.reduce((code, hook) => {
-                code += stripStateAndPropsRefs(hook.code, {
-                  replaceWith: 'this.',
-                  contextVars,
-                  outputVars,
-                  domRefs: Array.from(domRefs),
-                  stateVars,
-                });
+                code += hook.code;
                 return code + '\n';
               }, '')}
             }`
@@ -523,21 +561,16 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         !json.hooks.onUnMount
           ? ''
           : `ngOnDestroy() {
-              ${stripStateAndPropsRefs(json.hooks.onUnMount.code, {
-                replaceWith: 'this.',
-                contextVars,
-                outputVars,
-                domRefs: Array.from(domRefs),
-                stateVars,
-              })}
+              ${json.hooks.onUnMount.code}
             }`
       }
 
     }
   `;
 
-    str = generateNgModule(str, json.name, componentsUsed, json, options.bootstrapMapper);
-
+    if (options.standalone !== true) {
+      str = generateNgModule(str, json.name, componentsUsed, json, options.bootstrapMapper);
+    }
     if (options.plugins) {
       str = runPreCodePlugins(str, options.plugins);
     }

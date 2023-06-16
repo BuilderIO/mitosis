@@ -1,27 +1,31 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
+import { pipe } from 'fp-ts/lib/function';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
+import { tryParseJson } from '../../helpers/json';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { tryParseJson } from '../../helpers/json';
 import { jsonToAst } from './ast';
+import { collectTypes, isTypeOrInterface } from './component-types';
+import { extractContextComponents } from './context';
+import { jsxElementToJson } from './element-parser';
+import { generateExports } from './exports';
+import { componentFunctionToJson } from './function-parser';
+import { isImportOrDefaultExport } from './helpers';
+import { collectModuleScopeHooks } from './hooks';
+import { handleImportDeclaration } from './imports';
+import { undoPropsDestructure } from './props';
 import { mapStateIdentifiers } from './state';
 import { Context, ParseMitosisOptions } from './types';
-import { collectMetadata } from './metadata';
-import { extractContextComponents } from './context';
-import { isImportOrDefaultExport } from './helpers';
-import { collectTypes, handleTypeImports, isTypeOrInterface } from './component-types';
-import { undoPropsDestructure } from './props';
-import { generateExports } from './exports';
-import { pipe } from 'fp-ts/lib/function';
-import { handleImportDeclaration } from './imports';
-import { jsxElementToJson } from './element-parser';
-import { componentFunctionToJson } from './function-parser';
 
-const jsxPlugin = require('@babel/plugin-syntax-jsx');
-const tsPreset = require('@babel/preset-typescript');
+import tsPlugin from '@babel/plugin-syntax-typescript';
+import tsPreset from '@babel/preset-typescript';
+import { HOOKS } from '../../constants/hooks';
+import { getMagicString, getTargetId, getUseTargetStatements } from './hooks/use-target';
 
 const { types } = babel;
+
+const typescriptBabelPreset = [tsPreset, { isTSX: true, allExtensions: true }];
 
 const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
   path.traverse({
@@ -49,26 +53,21 @@ export function parseJsx(
     ..._options,
   };
 
-  const output = babel.transform(jsx, {
+  const jsxToUse = options.typescript
+    ? jsx
+    : // strip typescript types by running through babel's TS preset.
+      (babel.transform(jsx, {
+        configFile: false,
+        babelrc: false,
+        presets: [typescriptBabelPreset],
+      })?.code as string);
+
+  const output = babel.transform(jsxToUse, {
     configFile: false,
     babelrc: false,
     comments: false,
-    presets: [
-      [
-        tsPreset,
-        {
-          isTSX: true,
-          allExtensions: true,
-          // If left to its default `false`, then this will strip away:
-          // - unused JS imports
-          // - types imports within regular JS import syntax
-          // When outputting to TS, we must set it to `true` to preserve these imports.
-          onlyRemoveTypeImports: options.typescript,
-        },
-      ],
-    ],
     plugins: [
-      jsxPlugin,
+      [tsPlugin, { isTSX: true }],
       (): babel.PluginObj<Context> => ({
         visitor: {
           JSXExpressionContainer(path, context) {
@@ -91,8 +90,6 @@ export function parseJsx(
               (statement) => isImportOrDefaultExport(statement) || isTypeOrInterface(statement),
             );
 
-            handleTypeImports(path, context);
-
             context.builder.component.exports = generateExports(path);
 
             subComponentFunctions = path.node.body
@@ -104,7 +101,7 @@ export function parseJsx(
 
             const preComponentCode = pipe(
               path.node.body.filter((statement) => !isImportOrDefaultExport(statement)),
-              (statements) => collectMetadata(statements, context.builder.component, options),
+              collectModuleScopeHooks(context.builder.component, options),
               types.program,
               generate,
               (generatorResult) => generatorResult.code,
@@ -120,6 +117,33 @@ export function parseJsx(
             if (types.isIdentifier(node.id)) {
               const name = node.id.name;
               if (name[0].toUpperCase() === name[0]) {
+                path.traverse({
+                  /**
+                   * Plugin to find all `useTarget()` assignment calls inside of the component function body
+                   * and replace them with a magic string.
+                   */
+                  CallExpression(path) {
+                    if (!types.isVariableDeclarator(path.parent)) return;
+                    if (!types.isCallExpression(path.node)) return;
+                    if (!types.isIdentifier(path.node.callee)) return;
+                    if (path.node.callee.name !== HOOKS.TARGET) return;
+
+                    const targetBlock = getUseTargetStatements(path.node);
+
+                    if (!targetBlock) return;
+
+                    const blockId = getTargetId(context.builder.component);
+
+                    // replace the useTarget() call with a magic string
+                    path.replaceWith(types.stringLiteral(getMagicString(blockId)));
+
+                    // store the target block in the component
+                    context.builder.component.targetBlocks = {
+                      ...context.builder.component.targetBlocks,
+                      [blockId]: targetBlock,
+                    };
+                  },
+                });
                 path.replaceWith(jsonToAst(componentFunctionToJson(node, context)));
               }
             }
@@ -140,21 +164,21 @@ export function parseJsx(
               babel.types.isTSInterfaceDeclaration(node.declaration) ||
               babel.types.isTSTypeAliasDeclaration(node.declaration)
             ) {
-              collectTypes(path.node, context);
+              collectTypes(path, context);
             }
           },
           TSTypeAliasDeclaration(path, context) {
-            collectTypes(path.node, context);
+            collectTypes(path, context);
           },
           TSInterfaceDeclaration(path, context) {
-            collectTypes(path.node, context);
+            collectTypes(path, context);
           },
         },
       }),
     ],
   });
 
-  const toParse = stripNewlinesInStrings(
+  const stringifiedMitosisComponent = stripNewlinesInStrings(
     output!
       .code!.trim()
       // Occasional issues where comments get kicked to the top. Full fix should strip these sooner
@@ -165,12 +189,13 @@ export function parseJsx(
       .replace(/^\({/, '{')
       .replace(/}\);$/, '}'),
   );
-  const parsed = tryParseJson(toParse);
 
-  mapStateIdentifiers(parsed);
-  extractContextComponents(parsed);
+  const mitosisComponent = tryParseJson(stringifiedMitosisComponent);
 
-  parsed.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
+  mapStateIdentifiers(mitosisComponent);
+  extractContextComponents(mitosisComponent);
 
-  return parsed;
+  mitosisComponent.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
+
+  return mitosisComponent;
 }

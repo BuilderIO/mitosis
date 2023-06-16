@@ -1,11 +1,11 @@
 import * as CSS from 'csstype';
-import { MitosisNode } from '../../types/mitosis-node';
-import traverse from 'traverse';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { isMitosisNode } from '../is-mitosis-node';
 import json5 from 'json5';
 import { pickBy } from 'lodash';
+import traverse from 'traverse';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisNode } from '../../types/mitosis-node';
 import { dashCase } from '../dash-case';
+import { isMitosisNode } from '../is-mitosis-node';
 
 export const nodeHasCss = (node: MitosisNode) => {
   return Boolean(
@@ -88,18 +88,17 @@ export const parseCssObject = (css: string) => {
   }
 };
 
-export const styleMapToCss = (map: StyleMap): string => {
-  let str = '';
-
-  for (const key in map) {
-    const value = map[key];
-
-    if (typeof value === 'string') {
-      str += `\n${dashCase(key)}: ${value};`;
-    } else {
-      // TODO: do nothing
-    }
+const parseCSSKey = (key: string) => {
+  // Allow custom CSS properties
+  if (key.startsWith('--')) {
+    return key;
   }
+  return dashCase(key);
+};
 
-  return str;
+export const styleMapToCss = (map: StyleMap): string => {
+  return Object.entries(map)
+    .filter(([key, value]) => typeof value === 'string')
+    .map(([key, value]) => `  ${parseCSSKey(key)}: ${value};`)
+    .join('\n');
 };

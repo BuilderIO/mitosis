@@ -1,11 +1,11 @@
-import dedent from 'dedent';
 import json5 from 'json5';
 import { pickBy } from 'lodash';
+import { dedent } from '../../helpers/dedent';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
-import { getContextValue } from './helpers';
-import { ToVueOptions } from './types';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
+import { getContextKey, getContextValue, processBinding } from './helpers';
+import { ToVueOptions } from './types';
 
 const getCompositionPropDefinition = ({
   options,
@@ -16,12 +16,21 @@ const getCompositionPropDefinition = ({
   component: MitosisComponent;
   props: string[];
 }) => {
+  const isTs = options.typescript;
   let str = 'const props = ';
 
   if (component.defaultProps) {
-    const generic = options.typescript ? `<${component.propsTypeRef}>` : '';
-    str += `withDefaults(defineProps${generic}(), ${json5.stringify(component.defaultProps)})`;
-  } else if (options.typescript && component.propsTypeRef && component.propsTypeRef !== 'any') {
+    const generic = isTs ? `<${component.propsTypeRef}>` : '';
+    const defalutPropsString = props
+      .map((prop) => {
+        const value = component.defaultProps!.hasOwnProperty(prop)
+          ? component.defaultProps![prop]?.code
+          : 'undefined';
+        return `${prop}: ${value}`;
+      })
+      .join(',');
+    str += `withDefaults(defineProps${generic}(), {${defalutPropsString}})`;
+  } else if (isTs && component.propsTypeRef && component.propsTypeRef !== 'any') {
     str += `defineProps<${component.propsTypeRef}>()`;
   } else {
     str += `defineProps(${json5.stringify(props)})`;
@@ -37,12 +46,14 @@ export function generateCompositionApiScript(
   onUpdateWithDeps: extendedHook[],
   onUpdateWithoutDeps: extendedHook[],
 ) {
+  const isTs = options.typescript;
   let refs = getStateObjectStringFromComponent(component, {
     data: true,
     functions: false,
     getters: false,
     format: 'variables',
-    valueMapper: (code) => `ref(${code})`,
+    valueMapper: (code, _, typeParameter) =>
+      isTs && typeParameter ? `ref<${typeParameter}>(${code})` : `ref(${code})`,
     keyPrefix: 'const',
   });
 
@@ -54,8 +65,8 @@ export function generateCompositionApiScript(
   });
 
   if (template.includes('_classStringToObject')) {
-    methods += ` function _classStringToObject(str) {
-      const obj = {};
+    methods += ` function _classStringToObject(str${isTs ? ': string' : ''}) {
+      const obj${isTs ? ': Record<string, boolean>' : ''} = {};
       if (typeof str !== 'string') { return obj }
       const classNames = str.trim().split(/\\s+/);
       for (const name of classNames) {
@@ -71,23 +82,24 @@ export function generateCompositionApiScript(
     ${props.length ? getCompositionPropDefinition({ component, props, options }) : ''}
     ${refs}
 
-    ${Object.keys(component.context.get)
-      ?.map((key) => `const ${key} = inject(${component.context.get[key].name})`)
+    ${Object.entries(component.context.get)
+      ?.map(([key, context]) => {
+        return `const ${key} = inject(${getContextKey(context)})`;
+      })
       .join('\n')}
 
     ${Object.values(component.context.set)
-      ?.map(
-        (contextSet) =>
-          `provide(${contextSet.name}, ${getContextValue({
-            json: component,
-            options,
-          })(contextSet)})`,
-      )
+      ?.map((contextSet) => {
+        const contextValue = getContextValue({ json: component, options })(contextSet);
+        const key = getContextKey(contextSet);
+
+        return `provide(${key}, ${contextValue})`;
+      })
       .join('\n')}
 
     ${Object.keys(component.refs)
       ?.map((key) => {
-        if (options.typescript) {
+        if (isTs) {
           return `const ${key} = ref<${component.refs[key].typeParameter}>()`;
         } else {
           return `const ${key} = ref(null)`;
@@ -124,10 +136,13 @@ export function generateCompositionApiScript(
 
     ${
       onUpdateWithDeps
-        ?.map(
-          (hook) =>
-            `watch(() => ${hook.deps}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} })`,
-        )
+        ?.map((hook) => {
+          return `watch(() => ${processBinding({
+            code: hook.deps || '',
+            options,
+            json: component,
+          })}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} }, {immediate: true})`;
+        })
         .join('\n') || ''
     }
     ${methods ?? ''}

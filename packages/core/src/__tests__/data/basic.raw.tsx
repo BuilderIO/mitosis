@@ -1,4 +1,4 @@
-import { useStore } from '@builder.io/mitosis';
+import { useState, useStore } from '@builder.io/mitosis';
 
 export const DEFAULT_VALUES = {
   name: 'Steve',
@@ -11,6 +11,9 @@ export default function MyBasicComponent(props: { id: string }) {
       return 'bar';
     },
   });
+
+  const [age, setAge] = useState<number>(1);
+  const [sports, setSports] = useState<Array<string>>(['']);
 
   return (
     <div

@@ -1,5 +1,5 @@
 import { componentToLiquid } from '../generators/liquid';
-import { runTestsForTarget } from './shared';
+import { runTestsForTarget } from './test-generator';
 
 describe('Liquid', () => {
   runTestsForTarget({ options: {}, target: 'liquid', generator: componentToLiquid });

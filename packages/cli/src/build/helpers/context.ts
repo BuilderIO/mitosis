@@ -1,16 +1,17 @@
 import {
+  contextToQwik,
   contextToReact,
   contextToRsc,
   contextToSolid,
   contextToSvelte,
   contextToVue,
-  contextToQwik,
   MitosisConfig,
   parseContext,
   Target,
 } from '@builder.io/mitosis';
 import { readFile } from 'fs-extra';
-import { upperFirst, camelCase, last } from 'lodash';
+import { camelCase, last, upperFirst } from 'lodash';
+import { checkShouldOutputTypeScript } from './options';
 
 export const generateContextFile = async ({
   path,
@@ -22,7 +23,7 @@ export const generateContextFile = async ({
   target: Target;
 }) => {
   // 'foo/bar/my-thing.context.ts' -> 'MyThing'
-  const name = upperFirst(camelCase(last(path.split('/')).split('.')[0]));
+  const name = upperFirst(camelCase(last(path.split('/'))?.split('.')[0]));
   const context = parseContext(await readFile(path, 'utf8'), { name });
   if (!context) {
     console.warn('Could not parse context from file', path);
@@ -33,20 +34,31 @@ export const generateContextFile = async ({
       case 'vue':
       case 'vue2':
       case 'vue3':
-        return contextToVue(context);
+        return contextToVue(options.options[target])({ context });
       case 'solid':
         return contextToSolid()({ context });
-      case 'react':
       case 'preact':
+        return contextToReact({
+          preact: true,
+          typescript: checkShouldOutputTypeScript({ options, target }),
+        })({
+          context,
+        });
+      case 'react':
       case 'reactNative':
-        return contextToReact()({ context });
+        return contextToReact({ typescript: checkShouldOutputTypeScript({ options, target }) })({
+          context,
+        });
       case 'rsc':
         return contextToRsc()({ context });
       case 'qwik':
         return contextToQwik()({ context });
       default:
         console.warn('Context files are not supported for this target. Outputting no-op');
-        return contextToVue(context);
+        return `
+        // Noop file
+        export default {};
+      `;
     }
   }
 };

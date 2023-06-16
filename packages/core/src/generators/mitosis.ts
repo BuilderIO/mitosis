@@ -1,18 +1,20 @@
-import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
+import { HOOKS } from '../constants/hooks';
+import { SELF_CLOSING_HTML_TAGS } from '../constants/html_tags';
+import { dedent } from '../helpers/dedent';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponents } from '../helpers/get-components';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { isRootTextNode } from '../helpers/is-root-text-node';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
-import { METADATA_HOOK_NAME, selfClosingTags } from '../parsers/jsx';
+import { checkHasState } from '../helpers/state';
 import { MitosisComponent } from '../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { blockToReact, componentToReact } from './react';
-import { checkHasState } from '../helpers/state';
 
 export interface ToMitosisOptions extends BaseTranspilerOptions {
   format: 'react' | 'legacy';
@@ -28,18 +30,24 @@ const isValidAttributeName = (str: string) => {
 export const blockToMitosis = (
   json: MitosisNode,
   toMitosisOptions: Partial<ToMitosisOptions> = {},
+  component: MitosisComponent,
 ): string => {
   const options: ToMitosisOptions = {
     format: DEFAULT_FORMAT,
     ...toMitosisOptions,
   };
   if (options.format === 'react') {
-    return blockToReact(json, {
-      format: 'lite',
-      stateType: 'useState',
-      stylesType: 'emotion',
-      prettier: options.prettier,
-    });
+    return blockToReact(
+      json,
+      {
+        format: 'lite',
+        stateType: 'useState',
+        stylesType: 'emotion',
+        type: 'dom',
+        prettier: options.prettier,
+      },
+      component,
+    );
   }
 
   if (checkIsForNode(json)) {
@@ -47,7 +55,7 @@ export const blockToMitosis = (
     return `<For each={${json.bindings.each?.code}}>
     {(${json.scope.forName}, index) =>
       ${needsWrapper ? '<>' : ''}
-        ${json.children.map((child) => blockToMitosis(child, options))}}
+        ${json.children.map((child) => blockToMitosis(child, options, component))}}
       ${needsWrapper ? '</>' : ''}
     </For>`;
   }
@@ -88,7 +96,7 @@ export const blockToMitosis = (
       }
     }
   }
-  if (selfClosingTags.has(json.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
 
@@ -99,7 +107,7 @@ export const blockToMitosis = (
   }
   str += '>';
   if (json.children) {
-    str += json.children.map((item) => blockToMitosis(item, options)).join('\n');
+    str += json.children.map((item) => blockToMitosis(item, options, component)).join('\n');
   }
 
   str += `</${json.name}>`;
@@ -150,7 +158,7 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
       return `${refName}${domRefs.has(refName) ? `.current` : ''}`;
     });
 
-    const addWrapper = json.children.length !== 1;
+    const addWrapper = json.children.length !== 1 || isRootTextNode(json);
 
     const components = Array.from(getComponents(json));
 
@@ -179,7 +187,7 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
 
     ${
       stringifiedUseMetadata && stringifiedUseMetadata !== '{}'
-        ? `${METADATA_HOOK_NAME}(${stringifiedUseMetadata})`
+        ? `${HOOKS.METADATA}(${stringifiedUseMetadata})`
         : ''
     }
 
@@ -192,7 +200,7 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
       ${!json.hooks.onUnMount?.code ? '' : `onUnMount(() => { ${json.hooks.onUnMount.code} })`}
 
       return (${addWrapper ? '<>' : ''}
-        ${json.children.map((item) => blockToMitosis(item, options)).join('\n')}
+        ${json.children.map((item) => blockToMitosis(item, options, component)).join('\n')}
         ${addWrapper ? '</>' : ''})
     }
 

@@ -1,4 +1,6 @@
 import { outputFileAsync } from 'fs-extra-promise';
+import { resolve } from 'path';
+import stripAnsi from 'strip-ansi';
 import { File } from '../generators/qwik';
 import { componentToQwik } from '../generators/qwik/component-generator';
 import { addComponent, createFileSet, FileSet } from '../generators/qwik/index';
@@ -12,7 +14,7 @@ import {
   convertBuilderContentToSymbolHierarchy,
   convertBuilderElementToMitosisComponent,
 } from '../symbols/symbol-processor';
-import { runTestsForTarget } from './shared';
+import { runTestsForTarget } from './test-generator';
 
 import todo from '../../../../examples/todo/src/components/todo.lite.tsx?raw';
 import todos from '../../../../examples/todo/src/components/todos.lite.tsx?raw';
@@ -20,12 +22,12 @@ import todos from '../../../../examples/todo/src/components/todos.lite.tsx?raw';
 const debugFiles = true;
 
 const debugOutput = async (fileSet: FileSet) => {
-  const testName = expect.getState().currentTestName;
-  const base = 'dist/test/' + testName?.split(' ').join('/') + '/';
+  const testName = stripAnsi(expect.getState().currentTestName as string);
+  const base = 'dist/test/' + testName.split(/[\s>]+/g).join('/') + '/';
   if (debugFiles) {
     for (const key in fileSet) {
       const file = (fileSet as any)[key];
-      await outputFileAsync(base + file.path, file.contents);
+      await outputFileAsync(resolve(base, file.path), file.contents);
     }
   }
 };
@@ -74,7 +76,9 @@ describe('qwik', () => {
 
   describe('hello_world', () => {
     test('stylesheet', async () => {
-      const component = builderContentToMitosisComponent(require('./qwik.test.hello_world.json'));
+      const component = builderContentToMitosisComponent(
+        require('./qwik/specs/qwik.test.hello_world.json'),
+      );
       const fileSet = createFileSet({ output: 'mjs' });
 
       addComponent(fileSet, component);
@@ -85,7 +89,7 @@ describe('qwik', () => {
 
   test('page-with-symbol', async () => {
     const component = builderContentToMitosisComponent(
-      require('./qwik.test.page-with-symbol.json'),
+      require('./qwik/specs/qwik.test.page-with-symbol.json'),
     );
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
@@ -95,7 +99,9 @@ describe('qwik', () => {
   });
 
   test('button', async () => {
-    const component = builderContentToMitosisComponent(require('./qwik.test.button.json'));
+    const component = builderContentToMitosisComponent(
+      require('./qwik/specs/qwik.test.button.json'),
+    );
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -104,7 +110,7 @@ describe('qwik', () => {
   });
 
   test('svg', async () => {
-    const component = builderContentToMitosisComponent(require('./qwik.test.svg.json'), {
+    const component = builderContentToMitosisComponent(require('./qwik/specs/qwik.test.svg.json'), {
       includeBuilderExtras: true,
       preserveTextBlocks: true,
     });
@@ -116,10 +122,13 @@ describe('qwik', () => {
   });
 
   test('Image', async () => {
-    const component = builderContentToMitosisComponent(require('./qwik.test.image.json'), {
-      includeBuilderExtras: true,
-      preserveTextBlocks: true,
-    });
+    const component = builderContentToMitosisComponent(
+      require('./qwik/specs/qwik.test.image.json'),
+      {
+        includeBuilderExtras: true,
+        preserveTextBlocks: true,
+      },
+    );
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -128,10 +137,13 @@ describe('qwik', () => {
   });
 
   test('Image.slow', async () => {
-    const component = builderContentToMitosisComponent(require('./qwik.test.image.json'), {
-      includeBuilderExtras: true,
-      preserveTextBlocks: true,
-    });
+    const component = builderContentToMitosisComponent(
+      require('./qwik/specs/qwik.test.image.json'),
+      {
+        includeBuilderExtras: true,
+        preserveTextBlocks: true,
+      },
+    );
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -140,10 +152,13 @@ describe('qwik', () => {
   });
 
   test('Accordion', async () => {
-    const component = builderContentToMitosisComponent(require('./qwik.test.accordion.json'), {
-      includeBuilderExtras: true,
-      preserveTextBlocks: true,
-    });
+    const component = builderContentToMitosisComponent(
+      require('./qwik/specs/qwik.test.accordion.json'),
+      {
+        includeBuilderExtras: true,
+        preserveTextBlocks: true,
+      },
+    );
     compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
     const fileSet = createFileSet({ output: 'mjs', jsx: true });
 
@@ -153,10 +168,13 @@ describe('qwik', () => {
   });
 
   test('For', async () => {
-    const component = builderContentToMitosisComponent(require('./qwik.test.for-loop.json'), {
-      includeBuilderExtras: true,
-      preserveTextBlocks: true,
-    });
+    const component = builderContentToMitosisComponent(
+      require('./qwik/specs/qwik.test.for-loop.json'),
+      {
+        includeBuilderExtras: true,
+        preserveTextBlocks: true,
+      },
+    );
     compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
     const fileSet = createFileSet({ output: 'mjs', jsx: true });
 
@@ -169,7 +187,7 @@ describe('qwik', () => {
     test('bindings', async () => {
       // https://builder.io/content/0937630137c94676ba24f95d9d12e426/edit
       // https://cdn.builder.io/api/v2/content/page/0937630137c94676ba24f95d9d12e426?apiKey=23dfd7cef1104af59f281d58ec525923&noTraverse=false&preserveAllFields=true&single=true&cachebust=true
-      const content = require('./qwik.test.component-binding.json');
+      const content = require('./qwik/specs/qwik.test.component-binding.json');
       const state: Record<string, any> = {};
       const hierarchy = convertBuilderContentToSymbolHierarchy(content, {
         collectComponentState: state,
@@ -192,7 +210,7 @@ describe('qwik', () => {
       expect(toObj(fileSet)).toMatchSnapshot();
     });
     test('component inputs', async () => {
-      const content = require('./qwik.test.component-inputs.json');
+      const content = require('./qwik/specs/qwik.test.component-inputs.json');
       const state: Record<string, any> = {};
       expect(state).toMatchSnapshot();
       const fileSet = createFileSet({ output: 'cjs', jsx: true });
@@ -208,7 +226,7 @@ describe('qwik', () => {
   });
 
   test('show-hide', async () => {
-    const content = require('./qwik.test.show-hide.json');
+    const content = require('./qwik/specs/qwik.test.show-hide.json');
     const state: Record<string, any> = {};
     expect(state).toMatchSnapshot();
     const fileSet = createFileSet({ output: 'mjs', jsx: true });
@@ -225,7 +243,7 @@ describe('qwik', () => {
   test('bindings', async () => {
     // https://builder.io/content/5d5a2d612df542978577d83c0aefad1e
     // https://cdn.builder.io/api/v2/content/page/5d5a2d612df542978577d83c0aefad1e?apiKey=23dfd7cef1104af59f281d58ec525923
-    const content = require('./qwik.test.bindings.json');
+    const content = require('./qwik/specs/qwik.test.bindings.json');
     const fileSet = createFileSet({ output: 'cjs', jsx: false });
     const component = builderContentToMitosisComponent(content, {
       includeBuilderExtras: true,
@@ -239,7 +257,7 @@ describe('qwik', () => {
   });
 
   test('for-loop.bindings', async () => {
-    const component = require('./qwik.test.for-loop.binding.json');
+    const component = require('./qwik/specs/qwik.test.for-loop.binding.json');
     const fileSet = createFileSet({ output: 'cjs', jsx: false });
     compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
     addComponent(fileSet, component);
@@ -248,7 +266,7 @@ describe('qwik', () => {
   });
 
   test('mount', async () => {
-    const content = require('./qwik.test.mount.json');
+    const content = require('./qwik/specs/qwik.test.mount.json');
     const fileSet = createFileSet({ output: 'cjs', jsx: false });
     const component = builderContentToMitosisComponent(content, {
       includeBuilderExtras: true,

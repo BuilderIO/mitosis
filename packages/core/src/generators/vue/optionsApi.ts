@@ -1,21 +1,35 @@
 import json5 from 'json5';
-import { uniq, kebabCase, size } from 'lodash';
+import { kebabCase, size, uniq } from 'lodash';
+import { DefaultProps, PropsDefinition } from 'vue/types/options';
 import { getComponentsUsed } from '../../helpers/get-components-used';
 import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
-import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
-import { PropsDefinition, DefaultProps } from 'vue/types/options';
-import { encodeQuotes, getContextProvideString, getOnUpdateHookName } from './helpers';
+import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
+import { encodeQuotes, getContextKey, getContextValue, getOnUpdateHookName } from './helpers';
 import { ToVueOptions } from './types';
+
+const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) => {
+  return `{
+    ${Object.values(json.context.set)
+      .map((setVal) => {
+        const key = getContextKey(setVal);
+        return `[${key}]: ${getContextValue({ options, json, thisPrefix: '_this' })(setVal)}`;
+      })
+      .join(',')}
+  }`;
+};
 
 function getContextInjectString(component: MitosisComponent, options: ToVueOptions) {
   let str = '{';
 
-  for (const key in component.context.get) {
+  const contextGetters = component.context.get;
+
+  for (const key in contextGetters) {
+    const context = contextGetters[key];
     str += `
-      ${key}: "${encodeQuotes(component.context.get[key].name)}",
+      ${key}: ${encodeQuotes(getContextKey(context))},
     `;
   }
 
@@ -61,6 +75,7 @@ export function generateOptionsApiScript(
   const { exports: localExports } = component;
   const localVarAsData: string[] = [];
   const localVarAsFunc: string[] = [];
+  const isTs = options.typescript;
   if (localExports) {
     Object.keys(localExports).forEach((key) => {
       if (localExports[key].usedInLocal) {
@@ -106,8 +121,8 @@ export function generateOptionsApiScript(
   if (includeClassMapHelper) {
     functionsString = functionsString.replace(
       /}\s*$/,
-      `_classStringToObject(str) {
-        const obj = {};
+      `_classStringToObject(str${isTs ? ': string' : ''}) {
+        const obj${isTs ? ': Record<string, boolean>' : ''} = {};
         if (typeof str !== 'string') { return obj }
         const classNames = str.trim().split(/\\s+/);
         for (const name of classNames) {
@@ -136,25 +151,37 @@ export function generateOptionsApiScript(
 
   const componentsUsed = uniq([...componentsUsedInTemplate, ...importedComponents]);
 
-  let propsDefinition: PropsDefinition<DefaultProps> = Array.from(props).filter(
-    (prop) => prop !== 'children' && prop !== 'class',
-  );
-
-  // add default props (if set)
-  if (component.defaultProps) {
-    propsDefinition = propsDefinition.reduce(
-      (propsDefinition: DefaultProps, curr: string) => (
-        (propsDefinition[curr] = component.defaultProps?.hasOwnProperty(curr)
-          ? { default: component.defaultProps[curr] }
-          : {}),
-        propsDefinition
-      ),
-      {},
+  const getPropDefinition = ({
+    component,
+    props,
+  }: {
+    component: MitosisComponent;
+    props: string[];
+  }) => {
+    const propsDefinition: PropsDefinition<DefaultProps> = Array.from(props).filter(
+      (prop) => prop !== 'children' && prop !== 'class',
     );
-  }
+    let str = 'props: ';
+
+    if (component.defaultProps) {
+      const defalutPropsString = propsDefinition
+        .map((prop) => {
+          const value = component.defaultProps!.hasOwnProperty(prop)
+            ? component.defaultProps![prop]?.code
+            : 'undefined';
+          return `${prop}: { default: ${value} }`;
+        })
+        .join(',');
+
+      str += `{${defalutPropsString}}`;
+    } else {
+      str += `${json5.stringify(propsDefinition)}`;
+    }
+    return `${str},`;
+  };
 
   return `
-        export default {
+        export default ${options.defineComponent ? 'defineComponent(' : ''} {
         ${
           !component.name
             ? ''
@@ -163,18 +190,21 @@ export function generateOptionsApiScript(
               }${kebabCase(component.name)}',`
         }
         ${generateComponents(componentsUsed, options)}
-        ${props.length ? `props: ${json5.stringify(propsDefinition)},` : ''}
+        ${props.length ? getPropDefinition({ component, props }) : ''}
         ${
           dataString.length < 4
             ? ''
             : `
-        data: () => (${dataString}),
+        data() {
+          return ${dataString}
+        },
         `
         }
 
         ${
           size(component.context.set)
             ? `provide() {
+                const _this = this;
                 return ${getContextProvideString(component, options)}
               },`
             : ''
@@ -211,10 +241,7 @@ export function generateOptionsApiScript(
             ${onUpdateWithDeps
               .map(
                 (hook, index) =>
-                  `${getOnUpdateHookName(index)}() {
-                  ${hook.code}
-                  }
-                `,
+                  `${getOnUpdateHookName(index)}: { handler() { ${hook.code} }, immediate: true }`,
               )
               .join(',')}
           },`
@@ -231,7 +258,7 @@ export function generateOptionsApiScript(
         ${
           getterString.length < 4
             ? ''
-            : ` 
+            : `
           computed: ${getterString},
         `
         }
@@ -245,5 +272,6 @@ export function generateOptionsApiScript(
         ${Object.entries(component.meta.vueConfig || {})
           .map(([k, v]) => `${k}: ${v}`)
           .join(',')}
-      }`;
+        }
+        ${options.defineComponent ? ')' : ''}`;
 }

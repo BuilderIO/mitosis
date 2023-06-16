@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import isMitosisPath from '../isMitosisPath';
 
 describe('is mitosis file helper', () => {

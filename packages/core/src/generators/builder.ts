@@ -1,22 +1,22 @@
-import { ForNode, MitosisNode } from '../types/mitosis-node';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { fastClone } from '../helpers/fast-clone';
-import dedent from 'dedent';
-import { format } from 'prettier/standalone';
 import json5 from 'json5';
-import { isUpperCase } from '../helpers/is-upper-case';
-import { mediaQueryRegex, sizes } from '../constants/media-sizes';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { isComponent } from '../helpers/is-component';
-import { hasProps } from '../helpers/has-props';
 import { attempt, mapValues, omit, omitBy, set } from 'lodash';
-import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { format } from 'prettier/standalone';
 import traverse from 'traverse';
-import { BaseTranspilerOptions, TranspilerArgs } from '../types/transpiler';
-import { hashCodeAsString } from '../symbols/symbol-processor';
+import { mediaQueryRegex, sizes } from '../constants/media-sizes';
+import { dedent } from '../helpers/dedent';
+import { fastClone } from '../helpers/fast-clone';
+import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { hasProps } from '../helpers/has-props';
+import { isComponent } from '../helpers/is-component';
+import { isUpperCase } from '../helpers/is-upper-case';
+import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { checkHasState } from '../helpers/state';
+import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
+import { hashCodeAsString } from '../symbols/symbol-processor';
+import { ForNode, MitosisNode } from '../types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerArgs } from '../types/transpiler';
 
 export interface ToBuilderOptions extends BaseTranspilerOptions {
   includeIds?: boolean;
@@ -342,7 +342,6 @@ export const componentToBuilder =
       if (isBuilderElement(el)) {
         const value = subComponentMap[el.component?.name!];
         if (value) {
-          console.log('applied?');
           set(el, 'component.options.symbol.content', value);
         }
       }

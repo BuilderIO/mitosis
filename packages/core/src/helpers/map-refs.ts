@@ -1,23 +1,22 @@
+import type { NodePath } from '@babel/core';
+import { types } from '@babel/core';
 import traverse from 'traverse';
-import * as babel from '@babel/core';
 
 import { MitosisComponent } from '../types/mitosis-component';
+import { babelTransformExpression } from './babel-transform';
 import { getRefs } from './get-refs';
 import { isMitosisNode } from './is-mitosis-node';
-import { babelTransformExpression } from './babel-transform';
 import { SETTER } from './patterns';
-
-const tsPreset = require('@babel/preset-typescript');
 
 export type RefMapper = (refName: string) => string;
 
 const replaceRefsInString = (code: string, refs: string[], mapper: RefMapper) => {
   return babelTransformExpression(code, {
-    Identifier(path: babel.NodePath<babel.types.Identifier>) {
+    Identifier(path: NodePath<types.Identifier>) {
       const name = path.node.name;
       const isRef = refs.includes(name);
       if (isRef) {
-        path.replaceWith(babel.types.identifier(mapper(name)));
+        path.replaceWith(types.identifier(mapper(name)));
       }
     },
   });

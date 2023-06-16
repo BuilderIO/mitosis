@@ -1,15 +1,17 @@
-import ts from 'typescript';
 import { parseTemplate } from '@angular/compiler';
-import { Node, Element, Template, Text, BoundText } from '@angular/compiler/src/render3/r3_ast';
 import { ASTWithSource } from '@angular/compiler/src/expression_parser/ast';
+import { BoundText, Element, Node, Template, Text } from '@angular/compiler/src/render3/r3_ast';
+import { types } from '@babel/core';
+import { omit } from 'lodash';
+import ts from 'typescript';
+import { babelTransformCode } from '../helpers/babel-transform';
+import { createSingleBinding } from '../helpers/bindings';
+import { capitalize } from '../helpers/capitalize';
 import { createMitosisComponent } from '../helpers/create-mitosis-component';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
-import { MitosisNode } from '../types/mitosis-node';
-import { omit } from 'lodash';
-import { babelTransformCode } from '../helpers/babel-transform';
-import { types } from '@babel/core';
+import { Dictionary } from '../helpers/typescript';
 import { MitosisComponent } from '../types/mitosis-component';
-import { capitalize } from '../helpers/capitalize';
+import { Binding, MitosisNode } from '../types/mitosis-node';
 
 const getTsAST = (code: string) => {
   return ts.createSourceFile('code.ts', code, ts.ScriptTarget.Latest, true);
@@ -58,9 +60,9 @@ const angularTemplateNodeToMitosisNode = (
       return createMitosisNode({
         name: 'Show',
         bindings: {
-          when: {
+          when: createSingleBinding({
             code: transformBinding((ngIf.value as ASTWithSource).source!, options),
-          },
+          }),
         },
         children: [angularTemplateNodeToMitosisNode(omit(node, 'templateAttrs'), options)],
       });
@@ -73,7 +75,7 @@ const angularTemplateNodeToMitosisNode = (
       return createMitosisNode({
         name: 'For',
         bindings: {
-          each: { code: transformBinding(expression, options) },
+          each: createSingleBinding({ code: transformBinding(expression, options) }),
         },
         scope: {
           forName: itemName,
@@ -85,22 +87,22 @@ const angularTemplateNodeToMitosisNode = (
 
   if (isElement(node)) {
     const properties: Record<string, string> = {};
-    const bindings: Record<string, { code: string; arguments?: string[] }> = {};
+    const bindings: Dictionary<Binding> = {};
 
     for (const input of node.inputs) {
-      bindings[input.name] = {
+      bindings[input.name] = createSingleBinding({
         code: transformBinding((input.value as ASTWithSource).source!, options),
-      };
+      });
     }
     for (const output of node.outputs) {
-      bindings['on' + capitalize(output.name)] = {
+      bindings['on' + capitalize(output.name)] = createSingleBinding({
         code: transformBinding(
           (output.handler as ASTWithSource)
             .source! // TODO: proper reference replace
             .replace(/\$event/g, 'event'),
           options,
         ),
-      };
+      });
     }
     for (const attribute of node.attributes) {
       properties[attribute.name] = attribute.value;
@@ -109,7 +111,7 @@ const angularTemplateNodeToMitosisNode = (
     return createMitosisNode({
       name: node.name,
       properties,
-      bindings,
+      bindings: bindings,
       children: node.children.map((node) => angularTemplateNodeToMitosisNode(node, options)),
     });
   }

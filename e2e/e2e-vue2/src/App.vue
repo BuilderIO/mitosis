@@ -1,15 +1,14 @@
 <script lang="ts">
-// @ts-ignore
-import { MyComponent } from '@builder.io/e2e-app/vue2';
+import { E2eApp } from '@e2e-app/vue';
 
 export default {
   name: 'app',
   components: {
-    MyComponent,
+    E2eApp,
   },
 };
 </script>
 
 <template>
-  <MyComponent></MyComponent>
+  <E2eApp></E2eApp>
 </template>

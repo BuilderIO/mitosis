@@ -4,13 +4,15 @@ import {
   GeneratorOptions,
   MitosisComponent,
   parseJsx,
+  parseSvelte,
+  Plugin,
   Target,
   targets,
 } from '@builder.io/mitosis';
 import { GluegunCommand } from 'gluegun';
 import { join } from 'path';
-import { UnionToIntersection } from '../types';
 import { getMitosisConfig } from '../helpers/get-mitosis-config';
+import { UnionToIntersection } from '../types';
 
 type GeneratorOpts = GeneratorOptions[Target];
 
@@ -42,16 +44,16 @@ const command: GluegunCommand = {
 
     const header = opts.header;
 
-    const plugins = [];
+    const plugins: Plugin[] = [];
 
     if (!opts.builderComponents) {
       plugins.push(compileAwayBuilderComponents());
     }
 
     const mitosisConfig = getMitosisConfig(configRelPath);
-    const generatorOptions = mitosisConfig?.options?.[to];
+    const generatorOptions = mitosisConfig?.options?.[to as keyof GeneratorOptions];
 
-    const generatorOpts: Partial<{ [K in AllGeneratorOptionKeys]: any }> = {
+    const generatorOpts = {
       ...generatorOptions,
       prettier: opts.prettier ?? true,
       plugins: [...plugins, ...(generatorOptions?.plugins || [])],
@@ -61,11 +63,12 @@ const command: GluegunCommand = {
       stylesType: opts.styles,
       stateType: opts.state,
       type: opts.type,
+      api: opts.api,
       cssNamespace: opts.cssNamespace,
-    };
+    } as any as Partial<{ [K in AllGeneratorOptionKeys]: any }>;
 
     // Positional Args
-    const paths = parameters.array;
+    const paths = parameters.array || [];
 
     // Flag configuration state
     const isStdin = parameters.first === '-' || paths.length === 0;
@@ -104,7 +107,7 @@ const command: GluegunCommand = {
       let output: any;
 
       if (outDir) {
-        out = join(outDir, path);
+        out = join(outDir, path!);
       }
 
       // Validate that "--out" file doesn't already exist
@@ -118,13 +121,16 @@ const command: GluegunCommand = {
 
         switch (from_) {
           case 'mitosis':
-            json = parseJsx(data, { typescript: generatorOpts.typescript });
+            json = parseJsx(data!, { typescript: generatorOpts.typescript });
             break;
 
           case 'builder':
-            json = builderContentToMitosisComponent(JSON.parse(data));
+            json = builderContentToMitosisComponent(JSON.parse(data!));
             break;
 
+          case 'svelte':
+            json = await parseSvelte(data!);
+            break;
           default:
             print.error(`${from_} is not a valid input type`);
             process.exit(1);
@@ -179,11 +185,11 @@ function listTargets() {
 }
 
 function isTarget(term: string): term is Target {
-  return typeof targets[term] !== 'undefined';
+  return typeof targets[term as keyof typeof targets] !== 'undefined';
 }
 
 async function readStdin() {
-  const chunks = [];
+  const chunks: Buffer[] = [];
 
   await new Promise((res) =>
     process.stdin

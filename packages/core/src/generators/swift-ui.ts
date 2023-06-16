@@ -1,6 +1,5 @@
-import dedent from 'dedent';
-import { tryPrettierFormat } from '../helpers/try-prettier-format';
 import traverse from 'traverse';
+import { dedent } from '../helpers/dedent';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { format } from '../helpers/generic-format';
@@ -8,11 +7,12 @@ import { getStateObjectStringFromComponent } from '../helpers/get-state-object-s
 import { getStyles } from '../helpers/get-styles';
 import isChildren from '../helpers/is-children';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
+import { checkHasState } from '../helpers/state';
+import { tryPrettierFormat } from '../helpers/try-prettier-format';
 import { MitosisComponent } from '../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { MitosisStyles } from '../types/mitosis-styles';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { checkHasState } from '../helpers/state';
 
 export type ToSwiftOptions = BaseTranspilerOptions;
 
