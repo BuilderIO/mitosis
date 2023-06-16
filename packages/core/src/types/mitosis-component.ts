@@ -1,6 +1,7 @@
 import { Dictionary } from '../helpers/typescript';
 import { Target } from './config';
 import { JSONObject } from './json';
+import { ComponentMetadata } from './metadata';
 import { MitosisNode } from './mitosis-node';
 
 /**
@@ -88,7 +89,7 @@ export type MitosisComponent = {
   imports: MitosisImport[];
   exports?: MitosisExports;
   meta: JSONObject & {
-    useMetadata?: JSONObject;
+    useMetadata?: ComponentMetadata;
   };
   inputs: MitosisComponentInput[];
   state: MitosisState;

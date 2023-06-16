@@ -21,5 +21,5 @@ export const getContextType = ({
   component: MitosisComponent;
   context: ContextGetInfo | ContextSetInfo;
 }): ContextType => {
-  return (component.meta.useMetadata?.context as any)?.[context.name] || context.type || 'normal';
+  return component.meta.useMetadata?.context?.[context.name] || context.type || 'normal';
 };
