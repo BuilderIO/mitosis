@@ -6,15 +6,15 @@ exports[`Context > Parse context 1`] = `
   "name": "SimpleExample",
   "value": {
     "content": {
-      "code": null,
+      "code": "null",
       "type": "property",
     },
     "context": {
-      "code": {},
+      "code": "{}",
       "type": "property",
     },
     "foo": {
-      "code": "bar",
+      "code": "'bar'",
       "type": "property",
     },
     "fooUpperCase": {
@@ -30,7 +30,7 @@ exports[`Context > Parse context 1`] = `
       "type": "method",
     },
     "state": {
-      "code": {},
+      "code": "{}",
       "type": "property",
     },
   },
@@ -104,10 +104,12 @@ exports[`Context > Use and set context in complex components 1`] = `
           "bindings": {
             "state.properties": {
               "code": "state.properties",
+              "spreadType": "normal",
               "type": "spread",
             },
             "style": {
               "code": "state.css",
+              "type": "single",
             },
           },
           "children": [
@@ -128,6 +130,7 @@ exports[`Context > Use and set context in complex components 1`] = `
               "bindings": {
                 "block": {
                   "code": "state.useBlock",
+                  "type": "single",
                 },
               },
               "children": [],
@@ -153,6 +156,7 @@ exports[`Context > Use and set context in complex components 1`] = `
               "bindings": {
                 "when": {
                   "code": "state.componentRef",
+                  "type": "single",
                 },
               },
               "children": [
@@ -161,9 +165,11 @@ exports[`Context > Use and set context in complex components 1`] = `
                   "bindings": {
                     "children": {
                       "code": "state.useBlock.children",
+                      "type": "single",
                     },
                     "state.componentOptions": {
                       "code": "state.componentOptions",
+                      "spreadType": "normal",
                       "type": "spread",
                     },
                   },
@@ -196,6 +202,7 @@ exports[`Context > Use and set context in complex components 1`] = `
               "bindings": {
                 "when": {
                   "code": "!state.componentRef && state.useBlock.children && state.useBlock.children.length",
+                  "type": "single",
                 },
               },
               "children": [
@@ -216,6 +223,7 @@ exports[`Context > Use and set context in complex components 1`] = `
                   "bindings": {
                     "each": {
                       "code": "state.useBlock.children",
+                      "type": "single",
                     },
                   },
                   "children": [
@@ -224,9 +232,11 @@ exports[`Context > Use and set context in complex components 1`] = `
                       "bindings": {
                         "block": {
                           "code": "child",
+                          "type": "single",
                         },
                         "index": {
                           "code": "index",
+                          "type": "single",
                         },
                       },
                       "children": [],
@@ -324,54 +334,63 @@ exports[`Context > Use and set context in complex components 1`] = `
   "hooks": {},
   "imports": [
     {
-      "imports": {
-        "getBlockComponentOptions": "getBlockComponentOptions",
-      },
-      "path": "../functions/get-block-component-options",
-    },
-    {
-      "imports": {
-        "getBlockProperties": "getBlockProperties",
-      },
-      "path": "../functions/get-block-properties",
-    },
-    {
-      "imports": {
-        "getBlockStyles": "getBlockStyles",
-      },
-      "path": "../functions/get-block-styles",
-    },
-    {
-      "imports": {
-        "getBlockTag": "getBlockTag",
-      },
-      "path": "../functions/get-block-tag",
-    },
-    {
-      "imports": {
-        "components": "components",
-      },
-      "path": "../functions/register-component",
-    },
-    {
+      "importKind": "value",
       "imports": {
         "BuilderContext": "default",
       },
       "path": "../context/builder.context.lite",
     },
     {
+      "importKind": "value",
       "imports": {
         "getBlockActions": "getBlockActions",
       },
       "path": "../functions/get-block-actions",
     },
     {
+      "importKind": "value",
+      "imports": {
+        "getBlockComponentOptions": "getBlockComponentOptions",
+      },
+      "path": "../functions/get-block-component-options",
+    },
+    {
+      "importKind": "value",
+      "imports": {
+        "getBlockProperties": "getBlockProperties",
+      },
+      "path": "../functions/get-block-properties",
+    },
+    {
+      "importKind": "value",
+      "imports": {
+        "getBlockStyles": "getBlockStyles",
+      },
+      "path": "../functions/get-block-styles",
+    },
+    {
+      "importKind": "value",
+      "imports": {
+        "getBlockTag": "getBlockTag",
+      },
+      "path": "../functions/get-block-tag",
+    },
+    {
+      "importKind": "value",
       "imports": {
         "getProcessedBlock": "getProcessedBlock",
       },
       "path": "../functions/get-processed-block",
     },
     {
+      "importKind": "value",
+      "imports": {
+        "components": "components",
+      },
+      "path": "../functions/register-component",
+    },
+    {
+      "importKind": "value",
       "imports": {
         "BlockStyles": "default",
       },
@@ -381,7 +400,6 @@ exports[`Context > Use and set context in complex components 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RenderBlock",
-  "propsTypeRef": "RenderBlockProps",
   "refs": {},
   "state": {
     "actions": {
@@ -402,7 +420,7 @@ exports[`Context > Use and set context in complex components 1`] = `
     return null;
   }
 
-  const ref = components[state.useBlock.component?.name!];
+  const ref = components[state.useBlock.component?.name];
 
   if (componentName && !ref) {
     // TODO: Public doc page with more info about this message
@@ -447,7 +465,7 @@ exports[`Context > Use and set context in complex components 1`] = `
     },
     "tagName": {
       "code": "get tagName() {
-  return (getBlockTag(state.useBlock) as any);
+  return getBlockTag(state.useBlock);
 }",
       "type": "getter",
     },
@@ -463,34 +481,23 @@ exports[`Context > Use and set context in complex components 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export type RenderBlockProps = {
-  block: BuilderBlock;
-  index: number;
-};",
-  ],
 }
 `;
 
 exports[`Context > Use and set context in complex components 2`] = `
 "import * as React from \\"react\\";
 import { useContext } from \\"react\\";
-
-export type RenderBlockProps = {
-  block: BuilderBlock;
-  index: number;
-};
+import BuilderContext from \\"../context/builder.context.js\\";
+import { getBlockActions } from \\"../functions/get-block-actions\\";
 import { getBlockComponentOptions } from \\"../functions/get-block-component-options\\";
 import { getBlockProperties } from \\"../functions/get-block-properties\\";
 import { getBlockStyles } from \\"../functions/get-block-styles\\";
 import { getBlockTag } from \\"../functions/get-block-tag\\";
-import { components } from \\"../functions/register-component\\";
-import BuilderContext from \\"../context/builder.context.js\\";
-import { getBlockActions } from \\"../functions/get-block-actions\\";
 import { getProcessedBlock } from \\"../functions/get-processed-block\\";
+import { components } from \\"../functions/register-component\\";
 import BlockStyles from \\"./block-styles.lite\\";
 
-export default function RenderBlock(props: RenderBlockProps) {
+function RenderBlock(props) {
   function component() {
     const componentName = useBlock().component?.name;
 
@@ -503,8 +510,8 @@ export default function RenderBlock(props: RenderBlockProps) {
     if (componentName && !ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-        Could not find a registered component named \\"\${componentName}\\".
-        If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
     }
 
     return ref;
@@ -580,6 +587,8 @@ export default function RenderBlock(props: RenderBlockProps) {
     </>
   );
 }
+
+export default RenderBlock;
 "
 `;
 
@@ -644,6 +653,7 @@ exports[`Context > Use and set context in components 1`] = `
                       "bindings": {
                         "_text": {
                           "code": "foo.value",
+                          "type": "single",
                         },
                       },
                       "children": [],
@@ -679,6 +689,7 @@ exports[`Context > Use and set context in components 1`] = `
                       "bindings": {
                         "_text": {
                           "code": "foo2.value",
+                          "type": "single",
                         },
                       },
                       "children": [],
@@ -714,6 +725,7 @@ exports[`Context > Use and set context in components 1`] = `
                       "bindings": {
                         "_text": {
                           "code": "foo3.value",
+                          "type": "single",
                         },
                       },
                       "children": [],
@@ -809,7 +821,7 @@ exports[`Context > Use and set context in components 1`] = `
             "type": "method",
           },
           "foo": {
-            "code": "bar",
+            "code": "'bar'",
             "type": "property",
           },
         },
@@ -818,7 +830,7 @@ exports[`Context > Use and set context in components 1`] = `
         "name": "Context2",
         "value": {
           "bar": {
-            "code": "baz",
+            "code": "'baz'",
             "type": "property",
           },
         },
@@ -833,7 +845,7 @@ exports[`Context > Use and set context in components 1`] = `
             "type": "method",
           },
           "foo": {
-            "code": "bar",
+            "code": "'bar'",
             "type": "property",
           },
         },
@@ -842,7 +854,7 @@ exports[`Context > Use and set context in components 1`] = `
         "name": "ReactiveContext2",
         "value": {
           "bar": {
-            "code": "baz",
+            "code": "'baz'",
             "type": "property",
           },
         },
@@ -857,7 +869,7 @@ exports[`Context > Use and set context in components 1`] = `
             "type": "method",
           },
           "foo": {
-            "code": "bar",
+            "code": "'bar'",
             "type": "property",
           },
         },
@@ -866,7 +878,7 @@ exports[`Context > Use and set context in components 1`] = `
         "name": "ReactiveProxyContext2",
         "value": {
           "bar": {
-            "code": "baz",
+            "code": "'baz'",
             "type": "property",
           },
         },
@@ -877,36 +889,42 @@ exports[`Context > Use and set context in components 1`] = `
   "hooks": {},
   "imports": [
     {
+      "importKind": "value",
       "imports": {
         "Context1": "default",
       },
       "path": "@dummy/1",
     },
     {
+      "importKind": "value",
       "imports": {
         "Context2": "default",
       },
       "path": "@dummy/2",
     },
     {
+      "importKind": "value",
       "imports": {
         "ReactiveContext1": "default",
       },
       "path": "@dummy/3",
     },
     {
+      "importKind": "value",
       "imports": {
         "ReactiveContext2": "default",
       },
       "path": "@dummy/4",
     },
     {
+      "importKind": "value",
       "imports": {
         "ReactiveProxyContext1": "default",
       },
       "path": "@dummy/5",
     },
     {
+      "importKind": "value",
       "imports": {
         "ReactiveProxyContext2": "default",
       },
@@ -925,26 +943,15 @@ exports[`Context > Use and set context in components 1`] = `
     },
   },
   "name": "ComponentWithContext",
-  "propsTypeRef": "ComponentWithContextProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ComponentWithContextProps {
-  content: string
-}",
-  ],
 }
 `;
 
 exports[`Context > Use and set context in components 2`] = `
 "import * as React from \\"react\\";
 import { useContext } from \\"react\\";
-
-export interface ComponentWithContextProps {
-  content: string;
-}
-
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 import ReactiveContext1 from \\"@dummy/3\\";
@@ -952,7 +959,7 @@ import ReactiveContext2 from \\"@dummy/4\\";
 import ReactiveProxyContext1 from \\"@dummy/5\\";
 import ReactiveProxyContext2 from \\"@dummy/6\\";
 
-export default function ComponentWithContext(props: ComponentWithContextProps) {
+function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   const foo2 = useContext(ReactiveContext1);
@@ -1021,18 +1028,22 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
     </ReactiveContext2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;
 
 exports[`Context > Use and set context in components 3`] = `
 "import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
 import { useContext } from \\"react\\";
-
-export interface ComponentWithContextProps {
-  content: string;
-}
-
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 import ReactiveContext1 from \\"@dummy/3\\";
@@ -1040,7 +1051,7 @@ import ReactiveContext2 from \\"@dummy/4\\";
 import ReactiveProxyContext1 from \\"@dummy/5\\";
 import ReactiveProxyContext2 from \\"@dummy/6\\";
 
-export default function ComponentWithContext(props: ComponentWithContextProps) {
+function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   const foo2 = useContext(ReactiveContext1);
@@ -1109,5 +1120,7 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
     </ReactiveContext2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;

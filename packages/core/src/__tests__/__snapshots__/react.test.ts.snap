@@ -1,16 +1,12 @@
 // Vitest Snapshot v1
 
-exports[`React > Javascript Test > AdvancedRef 1`] = `
+exports[`React > jsx > Javascript Test > AdvancedRef 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export interface Props {
-  showInput: boolean;
-}
-
-export default function MyBasicRefComponent(props: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+function MyBasicRefComponent(props) {
+  const inputRef = useRef(null);
+  const inputNoArgRef = useRef(null);
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onBlur() {
@@ -39,7 +35,7 @@ export default function MyBasicRefComponent(props: Props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label for=\\"cars\\" ref={inputNoArgRef}>
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
 
@@ -62,27 +58,29 @@ export default function MyBasicRefComponent(props: Props) {
     </>
   );
 }
+
+export default MyBasicRefComponent;
 "
 `;
 
-exports[`React > Javascript Test > Basic 1`] = `
+exports[`React > jsx > Javascript Test > Basic 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-
-export interface MyBasicComponentProps {
-  id: string;
-}
 
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-export default function MyBasicComponent(props: MyBasicComponentProps) {
+function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   function underscore_fn_name() {
     return \\"bar\\";
   }
+
+  const [age, setAge] = useState(() => 1);
+
+  const [sports, setSports] = useState(() => [\\"\\"]);
 
   return (
     <>
@@ -101,15 +99,17 @@ export default function MyBasicComponent(props: MyBasicComponentProps) {
     </>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > Basic Context 1`] = `
+exports[`React > jsx > Javascript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onChange() {
@@ -122,7 +122,7 @@ export default function MyBasicComponent(props: any) {
   useEffect(() => {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  });
+  }, []);
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -139,26 +139,23 @@ export default function MyBasicComponent(props: any) {
     </Context.Provider>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > Basic OnMount Update 1`] = `
+exports[`React > jsx > Javascript Test > Basic OnMount Update 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export interface Props {
-  hi: string;
-  bye: string;
-}
-
-export default function MyBasicOnMountUpdateComponent(props: Props) {
+function MyBasicOnMountUpdateComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
   useEffect(() => {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  });
+  }, []);
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -171,14 +168,16 @@ export default function MyBasicOnMountUpdateComponent(props: Props) {
     </div>
   );
 }
+
+export default MyBasicOnMountUpdateComponent;
 "
 `;
 
-exports[`React > Javascript Test > Basic Outputs 1`] = `
+exports[`React > jsx > Javascript Test > Basic Outputs 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOutputsComponent(props: any) {
+function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -188,14 +187,16 @@ export default function MyBasicOutputsComponent(props: any) {
 
   return <div />;
 }
+
+export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`React > Javascript Test > Basic Outputs Meta 1`] = `
+exports[`React > jsx > Javascript Test > Basic Outputs Meta 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOutputsComponent(props: any) {
+function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -205,28 +206,27 @@ export default function MyBasicOutputsComponent(props: any) {
 
   return <div />;
 }
+
+export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`React > Javascript Test > BasicAttribute 1`] = `
+exports[`React > jsx > Javascript Test > BasicAttribute 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props) {
   return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
 }
+
+export default MyComponent;
 "
 `;
 
-exports[`React > Javascript Test > BasicBooleanAttribute 1`] = `
+exports[`React > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 "import * as React from \\"react\\";
-
-type Props = {
-  children: any;
-  type: string;
-};
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-export default function MyBooleanAttribute(props: Props) {
+function MyBooleanAttribute(props) {
   return (
     <div>
       {props.children}
@@ -241,16 +241,18 @@ export default function MyBooleanAttribute(props: Props) {
     </div>
   );
 }
+
+export default MyBooleanAttribute;
 "
 `;
 
-exports[`React > Javascript Test > BasicChildComponent 1`] = `
+exports[`React > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
-export default function MyBasicChildComponent(props: any) {
+function MyBasicChildComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
@@ -265,14 +267,16 @@ export default function MyBasicChildComponent(props: any) {
     </div>
   );
 }
+
+export default MyBasicChildComponent;
 "
 `;
 
-exports[`React > Javascript Test > BasicFor 1`] = `
+exports[`React > jsx > Javascript Test > BasicFor 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicForComponent(props: any) {
+function MyBasicForComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
@@ -299,20 +303,18 @@ export default function MyBasicForComponent(props: any) {
     </div>
   );
 }
+
+export default MyBasicForComponent;
 "
 `;
 
-exports[`React > Javascript Test > BasicRef 1`] = `
+exports[`React > jsx > Javascript Test > BasicRef 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef } from \\"react\\";
 
-export interface Props {
-  showInput: boolean;
-}
-
-export default function MyBasicRefComponent(props: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+function MyBasicRefComponent(props) {
+  const inputRef = useRef(null);
+  const inputNoArgRef = useRef(null);
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onBlur() {
@@ -337,7 +339,7 @@ export default function MyBasicRefComponent(props: Props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label for=\\"cars\\" ref={inputNoArgRef}>
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
 
@@ -360,18 +362,16 @@ export default function MyBasicRefComponent(props: Props) {
     </>
   );
 }
+
+export default MyBasicRefComponent;
 "
 `;
 
-exports[`React > Javascript Test > BasicRefAssignment 1`] = `
+exports[`React > jsx > Javascript Test > BasicRefAssignment 1`] = `
 "import * as React from \\"react\\";
 import { useRef } from \\"react\\";
 
-export interface Props {
-  showInput: boolean;
-}
-
-export default function MyBasicRefAssignmentComponent(props: Props) {
+function MyBasicRefAssignmentComponent(props) {
   const holdValueRef = useRef(\\"Patrick\\");
   function handlerClick(event) {
     event.preventDefault();
@@ -385,21 +385,19 @@ export default function MyBasicRefAssignmentComponent(props: Props) {
     </div>
   );
 }
+
+export default MyBasicRefAssignmentComponent;
 "
 `;
 
-exports[`React > Javascript Test > BasicRefPrevious 1`] = `
+exports[`React > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export interface Props {
-  showInput: boolean;
-}
-
-export function usePrevious<T>(value: T) {
+export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -409,7 +407,7 @@ export function usePrevious<T>(value: T) {
   return ref;
 }
 
-export default function MyPreviousComponent(props: Props) {
+function MyPreviousComponent(props) {
   const [count, setCount] = useState(() => 0);
 
   const prevCount = useRef(count);
@@ -430,20 +428,15 @@ export default function MyPreviousComponent(props: Props) {
     </div>
   );
 }
+
+export default MyPreviousComponent;
 "
 `;
 
-exports[`React > Javascript Test > Button 1`] = `
+exports[`React > jsx > Javascript Test > Button 1`] = `
 "import * as React from \\"react\\";
 
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}
-
-export default function Button(props: ButtonProps) {
+function Button(props) {
   return (
     <div>
       {props.link ? (
@@ -468,28 +461,15 @@ export default function Button(props: ButtonProps) {
     </div>
   );
 }
+
+export default Button;
 "
 `;
 
-exports[`React > Javascript Test > Columns 1`] = `
+exports[`React > jsx > Javascript Test > Columns 1`] = `
 "import * as React from \\"react\\";
 
-type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
-
-  width?: number;
-};
-export interface ColumnProps {
-  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
-
-  space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
-
-  reverseColumnsWhenStacked?: boolean;
-}
-
-export default function Column(props: ColumnProps) {
+function Column(props) {
   function getColumns() {
     return props.columns || [];
   }
@@ -545,18 +525,15 @@ export default function Column(props: ColumnProps) {
     </>
   );
 }
+
+export default Column;
 "
 `;
 
-exports[`React > Javascript Test > ContentSlotHtml 1`] = `
+exports[`React > jsx > Javascript Test > ContentSlotHtml 1`] = `
 "import * as React from \\"react\\";
 
-type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};
-
-export default function ContentSlotCode(props: Props) {
+function ContentSlotCode(props) {
   return (
     <div>
       {props.slotTesting}
@@ -569,47 +546,71 @@ export default function ContentSlotCode(props: Props) {
     </div>
   );
 }
+
+export default ContentSlotCode;
 "
 `;
 
-exports[`React > Javascript Test > ContentSlotJSX 1`] = `
+exports[`React > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
-type Props = {
-  [key: string]: string | JSX.Element;
-};
+function ContentSlotJsxCode(props) {
+  const [name, setName] = useState(() => \\"king\\");
 
-export default function ContentSlotJsxCode(props: Props) {
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <div>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <div>{props.slotTesting}</div>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={cls()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || \\"{props.content}\\"}</>
+            ) : null}
+
+            <div>
+              <hr />
+            </div>
+
+            <div>{props.children}</div>
+          </div>
         </>
       ) : null}
-
-      <div>
-        <hr />
-      </div>
-
-      <div>{props.children}</div>
-    </div>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: undefined,
+};
+
+export default ContentSlotJsxCode;
 "
 `;
 
-exports[`React > Javascript Test > CustomCode 1`] = `
+exports[`React > jsx > Javascript Test > CustomCode 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
-
-export default function CustomCode(props: CustomCodeProps) {
-  const elem = useRef<HTMLDivElement>(null);
+function CustomCode(props) {
+  const elem = useRef(null);
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
   const [scriptsRun, setScriptsRun] = useState(() => []);
@@ -670,20 +671,17 @@ export default function CustomCode(props: CustomCodeProps) {
     />
   );
 }
+
+export default CustomCode;
 "
 `;
 
-exports[`React > Javascript Test > Embed 1`] = `
+exports[`React > jsx > Javascript Test > Embed 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
-
-export default function CustomCode(props: CustomCodeProps) {
-  const elem = useRef<HTMLDivElement>(null);
+function CustomCode(props) {
+  const elem = useRef(null);
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
   const [scriptsRun, setScriptsRun] = useState(() => []);
@@ -744,44 +742,24 @@ export default function CustomCode(props: CustomCodeProps) {
     />
   );
 }
+
+export default CustomCode;
 "
 `;
 
-exports[`React > Javascript Test > Form 1`] = `
+exports[`React > jsx > Javascript Test > Form 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef } from \\"react\\";
-
-export interface FormProps {
-  attributes?: any;
-  name?: string;
-  action?: string;
-  validate?: boolean;
-  method?: string;
-  builderBlock?: BuilderElement;
-  sendSubmissionsTo?: string;
-  sendSubmissionsToEmail?: string;
-  sendWithJs?: boolean;
-  contentType?: string;
-  customHeaders?: {
-    [key: string]: string;
-  };
-  successUrl?: string;
-  previewState?: FormState;
-  successMessage?: BuilderElement[];
-  errorMessage?: BuilderElement[];
-  sendingMessage?: BuilderElement[];
-  resetFormOnSubmit?: boolean;
-  errorMessagePath?: string;
-}
-export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
-export default function FormComponent(props: FormProps) {
-  const formRef = useRef<HTMLFormElement>(null);
+function FormComponent(props) {
+  const formRef = useRef(null);
   const [formState, setFormState] = useState(() => \\"unsubmitted\\");
 
   const [responseData, setResponseData] = useState(() => null);
@@ -919,7 +897,7 @@ export default function FormComponent(props: FormProps) {
               get(body, props.errorMessagePath);
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message =
+                /* TODO: ideally convert json to yaml so it woul dbe like          error: - email has been taken */ message =
                   JSON.stringify(message);
               }
               setFormErrorMessage(message);
@@ -1042,34 +1020,16 @@ export default function FormComponent(props: FormProps) {
     </>
   );
 }
+export default FormComponent;
 "
 `;
 
-exports[`React > Javascript Test > Image 1`] = `
+exports[`React > jsx > Javascript Test > Image 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-// TODO: AMP Support?
-export interface ImageProps {
-  _class?: string;
-  image: string;
-  sizes?: string;
-  lazy?: boolean;
-  height?: number;
-  width?: number;
-  altText?: string;
-  backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-
-  srcset?: string; // TODO: Implement support for custom aspect ratios
-
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
-
-  children?: any;
-}
-
-export default function Image(props: ImageProps) {
-  const pictureRef = useRef<HTMLElement>(null);
+function Image(props) {
+  const pictureRef = useRef(null);
   const [scrollListener, setScrollListener] = useState(() => null);
 
   const [imageLoaded, setImageLoaded] = useState(() => false);
@@ -1162,14 +1122,16 @@ export default function Image(props: ImageProps) {
     </>
   );
 }
+
+export default Image;
 "
 `;
 
-exports[`React > Javascript Test > Image State 1`] = `
+exports[`React > jsx > Javascript Test > Image State 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function ImgStateComponent(props: any) {
+function ImgStateComponent(props) {
   const [canShow, setCanShow] = useState(() => true);
 
   const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
@@ -1184,32 +1146,16 @@ export default function ImgStateComponent(props: any) {
     </div>
   );
 }
+
+export default ImgStateComponent;
 "
 `;
 
-exports[`React > Javascript Test > Img 1`] = `
+exports[`React > jsx > Javascript Test > Img 1`] = `
 "import * as React from \\"react\\";
-
-export interface ImgProps {
-  attributes?: any;
-  imgSrc?: string;
-  altText?: string;
-  backgroundSize?: \\"cover\\" | \\"contain\\";
-  backgroundPosition?:
-    | \\"center\\"
-    | \\"top\\"
-    | \\"left\\"
-    | \\"right\\"
-    | \\"bottom\\"
-    | \\"top left\\"
-    | \\"top right\\"
-    | \\"bottom left\\"
-    | \\"bottom right\\";
-}
-
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function ImgComponent(props: ImgProps) {
+function ImgComponent(props) {
   return (
     <img
       style={{
@@ -1223,25 +1169,16 @@ export default function ImgComponent(props: ImgProps) {
     />
   );
 }
+
+export default ImgComponent;
 "
 `;
 
-exports[`React > Javascript Test > Input 1`] = `
+exports[`React > jsx > Javascript Test > Input 1`] = `
 "import * as React from \\"react\\";
-
-export interface FormInputProps {
-  type?: string;
-  attributes?: any;
-  name?: string;
-  value?: string;
-  placeholder?: string;
-  defaultValue?: string;
-  required?: boolean;
-}
-
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function FormInputComponent(props: FormInputProps) {
+function FormInputComponent(props) {
   return (
     <input
       {...props.attributes}
@@ -1259,18 +1196,15 @@ export default function FormInputComponent(props: FormInputProps) {
     />
   );
 }
+
+export default FormInputComponent;
 "
 `;
 
-exports[`React > Javascript Test > RawText 1`] = `
+exports[`React > jsx > Javascript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
-export interface RawTextProps {
-  attributes?: any;
-  text?: string; // builderBlock?: any;
-}
-
-export default function RawText(props: RawTextProps) {
+function RawText(props) {
   return (
     <span
       className={props.attributes?.class || props.attributes?.className}
@@ -1278,19 +1212,15 @@ export default function RawText(props: RawTextProps) {
     />
   );
 }
+
+export default RawText;
 "
 `;
 
-exports[`React > Javascript Test > Section 1`] = `
+exports[`React > jsx > Javascript Test > Section 1`] = `
 "import * as React from \\"react\\";
 
-export interface SectionProps {
-  maxWidth?: number;
-  attributes?: any;
-  children?: any;
-}
-
-export default function SectionComponent(props: SectionProps) {
+function SectionComponent(props) {
   return (
     <section
       {...props.attributes}
@@ -1306,26 +1236,16 @@ export default function SectionComponent(props: SectionProps) {
     </section>
   );
 }
+
+export default SectionComponent;
 "
 `;
 
-exports[`React > Javascript Test > Select 1`] = `
+exports[`React > jsx > Javascript Test > Select 1`] = `
 "import * as React from \\"react\\";
-
-export interface FormSelectProps {
-  options?: {
-    name?: string;
-    value: string;
-  }[];
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-}
-
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function SelectComponent(props: FormSelectProps) {
+function SelectComponent(props) {
   return (
     <select
       {...props.attributes}
@@ -1346,57 +1266,83 @@ export default function SelectComponent(props: FormSelectProps) {
     </select>
   );
 }
+
+export default SelectComponent;
 "
 `;
 
-exports[`React > Javascript Test > SlotHtml 1`] = `
+exports[`React > jsx > Javascript Test > SlotDefault 1`] = `
 "import * as React from \\"react\\";
 
-type Props = {
-  [key: string]: string;
-};
+function SlotCode(props) {
+  return (
+    <div>
+      {props.children || <div className=\\"default-slot\\">Default content</div>}
+    </div>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`React > jsx > Javascript Test > SlotHtml 1`] = `
+"import * as React from \\"react\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default function SlotCode(props: Props) {
+function SlotCode(props) {
   return (
     <div>
       <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
     </div>
   );
 }
+
+export default SlotCode;
 "
 `;
 
-exports[`React > Javascript Test > SlotJsx 1`] = `
+exports[`React > jsx > Javascript Test > SlotJsx 1`] = `
 "import * as React from \\"react\\";
-
-type Props = {
-  [key: string]: string;
-};
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default function SlotCode(props: Props) {
+function SlotCode(props) {
   return (
     <div>
       <ContentSlotCode slotTesting={<div>Hello</div>} />
     </div>
   );
 }
+
+export default SlotCode;
 "
 `;
 
-exports[`React > Javascript Test > Stamped.io 1`] = `
+exports[`React > jsx > Javascript Test > SlotNamed 1`] = `
+"import * as React from \\"react\\";
+
+function SlotCode(props) {
+  return (
+    <div>
+      {props.slotTop}
+
+      {props.slotLeft || \\"Default left\\"}
+
+      {props.children || \\"Default Child\\"}
+    </div>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`React > jsx > Javascript Test > Stamped.io 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
-type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
-};
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
-
-export default function SmileReviews(props: SmileReviewsProps) {
+function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
 
   const [name, setName] = useState(() => \\"test\\");
@@ -1430,7 +1376,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
           Write a review
         </button>
 
-        {showReviewPrompt ? (
+        {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
             <input placeholder=\\"Title\\" className=\\"input\\" />
@@ -1494,42 +1440,32 @@ export default function SmileReviews(props: SmileReviewsProps) {
     </>
   );
 }
+
+export default SmileReviews;
 "
 `;
 
-exports[`React > Javascript Test > Submit 1`] = `
+exports[`React > jsx > Javascript Test > Submit 1`] = `
 "import * as React from \\"react\\";
 
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-}
-
-export default function SubmitButton(props: ButtonProps) {
+function SubmitButton(props) {
   return (
     <button type=\\"submit\\" {...props.attributes}>
       {props.text}
     </button>
   );
 }
+
+export default SubmitButton;
 "
 `;
 
-exports[`React > Javascript Test > Text 1`] = `
+exports[`React > jsx > Javascript Test > Text 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-
-export interface TextProps {
-  attributes?: any;
-  rtlMode: boolean;
-  text?: string;
-  content?: string;
-  builderBlock?: any;
-}
-
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function Text(props: TextProps) {
+function Text(props) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
@@ -1548,21 +1484,15 @@ export default function Text(props: TextProps) {
     />
   );
 }
+
+export default Text;
 "
 `;
 
-exports[`React > Javascript Test > Textarea 1`] = `
+exports[`React > jsx > Javascript Test > Textarea 1`] = `
 "import * as React from \\"react\\";
 
-export interface TextareaProps {
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-  placeholder?: string;
-}
-
-export default function Textarea(props: TextareaProps) {
+function Textarea(props) {
   return (
     <textarea
       {...props.attributes}
@@ -1573,39 +1503,15 @@ export default function Textarea(props: TextareaProps) {
     />
   );
 }
+
+export default Textarea;
 "
 `;
 
-exports[`React > Javascript Test > Video 1`] = `
+exports[`React > jsx > Javascript Test > Video 1`] = `
 "import * as React from \\"react\\";
 
-export interface VideoProps {
-  attributes?: any;
-  video?: string;
-  autoPlay?: boolean;
-  controls?: boolean;
-  muted?: boolean;
-  loop?: boolean;
-  playsInline?: boolean;
-  aspectRatio?: number;
-  width?: number;
-  height?: number;
-  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
-  position?:
-    | \\"center\\"
-    | \\"top\\"
-    | \\"left\\"
-    | \\"right\\"
-    | \\"bottom\\"
-    | \\"top left\\"
-    | \\"top right\\"
-    | \\"bottom left\\"
-    | \\"bottom right\\";
-  posterImage?: string;
-  lazyLoad?: boolean;
-}
-
-export default function Video(props: VideoProps) {
+function Video(props) {
   return (
     <video
       preload=\\"none\\"
@@ -1629,20 +1535,80 @@ export default function Video(props: VideoProps) {
     />
   );
 }
+
+export default Video;
 "
 `;
 
-exports[`React > Javascript Test > basicForwardRef 1`] = `
+exports[`React > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props) {
+  const [name, setName] = useState(() => \\"steve\\");
+
+  function setName(value) {
+    setName(value);
+  }
+
+  function updateNameWithArrowFn(value) {
+    setName(value);
+  }
+
+  return (
+    <div>
+      Hello
+      {name}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      Hello
+      <Tag>{name}</Tag>
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <span>{action.text}</span>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
+exports[`React > jsx > Javascript Test > basicForwardRef 1`] = `
 "import * as React from \\"react\\";
 import { useState, forwardRef } from \\"react\\";
 
-export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}
-
-export default forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
+const MyBasicForwardRefComponent = forwardRef(
+  function MyBasicForwardRefComponent(props, inputRef) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
@@ -1664,20 +1630,17 @@ export default forwardRef<Props[\\"inputRef\\"]>(
     );
   }
 );
+
+export default MyBasicForwardRefComponent;
 "
 `;
 
-exports[`React > Javascript Test > basicForwardRefMetadata 1`] = `
+exports[`React > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 "import * as React from \\"react\\";
 import { useState, forwardRef } from \\"react\\";
 
-export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}
-
-export default forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
+const MyBasicForwardRefComponent = forwardRef(
+  function MyBasicForwardRefComponent(props, inputRef) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
@@ -1699,14 +1662,16 @@ export default forwardRef<Props[\\"inputRef\\"]>(
     );
   }
 );
+
+export default MyBasicForwardRefComponent;
 "
 `;
 
-exports[`React > Javascript Test > basicOnUpdateReturn 1`] = `
+exports[`React > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOnUpdateReturnComponent(props: any) {
+function MyBasicOnUpdateReturnComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -1733,13 +1698,15 @@ export default function MyBasicOnUpdateReturnComponent(props: any) {
     </div>
   );
 }
+
+export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
-exports[`React > Javascript Test > class + ClassName + css 1`] = `
+exports[`React > jsx > Javascript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props) {
   return (
     <>
       <div className=\\"test2 test div\\">
@@ -1753,13 +1720,15 @@ export default function MyBasicComponent(props: any) {
     </>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > class + css 1`] = `
+exports[`React > jsx > Javascript Test > class + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props) {
   return (
     <>
       <div className=\\"test div\\">
@@ -1773,13 +1742,15 @@ export default function MyBasicComponent(props: any) {
     </>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > className + css 1`] = `
+exports[`React > jsx > Javascript Test > className + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props) {
   return (
     <>
       <div className=\\"test div\\">
@@ -1793,19 +1764,16 @@ export default function MyBasicComponent(props: any) {
     </>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > className 1`] = `
+exports[`React > jsx > Javascript Test > className 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};
-
-export default function ClassNameCode(props: Props) {
+function ClassNameCode(props) {
   const [bindings, setBindings] = useState(() => \\"a binding\\");
 
   return (
@@ -1816,14 +1784,16 @@ export default function ClassNameCode(props: Props) {
     </div>
   );
 }
+
+export default ClassNameCode;
 "
 `;
 
-exports[`React > Javascript Test > classState 1`] = `
+exports[`React > jsx > Javascript Test > classState 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props) {
   const [classState, setClassState] = useState(() => \\"testClassName\\");
 
   const [styleState, setStyleState] = useState(() => ({
@@ -1843,17 +1813,14 @@ export default function MyBasicComponent(props: any) {
     </>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > componentWithContext 1`] = `
+exports[`React > jsx > Javascript Test > componentWithContext 1`] = `
 "import * as React from \\"react\\";
 import { useContext } from \\"react\\";
-
-export interface ComponentWithContextProps {
-  content: string;
-}
-
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 import ReactiveContext1 from \\"@dummy/3\\";
@@ -1861,7 +1828,7 @@ import ReactiveContext2 from \\"@dummy/4\\";
 import ReactiveProxyContext1 from \\"@dummy/5\\";
 import ReactiveProxyContext2 from \\"@dummy/6\\";
 
-export default function ComponentWithContext(props: ComponentWithContextProps) {
+function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   const foo2 = useContext(ReactiveContext1);
@@ -1930,20 +1897,75 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
     </ReactiveContext2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;
 
-exports[`React > Javascript Test > defaultProps 1`] = `
+exports[`React > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
 "import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
 
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          {foo.value}
+
+          <div>other</div>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
 }
 
-export default function Button(props: ButtonProps) {
+export default ComponentWithContext;
+"
+`;
+
+exports[`React > jsx > Javascript Test > contentState 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+
+function RenderContent(props) {
+  return (
+    <BuilderContext.Provider
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+    >
+      <div>setting context</div>
+    </BuilderContext.Provider>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
+exports[`React > jsx > Javascript Test > defaultProps 1`] = `
+"import * as React from \\"react\\";
+
+function Button(props) {
   return (
     <div>
       {props.link ? (
@@ -1960,8 +1982,12 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button type=\\"button\\" {...props.attributes}>
-            {props.text}
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
+            {props.buttonText}
           </button>
         </>
       ) : null}
@@ -1973,21 +1999,19 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
+
+export default Button;
 "
 `;
 
-exports[`React > Javascript Test > defaultPropsOutsideComponent 1`] = `
+exports[`React > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 "import * as React from \\"react\\";
 
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}
-
-export default function Button(props: ButtonProps) {
+function Button(props) {
   return (
     <div>
       {props.link ? (
@@ -2004,7 +2028,11 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </>
@@ -2017,22 +2045,21 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
+
+export default Button;
 "
 `;
 
-exports[`React > Javascript Test > defaultValsWithTypes 1`] = `
+exports[`React > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "import * as React from \\"react\\";
 
-type Props = {
-  name: string;
-};
-
-const DEFAULT_VALUES: Props = {
+const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
-export default function ComponentWithTypes(props: Props) {
+function ComponentWithTypes(props) {
   return (
     <div>
       {\\" \\"}
@@ -2041,20 +2068,32 @@ export default function ComponentWithTypes(props: Props) {
     </div>
   );
 }
+
+export default ComponentWithTypes;
 "
 `;
 
-exports[`React > Javascript Test > import types 1`] = `
+exports[`React > jsx > Javascript Test > expressionState 1`] = `
 "import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
-type RenderContentProps = {
-  options?: GetContentOptions;
-  content: BuilderContent;
-  renderContentProps: RenderBlockProps;
-};
+function MyComponent(props) {
+  const [refToUse, setRefToUse] = useState(() =>
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return <div>{refToUse}</div>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > jsx > Javascript Test > import types 1`] = `
+"import * as React from \\"react\\";
 import RenderBlock from \\"./builder-render-block.raw\\";
 
-export default function RenderContent(props: RenderContentProps) {
+function RenderContent(props) {
   function getRenderContentProps(block, index) {
     return {
       block: block,
@@ -2068,14 +2107,16 @@ export default function RenderContent(props: RenderContentProps) {
     />
   );
 }
+
+export default RenderContent;
 "
 `;
 
-exports[`React > Javascript Test > multipleOnUpdate 1`] = `
+exports[`React > jsx > Javascript Test > multipleOnUpdate 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function MultipleOnUpdate(props: any) {
+function MultipleOnUpdate(props) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -2085,14 +2126,16 @@ export default function MultipleOnUpdate(props: any) {
 
   return <div />;
 }
+
+export default MultipleOnUpdate;
 "
 `;
 
-exports[`React > Javascript Test > multipleOnUpdateWithDeps 1`] = `
+exports[`React > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MultipleOnUpdateWithDeps(props: any) {
+function MultipleOnUpdateWithDeps(props) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -2118,32 +2161,31 @@ export default function MultipleOnUpdateWithDeps(props: any) {
 
   return <div />;
 }
+
+export default MultipleOnUpdateWithDeps;
 "
 `;
 
-exports[`React > Javascript Test > multipleSpreads 1`] = `
+exports[`React > jsx > Javascript Test > multipleSpreads 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props) {
   const [attrs, setAttrs] = useState(() => ({
     hello: \\"world\\",
   }));
 
   return <input {...state.attrs} {...props} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > nestedShow 1`] = `
+exports[`React > jsx > Javascript Test > nestedShow 1`] = `
 "import * as React from \\"react\\";
 
-interface Props {
-  conditionA: boolean;
-  conditionB: boolean;
-}
-
-export default function NestedShow(props: Props) {
+function NestedShow(props) {
   return (
     <>
       {props.conditionA ? (
@@ -2162,20 +2204,23 @@ export default function NestedShow(props: Props) {
     </>
   );
 }
+
+export default NestedShow;
 "
 `;
 
-exports[`React > Javascript Test > nestedStyles 1`] = `
+exports[`React > jsx > Javascript Test > nestedStyles 1`] = `
 "import * as React from \\"react\\";
 
-export default function NestedStyles(props: any) {
+function NestedStyles(props) {
   return (
     <>
       <div className=\\"div\\">Hello world</div>
       <style jsx>{\`
         .div {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .div {
@@ -2185,24 +2230,35 @@ export default function NestedStyles(props: any) {
         .div:hover {
           display: flex;
         }
+        .div:active {
+          display: inline;
+        }
         .div .nested-selector {
           display: grid;
+        }
+        .div .nested-selector:hover {
+          display: block;
+        }
+        .div.nested-selector:active {
+          display: inline-block;
         }
       \`}</style>
     </>
   );
 }
+
+export default NestedStyles;
 "
 `;
 
-exports[`React > Javascript Test > onInit & onMount 1`] = `
+exports[`React > jsx > Javascript Test > onInit & onMount 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function OnInit(props: any) {
+function OnInit(props) {
   useEffect(() => {
     console.log(\\"onInit\\");
-  });
+  }, []);
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -2210,28 +2266,26 @@ export default function OnInit(props: any) {
 
   return <div />;
 }
+
+export default OnInit;
 "
 `;
 
-exports[`React > Javascript Test > onInit 1`] = `
+exports[`React > jsx > Javascript Test > onInit 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
-
-type Props = {
-  name: string;
-};
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
-export default function OnInit(props: Props) {
+function OnInit(props) {
   const [name, setName] = useState(() => \\"\\");
 
   useEffect(() => {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  });
+  }, []);
 
   return (
     <div>
@@ -2240,14 +2294,16 @@ export default function OnInit(props: Props) {
     </div>
   );
 }
+
+export default OnInit;
 "
 `;
 
-exports[`React > Javascript Test > onMount 1`] = `
+exports[`React > jsx > Javascript Test > onMount 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function Comp(props: any) {
+function Comp(props) {
   useEffect(() => {
     console.log(\\"Runs on mount\\");
   }, []);
@@ -2260,32 +2316,32 @@ export default function Comp(props: any) {
 
   return <div />;
 }
+
+export default Comp;
 "
 `;
 
-exports[`React > Javascript Test > onUpdate 1`] = `
+exports[`React > jsx > Javascript Test > onUpdate 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function OnUpdate(props: any) {
+function OnUpdate(props) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
 
   return <div />;
 }
+
+export default OnUpdate;
 "
 `;
 
-exports[`React > Javascript Test > onUpdateWithDeps 1`] = `
+exports[`React > jsx > Javascript Test > onUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-type Props = {
-  size: string;
-};
-
-export default function OnUpdateWithDeps(props: Props) {
+function OnUpdateWithDeps(props) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -2296,51 +2352,32 @@ export default function OnUpdateWithDeps(props: Props) {
 
   return <div />;
 }
+
+export default OnUpdateWithDeps;
 "
 `;
 
-exports[`React > Javascript Test > preserveExportOrLocalStatement 1`] = `
+exports[`React > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
 "import * as React from \\"react\\";
-
-type Types = {
-  s: any[];
-};
-interface IPost {
-  len: number;
-}
-export interface MyBasicComponentProps {
-  id: string;
-}
 
 const b = 3;
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
-export default function MyBasicComponent(props: MyBasicComponentProps) {
+function MyBasicComponent(props) {
   return <div />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > preserveTyping 1`] = `
+exports[`React > jsx > Javascript Test > preserveTyping 1`] = `
 "import * as React from \\"react\\";
 
-export type A = \\"test\\";
-export interface C {
-  n: \\"test\\";
-}
-type B = \\"test2\\";
-interface D {
-  n: \\"test\\";
-}
-export interface MyBasicComponentProps {
-  name: string;
-  age?: number;
-}
-
-export default function MyBasicComponent(props: MyBasicComponentProps) {
+function MyBasicComponent(props) {
   return (
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -2348,19 +2385,16 @@ export default function MyBasicComponent(props: MyBasicComponentProps) {
     </div>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > propsDestructure 1`] = `
+exports[`React > jsx > Javascript Test > propsDestructure 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-type Props = {
-  children: any;
-  type: string;
-};
-
-export default function MyBasicComponent(props: Props) {
+function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
@@ -2371,18 +2405,15 @@ export default function MyBasicComponent(props: Props) {
     </div>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > propsInterface 1`] = `
+exports[`React > jsx > Javascript Test > propsInterface 1`] = `
 "import * as React from \\"react\\";
 
-interface Person {
-  name: string;
-  age?: number;
-}
-
-export default function MyBasicComponent(props: Person | never) {
+function MyBasicComponent(props) {
   return (
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -2390,18 +2421,15 @@ export default function MyBasicComponent(props: Person | never) {
     </div>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > propsType 1`] = `
+exports[`React > jsx > Javascript Test > propsType 1`] = `
 "import * as React from \\"react\\";
 
-type Person = {
-  name: string;
-  age?: number;
-};
-
-export default function MyBasicComponent(props: Person) {
+function MyBasicComponent(props) {
   return (
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -2409,29 +2437,317 @@ export default function MyBasicComponent(props: Person) {
     </div>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > renderContentExample 1`] = `
+exports[`React > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+function OnUpdate(props) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
+}
+
+export default OnUpdate;
+"
+`;
+
+exports[`React > jsx > Javascript Test > renderBlock 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
+import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
+import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
+import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import BlockStyles from \\"./block-styles.lite\\";
+import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import RenderComponent from \\"./render-component.lite\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+
+function RenderBlock(props) {
+  function component() {
+    const componentName = getProcessedBlock({
+      block: props.block,
+      state: props.context.state,
+      context: props.context.context,
+      shouldEvaluateBindings: false,
+    }).component?.name;
+
+    if (!componentName) {
+      return null;
+    }
+
+    const ref = props.context.registeredComponents[componentName];
+
+    if (!ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+      return undefined;
+    } else {
+      return ref;
+    }
+  }
+
+  function tag() {
+    return getBlockTag(useBlock());
+  }
+
+  function useBlock() {
+    return repeatItemData()
+      ? props.block
+      : getProcessedBlock({
+          block: props.block,
+          state: props.context.state,
+          context: props.context.context,
+          shouldEvaluateBindings: true,
+        });
+  }
+
+  function actions() {
+    return getBlockActions({
+      block: useBlock(),
+      state: props.context.state,
+      context: props.context.context,
+    });
+  }
+
+  function attributes() {
+    const blockProperties = getBlockProperties(useBlock());
+    return {
+      ...blockProperties,
+      ...(TARGET === \\"reactNative\\"
+        ? {
+            style: getReactNativeBlockStyles({
+              block: useBlock(),
+              context: props.context,
+              blockStyles: blockProperties.style,
+            }),
+          }
+        : {}),
+    };
+  }
+
+  function shouldWrap() {
+    return !component?.()?.noWrap;
+  }
+
+  function renderComponentProps() {
+    return {
+      blockChildren: useChildren(),
+      componentRef: component?.()?.component,
+      componentOptions: {
+        ...getBlockComponentOptions(useBlock()),
+
+        /**
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
+         */
+        ...(shouldWrap()
+          ? {}
+          : {
+              attributes: { ...attributes(), ...actions() },
+            }),
+        customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
+      },
+      context: childrenContext(),
+    };
+  }
+
+  function useChildren() {
+    // TO-DO: When should \`canHaveChildren\` dictate rendering?
+    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+    // but still receive and need to render children.
+    // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
+    return useBlock().children ?? [];
+  }
+
+  function childrenWithoutParentComponent() {
+    /**
+     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+     * we render them outside of \`componentRef\`.
+     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+     * blocks, and the children will be repeated within those blocks.
+     */
+    const shouldRenderChildrenOutsideRef =
+      !component?.()?.component && !repeatItemData();
+    return shouldRenderChildrenOutsideRef ? useChildren() : [];
+  }
+
+  function repeatItemData() {
+    /**
+     * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
+     * which will not work if there is a repeat.
+     */
+    const { repeat, ...blockWithoutRepeat } = props.block;
+
+    if (!repeat?.collection) {
+      return undefined;
+    }
+
+    const itemsArray = evaluate({
+      code: repeat.collection,
+      state: props.context.state,
+      context: props.context.context,
+    });
+
+    if (!Array.isArray(itemsArray)) {
+      return undefined;
+    }
+
+    const collectionName = repeat.collection.split(\\".\\").pop();
+    const itemNameToUse =
+      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+    const repeatArray = itemsArray.map((item, index) => ({
+      context: {
+        ...props.context,
+        state: {
+          ...props.context.state,
+          $index: index,
+          $item: item,
+          [itemNameToUse]: item,
+          [\`$\${itemNameToUse}Index\`]: index,
+        },
+      },
+      block: blockWithoutRepeat,
+    }));
+    return repeatArray;
+  }
+
+  function inheritedTextStyles() {
+    if (TARGET !== \\"reactNative\\") {
+      return {};
+    }
+
+    const styles = getReactNativeBlockStyles({
+      block: useBlock(),
+      context: props.context,
+      blockStyles: attributes().style,
+    });
+    return extractTextStyles(styles);
+  }
+
+  function childrenContext() {
+    return {
+      apiKey: props.context.apiKey,
+      state: props.context.state,
+      content: props.context.content,
+      context: props.context.context,
+      registeredComponents: props.context.registeredComponents,
+      inheritedStyles: inheritedTextStyles(),
+    };
+  }
+
+  function renderComponentTag() {
+    if (TARGET === \\"reactNative\\") {
+      return RenderComponentWithContext;
+    } else if (TARGET === \\"vue3\\") {
+      // vue3 expects a string for the component tag
+      return \\"RenderComponent\\";
+    } else {
+      return RenderComponent;
+    }
+  }
+
+  const [componentInfo, setComponentInfo] = useState(() => null);
+
+  const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
+
+  return (
+    <>
+      {shouldWrap() ? (
+        <>
+          {isEmptyHtmlElement(tag()) ? (
+            <>
+              <TagRef {...attributes()} {...actions()} />
+            </>
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+            <>
+              {repeatItemData()?.map((data, index) => (
+                <RenderRepeatedBlock
+                  key={index}
+                  repeatContext={data.context}
+                  block={data.block}
+                />
+              ))}
+            </>
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
+            <>
+              <TagRef {...attributes()} {...actions()}>
+                <RenderComponentTagRef {...renderComponentProps()} />
+
+                {childrenWithoutParentComponent()?.map((child) => (
+                  <RenderBlock
+                    key={\\"render-block-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  />
+                ))}
+
+                {childrenWithoutParentComponent()?.map((child) => (
+                  <BlockStyles
+                    key={\\"block-style-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  />
+                ))}
+              </TagRef>
+            </>
+          ) : null}
+        </>
+      ) : (
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
+      )}
+    </>
+  );
+}
+
+export default RenderBlock;
+"
+`;
+
+exports[`React > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { useContext, useEffect } from \\"react\\";
-
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-export default function RenderContent(props: Props) {
+function RenderContent(props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
@@ -2466,20 +2782,15 @@ export default function RenderContent(props: Props) {
     </>
   );
 }
+
+export default RenderContent;
 "
 `;
 
-exports[`React > Javascript Test > rootFragmentMultiNode 1`] = `
+exports[`React > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
 "import * as React from \\"react\\";
 
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}
-
-export default function Button(props: ButtonProps) {
+function Button(props) {
   return (
     <>
       {props.link ? (
@@ -2504,17 +2815,15 @@ export default function Button(props: ButtonProps) {
     </>
   );
 }
+
+export default Button;
 "
 `;
 
-exports[`React > Javascript Test > rootShow 1`] = `
+exports[`React > jsx > Javascript Test > rootShow 1`] = `
 "import * as React from \\"react\\";
 
-export interface RenderStylesProps {
-  foo: string;
-}
-
-export default function RenderStyles(props: RenderStylesProps) {
+function RenderStyles(props) {
   return (
     <>
       {props.foo === \\"bar\\" ? (
@@ -2527,13 +2836,15 @@ export default function RenderStyles(props: RenderStylesProps) {
     </>
   );
 }
+
+export default RenderStyles;
 "
 `;
 
-exports[`React > Javascript Test > self-referencing component 1`] = `
+exports[`React > jsx > Javascript Test > self-referencing component 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props) {
   return (
     <div>
       {props.name}
@@ -2546,13 +2857,15 @@ export default function MyComponent(props: any) {
     </div>
   );
 }
+
+export default MyComponent;
 "
 `;
 
-exports[`React > Javascript Test > self-referencing component with children 1`] = `
+exports[`React > jsx > Javascript Test > self-referencing component with children 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props) {
   return (
     <div>
       {props.name}
@@ -2569,18 +2882,15 @@ export default function MyComponent(props: any) {
     </div>
   );
 }
+
+export default MyComponent;
 "
 `;
 
-exports[`React > Javascript Test > showWithFor 1`] = `
+exports[`React > jsx > Javascript Test > showWithFor 1`] = `
 "import * as React from \\"react\\";
 
-interface Props {
-  conditionA: boolean;
-  items: string[];
-}
-
-export default function NestedShow(props: Props) {
+function NestedShow(props) {
   return (
     <>
       {props.conditionA ? (
@@ -2595,65 +2905,138 @@ export default function NestedShow(props: Props) {
     </>
   );
 }
+
+export default NestedShow;
 "
 `;
 
-exports[`React > Javascript Test > spreadAttrs 1`] = `
+exports[`React > jsx > Javascript Test > showWithRootText 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function ShowRootText(props) {
+  return <>{props.conditionA ? <>ContentA</> : <div>else-condition-A</div>}</>;
+}
+
+export default ShowRootText;
+"
+`;
+
+exports[`React > jsx > Javascript Test > spreadAttrs 1`] = `
+"import * as React from \\"react\\";
+
+function MyBasicComponent(props) {
   return <input {...attrs} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > spreadNestedProps 1`] = `
+exports[`React > jsx > Javascript Test > spreadNestedProps 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props) {
   return <input {...props.nested} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > spreadProps 1`] = `
+exports[`React > jsx > Javascript Test > spreadProps 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props) {
   return <input {...props} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Javascript Test > subComponent 1`] = `
+exports[`React > jsx > Javascript Test > styleClassAndCss 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <div
+        className=\\"builder-column div\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > jsx > Javascript Test > subComponent 1`] = `
 "import * as React from \\"react\\";
 import Foo from \\"./foo-sub-component.lite\\";
 
-export default function SubComponent(props: any) {
+function SubComponent(props) {
   return <Foo />;
 }
+
+export default SubComponent;
 "
 `;
 
-exports[`React > Javascript Test > typeDependency 1`] = `
+exports[`React > jsx > Javascript Test > svgComponent 1`] = `
 "import * as React from \\"react\\";
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
-export type TypeDependencyProps = {
-  foo: Foo;
-  foo2: Foo2;
-};
 
-export default function TypeDependency(props: TypeDependencyProps) {
+function SvgComponent(props) {
+  return (
+    <svg
+      fill=\\"none\\"
+      role=\\"img\\"
+      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+      width={42}
+      height={42}
+    >
+      <defs>
+        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+          <feFlood result=\\"BackgroundImageFix\\" />
+
+          <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
+
+          <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
+export default SvgComponent;
+"
+`;
+
+exports[`React > jsx > Javascript Test > typeDependency 1`] = `
+"import * as React from \\"react\\";
+
+function TypeDependency(props) {
   return <div>{props.foo}</div>;
 }
+
+export default TypeDependency;
 "
 `;
 
-exports[`React > Javascript Test > use-style 1`] = `
+exports[`React > jsx > Javascript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props) {
   return (
     <>
       <button type=\\"button\\">Button</button>
@@ -2668,39 +3051,43 @@ export default function MyComponent(props: any) {
     </>
   );
 }
+
+export default MyComponent;
 "
 `;
 
-exports[`React > Javascript Test > use-style-and-css 1`] = `
+exports[`React > jsx > Javascript Test > use-style-and-css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props) {
   return (
     <>
       <button type=\\"button\\" className=\\"button\\">
         Button
       </button>
       <style jsx>{\`
-        .button {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button {
+          background: blue;
+          color: white;
         }
       \`}</style>
     </>
   );
 }
+
+export default MyComponent;
 "
 `;
 
-exports[`React > Javascript Test > use-style-outside-component 1`] = `
+exports[`React > jsx > Javascript Test > use-style-outside-component 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props) {
   return (
     <>
       <button type=\\"button\\">Button</button>
@@ -2715,14 +3102,32 @@ export default function MyComponent(props: any) {
     </>
   );
 }
+
+export default MyComponent;
 "
 `;
 
-exports[`React > Remove Internal mitosis package 1`] = `
+exports[`React > jsx > Javascript Test > useTarget 1`] = `
+"import * as React from \\"react\\";
+
+function UseTargetComponent(props) {
+  function name() {
+    const prefix = 123;
+    return prefix + \\"foo\\";
+  }
+
+  return <div>{name()}</div>;
+}
+
+export default UseTargetComponent;
+"
+`;
+
+exports[`React > jsx > Remove Internal mitosis package 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   return (
@@ -2732,10 +3137,12 @@ export default function MyBasicComponent(props: any) {
     </div>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > AdvancedRef 1`] = `
+exports[`React > jsx > Typescript Test > AdvancedRef 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -2743,7 +3150,7 @@ export interface Props {
   showInput: boolean;
 }
 
-export default function MyBasicRefComponent(props: Props) {
+function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputNoArgRef = useRef<HTMLLabelElement>(null);
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -2774,7 +3181,7 @@ export default function MyBasicRefComponent(props: Props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label for=\\"cars\\" ref={inputNoArgRef}>
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
 
@@ -2797,10 +3204,12 @@ export default function MyBasicRefComponent(props: Props) {
     </>
   );
 }
+
+export default MyBasicRefComponent;
 "
 `;
 
-exports[`React > Typescript Test > Basic 1`] = `
+exports[`React > jsx > Typescript Test > Basic 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
@@ -2812,12 +3221,16 @@ export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-export default function MyBasicComponent(props: MyBasicComponentProps) {
+function MyBasicComponent(props: MyBasicComponentProps) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   function underscore_fn_name() {
     return \\"bar\\";
   }
+
+  const [age, setAge] = useState(() => 1);
+
+  const [sports, setSports] = useState(() => [\\"\\"]);
 
   return (
     <>
@@ -2836,15 +3249,17 @@ export default function MyBasicComponent(props: MyBasicComponentProps) {
     </>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > Basic Context 1`] = `
+exports[`React > jsx > Typescript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onChange() {
@@ -2857,7 +3272,7 @@ export default function MyBasicComponent(props: any) {
   useEffect(() => {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  });
+  }, []);
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -2874,10 +3289,12 @@ export default function MyBasicComponent(props: any) {
     </Context.Provider>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > Basic OnMount Update 1`] = `
+exports[`React > jsx > Typescript Test > Basic OnMount Update 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -2886,14 +3303,14 @@ export interface Props {
   bye: string;
 }
 
-export default function MyBasicOnMountUpdateComponent(props: Props) {
+function MyBasicOnMountUpdateComponent(props: Props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
   useEffect(() => {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  });
+  }, []);
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -2906,14 +3323,16 @@ export default function MyBasicOnMountUpdateComponent(props: Props) {
     </div>
   );
 }
+
+export default MyBasicOnMountUpdateComponent;
 "
 `;
 
-exports[`React > Typescript Test > Basic Outputs 1`] = `
+exports[`React > jsx > Typescript Test > Basic Outputs 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOutputsComponent(props: any) {
+function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -2923,14 +3342,16 @@ export default function MyBasicOutputsComponent(props: any) {
 
   return <div />;
 }
+
+export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`React > Typescript Test > Basic Outputs Meta 1`] = `
+exports[`React > jsx > Typescript Test > Basic Outputs Meta 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOutputsComponent(props: any) {
+function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -2940,19 +3361,23 @@ export default function MyBasicOutputsComponent(props: any) {
 
   return <div />;
 }
+
+export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`React > Typescript Test > BasicAttribute 1`] = `
+exports[`React > jsx > Typescript Test > BasicAttribute 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
 }
+
+export default MyComponent;
 "
 `;
 
-exports[`React > Typescript Test > BasicBooleanAttribute 1`] = `
+exports[`React > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 "import * as React from \\"react\\";
 
 type Props = {
@@ -2961,7 +3386,7 @@ type Props = {
 };
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-export default function MyBooleanAttribute(props: Props) {
+function MyBooleanAttribute(props: Props) {
   return (
     <div>
       {props.children}
@@ -2976,16 +3401,18 @@ export default function MyBooleanAttribute(props: Props) {
     </div>
   );
 }
+
+export default MyBooleanAttribute;
 "
 `;
 
-exports[`React > Typescript Test > BasicChildComponent 1`] = `
+exports[`React > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
-export default function MyBasicChildComponent(props: any) {
+function MyBasicChildComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
@@ -3000,14 +3427,16 @@ export default function MyBasicChildComponent(props: any) {
     </div>
   );
 }
+
+export default MyBasicChildComponent;
 "
 `;
 
-exports[`React > Typescript Test > BasicFor 1`] = `
+exports[`React > jsx > Typescript Test > BasicFor 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicForComponent(props: any) {
+function MyBasicForComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
@@ -3034,10 +3463,12 @@ export default function MyBasicForComponent(props: any) {
     </div>
   );
 }
+
+export default MyBasicForComponent;
 "
 `;
 
-exports[`React > Typescript Test > BasicRef 1`] = `
+exports[`React > jsx > Typescript Test > BasicRef 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef } from \\"react\\";
 
@@ -3045,7 +3476,7 @@ export interface Props {
   showInput: boolean;
 }
 
-export default function MyBasicRefComponent(props: Props) {
+function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputNoArgRef = useRef<HTMLLabelElement>(null);
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -3072,7 +3503,7 @@ export default function MyBasicRefComponent(props: Props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label for=\\"cars\\" ref={inputNoArgRef}>
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
 
@@ -3095,10 +3526,12 @@ export default function MyBasicRefComponent(props: Props) {
     </>
   );
 }
+
+export default MyBasicRefComponent;
 "
 `;
 
-exports[`React > Typescript Test > BasicRefAssignment 1`] = `
+exports[`React > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "import * as React from \\"react\\";
 import { useRef } from \\"react\\";
 
@@ -3106,9 +3539,9 @@ export interface Props {
   showInput: boolean;
 }
 
-export default function MyBasicRefAssignmentComponent(props: Props) {
+function MyBasicRefAssignmentComponent(props: Props) {
   const holdValueRef = useRef(\\"Patrick\\");
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef.current);
     holdValueRef.current = holdValueRef.current + \\"JS\\";
@@ -3120,10 +3553,12 @@ export default function MyBasicRefAssignmentComponent(props: Props) {
     </div>
   );
 }
+
+export default MyBasicRefAssignmentComponent;
 "
 `;
 
-exports[`React > Typescript Test > BasicRefPrevious 1`] = `
+exports[`React > jsx > Typescript Test > BasicRefPrevious 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -3144,7 +3579,7 @@ export function usePrevious<T>(value: T) {
   return ref;
 }
 
-export default function MyPreviousComponent(props: Props) {
+function MyPreviousComponent(props: Props) {
   const [count, setCount] = useState(() => 0);
 
   const prevCount = useRef(count);
@@ -3165,10 +3600,12 @@ export default function MyPreviousComponent(props: Props) {
     </div>
   );
 }
+
+export default MyPreviousComponent;
 "
 `;
 
-exports[`React > Typescript Test > Button 1`] = `
+exports[`React > jsx > Typescript Test > Button 1`] = `
 "import * as React from \\"react\\";
 
 export interface ButtonProps {
@@ -3178,7 +3615,7 @@ export interface ButtonProps {
   openLinkInNewTab?: boolean;
 }
 
-export default function Button(props: ButtonProps) {
+function Button(props: ButtonProps) {
   return (
     <div>
       {props.link ? (
@@ -3203,10 +3640,12 @@ export default function Button(props: ButtonProps) {
     </div>
   );
 }
+
+export default Button;
 "
 `;
 
-exports[`React > Typescript Test > Columns 1`] = `
+exports[`React > jsx > Typescript Test > Columns 1`] = `
 "import * as React from \\"react\\";
 
 type Column = {
@@ -3224,7 +3663,7 @@ export interface ColumnProps {
   reverseColumnsWhenStacked?: boolean;
 }
 
-export default function Column(props: ColumnProps) {
+function Column(props: ColumnProps) {
   function getColumns() {
     return props.columns || [];
   }
@@ -3233,12 +3672,12 @@ export default function Column(props: ColumnProps) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -3280,18 +3719,21 @@ export default function Column(props: ColumnProps) {
     </>
   );
 }
+
+export default Column;
 "
 `;
 
-exports[`React > Typescript Test > ContentSlotHtml 1`] = `
+exports[`React > jsx > Typescript Test > ContentSlotHtml 1`] = `
 "import * as React from \\"react\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
-export default function ContentSlotCode(props: Props) {
+function ContentSlotCode(props: Props) {
   return (
     <div>
       {props.slotTesting}
@@ -3304,37 +3746,71 @@ export default function ContentSlotCode(props: Props) {
     </div>
   );
 }
+
+export default ContentSlotCode;
 "
 `;
 
-exports[`React > Typescript Test > ContentSlotJSX 1`] = `
+exports[`React > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
-export default function ContentSlotJsxCode(props: Props) {
+function ContentSlotJsxCode(props: Props) {
+  const [name, setName] = useState(() => \\"king\\");
+
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <div>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <div>{props.slotTesting}</div>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={cls()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || \\"{props.content}\\"}</>
+            ) : null}
+
+            <div>
+              <hr />
+            </div>
+
+            <div>{props.children}</div>
+          </div>
         </>
       ) : null}
-
-      <div>
-        <hr />
-      </div>
-
-      <div>{props.children}</div>
-    </div>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: undefined,
+};
+
+export default ContentSlotJsxCode;
 "
 `;
 
-exports[`React > Typescript Test > CustomCode 1`] = `
+exports[`React > jsx > Typescript Test > CustomCode 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -3343,7 +3819,7 @@ export interface CustomCodeProps {
   replaceNodes?: boolean;
 }
 
-export default function CustomCode(props: CustomCodeProps) {
+function CustomCode(props: CustomCodeProps) {
   const elem = useRef<HTMLDivElement>(null);
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
@@ -3405,10 +3881,12 @@ export default function CustomCode(props: CustomCodeProps) {
     />
   );
 }
+
+export default CustomCode;
 "
 `;
 
-exports[`React > Typescript Test > Embed 1`] = `
+exports[`React > jsx > Typescript Test > Embed 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -3417,7 +3895,7 @@ export interface CustomCodeProps {
   replaceNodes?: boolean;
 }
 
-export default function CustomCode(props: CustomCodeProps) {
+function CustomCode(props: CustomCodeProps) {
   const elem = useRef<HTMLDivElement>(null);
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
@@ -3479,10 +3957,12 @@ export default function CustomCode(props: CustomCodeProps) {
     />
   );
 }
+
+export default CustomCode;
 "
 `;
 
-exports[`React > Typescript Test > Form 1`] = `
+exports[`React > jsx > Typescript Test > Form 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef } from \\"react\\";
 
@@ -3509,13 +3989,15 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
-export default function FormComponent(props: FormProps) {
+function FormComponent(props: FormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [formState, setFormState] = useState(() => \\"unsubmitted\\");
 
@@ -3527,7 +4009,11 @@ export default function FormComponent(props: FormProps) {
     return (Builder.isEditing && props.previewState) || formState;
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -3541,16 +4027,19 @@ export default function FormComponent(props: FormProps) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -3576,7 +4065,7 @@ export default function FormComponent(props: FormProps) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -3638,7 +4127,7 @@ export default function FormComponent(props: FormProps) {
       fetch(
         props.sendSubmissionsTo === \\"email\\"
           ? formUrl
-          : props.action /* TODO: throw error if no action URL */,
+          : props.action! /* TODO: throw error if no action URL */,
         { body, headers, method: props.method || \\"post\\" }
       ).then(
         async (res) => {
@@ -3654,7 +4143,7 @@ export default function FormComponent(props: FormProps) {
               get(body, props.errorMessagePath);
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message =
+                /* TODO: ideally convert json to yaml so it woul dbe like          error: - email has been taken */ message =
                   JSON.stringify(message);
               }
               setFormErrorMessage(message);
@@ -3738,7 +4227,7 @@ export default function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
+              blocks={props.errorMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -3746,7 +4235,7 @@ export default function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
+              blocks={props.sendingMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -3762,7 +4251,7 @@ export default function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
+              blocks={props.successMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -3777,10 +4266,11 @@ export default function FormComponent(props: FormProps) {
     </>
   );
 }
+export default FormComponent;
 "
 `;
 
-exports[`React > Typescript Test > Image 1`] = `
+exports[`React > jsx > Typescript Test > Image 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -3803,7 +4293,7 @@ export interface ImageProps {
   children?: any;
 }
 
-export default function Image(props: ImageProps) {
+function Image(props: ImageProps) {
   const pictureRef = useRef<HTMLElement>(null);
   const [scrollListener, setScrollListener] = useState(() => null);
 
@@ -3897,14 +4387,16 @@ export default function Image(props: ImageProps) {
     </>
   );
 }
+
+export default Image;
 "
 `;
 
-exports[`React > Typescript Test > Image State 1`] = `
+exports[`React > jsx > Typescript Test > Image State 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function ImgStateComponent(props: any) {
+function ImgStateComponent(props: any) {
   const [canShow, setCanShow] = useState(() => true);
 
   const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
@@ -3919,10 +4411,12 @@ export default function ImgStateComponent(props: any) {
     </div>
   );
 }
+
+export default ImgStateComponent;
 "
 `;
 
-exports[`React > Typescript Test > Img 1`] = `
+exports[`React > jsx > Typescript Test > Img 1`] = `
 "import * as React from \\"react\\";
 
 export interface ImgProps {
@@ -3944,7 +4438,7 @@ export interface ImgProps {
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function ImgComponent(props: ImgProps) {
+function ImgComponent(props: ImgProps) {
   return (
     <img
       style={{
@@ -3958,10 +4452,12 @@ export default function ImgComponent(props: ImgProps) {
     />
   );
 }
+
+export default ImgComponent;
 "
 `;
 
-exports[`React > Typescript Test > Input 1`] = `
+exports[`React > jsx > Typescript Test > Input 1`] = `
 "import * as React from \\"react\\";
 
 export interface FormInputProps {
@@ -3976,7 +4472,7 @@ export interface FormInputProps {
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function FormInputComponent(props: FormInputProps) {
+function FormInputComponent(props: FormInputProps) {
   return (
     <input
       {...props.attributes}
@@ -3994,10 +4490,12 @@ export default function FormInputComponent(props: FormInputProps) {
     />
   );
 }
+
+export default FormInputComponent;
 "
 `;
 
-exports[`React > Typescript Test > RawText 1`] = `
+exports[`React > jsx > Typescript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
 export interface RawTextProps {
@@ -4005,7 +4503,7 @@ export interface RawTextProps {
   text?: string; // builderBlock?: any;
 }
 
-export default function RawText(props: RawTextProps) {
+function RawText(props: RawTextProps) {
   return (
     <span
       className={props.attributes?.class || props.attributes?.className}
@@ -4013,10 +4511,12 @@ export default function RawText(props: RawTextProps) {
     />
   );
 }
+
+export default RawText;
 "
 `;
 
-exports[`React > Typescript Test > Section 1`] = `
+exports[`React > jsx > Typescript Test > Section 1`] = `
 "import * as React from \\"react\\";
 
 export interface SectionProps {
@@ -4025,7 +4525,7 @@ export interface SectionProps {
   children?: any;
 }
 
-export default function SectionComponent(props: SectionProps) {
+function SectionComponent(props: SectionProps) {
   return (
     <section
       {...props.attributes}
@@ -4041,10 +4541,12 @@ export default function SectionComponent(props: SectionProps) {
     </section>
   );
 }
+
+export default SectionComponent;
 "
 `;
 
-exports[`React > Typescript Test > Select 1`] = `
+exports[`React > jsx > Typescript Test > Select 1`] = `
 "import * as React from \\"react\\";
 
 export interface FormSelectProps {
@@ -4060,7 +4562,7 @@ export interface FormSelectProps {
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function SelectComponent(props: FormSelectProps) {
+function SelectComponent(props: FormSelectProps) {
   return (
     <select
       {...props.attributes}
@@ -4081,10 +4583,31 @@ export default function SelectComponent(props: FormSelectProps) {
     </select>
   );
 }
+
+export default SelectComponent;
 "
 `;
 
-exports[`React > Typescript Test > SlotHtml 1`] = `
+exports[`React > jsx > Typescript Test > SlotDefault 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+function SlotCode(props: Props) {
+  return (
+    <div>
+      {props.children || <div className=\\"default-slot\\">Default content</div>}
+    </div>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`React > jsx > Typescript Test > SlotHtml 1`] = `
 "import * as React from \\"react\\";
 
 type Props = {
@@ -4092,17 +4615,19 @@ type Props = {
 };
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default function SlotCode(props: Props) {
+function SlotCode(props: Props) {
   return (
     <div>
       <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
     </div>
   );
 }
+
+export default SlotCode;
 "
 `;
 
-exports[`React > Typescript Test > SlotJsx 1`] = `
+exports[`React > jsx > Typescript Test > SlotJsx 1`] = `
 "import * as React from \\"react\\";
 
 type Props = {
@@ -4110,17 +4635,42 @@ type Props = {
 };
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default function SlotCode(props: Props) {
+function SlotCode(props: Props) {
   return (
     <div>
       <ContentSlotCode slotTesting={<div>Hello</div>} />
     </div>
   );
 }
+
+export default SlotCode;
 "
 `;
 
-exports[`React > Typescript Test > Stamped.io 1`] = `
+exports[`React > jsx > Typescript Test > SlotNamed 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+function SlotCode(props: Props) {
+  return (
+    <div>
+      {props.slotTop}
+
+      {props.slotLeft || \\"Default left\\"}
+
+      {props.children || \\"Default Child\\"}
+    </div>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`React > jsx > Typescript Test > Stamped.io 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -4128,10 +4678,9 @@ type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
-export default function SmileReviews(props: SmileReviewsProps) {
+function SmileReviews(props: SmileReviewsProps) {
   const [reviews, setReviews] = useState(() => []);
 
   const [name, setName] = useState(() => \\"test\\");
@@ -4165,7 +4714,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
           Write a review
         </button>
 
-        {showReviewPrompt ? (
+        {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
             <input placeholder=\\"Title\\" className=\\"input\\" />
@@ -4229,10 +4778,12 @@ export default function SmileReviews(props: SmileReviewsProps) {
     </>
   );
 }
+
+export default SmileReviews;
 "
 `;
 
-exports[`React > Typescript Test > Submit 1`] = `
+exports[`React > jsx > Typescript Test > Submit 1`] = `
 "import * as React from \\"react\\";
 
 export interface ButtonProps {
@@ -4240,17 +4791,19 @@ export interface ButtonProps {
   text?: string;
 }
 
-export default function SubmitButton(props: ButtonProps) {
+function SubmitButton(props: ButtonProps) {
   return (
     <button type=\\"submit\\" {...props.attributes}>
       {props.text}
     </button>
   );
 }
+
+export default SubmitButton;
 "
 `;
 
-exports[`React > Typescript Test > Text 1`] = `
+exports[`React > jsx > Typescript Test > Text 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
@@ -4264,7 +4817,7 @@ export interface TextProps {
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function Text(props: TextProps) {
+function Text(props: TextProps) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
@@ -4283,10 +4836,12 @@ export default function Text(props: TextProps) {
     />
   );
 }
+
+export default Text;
 "
 `;
 
-exports[`React > Typescript Test > Textarea 1`] = `
+exports[`React > jsx > Typescript Test > Textarea 1`] = `
 "import * as React from \\"react\\";
 
 export interface TextareaProps {
@@ -4297,7 +4852,7 @@ export interface TextareaProps {
   placeholder?: string;
 }
 
-export default function Textarea(props: TextareaProps) {
+function Textarea(props: TextareaProps) {
   return (
     <textarea
       {...props.attributes}
@@ -4308,10 +4863,12 @@ export default function Textarea(props: TextareaProps) {
     />
   );
 }
+
+export default Textarea;
 "
 `;
 
-exports[`React > Typescript Test > Video 1`] = `
+exports[`React > jsx > Typescript Test > Video 1`] = `
 "import * as React from \\"react\\";
 
 export interface VideoProps {
@@ -4340,7 +4897,7 @@ export interface VideoProps {
   lazyLoad?: boolean;
 }
 
-export default function Video(props: VideoProps) {
+function Video(props: VideoProps) {
   return (
     <video
       preload=\\"none\\"
@@ -4364,10 +4921,75 @@ export default function Video(props: VideoProps) {
     />
   );
 }
+
+export default Video;
 "
 `;
 
-exports[`React > Typescript Test > basicForwardRef 1`] = `
+exports[`React > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"steve\\");
+
+  function setName(value) {
+    setName(value);
+  }
+
+  function updateNameWithArrowFn(value) {
+    setName(value);
+  }
+
+  return (
+    <div>
+      Hello
+      {name}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      Hello
+      <Tag>{name}</Tag>
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <span>{action.text}</span>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
+exports[`React > jsx > Typescript Test > basicForwardRef 1`] = `
 "import * as React from \\"react\\";
 import { useState, forwardRef } from \\"react\\";
 
@@ -4376,7 +4998,7 @@ export interface Props {
   inputRef: HTMLInputElement;
 }
 
-export default forwardRef<Props[\\"inputRef\\"]>(
+const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
   function MyBasicForwardRefComponent(props: Props, inputRef) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
@@ -4399,10 +5021,12 @@ export default forwardRef<Props[\\"inputRef\\"]>(
     );
   }
 );
+
+export default MyBasicForwardRefComponent;
 "
 `;
 
-exports[`React > Typescript Test > basicForwardRefMetadata 1`] = `
+exports[`React > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 "import * as React from \\"react\\";
 import { useState, forwardRef } from \\"react\\";
 
@@ -4411,7 +5035,7 @@ export interface Props {
   inputRef: HTMLInputElement;
 }
 
-export default forwardRef<Props[\\"inputRef\\"]>(
+const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
   function MyBasicForwardRefComponent(props: Props, inputRef) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
@@ -4434,14 +5058,16 @@ export default forwardRef<Props[\\"inputRef\\"]>(
     );
   }
 );
+
+export default MyBasicForwardRefComponent;
 "
 `;
 
-exports[`React > Typescript Test > basicOnUpdateReturn 1`] = `
+exports[`React > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOnUpdateReturnComponent(props: any) {
+function MyBasicOnUpdateReturnComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -4468,13 +5094,15 @@ export default function MyBasicOnUpdateReturnComponent(props: any) {
     </div>
   );
 }
+
+export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
-exports[`React > Typescript Test > class + ClassName + css 1`] = `
+exports[`React > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   return (
     <>
       <div className=\\"test2 test div\\">
@@ -4488,13 +5116,15 @@ export default function MyBasicComponent(props: any) {
     </>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > class + css 1`] = `
+exports[`React > jsx > Typescript Test > class + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   return (
     <>
       <div className=\\"test div\\">
@@ -4508,13 +5138,15 @@ export default function MyBasicComponent(props: any) {
     </>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > className + css 1`] = `
+exports[`React > jsx > Typescript Test > className + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   return (
     <>
       <div className=\\"test div\\">
@@ -4528,10 +5160,12 @@ export default function MyBasicComponent(props: any) {
     </>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > className 1`] = `
+exports[`React > jsx > Typescript Test > className 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
@@ -4539,8 +5173,9 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
-export default function ClassNameCode(props: Props) {
+function ClassNameCode(props: Props) {
   const [bindings, setBindings] = useState(() => \\"a binding\\");
 
   return (
@@ -4551,14 +5186,16 @@ export default function ClassNameCode(props: Props) {
     </div>
   );
 }
+
+export default ClassNameCode;
 "
 `;
 
-exports[`React > Typescript Test > classState 1`] = `
+exports[`React > jsx > Typescript Test > classState 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   const [classState, setClassState] = useState(() => \\"testClassName\\");
 
   const [styleState, setStyleState] = useState(() => ({
@@ -4578,10 +5215,12 @@ export default function MyBasicComponent(props: any) {
     </>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > componentWithContext 1`] = `
+exports[`React > jsx > Typescript Test > componentWithContext 1`] = `
 "import * as React from \\"react\\";
 import { useContext } from \\"react\\";
 
@@ -4596,7 +5235,7 @@ import ReactiveContext2 from \\"@dummy/4\\";
 import ReactiveProxyContext1 from \\"@dummy/5\\";
 import ReactiveProxyContext2 from \\"@dummy/6\\";
 
-export default function ComponentWithContext(props: ComponentWithContextProps) {
+function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   const foo2 = useContext(ReactiveContext1);
@@ -4665,20 +5304,90 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
     </ReactiveContext2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;
 
-exports[`React > Typescript Test > defaultProps 1`] = `
+exports[`React > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          {foo.value}
+
+          <div>other</div>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`React > jsx > Typescript Test > contentState 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+
+function RenderContent(props: any) {
+  return (
+    <BuilderContext.Provider
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+    >
+      <div>setting context</div>
+    </BuilderContext.Provider>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
+exports[`React > jsx > Typescript Test > defaultProps 1`] = `
 "import * as React from \\"react\\";
 
 export interface ButtonProps {
   attributes?: any;
   text?: string;
+  buttonText?: string; // no default value
+
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 
-export default function Button(props: ButtonProps) {
+function Button(props: ButtonProps) {
   return (
     <div>
       {props.link ? (
@@ -4695,8 +5404,12 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button type=\\"button\\" {...props.attributes}>
-            {props.text}
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
+            {props.buttonText}
           </button>
         </>
       ) : null}
@@ -4708,11 +5421,16 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
+
+export default Button;
 "
 `;
 
-exports[`React > Typescript Test > defaultPropsOutsideComponent 1`] = `
+exports[`React > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
 "import * as React from \\"react\\";
 
 export interface ButtonProps {
@@ -4720,9 +5438,10 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 
-export default function Button(props: ButtonProps) {
+function Button(props: ButtonProps) {
   return (
     <div>
       {props.link ? (
@@ -4739,7 +5458,11 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button type=\\"button\\" {...props.attributes}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
             {props.text}
           </button>
         </>
@@ -4752,11 +5475,14 @@ Button.defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
+
+export default Button;
 "
 `;
 
-exports[`React > Typescript Test > defaultValsWithTypes 1`] = `
+exports[`React > jsx > Typescript Test > defaultValsWithTypes 1`] = `
 "import * as React from \\"react\\";
 
 type Props = {
@@ -4767,7 +5493,7 @@ const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
-export default function ComponentWithTypes(props: Props) {
+function ComponentWithTypes(props: Props) {
   return (
     <div>
       {\\" \\"}
@@ -4776,10 +5502,28 @@ export default function ComponentWithTypes(props: Props) {
     </div>
   );
 }
+
+export default ComponentWithTypes;
 "
 `;
 
-exports[`React > Typescript Test > import types 1`] = `
+exports[`React > jsx > Typescript Test > expressionState 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [refToUse, setRefToUse] = useState(() =>
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return <div>{refToUse}</div>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > jsx > Typescript Test > import types 1`] = `
 "import * as React from \\"react\\";
 
 type RenderContentProps = {
@@ -4790,7 +5534,7 @@ type RenderContentProps = {
 import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
 import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
-export default function RenderContent(props: RenderContentProps) {
+function RenderContent(props: RenderContentProps) {
   function getRenderContentProps(block, index) {
     return {
       block: block,
@@ -4804,14 +5548,16 @@ export default function RenderContent(props: RenderContentProps) {
     />
   );
 }
+
+export default RenderContent;
 "
 `;
 
-exports[`React > Typescript Test > multipleOnUpdate 1`] = `
+exports[`React > jsx > Typescript Test > multipleOnUpdate 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function MultipleOnUpdate(props: any) {
+function MultipleOnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -4821,14 +5567,16 @@ export default function MultipleOnUpdate(props: any) {
 
   return <div />;
 }
+
+export default MultipleOnUpdate;
 "
 `;
 
-exports[`React > Typescript Test > multipleOnUpdateWithDeps 1`] = `
+exports[`React > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MultipleOnUpdateWithDeps(props: any) {
+function MultipleOnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -4854,24 +5602,28 @@ export default function MultipleOnUpdateWithDeps(props: any) {
 
   return <div />;
 }
+
+export default MultipleOnUpdateWithDeps;
 "
 `;
 
-exports[`React > Typescript Test > multipleSpreads 1`] = `
+exports[`React > jsx > Typescript Test > multipleSpreads 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   const [attrs, setAttrs] = useState(() => ({
     hello: \\"world\\",
   }));
 
   return <input {...state.attrs} {...props} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > nestedShow 1`] = `
+exports[`React > jsx > Typescript Test > nestedShow 1`] = `
 "import * as React from \\"react\\";
 
 interface Props {
@@ -4879,7 +5631,7 @@ interface Props {
   conditionB: boolean;
 }
 
-export default function NestedShow(props: Props) {
+function NestedShow(props: Props) {
   return (
     <>
       {props.conditionA ? (
@@ -4898,20 +5650,23 @@ export default function NestedShow(props: Props) {
     </>
   );
 }
+
+export default NestedShow;
 "
 `;
 
-exports[`React > Typescript Test > nestedStyles 1`] = `
+exports[`React > jsx > Typescript Test > nestedStyles 1`] = `
 "import * as React from \\"react\\";
 
-export default function NestedStyles(props: any) {
+function NestedStyles(props: any) {
   return (
     <>
       <div className=\\"div\\">Hello world</div>
       <style jsx>{\`
         .div {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .div {
@@ -4921,24 +5676,35 @@ export default function NestedStyles(props: any) {
         .div:hover {
           display: flex;
         }
+        .div:active {
+          display: inline;
+        }
         .div .nested-selector {
           display: grid;
+        }
+        .div .nested-selector:hover {
+          display: block;
+        }
+        .div.nested-selector:active {
+          display: inline-block;
         }
       \`}</style>
     </>
   );
 }
+
+export default NestedStyles;
 "
 `;
 
-exports[`React > Typescript Test > onInit & onMount 1`] = `
+exports[`React > jsx > Typescript Test > onInit & onMount 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function OnInit(props: any) {
+function OnInit(props: any) {
   useEffect(() => {
     console.log(\\"onInit\\");
-  });
+  }, []);
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -4946,10 +5712,12 @@ export default function OnInit(props: any) {
 
   return <div />;
 }
+
+export default OnInit;
 "
 `;
 
-exports[`React > Typescript Test > onInit 1`] = `
+exports[`React > jsx > Typescript Test > onInit 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -4961,13 +5729,13 @@ export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
-export default function OnInit(props: Props) {
+function OnInit(props: Props) {
   const [name, setName] = useState(() => \\"\\");
 
   useEffect(() => {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  });
+  }, []);
 
   return (
     <div>
@@ -4976,14 +5744,16 @@ export default function OnInit(props: Props) {
     </div>
   );
 }
+
+export default OnInit;
 "
 `;
 
-exports[`React > Typescript Test > onMount 1`] = `
+exports[`React > jsx > Typescript Test > onMount 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function Comp(props: any) {
+function Comp(props: any) {
   useEffect(() => {
     console.log(\\"Runs on mount\\");
   }, []);
@@ -4996,24 +5766,28 @@ export default function Comp(props: any) {
 
   return <div />;
 }
+
+export default Comp;
 "
 `;
 
-exports[`React > Typescript Test > onUpdate 1`] = `
+exports[`React > jsx > Typescript Test > onUpdate 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function OnUpdate(props: any) {
+function OnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
 
   return <div />;
 }
+
+export default OnUpdate;
 "
 `;
 
-exports[`React > Typescript Test > onUpdateWithDeps 1`] = `
+exports[`React > jsx > Typescript Test > onUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -5021,7 +5795,7 @@ type Props = {
   size: string;
 };
 
-export default function OnUpdateWithDeps(props: Props) {
+function OnUpdateWithDeps(props: Props) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -5032,10 +5806,12 @@ export default function OnUpdateWithDeps(props: Props) {
 
   return <div />;
 }
+
+export default OnUpdateWithDeps;
 "
 `;
 
-exports[`React > Typescript Test > preserveExportOrLocalStatement 1`] = `
+exports[`React > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
 "import * as React from \\"react\\";
 
 type Types = {
@@ -5054,13 +5830,15 @@ export const a = 3;
 export const bar = () => {};
 export function run<T>(value: T) {}
 
-export default function MyBasicComponent(props: MyBasicComponentProps) {
+function MyBasicComponent(props: MyBasicComponentProps) {
   return <div />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > preserveTyping 1`] = `
+exports[`React > jsx > Typescript Test > preserveTyping 1`] = `
 "import * as React from \\"react\\";
 
 export type A = \\"test\\";
@@ -5076,7 +5854,7 @@ export interface MyBasicComponentProps {
   age?: number;
 }
 
-export default function MyBasicComponent(props: MyBasicComponentProps) {
+function MyBasicComponent(props: MyBasicComponentProps) {
   return (
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -5084,10 +5862,12 @@ export default function MyBasicComponent(props: MyBasicComponentProps) {
     </div>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > propsDestructure 1`] = `
+exports[`React > jsx > Typescript Test > propsDestructure 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
@@ -5096,7 +5876,7 @@ type Props = {
   type: string;
 };
 
-export default function MyBasicComponent(props: Props) {
+function MyBasicComponent(props: Props) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
@@ -5107,10 +5887,12 @@ export default function MyBasicComponent(props: Props) {
     </div>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > propsInterface 1`] = `
+exports[`React > jsx > Typescript Test > propsInterface 1`] = `
 "import * as React from \\"react\\";
 
 interface Person {
@@ -5118,7 +5900,7 @@ interface Person {
   age?: number;
 }
 
-export default function MyBasicComponent(props: Person | never) {
+function MyBasicComponent(props: Person | never) {
   return (
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -5126,10 +5908,12 @@ export default function MyBasicComponent(props: Person | never) {
     </div>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > propsType 1`] = `
+exports[`React > jsx > Typescript Test > propsType 1`] = `
 "import * as React from \\"react\\";
 
 type Person = {
@@ -5137,7 +5921,7 @@ type Person = {
   age?: number;
 };
 
-export default function MyBasicComponent(props: Person) {
+function MyBasicComponent(props: Person) {
   return (
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -5145,10 +5929,319 @@ export default function MyBasicComponent(props: Person) {
     </div>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > renderContentExample 1`] = `
+exports[`React > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+function OnUpdate(props: any) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
+}
+
+export default OnUpdate;
+"
+`;
+
+exports[`React > jsx > Typescript Test > renderBlock 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export type RenderBlockProps = {
+  block: BuilderBlock;
+  context: BuilderContextInterface;
+};
+import { TARGET } from \\"../../constants/target.js\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
+import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
+import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
+import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
+import BlockStyles from \\"./block-styles.lite\\";
+import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import type { RenderComponentProps } from \\"./render-component.lite\\";
+import RenderComponent from \\"./render-component.lite\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import type { RepeatData } from \\"./types.js\\";
+
+function RenderBlock(props: RenderBlockProps) {
+  function component() {
+    const componentName = getProcessedBlock({
+      block: props.block,
+      state: props.context.state,
+      context: props.context.context,
+      shouldEvaluateBindings: false,
+    }).component?.name;
+
+    if (!componentName) {
+      return null;
+    }
+
+    const ref = props.context.registeredComponents[componentName];
+
+    if (!ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+      return undefined;
+    } else {
+      return ref;
+    }
+  }
+
+  function tag() {
+    return getBlockTag(useBlock());
+  }
+
+  function useBlock() {
+    return repeatItemData()
+      ? props.block
+      : getProcessedBlock({
+          block: props.block,
+          state: props.context.state,
+          context: props.context.context,
+          shouldEvaluateBindings: true,
+        });
+  }
+
+  function actions() {
+    return getBlockActions({
+      block: useBlock(),
+      state: props.context.state,
+      context: props.context.context,
+    });
+  }
+
+  function attributes() {
+    const blockProperties = getBlockProperties(useBlock());
+    return {
+      ...blockProperties,
+      ...(TARGET === \\"reactNative\\"
+        ? {
+            style: getReactNativeBlockStyles({
+              block: useBlock(),
+              context: props.context,
+              blockStyles: blockProperties.style,
+            }),
+          }
+        : {}),
+    };
+  }
+
+  function shouldWrap() {
+    return !component?.()?.noWrap;
+  }
+
+  function renderComponentProps() {
+    return {
+      blockChildren: useChildren(),
+      componentRef: component?.()?.component,
+      componentOptions: {
+        ...getBlockComponentOptions(useBlock()),
+
+        /**
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
+         */
+        ...(shouldWrap()
+          ? {}
+          : {
+              attributes: { ...attributes(), ...actions() },
+            }),
+        customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
+      },
+      context: childrenContext(),
+    };
+  }
+
+  function useChildren() {
+    // TO-DO: When should \`canHaveChildren\` dictate rendering?
+    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+    // but still receive and need to render children.
+    // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
+    return useBlock().children ?? [];
+  }
+
+  function childrenWithoutParentComponent() {
+    /**
+     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+     * we render them outside of \`componentRef\`.
+     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+     * blocks, and the children will be repeated within those blocks.
+     */
+    const shouldRenderChildrenOutsideRef =
+      !component?.()?.component && !repeatItemData();
+    return shouldRenderChildrenOutsideRef ? useChildren() : [];
+  }
+
+  function repeatItemData() {
+    /**
+     * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
+     * which will not work if there is a repeat.
+     */
+    const { repeat, ...blockWithoutRepeat } = props.block;
+
+    if (!repeat?.collection) {
+      return undefined;
+    }
+
+    const itemsArray = evaluate({
+      code: repeat.collection,
+      state: props.context.state,
+      context: props.context.context,
+    });
+
+    if (!Array.isArray(itemsArray)) {
+      return undefined;
+    }
+
+    const collectionName = repeat.collection.split(\\".\\").pop();
+    const itemNameToUse =
+      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+      context: {
+        ...props.context,
+        state: {
+          ...props.context.state,
+          $index: index,
+          $item: item,
+          [itemNameToUse]: item,
+          [\`$\${itemNameToUse}Index\`]: index,
+        },
+      },
+      block: blockWithoutRepeat,
+    }));
+    return repeatArray;
+  }
+
+  function inheritedTextStyles() {
+    if (TARGET !== \\"reactNative\\") {
+      return {};
+    }
+
+    const styles = getReactNativeBlockStyles({
+      block: useBlock(),
+      context: props.context,
+      blockStyles: attributes().style,
+    });
+    return extractTextStyles(styles);
+  }
+
+  function childrenContext() {
+    return {
+      apiKey: props.context.apiKey,
+      state: props.context.state,
+      content: props.context.content,
+      context: props.context.context,
+      registeredComponents: props.context.registeredComponents,
+      inheritedStyles: inheritedTextStyles(),
+    };
+  }
+
+  function renderComponentTag() {
+    if (TARGET === \\"reactNative\\") {
+      return RenderComponentWithContext;
+    } else if (TARGET === \\"vue3\\") {
+      // vue3 expects a string for the component tag
+      return \\"RenderComponent\\";
+    } else {
+      return RenderComponent;
+    }
+  }
+
+  const [componentInfo, setComponentInfo] = useState(() => null);
+
+  const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
+
+  return (
+    <>
+      {shouldWrap() ? (
+        <>
+          {isEmptyHtmlElement(tag()) ? (
+            <>
+              <TagRef {...attributes()} {...actions()} />
+            </>
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+            <>
+              {repeatItemData()?.map((data, index) => (
+                <RenderRepeatedBlock
+                  key={index}
+                  repeatContext={data.context}
+                  block={data.block}
+                />
+              ))}
+            </>
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
+            <>
+              <TagRef {...attributes()} {...actions()}>
+                <RenderComponentTagRef {...renderComponentProps()} />
+
+                {childrenWithoutParentComponent()?.map((child) => (
+                  <RenderBlock
+                    key={\\"render-block-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  />
+                ))}
+
+                {childrenWithoutParentComponent()?.map((child) => (
+                  <BlockStyles
+                    key={\\"block-style-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  />
+                ))}
+              </TagRef>
+            </>
+          ) : null}
+        </>
+      ) : (
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
+      )}
+    </>
+  );
+}
+
+export default RenderBlock;
+"
+`;
+
+exports[`React > jsx > Typescript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { useContext, useEffect } from \\"react\\";
 
@@ -5159,15 +6252,15 @@ type Props = {
     id: string;
   };
 };
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-export default function RenderContent(props: Props) {
+function RenderContent(props: Props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
@@ -5202,10 +6295,12 @@ export default function RenderContent(props: Props) {
     </>
   );
 }
+
+export default RenderContent;
 "
 `;
 
-exports[`React > Typescript Test > rootFragmentMultiNode 1`] = `
+exports[`React > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
 "import * as React from \\"react\\";
 
 export interface ButtonProps {
@@ -5215,7 +6310,7 @@ export interface ButtonProps {
   openLinkInNewTab?: boolean;
 }
 
-export default function Button(props: ButtonProps) {
+function Button(props: ButtonProps) {
   return (
     <>
       {props.link ? (
@@ -5240,17 +6335,19 @@ export default function Button(props: ButtonProps) {
     </>
   );
 }
+
+export default Button;
 "
 `;
 
-exports[`React > Typescript Test > rootShow 1`] = `
+exports[`React > jsx > Typescript Test > rootShow 1`] = `
 "import * as React from \\"react\\";
 
 export interface RenderStylesProps {
   foo: string;
 }
 
-export default function RenderStyles(props: RenderStylesProps) {
+function RenderStyles(props: RenderStylesProps) {
   return (
     <>
       {props.foo === \\"bar\\" ? (
@@ -5263,13 +6360,15 @@ export default function RenderStyles(props: RenderStylesProps) {
     </>
   );
 }
+
+export default RenderStyles;
 "
 `;
 
-exports[`React > Typescript Test > self-referencing component 1`] = `
+exports[`React > jsx > Typescript Test > self-referencing component 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return (
     <div>
       {props.name}
@@ -5282,13 +6381,15 @@ export default function MyComponent(props: any) {
     </div>
   );
 }
+
+export default MyComponent;
 "
 `;
 
-exports[`React > Typescript Test > self-referencing component with children 1`] = `
+exports[`React > jsx > Typescript Test > self-referencing component with children 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return (
     <div>
       {props.name}
@@ -5305,10 +6406,12 @@ export default function MyComponent(props: any) {
     </div>
   );
 }
+
+export default MyComponent;
 "
 `;
 
-exports[`React > Typescript Test > showWithFor 1`] = `
+exports[`React > jsx > Typescript Test > showWithFor 1`] = `
 "import * as React from \\"react\\";
 
 interface Props {
@@ -5316,7 +6419,7 @@ interface Props {
   items: string[];
 }
 
-export default function NestedShow(props: Props) {
+function NestedShow(props: Props) {
   return (
     <>
       {props.conditionA ? (
@@ -5331,65 +6434,149 @@ export default function NestedShow(props: Props) {
     </>
   );
 }
+
+export default NestedShow;
 "
 `;
 
-exports[`React > Typescript Test > spreadAttrs 1`] = `
+exports[`React > jsx > Typescript Test > showWithRootText 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowRootText(props: Props) {
+  return <>{props.conditionA ? <>ContentA</> : <div>else-condition-A</div>}</>;
+}
+
+export default ShowRootText;
+"
+`;
+
+exports[`React > jsx > Typescript Test > spreadAttrs 1`] = `
+"import * as React from \\"react\\";
+
+function MyBasicComponent(props: any) {
   return <input {...attrs} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > spreadNestedProps 1`] = `
+exports[`React > jsx > Typescript Test > spreadNestedProps 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   return <input {...props.nested} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > spreadProps 1`] = `
+exports[`React > jsx > Typescript Test > spreadProps 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   return <input {...props} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
-exports[`React > Typescript Test > subComponent 1`] = `
+exports[`React > jsx > Typescript Test > styleClassAndCss 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props: any) {
+  return (
+    <>
+      <div
+        className=\\"builder-column div\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > jsx > Typescript Test > subComponent 1`] = `
 "import * as React from \\"react\\";
 import Foo from \\"./foo-sub-component.lite\\";
 
-export default function SubComponent(props: any) {
+function SubComponent(props: any) {
   return <Foo />;
 }
+
+export default SubComponent;
 "
 `;
 
-exports[`React > Typescript Test > typeDependency 1`] = `
+exports[`React > jsx > Typescript Test > svgComponent 1`] = `
 "import * as React from \\"react\\";
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
+
+function SvgComponent(props: any) {
+  return (
+    <svg
+      fill=\\"none\\"
+      role=\\"img\\"
+      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+      width={42}
+      height={42}
+    >
+      <defs>
+        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+          <feFlood result=\\"BackgroundImageFix\\" />
+
+          <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
+
+          <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
+export default SvgComponent;
+"
+`;
+
+exports[`React > jsx > Typescript Test > typeDependency 1`] = `
+"import * as React from \\"react\\";
+
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
 };
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export.lite\\";
 
-export default function TypeDependency(props: TypeDependencyProps) {
+function TypeDependency(props: TypeDependencyProps) {
   return <div>{props.foo}</div>;
 }
+
+export default TypeDependency;
 "
 `;
 
-exports[`React > Typescript Test > use-style 1`] = `
+exports[`React > jsx > Typescript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return (
     <>
       <button type=\\"button\\">Button</button>
@@ -5404,39 +6591,43 @@ export default function MyComponent(props: any) {
     </>
   );
 }
+
+export default MyComponent;
 "
 `;
 
-exports[`React > Typescript Test > use-style-and-css 1`] = `
+exports[`React > jsx > Typescript Test > use-style-and-css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return (
     <>
       <button type=\\"button\\" className=\\"button\\">
         Button
       </button>
       <style jsx>{\`
-        .button {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button {
+          background: blue;
+          color: white;
         }
       \`}</style>
     </>
   );
 }
+
+export default MyComponent;
 "
 `;
 
-exports[`React > Typescript Test > use-style-outside-component 1`] = `
+exports[`React > jsx > Typescript Test > use-style-outside-component 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return (
     <>
       <button type=\\"button\\">Button</button>
@@ -5451,6 +6642,24 @@ export default function MyComponent(props: any) {
     </>
   );
 }
+
+export default MyComponent;
+"
+`;
+
+exports[`React > jsx > Typescript Test > useTarget 1`] = `
+"import * as React from \\"react\\";
+
+function UseTargetComponent(props: any) {
+  function name() {
+    const prefix = 123;
+    return prefix + \\"foo\\";
+  }
+
+  return <div>{name()}</div>;
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -5458,14 +6667,9 @@ exports[`React > stamped (mobx) 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 import { useLocalObservable, observer } from \\"mobx-react-lite\\";
-type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
-};
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
-function SmileReviews(props: SmileReviewsProps) {
+function SmileReviews(props) {
   const state = useLocalObservable(() => ({
     reviews: [],
     name: \\"test\\",
@@ -5497,16 +6701,16 @@ function SmileReviews(props: SmileReviewsProps) {
           Write a review
         </button>
 
-        {state.showReviewPrompt ? (
+        {state.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-25be9656\\" />
+            <input placeholder=\\"Title\\" className=\\"input-94a2f244\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-25be9656\\"
+              className=\\"textarea-94a2f244\\"
             />
             <button
-              className=\\"button-25be9656\\"
+              className=\\"button-94a2f244\\"
               onClick={(event) => {
                 event.preventDefault();
                 state.showReviewPrompt = false;
@@ -5518,8 +6722,8 @@ function SmileReviews(props: SmileReviewsProps) {
         ) : null}
 
         {state.reviews?.map((review, index) => (
-          <div className=\\"review-25be9656\\" key={review.id}>
-            <img className=\\"img-25be9656\\" src={review.avatar} />
+          <div className=\\"review-94a2f244\\" key={review.id}>
+            <img className=\\"img-94a2f244\\" src={review.avatar} />
 
             <div
               className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
@@ -5536,19 +6740,25 @@ function SmileReviews(props: SmileReviewsProps) {
           </div>
         ))}
       </div>
-      <style>{\`.input-25be9656 { 
-display: block; }.textarea-25be9656 { 
-display: block; }.button-25be9656 { 
-display: block; }.review-25be9656 { 
-margin: 10px;
-padding: 10px;
-background: white;
-display: flex;
-border-radius: 5px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }.img-25be9656 { 
-height: 30px;
-width: 30px;
-margin-right: 10px; }\`}</style>
+
+      <style>{\`.input-94a2f244 {
+  display: block;
+}.textarea-94a2f244 {
+  display: block;
+}.button-94a2f244 {
+  display: block;
+}.review-94a2f244 {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}.img-94a2f244 {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+}\`}</style>
     </>
   );
 }
@@ -5561,15 +6771,9 @@ export default observedSmileReviews;
 exports[`React > stamped (useState) 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
-type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
-};
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
-
-export default function SmileReviews(props: SmileReviewsProps) {
+function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
 
   const [name, setName] = useState(() => \\"test\\");
@@ -5603,16 +6807,16 @@ export default function SmileReviews(props: SmileReviewsProps) {
           Write a review
         </button>
 
-        {showReviewPrompt ? (
+        {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-224aa5cc\\" />
+            <input placeholder=\\"Title\\" className=\\"input-208b4df4\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-224aa5cc\\"
+              className=\\"textarea-208b4df4\\"
             />
             <button
-              className=\\"button-224aa5cc\\"
+              className=\\"button-208b4df4\\"
               onClick={(event) => {
                 event.preventDefault();
                 setShowReviewPrompt(false);
@@ -5624,8 +6828,8 @@ export default function SmileReviews(props: SmileReviewsProps) {
         ) : null}
 
         {reviews?.map((review, index) => (
-          <div className=\\"review-224aa5cc\\" key={review.id}>
-            <img className=\\"img-224aa5cc\\" src={review.avatar} />
+          <div className=\\"review-208b4df4\\" key={review.id}>
+            <img className=\\"img-208b4df4\\" src={review.avatar} />
 
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
               <div>
@@ -5640,21 +6844,837 @@ export default function SmileReviews(props: SmileReviewsProps) {
           </div>
         ))}
       </div>
-      <style>{\`.input-224aa5cc { 
-display: block; }.textarea-224aa5cc { 
-display: block; }.button-224aa5cc { 
-display: block; }.review-224aa5cc { 
-margin: 10px;
-padding: 10px;
-background: white;
-display: flex;
-border-radius: 5px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }.img-224aa5cc { 
-height: 30px;
-width: 30px;
-margin-right: 10px; }\`}</style>
+
+      <style>{\`.input-208b4df4 {
+  display: block;
+}.textarea-208b4df4 {
+  display: block;
+}.button-208b4df4 {
+  display: block;
+}.review-208b4df4 {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}.img-208b4df4 {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+}\`}</style>
     </>
   );
 }
+
+export default SmileReviews;
+"
+`;
+
+exports[`React > svelte > Javascript Test > basic 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  return (
+    <div>
+      <input onChange={(event) => setName(event.target.value)} value={name} />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > bindGroup 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props) {
+  const [tortilla, setTortilla] = useState(() => \\"Plain\\");
+
+  const [fillings, setFillings] = useState(() => []);
+
+  return (
+    <div>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        checked={tortilla === \\"Plain\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={tortilla === \\"Whole wheat\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={tortilla === \\"Spinach\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        checked={fillings === \\"Rice\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={fillings === \\"Beans\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={fillings === \\"Cheese\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={fillings === \\"Guac (extra)\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <p>
+        Tortilla:
+        {tortilla}
+      </p>
+      <p>
+        Fillings:
+        {fillings}
+      </p>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > bindProperty 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props) {
+  const [value, setValue] = useState(() => \\"hello\\");
+
+  return <input value={value} />;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > classDirective 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props) {
+  const [focus, setFocus] = useState(() => true);
+
+  return (
+    <input
+      className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+        focus ? \\"focus\\" : \\"\\"
+      }\`}
+    />
+  );
+}
+
+MyComponent.defaultProps = {};
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > context 1`] = `
+"import * as React from \\"react\\";
+import { useState, useContext } from \\"react\\";
+
+function MyComponent(props) {
+  const [activeTab, setActiveTab] = useState(() => 0);
+
+  const disabled = useContext(\\"disabled\\");
+
+  return (
+    <Context.Provider value={activeTab}>
+      <div>{activeTab}</div>
+    </Context.Provider>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > each 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props) {
+  const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
+
+  return (
+    <ul>
+      {numbers?.map((num) => (
+        <li>{num}</li>
+      ))}
+    </ul>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > html 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props) {
+  const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
+
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props) {
+  const [show, setShow] = useState(() => true);
+
+  function toggle() {
+    setShow(!show);
+  }
+
+  return (
+    <>
+      {show ? (
+        <button onClick={(event) => toggle(event)}> Hide </button>
+      ) : (
+        <button onClick={(event) => toggle(event)}> Show </button>
+      )}
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > imports 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import Button from \\"./Button.lite\\";
+
+function MyComponent(props) {
+  const [disabled, setDisabled] = useState(() => false);
+
+  return (
+    <div>
+      <Button type=\\"button\\" disabled={disabled}>
+        {props.children}
+      </Button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > lifecycleHooks 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+function MyComponent(props) {
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
+
+  useEffect(() => {
+    console.log(\\"onAfterUpdate\\");
+  });
+
+  useEffect(() => {
+    return () => {
+      console.log(\\"onDestroy\\");
+    };
+  }, []);
+
+  return <div />;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > reactive 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  function lowercaseName() {
+    return name.toLowerCase();
+  }
+
+  return (
+    <div>
+      <input value={name} />
+      Lowercase:
+      {lowercaseName()}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+function MyComponent(props) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > slots 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props) {
+  return (
+    <div>
+      {props.children || \\"default\\"}
+      {props.slotTest || <div>default</div>}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > style 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <input className=\\"form-input\\" />
+      <style jsx>{\`
+        input {
+          color: red;
+          font-size: 12px;
+        }
+
+        .form-input:focus {
+          outline: 1px solid blue;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Javascript Test > textExpressions 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props) {
+  const [a, setA] = useState(() => 5);
+
+  const [b, setB] = useState(() => 12);
+
+  return (
+    <div>
+      normal:
+      {a + b}
+      <br />
+      conditional
+      {a > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > basic 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  return (
+    <div>
+      <input onChange={(event) => setName(event.target.value)} value={name} />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > bindGroup 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [tortilla, setTortilla] = useState(() => \\"Plain\\");
+
+  const [fillings, setFillings] = useState(() => []);
+
+  return (
+    <div>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        checked={tortilla === \\"Plain\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={tortilla === \\"Whole wheat\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={tortilla === \\"Spinach\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        checked={fillings === \\"Rice\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={fillings === \\"Beans\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={fillings === \\"Cheese\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={fillings === \\"Guac (extra)\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <p>
+        Tortilla:
+        {tortilla}
+      </p>
+      <p>
+        Fillings:
+        {fillings}
+      </p>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > bindProperty 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [value, setValue] = useState(() => \\"hello\\");
+
+  return <input value={value} />;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > classDirective 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [focus, setFocus] = useState(() => true);
+
+  return (
+    <input
+      className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+        focus ? \\"focus\\" : \\"\\"
+      }\`}
+    />
+  );
+}
+
+MyComponent.defaultProps = {};
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > context 1`] = `
+"import * as React from \\"react\\";
+import { useState, useContext } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [activeTab, setActiveTab] = useState(() => 0);
+
+  const disabled = useContext(\\"disabled\\");
+
+  return (
+    <Context.Provider value={activeTab}>
+      <div>{activeTab}</div>
+    </Context.Provider>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > each 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
+
+  return (
+    <ul>
+      {numbers?.map((num) => (
+        <li>{num}</li>
+      ))}
+    </ul>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props: any) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > html 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
+
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [show, setShow] = useState(() => true);
+
+  function toggle() {
+    setShow(!show);
+  }
+
+  return (
+    <>
+      {show ? (
+        <button onClick={(event) => toggle(event)}> Hide </button>
+      ) : (
+        <button onClick={(event) => toggle(event)}> Show </button>
+      )}
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > imports 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import Button from \\"./Button.lite\\";
+
+function MyComponent(props: any) {
+  const [disabled, setDisabled] = useState(() => false);
+
+  return (
+    <div>
+      <Button type=\\"button\\" disabled={disabled}>
+        {props.children}
+      </Button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > lifecycleHooks 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+function MyComponent(props: any) {
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
+
+  useEffect(() => {
+    console.log(\\"onAfterUpdate\\");
+  });
+
+  useEffect(() => {
+    return () => {
+      console.log(\\"onDestroy\\");
+    };
+  }, []);
+
+  return <div />;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > reactive 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  function lowercaseName() {
+    return name.toLowerCase();
+  }
+
+  return (
+    <div>
+      <input value={name} />
+      Lowercase:
+      {lowercaseName()}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > slots 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props: any) {
+  return (
+    <div>
+      {props.children || \\"default\\"}
+      {props.slotTest || <div>default</div>}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > style 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props: any) {
+  return (
+    <>
+      <input className=\\"form-input\\" />
+      <style jsx>{\`
+        input {
+          color: red;
+          font-size: 12px;
+        }
+
+        .form-input:focus {
+          outline: 1px solid blue;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React > svelte > Typescript Test > textExpressions 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyComponent(props: any) {
+  const [a, setA] = useState(() => 5);
+
+  const [b, setB] = useState(() => 12);
+
+  return (
+    <div>
+      normal:
+      {a + b}
+      <br />
+      conditional
+      {a > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+  );
+}
+
+export default MyComponent;
 "
 `;

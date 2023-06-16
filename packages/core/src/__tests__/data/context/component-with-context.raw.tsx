@@ -1,11 +1,10 @@
-import { setContext, useContext } from '@builder.io/mitosis';
+import { setContext, useContext, useMetadata } from '@builder.io/mitosis';
 import Context1 from '@dummy/1';
 import Context2 from '@dummy/2';
 import ReactiveContext1 from '@dummy/3';
 import ReactiveContext2 from '@dummy/4';
 import ReactiveProxyContext1 from '@dummy/5';
 import ReactiveProxyContext2 from '@dummy/6';
-import { useContext, setContext, useMetadata } from '@builder.io/mitosis';
 
 useMetadata({
   context: {
