@@ -125,7 +125,7 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -315,8 +315,8 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
@@ -495,10 +495,10 @@ import {
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export function usePrevious<T>(value: T) {
+export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -625,7 +625,7 @@ function Column(props) {
 
 const styles = StyleSheet.create({
   view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
-  view2: { flexGrow: 1 },
+  view2: { flexGrow: \\"1\\" },
 });
 
 export default Column;
@@ -696,7 +696,9 @@ function ContentSlotJsxCode(props) {
             {...props.attributes}
             onClick={(event) => show()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || <Text>{props.content}</Text>}</>
+            ) : null}
 
             <View>
               <View />
@@ -713,7 +715,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: <Text>{props.content}</Text>,
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -873,11 +875,13 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState, useRef } from \\"react\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 function FormComponent(props) {
   const formRef = useRef(null);
@@ -1226,7 +1230,7 @@ function Image(props) {
 
 const styles = StyleSheet.create({
   view1: {
-    opacity: 1,
+    opacity: \\"1\\",
     transition: \\"opacity 0.2s ease-in-out\\",
     objectFit: \\"cover\\",
     objectPosition: \\"center\\",
@@ -1436,16 +1440,16 @@ import {
 } from \\"react-native\\";
 
 function SlotCode(props) {
-  return <View>{props.children}</View>;
-}
-
-SlotCode.defaultProps = {
-  children: (
+  return (
     <View>
-      <Text>Default content</Text>
+      {props.children || (
+        <View>
+          <Text>Default content</Text>
+        </View>
+      )}
     </View>
-  ),
-};
+  );
+}
 
 export default SlotCode;
 "
@@ -1515,17 +1519,12 @@ function SlotCode(props) {
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || <Text>Default left</Text>}
 
-      {props.children}
+      {props.children || <Text>Default Child</Text>}
     </View>
   );
 }
-
-SlotCode.defaultProps = {
-  slotLeft: <Text>Default left</Text>,
-  children: <Text>Default Child</Text>,
-};
 
 export default SlotCode;
 "
@@ -1542,8 +1541,7 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
@@ -1581,14 +1579,13 @@ function SmileReviews(props) {
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <View placeholder=\\"Email\\" />
-          <View placeholder=\\"Title\\" style={styles.view1} />
-          <View placeholder=\\"How was your experience?\\" style={styles.view2} />
+          <View placeholder=\\"Title\\" />
+          <View placeholder=\\"How was your experience?\\" />
           <View
             onClick={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
             }}
-            style={styles.view3}
           >
             <Text>Submit</Text>
           </View>
@@ -1596,8 +1593,8 @@ function SmileReviews(props) {
       ) : null}
 
       {reviews?.map((review, index) => (
-        <View key={review.id} style={styles.view4}>
-          <View src={review.avatar} style={styles.view5} />
+        <View key={review.id} style={styles.view1}>
+          <View src={review.avatar} style={styles.view2} />
 
           <View>
             <View>
@@ -1620,18 +1617,15 @@ function SmileReviews(props) {
 }
 
 const styles = StyleSheet.create({
-  view1: { display: \\"block\\" },
-  view2: { display: \\"block\\" },
-  view3: { display: \\"block\\" },
-  view4: {
+  view1: {
     margin: 10,
     padding: 10,
     background: \\"white\\",
     display: \\"flex\\",
     borderRadius: 5,
-    boxShadow: 0,
+    boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
   },
-  view5: { height: 30, width: 30, marginRight: 10 },
+  view2: { height: 30, width: 30, marginRight: 10 },
 });
 
 export default SmileReviews;
@@ -1797,6 +1791,55 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      <Text>Hello </Text>
+      <Tag>
+        <Text>{name}</Text>
+      </Tag>
+
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <View>
+            <Text>{action.text}</Text>
+          </View>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
@@ -2041,7 +2084,7 @@ function MyBasicComponent(props) {
   }));
 
   return (
-    <View style={styles.view1}>
+    <View style={styleState}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -2294,7 +2337,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-const DEFAULT_VALUES: Props = {
+const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
@@ -2527,9 +2570,13 @@ function NestedStyles(props) {
 const styles = StyleSheet.create({
   view1: {
     display: \\"flex\\",
-    foo: \\"var(--bar)\\",
+    \\"--bar\\": \\"red\\",
+    color: \\"var(--bar)\\",
     \\"&:hover\\": { display: \\"flex\\" },
+    \\":active\\": { display: \\"inline\\" },
     \\".nested-selector\\": { display: \\"grid\\" },
+    \\".nested-selector:hover\\": { display: \\"block\\" },
+    \\"&.nested-selector:active\\": { display: \\"inline-block\\" },
   },
 });
 
@@ -2698,7 +2745,7 @@ const b = 3;
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
 function MyBasicComponent(props) {
   return <View />;
@@ -2856,20 +2903,20 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
 
 function RenderBlock(props) {
   function component() {
@@ -2889,8 +2936,8 @@ function RenderBlock(props) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -3060,6 +3107,7 @@ function RenderBlock(props) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
 
   return (
     <>
@@ -3067,7 +3115,7 @@ function RenderBlock(props) {
         <>
           {isEmptyHtmlElement(tag()) ? (
             <>
-              <View {...attributes()} {...actions()} />
+              <TagRef {...attributes()} {...actions()} />
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
@@ -3083,7 +3131,7 @@ function RenderBlock(props) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
             <>
-              <View {...attributes()} {...actions()}>
+              <TagRef {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
                 {childrenWithoutParentComponent()?.map((child) => (
@@ -3101,12 +3149,14 @@ function RenderBlock(props) {
                     context={childrenContext()}
                   />
                 ))}
-              </View>
+              </TagRef>
             </>
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -3127,12 +3177,12 @@ import {
   Text,
 } from \\"react-native\\";
 import { useContext, useEffect } from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 function RenderContent(props) {
@@ -3347,6 +3397,37 @@ export default NestedShow;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function ShowRootText(props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          <Text>ContentA</Text>
+        </>
+      ) : (
+        <View>
+          <Text>else-condition-A</Text>
+        </View>
+      )}
+    </>
+  );
+}
+
+export default ShowRootText;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > spreadAttrs 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -3401,6 +3482,36 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > styleClassAndCss 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function MyComponent(props) {
+  return (
+    <View
+      style={{
+        width: \\"100%\\",
+        ...styles.view1,
+      }}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
+});
+
+export default MyComponent;
 "
 `;
 
@@ -3558,6 +3669,34 @@ function MyComponent(props) {
 const styles = StyleSheet.create({});
 
 export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > useTarget 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function UseTargetComponent(props) {
+  function name() {
+    const prefix = \\"rn\\";
+    return prefix + \\"foo\\";
+  }
+
+  return (
+    <View>
+      <Text>{name()}</Text>
+    </View>
+  );
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -3722,7 +3861,7 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -3922,8 +4061,8 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
@@ -4079,7 +4218,7 @@ export interface Props {
 
 function MyBasicRefAssignmentComponent(props: Props) {
   const holdValueRef = useRef(\\"Patrick\\");
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef.current);
     holdValueRef.current = holdValueRef.current + \\"JS\\";
@@ -4239,12 +4378,12 @@ function Column(props: ColumnProps) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -4266,7 +4405,7 @@ function Column(props: ColumnProps) {
 
 const styles = StyleSheet.create({
   view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
-  view2: { flexGrow: 1 },
+  view2: { flexGrow: \\"1\\" },
 });
 
 export default Column;
@@ -4288,6 +4427,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotCode(props: Props) {
   return (
@@ -4322,6 +4462,7 @@ import { useState } from \\"react\\";
 type Props = {
   [key: string]: string | JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotJsxCode(props: Props) {
   const [name, setName] = useState(() => \\"king\\");
@@ -4346,7 +4487,9 @@ function ContentSlotJsxCode(props: Props) {
             {...props.attributes}
             onClick={(event) => show()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || <Text>{props.content}</Text>}</>
+            ) : null}
 
             <View>
               <View />
@@ -4363,7 +4506,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: <Text>{props.content}</Text>,
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -4557,11 +4700,13 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 function FormComponent(props: FormProps) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -4575,7 +4720,11 @@ function FormComponent(props: FormProps) {
     return (Builder.isEditing && props.previewState) || formState;
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -4589,16 +4738,19 @@ function FormComponent(props: FormProps) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -4624,7 +4776,7 @@ function FormComponent(props: FormProps) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -4686,7 +4838,7 @@ function FormComponent(props: FormProps) {
       fetch(
         props.sendSubmissionsTo === \\"email\\"
           ? formUrl
-          : props.action /* TODO: throw error if no action URL */,
+          : props.action! /* TODO: throw error if no action URL */,
         { body, headers, method: props.method || \\"post\\" }
       ).then(
         async (res) => {
@@ -4778,14 +4930,14 @@ function FormComponent(props: FormProps) {
       ) : null}{\\" \\"}
       {submissionState() === \\"error\\" ? (
         <>
-          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
+          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage!} />
         </>
       ) : null}{\\" \\"}
       {submissionState() === \\"sending\\" ? (
         <>
           <BuilderBlocks
             dataPath=\\"sendingMessage\\"
-            blocks={props.sendingMessage}
+            blocks={props.sendingMessage!}
           />
         </>
       ) : null}{\\" \\"}
@@ -4801,7 +4953,7 @@ function FormComponent(props: FormProps) {
         <>
           <BuilderBlocks
             dataPath=\\"successMessage\\"
-            blocks={props.successMessage}
+            blocks={props.successMessage!}
           />
         </>
       ) : null}{\\" \\"}
@@ -4929,7 +5081,7 @@ function Image(props: ImageProps) {
 
 const styles = StyleSheet.create({
   view1: {
-    opacity: 1,
+    opacity: \\"1\\",
     transition: \\"opacity 0.2s ease-in-out\\",
     objectFit: \\"cover\\",
     objectPosition: \\"center\\",
@@ -5195,16 +5347,16 @@ type Props = {
 };
 
 function SlotCode(props: Props) {
-  return <View>{props.children}</View>;
-}
-
-SlotCode.defaultProps = {
-  children: (
+  return (
     <View>
-      <Text>Default content</Text>
+      {props.children || (
+        <View>
+          <Text>Default content</Text>
+        </View>
+      )}
     </View>
-  ),
-};
+  );
+}
 
 export default SlotCode;
 "
@@ -5286,17 +5438,12 @@ function SlotCode(props: Props) {
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || <Text>Default left</Text>}
 
-      {props.children}
+      {props.children || <Text>Default Child</Text>}
     </View>
   );
 }
-
-SlotCode.defaultProps = {
-  slotLeft: <Text>Default left</Text>,
-  children: <Text>Default Child</Text>,
-};
 
 export default SlotCode;
 "
@@ -5318,8 +5465,7 @@ type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props: SmileReviewsProps) {
   const [reviews, setReviews] = useState(() => []);
@@ -5357,14 +5503,13 @@ function SmileReviews(props: SmileReviewsProps) {
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <View placeholder=\\"Email\\" />
-          <View placeholder=\\"Title\\" style={styles.view1} />
-          <View placeholder=\\"How was your experience?\\" style={styles.view2} />
+          <View placeholder=\\"Title\\" />
+          <View placeholder=\\"How was your experience?\\" />
           <View
             onClick={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
             }}
-            style={styles.view3}
           >
             <Text>Submit</Text>
           </View>
@@ -5372,8 +5517,8 @@ function SmileReviews(props: SmileReviewsProps) {
       ) : null}
 
       {reviews?.map((review, index) => (
-        <View key={review.id} style={styles.view4}>
-          <View src={review.avatar} style={styles.view5} />
+        <View key={review.id} style={styles.view1}>
+          <View src={review.avatar} style={styles.view2} />
 
           <View>
             <View>
@@ -5396,18 +5541,15 @@ function SmileReviews(props: SmileReviewsProps) {
 }
 
 const styles = StyleSheet.create({
-  view1: { display: \\"block\\" },
-  view2: { display: \\"block\\" },
-  view3: { display: \\"block\\" },
-  view4: {
+  view1: {
     margin: 10,
     padding: 10,
     background: \\"white\\",
     display: \\"flex\\",
     borderRadius: 5,
-    boxShadow: 0,
+    boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
   },
-  view5: { height: 30, width: 30, marginRight: 10 },
+  view2: { height: 30, width: 30, marginRight: 10 },
 });
 
 export default SmileReviews;
@@ -5621,6 +5763,55 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      <Text>Hello </Text>
+      <Tag>
+        <Text>{name}</Text>
+      </Tag>
+
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <View>
+            <Text>{action.text}</Text>
+          </View>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
@@ -5839,6 +6030,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ClassNameCode(props: Props) {
   const [bindings, setBindings] = useState(() => \\"a binding\\");
@@ -5880,7 +6072,7 @@ function MyBasicComponent(props: any) {
   }));
 
   return (
-    <View style={styles.view1}>
+    <View style={styleState}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -6226,7 +6418,8 @@ type RenderContentProps = {
   content: BuilderContent;
   renderContentProps: RenderBlockProps;
 };
-import RenderBlock from \\"./builder-render-block.raw\\";
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 function RenderContent(props: RenderContentProps) {
   function getRenderContentProps(block, index) {
@@ -6409,9 +6602,13 @@ function NestedStyles(props: any) {
 const styles = StyleSheet.create({
   view1: {
     display: \\"flex\\",
-    foo: \\"var(--bar)\\",
+    \\"--bar\\": \\"red\\",
+    color: \\"var(--bar)\\",
     \\"&:hover\\": { display: \\"flex\\" },
+    \\":active\\": { display: \\"inline\\" },
     \\".nested-selector\\": { display: \\"grid\\" },
+    \\".nested-selector:hover\\": { display: \\"block\\" },
+    \\"&.nested-selector:active\\": { display: \\"inline-block\\" },
   },
 });
 
@@ -6784,32 +6981,33 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
-import type {
-  BuilderContextInterface,
-  RegisteredComponent,
-} from \\"../../context/types.js\\";
-import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-import type { Nullable } from \\"../../types/typescript.js\\";
-import type { RenderComponentProps } from \\"./render-component\\";
-import type { RepeatData } from \\"./types.js\\";
+
 export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
 };
+import { TARGET } from \\"../../constants/target.js\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import type { RenderComponentProps } from \\"./render-component.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import type { RepeatData } from \\"./types.js\\";
 
 function RenderBlock(props: RenderBlockProps) {
   function component() {
@@ -6829,8 +7027,8 @@ function RenderBlock(props: RenderBlockProps) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -6946,7 +7144,7 @@ function RenderBlock(props: RenderBlockProps) {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {
@@ -7000,6 +7198,7 @@ function RenderBlock(props: RenderBlockProps) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
 
   return (
     <>
@@ -7007,7 +7206,7 @@ function RenderBlock(props: RenderBlockProps) {
         <>
           {isEmptyHtmlElement(tag()) ? (
             <>
-              <View {...attributes()} {...actions()} />
+              <TagRef {...attributes()} {...actions()} />
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
@@ -7023,7 +7222,7 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
             <>
-              <View {...attributes()} {...actions()}>
+              <TagRef {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
                 {childrenWithoutParentComponent()?.map((child) => (
@@ -7041,12 +7240,14 @@ function RenderBlock(props: RenderBlockProps) {
                     context={childrenContext()}
                   />
                 ))}
-              </View>
+              </TagRef>
             </>
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -7075,12 +7276,12 @@ type Props = {
     id: string;
   };
 };
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 function RenderContent(props: Props) {
@@ -7311,6 +7512,41 @@ export default NestedShow;
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowRootText(props: Props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          <Text>ContentA</Text>
+        </>
+      ) : (
+        <View>
+          <Text>else-condition-A</Text>
+        </View>
+      )}
+    </>
+  );
+}
+
+export default ShowRootText;
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > spreadAttrs 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -7365,6 +7601,36 @@ function MyBasicComponent(props: any) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > styleClassAndCss 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function MyComponent(props: any) {
+  return (
+    <View
+      style={{
+        width: \\"100%\\",
+        ...styles.view1,
+      }}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
+});
+
+export default MyComponent;
 "
 `;
 
@@ -7435,12 +7701,13 @@ import {
   Image,
   Text,
 } from \\"react-native\\";
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
+
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
 };
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export.lite\\";
 
 function TypeDependency(props: TypeDependencyProps) {
   return (
@@ -7528,6 +7795,34 @@ function MyComponent(props: any) {
 const styles = StyleSheet.create({});
 
 export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > useTarget 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function UseTargetComponent(props: any) {
+  function name() {
+    const prefix = \\"rn\\";
+    return prefix + \\"foo\\";
+  }
+
+  return (
+    <View>
+      <Text>{name()}</Text>
+    </View>
+  );
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -7996,20 +8291,15 @@ import {
 function MyComponent(props) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || <Text>default</Text>}
+      {props.slotTest || (
+        <View>
+          <Text>default</Text>
+        </View>
+      )}
     </View>
   );
 }
-
-MyComponent.defaultProps = {
-  children: <Text>default</Text>,
-  slotTest: (
-    <View>
-      <Text>default</Text>
-    </View>
-  ),
-};
 
 export default MyComponent;
 "
@@ -8533,20 +8823,15 @@ import {
 function MyComponent(props: any) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || <Text>default</Text>}
+      {props.slotTest || (
+        <View>
+          <Text>default</Text>
+        </View>
+      )}
     </View>
   );
 }
-
-MyComponent.defaultProps = {
-  children: <Text>default</Text>,
-  slotTest: (
-    <View>
-      <Text>default</Text>
-    </View>
-  ),
-};
 
 export default MyComponent;
 "

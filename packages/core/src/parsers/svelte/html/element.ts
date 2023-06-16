@@ -1,14 +1,14 @@
 import { generate } from 'astring';
 import { upperFirst } from 'lodash';
-import { createMitosisNode } from '../helpers/mitosis-node';
 import { filterChildren, parseChildren } from '../helpers/children';
+import { createMitosisNode } from '../helpers/mitosis-node';
 import { insertAt, uniqueName } from '../helpers/string';
 import { parseAction } from './actions';
 
-import type { TemplateNode, Element, Text, MustacheTag } from 'svelte/types/compiler/interfaces';
-import type { Identifier, ArrowFunctionExpression, BaseCallExpression, Node } from 'estree';
-import type { SveltosisComponent } from '../types';
+import type { ArrowFunctionExpression, BaseCallExpression, Identifier, Node } from 'estree';
+import type { Element, MustacheTag, TemplateNode, Text } from 'svelte/types/compiler/interfaces';
 import { createSingleBinding } from '../../../helpers/bindings';
+import type { SveltosisComponent } from '../types';
 
 interface AttributeShorthand {
   type: 'AttributeShorthand';

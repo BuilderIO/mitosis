@@ -1,7 +1,7 @@
 import { getForArguments } from '../../helpers/nodes/for';
 import { ForNode, MitosisNode } from '../../types/mitosis-node';
 import { minify } from '../minify';
-import { SrcBuilder, iteratorProperty } from './src-generator';
+import { iteratorProperty, SrcBuilder } from './src-generator';
 
 export const DIRECTIVES: Record<
   string,
@@ -33,25 +33,32 @@ export const DIRECTIVES: Record<
         this.isBuilder && this.emit('(('), this.emit('function(', forArgs, '){');
         if (this.isBuilder) {
           this.emit(
-            'var state=Object.assign({},this,{',
+            'const l={...this,',
             iteratorProperty(expr),
             ':',
             forName,
             '==null?{}:',
             forName,
-            '});',
+            ',',
+            () =>
+              forArgs.forEach((arg) => {
+                this.emit(arg, ':', arg, ',');
+              }),
+            '};',
           );
+          this.emit('const state = __proxyMerge__(s,l);');
         }
         this.emit('return(');
         blockFn();
         this.emit(');}');
-        this.isBuilder && this.emit(').bind(state))');
+        this.isBuilder && this.emit(').bind(l))');
         this.emit(')');
       });
     },
   Image: minify`${Image}`,
   CoreButton: minify`${CoreButton}`,
   __passThroughProps__: minify`${__passThroughProps__}`,
+  __proxyMerge__: minify`${__proxyMerge__}`,
 };
 
 declare const h: (name: string, props: Record<string, any>, children?: any[]) => any;
@@ -107,7 +114,7 @@ export function Image(props: ImageProps) {
         .map((size) => {
           return updateQueryParam(webpImage, 'width', size) + ' ' + size + 'w';
         })
-        .concat([image])
+        .concat(tryAppendWidth(image))
         .join(', ');
       imgProps.srcset = srcset;
       jsx = jsx = [
@@ -145,9 +152,18 @@ export function Image(props: ImageProps) {
 
     return uri + separator + key + '=' + encodeURIComponent(value);
   }
+
+  function tryAppendWidth(url: string) {
+    const match = url.match(/[?&]width=(\d+)/);
+    const width = match && match[1];
+    if (width) {
+      return [url + ' ' + width + 'w'];
+    }
+    return [];
+  }
 }
 
-export function __passThroughProps__(
+function __passThroughProps__(
   dstProps: Record<string, any>,
   srcProps: Record<string, any>,
 ): Record<string, any> {
@@ -162,7 +178,7 @@ export function __passThroughProps__(
   return dstProps;
 }
 
-export function CoreButton(props: {
+function CoreButton(props: {
   text?: string;
   link?: string;
   class?: string;
@@ -177,4 +193,20 @@ export function CoreButton(props: {
     class: props.class,
   };
   return h(hasLink ? 'a' : props.tagName$ || 'span', __passThroughProps__(hProps, props));
+}
+
+function __proxyMerge__(state: any, local: any) {
+  return new Proxy(state, {
+    get: (obj: any, prop: any) => {
+      if (local && prop in local) {
+        return local[prop];
+      } else {
+        return state[prop];
+      }
+    },
+    set: (obj: any, prop: any, value: any) => {
+      obj[prop] = value;
+      return true;
+    },
+  });
 }

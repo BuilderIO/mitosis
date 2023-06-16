@@ -1,13 +1,16 @@
 import * as babel from '@babel/core';
 
-const jsxPlugin = require('@babel/plugin-syntax-jsx');
-const tsPreset = require('@babel/preset-typescript');
-const decorators = require('@babel/plugin-syntax-decorators');
+import decorators from '@babel/plugin-syntax-decorators';
+import tsPlugin from '@babel/plugin-syntax-typescript';
+import tsPreset from '@babel/preset-typescript';
 
 export function parseCode(code: string) {
   const ast = babel.parse(code, {
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-    plugins: [[decorators, { legacy: true }], jsxPlugin],
+    plugins: [
+      [tsPlugin, { isTSX: true }],
+      [decorators, { legacy: true }],
+    ],
   });
   const body = babel.types.isFile(ast)
     ? ast.program.body

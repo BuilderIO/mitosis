@@ -1,4 +1,6 @@
 import { outputFileAsync } from 'fs-extra-promise';
+import { resolve } from 'path';
+import stripAnsi from 'strip-ansi';
 import { File } from '../generators/qwik';
 import { componentToQwik } from '../generators/qwik/component-generator';
 import { addComponent, createFileSet, FileSet } from '../generators/qwik/index';
@@ -12,7 +14,7 @@ import {
   convertBuilderContentToSymbolHierarchy,
   convertBuilderElementToMitosisComponent,
 } from '../symbols/symbol-processor';
-import { runTestsForTarget } from './shared';
+import { runTestsForTarget } from './test-generator';
 
 import todo from '../../../../examples/todo/src/components/todo.lite.tsx?raw';
 import todos from '../../../../examples/todo/src/components/todos.lite.tsx?raw';
@@ -20,12 +22,12 @@ import todos from '../../../../examples/todo/src/components/todos.lite.tsx?raw';
 const debugFiles = true;
 
 const debugOutput = async (fileSet: FileSet) => {
-  const testName = expect.getState().currentTestName;
-  const base = 'dist/test/' + testName?.split(' ').join('/') + '/';
+  const testName = stripAnsi(expect.getState().currentTestName as string);
+  const base = 'dist/test/' + testName.split(/[\s>]+/g).join('/') + '/';
   if (debugFiles) {
     for (const key in fileSet) {
       const file = (fileSet as any)[key];
-      await outputFileAsync(base + file.path, file.contents);
+      await outputFileAsync(resolve(base, file.path), file.contents);
     }
   }
 };

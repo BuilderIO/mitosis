@@ -1,27 +1,28 @@
+import { camelCase, curry, flow, flowRight as compose } from 'lodash';
 import { format } from 'prettier/standalone';
-import { collectCss } from '../../helpers/styles/collect-css';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
+import { babelTransformCode } from '../../helpers/babel-transform';
+import { dashCase } from '../../helpers/dash-case';
 import { fastClone } from '../../helpers/fast-clone';
+import { getRefs } from '../../helpers/get-refs';
+import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
+import { initializeOptions } from '../../helpers/merge-options';
+import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
+import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { selfClosingTags } from '../../parsers/jsx';
-import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
+import { collectCss } from '../../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
-import { dashCase } from '../../helpers/dash-case';
-import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { camelCase, curry, flow, flowRight as compose } from 'lodash';
-import { getRefs } from '../../helpers/get-refs';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
+import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { renderMountHook } from './render-mount-hook';
-import { babelTransformCode } from '../../helpers/babel-transform';
-import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
 
 export interface ToAlpineOptions extends BaseTranspilerOptions {
   /**
@@ -183,7 +184,7 @@ const blockToAlpine = (json: MitosisNode | ForNode, options: ToAlpineOptions = {
       str += ` ${bind}${bindingType === 'spread' ? '' : key}="${useValue}" `.replace(':=', '=');
     }
   }
-  return selfClosingTags.has(json.name)
+  return SELF_CLOSING_HTML_TAGS.has(json.name)
     ? `${str} />`
     : `${str}>${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('\n')}</${
         json.name
@@ -191,8 +192,10 @@ const blockToAlpine = (json: MitosisNode | ForNode, options: ToAlpineOptions = {
 };
 
 export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
-  (options = {}) =>
+  (_options = {}) =>
   ({ component }) => {
+    const options = initializeOptions('alpine', _options);
+
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);

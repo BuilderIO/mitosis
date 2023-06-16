@@ -1,18 +1,20 @@
-import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
+import { HOOKS } from '../constants/hooks';
+import { SELF_CLOSING_HTML_TAGS } from '../constants/html_tags';
+import { dedent } from '../helpers/dedent';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponents } from '../helpers/get-components';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { isRootTextNode } from '../helpers/is-root-text-node';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
-import { METADATA_HOOK_NAME, selfClosingTags } from '../parsers/jsx';
+import { checkHasState } from '../helpers/state';
 import { MitosisComponent } from '../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { blockToReact, componentToReact } from './react';
-import { checkHasState } from '../helpers/state';
 
 export interface ToMitosisOptions extends BaseTranspilerOptions {
   format: 'react' | 'legacy';
@@ -94,7 +96,7 @@ export const blockToMitosis = (
       }
     }
   }
-  if (selfClosingTags.has(json.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
 
@@ -156,7 +158,7 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
       return `${refName}${domRefs.has(refName) ? `.current` : ''}`;
     });
 
-    const addWrapper = json.children.length !== 1;
+    const addWrapper = json.children.length !== 1 || isRootTextNode(json);
 
     const components = Array.from(getComponents(json));
 
@@ -185,7 +187,7 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
 
     ${
       stringifiedUseMetadata && stringifiedUseMetadata !== '{}'
-        ? `${METADATA_HOOK_NAME}(${stringifiedUseMetadata})`
+        ? `${HOOKS.METADATA}(${stringifiedUseMetadata})`
         : ''
     }
 

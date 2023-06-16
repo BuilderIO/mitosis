@@ -1,23 +1,29 @@
-import dedent from 'dedent';
+import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { TranspilerGenerator } from '../../types/transpiler';
-import { collectCss } from '../../helpers/styles/collect-css';
+import { createSingleBinding } from '../../helpers/bindings';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
+import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
-import { getRefs } from '../../helpers/get-refs';
 import { getPropsRef } from '../../helpers/get-props-ref';
+import { getRefs } from '../../helpers/get-refs';
 import {
-  stringifyContextValue,
   getStateObjectStringFromComponent,
+  stringifyContextValue,
 } from '../../helpers/get-state-object-string';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { handleMissingState } from '../../helpers/handle-missing-state';
+import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { mapRefs } from '../../helpers/map-refs';
+import { initializeOptions } from '../../helpers/merge-options';
 import { processHttpRequests } from '../../helpers/process-http-requests';
-import { processTagReferences } from '../../helpers/process-tag-references';
 import { renderPreComponent } from '../../helpers/render-imports';
+import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
+import { checkHasState } from '../../helpers/state';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { collectCss } from '../../helpers/styles/collect-css';
+import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
+import { hasCss } from '../../helpers/styles/helpers';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -25,26 +31,19 @@ import {
   runPreJsonPlugins,
 } from '../../modules/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
+import { TranspilerGenerator } from '../../types/transpiler';
 import { hasContext } from '../helpers/context';
 import { collectReactNativeStyles } from '../react-native';
-import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
-import { hasCss } from '../../helpers/styles/helpers';
-import { checkHasState } from '../../helpers/state';
-import { ToReactOptions } from './types';
-import { getUseStateCode, processHookCode, updateStateSetters } from './state';
-import { closeFrag, openFrag, processBinding, wrapInFragment } from './helpers';
-import hash from 'hash-sum';
-import { createSingleBinding } from '../../helpers/bindings';
 import { blockToReact } from './blocks';
-import { mergeOptions } from '../../helpers/merge-options';
-import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
+import { closeFrag, getCode, openFrag, processTagReferences, wrapInFragment } from './helpers';
+import { getUseStateCode, processHookCode, updateStateSetters } from './state';
+import { ToReactOptions } from './types';
 
 export const contextPropDrillingKey = '_context';
 
 /**
  * If the root Mitosis component only has 1 child, and it is a `Show`/`For` node, then we need to wrap it in a fragment.
  * Otherwise, we end up with invalid React render code.
- *
  */
 const isRootSpecialNode = (json: MitosisComponent) =>
   json.children.length === 1 && ['Show', 'For'].includes(json.children[0].name);
@@ -134,10 +133,6 @@ function getContextString(component: MitosisComponent, options: ToReactOptions) 
   return str;
 }
 
-const getInitCode = (json: MitosisComponent, options: ToReactOptions): string => {
-  return processBinding(json.hooks.init?.code || '', options);
-};
-
 type ReactExports =
   | 'useState'
   | 'useRef'
@@ -162,9 +157,20 @@ export const componentToPreact: TranspilerGenerator<Partial<ToReactOptions>> = (
 
 export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
   (reactOptions = {}) =>
-  ({ component }) => {
+  ({ component, path }) => {
     let json = fastClone(component);
-    const options: ToReactOptions = mergeOptions(DEFAULT_OPTIONS, reactOptions);
+
+    const target = reactOptions.preact
+      ? 'preact'
+      : reactOptions.type === 'native'
+      ? 'reactNative'
+      : reactOptions.type === 'taro'
+      ? 'taro'
+      : reactOptions.rsc
+      ? 'rsc'
+      : 'react';
+
+    const options = initializeOptions(target, DEFAULT_OPTIONS, reactOptions);
 
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
@@ -191,7 +197,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
           // Remove spaces between imports
           .replace(/;\n\nimport\s/g, ';\nimport ');
       } catch (err) {
-        console.error('Format error for file:', str, JSON.stringify(json, null, 2));
+        console.error('Format error for file:');
         throw err;
       }
     }
@@ -245,7 +251,7 @@ const _componentToReact = (
 ) => {
   processHttpRequests(json);
   handleMissingState(json);
-  processTagReferences(json);
+  processTagReferences(json, options);
   const contextStr = provideContext(json, options);
   const componentHasStyles = hasCss(json);
   if (options.stateType === 'useState') {
@@ -264,7 +270,7 @@ const _componentToReact = (
   let hasState = checkHasState(json);
 
   const [forwardRef, hasPropRef] = getPropsRef(json);
-  const isForwardRef = Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
+  const isForwardRef = !options.preact && Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
   if (isForwardRef) {
     const meta = json.meta.useMetadata?.forwardRef as string;
     options.forwardRef = meta || forwardRef;
@@ -313,7 +319,7 @@ const _componentToReact = (
   if (allRefs.length) {
     reactLibImports.add('useRef');
   }
-  if (hasPropRef) {
+  if (!options.preact && hasPropRef) {
     reactLibImports.add('forwardRef');
   }
   if (
@@ -325,10 +331,17 @@ const _componentToReact = (
     reactLibImports.add('useEffect');
   }
 
+  const hasCustomStyles = !!json.style?.length;
+  const shouldInjectCustomStyles =
+    hasCustomStyles &&
+    (options.stylesType === 'styled-components' || options.stylesType === 'emotion');
+
   const wrap =
     wrapInFragment(json) ||
+    isRootTextNode(json) ||
     (componentHasStyles &&
       (options.stylesType === 'styled-jsx' || options.stylesType === 'style-tag')) ||
+    shouldInjectCustomStyles ||
     isRootSpecialNode(json);
 
   const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
@@ -369,7 +382,7 @@ const _componentToReact = (
     }
     ${hasStateArgument ? refsString : ''}
     ${getContextString(json, options)}
-    ${getInitCode(json, options)}
+    ${getCode(json.hooks.init?.code, options)}
     ${contextStr || ''}
 
     ${
@@ -425,10 +438,14 @@ const _componentToReact = (
       ${
         componentHasStyles && options.stylesType === 'styled-jsx'
           ? `<style jsx>{\`${css}\`}</style>`
-          : componentHasStyles && options.stylesType === 'style-tag'
+          : ''
+      }
+      ${
+        componentHasStyles && options.stylesType === 'style-tag'
           ? `<style>{\`${css}\`}</style>`
           : ''
       }
+      ${shouldInjectCustomStyles ? `<style>{\`${json.style}\`}</style>` : ''}
       ${wrap ? closeFrag(options) : ''}
     );
   `;

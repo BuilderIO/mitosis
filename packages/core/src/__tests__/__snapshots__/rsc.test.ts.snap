@@ -22,7 +22,7 @@ function MyBasicRefComponent(props) {
       <div>
         {props.showInput ? (
           <>
-            <input className=\\"input-37c780bb\\" value={state.name} />
+            <input className=\\"input-5e04c954\\" value={state.name} />
 
             <label htmlFor=\\"cars\\">Choose a car:</label>
 
@@ -37,8 +37,9 @@ function MyBasicRefComponent(props) {
         {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style>{\`.input-37c780bb {
-color: red;
+
+      <style>{\`.input-5e04c954 {
+  color: red;
 }\`}</style>
     </>
   );
@@ -69,12 +70,13 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <div className=\\"test div-251ed544\\">
+      <div className=\\"test div-147b3959\\">
         <input value={DEFAULT_VALUES.name || state.name} />
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-      <style>{\`.div-251ed544 {
-padding: 10px;
+
+      <style>{\`.div-147b3959 {
+  padding: 10px;
 }\`}</style>
     </>
   );
@@ -87,7 +89,7 @@ export default MyBasicComponent;
 exports[`RSC > jsx > Javascript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
   const _context = { ...props[\\"_context\\"] };
@@ -216,8 +218,8 @@ export default MyBooleanAttribute;
 
 exports[`RSC > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
   const _context = { ...props[\\"_context\\"] };
@@ -291,7 +293,7 @@ function MyBasicRefComponent(props) {
       <div>
         {props.showInput ? (
           <>
-            <input className=\\"input-37c780bb\\" value={state.name} />
+            <input className=\\"input-5e04c954\\" value={state.name} />
 
             <label htmlFor=\\"cars\\">Choose a car:</label>
 
@@ -306,8 +308,9 @@ function MyBasicRefComponent(props) {
         {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style>{\`.input-37c780bb {
-color: red;
+
+      <style>{\`.input-5e04c954 {
+  color: red;
 }\`}</style>
     </>
   );
@@ -345,10 +348,10 @@ export default MyBasicRefAssignmentComponent;
 exports[`RSC > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "import * as React from \\"react\\";
 
-export function usePrevious<T>(value: T) {
+export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -443,22 +446,23 @@ function Column(props) {
 
   return (
     <>
-      <div className=\\"builder-columns div-033a66b8\\">
+      <div className=\\"builder-columns div-6557df1e\\">
         {props.columns?.map((column, index) => (
-          <div className=\\"builder-column div-033a66b8-2\\">
+          <div className=\\"builder-column div-6557df1e-2\\">
             {column.content}
 
             {index}
           </div>
         ))}
       </div>
-      <style>{\`.div-033a66b8 {
-display: flex;
-flex-direction: column;
-align-items: stretch;
-line-height: normal;
-}@media (max-width: 999px) { .div-033a66b8 {   flex-direction: row; } }@media (max-width: 639px) { .div-033a66b8 {   flex-direction: row-reverse; } }.div-033a66b8-2 {
-flex-grow: 1;
+
+      <style>{\`.div-6557df1e {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
+}@media (max-width: 999px) { .div-6557df1e {   flex-direction: row; } }@media (max-width: 639px) { .div-6557df1e {   flex-direction: row-reverse; } }.div-6557df1e-2 {
+  flex-grow: 1;
 }\`}</style>
     </>
   );
@@ -516,10 +520,10 @@ function ContentSlotJsxCode(props) {
             name={props.slotContent ? \\"name1\\" : \\"name2\\"}
             title={props.slotContent ? \\"title1\\" : \\"title2\\"}
             {...props.attributes}
-            className={props.slotContent ? \`\${state.name}-content\` : \\"\\"}
+            className={state.cls}
           >
             {state.showContent && props.slotContent ? (
-              <>{props.slotContent}</>
+              <>{props.slotContent || \\"{props.content}\\"}</>
             ) : null}
 
             <div>
@@ -537,7 +541,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -678,11 +682,13 @@ export default CustomCode;
 
 exports[`RSC > jsx > Javascript Test > Form 1`] = `
 "import * as React from \\"react\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 function FormComponent(props) {
   const _context = { ...props[\\"_context\\"] };
@@ -924,7 +930,7 @@ function FormComponent(props) {
         ) : null}{\\" \\"}
         {state.submissionState === \\"error\\" && state.responseData ? (
           <>
-            <pre className=\\"builder-form-error-text pre-170708b2\\">
+            <pre className=\\"builder-form-error-text pre-172edb1e\\">
               {\\" \\"}
               {JSON.stringify(state.responseData, null, 2)}{\\" \\"}
             </pre>
@@ -940,7 +946,7 @@ function FormComponent(props) {
           </>
         ) : null}{\\" \\"}
       </form>{\\" \\"}
-      <style>{\`.pre-170708b2 { padding: 10px; color: red; text-align: center; }\`}</style>{\\" \\"}
+      <style>{\`.pre-172edb1e {   padding: 10px;   color: red;   text-align: center; }\`}</style>{\\" \\"}
     </>
   );
 }
@@ -985,7 +991,7 @@ function Image(props) {
                 className={
                   \\"builder-image\\" +
                   (props._class ? \\" \\" + props._class : \\"\\") +
-                  \\" img-ccac6a98\\"
+                  \\" img-af8fac0c\\"
                 }
                 src={props.image}
                 srcset={props.srcset}
@@ -999,11 +1005,12 @@ function Image(props) {
 
         {props.children}
       </div>
-      <style>{\`.img-ccac6a98 {
-opacity: 1;
-transition: opacity 0.2s ease-in-out;
-object-fit: cover;
-object-position: center;
+
+      <style>{\`.img-af8fac0c {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
 }\`}</style>
     </>
   );
@@ -1228,12 +1235,10 @@ function SlotCode(props) {
     <div slotContext={_context}>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\" };
 
 export default SlotCode;
 "
@@ -1241,8 +1246,7 @@ export default SlotCode;
 
 exports[`RSC > jsx > Javascript Test > Stamped.io 1`] = `
 "import * as React from \\"react\\";
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props) {
   const _context = { ...props[\\"_context\\"] };
@@ -1267,18 +1271,18 @@ function SmileReviews(props) {
         {state.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-000d4b30\\" />
+            <input placeholder=\\"Title\\" className=\\"input-5b52f02a\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-000d4b30\\"
+              className=\\"textarea-5b52f02a\\"
             />
-            <button className=\\"button-000d4b30\\">Submit</button>
+            <button className=\\"button-5b52f02a\\">Submit</button>
           </>
         ) : null}
 
         {state.reviews?.map((review, index) => (
-          <div className=\\"review-000d4b30\\" key={review.id}>
-            <img className=\\"img-000d4b30\\" src={review.avatar} />
+          <div className=\\"review-5b52f02a\\" key={review.id}>
+            <img className=\\"img-5b52f02a\\" src={review.avatar} />
 
             <div
               className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
@@ -1295,23 +1299,24 @@ function SmileReviews(props) {
           </div>
         ))}
       </div>
-      <style>{\`.input-000d4b30 {
-display: block;
-}.textarea-000d4b30 {
-display: block;
-}.button-000d4b30 {
-display: block;
-}.review-000d4b30 {
-margin: 10px;
-padding: 10px;
-background: white;
-display: flex;
-border-radius: 5px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}.img-000d4b30 {
-height: 30px;
-width: 30px;
-margin-right: 10px;
+
+      <style>{\`.input-5b52f02a {
+  display: block;
+}.textarea-5b52f02a {
+  display: block;
+}.button-5b52f02a {
+  display: block;
+}.review-5b52f02a {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}.img-5b52f02a {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
 }\`}</style>
     </>
   );
@@ -1451,6 +1456,40 @@ export default MyComponent;
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    name: \\"VincentW\\",
+    TagName: \\"div\\",
+    tag: \\"span\\",
+    get TagNameGetter() {
+      return \\"span\\";
+    },
+  };
+
+  return (
+    <state.TagNameGetter _context={_context}>
+      Hello
+      <state.tag>{state.name}</state.tag>
+      {props.actions?.map((action) => (
+        <state.TagName _context={_context}>
+          <action.icon />
+
+          <span>{action.text}</span>
+        </state.TagName>
+      ))}
+    </state.TagNameGetter>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > basicForwardRef 1`] = `
 "import * as React from \\"react\\";
 
@@ -1462,10 +1501,11 @@ function MyBasicForwardRefComponent(props) {
   return (
     <>
       <div>
-        <input className=\\"input-346a570f\\" value={state.name} />
+        <input className=\\"input-5987db15\\" value={state.name} />
       </div>
-      <style>{\`.input-346a570f {
-color: red;
+
+      <style>{\`.input-5987db15 {
+  color: red;
 }\`}</style>
     </>
   );
@@ -1487,10 +1527,11 @@ const MyBasicForwardRefComponent = forwardRef(
     return (
       <>
         <div>
-          <input className=\\"input-52d8b09f\\" value={state.name} />
+          <input className=\\"input-ec76c244\\" value={state.name} />
         </div>
-        <style>{\`.input-52d8b09f {
-color: red;
+
+        <style>{\`.input-ec76c244 {
+  color: red;
 }\`}</style>
       </>
     );
@@ -1532,8 +1573,9 @@ function MyBasicComponent(props) {
       <div className=\\"test2 test div-0a30b052\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
+
       <style>{\`.div-0a30b052 {
-padding: 10px;
+  padding: 10px;
 }\`}</style>
     </>
   );
@@ -1554,8 +1596,9 @@ function MyBasicComponent(props) {
       <div className=\\"test div-3e236934\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
+
       <style>{\`.div-3e236934 {
-padding: 10px;
+  padding: 10px;
 }\`}</style>
     </>
   );
@@ -1576,8 +1619,9 @@ function MyBasicComponent(props) {
       <div className=\\"test div-3e236934\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
+
       <style>{\`.div-3e236934 {
-padding: 10px;
+  padding: 10px;
 }\`}</style>
     </>
   );
@@ -1629,8 +1673,9 @@ function MyBasicComponent(props) {
       >
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
+
       <style>{\`.div-a140d134 {
-padding: 10px;
+  padding: 10px;
 }\`}</style>
     </>
   );
@@ -1806,7 +1851,7 @@ export default Button;
 exports[`RSC > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "import * as React from \\"react\\";
 
-const DEFAULT_VALUES: Props = {
+const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
@@ -1957,14 +2002,22 @@ function NestedStyles(props) {
 
   return (
     <>
-      <div className=\\"div-caf6a574\\">Hello world</div>
-      <style>{\`.div-caf6a574 {
-display: flex;
-foo: var(--bar);
-}@media (max-width: env(--mobile)) { .div-caf6a574 {   display: block; } }.div-caf6a574:hover {
-display: flex;
-}.div-caf6a574 .nested-selector {
-display: grid;
+      <div className=\\"div-1322de04\\">Hello world</div>
+
+      <style>{\`.div-1322de04 {
+  display: flex;
+  --bar: red;
+  color: var(--bar);
+}@media (max-width: env(--mobile)) { .div-1322de04 {   display: block; } }.div-1322de04:hover {
+  display: flex;
+}.div-1322de04:active {
+  display: inline;
+}.div-1322de04 .nested-selector {
+  display: grid;
+}.div-1322de04 .nested-selector:hover {
+  display: block;
+}.div-1322de04.nested-selector:active {
+  display: inline-block;
 }\`}</style>
     </>
   );
@@ -2070,7 +2123,7 @@ const b = 3;
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
 function MyBasicComponent(props) {
   const _context = { ...props[\\"_context\\"] };
@@ -2182,20 +2235,20 @@ export default OnUpdate;
 
 exports[`RSC > jsx > Javascript Test > renderBlock 1`] = `
 "import * as React from \\"react\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
 
 function RenderBlock(props) {
   const _context = { ...props[\\"_context\\"] };
@@ -2218,8 +2271,8 @@ function RenderBlock(props) {
       if (!ref) {
         // TODO: Public doc page with more info about this message
         console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
         return undefined;
       } else {
         return ref;
@@ -2376,16 +2429,13 @@ function RenderBlock(props) {
     componentInfo: null,
   };
 
-  const RenderComponentTagRef = state.renderComponentTag;
-  const TagRef = state.tag;
-
   return (
     <>
       {state.shouldWrap ? (
         <>
           {isEmptyHtmlElement(state.tag) ? (
             <>
-              <TagRef {...state.attributes} {...state.actions} />
+              <state.tag {...state.attributes} {...state.actions} />
             </>
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
@@ -2402,8 +2452,8 @@ function RenderBlock(props) {
           ) : null}
           {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
             <>
-              <TagRef {...state.attributes} {...state.actions}>
-                <RenderComponentTagRef
+              <state.tag {...state.attributes} {...state.actions}>
+                <state.renderComponentTag
                   {...state.renderComponentProps}
                   _context={_context}
                 />
@@ -2425,15 +2475,17 @@ function RenderBlock(props) {
                     _context={_context}
                   />
                 ))}
-              </TagRef>
+              </state.tag>
             </>
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef
-          {...state.renderComponentProps}
-          _context={_context}
-        />
+        <>
+          <state.renderComponentTag
+            {...state.renderComponentProps}
+            _context={_context}
+          />
+        </>
       )}
     </>
   );
@@ -2445,12 +2497,12 @@ export default RenderBlock;
 
 exports[`RSC > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 function RenderContent(props) {
@@ -2467,12 +2519,13 @@ function RenderContent(props) {
 
   return (
     <>
-      <div className=\\"div-a387715c\\">
+      <div className=\\"div-046fb807\\">
         <RenderBlocks blocks={props.content.blocks} _context={_context} />
       </div>
-      <style>{\`.div-a387715c {
-display: flex;
-flex-direction: columns;
+
+      <style>{\`.div-046fb807 {
+  display: flex;
+  flex-direction: columns;
 }\`}</style>
     </>
   );
@@ -2615,6 +2668,19 @@ export default NestedShow;
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+
+function ShowRootText(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <>{props.conditionA ? <>ContentA</> : <div>else-condition-A</div>}</>;
+}
+
+export default ShowRootText;
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > spreadAttrs 1`] = `
 "import * as React from \\"react\\";
 
@@ -2651,6 +2717,34 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`RSC > jsx > Javascript Test > styleClassAndCss 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <>
+      <div
+        className=\\"builder-column div-309a9da5\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+
+      <style>{\`.div-309a9da5 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
 "
 `;
 
@@ -2730,14 +2824,15 @@ function MyComponent(props) {
   return (
     <>
       <button type=\\"button\\">Button</button>
-      <style>{\`
 
-  button {
-      background: blue;
-      color: white;
-      font-size: 12px;
-      outline: 1px solid black;
-  }
+      <style>{\`
+        button {
+            background: blue;
+            color: white;
+            font-size: 12px;
+            outline: 1px solid black;
+        }
+
 \`}</style>
     </>
   );
@@ -2758,16 +2853,17 @@ function MyComponent(props) {
       <button type=\\"button\\" className=\\"button-4fd6647d\\">
         Button
       </button>
-      <style>{\`.button-4fd6647d {
-background: blue;
-color: white;
-}
 
-    button {
-        font-size: 12px;
-        outline: 1px solid black;
-    }
-\`}</style>
+      <style>{\`
+        button {
+            font-size: 12px;
+            outline: 1px solid black;
+        }
+
+.button-4fd6647d {
+  background: blue;
+  color: white;
+}\`}</style>
     </>
   );
 }
@@ -2785,20 +2881,41 @@ function MyComponent(props) {
   return (
     <>
       <button type=\\"button\\">Button</button>
-      <style>{\`
 
-button {
-  background: blue;
-  color: white;
-  font-size: 12px;
-  outline: 1px solid black;
-}
+      <style>{\`
+  button {
+      background: blue;
+      color: white;
+      font-size: 12px;
+      outline: 1px solid black;
+  }
+
 \`}</style>
     </>
   );
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`RSC > jsx > Javascript Test > useTarget 1`] = `
+"import * as React from \\"react\\";
+
+function UseTargetComponent(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    get name() {
+      const prefix = \\"rsc\\";
+      return prefix + \\"foo\\";
+    },
+  };
+
+  return <div>{state.name}</div>;
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -2863,8 +2980,9 @@ function MyBasicRefComponent(props: Props) {
         {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
+
       <style>{\`.input-37c780bb {
-color: red;
+  color: red;
 }\`}</style>
     </>
   );
@@ -2903,8 +3021,9 @@ function MyBasicComponent(props: MyBasicComponentProps) {
         <input value={DEFAULT_VALUES.name || state.name} />
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
+
       <style>{\`.div-251ed544 {
-padding: 10px;
+  padding: 10px;
 }\`}</style>
     </>
   );
@@ -2917,7 +3036,7 @@ export default MyBasicComponent;
 exports[`RSC > jsx > Typescript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
@@ -3056,8 +3175,8 @@ export default MyBooleanAttribute;
 
 exports[`RSC > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
@@ -3150,8 +3269,9 @@ function MyBasicRefComponent(props: Props) {
         {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
+
       <style>{\`.input-37c780bb {
-color: red;
+  color: red;
 }\`}</style>
     </>
   );
@@ -3172,7 +3292,7 @@ function MyBasicRefAssignmentComponent(props: Props) {
   const _context = { ...props[\\"_context\\"] };
 
   const state = {
-    handlerClick: function handlerClick(event) {
+    handlerClick: function handlerClick(event: Event) {
       event.preventDefault();
       console.log(\\"current value\\", holdValueRef);
       holdValueRef = holdValueRef + \\"JS\\";
@@ -3302,11 +3422,11 @@ function Column(props: ColumnProps) {
     getGutterSize() {
       return typeof props.space === \\"number\\" ? props.space || 0 : 20;
     },
-    getWidth(index) {
+    getWidth(index: number) {
       const columns = state.getColumns();
       return (columns[index] && columns[index].width) || 100 / columns.length;
     },
-    getColumnCssWidth(index) {
+    getColumnCssWidth(index: number) {
       const columns = state.getColumns();
       const gutterSize = state.getGutterSize();
       const subtractWidth =
@@ -3317,22 +3437,23 @@ function Column(props: ColumnProps) {
 
   return (
     <>
-      <div className=\\"builder-columns div-033a66b8\\">
+      <div className=\\"builder-columns div-f83a82ca\\">
         {props.columns?.map((column, index) => (
-          <div className=\\"builder-column div-033a66b8-2\\">
+          <div className=\\"builder-column div-f83a82ca-2\\">
             {column.content}
 
             {index}
           </div>
         ))}
       </div>
-      <style>{\`.div-033a66b8 {
-display: flex;
-flex-direction: column;
-align-items: stretch;
-line-height: normal;
-}@media (max-width: 999px) { .div-033a66b8 {   flex-direction: row; } }@media (max-width: 639px) { .div-033a66b8 {   flex-direction: row-reverse; } }.div-033a66b8-2 {
-flex-grow: 1;
+
+      <style>{\`.div-f83a82ca {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
+}@media (max-width: 999px) { .div-f83a82ca {   flex-direction: row; } }@media (max-width: 639px) { .div-f83a82ca {   flex-direction: row-reverse; } }.div-f83a82ca-2 {
+  flex-grow: 1;
 }\`}</style>
     </>
   );
@@ -3349,6 +3470,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotCode(props: Props) {
   const _context = { ...props[\\"_context\\"] };
@@ -3376,6 +3498,7 @@ exports[`RSC > jsx > Typescript Test > ContentSlotJSX 1`] = `
 type Props = {
   [key: string]: string | JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotJsxCode(props: Props) {
   const _context = { ...props[\\"_context\\"] };
@@ -3399,10 +3522,10 @@ function ContentSlotJsxCode(props: Props) {
             name={props.slotContent ? \\"name1\\" : \\"name2\\"}
             title={props.slotContent ? \\"title1\\" : \\"title2\\"}
             {...props.attributes}
-            className={props.slotContent ? \`\${state.name}-content\` : \\"\\"}
+            className={state.cls}
           >
             {state.showContent && props.slotContent ? (
-              <>{props.slotContent}</>
+              <>{props.slotContent || \\"{props.content}\\"}</>
             ) : null}
 
             <div>
@@ -3420,7 +3543,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -3595,11 +3718,13 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 function FormComponent(props: FormProps) {
   const _context = { ...props[\\"_context\\"] };
@@ -3611,7 +3736,11 @@ function FormComponent(props: FormProps) {
     get submissionState() {
       return (Builder.isEditing && props.previewState) || state.formState;
     },
-    onSubmit(event) {
+    onSubmit(
+      event: Event & {
+        currentTarget: HTMLFormElement;
+      }
+    ) {
       const sendWithJs =
         props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
@@ -3626,16 +3755,19 @@ function FormComponent(props: FormProps) {
         event.preventDefault();
         const el = event.currentTarget;
         const headers = props.customHeaders || {};
-        let body;
+        let body: any;
         const formData = new FormData(el); // TODO: maybe support null
 
-        const formPairs = Array.from(
+        const formPairs: {
+          key: string;
+          value: File | boolean | number | string | FileList;
+        }[] = Array.from(
           event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
         )
-          .filter((el) => !!el.name)
+          .filter((el) => !!(el as HTMLInputElement).name)
           .map((el) => {
-            let value;
-            const key = el.name;
+            let value: any;
+            const key = (el as HTMLImageElement).name;
 
             if (el instanceof HTMLInputElement) {
               if (el.type === \\"radio\\") {
@@ -3661,7 +3793,7 @@ function FormComponent(props: FormProps) {
                 value = el.value;
               }
             } else {
-              value = el.value;
+              value = (el as HTMLInputElement).value;
             }
 
             return {
@@ -3725,7 +3857,7 @@ function FormComponent(props: FormProps) {
         fetch(
           props.sendSubmissionsTo === \\"email\\"
             ? formUrl
-            : props.action /* TODO: throw error if no action URL */,
+            : props.action! /* TODO: throw error if no action URL */,
           { body, headers, method: props.method || \\"post\\" }
         ).then(
           async (res) => {
@@ -3825,7 +3957,7 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
+              blocks={props.errorMessage!}
               _context={_context}
             />
           </>
@@ -3834,14 +3966,14 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
+              blocks={props.sendingMessage!}
               _context={_context}
             />
           </>
         ) : null}{\\" \\"}
         {state.submissionState === \\"error\\" && state.responseData ? (
           <>
-            <pre className=\\"builder-form-error-text pre-170708b2\\">
+            <pre className=\\"builder-form-error-text pre-5410025b\\">
               {\\" \\"}
               {JSON.stringify(state.responseData, null, 2)}{\\" \\"}
             </pre>
@@ -3851,13 +3983,13 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
+              blocks={props.successMessage!}
               _context={_context}
             />
           </>
         ) : null}{\\" \\"}
       </form>{\\" \\"}
-      <style>{\`.pre-170708b2 { padding: 10px; color: red; text-align: center; }\`}</style>{\\" \\"}
+      <style>{\`.pre-5410025b {   padding: 10px;   color: red;   text-align: center; }\`}</style>{\\" \\"}
     </>
   );
 }
@@ -3935,11 +4067,12 @@ function Image(props: ImageProps) {
 
         {props.children}
       </div>
+
       <style>{\`.img-ccac6a98 {
-opacity: 1;
-transition: opacity 0.2s ease-in-out;
-object-fit: cover;
-object-position: center;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
 }\`}</style>
     </>
   );
@@ -4232,12 +4365,10 @@ function SlotCode(props: Props) {
     <div slotContext={_context}>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\" };
 
 export default SlotCode;
 "
@@ -4250,8 +4381,7 @@ type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props: SmileReviewsProps) {
   const _context = { ...props[\\"_context\\"] };
@@ -4276,18 +4406,18 @@ function SmileReviews(props: SmileReviewsProps) {
         {state.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-000d4b30\\" />
+            <input placeholder=\\"Title\\" className=\\"input-6aea881e\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-000d4b30\\"
+              className=\\"textarea-6aea881e\\"
             />
-            <button className=\\"button-000d4b30\\">Submit</button>
+            <button className=\\"button-6aea881e\\">Submit</button>
           </>
         ) : null}
 
         {state.reviews?.map((review, index) => (
-          <div className=\\"review-000d4b30\\" key={review.id}>
-            <img className=\\"img-000d4b30\\" src={review.avatar} />
+          <div className=\\"review-6aea881e\\" key={review.id}>
+            <img className=\\"img-6aea881e\\" src={review.avatar} />
 
             <div
               className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
@@ -4304,23 +4434,24 @@ function SmileReviews(props: SmileReviewsProps) {
           </div>
         ))}
       </div>
-      <style>{\`.input-000d4b30 {
-display: block;
-}.textarea-000d4b30 {
-display: block;
-}.button-000d4b30 {
-display: block;
-}.review-000d4b30 {
-margin: 10px;
-padding: 10px;
-background: white;
-display: flex;
-border-radius: 5px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}.img-000d4b30 {
-height: 30px;
-width: 30px;
-margin-right: 10px;
+
+      <style>{\`.input-6aea881e {
+  display: block;
+}.textarea-6aea881e {
+  display: block;
+}.button-6aea881e {
+  display: block;
+}.review-6aea881e {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}.img-6aea881e {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
 }\`}</style>
     </>
   );
@@ -4508,6 +4639,40 @@ export default MyComponent;
 "
 `;
 
+exports[`RSC > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    name: \\"VincentW\\",
+    TagName: \\"div\\",
+    tag: \\"span\\",
+    get TagNameGetter() {
+      return \\"span\\";
+    },
+  };
+
+  return (
+    <state.TagNameGetter _context={_context}>
+      Hello
+      <state.tag>{state.name}</state.tag>
+      {props.actions?.map((action) => (
+        <state.TagName _context={_context}>
+          <action.icon />
+
+          <span>{action.text}</span>
+        </state.TagName>
+      ))}
+    </state.TagNameGetter>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
 exports[`RSC > jsx > Typescript Test > basicForwardRef 1`] = `
 "import * as React from \\"react\\";
 
@@ -4526,8 +4691,9 @@ function MyBasicForwardRefComponent(props: Props) {
       <div>
         <input className=\\"input-346a570f\\" value={state.name} />
       </div>
+
       <style>{\`.input-346a570f {
-color: red;
+  color: red;
 }\`}</style>
     </>
   );
@@ -4556,8 +4722,9 @@ const MyBasicForwardRefComponent = forwardRef(
         <div>
           <input className=\\"input-52d8b09f\\" value={state.name} />
         </div>
+
         <style>{\`.input-52d8b09f {
-color: red;
+  color: red;
 }\`}</style>
       </>
     );
@@ -4599,8 +4766,9 @@ function MyBasicComponent(props: any) {
       <div className=\\"test2 test div-0a30b052\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
+
       <style>{\`.div-0a30b052 {
-padding: 10px;
+  padding: 10px;
 }\`}</style>
     </>
   );
@@ -4621,8 +4789,9 @@ function MyBasicComponent(props: any) {
       <div className=\\"test div-3e236934\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
+
       <style>{\`.div-3e236934 {
-padding: 10px;
+  padding: 10px;
 }\`}</style>
     </>
   );
@@ -4643,8 +4812,9 @@ function MyBasicComponent(props: any) {
       <div className=\\"test div-3e236934\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
+
       <style>{\`.div-3e236934 {
-padding: 10px;
+  padding: 10px;
 }\`}</style>
     </>
   );
@@ -4661,6 +4831,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ClassNameCode(props: Props) {
   const _context = { ...props[\\"_context\\"] };
@@ -4701,8 +4872,9 @@ function MyBasicComponent(props: any) {
       >
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
+
       <style>{\`.div-a140d134 {
-padding: 10px;
+  padding: 10px;
 }\`}</style>
     </>
   );
@@ -4957,7 +5129,8 @@ type RenderContentProps = {
   content: BuilderContent;
   renderContentProps: RenderBlockProps;
 };
-import RenderBlock from \\"./builder-render-block.raw\\";
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 function RenderContent(props: RenderContentProps) {
   const _context = { ...props[\\"_context\\"] };
@@ -5072,14 +5245,22 @@ function NestedStyles(props: any) {
 
   return (
     <>
-      <div className=\\"div-caf6a574\\">Hello world</div>
-      <style>{\`.div-caf6a574 {
-display: flex;
-foo: var(--bar);
-}@media (max-width: env(--mobile)) { .div-caf6a574 {   display: block; } }.div-caf6a574:hover {
-display: flex;
-}.div-caf6a574 .nested-selector {
-display: grid;
+      <div className=\\"div-1322de04\\">Hello world</div>
+
+      <style>{\`.div-1322de04 {
+  display: flex;
+  --bar: red;
+  color: var(--bar);
+}@media (max-width: env(--mobile)) { .div-1322de04 {   display: block; } }.div-1322de04:hover {
+  display: flex;
+}.div-1322de04:active {
+  display: inline;
+}.div-1322de04 .nested-selector {
+  display: grid;
+}.div-1322de04 .nested-selector:hover {
+  display: block;
+}.div-1322de04.nested-selector:active {
+  display: inline-block;
 }\`}</style>
     </>
   );
@@ -5343,32 +5524,33 @@ export default OnUpdate;
 
 exports[`RSC > jsx > Typescript Test > renderBlock 1`] = `
 "import * as React from \\"react\\";
-import type {
-  BuilderContextInterface,
-  RegisteredComponent,
-} from \\"../../context/types.js\\";
-import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-import type { Nullable } from \\"../../types/typescript.js\\";
-import type { RenderComponentProps } from \\"./render-component\\";
-import type { RepeatData } from \\"./types.js\\";
+
 export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
 };
+import { TARGET } from \\"../../constants/target.js\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import type { RenderComponentProps } from \\"./render-component.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import type { RepeatData } from \\"./types.js\\";
 
 function RenderBlock(props: RenderBlockProps) {
   const _context = { ...props[\\"_context\\"] };
@@ -5391,8 +5573,8 @@ function RenderBlock(props: RenderBlockProps) {
       if (!ref) {
         // TODO: Public doc page with more info about this message
         console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
         return undefined;
       } else {
         return ref;
@@ -5499,7 +5681,7 @@ function RenderBlock(props: RenderBlockProps) {
       const collectionName = repeat.collection.split(\\".\\").pop();
       const itemNameToUse =
         repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-      const repeatArray = itemsArray.map((item, index) => ({
+      const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
         context: {
           ...props.context,
           state: {
@@ -5549,16 +5731,13 @@ function RenderBlock(props: RenderBlockProps) {
     componentInfo: null,
   };
 
-  const RenderComponentTagRef = state.renderComponentTag;
-  const TagRef = state.tag;
-
   return (
     <>
       {state.shouldWrap ? (
         <>
           {isEmptyHtmlElement(state.tag) ? (
             <>
-              <TagRef {...state.attributes} {...state.actions} />
+              <state.tag {...state.attributes} {...state.actions} />
             </>
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
@@ -5575,8 +5754,8 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
           {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
             <>
-              <TagRef {...state.attributes} {...state.actions}>
-                <RenderComponentTagRef
+              <state.tag {...state.attributes} {...state.actions}>
+                <state.renderComponentTag
                   {...state.renderComponentProps}
                   _context={_context}
                 />
@@ -5598,15 +5777,17 @@ function RenderBlock(props: RenderBlockProps) {
                     _context={_context}
                   />
                 ))}
-              </TagRef>
+              </state.tag>
             </>
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef
-          {...state.renderComponentProps}
-          _context={_context}
-        />
+        <>
+          <state.renderComponentTag
+            {...state.renderComponentProps}
+            _context={_context}
+          />
+        </>
       )}
     </>
   );
@@ -5626,12 +5807,12 @@ type Props = {
     id: string;
   };
 };
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 function RenderContent(props: Props) {
@@ -5648,12 +5829,13 @@ function RenderContent(props: Props) {
 
   return (
     <>
-      <div className=\\"div-a387715c\\">
+      <div className=\\"div-488069a0\\">
         <RenderBlocks blocks={props.content.blocks} _context={_context} />
       </div>
-      <style>{\`.div-a387715c {
-display: flex;
-flex-direction: columns;
+
+      <style>{\`.div-488069a0 {
+  display: flex;
+  flex-direction: columns;
 }\`}</style>
     </>
   );
@@ -5812,6 +5994,23 @@ export default NestedShow;
 "
 `;
 
+exports[`RSC > jsx > Typescript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowRootText(props: Props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <>{props.conditionA ? <>ContentA</> : <div>else-condition-A</div>}</>;
+}
+
+export default ShowRootText;
+"
+`;
+
 exports[`RSC > jsx > Typescript Test > spreadAttrs 1`] = `
 "import * as React from \\"react\\";
 
@@ -5848,6 +6047,34 @@ function MyBasicComponent(props: any) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > styleClassAndCss 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <>
+      <div
+        className=\\"builder-column div-309a9da5\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+
+      <style>{\`.div-309a9da5 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
 "
 `;
 
@@ -5907,12 +6134,13 @@ export default SvgComponent;
 
 exports[`RSC > jsx > Typescript Test > typeDependency 1`] = `
 "import * as React from \\"react\\";
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
+
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
 };
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export.lite\\";
 
 function TypeDependency(props: TypeDependencyProps) {
   const _context = { ...props[\\"_context\\"] };
@@ -5933,14 +6161,15 @@ function MyComponent(props: any) {
   return (
     <>
       <button type=\\"button\\">Button</button>
-      <style>{\`
 
-  button {
-      background: blue;
-      color: white;
-      font-size: 12px;
-      outline: 1px solid black;
-  }
+      <style>{\`
+        button {
+            background: blue;
+            color: white;
+            font-size: 12px;
+            outline: 1px solid black;
+        }
+
 \`}</style>
     </>
   );
@@ -5961,16 +6190,17 @@ function MyComponent(props: any) {
       <button type=\\"button\\" className=\\"button-4fd6647d\\">
         Button
       </button>
-      <style>{\`.button-4fd6647d {
-background: blue;
-color: white;
-}
 
-    button {
-        font-size: 12px;
-        outline: 1px solid black;
-    }
-\`}</style>
+      <style>{\`
+        button {
+            font-size: 12px;
+            outline: 1px solid black;
+        }
+
+.button-4fd6647d {
+  background: blue;
+  color: white;
+}\`}</style>
     </>
   );
 }
@@ -5988,20 +6218,41 @@ function MyComponent(props: any) {
   return (
     <>
       <button type=\\"button\\">Button</button>
-      <style>{\`
 
-button {
-  background: blue;
-  color: white;
-  font-size: 12px;
-  outline: 1px solid black;
-}
+      <style>{\`
+  button {
+      background: blue;
+      color: white;
+      font-size: 12px;
+      outline: 1px solid black;
+  }
+
 \`}</style>
     </>
   );
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > useTarget 1`] = `
+"import * as React from \\"react\\";
+
+function UseTargetComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    get name() {
+      const prefix = \\"rsc\\";
+      return prefix + \\"foo\\";
+    },
+  };
+
+  return <div>{state.name}</div>;
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -6309,10 +6560,10 @@ exports[`RSC > svelte > Javascript Test > slots 1`] = `
 function MyComponent(props) {
   const _context = { ...props[\\"_context\\"] };
 
-  return <div slotContext={_context}>{props.slotTest}</div>;
+  return (
+    <div slotContext={_context}>{props.slotTest || <div>default</div>}</div>
+  );
 }
-
-MyComponent.defaultProps = { slotTest: <div>default</div> };
 
 export default MyComponent;
 "
@@ -6327,16 +6578,17 @@ function MyComponent(props) {
   return (
     <>
       <input className=\\"form-input\\" />
+
       <style>{\`
+  input {
+    color: red;
+    font-size: 12px;
+  }
 
-input {
-color: red;
-font-size: 12px;
-}
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
 
-.form-input:focus {
-outline: 1px solid blue;
-}
 \`}</style>
     </>
   );
@@ -6673,10 +6925,10 @@ exports[`RSC > svelte > Typescript Test > slots 1`] = `
 function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  return <div slotContext={_context}>{props.slotTest}</div>;
+  return (
+    <div slotContext={_context}>{props.slotTest || <div>default</div>}</div>
+  );
 }
-
-MyComponent.defaultProps = { slotTest: <div>default</div> };
 
 export default MyComponent;
 "
@@ -6691,16 +6943,17 @@ function MyComponent(props: any) {
   return (
     <>
       <input className=\\"form-input\\" />
+
       <style>{\`
+  input {
+    color: red;
+    font-size: 12px;
+  }
 
-input {
-color: red;
-font-size: 12px;
-}
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
 
-.form-input:focus {
-outline: 1px solid blue;
-}
 \`}</style>
     </>
   );

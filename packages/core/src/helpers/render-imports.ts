@@ -42,6 +42,7 @@ const getFileExtensionForTarget = (target: Target): string => {
     // these `.lite` extensions are handled in the `transpile` step of the CLI.
     // TO-DO: consolidate file-extension renaming to this file, and remove `.lite` replaces from the CLI `transpile`. (outdated) ?
     // Bit team wanted to make sure React and Angular behaved the same in regards to imports - ALU 10/05/22
+    case 'qwik':
     default:
       return '.lite';
   }
@@ -127,6 +128,7 @@ export const renderImport = ({
 
   const isComponentImport = checkIsComponentImport(theImport);
   const shouldBeAsyncImport = asyncComponentImports && isComponentImport;
+  const isTypeImport = theImport.importKind === 'type';
 
   // For lit (components) we just want to do a plain import
   // https://lit.dev/docs/components/rendering/#composing-templates
@@ -143,7 +145,7 @@ export const renderImport = ({
     } else {
       return `const ${importValue} = () => import('${path}')
       .then(x => x.default)
-      .catch(err => { 
+      .catch(err => {
         console.error('Error while attempting to dynamically import component ${importValue} at ${path}', err);
         throw err;
       });`;
@@ -154,7 +156,9 @@ export const renderImport = ({
     return importMapper(component, theImport, importedValues, componentsUsed);
   }
 
-  return importValue ? `import ${importValue} from '${path}';` : `import '${path}';`;
+  return importValue
+    ? `import ${isTypeImport ? 'type' : ''} ${importValue} from '${path}';`
+    : `import '${path}';`;
 };
 
 export const renderImports = ({

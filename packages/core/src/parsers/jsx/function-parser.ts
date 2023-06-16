@@ -1,46 +1,21 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { traceReferenceToModulePath } from '../../helpers/trace-reference-to-module-path';
+import { HOOKS } from '../../constants/hooks';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { getBindingsCode } from '../../helpers/get-bindings';
+import { traceReferenceToModulePath } from '../../helpers/trace-reference-to-module-path';
 import { JSONOrNode } from '../../types/json';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
-import { HOOKS } from '../../constants/hooks';
-import { parseStateObjectToMitosisState } from './state';
-import { Context } from './types';
-import { parseCode, parseCodeJson } from './helpers';
 import { getPropsTypeRef } from './component-types';
 import { jsxElementToJson } from './element-parser';
-import { METADATA_HOOK_NAME } from './hooks';
+import { parseCode, parseCodeJson } from './helpers';
+import { generateUseStyleCode, parseDefaultPropsHook } from './hooks';
+import { processHookCode } from './hooks/helpers';
+import { parseStateObjectToMitosisState } from './state';
+import { Context } from './types';
 
 const { types } = babel;
-
-export function generateUseStyleCode(expression: babel.types.CallExpression) {
-  return generate(expression.arguments[0]).code.replace(/(^("|'|`)|("|'|`)$)/g, '');
-}
-
-export function parseDefaultPropsHook(
-  component: MitosisComponent,
-  expression: babel.types.CallExpression,
-) {
-  const firstArg = expression.arguments[0];
-  if (types.isObjectExpression(firstArg)) {
-    component.defaultProps = parseStateObjectToMitosisState(firstArg, false);
-  }
-}
-
-const processHookCode = (
-  firstArg: babel.types.ArrowFunctionExpression | babel.types.FunctionExpression,
-) =>
-  generate(firstArg.body)
-    .code.trim()
-    // Remove arbitrary block wrapping if any
-    // AKA
-    //  { console.log('hi') } -> console.log('hi')
-    .replace(/^{/, '')
-    .replace(/}$/, '')
-    .trim();
 
 /**
  * Parses function declarations within the Mitosis copmonent's body to JSON
@@ -57,12 +32,9 @@ export const componentFunctionToJson = (
   for (const item of node.body.body) {
     if (types.isExpressionStatement(item)) {
       const expression = item.expression;
-      if (types.isCallExpression(expression)) {
-        if (types.isIdentifier(expression.callee)) {
-          if (
-            expression.callee.name === 'setContext' ||
-            expression.callee.name === 'provideContext'
-          ) {
+      if (types.isCallExpression(expression) && types.isIdentifier(expression.callee)) {
+        switch (expression.callee.name) {
+          case HOOKS.SET_CONTEXT: {
             const keyNode = expression.arguments[0];
             const valueNode = expression.arguments[1];
             if (types.isIdentifier(keyNode)) {
@@ -91,13 +63,17 @@ export const componentFunctionToJson = (
                 };
               }
             }
-          } else if (expression.callee.name === 'onMount') {
+            break;
+          }
+          case HOOKS.MOUNT: {
             const firstArg = expression.arguments[0];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = processHookCode(firstArg);
               hooks.onMount = { code };
             }
-          } else if (expression.callee.name === 'onUpdate') {
+            break;
+          }
+          case HOOKS.UPDATE: {
             const firstArg = expression.arguments[0];
             const secondArg = expression.arguments[1];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
@@ -117,25 +93,35 @@ export const componentFunctionToJson = (
                 ];
               }
             }
-          } else if (expression.callee.name === 'onUnMount') {
+            break;
+          }
+          case HOOKS.UNMOUNT: {
             const firstArg = expression.arguments[0];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = processHookCode(firstArg);
               hooks.onUnMount = { code };
             }
-          } else if (expression.callee.name === 'onInit') {
+            break;
+          }
+          case HOOKS.INIT: {
             const firstArg = expression.arguments[0];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = processHookCode(firstArg);
               hooks.onInit = { code };
             }
-          } else if (expression.callee.name === HOOKS.DEFAULT_PROPS) {
+            break;
+          }
+          case HOOKS.DEFAULT_PROPS: {
             parseDefaultPropsHook(context.builder.component, expression);
-          } else if (expression.callee.name === HOOKS.STYLE) {
+            break;
+          }
+          case HOOKS.STYLE: {
             context.builder.component.style = generateUseStyleCode(expression);
-          } else if (expression.callee.name === METADATA_HOOK_NAME) {
-            context.builder.component.meta[METADATA_HOOK_NAME] = {
-              ...context.builder.component.meta[METADATA_HOOK_NAME],
+            break;
+          }
+          case HOOKS.METADATA: {
+            context.builder.component.meta[HOOKS.METADATA] = {
+              ...context.builder.component.meta[HOOKS.METADATA],
               ...parseCodeJson(expression.arguments[0]),
             };
           }
@@ -184,10 +170,7 @@ export const componentFunctionToJson = (
               state[varName]!.typeParameter = generate(init.typeParameters.params[0]).code;
             }
           }
-        }
-        // Solid store format, like:
-        // const state = useStore({...})
-        if (init.callee.name === HOOKS.STORE) {
+        } else if (init.callee.name === HOOKS.STORE) {
           const firstArg = init.arguments[0];
           if (types.isObjectExpression(firstArg)) {
             const useStoreState = parseStateObjectToMitosisState(firstArg);

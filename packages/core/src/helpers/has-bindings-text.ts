@@ -1,7 +1,7 @@
 import traverse from 'traverse';
 import { MitosisComponent } from '../types/mitosis-component';
-import { isMitosisNode } from './is-mitosis-node';
 import isChildren from './is-children';
+import { isMitosisNode } from './is-mitosis-node';
 
 export const hasBindingsText = (json: MitosisComponent) => {
   let has = false;

@@ -1,16 +1,16 @@
 import { format } from 'prettier/standalone';
-import { collectCss } from '../helpers/styles/collect-css';
+import { SELF_CLOSING_HTML_TAGS } from '../constants/html_tags';
+import { dedent } from '../helpers/dedent';
 import { fastClone } from '../helpers/fast-clone';
-import { selfClosingTags } from '../parsers/jsx';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { collectCss } from '../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import dedent from 'dedent';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToTemplateOptions extends BaseTranspilerOptions {}
@@ -83,7 +83,7 @@ const blockToTemplate = (json: MitosisNode, options: ToTemplateOptions = {}) => 
         str += ` ${key}="\${${useValue}}" `;
       }
     }
-    if (selfClosingTags.has(json.name)) {
+    if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
       return str + ' />';
     }
     str += '>';

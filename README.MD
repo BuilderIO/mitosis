@@ -48,6 +48,7 @@ npm install @builder.io/mitosis-cli @builder.io/mitosis
 ### Setup `mitosis.config.js`
 
 ```js
+/** @type {import('@builder.io/mitosis').MitosisConfig} */
 module.exports = {
   files: 'src/**',
   targets: ['vue3', 'solid', 'svelte', 'react'],
@@ -187,6 +188,13 @@ Once you're ready, checkout our [issues](https://github.com/BuilderIO/mitosis/is
 - [Qwik](https://github.com/BuilderIO/qwik): An open-source framework designed for best possible time to interactive, by focusing on resumability of server-side-rendering of HTML, and fine-grained lazy-loading of code.
 - [Partytown](https://github.com/BuilderIO/partytown): Relocate resource intensive third-party scripts off of the main thread and into a web worker. 🎉
 
+<br>
+<br>
 <p align="center">
-  Made with ❤️ by <a target="_blank" href="https://www.builder.io/">Builder.io</a>
+   <a href="https://www.builder.io/m/developers">
+      <picture>
+         <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/844291/230786554-eb225eeb-2f6b-4286-b8c2-535b1131744a.png">
+         <img width="250" alt="Made with love by Builder.io" src="https://user-images.githubusercontent.com/844291/230786555-a58479e4-75f3-4222-a6eb-74c5af953eac.png">
+       </picture>
+   </a>
 </p>

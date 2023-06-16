@@ -2,7 +2,6 @@ module.exports = {
   env: {
     node: true,
     browser: true,
-    jest: true,
   },
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   plugins: ['@typescript-eslint', 'unused-imports'],
@@ -15,7 +14,7 @@ module.exports = {
     },
   },
   rules: {
-    "no-unused-vars": "off", // or "@typescript-eslint/no-unused-vars": "off",
-		"unused-imports/no-unused-imports": "error"
-  }
+    'no-unused-vars': 'off', // or "@typescript-eslint/no-unused-vars": "off",
+    'unused-imports/no-unused-imports': 'error',
+  },
 };

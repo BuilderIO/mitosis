@@ -1,5 +1,5 @@
-import { Rule } from 'eslint';
 import * as types from '@babel/types';
+import { Rule } from 'eslint';
 import isMitosisPath from '../helpers/isMitosisPath';
 
 const rule: Rule.RuleModule = {

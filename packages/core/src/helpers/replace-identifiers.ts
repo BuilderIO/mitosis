@@ -110,13 +110,13 @@ const _replaceIdentifiers = (
           (newMemberExpression as AllowMeta)._builder_meta = { newlyGenerated: true };
           path.replaceWith(newMemberExpression);
         } catch (err) {
-          console.debug('Could not replace', path.node, 'with', to.toString());
+          console.debug('Could not replace node.');
           // throw err;
         }
       }
     } else {
       if (types.isIdentifier(path.node)) {
-        console.debug(`Could not replace Identifier '${from.toString()}' with nothing.`);
+        console.debug(`Could not replace Identifier with nothing.`);
       } else {
         // if we're looking at a member expression, e.g. `props.foo` and no `to` was provided, then we want to strip out
         // the identifier and end up with `foo`. So we replace the member expression with just its `property` value.
@@ -164,3 +164,9 @@ export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
     throw err;
   }
 };
+
+export const replaceStateIdentifier = (to: ReplaceArgs['to']) => (code: string) =>
+  replaceIdentifiers({ code, from: 'state', to });
+
+export const replacePropsIdentifier = (to: ReplaceArgs['to']) => (code: string) =>
+  replaceIdentifiers({ code, from: 'props', to });

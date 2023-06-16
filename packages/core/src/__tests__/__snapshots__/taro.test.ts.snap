@@ -108,7 +108,7 @@ export default MyBasicComponent;
 exports[`Taro > jsx > Javascript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 import { View, Text, Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
@@ -256,8 +256,8 @@ export default MyBooleanAttribute;
 exports[`Taro > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 import { View } from \\"@tarojs/components\\";
 
 function MyBasicChildComponent(props) {
@@ -405,10 +405,10 @@ exports[`Taro > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 import { View, Text, Button } from \\"@tarojs/components\\";
-export function usePrevious<T>(value: T) {
+export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -593,7 +593,9 @@ function ContentSlotJsxCode(props) {
             {...props.attributes}
             onClick={(event) => show()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || \\"{props.content}\\"}</>
+            ) : null}
 
             <View>
               <View />
@@ -610,7 +612,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -748,11 +750,13 @@ export default CustomCode;
 exports[`Taro > jsx > Javascript Test > Form 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef } from \\"react\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 import { Form, View, Text } from \\"@tarojs/components\\";
 
 function FormComponent(props) {
@@ -1271,10 +1275,8 @@ exports[`Taro > jsx > Javascript Test > SlotDefault 1`] = `
 import { View, Text } from \\"@tarojs/components\\";
 
 function SlotCode(props) {
-  return <View>{props.children}</View>;
+  return <View>{props.children || <View>Default content</View>}</View>;
 }
-
-SlotCode.defaultProps = { children: <View>Default content</View> };
 
 export default SlotCode;
 "
@@ -1323,14 +1325,12 @@ function SlotCode(props) {
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </View>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -1339,8 +1339,7 @@ export default SlotCode;
 exports[`Taro > jsx > Javascript Test > Stamped.io 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 import { View, Button, Text, Input, Textarea, Image } from \\"@tarojs/components\\";
 
 function SmileReviews(props) {
@@ -1570,6 +1569,43 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  const [tag, setTag] = useState(() => \\"span\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      Hello
+      <View>{name}</View>
+      {props.actions?.map((action) => (
+        <TagName>
+          <View />
+
+          <Text>{action.text}</Text>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
@@ -1988,7 +2024,7 @@ export default Button;
 exports[`Taro > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "import * as React from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
-const DEFAULT_VALUES: Props = {
+const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
@@ -2159,7 +2195,8 @@ function NestedStyles(props) {
       <style jsx>{\`
         .view {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .view {
@@ -2169,8 +2206,17 @@ function NestedStyles(props) {
         .view:hover {
           display: flex;
         }
+        .view:active {
+          display: inline;
+        }
         .view .nested-selector {
           display: grid;
+        }
+        .view .nested-selector:hover {
+          display: block;
+        }
+        .view.nested-selector:active {
+          display: inline-block;
         }
       \`}</style>
     </>
@@ -2298,7 +2344,7 @@ const b = 3;
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
 function MyBasicComponent(props) {
   return <View />;
@@ -2412,20 +2458,20 @@ export default OnUpdate;
 exports[`Taro > jsx > Javascript Test > renderBlock 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
 import { View } from \\"@tarojs/components\\";
 
 function RenderBlock(props) {
@@ -2446,8 +2492,8 @@ function RenderBlock(props) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -2663,7 +2709,9 @@ function RenderBlock(props) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -2676,12 +2724,12 @@ export default RenderBlock;
 exports[`Taro > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { useContext, useEffect } from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 import { View } from \\"@tarojs/components\\";
 
@@ -2856,6 +2904,20 @@ export default NestedShow;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function ShowRootText(props) {
+  return (
+    <>{props.conditionA ? <>ContentA</> : <View>else-condition-A</View>}</>
+  );
+}
+
+export default ShowRootText;
+"
+`;
+
 exports[`Taro > jsx > Javascript Test > spreadAttrs 1`] = `
 "import * as React from \\"react\\";
 import { Input } from \\"@tarojs/components\\";
@@ -2889,6 +2951,34 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > styleClassAndCss 1`] = `
+"import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <View
+        className=\\"view\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+      <style jsx>{\`
+        .view {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
 "
 `;
 
@@ -2982,14 +3072,14 @@ function MyComponent(props) {
         Button
       </Button>
       <style jsx>{\`
-        .button {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button {
+          background: blue;
+          color: white;
         }
       \`}</style>
     </>
@@ -3021,6 +3111,23 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > useTarget 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function UseTargetComponent(props) {
+  function name() {
+    const prefix = \\"t\\";
+    return prefix + \\"foo\\";
+  }
+
+  return <View>{name()}</View>;
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -3162,7 +3269,7 @@ export default MyBasicComponent;
 exports[`Taro > jsx > Typescript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 import { View, Text, Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
@@ -3321,8 +3428,8 @@ export default MyBooleanAttribute;
 exports[`Taro > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 import { View } from \\"@tarojs/components\\";
 
 function MyBasicChildComponent(props: any) {
@@ -3459,7 +3566,7 @@ import { View, Button, Text } from \\"@tarojs/components\\";
 
 function MyBasicRefAssignmentComponent(props: Props) {
   const holdValueRef = useRef(\\"Patrick\\");
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef.current);
     holdValueRef.current = holdValueRef.current + \\"JS\\";
@@ -3595,12 +3702,12 @@ function Column(props: ColumnProps) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -3654,6 +3761,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 import { View } from \\"@tarojs/components\\";
 
 function ContentSlotCode(props: Props) {
@@ -3681,6 +3789,7 @@ import { useState } from \\"react\\";
 type Props = {
   [key: string]: string | JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function ContentSlotJsxCode(props: Props) {
@@ -3706,7 +3815,9 @@ function ContentSlotJsxCode(props: Props) {
             {...props.attributes}
             onClick={(event) => show()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || \\"{props.content}\\"}</>
+            ) : null}
 
             <View>
               <View />
@@ -3723,7 +3834,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -3897,11 +4008,13 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 import { Form, View, Text } from \\"@tarojs/components\\";
 
 function FormComponent(props: FormProps) {
@@ -3916,7 +4029,11 @@ function FormComponent(props: FormProps) {
     return (Builder.isEditing && props.previewState) || formState;
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -3930,16 +4047,19 @@ function FormComponent(props: FormProps) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -3965,7 +4085,7 @@ function FormComponent(props: FormProps) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -4027,7 +4147,7 @@ function FormComponent(props: FormProps) {
       fetch(
         props.sendSubmissionsTo === \\"email\\"
           ? formUrl
-          : props.action /* TODO: throw error if no action URL */,
+          : props.action! /* TODO: throw error if no action URL */,
         { body, headers, method: props.method || \\"post\\" }
       ).then(
         async (res) => {
@@ -4127,7 +4247,7 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
+              blocks={props.errorMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -4135,7 +4255,7 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
+              blocks={props.sendingMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -4151,7 +4271,7 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
+              blocks={props.successMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -4498,10 +4618,8 @@ type Props = {
 import { View, Text } from \\"@tarojs/components\\";
 
 function SlotCode(props: Props) {
-  return <View>{props.children}</View>;
+  return <View>{props.children || <View>Default content</View>}</View>;
 }
-
-SlotCode.defaultProps = { children: <View>Default content</View> };
 
 export default SlotCode;
 "
@@ -4562,14 +4680,12 @@ function SlotCode(props: Props) {
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </View>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -4583,8 +4699,7 @@ type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 import { View, Button, Text, Input, Textarea, Image } from \\"@tarojs/components\\";
 
 function SmileReviews(props: SmileReviewsProps) {
@@ -4868,6 +4983,43 @@ export default MyComponent;
 "
 `;
 
+exports[`Taro > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  const [tag, setTag] = useState(() => \\"span\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      Hello
+      <View>{name}</View>
+      {props.actions?.map((action) => (
+        <TagName>
+          <View />
+
+          <Text>{action.text}</Text>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
 exports[`Taro > jsx > Typescript Test > basicForwardRef 1`] = `
 "import * as React from \\"react\\";
 import { useState, forwardRef } from \\"react\\";
@@ -5060,6 +5212,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function ClassNameCode(props: Props) {
@@ -5377,7 +5530,8 @@ type RenderContentProps = {
   content: BuilderContent;
   renderContentProps: RenderBlockProps;
 };
-import RenderBlock from \\"./builder-render-block.raw\\";
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 import \\"@tarojs/components\\";
 
 function RenderContent(props: RenderContentProps) {
@@ -5517,7 +5671,8 @@ function NestedStyles(props: any) {
       <style jsx>{\`
         .view {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .view {
@@ -5527,8 +5682,17 @@ function NestedStyles(props: any) {
         .view:hover {
           display: flex;
         }
+        .view:active {
+          display: inline;
+        }
         .view .nested-selector {
           display: grid;
+        }
+        .view .nested-selector:hover {
+          display: block;
+        }
+        .view.nested-selector:active {
+          display: inline-block;
         }
       \`}</style>
     </>
@@ -5819,32 +5983,33 @@ export default OnUpdate;
 exports[`Taro > jsx > Typescript Test > renderBlock 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-import type {
-  BuilderContextInterface,
-  RegisteredComponent,
-} from \\"../../context/types.js\\";
-import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-import type { Nullable } from \\"../../types/typescript.js\\";
-import type { RenderComponentProps } from \\"./render-component\\";
-import type { RepeatData } from \\"./types.js\\";
+
 export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
 };
+import { TARGET } from \\"../../constants/target.js\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import type { RenderComponentProps } from \\"./render-component.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import type { RepeatData } from \\"./types.js\\";
 import { View } from \\"@tarojs/components\\";
 
 function RenderBlock(props: RenderBlockProps) {
@@ -5865,8 +6030,8 @@ function RenderBlock(props: RenderBlockProps) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -5982,7 +6147,7 @@ function RenderBlock(props: RenderBlockProps) {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {
@@ -6082,7 +6247,9 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -6103,12 +6270,12 @@ type Props = {
     id: string;
   };
 };
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 import { View } from \\"@tarojs/components\\";
 
@@ -6302,6 +6469,25 @@ export default NestedShow;
 "
 `;
 
+exports[`Taro > jsx > Typescript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+import { View, Text } from \\"@tarojs/components\\";
+
+function ShowRootText(props: Props) {
+  return (
+    <>{props.conditionA ? <>ContentA</> : <View>else-condition-A</View>}</>
+  );
+}
+
+export default ShowRootText;
+"
+`;
+
 exports[`Taro > jsx > Typescript Test > spreadAttrs 1`] = `
 "import * as React from \\"react\\";
 import { Input } from \\"@tarojs/components\\";
@@ -6335,6 +6521,34 @@ function MyBasicComponent(props: any) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > styleClassAndCss 1`] = `
+"import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function MyComponent(props: any) {
+  return (
+    <>
+      <View
+        className=\\"view\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+      <style jsx>{\`
+        .view {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
 "
 `;
 
@@ -6383,12 +6597,13 @@ export default SvgComponent;
 
 exports[`Taro > jsx > Typescript Test > typeDependency 1`] = `
 "import * as React from \\"react\\";
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
+
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
 };
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export.lite\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function TypeDependency(props: TypeDependencyProps) {
@@ -6434,14 +6649,14 @@ function MyComponent(props: any) {
         Button
       </Button>
       <style jsx>{\`
-        .button {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button {
+          background: blue;
+          color: white;
         }
       \`}</style>
     </>
@@ -6473,6 +6688,23 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > useTarget 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function UseTargetComponent(props: any) {
+  function name() {
+    const prefix = \\"t\\";
+    return prefix + \\"foo\\";
+  }
+
+  return <View>{name()}</View>;
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -6829,16 +7061,11 @@ import { View, Text } from \\"@tarojs/components\\";
 function MyComponent(props) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <View>default</View>}
     </View>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <View>default</View>,
-};
 
 export default MyComponent;
 "
@@ -7248,16 +7475,11 @@ import { View, Text } from \\"@tarojs/components\\";
 function MyComponent(props: any) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <View>default</View>}
     </View>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <View>default</View>,
-};
 
 export default MyComponent;
 "

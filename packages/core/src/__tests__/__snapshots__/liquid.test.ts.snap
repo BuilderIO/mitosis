@@ -207,7 +207,7 @@ exports[`Liquid > jsx > Javascript Test > ContentSlotHtml 1`] = `
 exports[`Liquid > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "{% if slotReference %}
 
-<div props.attributes=\\"{{attributes}}\\">
+<div props.attributes=\\"{{attributes}}\\" class=\\"{{cls}}\\">
   <div>
     <hr />
   </div>
@@ -438,6 +438,22 @@ exports[`Liquid > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 "
 `;
 
+exports[`Liquid > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"<state.TagNameGetter>
+  Hello
+  <state.tag>{{name}}</state.tag>
+
+  {% for action in actions %}
+  <state.TagName>
+    <action.icon></action.icon>
+
+    <span>{{action.text}}</span>
+  </state.TagName>
+  {% endfor %}
+</state.TagNameGetter>
+"
+`;
+
 exports[`Liquid > jsx > Javascript Test > basicForwardRef 1`] = `
 "<div>
   <input class=\\"input\\" value=\\"{{name}}\\" />
@@ -603,7 +619,8 @@ exports[`Liquid > jsx > Javascript Test > nestedStyles 1`] = `
 <style>
   .div {
     display: flex;
-    foo: var(--bar);
+    --bar: red;
+    color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
     .div {
@@ -613,8 +630,17 @@ exports[`Liquid > jsx > Javascript Test > nestedStyles 1`] = `
   .div:hover {
     display: flex;
   }
+  .div:active {
+    display: inline;
+  }
   .div .nested-selector {
     display: grid;
+  }
+  .div .nested-selector:hover {
+    display: block;
+  }
+  .div.nested-selector:active {
+    display: inline-block;
   }
 </style>
 "
@@ -725,6 +751,11 @@ exports[`Liquid > jsx > Javascript Test > showWithFor 1`] = `
 "
 `;
 
+exports[`Liquid > jsx > Javascript Test > showWithRootText 1`] = `
+"{% if conditionA %} ContentA {% endif %}
+"
+`;
+
 exports[`Liquid > jsx > Javascript Test > spreadAttrs 1`] = `
 "<input attrs=\\"{{attrs}}\\" />
 "
@@ -737,6 +768,18 @@ exports[`Liquid > jsx > Javascript Test > spreadNestedProps 1`] = `
 
 exports[`Liquid > jsx > Javascript Test > spreadProps 1`] = `
 "<input props=\\"{{props}}\\" />
+"
+`;
+
+exports[`Liquid > jsx > Javascript Test > styleClassAndCss 1`] = `
+"<div class=\\"builder-column div\\"></div>
+<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>
 "
 `;
 
@@ -788,14 +831,14 @@ exports[`Liquid > jsx > Javascript Test > use-style 1`] = `
 exports[`Liquid > jsx > Javascript Test > use-style-and-css 1`] = `
 "<button type=\\"button\\" class=\\"button\\">Button</button>
 <style>
-  .button {
-    background: blue;
-    color: white;
-  }
-
   button {
     font-size: 12px;
     outline: 1px solid black;
+  }
+
+  .button {
+    background: blue;
+    color: white;
   }
 </style>
 "
@@ -811,6 +854,11 @@ exports[`Liquid > jsx > Javascript Test > use-style-outside-component 1`] = `
     outline: 1px solid black;
   }
 </style>
+"
+`;
+
+exports[`Liquid > jsx > Javascript Test > useTarget 1`] = `
+"<div>{{name}}</div>
 "
 `;
 
@@ -1026,7 +1074,7 @@ exports[`Liquid > jsx > Typescript Test > ContentSlotHtml 1`] = `
 exports[`Liquid > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "{% if slotReference %}
 
-<div props.attributes=\\"{{attributes}}\\">
+<div props.attributes=\\"{{attributes}}\\" class=\\"{{cls}}\\">
   <div>
     <hr />
   </div>
@@ -1257,6 +1305,22 @@ exports[`Liquid > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 "
 `;
 
+exports[`Liquid > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"<state.TagNameGetter>
+  Hello
+  <state.tag>{{name}}</state.tag>
+
+  {% for action in actions %}
+  <state.TagName>
+    <action.icon></action.icon>
+
+    <span>{{action.text}}</span>
+  </state.TagName>
+  {% endfor %}
+</state.TagNameGetter>
+"
+`;
+
 exports[`Liquid > jsx > Typescript Test > basicForwardRef 1`] = `
 "<div>
   <input class=\\"input\\" value=\\"{{name}}\\" />
@@ -1422,7 +1486,8 @@ exports[`Liquid > jsx > Typescript Test > nestedStyles 1`] = `
 <style>
   .div {
     display: flex;
-    foo: var(--bar);
+    --bar: red;
+    color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
     .div {
@@ -1432,8 +1497,17 @@ exports[`Liquid > jsx > Typescript Test > nestedStyles 1`] = `
   .div:hover {
     display: flex;
   }
+  .div:active {
+    display: inline;
+  }
   .div .nested-selector {
     display: grid;
+  }
+  .div .nested-selector:hover {
+    display: block;
+  }
+  .div.nested-selector:active {
+    display: inline-block;
   }
 </style>
 "
@@ -1544,6 +1618,11 @@ exports[`Liquid > jsx > Typescript Test > showWithFor 1`] = `
 "
 `;
 
+exports[`Liquid > jsx > Typescript Test > showWithRootText 1`] = `
+"{% if conditionA %} ContentA {% endif %}
+"
+`;
+
 exports[`Liquid > jsx > Typescript Test > spreadAttrs 1`] = `
 "<input attrs=\\"{{attrs}}\\" />
 "
@@ -1556,6 +1635,18 @@ exports[`Liquid > jsx > Typescript Test > spreadNestedProps 1`] = `
 
 exports[`Liquid > jsx > Typescript Test > spreadProps 1`] = `
 "<input props=\\"{{props}}\\" />
+"
+`;
+
+exports[`Liquid > jsx > Typescript Test > styleClassAndCss 1`] = `
+"<div class=\\"builder-column div\\"></div>
+<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>
 "
 `;
 
@@ -1607,14 +1698,14 @@ exports[`Liquid > jsx > Typescript Test > use-style 1`] = `
 exports[`Liquid > jsx > Typescript Test > use-style-and-css 1`] = `
 "<button type=\\"button\\" class=\\"button\\">Button</button>
 <style>
-  .button {
-    background: blue;
-    color: white;
-  }
-
   button {
     font-size: 12px;
     outline: 1px solid black;
+  }
+
+  .button {
+    background: blue;
+    color: white;
   }
 </style>
 "
@@ -1630,6 +1721,11 @@ exports[`Liquid > jsx > Typescript Test > use-style-outside-component 1`] = `
     outline: 1px solid black;
   }
 </style>
+"
+`;
+
+exports[`Liquid > jsx > Typescript Test > useTarget 1`] = `
+"<div>{{name}}</div>
 "
 `;
 

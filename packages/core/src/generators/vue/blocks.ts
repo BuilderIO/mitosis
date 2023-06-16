@@ -1,21 +1,21 @@
-import { pipe, identity } from 'fp-ts/lib/function';
-import { Dictionary } from '../../helpers/typescript';
+import { identity, pipe } from 'fp-ts/lib/function';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { checkIsDefined } from '../../helpers/nullable';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
-import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisNode, ForNode, Binding, SpreadType } from '../../types/mitosis-node';
+import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
+import { Dictionary } from '../../helpers/typescript';
+import { Binding, ForNode, MitosisNode, SpreadType } from '../../types/mitosis-node';
 import {
-  encodeQuotes,
   addBindingsToJson,
   addPropertiesToJson,
+  encodeQuotes,
   invertBooleanExpression,
 } from './helpers';
 import { ToVueOptions } from './types';
-import { checkIsDefined } from '../../helpers/nullable';
 
 const SPECIAL_PROPERTIES = {
   V_IF: 'v-if',
@@ -50,10 +50,20 @@ const NODE_MAPPERS: {
 } = {
   Fragment(json, options, scope) {
     const children = json.children.filter(filterEmptyTextNodes);
-    if (options.vueVersion === 2 && scope?.isRootNode && children.length > 1) {
-      throw new Error('Vue 2 template should have a single root element');
+    const shouldAddDivFallback =
+      options.vueVersion === 2 && scope?.isRootNode && children.length > 1;
+
+    const childrenStr = children.map((item) => blockToVue(item, options)).join('\n');
+
+    if (shouldAddDivFallback) {
+      console.warn(
+        'WARNING: Vue 2 forbids multiple root elements. You provided a root Fragment with multiple elements. Wrapping elements in div as a workaround.',
+      );
+
+      return `<div>${childrenStr}</div>`;
+    } else {
+      return childrenStr;
     }
-    return children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(_json, options) {
     const json = _json as ForNode;
@@ -292,6 +302,8 @@ const NODE_MAPPERS: {
   },
 };
 
+const SPECIAL_HTML_TAGS = ['style', 'script'];
+
 const stringifyBinding =
   (node: MitosisNode) =>
   ([key, value]: [string, Binding]) => {
@@ -390,11 +402,10 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     return `<slot/>`;
   }
 
-  if (node.name === 'style') {
-    // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
-    // <component is="'style'">...</component>
+  if (SPECIAL_HTML_TAGS.includes(node.name)) {
+    // Vue doesn't allow style/script tags in templates, but does support them through dynamic components.
+    node.bindings.is = { code: `'${node.name}'`, type: 'single' };
     node.name = 'component';
-    node.bindings.is = { code: "'style'", type: 'single' };
   }
 
   if (node.properties._text) {
@@ -413,7 +424,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   str += getBlockBindings(node);
 
-  if (selfClosingTags.has(node.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(node.name)) {
     return str + ' />';
   }
 

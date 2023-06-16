@@ -1,6 +1,6 @@
-import { parseHtmlNode } from '../html';
 import type { TemplateNode } from 'svelte/types/compiler/interfaces';
 import type { MitosisNode } from '../../../types/mitosis-node';
+import { parseHtmlNode } from '../html';
 import type { SveltosisComponent } from '../types';
 
 export function filterChildren(children: TemplateNode[]) {

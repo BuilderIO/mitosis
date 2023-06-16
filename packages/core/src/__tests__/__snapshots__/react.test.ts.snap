@@ -107,7 +107,7 @@ export default MyBasicComponent;
 exports[`React > jsx > Javascript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -249,8 +249,8 @@ export default MyBooleanAttribute;
 exports[`React > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
@@ -394,10 +394,10 @@ exports[`React > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export function usePrevious<T>(value: T) {
+export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -577,9 +577,11 @@ function ContentSlotJsxCode(props) {
             title={props.slotContent ? \\"title1\\" : \\"title2\\"}
             {...props.attributes}
             onClick={(event) => show()}
-            className={props.slotContent ? \`\${name}-content\` : \\"\\"}
+            className={cls()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || \\"{props.content}\\"}</>
+            ) : null}
 
             <div>
               <hr />
@@ -596,7 +598,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -748,11 +750,13 @@ export default CustomCode;
 exports[`React > jsx > Javascript Test > Form 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef } from \\"react\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 function FormComponent(props) {
   const formRef = useRef(null);
@@ -1271,12 +1275,12 @@ exports[`React > jsx > Javascript Test > SlotDefault 1`] = `
 "import * as React from \\"react\\";
 
 function SlotCode(props) {
-  return <div>{props.children}</div>;
+  return (
+    <div>
+      {props.children || <div className=\\"default-slot\\">Default content</div>}
+    </div>
+  );
 }
-
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
 
 export default SlotCode;
 "
@@ -1322,14 +1326,12 @@ function SlotCode(props) {
     <div>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -1338,8 +1340,7 @@ export default SlotCode;
 exports[`React > jsx > Javascript Test > Stamped.io 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
@@ -1563,6 +1564,42 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      Hello
+      <Tag>{name}</Tag>
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <span>{action.text}</span>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
@@ -1968,7 +2005,7 @@ export default Button;
 exports[`React > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "import * as React from \\"react\\";
 
-const DEFAULT_VALUES: Props = {
+const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
@@ -2132,7 +2169,8 @@ function NestedStyles(props) {
       <style jsx>{\`
         .div {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .div {
@@ -2142,8 +2180,17 @@ function NestedStyles(props) {
         .div:hover {
           display: flex;
         }
+        .div:active {
+          display: inline;
+        }
         .div .nested-selector {
           display: grid;
+        }
+        .div .nested-selector:hover {
+          display: block;
+        }
+        .div.nested-selector:active {
+          display: inline-block;
         }
       \`}</style>
     </>
@@ -2267,7 +2314,7 @@ const b = 3;
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
 function MyBasicComponent(props) {
   return <div />;
@@ -2376,20 +2423,20 @@ export default OnUpdate;
 exports[`React > jsx > Javascript Test > renderBlock 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
 
 function RenderBlock(props) {
   function component() {
@@ -2409,8 +2456,8 @@ function RenderBlock(props) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -2627,7 +2674,9 @@ function RenderBlock(props) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -2640,12 +2689,12 @@ export default RenderBlock;
 exports[`React > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { useContext, useEffect } from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 function RenderContent(props) {
@@ -2811,6 +2860,17 @@ export default NestedShow;
 "
 `;
 
+exports[`React > jsx > Javascript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+
+function ShowRootText(props) {
+  return <>{props.conditionA ? <>ContentA</> : <div>else-condition-A</div>}</>;
+}
+
+export default ShowRootText;
+"
+`;
+
 exports[`React > jsx > Javascript Test > spreadAttrs 1`] = `
 "import * as React from \\"react\\";
 
@@ -2841,6 +2901,33 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`React > jsx > Javascript Test > styleClassAndCss 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <div
+        className=\\"builder-column div\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
 "
 `;
 
@@ -2929,14 +3016,14 @@ function MyComponent(props) {
         Button
       </button>
       <style jsx>{\`
-        .button {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button {
+          background: blue;
+          color: white;
         }
       \`}</style>
     </>
@@ -2967,6 +3054,22 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React > jsx > Javascript Test > useTarget 1`] = `
+"import * as React from \\"react\\";
+
+function UseTargetComponent(props) {
+  function name() {
+    const prefix = 123;
+    return prefix + \\"foo\\";
+  }
+
+  return <div>{name()}</div>;
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -3104,7 +3207,7 @@ export default MyBasicComponent;
 exports[`React > jsx > Typescript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -3256,8 +3359,8 @@ export default MyBooleanAttribute;
 exports[`React > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
@@ -3388,7 +3491,7 @@ export interface Props {
 
 function MyBasicRefAssignmentComponent(props: Props) {
   const holdValueRef = useRef(\\"Patrick\\");
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef.current);
     holdValueRef.current = holdValueRef.current + \\"JS\\";
@@ -3519,12 +3622,12 @@ function Column(props: ColumnProps) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -3578,6 +3681,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotCode(props: Props) {
   return (
@@ -3604,6 +3708,7 @@ import { useState } from \\"react\\";
 type Props = {
   [key: string]: string | JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotJsxCode(props: Props) {
   const [name, setName] = useState(() => \\"king\\");
@@ -3627,9 +3732,11 @@ function ContentSlotJsxCode(props: Props) {
             title={props.slotContent ? \\"title1\\" : \\"title2\\"}
             {...props.attributes}
             onClick={(event) => show()}
-            className={props.slotContent ? \`\${name}-content\` : \\"\\"}
+            className={cls()}
           >
-            {showContent && props.slotContent ? <>{props.slotContent}</> : null}
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || \\"{props.content}\\"}</>
+            ) : null}
 
             <div>
               <hr />
@@ -3646,7 +3753,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -3832,11 +3939,13 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 function FormComponent(props: FormProps) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -3850,7 +3959,11 @@ function FormComponent(props: FormProps) {
     return (Builder.isEditing && props.previewState) || formState;
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -3864,16 +3977,19 @@ function FormComponent(props: FormProps) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -3899,7 +4015,7 @@ function FormComponent(props: FormProps) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -3961,7 +4077,7 @@ function FormComponent(props: FormProps) {
       fetch(
         props.sendSubmissionsTo === \\"email\\"
           ? formUrl
-          : props.action /* TODO: throw error if no action URL */,
+          : props.action! /* TODO: throw error if no action URL */,
         { body, headers, method: props.method || \\"post\\" }
       ).then(
         async (res) => {
@@ -4061,7 +4177,7 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
+              blocks={props.errorMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -4069,7 +4185,7 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
+              blocks={props.sendingMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -4085,7 +4201,7 @@ function FormComponent(props: FormProps) {
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
+              blocks={props.successMessage!}
             />
           </>
         ) : null}{\\" \\"}
@@ -4430,12 +4546,12 @@ type Props = {
 };
 
 function SlotCode(props: Props) {
-  return <div>{props.children}</div>;
+  return (
+    <div>
+      {props.children || <div className=\\"default-slot\\">Default content</div>}
+    </div>
+  );
 }
-
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
 
 export default SlotCode;
 "
@@ -4493,14 +4609,12 @@ function SlotCode(props: Props) {
     <div>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -4514,8 +4628,7 @@ type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props: SmileReviewsProps) {
   const [reviews, setReviews] = useState(() => []);
@@ -4790,6 +4903,42 @@ export default MyComponent;
 "
 `;
 
+exports[`React > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      Hello
+      <Tag>{name}</Tag>
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <span>{action.text}</span>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
 exports[`React > jsx > Typescript Test > basicForwardRef 1`] = `
 "import * as React from \\"react\\";
 import { useState, forwardRef } from \\"react\\";
@@ -4974,6 +5123,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ClassNameCode(props: Props) {
   const [bindings, setBindings] = useState(() => \\"a binding\\");
@@ -5281,7 +5431,8 @@ type RenderContentProps = {
   content: BuilderContent;
   renderContentProps: RenderBlockProps;
 };
-import RenderBlock from \\"./builder-render-block.raw\\";
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 function RenderContent(props: RenderContentProps) {
   function getRenderContentProps(block, index) {
@@ -5414,7 +5565,8 @@ function NestedStyles(props: any) {
       <style jsx>{\`
         .div {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .div {
@@ -5424,8 +5576,17 @@ function NestedStyles(props: any) {
         .div:hover {
           display: flex;
         }
+        .div:active {
+          display: inline;
+        }
         .div .nested-selector {
           display: grid;
+        }
+        .div .nested-selector:hover {
+          display: block;
+        }
+        .div.nested-selector:active {
+          display: inline-block;
         }
       \`}</style>
     </>
@@ -5704,32 +5865,33 @@ export default OnUpdate;
 exports[`React > jsx > Typescript Test > renderBlock 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
-import type {
-  BuilderContextInterface,
-  RegisteredComponent,
-} from \\"../../context/types.js\\";
-import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-import type { Nullable } from \\"../../types/typescript.js\\";
-import type { RenderComponentProps } from \\"./render-component\\";
-import type { RepeatData } from \\"./types.js\\";
+
 export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
 };
+import { TARGET } from \\"../../constants/target.js\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import type { RenderComponentProps } from \\"./render-component.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import type { RepeatData } from \\"./types.js\\";
 
 function RenderBlock(props: RenderBlockProps) {
   function component() {
@@ -5749,8 +5911,8 @@ function RenderBlock(props: RenderBlockProps) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -5866,7 +6028,7 @@ function RenderBlock(props: RenderBlockProps) {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {
@@ -5967,7 +6129,9 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
@@ -5988,12 +6152,12 @@ type Props = {
     id: string;
   };
 };
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 function RenderContent(props: Props) {
@@ -6175,6 +6339,21 @@ export default NestedShow;
 "
 `;
 
+exports[`React > jsx > Typescript Test > showWithRootText 1`] = `
+"import * as React from \\"react\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowRootText(props: Props) {
+  return <>{props.conditionA ? <>ContentA</> : <div>else-condition-A</div>}</>;
+}
+
+export default ShowRootText;
+"
+`;
+
 exports[`React > jsx > Typescript Test > spreadAttrs 1`] = `
 "import * as React from \\"react\\";
 
@@ -6205,6 +6384,33 @@ function MyBasicComponent(props: any) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`React > jsx > Typescript Test > styleClassAndCss 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props: any) {
+  return (
+    <>
+      <div
+        className=\\"builder-column div\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
 "
 `;
 
@@ -6251,12 +6457,13 @@ export default SvgComponent;
 
 exports[`React > jsx > Typescript Test > typeDependency 1`] = `
 "import * as React from \\"react\\";
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
+
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
 };
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export.lite\\";
 
 function TypeDependency(props: TypeDependencyProps) {
   return <div>{props.foo}</div>;
@@ -6299,14 +6506,14 @@ function MyComponent(props: any) {
         Button
       </button>
       <style jsx>{\`
-        .button {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button {
+          background: blue;
+          color: white;
         }
       \`}</style>
     </>
@@ -6340,12 +6547,27 @@ export default MyComponent;
 "
 `;
 
+exports[`React > jsx > Typescript Test > useTarget 1`] = `
+"import * as React from \\"react\\";
+
+function UseTargetComponent(props: any) {
+  function name() {
+    const prefix = 123;
+    return prefix + \\"foo\\";
+  }
+
+  return <div>{name()}</div>;
+}
+
+export default UseTargetComponent;
+"
+`;
+
 exports[`React > stamped (mobx) 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 import { useLocalObservable, observer } from \\"mobx-react-lite\\";
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props) {
   const state = useLocalObservable(() => ({
@@ -6382,13 +6604,13 @@ function SmileReviews(props) {
         {state.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-68afa6b4\\" />
+            <input placeholder=\\"Title\\" className=\\"input-94a2f244\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-68afa6b4\\"
+              className=\\"textarea-94a2f244\\"
             />
             <button
-              className=\\"button-68afa6b4\\"
+              className=\\"button-94a2f244\\"
               onClick={(event) => {
                 event.preventDefault();
                 state.showReviewPrompt = false;
@@ -6400,8 +6622,8 @@ function SmileReviews(props) {
         ) : null}
 
         {state.reviews?.map((review, index) => (
-          <div className=\\"review-68afa6b4\\" key={review.id}>
-            <img className=\\"img-68afa6b4\\" src={review.avatar} />
+          <div className=\\"review-94a2f244\\" key={review.id}>
+            <img className=\\"img-94a2f244\\" src={review.avatar} />
 
             <div
               className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
@@ -6418,23 +6640,24 @@ function SmileReviews(props) {
           </div>
         ))}
       </div>
-      <style>{\`.input-68afa6b4 {
-display: block;
-}.textarea-68afa6b4 {
-display: block;
-}.button-68afa6b4 {
-display: block;
-}.review-68afa6b4 {
-margin: 10px;
-padding: 10px;
-background: white;
-display: flex;
-border-radius: 5px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}.img-68afa6b4 {
-height: 30px;
-width: 30px;
-margin-right: 10px;
+
+      <style>{\`.input-94a2f244 {
+  display: block;
+}.textarea-94a2f244 {
+  display: block;
+}.button-94a2f244 {
+  display: block;
+}.review-94a2f244 {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}.img-94a2f244 {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
 }\`}</style>
     </>
   );
@@ -6448,8 +6671,7 @@ export default observedSmileReviews;
 exports[`React > stamped (useState) 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
@@ -6488,13 +6710,13 @@ function SmileReviews(props) {
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-bd83d79c\\" />
+            <input placeholder=\\"Title\\" className=\\"input-208b4df4\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-bd83d79c\\"
+              className=\\"textarea-208b4df4\\"
             />
             <button
-              className=\\"button-bd83d79c\\"
+              className=\\"button-208b4df4\\"
               onClick={(event) => {
                 event.preventDefault();
                 setShowReviewPrompt(false);
@@ -6506,8 +6728,8 @@ function SmileReviews(props) {
         ) : null}
 
         {reviews?.map((review, index) => (
-          <div className=\\"review-bd83d79c\\" key={review.id}>
-            <img className=\\"img-bd83d79c\\" src={review.avatar} />
+          <div className=\\"review-208b4df4\\" key={review.id}>
+            <img className=\\"img-208b4df4\\" src={review.avatar} />
 
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
               <div>
@@ -6522,23 +6744,24 @@ function SmileReviews(props) {
           </div>
         ))}
       </div>
-      <style>{\`.input-bd83d79c {
-display: block;
-}.textarea-bd83d79c {
-display: block;
-}.button-bd83d79c {
-display: block;
-}.review-bd83d79c {
-margin: 10px;
-padding: 10px;
-background: white;
-display: flex;
-border-radius: 5px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}.img-bd83d79c {
-height: 30px;
-width: 30px;
-margin-right: 10px;
+
+      <style>{\`.input-208b4df4 {
+  display: block;
+}.textarea-208b4df4 {
+  display: block;
+}.button-208b4df4 {
+  display: block;
+}.review-208b4df4 {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}.img-208b4df4 {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
 }\`}</style>
     </>
   );
@@ -6893,16 +7116,11 @@ exports[`React > svelte > Javascript Test > slots 1`] = `
 function MyComponent(props) {
   return (
     <div>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <div>default</div>}
     </div>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <div>default</div>,
-};
 
 export default MyComponent;
 "
@@ -7302,16 +7520,11 @@ exports[`React > svelte > Typescript Test > slots 1`] = `
 function MyComponent(props: any) {
   return (
     <div>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <div>default</div>}
     </div>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <div>default</div>,
-};
 
 export default MyComponent;
 "

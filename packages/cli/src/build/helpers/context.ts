@@ -1,16 +1,17 @@
 import {
+  contextToQwik,
   contextToReact,
   contextToRsc,
   contextToSolid,
   contextToSvelte,
   contextToVue,
-  contextToQwik,
   MitosisConfig,
   parseContext,
   Target,
 } from '@builder.io/mitosis';
 import { readFile } from 'fs-extra';
-import { upperFirst, camelCase, last } from 'lodash';
+import { camelCase, last, upperFirst } from 'lodash';
+import { checkShouldOutputTypeScript } from './options';
 
 export const generateContextFile = async ({
   path,
@@ -36,10 +37,18 @@ export const generateContextFile = async ({
         return contextToVue(options.options[target])({ context });
       case 'solid':
         return contextToSolid()({ context });
-      case 'react':
       case 'preact':
+        return contextToReact({
+          preact: true,
+          typescript: checkShouldOutputTypeScript({ options, target }),
+        })({
+          context,
+        });
+      case 'react':
       case 'reactNative':
-        return contextToReact()({ context });
+        return contextToReact({ typescript: checkShouldOutputTypeScript({ options, target }) })({
+          context,
+        });
       case 'rsc':
         return contextToRsc()({ context });
       case 'qwik':

@@ -110,7 +110,7 @@ exports[`Preact > jsx > Javascript Test > Basic Context 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useContext, useEffect } from \\"preact/hooks\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -258,8 +258,8 @@ exports[`Preact > jsx > Javascript Test > BasicChildComponent 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
@@ -407,10 +407,10 @@ exports[`Preact > jsx > Javascript Test > BasicRefPrevious 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
-export function usePrevious<T>(value: T) {
+export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -594,10 +594,10 @@ function ContentSlotJsxCode(props) {
             title={props.slotContent ? \\"title1\\" : \\"title2\\"}
             {...props.attributes}
             onClick={(event) => show()}
-            className={props.slotContent ? \`\${name}-content\` : \\"\\"}
+            className={cls()}
           >
             {showContent && props.slotContent ? (
-              <Fragment>{props.slotContent}</Fragment>
+              <Fragment>{props.slotContent || \\"{props.content}\\"}</Fragment>
             ) : null}
 
             <div>
@@ -615,7 +615,7 @@ function ContentSlotJsxCode(props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -770,11 +770,13 @@ exports[`Preact > jsx > Javascript Test > Form 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useRef } from \\"preact/hooks\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 function FormComponent(props) {
   const formRef = useRef(null);
@@ -1301,12 +1303,12 @@ exports[`Preact > jsx > Javascript Test > SlotDefault 1`] = `
 import { h, Fragment } from \\"preact\\";
 
 function SlotCode(props) {
-  return <div>{props.children}</div>;
+  return (
+    <div>
+      {props.children || <div className=\\"default-slot\\">Default content</div>}
+    </div>
+  );
 }
-
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
 
 export default SlotCode;
 "
@@ -1355,14 +1357,12 @@ function SlotCode(props) {
     <div>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -1372,8 +1372,7 @@ exports[`Preact > jsx > Javascript Test > Stamped.io 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
@@ -1605,34 +1604,69 @@ export default MyComponent;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      Hello
+      <Tag>{name}</Tag>
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <span>{action.text}</span>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > basicForwardRef 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
+import { useState } from \\"preact/hooks\\";
 
-const MyBasicForwardRefComponent = forwardRef(
-  function MyBasicForwardRefComponent(props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
+function MyBasicForwardRefComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
 
-    return (
-      <Fragment>
-        <div>
-          <input
-            className=\\"input\\"
-            ref={inputRef}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </div>
-        <style jsx>{\`
-          .input {
-            color: red;
-          }
-        \`}</style>
-      </Fragment>
-    );
-  }
-);
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
 
 export default MyBasicForwardRefComponent;
 "
@@ -1641,31 +1675,29 @@ export default MyBasicForwardRefComponent;
 exports[`Preact > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
+import { useState } from \\"preact/hooks\\";
 
-const MyBasicForwardRefComponent = forwardRef(
-  function MyBasicForwardRefComponent(props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
+function MyBasicForwardRefComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
 
-    return (
-      <Fragment>
-        <div>
-          <input
-            className=\\"input\\"
-            ref={inputRef}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </div>
-        <style jsx>{\`
-          .input {
-            color: red;
-          }
-        \`}</style>
-      </Fragment>
-    );
-  }
-);
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
 
 export default MyBasicForwardRefComponent;
 "
@@ -2021,7 +2053,7 @@ exports[`Preact > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-const DEFAULT_VALUES: Props = {
+const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
@@ -2192,7 +2224,8 @@ function NestedStyles(props) {
       <style jsx>{\`
         .div {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .div {
@@ -2202,8 +2235,17 @@ function NestedStyles(props) {
         .div:hover {
           display: flex;
         }
+        .div:active {
+          display: inline;
+        }
         .div .nested-selector {
           display: grid;
+        }
+        .div .nested-selector:hover {
+          display: block;
+        }
+        .div.nested-selector:active {
+          display: inline-block;
         }
       \`}</style>
     </Fragment>
@@ -2333,7 +2375,7 @@ const b = 3;
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
 function MyBasicComponent(props) {
   return <div />;
@@ -2448,20 +2490,20 @@ exports[`Preact > jsx > Javascript Test > renderBlock 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
 
 function RenderBlock(props) {
   function component() {
@@ -2481,8 +2523,8 @@ function RenderBlock(props) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -2699,7 +2741,9 @@ function RenderBlock(props) {
           ) : null}
         </Fragment>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <Fragment>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </Fragment>
       )}
     </Fragment>
   );
@@ -2713,12 +2757,12 @@ exports[`Preact > jsx > Javascript Test > renderContentExample 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useContext, useEffect } from \\"preact/hooks\\";
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 function RenderContent(props) {
@@ -2889,6 +2933,26 @@ export default NestedShow;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > showWithRootText 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function ShowRootText(props) {
+  return (
+    <Fragment>
+      {props.conditionA ? (
+        <Fragment>ContentA</Fragment>
+      ) : (
+        <div>else-condition-A</div>
+      )}
+    </Fragment>
+  );
+}
+
+export default ShowRootText;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > spreadAttrs 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -2922,6 +2986,34 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > styleClassAndCss 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function MyComponent(props) {
+  return (
+    <Fragment>
+      <div
+        className=\\"builder-column div\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyComponent;
 "
 `;
 
@@ -3015,14 +3107,14 @@ function MyComponent(props) {
         Button
       </button>
       <style jsx>{\`
-        .button {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button {
+          background: blue;
+          color: white;
         }
       \`}</style>
     </Fragment>
@@ -3054,6 +3146,23 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > useTarget 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function UseTargetComponent(props) {
+  function name() {
+    const prefix = \\"p\\";
+    return prefix + \\"foo\\";
+  }
+
+  return <div>{name()}</div>;
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -3195,7 +3304,7 @@ exports[`Preact > jsx > Typescript Test > Basic Context 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState, useContext, useEffect } from \\"preact/hooks\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -3353,8 +3462,8 @@ exports[`Preact > jsx > Typescript Test > BasicChildComponent 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
@@ -3488,7 +3597,7 @@ export interface Props {
 
 function MyBasicRefAssignmentComponent(props: Props) {
   const holdValueRef = useRef(\\"Patrick\\");
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef.current);
     holdValueRef.current = holdValueRef.current + \\"JS\\";
@@ -3622,12 +3731,12 @@ function Column(props: ColumnProps) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -3682,6 +3791,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotCode(props: Props) {
   return (
@@ -3709,6 +3819,7 @@ import { useState } from \\"preact/hooks\\";
 type Props = {
   [key: string]: string | JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotJsxCode(props: Props) {
   const [name, setName] = useState(() => \\"king\\");
@@ -3732,10 +3843,10 @@ function ContentSlotJsxCode(props: Props) {
             title={props.slotContent ? \\"title1\\" : \\"title2\\"}
             {...props.attributes}
             onClick={(event) => show()}
-            className={props.slotContent ? \`\${name}-content\` : \\"\\"}
+            className={cls()}
           >
             {showContent && props.slotContent ? (
-              <Fragment>{props.slotContent}</Fragment>
+              <Fragment>{props.slotContent || \\"{props.content}\\"}</Fragment>
             ) : null}
 
             <div>
@@ -3753,7 +3864,7 @@ function ContentSlotJsxCode(props: Props) {
 ContentSlotJsxCode.defaultProps = {
   content: \\"\\",
   slotReference: undefined,
-  slotContent: \\"{props.content}\\",
+  slotContent: undefined,
 };
 
 export default ContentSlotJsxCode;
@@ -3942,11 +4053,13 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 function FormComponent(props: FormProps) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -3960,7 +4073,11 @@ function FormComponent(props: FormProps) {
     return (Builder.isEditing && props.previewState) || formState;
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -3974,16 +4091,19 @@ function FormComponent(props: FormProps) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -4009,7 +4129,7 @@ function FormComponent(props: FormProps) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -4071,7 +4191,7 @@ function FormComponent(props: FormProps) {
       fetch(
         props.sendSubmissionsTo === \\"email\\"
           ? formUrl
-          : props.action /* TODO: throw error if no action URL */,
+          : props.action! /* TODO: throw error if no action URL */,
         { body, headers, method: props.method || \\"post\\" }
       ).then(
         async (res) => {
@@ -4171,7 +4291,7 @@ function FormComponent(props: FormProps) {
           <Fragment>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
+              blocks={props.errorMessage!}
             />
           </Fragment>
         ) : null}{\\" \\"}
@@ -4179,7 +4299,7 @@ function FormComponent(props: FormProps) {
           <Fragment>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
+              blocks={props.sendingMessage!}
             />
           </Fragment>
         ) : null}{\\" \\"}
@@ -4195,7 +4315,7 @@ function FormComponent(props: FormProps) {
           <Fragment>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
+              blocks={props.successMessage!}
             />
           </Fragment>
         ) : null}{\\" \\"}
@@ -4548,12 +4668,12 @@ type Props = {
 };
 
 function SlotCode(props: Props) {
-  return <div>{props.children}</div>;
+  return (
+    <div>
+      {props.children || <div className=\\"default-slot\\">Default content</div>}
+    </div>
+  );
 }
-
-SlotCode.defaultProps = {
-  children: <div className=\\"default-slot\\">Default content</div>,
-};
 
 export default SlotCode;
 "
@@ -4614,14 +4734,12 @@ function SlotCode(props: Props) {
     <div>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || \\"Default left\\"}
 
-      {props.children}
+      {props.children || \\"Default Child\\"}
     </div>
   );
 }
-
-SlotCode.defaultProps = { slotLeft: \\"Default left\\", children: \\"Default Child\\" };
 
 export default SlotCode;
 "
@@ -4636,8 +4754,7 @@ type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
 function SmileReviews(props: SmileReviewsProps) {
   const [reviews, setReviews] = useState(() => []);
@@ -4917,39 +5034,74 @@ export default MyComponent;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      Hello
+      <Tag>{name}</Tag>
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <span>{action.text}</span>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
+"
+`;
+
 exports[`Preact > jsx > Typescript Test > basicForwardRef 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
+import { useState } from \\"preact/hooks\\";
 
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
 }
 
-const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
+function MyBasicForwardRefComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
 
-    return (
-      <Fragment>
-        <div>
-          <input
-            className=\\"input\\"
-            ref={inputRef}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </div>
-        <style jsx>{\`
-          .input {
-            color: red;
-          }
-        \`}</style>
-      </Fragment>
-    );
-  }
-);
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
 
 export default MyBasicForwardRefComponent;
 "
@@ -4958,36 +5110,34 @@ export default MyBasicForwardRefComponent;
 exports[`Preact > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, forwardRef } from \\"preact/hooks\\";
+import { useState } from \\"preact/hooks\\";
 
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
 }
 
-const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
+function MyBasicForwardRefComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
 
-    return (
-      <Fragment>
-        <div>
-          <input
-            className=\\"input\\"
-            ref={inputRef}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </div>
-        <style jsx>{\`
-          .input {
-            color: red;
-          }
-        \`}</style>
-      </Fragment>
-    );
-  }
-);
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
 
 export default MyBasicForwardRefComponent;
 "
@@ -5108,6 +5258,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ClassNameCode(props: Props) {
   const [bindings, setBindings] = useState(() => \\"a binding\\");
@@ -5424,7 +5575,8 @@ type RenderContentProps = {
   content: BuilderContent;
   renderContentProps: RenderBlockProps;
 };
-import RenderBlock from \\"./builder-render-block.raw\\";
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 function RenderContent(props: RenderContentProps) {
   function getRenderContentProps(block, index) {
@@ -5562,7 +5714,8 @@ function NestedStyles(props: any) {
       <style jsx>{\`
         .div {
           display: flex;
-          foo: var(--bar);
+          --bar: red;
+          color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
           .div {
@@ -5572,8 +5725,17 @@ function NestedStyles(props: any) {
         .div:hover {
           display: flex;
         }
+        .div:active {
+          display: inline;
+        }
         .div .nested-selector {
           display: grid;
+        }
+        .div .nested-selector:hover {
+          display: block;
+        }
+        .div.nested-selector:active {
+          display: inline-block;
         }
       \`}</style>
     </Fragment>
@@ -5864,32 +6026,33 @@ exports[`Preact > jsx > Typescript Test > renderBlock 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
-import type {
-  BuilderContextInterface,
-  RegisteredComponent,
-} from \\"../../context/types.js\\";
-import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-import type { Nullable } from \\"../../types/typescript.js\\";
-import type { RenderComponentProps } from \\"./render-component\\";
-import type { RepeatData } from \\"./types.js\\";
+
 export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
 };
+import { TARGET } from \\"../../constants/target.js\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import type { RenderComponentProps } from \\"./render-component.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import type { RepeatData } from \\"./types.js\\";
 
 function RenderBlock(props: RenderBlockProps) {
   function component() {
@@ -5909,8 +6072,8 @@ function RenderBlock(props: RenderBlockProps) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-       Could not find a registered component named \\"\${componentName}\\". 
-       If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -6026,7 +6189,7 @@ function RenderBlock(props: RenderBlockProps) {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {
@@ -6127,7 +6290,9 @@ function RenderBlock(props: RenderBlockProps) {
           ) : null}
         </Fragment>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <Fragment>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </Fragment>
       )}
     </Fragment>
   );
@@ -6149,12 +6314,12 @@ type Props = {
     id: string;
   };
 };
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 function RenderContent(props: Props) {
@@ -6341,6 +6506,30 @@ export default NestedShow;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > showWithRootText 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowRootText(props: Props) {
+  return (
+    <Fragment>
+      {props.conditionA ? (
+        <Fragment>ContentA</Fragment>
+      ) : (
+        <div>else-condition-A</div>
+      )}
+    </Fragment>
+  );
+}
+
+export default ShowRootText;
+"
+`;
+
 exports[`Preact > jsx > Typescript Test > spreadAttrs 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -6374,6 +6563,34 @@ function MyBasicComponent(props: any) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > styleClassAndCss 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function MyComponent(props: any) {
+  return (
+    <Fragment>
+      <div
+        className=\\"builder-column div\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyComponent;
 "
 `;
 
@@ -6423,12 +6640,13 @@ export default SvgComponent;
 exports[`Preact > jsx > Typescript Test > typeDependency 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
+
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
 };
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export.lite\\";
 
 function TypeDependency(props: TypeDependencyProps) {
   return <div>{props.foo}</div>;
@@ -6473,14 +6691,14 @@ function MyComponent(props: any) {
         Button
       </button>
       <style jsx>{\`
-        .button {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button {
+          background: blue;
+          color: white;
         }
       \`}</style>
     </Fragment>
@@ -6512,6 +6730,23 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > useTarget 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function UseTargetComponent(props: any) {
+  function name() {
+    const prefix = \\"p\\";
+    return prefix + \\"foo\\";
+  }
+
+  return <div>{name()}</div>;
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -6874,16 +7109,11 @@ import { h, Fragment } from \\"preact\\";
 function MyComponent(props) {
   return (
     <div>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <div>default</div>}
     </div>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <div>default</div>,
-};
 
 export default MyComponent;
 "
@@ -7299,16 +7529,11 @@ import { h, Fragment } from \\"preact\\";
 function MyComponent(props: any) {
   return (
     <div>
-      {props.children}
-      {props.slotTest}
+      {props.children || \\"default\\"}
+      {props.slotTest || <div>default</div>}
     </div>
   );
 }
-
-MyComponent.defaultProps = {
-  children: \\"default\\",
-  slotTest: <div>default</div>,
-};
 
 export default MyComponent;
 "

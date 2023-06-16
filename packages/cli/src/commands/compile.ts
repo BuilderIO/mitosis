@@ -4,14 +4,15 @@ import {
   GeneratorOptions,
   MitosisComponent,
   parseJsx,
+  parseSvelte,
   Plugin,
   Target,
   targets,
 } from '@builder.io/mitosis';
 import { GluegunCommand } from 'gluegun';
 import { join } from 'path';
-import { UnionToIntersection } from '../types';
 import { getMitosisConfig } from '../helpers/get-mitosis-config';
+import { UnionToIntersection } from '../types';
 
 type GeneratorOpts = GeneratorOptions[Target];
 
@@ -62,6 +63,7 @@ const command: GluegunCommand = {
       stylesType: opts.styles,
       stateType: opts.state,
       type: opts.type,
+      api: opts.api,
       cssNamespace: opts.cssNamespace,
     } as any as Partial<{ [K in AllGeneratorOptionKeys]: any }>;
 
@@ -126,6 +128,9 @@ const command: GluegunCommand = {
             json = builderContentToMitosisComponent(JSON.parse(data!));
             break;
 
+          case 'svelte':
+            json = await parseSvelte(data!);
+            break;
           default:
             print.error(`${from_} is not a valid input type`);
             process.exit(1);

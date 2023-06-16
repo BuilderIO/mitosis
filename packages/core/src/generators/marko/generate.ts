@@ -1,30 +1,31 @@
-import dedent from 'dedent';
+import hash from 'hash-sum';
+import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
+import { dashCase } from '../../helpers/dash-case';
+import { dedent } from '../../helpers/dedent';
+import { fastClone } from '../../helpers/fast-clone';
+import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import { getRefs } from '../../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
+import { hasProps } from '../../helpers/has-props';
+import { indent } from '../../helpers/indent';
+import { mapRefs } from '../../helpers/map-refs';
+import { initializeOptions } from '../../helpers/merge-options';
+import { getForArguments } from '../../helpers/nodes/for';
 import { renderPreComponent } from '../../helpers/render-imports';
-import { selfClosingTags } from '../../parsers/jsx';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { collectCss } from '../../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { fastClone } from '../../helpers/fast-clone';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import { collectCss } from '../../helpers/styles/collect-css';
-import { indent } from '../../helpers/indent';
-import { mapRefs } from '../../helpers/map-refs';
-import { dashCase } from '../../helpers/dash-case';
-import { hasProps } from '../../helpers/has-props';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { getRefs } from '../../helpers/get-refs';
-import { camelCase } from 'lodash';
-import hash from 'hash-sum';
-import { getForArguments } from '../../helpers/nodes/for';
+import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
 
@@ -99,7 +100,7 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
       str += ` ${key}=(${processBinding(options.component, code as string)}) `;
     }
   }
-  if (selfClosingTags.has(json.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
   str += '>';
@@ -151,10 +152,11 @@ export const componentToMarko: TranspilerGenerator<ToMarkoOptions> =
   (userOptions = {}) =>
   ({ component }) => {
     let json = fastClone(component);
-    const options: InternalToMarkoOptions = {
+    const options = initializeOptions<InternalToMarkoOptions>('marko', {
       ...userOptions,
       component: json,
-    };
+    });
+
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }

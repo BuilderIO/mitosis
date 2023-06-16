@@ -16,9 +16,10 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';
-import React, { useRef, useState } from 'react';
 import Image from 'next/image';
+import { useRef, useState } from 'react';
 
+import stringify from 'fast-json-stable-stringify';
 import { adapt } from 'webcomponents-in-react';
 import { breakpoints } from '../../constants/breakpoints';
 import { colors } from '../../constants/colors';
@@ -37,7 +38,6 @@ import { useEventListener } from '../../hooks/use-event-listener';
 import { useReaction } from '../../hooks/use-reaction';
 import { Show } from '../Show';
 import { TextLink } from '../TextLink';
-import stringify from 'fast-json-stable-stringify';
 
 import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
 import { JsxCodeEditor } from '../JsxCodeEditor';
@@ -274,6 +274,7 @@ export default function Fiddle() {
       vueVersion: localStorageGet('options.vueVersion') || ('2' as '2' | '3'),
       alpineShorthandSyntax: localStorageGet('options.alpineShorthandSyntax') || 'false',
       alpineInline: localStorageGet('options.alpineInline') || 'false',
+      angularStandalone: localStorageGet('options.angularStandalone') || 'false',
     },
     applyPendingBuilderChange(update?: any) {
       const builderJson = update || state.pendingBuilderChange;
@@ -296,26 +297,31 @@ export default function Fiddle() {
 
         const { parseSvelte, parseJsx } = await mitosisCore();
 
+        const commonOptions: { typescript: boolean } = {
+          typescript: state.options.typescript === 'true',
+        };
+
         switch (state.inputTab) {
           case 'svelte':
             json = await parseSvelte(state.code);
             break;
           case 'jsx':
           default:
-            json = parseJsx(state.code);
+            json = parseJsx(state.code, {
+              typescript: commonOptions.typescript,
+            });
             break;
         }
-
-        const commonOptions: { typescript: boolean } = {
-          typescript: state.options.typescript === 'true',
-        };
-
         const generateOptions = () => {
           switch (state.outputTab) {
             case 'alpine':
               return {
                 useShorthandSyntax: this.options.alpineShorthandSyntax === 'true',
                 inlineState: this.options.alpineInline === 'true',
+              };
+            case 'angular':
+              return {
+                standalone: this.options.angularStandalone === 'true',
               };
             case 'react':
               return {
@@ -509,13 +515,13 @@ export default function Fiddle() {
   );
 
   return useObserver(() => {
-    const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
+    const isDarkMode = theme.darkMode;
+    const monacoTheme = isDarkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
       overflow: 'auto',
       whiteSpace: 'nowrap',
-      ...(theme.darkMode ? null : { backgroundColor: 'white' }),
+      ...(isDarkMode ? null : { backgroundColor: 'white' }),
     };
-
     return (
       <div
         css={{
@@ -526,11 +532,6 @@ export default function Fiddle() {
             {
               backgroundColor: 'transparent !important',
             },
-
-          'a > span': {
-            color: 'white',
-            textDecoration: 'none',
-          },
         }}
       >
         <div
@@ -573,6 +574,10 @@ export default function Fiddle() {
             <div
               css={{
                 display: 'flex',
+                'a > span': {
+                  color: 'white',
+                  textDecoration: 'none',
+                },
               }}
             >
               <Button
@@ -1390,6 +1395,48 @@ export default function Fiddle() {
                     labelPlacement="start"
                     control={<Radio color="primary" />}
                     label="Separate"
+                  />
+                </RadioGroup>
+              </div>
+            </Show>
+            <Show when={state.outputTab === 'angular'}>
+              <div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
+                }}
+              >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
+                  Standalone:
+                </Typography>
+                <RadioGroup
+                  css={{
+                    flexDirection: 'row',
+                    marginRight: 10,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: 12,
+                    },
+                  }}
+                  aria-label="Angular Standalone Selection"
+                  name="angularStandalone"
+                  value={state.options.angularStandalone}
+                  onChange={(e) => {
+                    state.options.angularStandalone = e.target.value;
+                    state.updateOutput();
+                  }}
+                >
+                  <FormControlLabel
+                    value="true"
+                    control={<Radio color="primary" />}
+                    labelPlacement="start"
+                    label="Standalone"
+                  />
+                  <FormControlLabel
+                    value="false"
+                    labelPlacement="start"
+                    control={<Radio color="primary" />}
+                    label="Modules"
                   />
                 </RadioGroup>
               </div>

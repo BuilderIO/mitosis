@@ -1,15 +1,15 @@
 <script setup>
-import { MyComponent } from '@builder.io/e2e-app-vue3-output';
+import { E2eApp } from '@e2e-app/vue/vue3';
 </script>
 
 <script>
 export default {
   components: {
-    MyComponent,
+    E2eApp,
   },
 };
 </script>
 
 <template>
-  <MyComponent></MyComponent>
+  <E2eApp></E2eApp>
 </template>
