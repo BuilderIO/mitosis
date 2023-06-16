@@ -43,17 +43,6 @@ const getContextCode = (json: MitosisComponent) => {
       const contextType = getContextType({ component: json, context });
 
       switch (contextType) {
-        case 'reactive-proxy':
-          const contextValueKey = `${key}ContextValue`;
-          return `
-          let ${contextValueKey} = getContext(${name}.key);
-          $: ${key} = new Proxy($${contextValueKey}, {
-            set: (obj, prop, value) => {
-              $${contextValueKey}[prop] = value
-              return true;
-            }
-          })
-          `;
         case 'reactive':
         case 'normal':
           return `let ${key} = getContext(${name}.key);`;
@@ -88,7 +77,6 @@ const setContextCode = ({
         case 'normal':
           return `setContext(${key}, ${valueStr});`;
         case 'reactive':
-        case 'reactive-proxy':
           const storeName = `${name}ContextStoreValue`;
 
           return `

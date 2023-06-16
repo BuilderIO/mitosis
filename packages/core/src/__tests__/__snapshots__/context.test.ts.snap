@@ -634,122 +634,52 @@ exports[`Context > Use and set context in components 1`] = `
               "children": [
                 {
                   "@type": "@builder.io/mitosis/node",
-                  "bindings": {},
+                  "bindings": {
+                    "_text": {
+                      "code": "foo.value",
+                      "type": "single",
+                    },
+                  },
                   "children": [],
                   "meta": {},
                   "name": "div",
-                  "properties": {
-                    "_text": "
-          ",
-                  },
-                  "scope": {},
-                },
-                {
-                  "@type": "@builder.io/mitosis/node",
-                  "bindings": {},
-                  "children": [
-                    {
-                      "@type": "@builder.io/mitosis/node",
-                      "bindings": {
-                        "_text": {
-                          "code": "foo.value",
-                          "type": "single",
-                        },
-                      },
-                      "children": [],
-                      "meta": {},
-                      "name": "div",
-                      "properties": {},
-                      "scope": {},
-                    },
-                  ],
-                  "meta": {},
-                  "name": "Fragment",
                   "properties": {},
                   "scope": {},
                 },
-                {
-                  "@type": "@builder.io/mitosis/node",
-                  "bindings": {},
-                  "children": [],
-                  "meta": {},
-                  "name": "div",
-                  "properties": {
-                    "_text": "
-          ",
-                  },
-                  "scope": {},
-                },
-                {
-                  "@type": "@builder.io/mitosis/node",
-                  "bindings": {},
-                  "children": [
-                    {
-                      "@type": "@builder.io/mitosis/node",
-                      "bindings": {
-                        "_text": {
-                          "code": "foo2.value",
-                          "type": "single",
-                        },
-                      },
-                      "children": [],
-                      "meta": {},
-                      "name": "div",
-                      "properties": {},
-                      "scope": {},
-                    },
-                  ],
-                  "meta": {},
-                  "name": "Fragment",
-                  "properties": {},
-                  "scope": {},
-                },
-                {
-                  "@type": "@builder.io/mitosis/node",
-                  "bindings": {},
-                  "children": [],
-                  "meta": {},
-                  "name": "div",
-                  "properties": {
-                    "_text": "
-          ",
-                  },
-                  "scope": {},
-                },
-                {
-                  "@type": "@builder.io/mitosis/node",
-                  "bindings": {},
-                  "children": [
-                    {
-                      "@type": "@builder.io/mitosis/node",
-                      "bindings": {
-                        "_text": {
-                          "code": "foo3.value",
-                          "type": "single",
-                        },
-                      },
-                      "children": [],
-                      "meta": {},
-                      "name": "div",
-                      "properties": {},
-                      "scope": {},
-                    },
-                  ],
-                  "meta": {},
-                  "name": "Fragment",
-                  "properties": {},
-                  "scope": {},
-                },
-                {
-                  "@type": "@builder.io/mitosis/node",
-                  "bindings": {},
-                  "children": [],
-                  "meta": {},
-                  "name": "div",
-                  "properties": {
-                    "_text": "
+              ],
+              "meta": {},
+              "name": "Fragment",
+              "properties": {},
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
         ",
+              },
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {
+                    "_text": {
+                      "code": "foo2.value",
+                      "type": "single",
+                    },
                   },
+                  "children": [],
+                  "meta": {},
+                  "name": "div",
+                  "properties": {},
                   "scope": {},
                 },
               ],
@@ -805,10 +735,6 @@ exports[`Context > Use and set context in components 1`] = `
         "name": "ReactiveContext1",
         "path": "@dummy/3:default",
       },
-      "foo3": {
-        "name": "ReactiveProxyContext1",
-        "path": "@dummy/5:default",
-      },
     },
     "set": {
       "@dummy/1:default": {
@@ -859,30 +785,6 @@ exports[`Context > Use and set context in components 1`] = `
           },
         },
       },
-      "@dummy/5:default": {
-        "name": "ReactiveProxyContext1",
-        "value": {
-          "content": {
-            "code": "content() {
-  return props.content;
-}",
-            "type": "method",
-          },
-          "foo": {
-            "code": "'bar'",
-            "type": "property",
-          },
-        },
-      },
-      "@dummy/6:default": {
-        "name": "ReactiveProxyContext2",
-        "value": {
-          "bar": {
-            "code": "'baz'",
-            "type": "property",
-          },
-        },
-      },
     },
   },
   "exports": {},
@@ -916,20 +818,6 @@ exports[`Context > Use and set context in components 1`] = `
       },
       "path": "@dummy/4",
     },
-    {
-      "importKind": "value",
-      "imports": {
-        "ReactiveProxyContext1": "default",
-      },
-      "path": "@dummy/5",
-    },
-    {
-      "importKind": "value",
-      "imports": {
-        "ReactiveProxyContext2": "default",
-      },
-      "path": "@dummy/6",
-    },
   ],
   "inputs": [],
   "meta": {
@@ -937,8 +825,6 @@ exports[`Context > Use and set context in components 1`] = `
       "context": {
         "ReactiveContext1": "reactive",
         "ReactiveContext2": "reactive",
-        "ReactiveProxyContext1": "reactive-proxy",
-        "ReactiveProxyContext2": "reactive-proxy",
       },
     },
   },
@@ -956,15 +842,11 @@ import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 import ReactiveContext1 from \\"@dummy/3\\";
 import ReactiveContext2 from \\"@dummy/4\\";
-import ReactiveProxyContext1 from \\"@dummy/5\\";
-import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   const foo2 = useContext(ReactiveContext1);
-
-  const foo3 = useContext(ReactiveProxyContext1);
 
   return (
     <ReactiveContext2.Provider
@@ -972,17 +854,21 @@ function ComponentWithContext(props) {
         bar: \\"baz\\",
       }}
     >
-      <ReactiveProxyContext2.Provider
+      <Context2.Provider
         value={{
           bar: \\"baz\\",
         }}
       >
-        <Context2.Provider
+        <ReactiveContext1.Provider
           value={{
-            bar: \\"baz\\",
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
           }}
         >
-          <ReactiveProxyContext1.Provider
+          <Context1.Provider
             value={{
               foo: \\"bar\\",
 
@@ -991,40 +877,16 @@ function ComponentWithContext(props) {
               },
             }}
           >
-            <ReactiveContext1.Provider
-              value={{
-                foo: \\"bar\\",
+            <>
+              <>
+                {foo.value}
 
-                content() {
-                  return props.content;
-                },
-              }}
-            >
-              <Context1.Provider
-                value={{
-                  foo: \\"bar\\",
-
-                  content() {
-                    return props.content;
-                  },
-                }}
-              >
-                <>
-                  <>
-                    <>
-                      {foo.value}
-
-                      {foo2.value}
-
-                      {foo3.value}
-                    </>
-                  </>
-                </>
-              </Context1.Provider>
-            </ReactiveContext1.Provider>
-          </ReactiveProxyContext1.Provider>
-        </Context2.Provider>
-      </ReactiveProxyContext2.Provider>
+                {foo2.value}
+              </>
+            </>
+          </Context1.Provider>
+        </ReactiveContext1.Provider>
+      </Context2.Provider>
     </ReactiveContext2.Provider>
   );
 }
@@ -1048,15 +910,11 @@ import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 import ReactiveContext1 from \\"@dummy/3\\";
 import ReactiveContext2 from \\"@dummy/4\\";
-import ReactiveProxyContext1 from \\"@dummy/5\\";
-import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   const foo2 = useContext(ReactiveContext1);
-
-  const foo3 = useContext(ReactiveProxyContext1);
 
   return (
     <ReactiveContext2.Provider
@@ -1064,17 +922,21 @@ function ComponentWithContext(props) {
         bar: \\"baz\\",
       }}
     >
-      <ReactiveProxyContext2.Provider
+      <Context2.Provider
         value={{
           bar: \\"baz\\",
         }}
       >
-        <Context2.Provider
+        <ReactiveContext1.Provider
           value={{
-            bar: \\"baz\\",
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
           }}
         >
-          <ReactiveProxyContext1.Provider
+          <Context1.Provider
             value={{
               foo: \\"bar\\",
 
@@ -1083,40 +945,16 @@ function ComponentWithContext(props) {
               },
             }}
           >
-            <ReactiveContext1.Provider
-              value={{
-                foo: \\"bar\\",
+            <>
+              <>
+                <Text>{foo.value}</Text>
 
-                content() {
-                  return props.content;
-                },
-              }}
-            >
-              <Context1.Provider
-                value={{
-                  foo: \\"bar\\",
-
-                  content() {
-                    return props.content;
-                  },
-                }}
-              >
-                <>
-                  <>
-                    <>
-                      <Text>{foo.value}</Text>
-
-                      <Text>{foo2.value}</Text>
-
-                      <Text>{foo3.value}</Text>
-                    </>
-                  </>
-                </>
-              </Context1.Provider>
-            </ReactiveContext1.Provider>
-          </ReactiveProxyContext1.Provider>
-        </Context2.Provider>
-      </ReactiveProxyContext2.Provider>
+                <Text>{foo2.value}</Text>
+              </>
+            </>
+          </Context1.Provider>
+        </ReactiveContext1.Provider>
+      </Context2.Provider>
     </ReactiveContext2.Provider>
   );
 }

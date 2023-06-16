@@ -1868,15 +1868,11 @@ import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 import ReactiveContext1 from \\"@dummy/3\\";
 import ReactiveContext2 from \\"@dummy/4\\";
-import ReactiveProxyContext1 from \\"@dummy/5\\";
-import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   const foo2 = useContext(ReactiveContext1);
-
-  const foo3 = useContext(ReactiveProxyContext1);
 
   return (
     <ReactiveContext2.Provider
@@ -1884,17 +1880,21 @@ function ComponentWithContext(props) {
         bar: \\"baz\\",
       }}
     >
-      <ReactiveProxyContext2.Provider
+      <Context2.Provider
         value={{
           bar: \\"baz\\",
         }}
       >
-        <Context2.Provider
+        <ReactiveContext1.Provider
           value={{
-            bar: \\"baz\\",
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
           }}
         >
-          <ReactiveProxyContext1.Provider
+          <Context1.Provider
             value={{
               foo: \\"bar\\",
 
@@ -1903,40 +1903,16 @@ function ComponentWithContext(props) {
               },
             }}
           >
-            <ReactiveContext1.Provider
-              value={{
-                foo: \\"bar\\",
+            <Fragment>
+              <Fragment>
+                {foo.value}
 
-                content() {
-                  return props.content;
-                },
-              }}
-            >
-              <Context1.Provider
-                value={{
-                  foo: \\"bar\\",
-
-                  content() {
-                    return props.content;
-                  },
-                }}
-              >
-                <Fragment>
-                  <Fragment>
-                    <Fragment>
-                      {foo.value}
-
-                      {foo2.value}
-
-                      {foo3.value}
-                    </Fragment>
-                  </Fragment>
-                </Fragment>
-              </Context1.Provider>
-            </ReactiveContext1.Provider>
-          </ReactiveProxyContext1.Provider>
-        </Context2.Provider>
-      </ReactiveProxyContext2.Provider>
+                {foo2.value}
+              </Fragment>
+            </Fragment>
+          </Context1.Provider>
+        </ReactiveContext1.Provider>
+      </Context2.Provider>
     </ReactiveContext2.Provider>
   );
 }
@@ -5369,15 +5345,11 @@ import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 import ReactiveContext1 from \\"@dummy/3\\";
 import ReactiveContext2 from \\"@dummy/4\\";
-import ReactiveProxyContext1 from \\"@dummy/5\\";
-import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   const foo2 = useContext(ReactiveContext1);
-
-  const foo3 = useContext(ReactiveProxyContext1);
 
   return (
     <ReactiveContext2.Provider
@@ -5385,17 +5357,21 @@ function ComponentWithContext(props: ComponentWithContextProps) {
         bar: \\"baz\\",
       }}
     >
-      <ReactiveProxyContext2.Provider
+      <Context2.Provider
         value={{
           bar: \\"baz\\",
         }}
       >
-        <Context2.Provider
+        <ReactiveContext1.Provider
           value={{
-            bar: \\"baz\\",
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
           }}
         >
-          <ReactiveProxyContext1.Provider
+          <Context1.Provider
             value={{
               foo: \\"bar\\",
 
@@ -5404,40 +5380,16 @@ function ComponentWithContext(props: ComponentWithContextProps) {
               },
             }}
           >
-            <ReactiveContext1.Provider
-              value={{
-                foo: \\"bar\\",
+            <Fragment>
+              <Fragment>
+                {foo.value}
 
-                content() {
-                  return props.content;
-                },
-              }}
-            >
-              <Context1.Provider
-                value={{
-                  foo: \\"bar\\",
-
-                  content() {
-                    return props.content;
-                  },
-                }}
-              >
-                <Fragment>
-                  <Fragment>
-                    <Fragment>
-                      {foo.value}
-
-                      {foo2.value}
-
-                      {foo3.value}
-                    </Fragment>
-                  </Fragment>
-                </Fragment>
-              </Context1.Provider>
-            </ReactiveContext1.Provider>
-          </ReactiveProxyContext1.Provider>
-        </Context2.Provider>
-      </ReactiveProxyContext2.Provider>
+                {foo2.value}
+              </Fragment>
+            </Fragment>
+          </Context1.Provider>
+        </ReactiveContext1.Provider>
+      </Context2.Provider>
     </ReactiveContext2.Provider>
   );
 }
