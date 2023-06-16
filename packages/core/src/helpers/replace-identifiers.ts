@@ -18,7 +18,7 @@ type AllowMeta<T = types.Node> = T & {
 type ReplaceArgs = {
   code: string;
   from: string | string[];
-  to: string | ((identifier: string) => string) | null;
+  to: string | ((accessedProperty: string, matchedIdentifier: string) => string) | null;
 };
 
 /**
@@ -83,7 +83,7 @@ const _replaceIdentifiers = (
         try {
           const newMemberExpression = pipe(
             getToParam(path),
-            to,
+            (x) => to(x, memberExpressionObject.name),
             (expression) => {
               const [head, ...tail] = expression.split('.');
               return [head, tail.join('.')];

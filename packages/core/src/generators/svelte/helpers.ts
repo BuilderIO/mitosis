@@ -23,7 +23,7 @@ export const makeContextGettersReactive =
     return replaceIdentifiers({
       code,
       from: getReactiveContextNames(json),
-      to: (name) => `$${name}`,
+      to: (name, identifier) => `$${identifier}.${name}`,
     });
   };
 
