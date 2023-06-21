@@ -260,6 +260,37 @@ const processAngularCode =
       (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
     );
 
+const defaultImportMapper = (standalone?: boolean) => {
+  return (_component: any, theImport: any, importedValues: any, componentsUsed: any) => {
+    let importPath = theImport.path;
+
+    const { defaultImport, namedImports, starImport } = importedValues;
+
+    let importValue;
+
+    if (starImport) {
+      importValue = ` * as ${starImport} `;
+    } else {
+      importValue = [defaultImport, namedImports]
+        .filter(Boolean)
+        .map((importName) => {
+          if (!standalone) {
+            for (const usedComponentName of componentsUsed || []) {
+              if ((importName || '').indexOf(usedComponentName) > -1) {
+                // replace the component name with the module name
+                return (importName || '').replace(usedComponentName, `${usedComponentName}Module`);
+              }
+            }
+          }
+          return importName;
+        })
+        .join(', ');
+    }
+
+    return `import ${importValue} from '${importPath}';`;
+  };
+};
+
 const DEFAULT_OPTIONS: ToAngularOptions = {
   preserveImports: false,
   preserveFileExtensions: false,
@@ -467,7 +498,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       excludeMitosisComponents: !options.standalone && !options.preserveImports,
       preserveFileExtensions: options.preserveFileExtensions,
       componentsUsed,
-      importMapper: options?.importMapper,
+      importMapper: options?.importMapper || defaultImportMapper(options.standalone),
     })}
 
     @Component({
