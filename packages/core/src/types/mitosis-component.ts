@@ -67,9 +67,14 @@ export interface MitosisExport {
 
 export type StateValueType = 'function' | 'getter' | 'method' | 'property';
 
-export type StateValue = {
+export type PropertyType = 'normal' | 'reactive';
+
+type StateType =
+  | { type: Extract<StateValueType, 'property'>; propertyType: PropertyType }
+  | { type: Exclude<StateValueType, 'property'> };
+
+export type StateValue = StateType & {
   code: string;
-  type: StateValueType;
   typeParameter?: string;
 };
 

@@ -4,23 +4,39 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { ToSvelteOptions } from './types';
 
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { getContextType } from '../helpers/context';
 
-function getReactiveContextNames(json: MitosisComponent) {
-  return Object.keys(json.context.get).filter((key) => {
-    const context = json.context.get[key];
-    return getContextType({ context: context, component: json }) === 'reactive';
-  });
+function getReactiveValues(json: MitosisComponent) {
+  // const reactiveContext = Object.keys(json.context.get).filter((key) => {
+  //   const context = json.context.get[key];
+  //   return getContextType({ context: context, component: json }) === 'reactive';
+  // });
+
+  const values = json.meta.useMetadata?.reactiveValues;
+
+  if (values) {
+    const reactiveValues = [
+      ...(values.props || []),
+      ...(values.state || []),
+      ...(values.context || []),
+    ];
+
+    return reactiveValues;
+  }
+
+  return undefined;
 }
 
-export const makeContextGettersReactive =
+export const transformReactiveValues =
   ({ json }: { json: MitosisComponent }) =>
   (code: string) => {
-    return replaceIdentifiers({
-      code,
-      from: getReactiveContextNames(json),
-      to: (name, identifier) => `$${identifier}.${name}`,
-    });
+    const reactiveValues = getReactiveValues(json);
+    return reactiveValues
+      ? replaceIdentifiers({
+          code,
+          from: reactiveValues,
+          to: (name, identifier) => `$${identifier}.${name}`,
+        })
+      : code;
   };
 
 export const stripStateAndProps =

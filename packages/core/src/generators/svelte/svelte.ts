@@ -13,7 +13,6 @@ import {
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { initializeOptions } from '../../helpers/merge-options';
-import { stripGetter } from '../../helpers/patterns';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { isSlotProperty } from '../../helpers/slots';
@@ -31,7 +30,7 @@ import { TranspilerGenerator } from '../../types/transpiler';
 import { getContextType, hasGetContext, hasSetContext } from '../helpers/context';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { blockToSvelte } from './blocks';
-import { makeContextGettersReactive, stripStateAndProps } from './helpers';
+import { stripStateAndProps, transformReactiveValues } from './helpers';
 import { ToSvelteOptions } from './types';
 
 const getContextCode = (json: MitosisComponent) => {
@@ -155,13 +154,9 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           case 'bindings':
           case 'hooks-deps':
           case 'state':
-            return flow(
-              stripStateAndProps({ json, options }),
-              stripGetter,
-              makeContextGettersReactive({ json }),
-            );
+          // return flow(stripStateAndProps({ json, options }), transformReactiveValues({ json }));
           case 'properties':
-            return stripStateAndProps({ json, options });
+            return flow(stripStateAndProps({ json, options }), transformReactiveValues({ json }));
           case 'dynamic-jsx-elements':
             return (x) => x;
         }

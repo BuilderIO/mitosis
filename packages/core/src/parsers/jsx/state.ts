@@ -133,11 +133,13 @@ const processStateObjectSlice = (
         return {
           code: parseCode(item.value.expression).trim(),
           type: 'property',
+          propertyType: 'normal',
         };
       }
       return {
         code: parseCode(item.value).trim(),
         type: 'property',
+        propertyType: 'normal',
       };
     }
   } else if (types.isObjectMethod(item)) {
@@ -170,11 +172,13 @@ const processDefaultPropsSlice = (
         return {
           code: parseCode(item.value.expression),
           type: 'property',
+          propertyType: 'normal',
         };
       }
       return {
         code: parseCode(item.value),
         type: 'property',
+        propertyType: 'normal',
       };
     }
   } else if (types.isObjectMethod(item)) {

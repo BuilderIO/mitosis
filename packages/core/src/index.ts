@@ -52,9 +52,19 @@ export type Context<T> = {
   Provider: typeof Provider<T>;
 };
 
+export type Signal<T> = {
+  value: T;
+};
+
 // These compile away
 export declare function useStore<T>(obj: T): T;
-export declare function useState<T>(obj: T): [T, (value: T) => void];
+
+export declare function useState<T>(
+  obj: T,
+  args: { reactive: true },
+): [Signal<T>, (value: T) => void];
+export declare function useState<T>(obj: T, args?: { reactive?: boolean }): [T, (value: T) => void];
+
 export declare function useRef<T>(obj?: null | void | T): T;
 export declare function useContext<T = Dictionary<any>>(key: Context<T>, type?: ContextType): T;
 export declare function createContext<T = Dictionary<any>>(
