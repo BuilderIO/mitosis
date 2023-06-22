@@ -1,5 +1,6 @@
 import { flow, pipe } from 'fp-ts/lib/function';
 import { format } from 'prettier/standalone';
+import { stripGetter } from 'src/helpers/patterns';
 import traverse from 'traverse';
 import { babelTransformCode, convertTypeScriptToJS } from '../../helpers/babel-transform';
 import { dedent } from '../../helpers/dedent';
@@ -154,7 +155,11 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           case 'bindings':
           case 'hooks-deps':
           case 'state':
-          // return flow(stripStateAndProps({ json, options }), transformReactiveValues({ json }));
+            return flow(
+              stripStateAndProps({ json, options }),
+              stripGetter,
+              transformReactiveValues({ json }),
+            );
           case 'properties':
             return flow(stripStateAndProps({ json, options }), transformReactiveValues({ json }));
           case 'dynamic-jsx-elements':
