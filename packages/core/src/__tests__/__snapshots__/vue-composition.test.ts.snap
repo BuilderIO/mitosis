@@ -1801,7 +1801,6 @@ function _classStringToObject(str) {
 exports[`Vue > jsx > Javascript Test > componentWithContext 1`] = `
 "<template>
   {{ foo.value }}
-  {{ foo2.value }}
 </template>
 
 <script setup>
@@ -1809,13 +1808,10 @@ import { inject, provide } from \\"vue\\";
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
 
 const props = defineProps([\\"content\\"]);
 
 const foo = inject(Context1.key);
-const foo2 = inject(ReactiveContext1.key);
 
 provide(Context1.key, {
   foo: \\"bar\\",
@@ -1823,14 +1819,7 @@ provide(Context1.key, {
     return props.content;
   },
 });
-provide(ReactiveContext1.key, {
-  foo: \\"bar\\",
-  content() {
-    return props.content;
-  },
-});
 provide(Context2.key, { bar: \\"baz\\" });
-provide(ReactiveContext2.key, { bar: \\"baz\\" });
 </script>"
 `;
 
@@ -4872,7 +4861,6 @@ function _classStringToObject(str: string) {
 exports[`Vue > jsx > Typescript Test > componentWithContext 1`] = `
 "<template>
   {{ foo.value }}
-  {{ foo2.value }}
 </template>
 
 <script setup lang=\\"ts\\">
@@ -4880,8 +4868,6 @@ import { inject, provide } from \\"vue\\";
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
 
 export interface ComponentWithContextProps {
   content: string;
@@ -4890,7 +4876,6 @@ export interface ComponentWithContextProps {
 const props = defineProps<ComponentWithContextProps>();
 
 const foo = inject(Context1.key);
-const foo2 = inject(ReactiveContext1.key);
 
 provide(Context1.key, {
   foo: \\"bar\\",
@@ -4898,14 +4883,7 @@ provide(Context1.key, {
     return props.content;
   },
 });
-provide(ReactiveContext1.key, {
-  foo: \\"bar\\",
-  content() {
-    return props.content;
-  },
-});
 provide(Context2.key, { bar: \\"baz\\" });
-provide(ReactiveContext2.key, { bar: \\"baz\\" });
 </script>"
 `;
 

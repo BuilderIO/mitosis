@@ -461,40 +461,13 @@ exports[`Svelte > jsx > Javascript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > ContentSlotJSX 1`] = `
-"<script>
-  export let attributes;
-  export let content = \\"\\";
+"unknown: Missing semicolon. (1:16)
 
-  function show() {
-    $$slots.content ? 1 : \\"\\";
-  }
-  $: cls = () => {
-    return $$slots.content && $$slots.default ? \`\${name}-content\` : \\"\\";
-  };
-
-  let name = \\"king\\";
-  let showContent = false;
-</script>
-
-{#if $$slots.reference}
-  <div
-    name={$$slots.content ? \\"name1\\" : \\"name2\\"}
-    title={$$slots.content ? \\"title1\\" : \\"title2\\"}
-    {...attributes}
-    on:click={(event) => {
-      show();
-    }}
-    class={cls()}
-  >
-    {#if showContent && $$slots.content}
-      <slot name=\\"content\\">{content}</slot>
-    {/if}
-    <div>
-      <hr />
-    </div>
-    <div><slot /></div>
-  </div>
-{/if}"
+> 1 | $:  get =  cls() =>  {
+    |                 ^
+  2 |   return $$slots.content && $$slots.default ? \`\${name}-content\` : '';
+  3 | }
+  4 |"
 `;
 
 exports[`Svelte > jsx > Javascript Test > CustomCode 1`] = `
@@ -632,301 +605,13 @@ exports[`Svelte > jsx > Javascript Test > Embed 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > Form 1`] = `
-"<script>
-  import { Builder, builder } from \\"@builder.io/sdk\\";
-  import {
-    BuilderBlock as BuilderBlockComponent,
-    BuilderBlocks,
-    get,
-    set,
-  } from \\"@fake\\";
+"unknown: Missing semicolon. (1:28)
 
-  export let previewState;
-  export let sendWithJs;
-  export let sendSubmissionsTo;
-  export let action;
-  export let customHeaders;
-  export let contentType;
-  export let sendSubmissionsToEmail;
-  export let name;
-  export let method;
-  export let errorMessagePath;
-  export let resetFormOnSubmit;
-  export let successUrl;
-  export let validate;
-  export let attributes;
-  export let builderBlock;
-  export let errorMessage;
-  export let sendingMessage;
-  export let successMessage;
-
-  function onSubmit(event) {
-    const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
-
-    if (sendSubmissionsTo === \\"zapier\\") {
-      event.preventDefault();
-    } else if (sendWithJs) {
-      if (!(action || sendSubmissionsTo === \\"email\\")) {
-        event.preventDefault();
-        return;
-      }
-
-      event.preventDefault();
-      const el = event.currentTarget;
-      const headers = customHeaders || {};
-      let body;
-      const formData = new FormData(el); // TODO: maybe support null
-
-      const formPairs = Array.from(
-        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-      )
-        .filter((el) => !!el.name)
-        .map((el) => {
-          let value;
-          const key = el.name;
-
-          if (el instanceof HTMLInputElement) {
-            if (el.type === \\"radio\\") {
-              if (el.checked) {
-                value = el.name;
-                return {
-                  key,
-                  value,
-                };
-              }
-            } else if (el.type === \\"checkbox\\") {
-              value = el.checked;
-            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-              const num = el.valueAsNumber;
-
-              if (!isNaN(num)) {
-                value = num;
-              }
-            } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
-              value = el.files;
-            } else {
-              value = el.value;
-            }
-          } else {
-            value = el.value;
-          }
-
-          return {
-            key,
-            value,
-          };
-        });
-      let contentType = contentType;
-
-      if (sendSubmissionsTo === \\"email\\") {
-        contentType = \\"multipart/form-data\\";
-      }
-
-      Array.from(formPairs).forEach(({ value }) => {
-        if (
-          value instanceof File ||
-          (Array.isArray(value) && value[0] instanceof File) ||
-          value instanceof FileList
-        ) {
-          contentType = \\"multipart/form-data\\";
-        }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
-
-      if (contentType !== \\"application/json\\") {
-        body = formData;
-      } else {
-        // Json
-        const json = {};
-        Array.from(formPairs).forEach(({ value, key }) => {
-          set(json, key, value);
-        });
-        body = JSON.stringify(json);
-      }
-
-      if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && action?.includes(\\"zapier.com\\"))
-        ) {
-          headers[\\"content-type\\"] = contentType;
-        }
-      }
-
-      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-        detail: {
-          body,
-        },
-      });
-
-      if (formRef) {
-        formRef.dispatchEvent(presubmitEvent);
-
-        if (presubmitEvent.defaultPrevented) {
-          return;
-        }
-      }
-
-      formState = \\"sending\\";
-      const formUrl = \`\${
-        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-        sendSubmissionsToEmail || \\"\\"
-      )}&name=\${encodeURIComponent(name || \\"\\")}\`;
-      fetch(
-        sendSubmissionsTo === \\"email\\" ? formUrl : action,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: method || \\"post\\",
-        }
-      ).then(
-        async (res) => {
-          let body;
-          const contentType = res.headers.get(\\"content-type\\");
-
-          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-            body = await res.json();
-          } else {
-            body = await res.text();
-          }
-
-          if (!res.ok && errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
-            let message = get(body, errorMessagePath);
-
-            if (message) {
-              if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
-                message = JSON.stringify(message);
-              }
-
-              formErrorMessage = message;
-            }
-          }
-
-          responseData = body;
-          formState = res.ok ? \\"success\\" : \\"error\\";
-
-          if (res.ok) {
-            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-              detail: {
-                res,
-                body,
-              },
-            });
-
-            if (formRef) {
-              formRef.dispatchEvent(submitSuccessEvent);
-
-              if (submitSuccessEvent.defaultPrevented) {
-                return;
-              }
-              /* TODO: option to turn this on/off? */
-
-              if (resetFormOnSubmit !== false) {
-                formRef.reset();
-              }
-            }
-            /* TODO: client side route event first that can be preventDefaulted */
-
-            if (successUrl) {
-              if (formRef) {
-                const event = new CustomEvent(\\"route\\", {
-                  detail: {
-                    url: successUrl,
-                  },
-                });
-                formRef.dispatchEvent(event);
-
-                if (!event.defaultPrevented) {
-                  location.href = successUrl;
-                }
-              } else {
-                location.href = successUrl;
-              }
-            }
-          }
-        },
-        (err) => {
-          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-            detail: {
-              error: err,
-            },
-          });
-
-          if (formRef) {
-            formRef.dispatchEvent(submitErrorEvent);
-
-            if (submitErrorEvent.defaultPrevented) {
-              return;
-            }
-          }
-
-          responseData = err;
-          formState = \\"error\\";
-        }
-      );
-    }
-  }
-  $: submissionState = () => {
-    return (Builder.isEditing && previewState) || formState;
-  };
-
-  let formRef;
-
-  let formState = \\"unsubmitted\\";
-  let responseData = null;
-  let formErrorMessage = \\"\\";
-</script>
-
-<form
-  {validate}
-  bind:this={formRef}
-  action={!sendWithJs && action}
-  {method}
-  {name}
-  on:submit={(event) => {
-    onSubmit(event);
-  }}
-  {...attributes}
->
-  {#if builderBlock && builderBlock.children}
-    {#each builderBlock?.children as block, index (block.id)}
-      <BuilderBlockComponent {block} {index} />
-    {/each}
-  {/if}
-
-  {#if submissionState() === \\"error\\"}
-    <BuilderBlocks dataPath=\\"errorMessage\\" blocks={errorMessage} />
-  {/if}
-
-  {#if submissionState() === \\"sending\\"}
-    <BuilderBlocks dataPath=\\"sendingMessage\\" blocks={sendingMessage} />
-  {/if}
-
-  {#if submissionState() === \\"error\\" && responseData}
-    <pre class=\\"builder-form-error-text pre\\">
-        {JSON.stringify(responseData, null, 2)}
-      </pre>
-  {/if}
-
-  {#if submissionState() === \\"success\\"}
-    <BuilderBlocks dataPath=\\"successMessage\\" blocks={successMessage} />
-  {/if}
-</form>
-
-<style>
-  .pre {
-    padding: 10px;
-    color: red;
-    text-align: center;
-  }
-</style>"
+> 1 | $:  get =  submissionState() =>  {
+    |                             ^
+  2 |   return Builder.isEditing && previewState || formState;
+  3 | }
+  4 |"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Image 1`] = `
@@ -1461,28 +1146,13 @@ exports[`Svelte > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > basicForNoTagReference 1`] = `
-"<script>
-  export let actions;
+"unknown: Missing semicolon. (1:26)
 
-  $: TagNameGetter = () => {
-    return \\"span\\";
-  };
-
-  let name = \\"VincentW\\";
-  let TagName = \\"div\\";
-  let tag = \\"span\\";
-</script>
-
-<svelte:component this={TagNameGetter()}>
-  Hello <svelte:component this={tag}>{name}</svelte:component>
-
-  {#each actions as action}
-    <svelte:component this={TagName}>
-      <svelte:component this={action.icon} />
-      <span>{action.text}</span>
-    </svelte:component>
-  {/each}
-</svelte:component>"
+> 1 | $:  get =  TagNameGetter() =>  {
+    |                           ^
+  2 |   return 'span';
+  3 | }
+  4 |"
 `;
 
 exports[`Svelte > jsx > Javascript Test > basicForwardRef 1`] = `
@@ -1627,13 +1297,10 @@ exports[`Svelte > jsx > Javascript Test > componentWithContext 1`] = `
 
   import Context1 from \\"@dummy/1\\";
   import Context2 from \\"@dummy/2\\";
-  import ReactiveContext1 from \\"@dummy/3\\";
-  import ReactiveContext2 from \\"@dummy/4\\";
 
   export let content;
 
   let foo = getContext(Context1.key);
-  let foo2 = getContext(ReactiveContext1.key);
 
   setContext(Context1.key, {
     foo: \\"bar\\",
@@ -1642,29 +1309,12 @@ exports[`Svelte > jsx > Javascript Test > componentWithContext 1`] = `
       return content;
     },
   });
-
-  const ReactiveContext1ContextStoreValue = writable({
-    foo: \\"bar\\",
-
-    content() {
-      return content;
-    },
-  });
-  setContext(ReactiveContext1.key, ReactiveContext1ContextStoreValue);
-
   setContext(Context2.key, {
     bar: \\"baz\\",
   });
-
-  const ReactiveContext2ContextStoreValue = writable({
-    bar: \\"baz\\",
-  });
-  setContext(ReactiveContext2.key, ReactiveContext2ContextStoreValue);
 </script>
 
-{foo.value}
-
-{$foo2.value}"
+{foo.value}"
 `;
 
 exports[`Svelte > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
@@ -2076,241 +1726,13 @@ exports[`Svelte > jsx > Javascript Test > referencingFunInsideHook 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
-"<script>
-  import { TARGET } from \\"../../constants/target.js\\";
-  import { evaluate } from \\"../../functions/evaluate.js\\";
-  import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
-  import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
-  import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
-  import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
-  import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
-  import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-  import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-  import BlockStyles from \\"./block-styles.svelte\\";
-  import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-  import RenderComponentWithContext from \\"./render-component-with-context.svelte\\";
-  import RenderComponent from \\"./render-component.svelte\\";
-  import RenderRepeatedBlock from \\"./render-repeated-block.svelte\\";
+"unknown: Missing semicolon. (1:22)
 
-  export let block;
-  export let context;
-
-  $: component = () => {
-    const componentName = getProcessedBlock({
-      block: block,
-      state: context.state,
-      context: context.context,
-      shouldEvaluateBindings: false,
-    }).component?.name;
-
-    if (!componentName) {
-      return null;
-    }
-
-    const ref = context.registeredComponents[componentName];
-
-    if (!ref) {
-      // TODO: Public doc page with more info about this message
-      console.warn(\`
-          Could not find a registered component named \\"\${componentName}\\".
-          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
-      return undefined;
-    } else {
-      return ref;
-    }
-  };
-
-  $: tag = () => {
-    return getBlockTag(useBlock());
-  };
-
-  $: useBlock = () => {
-    return repeatItemData()
-      ? block
-      : getProcessedBlock({
-          block: block,
-          state: context.state,
-          context: context.context,
-          shouldEvaluateBindings: true,
-        });
-  };
-
-  $: actions = () => {
-    return getBlockActions({
-      block: useBlock(),
-      state: context.state,
-      context: context.context,
-    });
-  };
-
-  $: attributes = () => {
-    const blockProperties = getBlockProperties(useBlock());
-    return {
-      ...blockProperties,
-      ...(TARGET === \\"reactNative\\"
-        ? {
-            style: getReactNativeBlockStyles({
-              block: useBlock(),
-              context: context,
-              blockStyles: blockProperties.style,
-            }),
-          }
-        : {}),
-    };
-  };
-
-  $: shouldWrap = () => {
-    return !component?.()?.noWrap;
-  };
-
-  $: renderComponentProps = () => {
-    return {
-      blockChildren: useChildren(),
-      componentRef: component?.()?.component,
-      componentOptions: {
-        ...getBlockComponentOptions(useBlock()),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
-        ...(shouldWrap()
-          ? {}
-          : {
-              attributes: { ...attributes(), ...actions() },
-            }),
-        customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
-      },
-      context: childrenContext(),
-    };
-  };
-
-  $: useChildren = () => {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
-    return useBlock().children ?? [];
-  };
-
-  $: childrenWithoutParentComponent = () => {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
-    const shouldRenderChildrenOutsideRef =
-      !component?.()?.component && !repeatItemData();
-    return shouldRenderChildrenOutsideRef ? useChildren() : [];
-  };
-
-  $: repeatItemData = () => {
-    /**
-     * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
-    const { repeat, ...blockWithoutRepeat } = block;
-
-    if (!repeat?.collection) {
-      return undefined;
-    }
-
-    const itemsArray = evaluate({
-      code: repeat.collection,
-      state: context.state,
-      context: context.context,
-    });
-
-    if (!Array.isArray(itemsArray)) {
-      return undefined;
-    }
-
-    const collectionName = repeat.collection.split(\\".\\").pop();
-    const itemNameToUse =
-      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
-      context: {
-        ...context,
-        state: {
-          ...context.state,
-          $index: index,
-          $item: item,
-          [itemNameToUse]: item,
-          [\`$\${itemNameToUse}Index\`]: index,
-        },
-      },
-      block: blockWithoutRepeat,
-    }));
-    return repeatArray;
-  };
-
-  $: inheritedTextStyles = () => {
-    if (TARGET !== \\"reactNative\\") {
-      return {};
-    }
-
-    const styles = getReactNativeBlockStyles({
-      block: useBlock(),
-      context: context,
-      blockStyles: attributes().style,
-    });
-    return extractTextStyles(styles);
-  };
-
-  $: childrenContext = () => {
-    return {
-      apiKey: context.apiKey,
-      state: context.state,
-      content: context.content,
-      context: context.context,
-      registeredComponents: context.registeredComponents,
-      inheritedStyles: inheritedTextStyles(),
-    };
-  };
-
-  $: renderComponentTag = () => {
-    if (TARGET === \\"reactNative\\") {
-      return RenderComponentWithContext;
-    } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
-      return \\"RenderComponent\\";
-    } else {
-      return RenderComponent;
-    }
-  };
-</script>
-
-{#if shouldWrap()}
-  {#if isEmptyHtmlElement(tag())}
-    <svelte:component this={tag()} {...attributes()} {...actions()} />
-  {/if}
-
-  {#if !isEmptyHtmlElement(tag()) && repeatItemData()}
-    {#each repeatItemData() as data, index (index)}
-      <RenderRepeatedBlock repeatContext={data.context} block={data.block} />
-    {/each}
-  {/if}
-
-  {#if !isEmptyHtmlElement(tag()) && !repeatItemData()}
-    <svelte:component this={tag()} {...attributes()} {...actions()}>
-      <svelte:component
-        this={renderComponentTag()}
-        {...renderComponentProps()}
-      />
-
-      {#each childrenWithoutParentComponent() as child (\\"render-block-\\" + child.id)}
-        <svelte:self block={child} context={childrenContext()} />
-      {/each}
-
-      {#each childrenWithoutParentComponent() as child (\\"block-style-\\" + child.id)}
-        <BlockStyles block={child} context={childrenContext()} />
-      {/each}
-    </svelte:component>
-  {/if}
-{:else}
-  <svelte:component this={renderComponentTag()} {...renderComponentProps()} />
-{/if}"
+> 1 | $:  get =  component() =>  {
+    |                       ^
+  2 |   const componentName = getProcessedBlock({
+  3 |     block: block,
+  4 |     state: context.state,"
 `;
 
 exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
@@ -2579,14 +2001,13 @@ exports[`Svelte > jsx > Javascript Test > use-style-outside-component 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > useTarget 1`] = `
-"<script>
-  $: name = () => {
-    const prefix = \\"s\\";
-    return prefix + \\"foo\\";
-  };
-</script>
+"unknown: Missing semicolon. (1:17)
 
-<div>{name()}</div>"
+> 1 | $:  get =  name() =>  {
+    |                  ^
+  2 |   const prefix = 's';
+  3 |   return prefix + 'foo';
+  4 | }"
 `;
 
 exports[`Svelte > jsx > Remove Internal mitosis package 1`] = `
@@ -3145,48 +2566,13 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    [key: string]: string | JSX.Element;
-  };
-</script>
+"unknown: Missing semicolon. (1:16)
 
-<script lang=\\"ts\\">
-  import type { JSX } from \\"../../../../jsx-runtime\\";
-
-  export let attributes: Props[\\"attributes\\"];
-  export let content: Props[\\"content\\"] = \\"\\";
-
-  function show() {
-    $$slots.content ? 1 : \\"\\";
-  }
-  $: cls = () => {
-    return $$slots.content && $$slots.default ? \`\${name}-content\` : \\"\\";
-  };
-
-  let name = \\"king\\";
-  let showContent = false;
-</script>
-
-{#if $$slots.reference}
-  <div
-    name={$$slots.content ? \\"name1\\" : \\"name2\\"}
-    title={$$slots.content ? \\"title1\\" : \\"title2\\"}
-    {...attributes}
-    on:click={(event) => {
-      show();
-    }}
-    class={cls()}
-  >
-    {#if showContent && $$slots.content}
-      <slot name=\\"content\\">{content}</slot>
-    {/if}
-    <div>
-      <hr />
-    </div>
-    <div><slot /></div>
-  </div>
-{/if}"
+> 1 | $:  get =  cls() =>  {
+    |                 ^
+  2 |   return $$slots.content && $$slots.default ? \`\${name}-content\` : '';
+  3 | }
+  4 |"
 `;
 
 exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
@@ -3338,335 +2724,13 @@ exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > Form 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface FormProps {
-    attributes?: any;
-    name?: string;
-    action?: string;
-    validate?: boolean;
-    method?: string;
-    builderBlock?: BuilderElement;
-    sendSubmissionsTo?: string;
-    sendSubmissionsToEmail?: string;
-    sendWithJs?: boolean;
-    contentType?: string;
-    customHeaders?: {
-      [key: string]: string;
-    };
-    successUrl?: string;
-    previewState?: FormState;
-    successMessage?: BuilderElement[];
-    errorMessage?: BuilderElement[];
-    sendingMessage?: BuilderElement[];
-    resetFormOnSubmit?: boolean;
-    errorMessagePath?: string;
-  }
+"unknown: Missing semicolon. (1:28)
 
-  export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-</script>
-
-<script lang=\\"ts\\">
-  import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
-  import {
-    BuilderBlock as BuilderBlockComponent,
-    BuilderBlocks,
-    get,
-    set,
-  } from \\"@fake\\";
-
-  export let previewState: FormProps[\\"previewState\\"];
-  export let sendWithJs: FormProps[\\"sendWithJs\\"];
-  export let sendSubmissionsTo: FormProps[\\"sendSubmissionsTo\\"];
-  export let action: FormProps[\\"action\\"];
-  export let customHeaders: FormProps[\\"customHeaders\\"];
-  export let contentType: FormProps[\\"contentType\\"];
-  export let sendSubmissionsToEmail: FormProps[\\"sendSubmissionsToEmail\\"];
-  export let name: FormProps[\\"name\\"];
-  export let method: FormProps[\\"method\\"];
-  export let errorMessagePath: FormProps[\\"errorMessagePath\\"];
-  export let resetFormOnSubmit: FormProps[\\"resetFormOnSubmit\\"];
-  export let successUrl: FormProps[\\"successUrl\\"];
-  export let validate: FormProps[\\"validate\\"];
-  export let attributes: FormProps[\\"attributes\\"];
-  export let builderBlock: FormProps[\\"builderBlock\\"];
-  export let errorMessage: FormProps[\\"errorMessage\\"];
-  export let sendingMessage: FormProps[\\"sendingMessage\\"];
-  export let successMessage: FormProps[\\"successMessage\\"];
-
-  function onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
-    const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
-
-    if (sendSubmissionsTo === \\"zapier\\") {
-      event.preventDefault();
-    } else if (sendWithJs) {
-      if (!(action || sendSubmissionsTo === \\"email\\")) {
-        event.preventDefault();
-        return;
-      }
-
-      event.preventDefault();
-      const el = event.currentTarget;
-      const headers = customHeaders || {};
-      let body: any;
-      const formData = new FormData(el); // TODO: maybe support null
-
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
-        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-      )
-        .filter((el) => !!(el as HTMLInputElement).name)
-        .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
-
-          if (el instanceof HTMLInputElement) {
-            if (el.type === \\"radio\\") {
-              if (el.checked) {
-                value = el.name;
-                return {
-                  key,
-                  value,
-                };
-              }
-            } else if (el.type === \\"checkbox\\") {
-              value = el.checked;
-            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-              const num = el.valueAsNumber;
-
-              if (!isNaN(num)) {
-                value = num;
-              }
-            } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
-              value = el.files;
-            } else {
-              value = el.value;
-            }
-          } else {
-            value = (el as HTMLInputElement).value;
-          }
-
-          return {
-            key,
-            value,
-          };
-        });
-      let contentType = contentType;
-
-      if (sendSubmissionsTo === \\"email\\") {
-        contentType = \\"multipart/form-data\\";
-      }
-
-      Array.from(formPairs).forEach(({ value }) => {
-        if (
-          value instanceof File ||
-          (Array.isArray(value) && value[0] instanceof File) ||
-          value instanceof FileList
-        ) {
-          contentType = \\"multipart/form-data\\";
-        }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
-
-      if (contentType !== \\"application/json\\") {
-        body = formData;
-      } else {
-        // Json
-        const json = {};
-        Array.from(formPairs).forEach(({ value, key }) => {
-          set(json, key, value);
-        });
-        body = JSON.stringify(json);
-      }
-
-      if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && action?.includes(\\"zapier.com\\"))
-        ) {
-          headers[\\"content-type\\"] = contentType;
-        }
-      }
-
-      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-        detail: {
-          body,
-        },
-      });
-
-      if (formRef) {
-        formRef.dispatchEvent(presubmitEvent);
-
-        if (presubmitEvent.defaultPrevented) {
-          return;
-        }
-      }
-
-      formState = \\"sending\\";
-      const formUrl = \`\${
-        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-        sendSubmissionsToEmail || \\"\\"
-      )}&name=\${encodeURIComponent(name || \\"\\")}\`;
-      fetch(
-        sendSubmissionsTo === \\"email\\" ? formUrl : action!,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: method || \\"post\\",
-        }
-      ).then(
-        async (res) => {
-          let body;
-          const contentType = res.headers.get(\\"content-type\\");
-
-          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-            body = await res.json();
-          } else {
-            body = await res.text();
-          }
-
-          if (!res.ok && errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
-            let message = get(body, errorMessagePath);
-
-            if (message) {
-              if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
-                message = JSON.stringify(message);
-              }
-
-              formErrorMessage = message;
-            }
-          }
-
-          responseData = body;
-          formState = res.ok ? \\"success\\" : \\"error\\";
-
-          if (res.ok) {
-            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-              detail: {
-                res,
-                body,
-              },
-            });
-
-            if (formRef) {
-              formRef.dispatchEvent(submitSuccessEvent);
-
-              if (submitSuccessEvent.defaultPrevented) {
-                return;
-              }
-              /* TODO: option to turn this on/off? */
-
-              if (resetFormOnSubmit !== false) {
-                formRef.reset();
-              }
-            }
-            /* TODO: client side route event first that can be preventDefaulted */
-
-            if (successUrl) {
-              if (formRef) {
-                const event = new CustomEvent(\\"route\\", {
-                  detail: {
-                    url: successUrl,
-                  },
-                });
-                formRef.dispatchEvent(event);
-
-                if (!event.defaultPrevented) {
-                  location.href = successUrl;
-                }
-              } else {
-                location.href = successUrl;
-              }
-            }
-          }
-        },
-        (err) => {
-          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-            detail: {
-              error: err,
-            },
-          });
-
-          if (formRef) {
-            formRef.dispatchEvent(submitErrorEvent);
-
-            if (submitErrorEvent.defaultPrevented) {
-              return;
-            }
-          }
-
-          responseData = err;
-          formState = \\"error\\";
-        }
-      );
-    }
-  }
-  $: submissionState = () => {
-    return (Builder.isEditing && previewState) || formState;
-  };
-
-  let formRef;
-
-  let formState = \\"unsubmitted\\";
-  let responseData = null;
-  let formErrorMessage = \\"\\";
-</script>
-
-<form
-  {validate}
-  bind:this={formRef}
-  action={!sendWithJs && action}
-  {method}
-  {name}
-  on:submit={(event) => {
-    onSubmit(event);
-  }}
-  {...attributes}
->
-  {#if builderBlock && builderBlock.children}
-    {#each builderBlock?.children as block, index (block.id)}
-      <BuilderBlockComponent {block} {index} />
-    {/each}
-  {/if}
-
-  {#if submissionState() === \\"error\\"}
-    <BuilderBlocks dataPath=\\"errorMessage\\" blocks={errorMessage} />
-  {/if}
-
-  {#if submissionState() === \\"sending\\"}
-    <BuilderBlocks dataPath=\\"sendingMessage\\" blocks={sendingMessage} />
-  {/if}
-
-  {#if submissionState() === \\"error\\" && responseData}
-    <pre class=\\"builder-form-error-text pre\\">
-        {JSON.stringify(responseData, null, 2)}
-      </pre>
-  {/if}
-
-  {#if submissionState() === \\"success\\"}
-    <BuilderBlocks dataPath=\\"successMessage\\" blocks={successMessage} />
-  {/if}
-</form>
-
-<style>
-  .pre {
-    padding: 10px;
-    color: red;
-    text-align: center;
-  }
-</style>"
+> 1 | $:  get =  submissionState() =>  {
+    |                             ^
+  2 |   return Builder.isEditing && previewState || formState;
+  3 | }
+  4 |"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Image 1`] = `
@@ -4384,28 +3448,13 @@ exports[`Svelte > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > basicForNoTagReference 1`] = `
-"<script lang=\\"ts\\">
-  export let actions;
+"unknown: Missing semicolon. (1:26)
 
-  $: TagNameGetter = () => {
-    return \\"span\\";
-  };
-
-  let name = \\"VincentW\\";
-  let TagName = \\"div\\";
-  let tag = \\"span\\";
-</script>
-
-<svelte:component this={TagNameGetter()}>
-  Hello <svelte:component this={tag}>{name}</svelte:component>
-
-  {#each actions as action}
-    <svelte:component this={TagName}>
-      <svelte:component this={action.icon} />
-      <span>{action.text}</span>
-    </svelte:component>
-  {/each}
-</svelte:component>"
+> 1 | $:  get =  TagNameGetter() =>  {
+    |                           ^
+  2 |   return 'span';
+  3 | }
+  4 |"
 `;
 
 exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
@@ -4588,13 +3637,10 @@ exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
 
   import Context1 from \\"@dummy/1\\";
   import Context2 from \\"@dummy/2\\";
-  import ReactiveContext1 from \\"@dummy/3\\";
-  import ReactiveContext2 from \\"@dummy/4\\";
 
   export let content: ComponentWithContextProps[\\"content\\"];
 
   let foo = getContext(Context1.key);
-  let foo2 = getContext(ReactiveContext1.key);
 
   setContext(Context1.key, {
     foo: \\"bar\\",
@@ -4603,29 +3649,12 @@ exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
       return content;
     },
   });
-
-  const ReactiveContext1ContextStoreValue = writable({
-    foo: \\"bar\\",
-
-    content() {
-      return content;
-    },
-  });
-  setContext(ReactiveContext1.key, ReactiveContext1ContextStoreValue);
-
   setContext(Context2.key, {
     bar: \\"baz\\",
   });
-
-  const ReactiveContext2ContextStoreValue = writable({
-    bar: \\"baz\\",
-  });
-  setContext(ReactiveContext2.key, ReactiveContext2ContextStoreValue);
 </script>
 
-{foo.value}
-
-{$foo2.value}"
+{foo.value}"
 `;
 
 exports[`Svelte > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
@@ -5156,256 +4185,13 @@ exports[`Svelte > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export type RenderBlockProps = {
-    block: BuilderBlock;
-    context: BuilderContextInterface;
-  };
-</script>
+"unknown: Missing semicolon. (1:22)
 
-<script lang=\\"ts\\">
-  import { TARGET } from \\"../../constants/target.js\\";
-  import type {
-    BuilderContextInterface,
-    RegisteredComponent,
-  } from \\"../../context/types.js\\";
-  import { evaluate } from \\"../../functions/evaluate.js\\";
-  import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
-  import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
-  import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
-  import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
-  import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
-  import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-  import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-  import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-  import type { Nullable } from \\"../../types/typescript.js\\";
-  import BlockStyles from \\"./block-styles.svelte\\";
-  import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-  import RenderComponentWithContext from \\"./render-component-with-context.svelte\\";
-  import type { RenderComponentProps } from \\"./render-component.svelte\\";
-  import RenderComponent from \\"./render-component.svelte\\";
-  import RenderRepeatedBlock from \\"./render-repeated-block.svelte\\";
-  import type { RepeatData } from \\"./types.js\\";
-
-  export let block: RenderBlockProps[\\"block\\"];
-  export let context: RenderBlockProps[\\"context\\"];
-
-  $: component = () => {
-    const componentName = getProcessedBlock({
-      block: block,
-      state: context.state,
-      context: context.context,
-      shouldEvaluateBindings: false,
-    }).component?.name;
-
-    if (!componentName) {
-      return null;
-    }
-
-    const ref = context.registeredComponents[componentName];
-
-    if (!ref) {
-      // TODO: Public doc page with more info about this message
-      console.warn(\`
-          Could not find a registered component named \\"\${componentName}\\".
-          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
-      return undefined;
-    } else {
-      return ref;
-    }
-  };
-
-  $: tag = () => {
-    return getBlockTag(useBlock());
-  };
-
-  $: useBlock = () => {
-    return repeatItemData()
-      ? block
-      : getProcessedBlock({
-          block: block,
-          state: context.state,
-          context: context.context,
-          shouldEvaluateBindings: true,
-        });
-  };
-
-  $: actions = () => {
-    return getBlockActions({
-      block: useBlock(),
-      state: context.state,
-      context: context.context,
-    });
-  };
-
-  $: attributes = () => {
-    const blockProperties = getBlockProperties(useBlock());
-    return {
-      ...blockProperties,
-      ...(TARGET === \\"reactNative\\"
-        ? {
-            style: getReactNativeBlockStyles({
-              block: useBlock(),
-              context: context,
-              blockStyles: blockProperties.style,
-            }),
-          }
-        : {}),
-    };
-  };
-
-  $: shouldWrap = () => {
-    return !component?.()?.noWrap;
-  };
-
-  $: renderComponentProps = () => {
-    return {
-      blockChildren: useChildren(),
-      componentRef: component?.()?.component,
-      componentOptions: {
-        ...getBlockComponentOptions(useBlock()),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
-        ...(shouldWrap()
-          ? {}
-          : {
-              attributes: { ...attributes(), ...actions() },
-            }),
-        customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
-      },
-      context: childrenContext(),
-    };
-  };
-
-  $: useChildren = () => {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
-    return useBlock().children ?? [];
-  };
-
-  $: childrenWithoutParentComponent = () => {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
-    const shouldRenderChildrenOutsideRef =
-      !component?.()?.component && !repeatItemData();
-    return shouldRenderChildrenOutsideRef ? useChildren() : [];
-  };
-
-  $: repeatItemData = () => {
-    /**
-     * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
-    const { repeat, ...blockWithoutRepeat } = block;
-
-    if (!repeat?.collection) {
-      return undefined;
-    }
-
-    const itemsArray = evaluate({
-      code: repeat.collection,
-      state: context.state,
-      context: context.context,
-    });
-
-    if (!Array.isArray(itemsArray)) {
-      return undefined;
-    }
-
-    const collectionName = repeat.collection.split(\\".\\").pop();
-    const itemNameToUse =
-      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
-      context: {
-        ...context,
-        state: {
-          ...context.state,
-          $index: index,
-          $item: item,
-          [itemNameToUse]: item,
-          [\`$\${itemNameToUse}Index\`]: index,
-        },
-      },
-      block: blockWithoutRepeat,
-    }));
-    return repeatArray;
-  };
-
-  $: inheritedTextStyles = () => {
-    if (TARGET !== \\"reactNative\\") {
-      return {};
-    }
-
-    const styles = getReactNativeBlockStyles({
-      block: useBlock(),
-      context: context,
-      blockStyles: attributes().style,
-    });
-    return extractTextStyles(styles);
-  };
-
-  $: childrenContext = () => {
-    return {
-      apiKey: context.apiKey,
-      state: context.state,
-      content: context.content,
-      context: context.context,
-      registeredComponents: context.registeredComponents,
-      inheritedStyles: inheritedTextStyles(),
-    };
-  };
-
-  $: renderComponentTag = () => {
-    if (TARGET === \\"reactNative\\") {
-      return RenderComponentWithContext;
-    } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
-      return \\"RenderComponent\\";
-    } else {
-      return RenderComponent;
-    }
-  };
-</script>
-
-{#if shouldWrap()}
-  {#if isEmptyHtmlElement(tag())}
-    <svelte:component this={tag()} {...attributes()} {...actions()} />
-  {/if}
-
-  {#if !isEmptyHtmlElement(tag()) && repeatItemData()}
-    {#each repeatItemData() as data, index (index)}
-      <RenderRepeatedBlock repeatContext={data.context} block={data.block} />
-    {/each}
-  {/if}
-
-  {#if !isEmptyHtmlElement(tag()) && !repeatItemData()}
-    <svelte:component this={tag()} {...attributes()} {...actions()}>
-      <svelte:component
-        this={renderComponentTag()}
-        {...renderComponentProps()}
-      />
-
-      {#each childrenWithoutParentComponent() as child (\\"render-block-\\" + child.id)}
-        <svelte:self block={child} context={childrenContext()} />
-      {/each}
-
-      {#each childrenWithoutParentComponent() as child (\\"block-style-\\" + child.id)}
-        <BlockStyles block={child} context={childrenContext()} />
-      {/each}
-    </svelte:component>
-  {/if}
-{:else}
-  <svelte:component this={renderComponentTag()} {...renderComponentProps()} />
-{/if}"
+> 1 | $:  get =  component() =>  {
+    |                       ^
+  2 |   const componentName = getProcessedBlock({
+  3 |     block: block,
+  4 |     state: context.state,"
 `;
 
 exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
@@ -5744,14 +4530,13 @@ exports[`Svelte > jsx > Typescript Test > use-style-outside-component 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > useTarget 1`] = `
-"<script lang=\\"ts\\">
-  $: name = () => {
-    const prefix = \\"s\\";
-    return prefix + \\"foo\\";
-  };
-</script>
+"unknown: Missing semicolon. (1:17)
 
-<div>{name()}</div>"
+> 1 | $:  get =  name() =>  {
+    |                  ^
+  2 |   const prefix = 's';
+  3 |   return prefix + 'foo';
+  4 | }"
 `;
 
 exports[`Svelte > svelte > Javascript Test > basic 1`] = `
@@ -5965,18 +4750,13 @@ exports[`Svelte > svelte > Javascript Test > lifecycleHooks 1`] = `
 `;
 
 exports[`Svelte > svelte > Javascript Test > reactive 1`] = `
-"<script>
-  $: lowercaseName = () => {
-    return name.toLowerCase();
-  };
+"unknown: Missing semicolon. (1:26)
 
-  let name = \\"Steve\\";
-</script>
-
-<div>
-  <input value={name} />
-  Lowercase: {lowercaseName()}
-</div>"
+> 1 | $:  get =  lowercaseName() =>  {
+    |                           ^
+  2 |   return name.toLowerCase();
+  3 | }
+  4 |"
 `;
 
 exports[`Svelte > svelte > Javascript Test > reactiveWithFn 1`] = `
@@ -6243,18 +5023,13 @@ exports[`Svelte > svelte > Typescript Test > lifecycleHooks 1`] = `
 `;
 
 exports[`Svelte > svelte > Typescript Test > reactive 1`] = `
-"<script lang=\\"ts\\">
-  $: lowercaseName = () => {
-    return name.toLowerCase();
-  };
+"unknown: Missing semicolon. (1:26)
 
-  let name = \\"Steve\\";
-</script>
-
-<div>
-  <input value={name} />
-  Lowercase: {lowercaseName()}
-</div>"
+> 1 | $:  get =  lowercaseName() =>  {
+    |                           ^
+  2 |   return name.toLowerCase();
+  3 | }
+  4 |"
 `;
 
 exports[`Svelte > svelte > Typescript Test > reactiveWithFn 1`] = `

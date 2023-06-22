@@ -1823,54 +1823,28 @@ exports[`React > jsx > Javascript Test > componentWithContext 1`] = `
 import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
 
 function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
-  const foo2 = useContext(ReactiveContext1);
-
   return (
-    <ReactiveContext2.Provider
+    <Context2.Provider
       value={{
         bar: \\"baz\\",
       }}
     >
-      <Context2.Provider
+      <Context1.Provider
         value={{
-          bar: \\"baz\\",
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
         }}
       >
-        <ReactiveContext1.Provider
-          value={{
-            foo: \\"bar\\",
-
-            content() {
-              return props.content;
-            },
-          }}
-        >
-          <Context1.Provider
-            value={{
-              foo: \\"bar\\",
-
-              content() {
-                return props.content;
-              },
-            }}
-          >
-            <>
-              <>
-                {foo.value}
-
-                {foo2.value}
-              </>
-            </>
-          </Context1.Provider>
-        </ReactiveContext1.Provider>
-      </Context2.Provider>
-    </ReactiveContext2.Provider>
+        <>{foo.value}</>
+      </Context1.Provider>
+    </Context2.Provider>
   );
 }
 
@@ -5206,54 +5180,28 @@ export interface ComponentWithContextProps {
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
 
 function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
-  const foo2 = useContext(ReactiveContext1);
-
   return (
-    <ReactiveContext2.Provider
+    <Context2.Provider
       value={{
         bar: \\"baz\\",
       }}
     >
-      <Context2.Provider
+      <Context1.Provider
         value={{
-          bar: \\"baz\\",
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
         }}
       >
-        <ReactiveContext1.Provider
-          value={{
-            foo: \\"bar\\",
-
-            content() {
-              return props.content;
-            },
-          }}
-        >
-          <Context1.Provider
-            value={{
-              foo: \\"bar\\",
-
-              content() {
-                return props.content;
-              },
-            }}
-          >
-            <>
-              <>
-                {foo.value}
-
-                {foo2.value}
-              </>
-            </>
-          </Context1.Provider>
-        </ReactiveContext1.Provider>
-      </Context2.Provider>
-    </ReactiveContext2.Provider>
+        <>{foo.value}</>
+      </Context1.Provider>
+    </Context2.Provider>
   );
 }
 
@@ -6656,13 +6604,13 @@ function SmileReviews(props) {
         {state.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-94a2f244\\" />
+            <input placeholder=\\"Title\\" className=\\"input-4e06abd9\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-94a2f244\\"
+              className=\\"textarea-4e06abd9\\"
             />
             <button
-              className=\\"button-94a2f244\\"
+              className=\\"button-4e06abd9\\"
               onClick={(event) => {
                 event.preventDefault();
                 state.showReviewPrompt = false;
@@ -6674,8 +6622,8 @@ function SmileReviews(props) {
         ) : null}
 
         {state.reviews?.map((review, index) => (
-          <div className=\\"review-94a2f244\\" key={review.id}>
-            <img className=\\"img-94a2f244\\" src={review.avatar} />
+          <div className=\\"review-4e06abd9\\" key={review.id}>
+            <img className=\\"img-4e06abd9\\" src={review.avatar} />
 
             <div
               className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
@@ -6693,20 +6641,20 @@ function SmileReviews(props) {
         ))}
       </div>
 
-      <style>{\`.input-94a2f244 {
+      <style>{\`.input-4e06abd9 {
   display: block;
-}.textarea-94a2f244 {
+}.textarea-4e06abd9 {
   display: block;
-}.button-94a2f244 {
+}.button-4e06abd9 {
   display: block;
-}.review-94a2f244 {
+}.review-4e06abd9 {
   margin: 10px;
   padding: 10px;
   background: white;
   display: flex;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}.img-94a2f244 {
+}.img-4e06abd9 {
   height: 30px;
   width: 30px;
   margin-right: 10px;
@@ -6762,13 +6710,13 @@ function SmileReviews(props) {
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-208b4df4\\" />
+            <input placeholder=\\"Title\\" className=\\"input-33281325\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-208b4df4\\"
+              className=\\"textarea-33281325\\"
             />
             <button
-              className=\\"button-208b4df4\\"
+              className=\\"button-33281325\\"
               onClick={(event) => {
                 event.preventDefault();
                 setShowReviewPrompt(false);
@@ -6780,8 +6728,8 @@ function SmileReviews(props) {
         ) : null}
 
         {reviews?.map((review, index) => (
-          <div className=\\"review-208b4df4\\" key={review.id}>
-            <img className=\\"img-208b4df4\\" src={review.avatar} />
+          <div className=\\"review-33281325\\" key={review.id}>
+            <img className=\\"img-33281325\\" src={review.avatar} />
 
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
               <div>
@@ -6797,20 +6745,20 @@ function SmileReviews(props) {
         ))}
       </div>
 
-      <style>{\`.input-208b4df4 {
+      <style>{\`.input-33281325 {
   display: block;
-}.textarea-208b4df4 {
+}.textarea-33281325 {
   display: block;
-}.button-208b4df4 {
+}.button-33281325 {
   display: block;
-}.review-208b4df4 {
+}.review-33281325 {
   margin: 10px;
   padding: 10px;
   background: white;
   display: flex;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}.img-208b4df4 {
+}.img-33281325 {
   height: 30px;
   width: 30px;
   margin-right: 10px;

@@ -2451,25 +2451,19 @@ import { Component, Input } from \\"@angular/core\\";
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
 
 @Component({
   selector: \\"component-with-context, ComponentWithContext\\",
   template: \`
     <ng-container>
-      <ng-container>
-        <ng-container>{{foo.value}}</ng-container>
-
-        <ng-container>{{foo2.value}}</ng-container>
-      </ng-container>
+      <ng-container>{{foo.value}}</ng-container>
     </ng-container>
   \`,
 })
 export class ComponentWithContext {
   @Input() content: any;
 
-  constructor(public foo: Context1, public foo2: ReactiveContext1) {}
+  constructor(public foo: Context1) {}
 }
 
 @NgModule({
@@ -6936,25 +6930,19 @@ export interface ComponentWithContextProps {
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
 
 @Component({
   selector: \\"component-with-context, ComponentWithContext\\",
   template: \`
     <ng-container>
-      <ng-container>
-        <ng-container>{{foo.value}}</ng-container>
-
-        <ng-container>{{foo2.value}}</ng-container>
-      </ng-container>
+      <ng-container>{{foo.value}}</ng-container>
     </ng-container>
   \`,
 })
 export class ComponentWithContext {
   @Input() content: ComponentWithContextProps[\\"content\\"];
 
-  constructor(public foo: Context1, public foo2: ReactiveContext1) {}
+  constructor(public foo: Context1) {}
 }
 
 @NgModule({

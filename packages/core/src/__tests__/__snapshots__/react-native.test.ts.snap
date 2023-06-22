@@ -2109,54 +2109,30 @@ import {
 import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
 
 function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
-  const foo2 = useContext(ReactiveContext1);
-
   return (
-    <ReactiveContext2.Provider
+    <Context2.Provider
       value={{
         bar: \\"baz\\",
       }}
     >
-      <Context2.Provider
+      <Context1.Provider
         value={{
-          bar: \\"baz\\",
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
         }}
       >
-        <ReactiveContext1.Provider
-          value={{
-            foo: \\"bar\\",
-
-            content() {
-              return props.content;
-            },
-          }}
-        >
-          <Context1.Provider
-            value={{
-              foo: \\"bar\\",
-
-              content() {
-                return props.content;
-              },
-            }}
-          >
-            <>
-              <>
-                <Text>{foo.value}</Text>
-
-                <Text>{foo2.value}</Text>
-              </>
-            </>
-          </Context1.Provider>
-        </ReactiveContext1.Provider>
-      </Context2.Provider>
-    </ReactiveContext2.Provider>
+        <>
+          <Text>{foo.value}</Text>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
   );
 }
 
@@ -6126,54 +6102,30 @@ export interface ComponentWithContextProps {
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
 
 function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
-  const foo2 = useContext(ReactiveContext1);
-
   return (
-    <ReactiveContext2.Provider
+    <Context2.Provider
       value={{
         bar: \\"baz\\",
       }}
     >
-      <Context2.Provider
+      <Context1.Provider
         value={{
-          bar: \\"baz\\",
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
         }}
       >
-        <ReactiveContext1.Provider
-          value={{
-            foo: \\"bar\\",
-
-            content() {
-              return props.content;
-            },
-          }}
-        >
-          <Context1.Provider
-            value={{
-              foo: \\"bar\\",
-
-              content() {
-                return props.content;
-              },
-            }}
-          >
-            <>
-              <>
-                <Text>{foo.value}</Text>
-
-                <Text>{foo2.value}</Text>
-              </>
-            </>
-          </Context1.Provider>
-        </ReactiveContext1.Provider>
-      </Context2.Provider>
-    </ReactiveContext2.Provider>
+        <>
+          <Text>{foo.value}</Text>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
   );
 }
 
