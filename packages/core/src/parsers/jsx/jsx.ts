@@ -22,6 +22,7 @@ import tsPlugin from '@babel/plugin-syntax-typescript';
 import tsPreset from '@babel/preset-typescript';
 import { HOOKS } from '../../constants/hooks';
 import { getMagicString, getTargetId, getUseTargetStatements } from './hooks/use-target';
+import { findSignals } from './types-identification';
 
 const { types } = babel;
 
@@ -190,12 +191,36 @@ export function parseJsx(
       .replace(/}\);$/, '}'),
   );
 
-  const mitosisComponent = tryParseJson(stringifiedMitosisComponent);
+  const mitosisComponent: MitosisComponent = tryParseJson(stringifiedMitosisComponent);
 
   mapStateIdentifiers(mitosisComponent);
   extractContextComponents(mitosisComponent);
 
   mitosisComponent.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
+
+  if (options.tsConfigFilePath) {
+    const reactiveValues = findSignals({
+      code: jsx,
+      tsConfigFilePath: options.tsConfigFilePath,
+    });
+
+    reactiveValues.props.forEach((prop) => {
+      mitosisComponent.props = {
+        ...mitosisComponent.props,
+        [prop]: { propertyType: 'reactive' },
+      };
+    });
+
+    reactiveValues.state.forEach((state) => {
+      if (!mitosisComponent.state[state]) return;
+      mitosisComponent.state[state]!.propertyType = 'reactive';
+    });
+
+    reactiveValues.context.forEach((context) => {
+      if (!mitosisComponent.context.get[context]) return;
+      mitosisComponent.context.get[context].type = 'reactive';
+    });
+  }
 
   return mitosisComponent;
 }

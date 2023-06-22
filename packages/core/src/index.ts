@@ -1,7 +1,7 @@
 import { JSX } from '@builder.io/mitosis/jsx-runtime';
 import { Dictionary } from './helpers/typescript';
 import { ComponentMetadata } from './types/metadata';
-import { ContextType, TargetBlock } from './types/mitosis-component';
+import { ReactivityType, TargetBlock } from './types/mitosis-component';
 
 export * from './flow';
 export * from './generators/alpine';
@@ -66,15 +66,21 @@ export declare function useState<T>(
 export declare function useState<T>(obj: T, args?: { reactive?: boolean }): [T, (value: T) => void];
 
 export declare function useRef<T>(obj?: null | void | T): T;
-export declare function useContext<T = Dictionary<any>>(key: Context<T>, type?: ContextType): T;
+export declare function useContext<T = Dictionary<any>>(key: Context<T>, type?: ReactivityType): T;
+
 export declare function createContext<T = Dictionary<any>>(
   value: T,
-  type?: ContextType,
+  args: { reactive: true },
+): Context<Signal<T>>;
+export declare function createContext<T = Dictionary<any>>(
+  value: T,
+  args?: { reactive?: boolean },
 ): Context<T>;
+
 export declare function setContext<T = Dictionary<any>>(
   key: Context<T>,
   value: Partial<T>,
-  type?: ContextType,
+  options?: { type?: ReactivityType },
 ): void;
 export declare function onMount(fn: () => any): void;
 export declare function onUpdate(fn: () => any, deps?: any[]): void;

@@ -1,4 +1,4 @@
-import { Node, Project, Symbol } from 'ts-morph';
+import { Node, Project, SourceFile, Symbol, SyntaxKind } from 'ts-morph';
 
 const getSignalSymbol = (project: Project) => {
   const symbolExport = project.createSourceFile(
@@ -31,7 +31,50 @@ const getProject = (tsConfigFilePath: string) => {
   }
 };
 
-export const findSignalAccess = ({
+const getPropsSymbol = (ast: SourceFile) => {
+  let propsSymbol: Symbol | undefined = undefined;
+  ast.forEachChild((node) => {
+    if (propsSymbol !== undefined) return;
+
+    if (Node.isArrowFunction(node) || Node.isFunctionDeclaration(node)) {
+      if (
+        node.hasModifier(SyntaxKind.ExportKeyword) &&
+        node.hasModifier(SyntaxKind.DefaultKeyword)
+      ) {
+        propsSymbol = node.getParameters()[0].getSymbol();
+      }
+    }
+  });
+
+  if (propsSymbol === undefined) {
+    throw new Error('Could not find props name');
+  }
+
+  return propsSymbol as Symbol;
+};
+
+const getContextSymbols = (ast: SourceFile) => {
+  const contextSymbols = new Set<Symbol>();
+
+  ast.forEachDescendant((node) => {
+    if (!Node.isVariableDeclaration(node)) return;
+
+    const initializer = node.getInitializer();
+
+    if (!Node.isCallExpression(initializer)) return;
+    if (initializer.getExpression().getText() !== 'useContext') return;
+
+    const contextSymbol = node.getNameNode().getSymbol();
+
+    if (contextSymbol === undefined) return;
+
+    contextSymbols.add(contextSymbol);
+  });
+
+  return contextSymbols;
+};
+
+export const findSignals = ({
   code,
   tsConfigFilePath,
 }: {
@@ -44,9 +87,20 @@ export const findSignalAccess = ({
 
   const signalSymbol = getSignalSymbol(project);
 
-  ast.forEachDescendant((node) => {
-    if (Node.isPropertyAccessExpression(node)) {
-      const aliasSymbol = node.getExpression().getType().getTargetType()?.getAliasSymbol();
+  const reactiveValues = {
+    props: new Set<string>(),
+    state: new Set<string>(),
+    context: new Set<string>(),
+  };
+
+  const propsSymbol = getPropsSymbol(ast);
+
+  const contextSymbols = getContextSymbols(ast);
+
+  ast.forEachDescendant((parentNode) => {
+    if (Node.isPropertyAccessExpression(parentNode)) {
+      const node = parentNode.getExpression();
+      const aliasSymbol = node.getType().getTargetType()?.getAliasSymbol();
       const isSignal = aliasSymbol === signalSymbol;
 
       if (!isSignal) return;
@@ -65,42 +119,26 @@ export const findSignalAccess = ({
           return false;
         }
 
-        // crawl up parents to make sure we're not inside a declaration
-        if (Node.isVariableDeclaration(parent)) {
-          isInsideDeclaration = true;
-          return false;
-        }
-
         return true;
       });
 
       if (isInsideType) return;
       if (isInsideDeclaration) return;
 
-      console.log('Found Signals value access:', {
-        node: node.getText(),
-        line: node.getStartLineNumber(),
-      });
+      const nodeSymbol = node.getSymbol();
+
+      if (
+        Node.isPropertyAccessExpression(node) &&
+        node.getExpression().getSymbol() === propsSymbol
+      ) {
+        reactiveValues.props.add(node.getText());
+      } else if (nodeSymbol && contextSymbols.has(nodeSymbol)) {
+        reactiveValues.context.add(node.getText());
+      } else {
+        reactiveValues.state.add(node.getText());
+      }
     }
   });
+
+  return reactiveValues;
 };
-
-// const traverseAst = (node: ts.Node, visitor: (node: ts.Node) => void) => {
-//   visitor(node);
-//   ts.forEachChild(node, (x) => traverseAst(x, visitor));
-// };
-// export const identifyType2 = (code: string) => {
-//   const ast = ts.createSourceFile('code.ts', code, ts.ScriptTarget.Latest, true);
-
-//   const visitor = (node: ts.Node) => {
-//     if (
-//       ts.isPropertyAccessExpression(node) &&
-//       ts.isIdentifier(node.name) &&
-//       node.name.text === 'k'
-//     ) {
-//       console.log();
-//     }
-//   };
-
-//   traverseAst(ast, visitor);
-// };

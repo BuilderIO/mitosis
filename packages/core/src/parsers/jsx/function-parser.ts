@@ -5,7 +5,7 @@ import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { getBindingsCode } from '../../helpers/get-bindings';
 import { traceReferenceToModulePath } from '../../helpers/trace-reference-to-module-path';
 import { JSONOrNode } from '../../types/json';
-import { MitosisComponent, PropertyType } from '../../types/mitosis-component';
+import { MitosisComponent, ReactivityType } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { getPropsTypeRef } from './component-types';
 import { jsxElementToJson } from './element-parser';
@@ -159,7 +159,7 @@ export const componentFunctionToJson = (
             } else {
               const stateOptions = init.arguments[1];
 
-              let propertyType: PropertyType = 'normal';
+              let propertyType: ReactivityType = 'normal';
 
               if (types.isObjectExpression(stateOptions)) {
                 for (const prop of stateOptions.properties) {

@@ -1,8 +1,8 @@
 import {
   ContextGetInfo,
   ContextSetInfo,
-  ContextType,
   MitosisComponent,
+  ReactivityType,
 } from '../../types/mitosis-component';
 
 export const hasContext = (component: MitosisComponent) =>
@@ -20,6 +20,7 @@ export const getContextType = ({
 }: {
   component: MitosisComponent;
   context: ContextGetInfo | ContextSetInfo;
-}): ContextType => {
+}): ReactivityType => {
+  // TO-DO: remove useMetadata check if no longer needed.
   return component.meta.useMetadata?.contextTypes?.[context.name] || context.type || 'normal';
 };

@@ -33,10 +33,10 @@ export interface MitosisImport {
   importKind?: 'type' | 'typeof' | 'value' | null;
 }
 
-export type ContextType = 'normal' | 'reactive';
+export type ReactivityType = 'normal' | 'reactive';
 
 export type ContextOptions = {
-  type?: ContextType;
+  type?: ReactivityType;
 };
 export interface ContextGetInfo extends ContextOptions {
   name: string;
@@ -67,15 +67,11 @@ export interface MitosisExport {
 
 export type StateValueType = 'function' | 'getter' | 'method' | 'property';
 
-export type PropertyType = 'normal' | 'reactive';
-
-type StateType =
-  | { type: Extract<StateValueType, 'property'>; propertyType: PropertyType }
-  | { type: Exclude<StateValueType, 'property'> };
-
-export type StateValue = StateType & {
+export type StateValue = {
   code: string;
   typeParameter?: string;
+  type: StateValueType;
+  propertyType?: ReactivityType;
 };
 
 export type MitosisState = Dictionary<StateValue | undefined>;
@@ -101,6 +97,9 @@ export type MitosisComponent = {
   context: {
     get: Dictionary<ContextGetInfo>;
     set: Dictionary<ContextSetInfo>;
+  };
+  props?: {
+    [name: string]: { propertyType: ReactivityType };
   };
   refs: {
     [useRef: string]: {
