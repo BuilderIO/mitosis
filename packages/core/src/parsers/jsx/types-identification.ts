@@ -31,6 +31,12 @@ const getProject = (tsConfigFilePath: string) => {
   }
 };
 
+export const createTypescriptProject = (tsConfigFilePath: string) => {
+  const project = getProject(tsConfigFilePath);
+  const signalSymbol = getSignalSymbol(project);
+  return { project, signalSymbol };
+};
+
 const getPropsSymbol = (ast: SourceFile) => {
   let propsSymbol: Symbol | undefined = undefined;
   ast.forEachChild((node) => {
@@ -41,16 +47,12 @@ const getPropsSymbol = (ast: SourceFile) => {
         node.hasModifier(SyntaxKind.ExportKeyword) &&
         node.hasModifier(SyntaxKind.DefaultKeyword)
       ) {
-        propsSymbol = node.getParameters()[0].getSymbol();
+        propsSymbol = node.getParameters()[0]?.getSymbol();
       }
     }
   });
 
-  if (propsSymbol === undefined) {
-    throw new Error('Could not find props name');
-  }
-
-  return propsSymbol as Symbol;
+  return propsSymbol as Symbol | undefined;
 };
 
 const getContextSymbols = (ast: SourceFile) => {
@@ -74,18 +76,23 @@ const getContextSymbols = (ast: SourceFile) => {
   return contextSymbols;
 };
 
-export const findSignals = ({
-  code,
-  tsConfigFilePath,
-}: {
-  code: string;
-  tsConfigFilePath: string;
+export const findSignals = (args: {
+  project: Project;
+  signalSymbol: Symbol;
+  code?: string;
+  filePath?: string;
 }) => {
-  const project = getProject(tsConfigFilePath);
+  const { project, signalSymbol } = args;
 
-  const ast = project.createSourceFile('homepage2.lite.tsx', code);
+  const ast = args.code
+    ? args.project.createSourceFile('homepage2.lite.tsx', args.code)
+    : args.filePath
+    ? args.project.getSourceFileOrThrow(args.filePath)
+    : undefined;
 
-  const signalSymbol = getSignalSymbol(project);
+  if (ast === undefined) {
+    throw new Error('Could not find AST. Please provide either `code` or `filePath` configs.');
+  }
 
   const reactiveValues = {
     props: new Set<string>(),
@@ -131,7 +138,7 @@ export const findSignals = ({
         Node.isPropertyAccessExpression(node) &&
         node.getExpression().getSymbol() === propsSymbol
       ) {
-        reactiveValues.props.add(node.getText());
+        reactiveValues.props.add(node.getNameNode().getText());
       } else if (nodeSymbol && contextSymbols.has(nodeSymbol)) {
         reactiveValues.context.add(node.getText());
       } else {

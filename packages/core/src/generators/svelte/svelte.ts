@@ -1,6 +1,5 @@
 import { flow, pipe } from 'fp-ts/lib/function';
 import { format } from 'prettier/standalone';
-import { stripGetter } from 'src/helpers/patterns';
 import traverse from 'traverse';
 import { babelTransformCode, convertTypeScriptToJS } from '../../helpers/babel-transform';
 import { dedent } from '../../helpers/dedent';
@@ -14,6 +13,7 @@ import {
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { initializeOptions } from '../../helpers/merge-options';
+import { stripGetter } from '../../helpers/patterns';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { isSlotProperty } from '../../helpers/slots';
@@ -151,17 +151,22 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'hooks':
-            return flow(stripStateAndProps({ json, options }), babelTransformCode);
+            return flow(
+              stripStateAndProps({ json, options }),
+              transformReactiveValues({ json }),
+              babelTransformCode,
+            );
           case 'bindings':
           case 'hooks-deps':
           case 'state':
             return flow(
               stripStateAndProps({ json, options }),
-              stripGetter,
               transformReactiveValues({ json }),
+              stripGetter,
             );
-          case 'properties':
+          case 'properties': {
             return flow(stripStateAndProps({ json, options }), transformReactiveValues({ json }));
+          }
           case 'dynamic-jsx-elements':
             return (x) => x;
         }
@@ -187,6 +192,8 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     const css = collectCss(json);
     stripMetaProperties(json);
 
+    let usesWritable = false;
+
     const dataString = pipe(
       getStateObjectStringFromComponent(json, {
         data: true,
@@ -194,6 +201,13 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         getters: false,
         format: options.stateType === 'proxies' ? 'object' : 'variables',
         keyPrefix: options.stateType === 'variables' ? 'let ' : '',
+        valueMapper: (code, _t, _p, key) => {
+          if (json.state[key!]?.propertyType === 'reactive') {
+            usesWritable = true;
+            return `writable(${code})`;
+          }
+          return code;
+        },
       }),
       babelTransformCode,
     );
@@ -259,6 +273,9 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     }
     if (hasSetContext(component)) {
       svelteImports.push('setContext');
+    }
+
+    if (usesWritable) {
       svelteStoreImports.push('writable');
     }
 

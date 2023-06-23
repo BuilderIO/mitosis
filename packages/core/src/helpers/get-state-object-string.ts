@@ -1,15 +1,18 @@
 import { MitosisComponent, StateValue } from '../types/mitosis-component';
 import { MitosisContext } from '../types/mitosis-context';
 
+type ValueMapper = (
+  code: string,
+  type: 'data' | 'function' | 'getter',
+  typeParameter?: string,
+  key?: string,
+) => string;
+
 interface GetStateObjectStringOptions {
   data?: boolean;
   functions?: boolean;
   getters?: boolean;
-  valueMapper?: (
-    code: string,
-    type: 'data' | 'function' | 'getter',
-    typeParameter?: string,
-  ) => string;
+  valueMapper?: ValueMapper;
   format?: 'object' | 'class' | 'variables';
   keyPrefix?: string;
 }
@@ -67,6 +70,7 @@ const convertStateMemberToString =
           code,
           'data',
           typeParameter,
+          key,
         )}`;
       }
       default:

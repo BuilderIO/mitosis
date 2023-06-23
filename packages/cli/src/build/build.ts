@@ -20,6 +20,7 @@ import {
   componentToTemplate,
   componentToVue2,
   componentToVue3,
+  createTypescriptProject,
   MitosisComponent,
   MitosisConfig,
   parseJsx,
@@ -128,25 +129,33 @@ const parseJsxComponent = async ({
   options,
   path,
   file,
+  tsProject,
 }: {
   options: MitosisConfig;
   path: string;
   file: string;
+  tsProject: Parameters<typeof parseJsx>[1]['tsProject'];
 }) => {
   const requiredParses = getRequiredParsers(options);
   let typescriptMitosisJson: ParsedMitosisJson['typescriptMitosisJson'];
   let javascriptMitosisJson: ParsedMitosisJson['javascriptMitosisJson'];
+
+  const jsxArgs: Parameters<typeof parseJsx>[1] = {
+    ...options.parserOptions?.jsx,
+    tsProject,
+    filePath: path,
+  };
   if (requiredParses.typescript && requiredParses.javascript) {
     typescriptMitosisJson = options.parser
       ? await options.parser(file, path)
-      : parseJsx(file, { typescript: true });
+      : parseJsx(file, { ...jsxArgs, typescript: true });
     javascriptMitosisJson = options.parser
       ? await options.parser(file, path)
-      : parseJsx(file, { typescript: false });
+      : parseJsx(file, { ...jsxArgs, typescript: false });
   } else {
     const singleParse = options.parser
       ? await options.parser(file, path)
-      : parseJsx(file, { typescript: requiredParses.typescript });
+      : parseJsx(file, { ...jsxArgs, typescript: requiredParses.typescript });
 
     // technically only one of these will be used, but we set both to simplify things types-wise.
     typescriptMitosisJson = singleParse;
@@ -177,6 +186,11 @@ const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedM
   const paths = getFiles({ files: options.files, exclude: options.exclude }).filter(
     checkIsMitosisComponentFilePath,
   );
+
+  const tsProject = options.parserOptions?.jsx?.tsConfigFilePath
+    ? createTypescriptProject(options.parserOptions.jsx.tsConfigFilePath)
+    : undefined;
+
   return Promise.all(
     paths.map(async (path): Promise<ParsedMitosisJson> => {
       try {
@@ -184,7 +198,7 @@ const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedM
         if (INPUT_EXTENSIONS.svelte.some((x) => path.endsWith(x))) {
           return await parseSvelteComponent({ path, file });
         } else {
-          return await parseJsxComponent({ options, path, file });
+          return await parseJsxComponent({ options, path, file, tsProject });
         }
       } catch (err) {
         console.error('Could not parse file:', path);

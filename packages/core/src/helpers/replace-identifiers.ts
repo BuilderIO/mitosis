@@ -15,10 +15,15 @@ type AllowMeta<T = types.Node> = T & {
   };
 };
 
+export type ReplaceTo =
+  | string
+  | ((accessedProperty: string, matchedIdentifier: string) => string)
+  | null;
+
 type ReplaceArgs = {
   code: string;
   from: string | string[];
-  to: string | ((accessedProperty: string, matchedIdentifier: string) => string) | null;
+  to: ReplaceTo;
 };
 
 /**
@@ -126,6 +131,9 @@ const _replaceIdentifiers = (
   }
 };
 
+/**
+ * @deprecated Use `replaceNodes` instead.
+ */
 export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
   try {
     return pipe(
@@ -156,11 +164,6 @@ export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
       (code) => code.trim(),
     );
   } catch (err) {
-    // console.error('could not replace identifiers for ', {
-    //   code,
-    //   from: from.toString(),
-    //   to: to?.toString(),
-    // });
     throw err;
   }
 };
@@ -170,3 +173,44 @@ export const replaceStateIdentifier = (to: ReplaceArgs['to']) => (code: string) 
 
 export const replacePropsIdentifier = (to: ReplaceArgs['to']) => (code: string) =>
   replaceIdentifiers({ code, from: 'props', to });
+
+/**
+ * Replaces all instances of a Babel AST Node with a new Node within a code string.
+ * Uses `generate()` to convert the Node to a string and compare them.
+ */
+export const replaceNodes = ({
+  code,
+  nodeMaps,
+}: {
+  code: string;
+  nodeMaps: {
+    from: types.Node;
+    to: types.Node;
+  }[];
+}) => {
+  const searchAndReplace = (path: babel.NodePath<types.Node>) => {
+    if ((path.node as AllowMeta)?._builder_meta?.newlyGenerated) {
+      return;
+    }
+
+    for (const { from, to } of nodeMaps) {
+      if (path.matchesPattern(generate(from).code)) {
+        const x = types.cloneNode(to);
+        (x as AllowMeta)._builder_meta = { newlyGenerated: true };
+        path.replaceWith(x);
+      }
+    }
+  };
+
+  return babelTransformExpression(code, {
+    MemberExpression(path) {
+      searchAndReplace(path);
+    },
+    Identifier(path) {
+      searchAndReplace(path);
+    },
+    OptionalMemberExpression(path) {
+      searchAndReplace(path);
+    },
+  });
+};

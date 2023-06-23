@@ -6,7 +6,7 @@ import traverse from 'traverse';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { replaceNodes } from '../../helpers/replace-identifiers';
 import { MitosisComponent, MitosisState, StateValue } from '../../types/mitosis-component';
 import { parseCode, uncapitalize } from './helpers';
 
@@ -16,10 +16,12 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
   const setExpressions = stateProperties.map((propertyName) => `set${capitalize(propertyName)}`);
 
   return pipe(
-    replaceIdentifiers({
+    replaceNodes({
       code: expression,
-      from: stateProperties,
-      to: (name) => `state.${name}`,
+      nodeMaps: stateProperties.map((stateProp) => ({
+        from: types.identifier(stateProp),
+        to: types.memberExpression(types.identifier('state'), types.identifier(stateProp)),
+      })),
     }),
     (code) =>
       babelTransformExpression(

@@ -1,6 +1,9 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
+import tsPlugin from '@babel/plugin-syntax-typescript';
+import tsPreset from '@babel/preset-typescript';
 import { pipe } from 'fp-ts/lib/function';
+import { HOOKS } from '../../constants/hooks';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { tryParseJson } from '../../helpers/json';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
@@ -13,15 +16,11 @@ import { generateExports } from './exports';
 import { componentFunctionToJson } from './function-parser';
 import { isImportOrDefaultExport } from './helpers';
 import { collectModuleScopeHooks } from './hooks';
+import { getMagicString, getTargetId, getUseTargetStatements } from './hooks/use-target';
 import { handleImportDeclaration } from './imports';
 import { undoPropsDestructure } from './props';
 import { mapStateIdentifiers } from './state';
 import { Context, ParseMitosisOptions } from './types';
-
-import tsPlugin from '@babel/plugin-syntax-typescript';
-import tsPreset from '@babel/preset-typescript';
-import { HOOKS } from '../../constants/hooks';
-import { getMagicString, getTargetId, getUseTargetStatements } from './hooks/use-target';
 import { findSignals } from './types-identification';
 
 const { types } = babel;
@@ -124,7 +123,6 @@ export function parseJsx(
                    * and replace them with a magic string.
                    */
                   CallExpression(path) {
-                    if (!types.isVariableDeclarator(path.parent)) return;
                     if (!types.isCallExpression(path.node)) return;
                     if (!types.isIdentifier(path.node.callee)) return;
                     if (path.node.callee.name !== HOOKS.TARGET) return;
@@ -198,10 +196,11 @@ export function parseJsx(
 
   mitosisComponent.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
 
-  if (options.tsConfigFilePath) {
+  if (options.tsProject && options.filePath) {
     const reactiveValues = findSignals({
-      code: jsx,
-      tsConfigFilePath: options.tsConfigFilePath,
+      filePath: options.filePath,
+      project: options.tsProject.project,
+      signalSymbol: options.tsProject.signalSymbol,
     });
 
     reactiveValues.props.forEach((prop) => {

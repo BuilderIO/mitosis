@@ -1,4 +1,5 @@
-import { MitosisComponent } from './mitosis-component';
+import type { ParseMitosisOptions } from '../parsers/jsx/types';
+import type { MitosisComponent } from './mitosis-component';
 
 export type Format = 'esm' | 'cjs';
 export type Language = 'js' | 'ts';
@@ -70,4 +71,11 @@ export type MitosisConfig = {
    * If you provide this function, you must provide a value for every target yourself.
    */
   getTargetPath: ({ target }: { target: Target }) => string;
+
+  /**
+   * Provide options to the parser.
+   */
+  parserOptions?: {
+    jsx: Partial<ParseMitosisOptions>;
+  };
 };
