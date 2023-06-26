@@ -174,6 +174,85 @@ export const replaceStateIdentifier = (to: ReplaceArgs['to']) => (code: string) 
 export const replacePropsIdentifier = (to: ReplaceArgs['to']) => (code: string) =>
   replaceIdentifiers({ code, from: 'props', to });
 
+import { NodePath } from 'ast-types/lib/node-path';
+import recast from 'recast';
+
+export const replaceNodesRecast = ({
+  code,
+  nodeMaps,
+}: {
+  code: string;
+  nodeMaps: { from: types.Node; to: types.Node }[];
+}) => {
+  const searchAndReplace = (
+    path: NodePath<
+      | recast.types.namedTypes.MemberExpression
+      | recast.types.namedTypes.Identifier
+      | recast.types.namedTypes.OptionalMemberExpression
+    >,
+  ) => {
+    if ((path.node as AllowMeta)?._builder_meta?.newlyGenerated) {
+      return;
+    }
+
+    for (const { from, to } of nodeMaps) {
+      if ((path.node as AllowMeta)?._builder_meta?.newlyGenerated) {
+        return;
+      }
+
+      if (recast.print(path.node).code === recast.print(from).code) {
+        // const x = types.cloneNode(to);
+        // (x as AllowMeta)._builder_meta = { newlyGenerated: true };
+        try {
+          path.replace(to);
+        } catch (err) {
+          console.log('error replacing');
+          // console.log({
+          //   code,
+          //   to: generate(to).code,
+          //   from: generate(from).code,
+          // });
+        }
+      }
+    }
+  };
+
+  let ast = null;
+  try {
+    ast = recast.parse(code, {
+      parser: require('recast/parsers/babel-ts'),
+    }) as recast.types.ASTNode;
+  } catch (err) {
+    console.log('could not parse file: ', code);
+    return code;
+  }
+
+  try {
+    recast.visit(ast, {
+      visitMemberExpression(path) {
+        searchAndReplace(path);
+        this.traverse(path);
+      },
+      visitIdentifier(path) {
+        searchAndReplace(path);
+        this.traverse(path);
+      },
+      visitOptionalMemberExpression(path) {
+        searchAndReplace(path);
+        this.traverse(path);
+      },
+    });
+  } catch (err) {
+    console.log('could not modify AST');
+  }
+  try {
+    return recast.print(ast).code;
+  } catch (err) {
+    console.log('could not convert final AST');
+    return code;
+  }
+};
+
 /**
  * Replaces all instances of a Babel AST Node with a new Node within a code string.
  * Uses `generate()` to convert the Node to a string and compare them.
@@ -197,7 +276,7 @@ export const replaceNodes = ({
       if ((path.node as AllowMeta)?._builder_meta?.newlyGenerated) {
         return;
       }
-      // if (path.node.type !== from.type) return;
+      if (path.node.type !== from.type) return;
 
       if (generate(path.node).code === generate(from).code) {
         const x = types.cloneNode(to);
@@ -205,12 +284,11 @@ export const replaceNodes = ({
         try {
           path.replaceWith(x);
         } catch (err) {
-          console.log('error replacing', {
+          console.log({
             code,
-            orig: generate(path.node).code,
-            to: generate(x).code,
+            to: generate(to).code,
+            from: generate(from).code,
           });
-          // throw err;
         }
       }
     }

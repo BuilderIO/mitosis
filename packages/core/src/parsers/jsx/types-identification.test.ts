@@ -1,4 +1,4 @@
-import { findSignals } from './types-identification';
+import { createTypescriptProject, findSignals } from './types-identification';
 
 describe(findSignals.name, () => {
   test('x', () => {
@@ -46,7 +46,7 @@ describe(findSignals.name, () => {
     const result = findSignals({
       code,
       // we piggyback on the e2e-app TS project to avoid having to setup one for this test.
-      tsConfigFilePath: __dirname + '/../../../../../e2e/e2e-app/tsconfig.json',
+      ...createTypescriptProject(__dirname + '/../../../../../e2e/e2e-app/tsconfig.json'),
     });
     expect(result).toMatchSnapshot();
   });

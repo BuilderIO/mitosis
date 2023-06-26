@@ -1,12 +1,12 @@
 import * as babel from '@babel/core';
 
+import generate from '@babel/generator';
 import { MitosisNode } from '@builder.io/mitosis';
 import { pipe } from 'fp-ts/lib/function';
 import traverse from 'traverse';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { replaceNodes } from '../../helpers/replace-identifiers';
 import { MitosisComponent, MitosisState, StateValue } from '../../types/mitosis-component';
 import { parseCode, uncapitalize } from './helpers';
 
@@ -16,37 +16,45 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
   const setExpressions = stateProperties.map((propertyName) => `set${capitalize(propertyName)}`);
 
   return pipe(
-    replaceNodes({
-      code: expression,
-      nodeMaps: stateProperties.map((stateProp) => ({
-        from: types.identifier(stateProp),
-        to: types.memberExpression(types.identifier('state'), types.identifier(stateProp)),
-      })),
-    }),
-    (code) =>
-      babelTransformExpression(
-        // foo -> state.foo
-        code,
-        {
-          CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
-            if (types.isIdentifier(path.node.callee)) {
-              if (setExpressions.includes(path.node.callee.name)) {
-                // setFoo -> foo
-                const statePropertyName = uncapitalize(path.node.callee.name.slice(3));
-
-                // setFoo(...) -> state.foo = ...
-                path.replaceWith(
-                  types.assignmentExpression(
-                    '=',
-                    types.identifier(`state.${statePropertyName}`),
-                    path.node.arguments[0] as any,
-                  ),
-                );
-              }
+    babelTransformExpression(expression, {
+      Identifier(path) {
+        if (stateProperties.includes(path.node.name)) {
+          if (
+            // ignore state properties that are already prefixed with `state.`
+            !(types.isMemberExpression(path.parent) && path.parent.property === path.node) &&
+            // ignore declarations of that state property, e.g. `function foo() {}`
+            !types.isDeclaration(path.parent)
+          ) {
+            const newTh = types.memberExpression(
+              types.identifier('state'),
+              types.identifier(path.node.name),
+            );
+            try {
+              path.replaceWith(newTh);
+            } catch (err) {
+              console.log('err: ', { from: generate(path.parent).code, to: newTh });
             }
-          },
-        },
-      ),
+          }
+        }
+      },
+      CallExpression(path) {
+        if (types.isIdentifier(path.node.callee)) {
+          if (setExpressions.includes(path.node.callee.name)) {
+            // setFoo -> foo
+            const statePropertyName = uncapitalize(path.node.callee.name.slice(3));
+
+            // setFoo(...) -> state.foo = ...
+            path.replaceWith(
+              types.assignmentExpression(
+                '=',
+                types.identifier(`state.${statePropertyName}`),
+                path.node.arguments[0] as any,
+              ),
+            );
+          }
+        }
+      },
+    }),
     (code) => code.trim(),
   );
 }
@@ -87,7 +95,7 @@ export function mapStateIdentifiers(json: MitosisComponent) {
 
   for (const key in json.state) {
     const stateVal = json.state[key];
-    if (typeof stateVal?.code === 'string' && stateVal.type === 'function') {
+    if (stateVal?.type === 'function') {
       json.state[key] = {
         code: mapStateIdentifiersInExpression(stateVal.code, stateProperties),
         type: 'function',

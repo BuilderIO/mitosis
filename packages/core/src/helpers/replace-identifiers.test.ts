@@ -108,7 +108,7 @@ describe('newReplacer', () => {
     );
 
     const to = types.memberExpression(types.identifier('props'), types.identifier('$context'));
-    const output = replaceNodes({ code, from: thing, to });
+    const output = replaceNodes({ code, nodeMaps: [{ from: thing, to }] });
     expect(output).toMatchSnapshot();
   });
 });
