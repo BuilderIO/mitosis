@@ -1,2 +1,2 @@
 export { parseJsx } from './jsx';
-export { createTypescriptProject } from './types-identification';
+export { createTypescriptProject, mapSignalTypeInTSFile } from './types-identification';

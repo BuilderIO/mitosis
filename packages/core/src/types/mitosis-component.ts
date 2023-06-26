@@ -98,6 +98,9 @@ export type MitosisComponent = {
     get: Dictionary<ContextGetInfo>;
     set: Dictionary<ContextSetInfo>;
   };
+  signals?: {
+    signalTypeImportName?: string;
+  };
   props?: {
     [name: string]: { propertyType: ReactivityType };
   };

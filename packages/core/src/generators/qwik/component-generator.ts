@@ -17,9 +17,9 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { addPreventDefault } from './helpers/add-prevent-default';
 import { stableInject } from './helpers/stable-inject';
-import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
+import { StateInit, emitStateMethodsAndRewriteBindings, emitUseStore } from './helpers/state';
 import { renderJSXNodes } from './jsx';
-import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
+import { File, SrcBuilder, arrowFnBlock, invoke } from './src-generator';
 
 Error.stackTraceLimit = 9999;
 
@@ -39,6 +39,8 @@ const PLUGINS: Plugin[] = [
   }),
   CODE_PROCESSOR_PLUGIN((codeType, json) => {
     switch (codeType) {
+      case 'types':
+        return (c) => c;
       case 'bindings':
       case 'state':
       case 'hooks':

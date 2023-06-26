@@ -1,6 +1,6 @@
-import { MitosisState } from './mitosis-component';
+import { ContextOptions, MitosisState } from './mitosis-component';
 
-export type MitosisContext = {
+export type MitosisContext = ContextOptions & {
   '@type': '@builder.io/mitosis/context';
   name: string;
   value: MitosisState;

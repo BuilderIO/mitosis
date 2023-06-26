@@ -21,6 +21,7 @@ import {
   componentToVue2,
   componentToVue3,
   createTypescriptProject,
+  mapSignalTypeInTSFile,
   MitosisComponent,
   MitosisConfig,
   parseJsx,
@@ -192,7 +193,7 @@ const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedM
     : undefined;
 
   return Promise.all(
-    paths.map(async (path): Promise<ParsedMitosisJson> => {
+    paths.map(async (path) => {
       try {
         const file = await readFile(path, 'utf8');
         if (INPUT_EXTENSIONS.svelte.some((x) => path.endsWith(x))) {
@@ -407,9 +408,10 @@ const outputNonComponentFiles = async ({
   const extension = getNonComponentFileExtension({ target, options });
   const folderPath = `${options.dest}/${outputPath}`;
   return await Promise.all(
-    files.map(({ path, output }) =>
-      outputFile(`${folderPath}/${path.replace(/\.tsx?$/, extension)}`, output),
-    ),
+    files.map(async ({ path, output }) => {
+      const filePath = `${folderPath}/${path.replace(/\.tsx?$/, extension)}`;
+      await outputFile(filePath, output);
+    }),
   );
 };
 
@@ -480,6 +482,7 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
       const output = pipe(
         await transpileIfNecessary({ path, target, options, content: file }),
         transformImports({ target, options }),
+        (code) => mapSignalTypeInTSFile({ code, target }),
       );
 
       return { output, path };

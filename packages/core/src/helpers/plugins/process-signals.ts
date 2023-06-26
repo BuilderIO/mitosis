@@ -1,19 +1,31 @@
 import { Node } from '@babel/core';
-import { pipe } from 'fp-ts/lib/function';
+import {
+  getSignalMitosisImportForTarget,
+  mapSignalType,
+} from 'src/parsers/jsx/types-identification';
+import { Target } from 'src/types/config';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { Plugin } from '../../types/plugins';
 import { replaceNodes } from '../replace-identifiers';
 import { createCodeProcessorPlugin } from './process-code';
 
+export const processSignalType =
+  ({ json, target }: { json: MitosisComponent; target: Target }) =>
+  (code: string): string => {
+    if (json.signals?.signalTypeImportName) {
+      return mapSignalType({
+        code,
+        signalImportName: json.signals.signalTypeImportName,
+        target,
+      });
+    }
+
+    return code;
+  };
+
 export const processSignalsForCode =
   ({ json, processors }: { json: MitosisComponent; processors: Processors }) =>
   (code: string): string => {
-    const isTh = json.name === 'RenderBlock';
-
-    const isCode = code === 'childrenContext.value';
-
-    const isYes = isTh && isCode;
-
     const nodeMaps: { from: Node; to: Node }[] = [];
     for (const propName in json.props) {
       if (json.props[propName].propertyType === 'reactive') {
@@ -33,17 +45,8 @@ export const processSignalsForCode =
       }
     }
 
-    if (isYes) {
-      console.log('processSignalsForCode', { isTh, isCode });
-    }
     if (nodeMaps.length) {
-      if (isYes) {
-        console.log('before', { code });
-      }
       code = replaceNodes({ code, nodeMaps });
-      if (isYes) {
-        console.log('after', { code });
-      }
     }
 
     return code;
@@ -56,11 +59,35 @@ type Processors = {
 };
 
 /**
- * Process `mySignal.value` accessors for props, context, and state.
+ * Processes `Signal` type imports, transforming them to the target's equivalent and adding the import to the component.
  */
-export const processSignals = (processors: Processors) =>
-  pipe(
-    createCodeProcessorPlugin((_codeType, json) => processSignalsForCode({ processors, json })),
-    (plugin): Plugin =>
-      () => ({ json: { pre: plugin } }),
-  );
+export const getSignalTypePlugin =
+  ({ target }: { target: Target }): Plugin =>
+  () => ({
+    json: {
+      pre: (json) => {
+        createCodeProcessorPlugin((_codeType, json) => processSignalType({ json, target }))(json);
+
+        if (json.signals?.signalTypeImportName) {
+          json.imports = json.imports || [];
+          const signalMappedImport = getSignalMitosisImportForTarget(target);
+          if (signalMappedImport) {
+            json.imports.push(signalMappedImport);
+          }
+        }
+      },
+    },
+  });
+
+/**
+ * Processes `mySignal.value` accessors for props, context, and state.
+ */
+export const getSignalAccessPlugin =
+  ({ processors, target }: { processors: Processors; target: Target }): Plugin =>
+  () => ({
+    json: {
+      pre: createCodeProcessorPlugin((_codeType, json) =>
+        processSignalsForCode({ processors, json }),
+      ),
+    },
+  });

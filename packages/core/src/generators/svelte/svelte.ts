@@ -1,5 +1,6 @@
 import { flow, pipe } from 'fp-ts/lib/function';
 import { format } from 'prettier/standalone';
+import { getSignalTypePlugin } from 'src/helpers/plugins/process-signals';
 import traverse from 'traverse';
 import { babelTransformCode, convertTypeScriptToJS } from '../../helpers/babel-transform';
 import { dedent } from '../../helpers/dedent';
@@ -145,6 +146,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           case 'hooks-deps':
           case 'state':
           case 'dynamic-jsx-elements':
+          case 'types':
             return (x) => x;
         }
       }),
@@ -168,9 +170,11 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             return flow(stripStateAndProps({ json, options }), transformReactiveValues({ json }));
           }
           case 'dynamic-jsx-elements':
+          case 'types':
             return (x) => x;
         }
       }),
+      getSignalTypePlugin({ target: 'svelte' }),
     ];
 
     // Make a copy we can safely mutate, similar to babel's toolchain

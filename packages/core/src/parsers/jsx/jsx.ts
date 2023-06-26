@@ -21,7 +21,7 @@ import { handleImportDeclaration } from './imports';
 import { undoPropsDestructure } from './props';
 import { mapStateIdentifiers } from './state';
 import { Context, ParseMitosisOptions } from './types';
-import { findSignals } from './types-identification';
+import { findSignals, getSignalImportName } from './types-identification';
 
 const { types } = babel;
 
@@ -177,9 +177,13 @@ export function parseJsx(
     ],
   });
 
+  if (!output || !output.code) {
+    throw new Error('Could not parse JSX');
+  }
+
   const stringifiedMitosisComponent = stripNewlinesInStrings(
-    output!
-      .code!.trim()
+    output.code
+      .trim()
       // Occasional issues where comments get kicked to the top. Full fix should strip these sooner
       .replace(/^\/\*[\s\S]*?\*\/\s*/, '')
       // Weird bug with adding a newline in a normal at end of a normal string that can't have one
@@ -195,6 +199,10 @@ export function parseJsx(
   extractContextComponents(mitosisComponent);
 
   mitosisComponent.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
+
+  mitosisComponent.signals = {
+    signalTypeImportName: getSignalImportName(output.code),
+  };
 
   if (options.tsProject && options.filePath) {
     const reactiveValues = findSignals({
