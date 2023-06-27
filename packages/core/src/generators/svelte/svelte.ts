@@ -64,7 +64,11 @@ const setContextCode = ({
   return Object.values(json.context.set)
     .map((context) => {
       const { value, name, ref } = context;
-      const key = value ? `${name}.key` : name;
+      const nameIsStringLiteral =
+        (name.startsWith("'") && name.endsWith("'")) ||
+        (name.startsWith('"') && name.endsWith('"'));
+
+      const key = nameIsStringLiteral ? name : `${name}.key`;
 
       const valueStr = value
         ? processCode(stringifyContextValue(value))
