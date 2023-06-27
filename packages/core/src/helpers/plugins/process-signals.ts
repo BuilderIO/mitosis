@@ -8,9 +8,10 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { Plugin } from '../../types/plugins';
 import { replaceNodes } from '../replace-identifiers';
 import { createCodeProcessorPlugin } from './process-code';
+import { CodeType } from './process-code/types';
 
 export const processSignalType =
-  ({ json, target }: { json: MitosisComponent; target: Target }) =>
+  ({ json, target, codeType }: { json: MitosisComponent; target: Target; codeType?: CodeType }) =>
   (code: string): string => {
     if (json.signals?.signalTypeImportName) {
       return mapSignalType({
@@ -66,7 +67,16 @@ export const getSignalTypePlugin =
   () => ({
     json: {
       pre: (json) => {
-        createCodeProcessorPlugin((_codeType, json) => processSignalType({ json, target }))(json);
+        createCodeProcessorPlugin((codeType, json) => {
+          switch (codeType) {
+            // Skip these for now because they break for svelte: `<svelte:element>` becomes `<svelte: element>`.
+            // Besides, fairly impossible to endup with a Signal generic there like `<MyComponent<Signal<number>> />`.
+            case 'dynamic-jsx-elements':
+              return (x) => x;
+            default:
+              return processSignalType({ json, target, codeType });
+          }
+        })(json);
 
         if (json.signals?.signalTypeImportName) {
           json.imports = json.imports || [];

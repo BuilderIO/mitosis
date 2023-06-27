@@ -52,7 +52,7 @@ const getSignalSymbol = (project: Project) => {
   return signalSymbol as Symbol;
 };
 
-export const getSignalImportName = (code: string) => {
+export const getSignalImportName = (code: string): string | undefined => {
   let foundSignalUsage = false;
   let signalImportName: string | undefined = undefined;
 
@@ -86,11 +86,8 @@ export const getSignalImportName = (code: string) => {
       }
     },
   });
-  if (!foundSignalUsage) {
-    return signalImportName;
-  }
 
-  return undefined;
+  return foundSignalUsage ? signalImportName : undefined;
 };
 
 export const addSignalImport = ({ code, target }: { code: string; target: Target }) => {

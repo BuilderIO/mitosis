@@ -201,7 +201,7 @@ export function parseJsx(
   mitosisComponent.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
 
   mitosisComponent.signals = {
-    signalTypeImportName: getSignalImportName(output.code),
+    signalTypeImportName: getSignalImportName(jsxToUse),
   };
 
   if (options.tsProject && options.filePath) {

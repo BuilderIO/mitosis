@@ -69,6 +69,10 @@ export const createCodeProcessorPlugin =
       const state = json.state[key];
       if (state) {
         state.code = codeProcessor('state', json)(state.code, key);
+
+        if (state.typeParameter) {
+          state.typeParameter = codeProcessor('types', json)(state.typeParameter, key);
+        }
       }
     }
 
