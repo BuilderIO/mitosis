@@ -32,7 +32,7 @@ import { TranspilerGenerator } from '../../types/transpiler';
 import { getContextType, hasGetContext, hasSetContext } from '../helpers/context';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { blockToSvelte } from './blocks';
-import { stripStateAndProps, transformReactiveValues } from './helpers';
+import { stripStateAndProps } from './helpers';
 import { ToSvelteOptions } from './types';
 
 const getContextCode = (json: MitosisComponent) => {
@@ -157,22 +157,13 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'hooks':
-            return flow(
-              stripStateAndProps({ json, options }),
-              transformReactiveValues({ json }),
-              babelTransformCode,
-            );
+            return flow(stripStateAndProps({ json, options }), babelTransformCode);
           case 'bindings':
           case 'hooks-deps':
           case 'state':
-            return flow(
-              stripStateAndProps({ json, options }),
-              transformReactiveValues({ json }),
-              stripGetter,
-            );
-          case 'properties': {
-            return flow(stripStateAndProps({ json, options }), transformReactiveValues({ json }));
-          }
+            return flow(stripStateAndProps({ json, options }), stripGetter);
+          case 'properties':
+            return flow(stripStateAndProps({ json, options }));
           case 'dynamic-jsx-elements':
           case 'types':
             return (x) => x;

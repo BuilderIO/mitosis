@@ -1,4 +1,4 @@
-import { Node } from '@babel/core';
+import { Node, types } from '@babel/core';
 import {
   getSignalMitosisImportForTarget,
   mapSignalType,
@@ -25,24 +25,39 @@ export const processSignalType =
   };
 
 export const processSignalsForCode =
-  ({ json, processors }: { json: MitosisComponent; processors: Processors }) =>
+  ({ json, mapSignal }: { json: MitosisComponent; mapSignal: SignalMapper }) =>
   (code: string): string => {
     const nodeMaps: { from: Node; to: Node }[] = [];
     for (const propName in json.props) {
       if (json.props[propName].propertyType === 'reactive') {
-        nodeMaps.push(processors.props(propName));
+        nodeMaps.push({
+          from: types.memberExpression(
+            types.identifier('props'),
+            types.memberExpression(types.identifier(propName), types.identifier('value')),
+          ),
+          to: mapSignal(propName),
+        });
       }
     }
 
     for (const propName in json.context.get) {
       if (json.context.get[propName].type === 'reactive') {
-        nodeMaps.push(processors.context(propName));
+        nodeMaps.push({
+          from: types.memberExpression(types.identifier(propName), types.identifier('value')),
+          to: mapSignal(propName),
+        });
       }
     }
 
     for (const propName in json.state) {
       if (json.state[propName]?.propertyType === 'reactive') {
-        nodeMaps.push(processors.state(propName));
+        nodeMaps.push({
+          from: types.memberExpression(
+            types.identifier('state'),
+            types.memberExpression(types.identifier(propName), types.identifier('value')),
+          ),
+          to: mapSignal(propName),
+        });
       }
     }
 
@@ -53,11 +68,7 @@ export const processSignalsForCode =
     return code;
   };
 
-type Processors = {
-  props: (name: string) => { from: Node; to: Node };
-  context: (name: string) => { from: Node; to: Node };
-  state: (name: string) => { from: Node; to: Node };
-};
+type SignalMapper = (name: string) => Node;
 
 /**
  * Processes `Signal` type imports, transforming them to the target's equivalent and adding the import to the component.
@@ -89,15 +100,25 @@ export const getSignalTypePlugin =
     },
   });
 
+const getSignalMapperForTarget = (target: Target): SignalMapper => {
+  switch (target) {
+    case 'svelte':
+      return (name) => types.identifier('$' + name);
+    default:
+      // default case: strip the `.value` accessor
+      return (name) => types.identifier(name);
+  }
+};
+
 /**
  * Processes `mySignal.value` accessors for props, context, and state.
  */
 export const getSignalAccessPlugin =
-  ({ processors, target }: { processors: Processors; target: Target }): Plugin =>
+  ({ target }: { target: Target }): Plugin =>
   () => ({
     json: {
       pre: createCodeProcessorPlugin((_codeType, json) =>
-        processSignalsForCode({ processors, json }),
+        processSignalsForCode({ mapSignal: getSignalMapperForTarget(target), json }),
       ),
     },
   });

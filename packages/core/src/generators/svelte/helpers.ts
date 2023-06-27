@@ -8,26 +8,7 @@ import { ToSvelteOptions } from './types';
 export const transformReactiveValues = ({ json }: { json: MitosisComponent }) => {
   return processSignalsForCode({
     json,
-    processors: {
-      props: (name) => {
-        return {
-          from: types.memberExpression(types.identifier(name), types.identifier('value')),
-          to: types.identifier('$' + name),
-        };
-      },
-      context: (name) => {
-        return {
-          from: types.memberExpression(types.identifier(name), types.identifier('value')),
-          to: types.identifier('$' + name),
-        };
-      },
-      state: (name) => {
-        return {
-          from: types.memberExpression(types.identifier(name), types.identifier('value')),
-          to: types.identifier('$' + name),
-        };
-      },
-    },
+    mapSignal: (name) => types.identifier('$' + name),
   });
 };
 

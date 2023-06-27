@@ -1,4 +1,5 @@
 import { BaseTranspilerOptions, Target } from '..';
+import { getSignalAccessPlugin, getSignalTypePlugin } from './plugins/process-signals';
 import { processTargetBlocks } from './plugins/process-target-blocks';
 
 /**
@@ -29,7 +30,11 @@ export const initializeOptions = <T extends BaseTranspilerOptions>(
   const options = mergeOptions(a, b, c);
 
   // we want this plugin to run first in every case, as it replaces magic strings with the correct code.
-  options.plugins.unshift(processTargetBlocks(target));
+  options.plugins.unshift(
+    processTargetBlocks(target),
+    getSignalTypePlugin({ target }),
+    getSignalAccessPlugin({ target }),
+  );
 
   return options;
 };
