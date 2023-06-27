@@ -17,8 +17,8 @@ const processSignalsForCode =
       if (json.props[propName].propertyType === 'reactive') {
         nodeMaps.push({
           from: types.memberExpression(
-            types.identifier('props'),
-            types.memberExpression(types.identifier(propName), types.identifier('value')),
+            types.memberExpression(types.identifier('props'), types.identifier(propName)),
+            types.identifier('value'),
           ),
           to: types.memberExpression(types.identifier('props'), mapSignal(propName)),
         });
@@ -38,8 +38,8 @@ const processSignalsForCode =
       if (json.state[propName]?.propertyType === 'reactive') {
         nodeMaps.push({
           from: types.memberExpression(
-            types.identifier('state'),
-            types.memberExpression(types.identifier(propName), types.identifier('value')),
+            types.memberExpression(types.identifier('state'), types.identifier(propName)),
+            types.identifier('value'),
           ),
           to: types.memberExpression(types.identifier('state'), mapSignal(propName)),
         });

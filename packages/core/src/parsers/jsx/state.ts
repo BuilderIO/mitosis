@@ -1,5 +1,4 @@
 import * as babel from '@babel/core';
-
 import generate from '@babel/generator';
 import { MitosisNode } from '@builder.io/mitosis';
 import { pipe } from 'fp-ts/lib/function';
@@ -7,6 +6,7 @@ import traverse from 'traverse';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { createCodeProcessorPlugin } from '../../helpers/plugins/process-code';
 import { MitosisComponent, MitosisState, StateValue } from '../../types/mitosis-component';
 import { parseCode, uncapitalize } from './helpers';
 
@@ -20,19 +20,31 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
       Identifier(path) {
         if (stateProperties.includes(path.node.name)) {
           if (
-            // ignore state properties that are already prefixed with `state.`
+            // ignore member expressions, as the `stateProperty` is going to be at the module scope.
             !(types.isMemberExpression(path.parent) && path.parent.property === path.node) &&
+            !(
+              types.isOptionalMemberExpression(path.parent) && path.parent.property === path.node
+            ) &&
             // ignore declarations of that state property, e.g. `function foo() {}`
-            !types.isDeclaration(path.parent)
+            !types.isDeclaration(path.parent) &&
+            !types.isFunctionDeclaration(path.parent) &&
+            !(types.isFunctionExpression(path.parent) && path.parent.id === path.node) &&
+            // ignore object keys
+            !(types.isObjectProperty(path.parent) && path.parent.key === path.node)
           ) {
-            const newTh = types.memberExpression(
+            const newExpression = types.memberExpression(
               types.identifier('state'),
               types.identifier(path.node.name),
             );
             try {
-              path.replaceWith(newTh);
+              path.replaceWith(newExpression);
             } catch (err) {
-              console.log('err: ', { from: generate(path.parent).code, to: newTh });
+              console.log('err: ', {
+                from: generate(path.parent).code,
+                fromChild: generate(path.node).code,
+                to: newExpression,
+                // err,
+              });
             }
           }
         }
@@ -93,23 +105,14 @@ const consolidateClassBindings = (item: MitosisNode) => {
 export function mapStateIdentifiers(json: MitosisComponent) {
   const stateProperties = Object.keys(json.state);
 
-  for (const key in json.state) {
-    const stateVal = json.state[key];
-    if (stateVal?.type === 'function') {
-      json.state[key] = {
-        code: mapStateIdentifiersInExpression(stateVal.code, stateProperties),
-        type: 'function',
-      };
-    }
-  }
+  const plugin = createCodeProcessorPlugin(
+    () => (code) => mapStateIdentifiersInExpression(code, stateProperties),
+  );
+
+  plugin(json);
 
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
-      for (const key in item.bindings) {
-        const value = item.bindings[key]!;
-        item.bindings[key]!.code = mapStateIdentifiersInExpression(value.code, stateProperties);
-      }
-
       consolidateClassBindings(item);
     }
   });
