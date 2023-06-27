@@ -359,7 +359,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
             const fnName = `onUpdateFn_${index}`;
             return `
-              function ${fnName}(..._args${options.typescript ? ': any[]' : ''}}) {
+              function ${fnName}(..._args${options.typescript ? ': any[]' : ''}) {
                 ${code}
               }
               $: ${fnName}(...${deps})
