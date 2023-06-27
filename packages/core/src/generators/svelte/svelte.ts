@@ -1,6 +1,5 @@
 import { flow, pipe } from 'fp-ts/lib/function';
 import { format } from 'prettier/standalone';
-import { getSignalTypePlugin } from 'src/helpers/plugins/process-signals';
 import traverse from 'traverse';
 import { babelTransformCode, convertTypeScriptToJS } from '../../helpers/babel-transform';
 import { dedent } from '../../helpers/dedent';
@@ -16,6 +15,7 @@ import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { initializeOptions } from '../../helpers/merge-options';
 import { stripGetter } from '../../helpers/patterns';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
+import { getSignalTypePlugin } from '../../helpers/plugins/process-signals';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { isSlotProperty } from '../../helpers/slots';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';

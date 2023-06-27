@@ -2,8 +2,8 @@ import { Node } from '@babel/core';
 import {
   getSignalMitosisImportForTarget,
   mapSignalType,
-} from 'src/parsers/jsx/types-identification';
-import { Target } from 'src/types/config';
+} from '../../parsers/jsx/types-identification';
+import { Target } from '../../types/config';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { Plugin } from '../../types/plugins';
 import { replaceNodes } from '../replace-identifiers';

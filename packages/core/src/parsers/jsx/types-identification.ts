@@ -1,7 +1,7 @@
 import { types } from '@babel/core';
 import { pipe } from 'fp-ts/lib/function';
-import { babelTransformExpression } from 'src/helpers/babel-transform';
 import { Node, Project, SourceFile, Symbol, SyntaxKind } from 'ts-morph';
+import { babelTransformExpression } from '../../helpers/babel-transform';
 import { Target } from '../../types/config';
 import { mapImportDeclarationToMitosisImport } from './imports';
 
