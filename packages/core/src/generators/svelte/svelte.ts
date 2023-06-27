@@ -178,7 +178,13 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     gettersToFunctions(json);
 
-    const props = Array.from(getProps(json)).filter((prop) => !isSlotProperty(prop));
+    const filteredProps = Array.from(getProps(json))
+      .filter((prop) => !isSlotProperty(prop))
+      // map $prop to prop for reactive state
+      .map((x) => (x.startsWith('$') ? x.slice(1) : x));
+
+    // this helps make sure we don't have duplicate props
+    const props = Array.from(new Set(filteredProps));
 
     const refs = Array.from(getRefs(json))
       .map(stripStateAndProps({ json, options }))
