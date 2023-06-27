@@ -76,6 +76,11 @@ export type MitosisConfig = {
    * Provide options to the parser.
    */
   parserOptions?: {
-    jsx: Partial<ParseMitosisOptions>;
+    jsx: Partial<ParseMitosisOptions> & {
+      /**
+       * Path to your project's `tsconfig.json` file. Needed for advanced types parsing (e.g. signals).
+       */
+      tsConfigFilePath?: string;
+    };
   };
 };
