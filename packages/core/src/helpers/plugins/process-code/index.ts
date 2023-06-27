@@ -76,6 +76,13 @@ export const createCodeProcessorPlugin =
       }
     }
 
+    for (const key in json.context.set) {
+      const set = json.context.set[key];
+      if (set.ref) {
+        set.ref = codeProcessor('state', json)(set.ref, key);
+      }
+    }
+
     traverseNodes(json, (node) => {
       preProcessNodeCode({ json: node, codeProcessor, parentComponent: json });
     });
