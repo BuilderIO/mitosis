@@ -93,7 +93,7 @@ export const getSignalImportName = (code: string): string | undefined => {
   return foundSignalUsage ? signalImportName : undefined;
 };
 
-export const addSignalImport = ({ code, target }: { code: string; target: Target }) => {
+const addSignalImport = ({ code, target }: { code: string; target: Target }) => {
   const signalType = getSignalMappingForTarget(target);
 
   if (!signalType) {

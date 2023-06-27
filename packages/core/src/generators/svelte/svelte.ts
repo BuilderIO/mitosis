@@ -15,7 +15,6 @@ import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { initializeOptions } from '../../helpers/merge-options';
 import { stripGetter } from '../../helpers/patterns';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { getSignalTypePlugin } from '../../helpers/plugins/process-signals';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { isSlotProperty } from '../../helpers/slots';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
@@ -169,7 +168,6 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             return (x) => x;
         }
       }),
-      getSignalTypePlugin({ target: 'svelte' }),
     ];
 
     // Make a copy we can safely mutate, similar to babel's toolchain

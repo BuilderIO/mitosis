@@ -10,7 +10,7 @@ import { replaceNodes } from '../replace-identifiers';
 import { createCodeProcessorPlugin } from './process-code';
 import { CodeType } from './process-code/types';
 
-export const processSignalType =
+const processSignalType =
   ({ json, target, codeType }: { json: MitosisComponent; target: Target; codeType?: CodeType }) =>
   (code: string): string => {
     if (json.signals?.signalTypeImportName) {
@@ -24,7 +24,7 @@ export const processSignalType =
     return code;
   };
 
-export const processSignalsForCode =
+const processSignalsForCode =
   ({ json, mapSignal }: { json: MitosisComponent; mapSignal: SignalMapper }) =>
   (code: string): string => {
     const nodeMaps: { from: Node; to: Node }[] = [];
