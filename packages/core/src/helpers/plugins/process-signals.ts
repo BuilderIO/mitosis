@@ -8,21 +8,6 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { Plugin } from '../../types/plugins';
 import { replaceNodes } from '../replace-identifiers';
 import { createCodeProcessorPlugin } from './process-code';
-import { CodeType } from './process-code/types';
-
-const processSignalType =
-  ({ json, target, codeType }: { json: MitosisComponent; target: Target; codeType?: CodeType }) =>
-  (code: string): string => {
-    if (json.signals?.signalTypeImportName) {
-      return mapSignalType({
-        code,
-        signalImportName: json.signals.signalTypeImportName,
-        target,
-      });
-    }
-
-    return code;
-  };
 
 const processSignalsForCode =
   ({ json, mapSignal }: { json: MitosisComponent; mapSignal: SignalMapper }) =>
@@ -35,7 +20,7 @@ const processSignalsForCode =
             types.identifier('props'),
             types.memberExpression(types.identifier(propName), types.identifier('value')),
           ),
-          to: mapSignal(propName),
+          to: types.memberExpression(types.identifier('props'), mapSignal(propName)),
         });
       }
     }
@@ -56,7 +41,7 @@ const processSignalsForCode =
             types.identifier('state'),
             types.memberExpression(types.identifier(propName), types.identifier('value')),
           ),
-          to: mapSignal(propName),
+          to: types.memberExpression(types.identifier('state'), mapSignal(propName)),
         });
       }
     }
@@ -68,7 +53,7 @@ const processSignalsForCode =
     return code;
   };
 
-type SignalMapper = (name: string) => Node;
+type SignalMapper = (name: string) => types.Expression;
 
 /**
  * Processes `Signal` type imports, transforming them to the target's equivalent and adding the import to the component.
@@ -85,7 +70,17 @@ export const getSignalTypePlugin =
             case 'dynamic-jsx-elements':
               return (x) => x;
             default:
-              return processSignalType({ json, target, codeType });
+              return (code) => {
+                if (json.signals?.signalTypeImportName) {
+                  return mapSignalType({
+                    code,
+                    signalImportName: json.signals.signalTypeImportName,
+                    target,
+                  });
+                }
+
+                return code;
+              };
           }
         })(json);
 
