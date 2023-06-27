@@ -8,16 +8,19 @@ import { mapImportDeclarationToMitosisImport } from './imports';
 const getSignalMappingForTarget = (target: Target) => {
   switch (target) {
     case 'svelte':
+      const importDeclaration = types.importDeclaration(
+        [types.importSpecifier(types.identifier('Writable'), types.identifier('Writable'))],
+        types.stringLiteral('svelte/store'),
+      );
+      importDeclaration.importKind = 'type';
+
       return {
         getTypeReference: (generics: types.TSType[] = []) =>
           types.tsTypeReference(
             types.identifier('Writable'),
             types.tsTypeParameterInstantiation(generics),
           ),
-        importDeclaration: types.importDeclaration(
-          [types.importSpecifier(types.identifier('Writable'), types.identifier('Writable'))],
-          types.stringLiteral('svelte/store'),
-        ),
+        importDeclaration,
       };
     default:
       return undefined;
