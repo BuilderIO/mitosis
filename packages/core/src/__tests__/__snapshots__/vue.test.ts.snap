@@ -1236,7 +1236,7 @@ export default defineComponent({
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -4868,7 +4868,7 @@ export default defineComponent({
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -6389,30 +6389,47 @@ exports[`Vue > jsx > Typescript Test > onInit 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-import { defineComponent } from \\"vue\\";
+    import { defineComponent } from \\"vue\\"
 
-export const defaultValues = {
-  name: \\"PatrickJS\\",
+
+
+  export const defaultValues = {
+name: 'PatrickJS'
 };
 
-type Props = {
-  name: string;
-};
 
-export default defineComponent({
-  name: \\"on-init\\",
 
-  props: [\\"name\\"],
+    type Props = {
+state.name: string;
+}
 
-  data() {
-    return { name: \\"\\" };
-  },
 
-  created() {
-    this.name = defaultValues.name || this.name;
-    console.log(\\"set defaults with props\\");
-  },
-});
+      export default defineComponent( {
+      name: 'on-init',
+
+      props: ['name'],
+
+      data() {
+        return { name: '',}
+      },
+
+
+
+
+      created() {
+              this.name = defaultValues.name || this.name;
+console.log('set defaults with props')
+            },
+
+
+
+
+
+
+
+
+      }
+      )
 </script>"
 `;
 
@@ -7552,7 +7569,7 @@ export default defineComponent({
   provide() {
     const _this = this;
     return {
-      [\\"activeTab\\"]: _this.activeTab,
+      [\\"activeTab\\"]: this.activeTab,
     };
   },
   inject: {
@@ -7988,7 +8005,7 @@ export default defineComponent({
   provide() {
     const _this = this;
     return {
-      [\\"activeTab\\"]: _this.activeTab,
+      [\\"activeTab\\"]: this.activeTab,
     };
   },
   inject: {

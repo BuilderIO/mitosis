@@ -1293,7 +1293,7 @@ export default class Image extends LitElement {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -1310,7 +1310,7 @@ export default class Image extends LitElement {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -3108,8 +3108,8 @@ export default class OnUpdate extends LitElement {
   };
 
   updated() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 
@@ -5419,7 +5419,7 @@ export default class Image extends LitElement {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -5436,7 +5436,7 @@ export default class Image extends LitElement {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -7162,35 +7162,49 @@ export default class OnInit extends LitElement {
 
 exports[`Lit > jsx > Typescript Test > onInit 1`] = `
 "export const defaultValues = {
-  name: \\"PatrickJS\\",
+name: 'PatrickJS'
 };
 
-import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-type Props = {
-  name: string;
-};
+  import { LitElement, html, css } from 'lit';
+  import { customElement, property, state, query } from 'lit/decorators.js';
 
-@customElement(\\"on-init\\")
-export default class OnInit extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+  type Props = {
+state.name: string;
+}
 
-  @property() name: any;
 
-  @state() name = \\"\\";
+  @customElement('on-init')
+  export default class OnInit extends LitElement {
 
-  render() {
-    return html\`
+      createRenderRoot() {
+        return this;
+      }
+
+
+
+
+
+
+
+    @property() name: any
+
+      @state()  name= ''
+
+
+
+
+
+
+
+    render() {
+      return html\`
 
           <div>Default name defined by parent \${this.name}</div>
 
-        \`;
-  }
-}
-"
+        \`
+    }
+  }"
 `;
 
 exports[`Lit > jsx > Typescript Test > onMount 1`] = `
@@ -7462,8 +7476,8 @@ export default class OnUpdate extends LitElement {
   };
 
   updated() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 

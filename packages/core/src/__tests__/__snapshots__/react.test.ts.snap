@@ -130,13 +130,13 @@ function MyBasicComponent(props) {
   }, []);
 
   return (
-    <Context.Provider value={createInjector()}>
+    <Injector.Provider value={createInjector()}>
       <div>
         {myService.method(\\"hello\\") + name}
         Hello! I can run in React, Vue, Solid, or Liquid!
         <input onChange={(event) => onChange} />
       </div>
-    </Context.Provider>
+    </Injector.Provider>
   );
 }
 
@@ -3230,13 +3230,13 @@ function MyBasicComponent(props: any) {
   }, []);
 
   return (
-    <Context.Provider value={createInjector()}>
+    <Injector.Provider value={createInjector()}>
       <div>
         {myService.method(\\"hello\\") + name}
         Hello! I can run in React, Vue, Solid, or Liquid!
         <input onChange={(event) => onChange} />
       </div>
-    </Context.Provider>
+    </Injector.Provider>
   );
 }
 
@@ -5618,35 +5618,14 @@ export default OnInit;
 `;
 
 exports[`React > jsx > Typescript Test > onInit 1`] = `
-"import * as React from \\"react\\";
-import { useState, useEffect } from \\"react\\";
-
-type Props = {
-  name: string;
-};
-
-export const defaultValues = {
-  name: \\"PatrickJS\\",
-};
-
-function OnInit(props: Props) {
-  const [name, setName] = useState(() => \\"\\");
-
-  useEffect(() => {
-    setName(defaultValues.name || props.name);
-    console.log(\\"set defaults with props\\");
-  }, []);
-
-  return (
-    <div>
-      Default name defined by parent
-      {name}
-    </div>
-  );
-}
-
-export default OnInit;
-"
+"Property or signature expected. (7:1)
+   5 |
+   6 |   type Props = {
+>  7 | state.name: string;
+     | ^
+   8 | }
+   9 |
+  10 |"
 `;
 
 exports[`React > jsx > Typescript Test > onMount 1`] = `
@@ -6898,23 +6877,14 @@ export default MyComponent;
 `;
 
 exports[`React > svelte > Javascript Test > context 1`] = `
-"import * as React from \\"react\\";
-import { useState, useContext } from \\"react\\";
-
-function MyComponent(props) {
-  const [activeTab, setActiveTab] = useState(() => 0);
-
-  const disabled = useContext(\\"disabled\\");
-
-  return (
-    <Context.Provider value={activeTab}>
-      <div>{activeTab}</div>
-    </Context.Provider>
-  );
-}
-
-export default MyComponent;
-"
+"'>' expected. (30:13)
+  28 | return (
+  29 |
+> 30 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+     |             ^
+  31 |
+  32 |
+  33 |"
 `;
 
 exports[`React > svelte > Javascript Test > each 1`] = `
@@ -7302,23 +7272,14 @@ export default MyComponent;
 `;
 
 exports[`React > svelte > Typescript Test > context 1`] = `
-"import * as React from \\"react\\";
-import { useState, useContext } from \\"react\\";
-
-function MyComponent(props: any) {
-  const [activeTab, setActiveTab] = useState(() => 0);
-
-  const disabled = useContext(\\"disabled\\");
-
-  return (
-    <Context.Provider value={activeTab}>
-      <div>{activeTab}</div>
-    </Context.Provider>
-  );
-}
-
-export default MyComponent;
-"
+"'>' expected. (30:13)
+  28 | return (
+  29 |
+> 30 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+     |             ^
+  31 |
+  32 |
+  33 |"
 `;
 
 exports[`React > svelte > Typescript Test > each 1`] = `

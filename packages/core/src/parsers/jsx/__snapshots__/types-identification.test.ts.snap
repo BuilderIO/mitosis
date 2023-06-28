@@ -3,14 +3,13 @@
 exports[`Signals type parsing > findSignals 1`] = `
 {
   "context": Set {
-    "normalContext",
+    "context",
   },
-  "props": Set {},
+  "props": Set {
+    "k",
+  },
   "state": Set {
-    "console",
-    "props",
-    "context.value",
-    "normalContext.value",
+    "n",
   },
 }
 `;
@@ -25,10 +24,10 @@ const FooContext = createContext({
 const NormalContext = createContext({
   foo: 'bar'
 });
-type K = Signal<string>;
+type K = string;
 type Props = {
   k: K;
-  another: Signal<number>;
+  another: number;
 };
 export default function MyComponent(props: Props) {
   const [n] = useState(123, {
@@ -52,10 +51,10 @@ const FooContext = createContext({
 const NormalContext = createContext({
   foo: 'bar'
 });
-type K = Signal<string>;
+type K = Writable<string>;
 type Props = {
   k: K;
-  another: Signal<number>;
+  another: Writable<number>;
 };
 export default function MyComponent(props: Props) {
   const [n] = useState(123, {

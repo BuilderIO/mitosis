@@ -18,7 +18,7 @@ exports[`Svelte > jsx > Javascript Test > AdvancedRef 1`] = `
 
   let name = \\"PatrickJS\\";
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args) {
     console.log(\\"Received an update\\");
   }
   $: onUpdateFn_0(...[inputRef, inputNoArgRef]);
@@ -131,7 +131,7 @@ exports[`Svelte > jsx > Javascript Test > Basic Context 1`] = `
     console.log(bye);
   });
 
-  setContext(Injector, createInjector());
+  setContext(Injector.key, createInjector());
 </script>
 
 <div>
@@ -344,7 +344,7 @@ exports[`Svelte > jsx > Javascript Test > BasicRefPrevious 1`] = `
 
   let count = 0;
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args) {
     prevCount = count;
   }
   $: onUpdateFn_0(...[count]);
@@ -969,7 +969,7 @@ exports[`Svelte > jsx > Javascript Test > Image 1`] = `
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            load = true;
             scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -1524,7 +1524,7 @@ exports[`Svelte > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 "<script>
   let name = \\"PatrickJS\\";
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args) {
     const controller = new AbortController();
     const signal = controller.signal;
     fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -1823,7 +1823,7 @@ exports[`Svelte > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
   let c = \\"c\\";
   let d = \\"d\\";
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args) {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a === \\"a\\") {
@@ -1831,7 +1831,7 @@ exports[`Svelte > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
     }
   }
   $: onUpdateFn_0(...[a, b]);
-  function onUpdateFn_1() {
+  function onUpdateFn_1(..._args) {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a === \\"a\\") {
@@ -1968,7 +1968,7 @@ exports[`Svelte > jsx > Javascript Test > onUpdateWithDeps 1`] = `
   let a = \\"a\\";
   let b = \\"b\\";
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args) {
     console.log(\\"Runs when a, b or size changes\\", a, b, size);
   }
   $: onUpdateFn_0(...[a, b, size]);
@@ -2308,7 +2308,7 @@ exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
     sendComponentsToVisualEditor(customComponents);
   });
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args) {
     dispatchNewContentToVisualEditor(content);
   }
   $: onUpdateFn_0(...[content]);
@@ -2596,7 +2596,7 @@ exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
 
   let name = \\"PatrickJS\\";
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args: any[]) {
     console.log(\\"Received an update\\");
   }
   $: onUpdateFn_0(...[inputRef, inputNoArgRef]);
@@ -2715,7 +2715,7 @@ exports[`Svelte > jsx > Typescript Test > Basic Context 1`] = `
     console.log(bye);
   });
 
-  setContext(Injector, createInjector());
+  setContext(Injector.key, createInjector());
 </script>
 
 <div>
@@ -2965,7 +2965,7 @@ exports[`Svelte > jsx > Typescript Test > BasicRefPrevious 1`] = `
 
   let count = 0;
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args: any[]) {
     prevCount = count;
   }
   $: onUpdateFn_0(...[count]);
@@ -3705,7 +3705,7 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            load = true;
             scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -4034,7 +4034,7 @@ exports[`Svelte > jsx > Typescript Test > SlotJsx 1`] = `
 "<script context='module' lang='ts'>
       type Props = {
 [key: string]: string;
-};
+}
 
     </script>
     
@@ -4436,7 +4436,7 @@ exports[`Svelte > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 "<script lang=\\"ts\\">
   let name = \\"PatrickJS\\";
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args: any[]) {
     const controller = new AbortController();
     const signal = controller.signal;
     fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -4802,7 +4802,7 @@ exports[`Svelte > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
   let c = \\"c\\";
   let d = \\"d\\";
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args: any[]) {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a === \\"a\\") {
@@ -4810,7 +4810,7 @@ exports[`Svelte > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
     }
   }
   $: onUpdateFn_0(...[a, b]);
-  function onUpdateFn_1() {
+  function onUpdateFn_1(..._args: any[]) {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a === \\"a\\") {
@@ -4908,9 +4908,10 @@ exports[`Svelte > jsx > Typescript Test > onInit & onMount 1`] = `
 
 exports[`Svelte > jsx > Typescript Test > onInit 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    name: string;
-  };
+      type Props = {
+state.name: string;
+}
+
 </script>
 
 <script lang=\\"ts\\">
@@ -4969,7 +4970,7 @@ exports[`Svelte > jsx > Typescript Test > onUpdateWithDeps 1`] = `
   let a = \\"a\\";
   let b = \\"b\\";
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args: any[]) {
     console.log(\\"Runs when a, b or size changes\\", a, b, size);
   }
   $: onUpdateFn_0(...[a, b, size]);
@@ -5388,7 +5389,7 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
     sendComponentsToVisualEditor(customComponents);
   });
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args: any[]) {
     dispatchNewContentToVisualEditor(content);
   }
   $: onUpdateFn_0(...[content]);
@@ -5938,7 +5939,7 @@ exports[`Svelte > svelte > Javascript Test > reactiveWithFn 1`] = `
   let b = 5;
   let result = null;
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args) {
     calculateResult(a, b);
   }
   $: onUpdateFn_0(...[a, b]);
@@ -6215,7 +6216,7 @@ exports[`Svelte > svelte > Typescript Test > reactiveWithFn 1`] = `
   let b = 5;
   let result = null;
 
-  function onUpdateFn_0() {
+  function onUpdateFn_0(..._args: any[]) {
     calculateResult(a, b);
   }
   $: onUpdateFn_0(...[a, b]);

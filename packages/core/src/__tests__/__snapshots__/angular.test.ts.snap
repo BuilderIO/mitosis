@@ -2540,7 +2540,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -2647,7 +2647,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -10326,7 +10326,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -10452,7 +10452,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -13570,73 +13570,119 @@ exports[`Angular > jsx > Typescript Test > onInit 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {   Component , Input } from '@angular/core';
 
-type Props = {
-  name: string;
-};
 
-export const defaultValues = {
-  name: \\"PatrickJS\\",
-};
-
-@Component({
-  selector: \\"on-init, OnInit\\",
-  template: \`
-    <div>Default name defined by parent {{name}}</div>
-  \`,
-})
-export class OnInit {
-  @Input() name: Props[\\"name\\"];
-
-  name = \\"\\";
-
-  constructor() {
-    this.name = defaultValues.name || this.name;
-    console.log(\\"set defaults with props\\");
-  }
+  type Props = {
+state.name: string;
 }
+
+
+
+  export const defaultValues = {
+name: 'PatrickJS'
+};
+
+
+
+  @Component({
+    selector: 'on-init, OnInit',template: \`
+        <div>Default name defined by parent {{name}}</div>
+
+        \`
+  })
+  export class OnInit {
+
+
+
+    @Input() name: Props[\\"name\\"]
+
+
+
+
+
+     name= ''
+
+
+
+
+    constructor(
+) {
+
+            this.name = defaultValues.name || this.name;
+console.log('set defaults with props')
+
+        }
+
+
+
+
+
+
+
+  }
 
 @NgModule({
   declarations: [OnInit],
   imports: [CommonModule],
   exports: [OnInit],
+  
 })
-export class OnInitModule {}
-"
+export class OnInitModule {}"
 `;
 
 exports[`Angular > jsx > Typescript Test > onInit 2`] = `
-"import { Component, Input } from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import {   Component , Input } from '@angular/core';
+  import { CommonModule } from '@angular/common';
 
-type Props = {
-  name: string;
-};
-
-export const defaultValues = {
-  name: \\"PatrickJS\\",
-};
-
-@Component({
-  selector: \\"on-init, OnInit\\",
-  template: \`
-    <div>Default name defined by parent {{name}}</div>
-  \`,
-  standalone: true,
-  imports: [CommonModule],
-})
-export class OnInit {
-  @Input() name: Props[\\"name\\"];
-
-  name = \\"\\";
-
-  constructor() {
-    this.name = defaultValues.name || this.name;
-    console.log(\\"set defaults with props\\");
-  }
+  type Props = {
+state.name: string;
 }
-"
+
+
+
+  export const defaultValues = {
+name: 'PatrickJS'
+};
+
+
+
+  @Component({
+    selector: 'on-init, OnInit',template: \`
+        <div>Default name defined by parent {{name}}</div>
+
+        \`,standalone: true,imports: [CommonModule]
+  })
+  export class OnInit {
+
+
+
+    @Input() name: Props[\\"name\\"]
+
+
+
+
+
+     name= ''
+
+
+
+
+    constructor(
+) {
+
+            this.name = defaultValues.name || this.name;
+console.log('set defaults with props')
+
+        }
+
+
+
+
+
+
+
+  }"
 `;
 
 exports[`Angular > jsx > Typescript Test > onMount 1`] = `

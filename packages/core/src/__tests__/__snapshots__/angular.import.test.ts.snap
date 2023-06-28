@@ -1383,7 +1383,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -5624,7 +5624,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -7349,40 +7349,65 @@ exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Te
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {   Component , Input } from '@angular/core';
 
-type Props = {
-  name: string;
-};
 
-export const defaultValues = {
-  name: \\"PatrickJS\\",
-};
-
-@Component({
-  selector: \\"on-init, OnInit\\",
-  template: \`
-    <div>Default name defined by parent {{name}}</div>
-  \`,
-})
-export class OnInit {
-  @Input() name: Props[\\"name\\"];
-
-  name = \\"\\";
-
-  constructor() {
-    this.name = defaultValues.name || this.name;
-    console.log(\\"set defaults with props\\");
-  }
+  type Props = {
+state.name: string;
 }
+
+
+
+  export const defaultValues = {
+name: 'PatrickJS'
+};
+
+
+
+  @Component({
+    selector: 'on-init, OnInit',template: \`
+        <div>Default name defined by parent {{name}}</div>
+
+        \`
+  })
+  export class OnInit {
+
+
+
+    @Input() name: Props[\\"name\\"]
+
+
+
+
+
+     name= ''
+
+
+
+
+    constructor(
+) {
+
+            this.name = defaultValues.name || this.name;
+console.log('set defaults with props')
+
+        }
+
+
+
+
+
+
+
+  }
 
 @NgModule({
   declarations: [OnInit],
   imports: [CommonModule],
   exports: [OnInit],
+  
 })
-export class OnInitModule {}
-"
+export class OnInitModule {}"
 `;
 
 exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > onMount 1`] = `

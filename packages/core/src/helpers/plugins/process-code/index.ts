@@ -87,7 +87,9 @@ export const createCodeProcessorPlugin =
       preProcessNodeCode({ json: node, codeProcessor, parentComponent: json });
     });
 
-    json.types = json.types?.map((type) => codeProcessor('types', json)(type, ''));
+    if (json.types) {
+      json.types = json.types?.map((type) => codeProcessor('types', json)(type, ''));
+    }
 
     if (json.propsTypeRef) {
       json.propsTypeRef = codeProcessor('types', json)(json.propsTypeRef, '');

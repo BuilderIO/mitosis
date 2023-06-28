@@ -85,14 +85,14 @@ exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-46ffab9e {
+  .input-a14666dc {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-46ffab9e\\"
+      class=\\"input-a14666dc\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -951,7 +951,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.input.lazy && isBrowser();
+    return !!this.input.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -976,7 +976,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.state.load = true;
             this.state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -999,7 +999,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
 }
 
 style { 
-  .img-0f6bc980 {
+  .img-d13c78c4 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -1012,7 +1012,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-0f6bc980')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-d13c78c4')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -1206,16 +1206,16 @@ class {
 }
 
 style { 
-  .input-2c6dd004 {
+  .input-4e06abd9 {
     display: block;
   }
-  .textarea-2c6dd004 {
+  .textarea-4e06abd9 {
     display: block;
   }
-  .button-2c6dd004 {
+  .button-4e06abd9 {
     display: block;
   }
-  .review-2c6dd004 {
+  .review-4e06abd9 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -1223,7 +1223,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-2c6dd004 {
+  .img-4e06abd9 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -1236,13 +1236,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-2c6dd004\\" />
+    <input placeholder=\\"Title\\" class=\\"input-4e06abd9\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-2c6dd004\\"
+      class=\\"textarea-4e06abd9\\"
     ></textarea>
     <button
-      class=\\"button-2c6dd004\\"
+      class=\\"button-4e06abd9\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -1252,8 +1252,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-2c6dd004\\" key=(review.id)>
-      <img class=\\"img-2c6dd004\\" src=(review.avatar) />
+    <div class=\\"review-4e06abd9\\" key=(review.id)>
+      <img class=\\"img-4e06abd9\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -1857,8 +1857,8 @@ exports[`Marko > jsx > Javascript Test > referencingFunInsideHook 1`] = `
   };
 
   onRender() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 }
@@ -2120,12 +2120,12 @@ class {
 }
 
 style { 
-  .div-259a876c {
+  .div-0a15b5e6 {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-259a876c\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-0a15b5e6\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -2367,14 +2367,14 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-77e296a4 {
+  .input-545daac6 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-77e296a4\\"
+      class=\\"input-545daac6\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -2411,11 +2411,11 @@ class {
 }
 
 style { 
-  .div-3aa1f0ec {
+  .div-28c0e84e {
     padding: 10px;
   }
 }
-<div class=\\"test div-3aa1f0ec\\">
+<div class=\\"test div-28c0e84e\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -2725,29 +2725,29 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
 }
 
 style { 
-  .div-f5d75200 {
+  .div-24014cea {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-f5d75200 {
+    .div-24014cea {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-f5d75200 {
+    .div-24014cea {
       flex-direction: row-reverse;
     }
   }
-  .div-f5d75200-2 {
+  .div-24014cea-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-f5d75200\\">
+<div class=\\"builder-columns div-24014cea\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-f5d75200-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-24014cea-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -3187,7 +3187,7 @@ class {
 }
 
 style { 
-  .pre-3efd7212 {
+  .pre-3c6996d6 {
     padding: 10px;
     color: red;
     text-align: center;
@@ -3222,7 +3222,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-3efd7212\\">
+    <pre class=\\"builder-form-error-text pre-3c6996d6\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -3244,7 +3244,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.input.lazy && isBrowser();
+    return !!this.input.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -3269,7 +3269,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.state.load = true;
             this.state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -3292,7 +3292,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 }
 
 style { 
-  .img-d79cc01a {
+  .img-78c9bd0c {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -3305,7 +3305,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-d79cc01a')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-78c9bd0c')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -3499,16 +3499,16 @@ class {
 }
 
 style { 
-  .input-18d06030 {
+  .input-6053db04 {
     display: block;
   }
-  .textarea-18d06030 {
+  .textarea-6053db04 {
     display: block;
   }
-  .button-18d06030 {
+  .button-6053db04 {
     display: block;
   }
-  .review-18d06030 {
+  .review-6053db04 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -3516,7 +3516,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-18d06030 {
+  .img-6053db04 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -3529,13 +3529,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-18d06030\\" />
+    <input placeholder=\\"Title\\" class=\\"input-6053db04\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-18d06030\\"
+      class=\\"textarea-6053db04\\"
     ></textarea>
     <button
-      class=\\"button-18d06030\\"
+      class=\\"button-6053db04\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -3545,8 +3545,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-18d06030\\" key=(review.id)>
-      <img class=\\"img-18d06030\\" src=(review.avatar) />
+    <div class=\\"review-6053db04\\" key=(review.id)>
+      <img class=\\"img-6053db04\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -4153,8 +4153,8 @@ exports[`Marko > jsx > Typescript Test > referencingFunInsideHook 1`] = `
   };
 
   onRender() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 }
@@ -4424,12 +4424,12 @@ class {
 }
 
 style { 
-  .div-392fe34e {
+  .div-25870d9c {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-392fe34e\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-25870d9c\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;

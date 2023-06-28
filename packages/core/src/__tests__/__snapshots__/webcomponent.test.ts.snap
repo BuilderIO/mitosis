@@ -3898,7 +3898,7 @@ class Image extends HTMLElement {
       },
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!self.props.lazy && isBrowser();
+        return !!self.props.lazy && self.state.isBrowser();
       },
       isBrowser: function isBrowser() {
         return (
@@ -4024,7 +4024,8 @@ class Image extends HTMLElement {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.state.load = true;
+            this.update();
             this.state.scrollListener = null;
             this.update();
             window.removeEventListener(\\"scroll\\", listener);
@@ -10636,8 +10637,8 @@ class OnUpdate extends HTMLElement {
   onUpdate() {
     const self = this;
 
-    foo({
-      someOption: bar,
+    self.state.foo({
+      someOption: self.state.bar,
     });
   }
 
@@ -16702,7 +16703,7 @@ class Image extends HTMLElement {
       },
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!self.props.lazy && isBrowser();
+        return !!self.props.lazy && self.state.isBrowser();
       },
       isBrowser: function isBrowser() {
         return (
@@ -16828,7 +16829,8 @@ class Image extends HTMLElement {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.state.load = true;
+            this.update();
             this.state.scrollListener = null;
             this.update();
             window.removeEventListener(\\"scroll\\", listener);
@@ -22579,132 +22581,175 @@ customElements.define(\\"on-init\\", OnInit);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > onInit 1`] = `
-"type Props = {
-  name: string;
+"
+      type Props = {
+  state.name: string;
+}
+      
+    
+    export const defaultValues = {
+  name: 'PatrickJS'
 };
+    
+  
+      /**
+       * Usage:
+       * 
+       *  <on-init></on-init>
+       * 
+       */
+      class OnInit extends HTMLElement {
+        
 
-export const defaultValues = {
-  name: \\"PatrickJS\\",
-};
+        get _root() {
+          return this.shadowRoot || this;
+        }
 
-/**
- * Usage:
- *
- *  <on-init></on-init>
- *
- */
-class OnInit extends HTMLElement {
-  get _root() {
-    return this.shadowRoot || this;
-  }
+        constructor() {
+          super();
+          const self = this;
+          
 
-  constructor() {
-    super();
-    const self = this;
+          this.onInitOnce = false;
 
-    this.onInitOnce = false;
+          this.state = { name: '',};
+          if (!this.props) {
+            this.props = {};
+          }
+          
+          this.componentProps = [\\"name\\"];
+          
 
-    this.state = { name: \\"\\" };
-    if (!this.props) {
-      this.props = {};
-    }
+          
 
-    this.componentProps = [\\"name\\"];
+          // used to keep track of all nodes created by show/for
+          this.nodesToDestroy = [];
+          // batch updates
+          this.pendingUpdate = false;
+          
 
-    // used to keep track of all nodes created by show/for
-    this.nodesToDestroy = [];
-    // batch updates
-    this.pendingUpdate = false;
+          
 
-    if (undefined) {
-      this.attachShadow({ mode: \\"open\\" });
-    }
-  }
+          
 
-  destroyAnyNodes() {
-    // destroy current view template refs before rendering again
-    this.nodesToDestroy.forEach((el) => el.remove());
-    this.nodesToDestroy = [];
-  }
-
-  connectedCallback() {
-    this.getAttributeNames().forEach((attr) => {
-      const jsVar = attr.replace(/-/g, \\"\\");
-      const regexp = new RegExp(jsVar, \\"i\\");
-      this.componentProps.forEach((prop) => {
-        if (regexp.test(prop)) {
-          const attrValue = this.getAttribute(attr);
-          if (this.props[prop] !== attrValue) {
-            this.props[prop] = attrValue;
+          if (undefined) {
+            this.attachShadow({ mode: 'open' })
           }
         }
-      });
-    });
 
-    this._root.innerHTML = \`
+
+        
+
+        destroyAnyNodes() {
+          // destroy current view template refs before rendering again
+          this.nodesToDestroy.forEach(el => el.remove());
+          this.nodesToDestroy = [];
+        }
+
+        connectedCallback() {
+          
+          
+          this.getAttributeNames().forEach((attr) => {
+            const jsVar = attr.replace(/-/g, '');
+            const regexp = new RegExp(jsVar, 'i');
+            this.componentProps.forEach(prop => {
+              if (regexp.test(prop)) {
+                const attrValue = this.getAttribute(attr);
+                if (this.props[prop] !== attrValue) {
+                  this.props[prop] = attrValue;
+                }
+              }
+            });
+          });
+          
+          
+              this._root.innerHTML = \`
       <div>
         Default name defined by parent
         <template data-el=\\"div-on-init-1\\"><!-- state.name --></template>
       </div>\`;
-    this.pendingUpdate = true;
-    this.onInit();
-    this.render();
-    this.onMount();
-    this.pendingUpdate = false;
-    this.update();
-  }
+              this.pendingUpdate = true;
+              this.onInit();
+              this.render();
+              this.onMount();
+              this.pendingUpdate = false;
+              this.update();
+              
+        }
+        
+            onInit() {
+              
+                  if (!this.onInitOnce) {
+                    this.state.name = defaultValues.name || this.props.name;
+this.update();
+console.log('set defaults with props')
+                    this.onInitOnce = true;
+                  }
+            }
+            
 
-  onInit() {
-    if (!this.onInitOnce) {
-      this.state.name = defaultValues.name || this.props.name;
-      this.update();
-      console.log(\\"set defaults with props\\");
-      this.onInitOnce = true;
-    }
-  }
+        
+        
 
-  onMount() {}
+        onMount() {
+          
+        }
 
-  onUpdate() {}
+        onUpdate() {
+          
+        }
 
-  update() {
-    if (this.pendingUpdate === true) {
-      return;
-    }
-    this.pendingUpdate = true;
-    this.render();
-    this.onUpdate();
-    this.pendingUpdate = false;
-  }
+        update() {
+          if (this.pendingUpdate === true) {
+            return;
+          }
+          this.pendingUpdate = true;
+          this.render();
+          this.onUpdate();
+          this.pendingUpdate = false;
+        }
 
-  render() {
-    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
-    this.destroyAnyNodes();
-    this.updateBindings();
-  }
+        render() {
+          
 
-  updateBindings() {
-    this._root.querySelectorAll(\\"[data-el='div-on-init-1']\\").forEach((el) => {
-      this.renderTextNode(el, this.state.name);
-    });
-  }
+          // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+          this.destroyAnyNodes();
+          this.updateBindings();
 
-  // Helper to render content
-  renderTextNode(el, text) {
-    const textNode = document.createTextNode(text);
-    if (el?.scope) {
-      textNode.scope = el.scope;
-    }
-    if (el?.context) {
-      textNode.context = el.context;
-    }
-    el.after(textNode);
-    this.nodesToDestroy.push(el.nextSibling);
-  }
-}
+          
+        }
+        
 
-customElements.define(\\"on-init\\", OnInit);
-"
+        updateBindings() {
+          
+                            
+              this._root.querySelectorAll(\\"[data-el='div-on-init-1']\\").forEach((el) => {
+                this.renderTextNode(el, this.state.name)
+              })
+              
+            
+        }
+
+        // Helper to render content
+        renderTextNode(el, text) {
+          const textNode = document.createTextNode(text);
+          if (el?.scope) {
+            textNode.scope = el.scope;
+          }
+          if (el?.context) {
+            textNode.context = el.context;
+          }
+          el.after(textNode);
+          this.nodesToDestroy.push(el.nextSibling);
+        }
+        
+        
+
+        
+      }
+
+      customElements.define('on-init', OnInit);
+    "
 `;
 
 exports[`webcomponent > jsx > Typescript Test > onMount 1`] = `
@@ -23668,8 +23713,8 @@ class OnUpdate extends HTMLElement {
   onUpdate() {
     const self = this;
 
-    foo({
-      someOption: bar,
+    self.state.foo({
+      someOption: self.state.bar,
     });
   }
 
