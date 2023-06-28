@@ -1,59 +1,74 @@
 import { Node, types } from '@babel/core';
+import generate from '@babel/generator';
 import {
   getSignalMitosisImportForTarget,
   mapSignalType,
 } from '../../parsers/jsx/types-identification';
 import { Target } from '../../types/config';
-import { MitosisComponent } from '../../types/mitosis-component';
 import { Plugin } from '../../types/plugins';
+import { babelTransformExpression } from '../babel-transform';
+import { capitalize } from '../capitalize';
+import { checkIsDefined } from '../nullable';
 import { replaceNodes } from '../replace-identifiers';
 import { createCodeProcessorPlugin } from './process-code';
 
-const processSignalsForCode =
-  ({ json, mapSignal }: { json: MitosisComponent; mapSignal: SignalMapper }) =>
-  (code: string): string => {
-    const nodeMaps: { from: Node; to: Node }[] = [];
-    for (const propName in json.props) {
-      if (json.props[propName].propertyType === 'reactive') {
-        nodeMaps.push({
-          from: types.memberExpression(
-            types.memberExpression(types.identifier('props'), types.identifier(propName)),
-            types.identifier('value'),
-          ),
-          to: types.memberExpression(types.identifier('props'), mapSignal(propName)),
-        });
-      }
-    }
+export const replaceSignalSetters = ({
+  code,
+  nodeMaps,
+}: {
+  code: string;
+  nodeMaps: {
+    from: types.Node;
+    setTo: types.Expression;
+  }[];
+}) => {
+  for (const { from, setTo } of nodeMaps) {
+    code = babelTransformExpression(code, {
+      AssignmentExpression(path) {
+        if (path.node.operator !== '=') return;
 
-    for (const propName in json.context.get) {
-      if (json.context.get[propName].type === 'reactive') {
-        nodeMaps.push({
-          from: types.memberExpression(types.identifier(propName), types.identifier('value')),
-          to: mapSignal(propName),
-        });
-      }
-    }
+        const lhs = path.node.left;
+        const rhs = path.node.right;
 
-    for (const propName in json.state) {
-      if (json.state[propName]?.propertyType === 'reactive') {
-        nodeMaps.push({
-          from: types.memberExpression(
-            types.memberExpression(types.identifier('state'), types.identifier(propName)),
-            types.identifier('value'),
-          ),
-          to: types.memberExpression(types.identifier('state'), mapSignal(propName)),
-        });
-      }
-    }
+        if (!types.isMemberExpression(lhs)) return;
+        if (!(types.isObjectExpression(rhs) || types.isIdentifier(rhs))) return;
 
-    if (nodeMaps.length) {
-      code = replaceNodes({ code, nodeMaps });
-    }
+        const signalAccess = lhs.object;
+        if (!types.isMemberExpression(signalAccess)) return;
 
-    return code;
-  };
+        if (generate(signalAccess).code !== generate(from).code) return;
 
-type SignalMapper = (name: string) => types.Expression;
+        /**
+         * Go from:
+         *  a.b.c.value.d = e
+         *
+         * to:
+         *  a.b.setC((PREVIOUS_VALUE) => ({ ...PREVIOUS_VALUE, d: e }))
+         */
+        const setter = types.cloneNode(setTo);
+
+        // TO-DO: replace all `value` references inside of the set logic with `PREVIOUS_VALUE`.
+        const prevValueIdentifier = types.identifier('PREVIOUS_VALUE');
+        const setFn = types.arrowFunctionExpression(
+          [prevValueIdentifier],
+          types.objectExpression([
+            types.spreadElement(prevValueIdentifier),
+            types.objectProperty(lhs.property, rhs),
+          ]),
+        );
+        const setterExpression = types.callExpression(setter, [setFn]);
+
+        path.replaceWith(setterExpression);
+      },
+    });
+  }
+  return code;
+};
+
+type SignalMapper = {
+  getter: (name: string) => types.Expression;
+  setter?: (name: string) => types.Expression;
+};
 
 /**
  * Processes `Signal` type imports, transforming them to the target's equivalent and adding the import to the component.
@@ -98,10 +113,20 @@ export const getSignalTypePlugin =
 const getSignalMapperForTarget = (target: Target): SignalMapper => {
   switch (target) {
     case 'svelte':
-      return (name) => types.identifier('$' + name);
+      return {
+        getter: (name) => types.identifier('$' + name),
+      };
+    case 'react':
+    case 'solid':
+      return {
+        getter: (name) => types.identifier(name),
+        setter: (name) => types.identifier('set' + capitalize(name)),
+      };
     default:
       // default case: strip the `.value` accessor
-      return (name) => types.identifier(name);
+      return {
+        getter: (name) => types.identifier(name),
+      };
   }
 };
 
@@ -112,8 +137,67 @@ export const getSignalAccessPlugin =
   ({ target }: { target: Target }): Plugin =>
   () => ({
     json: {
-      pre: createCodeProcessorPlugin((_codeType, json) =>
-        processSignalsForCode({ mapSignal: getSignalMapperForTarget(target), json }),
-      ),
+      pre: createCodeProcessorPlugin((_codeType, json) => (code) => {
+        const mapSignal = getSignalMapperForTarget(target);
+        const nodeMaps: { from: Node; to: Node; setTo: types.Expression | undefined }[] = [];
+
+        for (const propName in json.props) {
+          if (json.props[propName].propertyType === 'reactive') {
+            nodeMaps.push({
+              from: types.memberExpression(
+                types.memberExpression(types.identifier('props'), types.identifier(propName)),
+                types.identifier('value'),
+              ),
+              to: types.memberExpression(types.identifier('props'), mapSignal.getter(propName)),
+              setTo: mapSignal.setter
+                ? types.memberExpression(types.identifier('props'), mapSignal.setter(propName))
+                : undefined,
+            });
+          }
+        }
+
+        for (const propName in json.context.get) {
+          if (json.context.get[propName].type === 'reactive') {
+            nodeMaps.push({
+              from: types.memberExpression(types.identifier(propName), types.identifier('value')),
+              to: mapSignal.getter(propName),
+              setTo: mapSignal.setter ? mapSignal.setter(propName) : undefined,
+            });
+          }
+        }
+
+        for (const propName in json.state) {
+          if (json.state[propName]?.propertyType === 'reactive') {
+            nodeMaps.push({
+              from: types.memberExpression(
+                types.memberExpression(types.identifier('state'), types.identifier(propName)),
+                types.identifier('value'),
+              ),
+              to: types.memberExpression(types.identifier('state'), mapSignal.getter(propName)),
+              setTo: mapSignal.setter ? mapSignal.setter(propName) : undefined,
+            });
+          }
+        }
+
+        const filteredNodeMaps = nodeMaps.filter(
+          (
+            x,
+          ): x is {
+            from: types.Node;
+            to: types.Node;
+            setTo: types.Expression;
+          } => checkIsDefined(x.setTo),
+        );
+        // we run state-setter replacement first, because otherwise the other one will catch it.
+        if (filteredNodeMaps.length) {
+          code = replaceSignalSetters({ code, nodeMaps: filteredNodeMaps });
+        }
+
+        if (nodeMaps.length) {
+          code = replaceNodes({ code, nodeMaps });
+        }
+
+        return code;
+      }),
     },
   });
