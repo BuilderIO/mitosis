@@ -7162,49 +7162,35 @@ export default class OnInit extends LitElement {
 
 exports[`Lit > jsx > Typescript Test > onInit 1`] = `
 "export const defaultValues = {
-name: 'PatrickJS'
+  name: \\"PatrickJS\\",
 };
 
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-  import { LitElement, html, css } from 'lit';
-  import { customElement, property, state, query } from 'lit/decorators.js';
+type Props = {
+  name: string;
+};
 
-  type Props = {
-state.name: string;
-}
+@customElement(\\"on-init\\")
+export default class OnInit extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
 
+  @property() name: any;
 
-  @customElement('on-init')
-  export default class OnInit extends LitElement {
+  @state() name = \\"\\";
 
-      createRenderRoot() {
-        return this;
-      }
-
-
-
-
-
-
-
-    @property() name: any
-
-      @state()  name= ''
-
-
-
-
-
-
-
-    render() {
-      return html\`
+  render() {
+    return html\`
 
           <div>Default name defined by parent \${this.name}</div>
 
-        \`
-    }
-  }"
+        \`;
+  }
+}
+"
 `;
 
 exports[`Lit > jsx > Typescript Test > onMount 1`] = `

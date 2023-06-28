@@ -6389,47 +6389,30 @@ exports[`Vue > jsx > Typescript Test > onInit 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-    import { defineComponent } from \\"vue\\"
+import { defineComponent } from \\"vue\\";
 
-
-
-  export const defaultValues = {
-name: 'PatrickJS'
+export const defaultValues = {
+  name: \\"PatrickJS\\",
 };
 
+type Props = {
+  name: string;
+};
 
+export default defineComponent({
+  name: \\"on-init\\",
 
-    type Props = {
-state.name: string;
-}
+  props: [\\"name\\"],
 
+  data() {
+    return { name: \\"\\" };
+  },
 
-      export default defineComponent( {
-      name: 'on-init',
-
-      props: ['name'],
-
-      data() {
-        return { name: '',}
-      },
-
-
-
-
-      created() {
-              this.name = defaultValues.name || this.name;
-console.log('set defaults with props')
-            },
-
-
-
-
-
-
-
-
-      }
-      )
+  created() {
+    this.name = defaultValues.name || this.name;
+    console.log(\\"set defaults with props\\");
+  },
+});
 </script>"
 `;
 

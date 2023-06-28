@@ -5768,14 +5768,36 @@ export default OnInit;
 `;
 
 exports[`Preact > jsx > Typescript Test > onInit 1`] = `
-"Property or signature expected. (9:1)
-   7 |
-   8 |   type Props = {
->  9 | state.name: string;
-     | ^
-  10 | }
-  11 |
-  12 |"
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+type Props = {
+  name: string;
+};
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+function OnInit(props: Props) {
+  const [name, setName] = useState(() => \\"\\");
+
+  useEffect(() => {
+    setName(defaultValues.name || props.name);
+    console.log(\\"set defaults with props\\");
+  }, []);
+
+  return (
+    <div>
+      Default name defined by parent
+      {name}
+    </div>
+  );
+}
+
+export default OnInit;
+"
 `;
 
 exports[`Preact > jsx > Typescript Test > onMount 1`] = `

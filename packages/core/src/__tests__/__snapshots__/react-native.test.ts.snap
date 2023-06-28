@@ -6645,14 +6645,43 @@ export default OnInit;
 `;
 
 exports[`React Native > jsx > Typescript Test > onInit 1`] = `
-"Property or signature expected. (9:1)
-   7 |
-   8 |   type Props = {
->  9 | state.name: string;
-     | ^
-  10 | }
-  11 |
-  12 |"
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+type Props = {
+  name: string;
+};
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+function OnInit(props: Props) {
+  const [name, setName] = useState(() => \\"\\");
+
+  useEffect(() => {
+    setName(defaultValues.name || props.name);
+    console.log(\\"set defaults with props\\");
+  }, []);
+
+  return (
+    <View>
+      <Text>Default name defined by parent </Text>
+      <Text>{name}</Text>
+    </View>
+  );
+}
+
+export default OnInit;
+"
 `;
 
 exports[`React Native > jsx > Typescript Test > onMount 1`] = `

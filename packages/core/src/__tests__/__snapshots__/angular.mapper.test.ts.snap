@@ -7508,65 +7508,41 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > onInit 1`] =
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import {   Component , Input } from '@angular/core';
+import { Component, Input } from \\"@angular/core\\";
 
-
-  type Props = {
-state.name: string;
-}
-
-
-
-  export const defaultValues = {
-name: 'PatrickJS'
+type Props = {
+  name: string;
 };
 
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
 
+@Component({
+  selector: \\"on-init, OnInit\\",
+  template: \`
+    <div>Default name defined by parent {{name}}</div>
+  \`,
+})
+export class OnInit {
+  @Input() name: Props[\\"name\\"];
 
-  @Component({
-    selector: 'on-init, OnInit',template: \`
-        <div>Default name defined by parent {{name}}</div>
+  name = \\"\\";
 
-        \`
-  })
-  export class OnInit {
-
-
-
-    @Input() name: Props[\\"name\\"]
-
-
-
-
-
-     name= ''
-
-
-
-
-    constructor(
-) {
-
-            this.name = defaultValues.name || this.name;
-console.log('set defaults with props')
-
-        }
-
-
-
-
-
-
-
+  constructor() {
+    this.name = defaultValues.name || this.name;
+    console.log(\\"set defaults with props\\");
   }
+}
 
 @NgModule({
   declarations: [OnInit],
   imports: [CommonModule],
   exports: [OnInit],
-  bootstrap: [SomeOtherComponent]
+  bootstrap: [SomeOtherComponent],
 })
-export class OnInitModule {}"
+export class OnInitModule {}
+"
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > onMount 1`] = `

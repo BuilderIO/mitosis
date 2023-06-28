@@ -11321,25 +11321,58 @@ export default OnInit;
 `;
 
 exports[`Solid > jsx > Typescript Test > onInit 1`] = `
-"Property or signature expected. (6:1)
-  4 |
-  5 |   type Props = {
-> 6 | state.name: string;
-    | ^
-  7 | }
-  8 |
-  9 |"
+"import { createSignal } from \\"solid-js\\";
+
+type Props = {
+  name: string;
+};
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+function OnInit(props: Props) {
+  const [name, setName] = createSignal(\\"\\");
+
+  return (
+    <div>
+      Default name defined by parent
+      {name()}
+    </div>
+  );
+}
+
+export default OnInit;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > onInit 2`] = `
-"Property or signature expected. (6:1)
-  4 |   import { css } from \\"solid-styled-components\\";
-  5 |   type Props = {
-> 6 | state.name: string;
-    | ^
-  7 | }
-  8 |
-  9 |"
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+type Props = {
+  name: string;
+};
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+function OnInit(props: Props) {
+  const [name, setName] = createSignal(\\"\\");
+
+  return (
+    <>
+      <div>
+        Default name defined by parent
+        {name()}
+      </div>
+    </>
+  );
+}
+
+export default OnInit;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > onMount 1`] = `

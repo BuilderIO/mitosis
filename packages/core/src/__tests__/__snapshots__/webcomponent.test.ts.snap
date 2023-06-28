@@ -22581,175 +22581,132 @@ customElements.define(\\"on-init\\", OnInit);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > onInit 1`] = `
-"
-      type Props = {
-  state.name: string;
-}
-      
-    
-    export const defaultValues = {
-  name: 'PatrickJS'
+"type Props = {
+  name: string;
 };
-    
-  
-      /**
-       * Usage:
-       * 
-       *  <on-init></on-init>
-       * 
-       */
-      class OnInit extends HTMLElement {
-        
 
-        get _root() {
-          return this.shadowRoot || this;
-        }
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
 
-        constructor() {
-          super();
-          const self = this;
-          
+/**
+ * Usage:
+ *
+ *  <on-init></on-init>
+ *
+ */
+class OnInit extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
 
-          this.onInitOnce = false;
+  constructor() {
+    super();
+    const self = this;
 
-          this.state = { name: '',};
-          if (!this.props) {
-            this.props = {};
+    this.onInitOnce = false;
+
+    this.state = { name: \\"\\" };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    this.componentProps = [\\"name\\"];
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
           }
-          
-          this.componentProps = [\\"name\\"];
-          
-
-          
-
-          // used to keep track of all nodes created by show/for
-          this.nodesToDestroy = [];
-          // batch updates
-          this.pendingUpdate = false;
-          
-
-          
-
-          
-
-          if (undefined) {
-            this.attachShadow({ mode: 'open' })
-          }
         }
+      });
+    });
 
-
-        
-
-        destroyAnyNodes() {
-          // destroy current view template refs before rendering again
-          this.nodesToDestroy.forEach(el => el.remove());
-          this.nodesToDestroy = [];
-        }
-
-        connectedCallback() {
-          
-          
-          this.getAttributeNames().forEach((attr) => {
-            const jsVar = attr.replace(/-/g, '');
-            const regexp = new RegExp(jsVar, 'i');
-            this.componentProps.forEach(prop => {
-              if (regexp.test(prop)) {
-                const attrValue = this.getAttribute(attr);
-                if (this.props[prop] !== attrValue) {
-                  this.props[prop] = attrValue;
-                }
-              }
-            });
-          });
-          
-          
-              this._root.innerHTML = \`
+    this._root.innerHTML = \`
       <div>
         Default name defined by parent
         <template data-el=\\"div-on-init-1\\"><!-- state.name --></template>
       </div>\`;
-              this.pendingUpdate = true;
-              this.onInit();
-              this.render();
-              this.onMount();
-              this.pendingUpdate = false;
-              this.update();
-              
-        }
-        
-            onInit() {
-              
-                  if (!this.onInitOnce) {
-                    this.state.name = defaultValues.name || this.props.name;
-this.update();
-console.log('set defaults with props')
-                    this.onInitOnce = true;
-                  }
-            }
-            
+    this.pendingUpdate = true;
+    this.onInit();
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
 
-        
-        
+  onInit() {
+    if (!this.onInitOnce) {
+      this.state.name = defaultValues.name || this.props.name;
+      this.update();
+      console.log(\\"set defaults with props\\");
+      this.onInitOnce = true;
+    }
+  }
 
-        onMount() {
-          
-        }
+  onMount() {}
 
-        onUpdate() {
-          
-        }
+  onUpdate() {}
 
-        update() {
-          if (this.pendingUpdate === true) {
-            return;
-          }
-          this.pendingUpdate = true;
-          this.render();
-          this.onUpdate();
-          this.pendingUpdate = false;
-        }
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
 
-        render() {
-          
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
 
-          // re-rendering needs to ensure that all nodes generated by for/show are refreshed
-          this.destroyAnyNodes();
-          this.updateBindings();
+  updateBindings() {
+    this._root.querySelectorAll(\\"[data-el='div-on-init-1']\\").forEach((el) => {
+      this.renderTextNode(el, this.state.name);
+    });
+  }
 
-          
-        }
-        
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
 
-        updateBindings() {
-          
-                            
-              this._root.querySelectorAll(\\"[data-el='div-on-init-1']\\").forEach((el) => {
-                this.renderTextNode(el, this.state.name)
-              })
-              
-            
-        }
-
-        // Helper to render content
-        renderTextNode(el, text) {
-          const textNode = document.createTextNode(text);
-          if (el?.scope) {
-            textNode.scope = el.scope;
-          }
-          if (el?.context) {
-            textNode.context = el.context;
-          }
-          el.after(textNode);
-          this.nodesToDestroy.push(el.nextSibling);
-        }
-        
-        
-
-        
-      }
-
-      customElements.define('on-init', OnInit);
-    "
+customElements.define(\\"on-init\\", OnInit);
+"
 `;
 
 exports[`webcomponent > jsx > Typescript Test > onMount 1`] = `

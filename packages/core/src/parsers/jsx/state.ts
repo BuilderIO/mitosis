@@ -32,6 +32,19 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
             // ignore object keys
             !(types.isObjectProperty(path.parent) && path.parent.key === path.node)
           ) {
+            let hasTypeParent = false;
+            path.findParent((parent) => {
+              if (types.isTSType(parent)) {
+                hasTypeParent = true;
+                return true;
+              }
+              return false;
+            });
+
+            if (hasTypeParent) {
+              return;
+            }
+
             const newExpression = types.memberExpression(
               types.identifier('state'),
               types.identifier(path.node.name),

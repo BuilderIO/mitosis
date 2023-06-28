@@ -5725,14 +5725,35 @@ export default OnInit;
 `;
 
 exports[`Taro > jsx > Typescript Test > onInit 1`] = `
-"Property or signature expected. (8:1)
-   6 |
-   7 |   type Props = {
->  8 | state.name: string;
-     | ^
-   9 | }
-  10 |
-  11 |   import  { View, Text } from '@tarojs/components';"
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+type Props = {
+  name: string;
+};
+import { View, Text } from \\"@tarojs/components\\";
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+function OnInit(props: Props) {
+  const [name, setName] = useState(() => \\"\\");
+
+  useEffect(() => {
+    setName(defaultValues.name || props.name);
+    console.log(\\"set defaults with props\\");
+  }, []);
+
+  return (
+    <View>
+      Default name defined by parent
+      {name}
+    </View>
+  );
+}
+
+export default OnInit;
+"
 `;
 
 exports[`Taro > jsx > Typescript Test > onMount 1`] = `

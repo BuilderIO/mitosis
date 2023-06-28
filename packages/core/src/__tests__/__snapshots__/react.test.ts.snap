@@ -5618,14 +5618,35 @@ export default OnInit;
 `;
 
 exports[`React > jsx > Typescript Test > onInit 1`] = `
-"Property or signature expected. (7:1)
-   5 |
-   6 |   type Props = {
->  7 | state.name: string;
-     | ^
-   8 | }
-   9 |
-  10 |"
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+type Props = {
+  name: string;
+};
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+function OnInit(props: Props) {
+  const [name, setName] = useState(() => \\"\\");
+
+  useEffect(() => {
+    setName(defaultValues.name || props.name);
+    console.log(\\"set defaults with props\\");
+  }, []);
+
+  return (
+    <div>
+      Default name defined by parent
+      {name}
+    </div>
+  );
+}
+
+export default OnInit;
+"
 `;
 
 exports[`React > jsx > Typescript Test > onMount 1`] = `
