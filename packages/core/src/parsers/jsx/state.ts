@@ -34,7 +34,7 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
           ) {
             let hasTypeParent = false;
             path.findParent((parent) => {
-              if (types.isTSType(parent)) {
+              if (types.isTSType(parent) || types.isTSInterfaceBody(parent)) {
                 hasTypeParent = true;
                 return true;
               }
