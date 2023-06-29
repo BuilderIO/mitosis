@@ -1,6 +1,6 @@
-import { SolidState } from 'src/generators/solid/types';
-import { Dictionary } from 'src/helpers/typescript';
 import { Target } from '..';
+import { SolidState } from '../generators/solid/types';
+import { Dictionary } from '../helpers/typescript';
 
 type Targets = typeof import('../targets').targets;
 type TargetOptions = {

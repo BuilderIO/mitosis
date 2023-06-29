@@ -1,6 +1,6 @@
-import { ComponentMetadata } from 'src/types/metadata';
 import traverse from 'traverse';
 import { convertTypeScriptToJS } from '../../../helpers/babel-transform';
+import { ComponentMetadata } from '../../../types/metadata';
 import { MitosisComponent } from '../../../types/mitosis-component';
 import { File } from '../src-generator';
 import { convertMethodToFunction } from './convert-method-to-function';
