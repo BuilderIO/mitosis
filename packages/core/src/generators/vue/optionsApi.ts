@@ -6,7 +6,7 @@ import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
-import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
+import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
 import { encodeQuotes, getContextKey, getContextValue, getOnUpdateHookName } from './helpers';
 import { ToVueOptions } from './types';
 
@@ -179,7 +179,7 @@ export function generateOptionsApiScript(
     }
     return `${str},`;
   };
-  // prettier-ignore 
+  // prettier-ignore
   return `
         export default ${options.defineComponent ? 'defineComponent(' : ''} {
         ${
