@@ -35,7 +35,12 @@
     "prerelease": "yarn build",
     "prettier": "prettier --cache --loglevel warn '{packages,docs}/**/*.{js,jsx,ts,tsx,json,md,html}'",
     "release:dev": "cd packages/core && yarn run release:dev && cd ../cli && yarn run release:dev && cd ../eslint-plugin && yarn run release:dev",
-    "release:patch": "cd packages/core && yarn run release:patch && cd ../cli && yarn run release:patch && cd ../eslint-plugin && yarn run release:patch"
+    "release:patch": "cd packages/core && yarn run release:patch && cd ../cli && yarn run release:patch && cd ../eslint-plugin && yarn run release:patch",
+    "changesets": "changeset add",
+    "bump":"changeset version",
+    "publish": "changeset publish --repository=https://registry.npmjs.org/",
+    "release":"yarn ci && yarn changesets && yarn bump && yarn publish"
+
   },
   "repository": {
     "type": "git",
@@ -43,6 +48,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.6.0",
+    "@changesets/cli": "^2.26.2",
     "@nrwl/nx-cloud": "15.0.2",
     "@nrwl/vite": "^15.8.5",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
