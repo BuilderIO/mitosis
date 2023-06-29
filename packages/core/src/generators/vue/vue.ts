@@ -105,11 +105,12 @@ const BASE_OPTIONS: ToVueOptions = {
 const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
   (userOptions) =>
   ({ component, path }) => {
-    const options = initializeOptions(
-      userOptions?.vueVersion === 2 ? 'vue2' : 'vue3',
-      BASE_OPTIONS,
-      userOptions,
-    );
+    const options = initializeOptions({
+      target: userOptions?.vueVersion === 2 ? 'vue2' : 'vue3',
+      component,
+      defaults: BASE_OPTIONS,
+      userOptions: userOptions,
+    });
 
     options.plugins.unshift(
       CODE_PROCESSOR_PLUGIN((codeType) => {

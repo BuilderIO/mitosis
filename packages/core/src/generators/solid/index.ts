@@ -99,7 +99,12 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
   ({ component }) => {
     let json = fastClone(component);
 
-    const options = initializeOptions('solid', DEFAULT_OPTIONS, passedOptions);
+    const options = initializeOptions({
+      target: 'solid',
+      component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: passedOptions,
+    });
     options.plugins = [
       ...(options.plugins || []),
       CODE_PROCESSOR_PLUGIN((codeType) => {

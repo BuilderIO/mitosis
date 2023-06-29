@@ -130,7 +130,7 @@ function processBinding(code: string) {
 export const componentToLit: TranspilerGenerator<ToLitOptions> =
   (_options = {}) =>
   ({ component }) => {
-    const options = initializeOptions('lit', _options);
+    const options = initializeOptions({ target: 'lit', component, defaults: _options });
 
     let json = fastClone(component);
     if (options.plugins) {

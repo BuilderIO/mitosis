@@ -90,7 +90,12 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
     // Make a copy we can safely mutate, similar to babel's toolchain
     let component = fastClone(_component);
 
-    const options = initializeOptions('qwik', DEFAULT_OPTIONS, userOptions);
+    const options = initializeOptions({
+      target: 'qwik',
+      component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: userOptions,
+    });
 
     component = runPreJsonPlugins(component, options.plugins);
     component = runPostJsonPlugins(component, options.plugins);
@@ -112,7 +117,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       emitImports(file, component);
       emitTypes(file, component);
       emitExports(file, component);
-      const metadata: Record<string, any> = component.meta.useMetadata || ({} as any);
+      const metadata = component.meta.useMetadata;
       const isLightComponent: boolean = metadata?.qwik?.component?.isLight || false;
       const mutable: string[] = metadata?.qwik?.mutable || [];
 

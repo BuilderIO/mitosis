@@ -135,7 +135,12 @@ const DEFAULT_OPTIONS: ToSvelteOptions = {
 export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
   (userProvidedOptions) =>
   ({ component }) => {
-    const options = initializeOptions('svelte', DEFAULT_OPTIONS, userProvidedOptions);
+    const options = initializeOptions({
+      target: 'svelte',
+      component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: userProvidedOptions,
+    });
 
     options.plugins = [
       ...(options.plugins || []),

@@ -100,7 +100,7 @@ function processBinding(code: string) {
 export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
   (_options = {}) =>
   ({ component }) => {
-    const options = initializeOptions('stencil', _options);
+    const options = initializeOptions({ target: 'stencil', component, defaults: _options });
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
