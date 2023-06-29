@@ -179,7 +179,7 @@ export function generateOptionsApiScript(
     }
     return `${str},`;
   };
-
+  // prettier-ignore 
   return `
         export default ${options.defineComponent ? 'defineComponent(' : ''} {
         ${
