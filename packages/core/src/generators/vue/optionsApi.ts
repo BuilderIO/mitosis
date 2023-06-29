@@ -6,7 +6,7 @@ import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
-import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
+import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { encodeQuotes, getContextKey, getContextValue, getOnUpdateHookName } from './helpers';
 import { ToVueOptions } from './types';
 
@@ -15,7 +15,7 @@ const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) 
     ${Object.values(json.context.set)
       .map((setVal) => {
         const key = getContextKey(setVal);
-        return `[${key}]: ${getContextValue({ options, json, thisPrefix: '_this' })(setVal)}`;
+        return `[${key}]: ${getContextValue(setVal)}`;
       })
       .join(',')}
   }`;

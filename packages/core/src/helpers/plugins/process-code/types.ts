@@ -7,6 +7,7 @@ export type CodeType =
   | 'properties'
   | 'state'
   | 'types'
+  | 'context-set'
   // this is for when we write dynamic JSX elements like `<state.foo>Hello</state.foo>` in Mitosis
   | 'dynamic-jsx-elements';
 

@@ -137,67 +137,73 @@ export const getSignalAccessPlugin =
   ({ target }: { target: Target }): Plugin =>
   () => ({
     json: {
-      pre: createCodeProcessorPlugin((_codeType, json) => (code) => {
-        const mapSignal = getSignalMapperForTarget(target);
-        const nodeMaps: { from: Node; to: Node; setTo: types.Expression | undefined }[] = [];
+      pre: (x) => {
+        return createCodeProcessorPlugin((_codeType, json) => (code) => {
+          const mapSignal = getSignalMapperForTarget(target);
+          const nodeMaps: { from: Node; to: Node; setTo: types.Expression | undefined }[] = [];
 
-        for (const propName in json.props) {
-          if (json.props[propName].propertyType === 'reactive') {
-            nodeMaps.push({
-              from: types.memberExpression(
-                types.memberExpression(types.identifier('props'), types.identifier(propName)),
-                types.identifier('value'),
-              ),
-              to: types.memberExpression(types.identifier('props'), mapSignal.getter(propName)),
-              setTo: mapSignal.setter
-                ? types.memberExpression(types.identifier('props'), mapSignal.setter(propName))
-                : undefined,
-            });
+          for (const propName in json.props) {
+            if (json.props[propName].propertyType === 'reactive') {
+              nodeMaps.push({
+                from: types.memberExpression(
+                  types.memberExpression(types.identifier('props'), types.identifier(propName)),
+                  types.identifier('value'),
+                ),
+                to: types.memberExpression(types.identifier('props'), mapSignal.getter(propName)),
+                setTo: mapSignal.setter
+                  ? types.memberExpression(types.identifier('props'), mapSignal.setter(propName))
+                  : undefined,
+              });
+            }
           }
-        }
 
-        for (const propName in json.context.get) {
-          if (json.context.get[propName].type === 'reactive') {
-            nodeMaps.push({
-              from: types.memberExpression(types.identifier(propName), types.identifier('value')),
-              to: mapSignal.getter(propName),
-              setTo: mapSignal.setter ? mapSignal.setter(propName) : undefined,
-            });
+          for (const propName in json.context.get) {
+            if (json.context.get[propName].type === 'reactive') {
+              nodeMaps.push({
+                from: types.memberExpression(types.identifier(propName), types.identifier('value')),
+                to: mapSignal.getter(propName),
+                setTo: mapSignal.setter ? mapSignal.setter(propName) : undefined,
+              });
+            }
           }
-        }
 
-        for (const propName in json.state) {
-          if (json.state[propName]?.propertyType === 'reactive') {
-            nodeMaps.push({
-              from: types.memberExpression(
-                types.memberExpression(types.identifier('state'), types.identifier(propName)),
-                types.identifier('value'),
-              ),
-              to: types.memberExpression(types.identifier('state'), mapSignal.getter(propName)),
-              setTo: mapSignal.setter ? mapSignal.setter(propName) : undefined,
-            });
+          for (const propName in json.state) {
+            if (json.state[propName]?.propertyType === 'reactive') {
+              nodeMaps.push({
+                from: types.memberExpression(
+                  types.memberExpression(types.identifier('state'), types.identifier(propName)),
+                  types.identifier('value'),
+                ),
+                to: types.memberExpression(types.identifier('state'), mapSignal.getter(propName)),
+                setTo: mapSignal.setter ? mapSignal.setter(propName) : undefined,
+              });
+            }
           }
-        }
 
-        const filteredNodeMaps = nodeMaps.filter(
-          (
-            x,
-          ): x is {
-            from: types.Node;
-            to: types.Node;
-            setTo: types.Expression;
-          } => checkIsDefined(x.setTo),
-        );
-        // we run state-setter replacement first, because otherwise the other one will catch it.
-        if (filteredNodeMaps.length) {
-          code = replaceSignalSetters({ code, nodeMaps: filteredNodeMaps });
-        }
+          const filteredNodeMaps = nodeMaps.filter(
+            (
+              x,
+            ): x is {
+              from: types.Node;
+              to: types.Node;
+              setTo: types.Expression;
+            } => checkIsDefined(x.setTo),
+          );
+          // we run state-setter replacement first, because otherwise the other one will catch it.
+          if (filteredNodeMaps.length) {
+            console.log('updating state-setters:', code);
+            code = replaceSignalSetters({ code, nodeMaps: filteredNodeMaps });
+            console.log('updated state-setters:', code);
+          }
 
-        if (nodeMaps.length) {
-          code = replaceNodes({ code, nodeMaps });
-        }
+          if (nodeMaps.length) {
+            console.log('updating the rest:', code);
+            code = replaceNodes({ code, nodeMaps });
+            console.log('updated the rest:', code);
+          }
 
-        return code;
-      }),
+          return code;
+        })(x);
+      },
     },
   });

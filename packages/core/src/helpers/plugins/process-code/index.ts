@@ -79,7 +79,15 @@ export const createCodeProcessorPlugin =
     for (const key in json.context.set) {
       const set = json.context.set[key];
       if (set.ref) {
-        set.ref = codeProcessor('state', json)(set.ref, key);
+        set.ref = codeProcessor('context-set', json)(set.ref, key);
+      }
+      if (set.value) {
+        for (const key in set.value) {
+          const value = set.value[key];
+          if (value) {
+            value.code = codeProcessor('context-set', json)(value.code, key);
+          }
+        }
       }
     }
 

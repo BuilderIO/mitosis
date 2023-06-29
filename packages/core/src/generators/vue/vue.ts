@@ -125,6 +125,9 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
                 convertTypeScriptToJS,
                 (code) => processBinding({ code, options, json: component, codeType }),
               );
+            case 'context-set':
+              return (code) =>
+                processBinding({ code, options, json: component, preserveGetter: true });
             case 'hooks-deps':
               return replaceStateIdentifier(null);
             case 'properties':
@@ -149,6 +152,15 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
               return (c) => c;
             case 'state':
               return (c) => processBinding({ code: c, options, json: component });
+            case 'context-set':
+              return (code) =>
+                processBinding({
+                  code,
+                  options,
+                  json: component,
+                  thisPrefix: '_this',
+                  preserveGetter: true,
+                });
           }
         }
       }),
