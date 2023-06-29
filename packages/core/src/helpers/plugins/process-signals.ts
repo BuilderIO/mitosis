@@ -191,15 +191,11 @@ export const getSignalAccessPlugin =
           );
           // we run state-setter replacement first, because otherwise the other one will catch it.
           if (filteredNodeMaps.length) {
-            console.log('updating state-setters:', code);
             code = replaceSignalSetters({ code, nodeMaps: filteredNodeMaps });
-            console.log('updated state-setters:', code);
           }
 
           if (nodeMaps.length) {
-            console.log('updating the rest:', code);
             code = replaceNodes({ code, nodeMaps });
-            console.log('updated the rest:', code);
           }
 
           return code;
