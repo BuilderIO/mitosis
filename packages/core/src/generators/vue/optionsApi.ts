@@ -6,7 +6,7 @@ import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
-import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
+import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { encodeQuotes, getContextKey, getContextValue, getOnUpdateHookName } from './helpers';
 import { ToVueOptions } from './types';
 
@@ -188,54 +188,49 @@ export function generateOptionsApiScript(
             : `name: '${
                 path && options.namePrefix?.(path) ? options.namePrefix?.(path) + '-' : ''
               }${kebabCase(component.name)}',`
-        }
-        ${generateComponents(componentsUsed, options)}
-        ${props.length ? getPropDefinition({ component, props }) : ''}
-        ${
+        }${
+          generateComponents(componentsUsed, options)
+        }${
+          props.length 
+            ? getPropDefinition({ component, props }) : 
+            ''
+        }${
           dataString.length < 4
             ? ''
-            : `
-        data() {
+            : `data() {
           return ${dataString}
         },
         `
-        }
-
-        ${
+        }${
           size(component.context.set)
             ? `provide() {
                 const _this = this;
                 return ${getContextProvideString(component, options)}
               },`
             : ''
-        }
-        ${
+        }${
           size(component.context.get)
             ? `inject: ${getContextInjectString(component, options)},`
             : ''
-        }
-        ${
+        }${
           component.hooks.onInit?.code
             ? `created() {
                 ${component.hooks.onInit.code}
               },`
             : ''
-        }
-        ${
+        }${
           component.hooks.onMount?.code
             ? `mounted() {
                 ${component.hooks.onMount.code}
               },`
             : ''
-        }
-        ${
+        }${
           onUpdateWithoutDeps.length
             ? `updated() {
             ${onUpdateWithoutDeps.map((hook) => hook.code).join('\n')}
           },`
             : ''
-        }
-        ${
+        }${
           onUpdateWithDeps.length
             ? `watch: {
             ${onUpdateWithDeps
@@ -246,30 +241,21 @@ export function generateOptionsApiScript(
               .join(',')}
           },`
             : ''
-        }
-        ${
+        }${
           component.hooks.onUnMount
             ? `unmounted() {
                 ${component.hooks.onUnMount.code}
               },`
             : ''
-        }
-
-        ${
+        }${
           getterString.length < 4
             ? ''
-            : `
-          computed: ${getterString},
-        `
-        }
-        ${
+            : `computed: ${getterString},`
+        }${
           functionsString.length < 4
             ? ''
-            : `
-          methods: ${functionsString},
-        `
-        }
-        ${Object.entries(component.meta.vueConfig || {})
+            : `methods: ${functionsString},`
+        }${Object.entries(component.meta.vueConfig || {})
           .map(([k, v]) => `${k}: ${v}`)
           .join(',')}
         }
