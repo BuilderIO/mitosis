@@ -30,8 +30,8 @@ import {
   DO_NOT_USE_ARGS,
   DO_NOT_USE_CONTEXT_VARS_TRANSFORMS,
   DO_NOT_USE_VARS_TRANSFORMS,
-  stripStateAndPropsRefs,
   StripStateAndPropsRefsOptions,
+  stripStateAndPropsRefs,
 } from '../helpers/strip-state-and-props-refs';
 import { collectCss } from '../helpers/styles/collect-css';
 import {
@@ -41,7 +41,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { MitosisComponent } from '../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
@@ -599,12 +599,16 @@ const htmlDecode = (html: string) => html.replace(/&quot;/gi, '"');
 export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
   (_options = {}) =>
   ({ component }) => {
-    const options: InternalToHtmlOptions = initializeOptions('html', {
-      ..._options,
-      onChangeJsById: {},
-      js: '',
-      namesMap: {},
-      format: 'script',
+    const options: InternalToHtmlOptions = initializeOptions({
+      target: 'html',
+      component,
+      defaults: {
+        ..._options,
+        onChangeJsById: {},
+        js: '',
+        namesMap: {},
+        format: 'script',
+      },
     });
     let json = fastClone(component);
     if (options.plugins) {
@@ -872,13 +876,17 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
     const ComponentName = component.name;
     const kebabName = kebabCase(ComponentName);
 
-    const options: InternalToHtmlOptions = initializeOptions('customElement', {
-      prefix: kebabName,
-      ..._options,
-      onChangeJsById: {},
-      js: '',
-      namesMap: {},
-      format: 'class',
+    const options: InternalToHtmlOptions = initializeOptions({
+      target: 'customElement',
+      component,
+      defaults: {
+        prefix: kebabName,
+        ..._options,
+        onChangeJsById: {},
+        js: '',
+        namesMap: {},
+        format: 'class',
+      },
     });
     let json = fastClone(component);
     if (options.plugins) {

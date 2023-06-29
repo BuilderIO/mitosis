@@ -24,7 +24,7 @@ import {
   runPreJsonPlugins,
 } from '../../modules/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
@@ -152,9 +152,13 @@ export const componentToMarko: TranspilerGenerator<ToMarkoOptions> =
   (userOptions = {}) =>
   ({ component }) => {
     let json = fastClone(component);
-    const options = initializeOptions<InternalToMarkoOptions>('marko', {
-      ...userOptions,
-      component: json,
+    const options = initializeOptions<InternalToMarkoOptions>({
+      target: 'marko',
+      component,
+      defaults: {
+        ...userOptions,
+        component: json,
+      },
     });
 
     if (options.plugins) {

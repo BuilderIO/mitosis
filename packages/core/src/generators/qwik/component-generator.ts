@@ -17,9 +17,9 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { addPreventDefault } from './helpers/add-prevent-default';
 import { stableInject } from './helpers/stable-inject';
-import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
+import { StateInit, emitStateMethodsAndRewriteBindings, emitUseStore } from './helpers/state';
 import { renderJSXNodes } from './jsx';
-import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
+import { File, SrcBuilder, arrowFnBlock, invoke } from './src-generator';
 
 Error.stackTraceLimit = 9999;
 
@@ -90,7 +90,12 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
     // Make a copy we can safely mutate, similar to babel's toolchain
     let component = fastClone(_component);
 
-    const options = initializeOptions('qwik', DEFAULT_OPTIONS, userOptions);
+    const options = initializeOptions({
+      target: 'qwik',
+      component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: userOptions,
+    });
 
     component = runPreJsonPlugins(component, options.plugins);
     component = runPostJsonPlugins(component, options.plugins);
@@ -112,7 +117,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       emitImports(file, component);
       emitTypes(file, component);
       emitExports(file, component);
-      const metadata: Record<string, any> = component.meta.useMetadata || ({} as any);
+      const metadata = component.meta.useMetadata;
       const isLightComponent: boolean = metadata?.qwik?.component?.isLight || false;
       const mutable: string[] = metadata?.qwik?.mutable || [];
 

@@ -31,7 +31,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 import { MitosisComponent } from '..';
@@ -276,7 +276,12 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
     const stateVars = Object.keys(json?.state || {});
 
-    const options = initializeOptions('angular', DEFAULT_OPTIONS, userOptions);
+    const options = initializeOptions({
+      target: 'angular',
+      component: _component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: userOptions,
+    });
     options.plugins = [
       ...(options.plugins || []),
       CODE_PROCESSOR_PLUGIN((codeType) => {
