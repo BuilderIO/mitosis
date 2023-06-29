@@ -102,7 +102,7 @@ function provideContext(json: MitosisComponent, options: ToReactOptions): string
       } else if (ref) {
         json.children = [
           createMitosisNode({
-            name: 'Context.Provider',
+            name: `${name}.Provider`,
             children: json.children,
             ...(ref && {
               bindings: {

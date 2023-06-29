@@ -15,7 +15,7 @@ const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) 
     ${Object.values(json.context.set)
       .map((setVal) => {
         const key = getContextKey(setVal);
-        return `[${key}]: ${getContextValue({ options, json, thisPrefix: '_this' })(setVal)}`;
+        return `[${key}]: ${getContextValue(setVal)}`;
       })
       .join(',')}
   }`;

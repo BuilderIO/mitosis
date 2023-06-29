@@ -5,7 +5,7 @@ import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { getBindingsCode } from '../../helpers/get-bindings';
 import { traceReferenceToModulePath } from '../../helpers/trace-reference-to-module-path';
 import { JSONOrNode } from '../../types/json';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisComponent, ReactivityType } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { getPropsTypeRef } from './component-types';
 import { jsxElementToJson } from './element-parser';
@@ -157,11 +157,27 @@ export const componentFunctionToJson = (
                 type: 'function',
               };
             } else {
+              const stateOptions = init.arguments[1];
+
+              let propertyType: ReactivityType = 'normal';
+
+              if (types.isObjectExpression(stateOptions)) {
+                for (const prop of stateOptions.properties) {
+                  if (!types.isProperty(prop) || !types.isIdentifier(prop.key)) continue;
+                  const isReactive = prop.key.name === 'reactive';
+
+                  if (isReactive && types.isBooleanLiteral(prop.value) && prop.value.value) {
+                    propertyType = 'reactive';
+                  }
+                }
+              }
+
               // Value as init, like:
               // useState(true)
               state[varName] = {
                 code: parseCode(value),
                 type: 'property',
+                propertyType,
               };
             }
 

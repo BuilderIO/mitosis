@@ -1,5 +1,5 @@
 import { types } from '@babel/core';
-import { pipe } from 'fp-ts/lib/function';
+import { flow, identity, pipe } from 'fp-ts/lib/function';
 import { pickBy } from 'lodash';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { babelTransformExpression } from '../../helpers/babel-transform';
@@ -213,13 +213,13 @@ export const processBinding = ({
             return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
         }
       }),
-      // bindings does not need process refs and prefix this
-      (x) =>
-        codeType === 'bindings'
-          ? x
-          : processRefs({ input: x, component: json, options, thisPrefix }),
-      (x) => (codeType === 'bindings' ? x : prefixMethodsWithThis(x, json, options)),
-      (x) => (preserveGetter === false ? stripGetter(x) : x),
+      codeType === 'bindings'
+        ? identity
+        : flow(
+            (x) => processRefs({ input: x, component: json, options, thisPrefix }),
+            (x) => prefixMethodsWithThis(x, json, options),
+          ),
+      preserveGetter === false ? stripGetter : identity,
     );
   } catch (e) {
     console.error('could not process bindings in ', { code });
@@ -227,19 +227,11 @@ export const processBinding = ({
   }
 };
 
-export const getContextValue =
-  (args: Pick<ProcessBinding, 'options' | 'json' | 'thisPrefix'>) =>
-  ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
-    const valueStr = value
-      ? stringifyContextValue(value, {
-          valueMapper: (code) => processBinding({ code, ...args, preserveGetter: true }),
-        })
-      : ref
-      ? processBinding({ code: ref, ...args, preserveGetter: true })
-      : null;
+export const getContextValue = ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
+  const valueStr = value ? stringifyContextValue(value) : ref;
 
-    return valueStr;
-  };
+  return valueStr;
+};
 
 export const checkIfContextHasStrName = (context: ContextGetInfo | ContextSetInfo) => {
   // check if the name is wrapped in single or double quotes

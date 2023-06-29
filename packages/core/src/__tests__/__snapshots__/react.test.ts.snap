@@ -130,13 +130,13 @@ function MyBasicComponent(props) {
   }, []);
 
   return (
-    <Context.Provider value={createInjector()}>
+    <Injector.Provider value={createInjector()}>
       <div>
         {myService.method(\\"hello\\") + name}
         Hello! I can run in React, Vue, Solid, or Liquid!
         <input onChange={(event) => onChange} />
       </div>
-    </Context.Provider>
+    </Injector.Provider>
   );
 }
 
@@ -3230,13 +3230,13 @@ function MyBasicComponent(props: any) {
   }, []);
 
   return (
-    <Context.Provider value={createInjector()}>
+    <Injector.Provider value={createInjector()}>
       <div>
         {myService.method(\\"hello\\") + name}
         Hello! I can run in React, Vue, Solid, or Liquid!
         <input onChange={(event) => onChange} />
       </div>
-    </Context.Provider>
+    </Injector.Provider>
   );
 }
 
@@ -6604,13 +6604,13 @@ function SmileReviews(props) {
         {state.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-94a2f244\\" />
+            <input placeholder=\\"Title\\" className=\\"input-4e06abd9\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-94a2f244\\"
+              className=\\"textarea-4e06abd9\\"
             />
             <button
-              className=\\"button-94a2f244\\"
+              className=\\"button-4e06abd9\\"
               onClick={(event) => {
                 event.preventDefault();
                 state.showReviewPrompt = false;
@@ -6622,8 +6622,8 @@ function SmileReviews(props) {
         ) : null}
 
         {state.reviews?.map((review, index) => (
-          <div className=\\"review-94a2f244\\" key={review.id}>
-            <img className=\\"img-94a2f244\\" src={review.avatar} />
+          <div className=\\"review-4e06abd9\\" key={review.id}>
+            <img className=\\"img-4e06abd9\\" src={review.avatar} />
 
             <div
               className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
@@ -6641,20 +6641,20 @@ function SmileReviews(props) {
         ))}
       </div>
 
-      <style>{\`.input-94a2f244 {
+      <style>{\`.input-4e06abd9 {
   display: block;
-}.textarea-94a2f244 {
+}.textarea-4e06abd9 {
   display: block;
-}.button-94a2f244 {
+}.button-4e06abd9 {
   display: block;
-}.review-94a2f244 {
+}.review-4e06abd9 {
   margin: 10px;
   padding: 10px;
   background: white;
   display: flex;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}.img-94a2f244 {
+}.img-4e06abd9 {
   height: 30px;
   width: 30px;
   margin-right: 10px;
@@ -6710,13 +6710,13 @@ function SmileReviews(props) {
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-208b4df4\\" />
+            <input placeholder=\\"Title\\" className=\\"input-33281325\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-208b4df4\\"
+              className=\\"textarea-33281325\\"
             />
             <button
-              className=\\"button-208b4df4\\"
+              className=\\"button-33281325\\"
               onClick={(event) => {
                 event.preventDefault();
                 setShowReviewPrompt(false);
@@ -6728,8 +6728,8 @@ function SmileReviews(props) {
         ) : null}
 
         {reviews?.map((review, index) => (
-          <div className=\\"review-208b4df4\\" key={review.id}>
-            <img className=\\"img-208b4df4\\" src={review.avatar} />
+          <div className=\\"review-33281325\\" key={review.id}>
+            <img className=\\"img-33281325\\" src={review.avatar} />
 
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
               <div>
@@ -6745,20 +6745,20 @@ function SmileReviews(props) {
         ))}
       </div>
 
-      <style>{\`.input-208b4df4 {
+      <style>{\`.input-33281325 {
   display: block;
-}.textarea-208b4df4 {
+}.textarea-33281325 {
   display: block;
-}.button-208b4df4 {
+}.button-33281325 {
   display: block;
-}.review-208b4df4 {
+}.review-33281325 {
   margin: 10px;
   padding: 10px;
   background: white;
   display: flex;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}.img-208b4df4 {
+}.img-33281325 {
   height: 30px;
   width: 30px;
   margin-right: 10px;
@@ -6898,23 +6898,14 @@ export default MyComponent;
 `;
 
 exports[`React > svelte > Javascript Test > context 1`] = `
-"import * as React from \\"react\\";
-import { useState, useContext } from \\"react\\";
-
-function MyComponent(props) {
-  const [activeTab, setActiveTab] = useState(() => 0);
-
-  const disabled = useContext(\\"disabled\\");
-
-  return (
-    <Context.Provider value={activeTab}>
-      <div>{activeTab}</div>
-    </Context.Provider>
-  );
-}
-
-export default MyComponent;
-"
+"'>' expected. (30:13)
+  28 | return (
+  29 |
+> 30 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+     |             ^
+  31 |
+  32 |
+  33 |"
 `;
 
 exports[`React > svelte > Javascript Test > each 1`] = `
@@ -7302,23 +7293,14 @@ export default MyComponent;
 `;
 
 exports[`React > svelte > Typescript Test > context 1`] = `
-"import * as React from \\"react\\";
-import { useState, useContext } from \\"react\\";
-
-function MyComponent(props: any) {
-  const [activeTab, setActiveTab] = useState(() => 0);
-
-  const disabled = useContext(\\"disabled\\");
-
-  return (
-    <Context.Provider value={activeTab}>
-      <div>{activeTab}</div>
-    </Context.Provider>
-  );
-}
-
-export default MyComponent;
-"
+"'>' expected. (30:13)
+  28 | return (
+  29 |
+> 30 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+     |             ^
+  31 |
+  32 |
+  33 |"
 `;
 
 exports[`React > svelte > Typescript Test > each 1`] = `
