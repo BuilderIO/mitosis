@@ -160,10 +160,10 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             return flow(stripStateAndProps({ json, options }), babelTransformCode);
           case 'bindings':
           case 'hooks-deps':
-          case 'context-set':
           case 'state':
             return flow(stripStateAndProps({ json, options }), stripGetter);
           case 'properties':
+          case 'context-set':
             return flow(stripStateAndProps({ json, options }));
           case 'dynamic-jsx-elements':
           case 'types':
