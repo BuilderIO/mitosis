@@ -2,12 +2,12 @@ import { onMount, useState, useStore } from '@builder.io/mitosis';
 import SignalItemList from './child.lite';
 
 export default function SignalParent() {
-  const [n] = useState('123', { reactive: true });
+  const [n] = useState(['123'], { reactive: true });
 
-  const store = useStore({
+  const state = useStore({
     someFn() {
       console.log(n, n.value);
-      n.value = '123';
+      n.value[0] = '123';
     },
   });
 
@@ -17,9 +17,9 @@ export default function SignalParent() {
 
   return (
     <div>
-      <SignalItemList list={[n]} />
+      <SignalItemList list={n} />
       <span>{n.value}</span>
-      <button onClick={store.someFn}>Click me</button>
+      <button onClick={state.someFn}>Click me</button>
       <div title={n.value.toString()} />
     </div>
   );

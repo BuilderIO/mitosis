@@ -183,14 +183,30 @@ const parseSvelteComponent = async ({ path, file }: { path: string; file: string
   return output;
 };
 
+const findTsConfigFile = (options: MitosisConfig) => {
+  const optionPath = options.parserOptions?.jsx?.tsConfigFilePath;
+
+  if (optionPath && pathExists(optionPath)) {
+    return optionPath;
+  }
+
+  const defaultPath = [cwd, 'tsconfig.json'].join('/');
+
+  if (pathExists(defaultPath)) {
+    return defaultPath;
+  }
+
+  return undefined;
+};
+
 const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
   const paths = getFiles({ files: options.files, exclude: options.exclude }).filter(
     checkIsMitosisComponentFilePath,
   );
 
-  const tsProject = options.parserOptions?.jsx?.tsConfigFilePath
-    ? createTypescriptProject(options.parserOptions.jsx.tsConfigFilePath)
-    : undefined;
+  const tsConfigFilePath = findTsConfigFile(options);
+
+  const tsProject = tsConfigFilePath ? createTypescriptProject(tsConfigFilePath) : undefined;
 
   return Promise.all(
     paths.map(async (path) => {

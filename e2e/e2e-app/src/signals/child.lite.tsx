@@ -1,32 +1,32 @@
 import { onMount, Signal, useStore } from '@builder.io/mitosis';
 
 interface ItemListProps {
-  list: Signal<string>[];
+  list: Signal<string[]>;
 }
 
 export default function SignalItemList(props: ItemListProps) {
-  const store = useStore({
+  const state = useStore({
     someFn() {
-      console.log(props.list, props.list[0].value);
-      props.list[0].value = 'hello';
+      console.log(props.list, props.list.value[0]);
+      props.list.value[0] = 'hello';
     },
   });
 
   onMount(() => {
-    console.log(props.list[0], props.list[0].value);
+    console.log(props.list, props.list.value[0]);
   });
 
   return (
     <ul class="shadow-md rounded">
-      {props.list.map((item) => (
+      {props.list.value.map((item) => (
         <li
           class="border-gray-200 border-b"
           css={{
             padding: '10px',
           }}
         >
-          {item.value}
-          <button onClick={store.someFn}>Click me</button>
+          {item}
+          <button onClick={state.someFn}>Click me</button>
         </li>
       ))}
     </ul>
