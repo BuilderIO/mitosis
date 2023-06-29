@@ -105,7 +105,7 @@ const BASE_OPTIONS: ToVueOptions = {
 const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
   (userOptions) =>
   ({ component, path }) => {
-    let options = initializeOptions(
+    const options = initializeOptions(
       userOptions?.vueVersion === 2 ? 'vue2' : 'vue3',
       BASE_OPTIONS,
       userOptions,
