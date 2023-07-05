@@ -9,7 +9,7 @@ type TargetOptions = {
 
 export type ComponentMetadata = {
   [index: string]: any;
-  options: TargetOptions;
+  options?: TargetOptions;
   qwik?: {
     component?: {
       isLight?: boolean;
