@@ -117,7 +117,7 @@ export const blockToSolid = ({
     str += json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToSolid({ component, json: item, options }))
-      .join('\n');
+      .join('');
   }
 
   if (json.name === 'Fragment') {

@@ -439,7 +439,7 @@ const _componentToReact = (
 
     return (
       ${wrap ? openFrag(options) : ''}
-      ${json.children.map((item) => blockToReact(item, options, json, [])).join('\n')}
+      ${json.children.map((item) => blockToReact(item, options, json, [])).join('')}
       ${
         componentHasStyles && options.stylesType === 'styled-jsx'
           ? `<style jsx>{\`${css}\`}</style>`

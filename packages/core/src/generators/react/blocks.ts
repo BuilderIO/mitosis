@@ -7,7 +7,7 @@ import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
 import { getForArguments } from '../../helpers/nodes/for';
 import { isSlotProperty } from '../../helpers/slots';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
+import { ForNode, MitosisNode, checkIsForNode } from '../../types/mitosis-node';
 import { closeFrag, getFragment, openFrag, processBinding, wrapInFragment } from './helpers';
 import { updateStateSettersInCode } from './state';
 import { ToReactOptions } from './types';
@@ -250,7 +250,7 @@ export const blockToReact = (
   if (json.children) {
     childrenNodes = json.children
       .map((item) => blockToReact(item, options, component, needsToRenderSlots))
-      .join('\n');
+      .join('');
   }
   if (needsToRenderSlots.length) {
     needsToRenderSlots.forEach(({ key, value }) => {

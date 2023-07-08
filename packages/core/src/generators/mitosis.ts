@@ -107,7 +107,7 @@ export const blockToMitosis = (
   }
   str += '>';
   if (json.children) {
-    str += json.children.map((item) => blockToMitosis(item, options, component)).join('\n');
+    str += json.children.map((item) => blockToMitosis(item, options, component)).join('');
   }
 
   str += `</${json.name}>`;
@@ -200,7 +200,7 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
       ${!json.hooks.onUnMount?.code ? '' : `onUnMount(() => { ${json.hooks.onUnMount.code} })`}
 
       return (${addWrapper ? '<>' : ''}
-        ${json.children.map((item) => blockToMitosis(item, options, component)).join('\n')}
+        ${json.children.map((item) => blockToMitosis(item, options, component)).join('')}
         ${addWrapper ? '</>' : ''})
     }
 

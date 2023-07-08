@@ -183,9 +183,8 @@ function MyBasicForShowComponent(props) {
                   setName(event.target.value + \\" and \\" + person);
                 }}
               />
-              Hello
-              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
-              Liquid!
+              Hello {person}! I can run in Qwik, Web Component, React, Vue,
+              Solid, or Liquid!
             </Show>
           );
         }}
@@ -264,9 +263,8 @@ function MyBasicForShowComponent(props) {
                     setName(event.target.value + \\" and \\" + person);
                   }}
                 />
-                Hello
-                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-                or Liquid!
+                Hello {person}! I can run in Qwik, Web Component, React, Vue,
+                Solid, or Liquid!
               </Show>
             );
           }}
@@ -366,12 +364,7 @@ function MyBasicOnMountUpdateComponent(props) {
     setName(\\"PatrickJS onMount\\" + props.bye);
   });
 
-  return (
-    <div>
-      Hello
-      {name()}
-    </div>
-  );
+  return <div>Hello {name()}</div>;
 }
 
 export default MyBasicOnMountUpdateComponent;
@@ -394,10 +387,7 @@ function MyBasicOnMountUpdateComponent(props) {
 
   return (
     <>
-      <div>
-        Hello
-        {name()}
-      </div>
+      <div>Hello {name()}</div>
     </>
   );
 }
@@ -645,9 +635,8 @@ function MyBasicForComponent(props) {
                   setName(event.target.value + \\" and \\" + person);
                 }}
               />
-              Hello
-              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
-              Liquid!
+              Hello {person}! I can run in Qwik, Web Component, React, Vue,
+              Solid, or Liquid!
             </>
           );
         }}
@@ -688,9 +677,8 @@ function MyBasicForComponent(props) {
                     setName(event.target.value + \\" and \\" + person);
                   }}
                 />
-                Hello
-                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-                or Liquid!
+                Hello {person}! I can run in Qwik, Web Component, React, Vue,
+                Solid, or Liquid!
               </>
             );
           }}
@@ -887,9 +875,7 @@ function MyPreviousComponent(props) {
   return (
     <div>
       <h1>
-        Now:
-        {count()}, before:
-        {prevCount}
+        Now: {count()}, before: {prevCount}
       </h1>
       <button onClick={(event) => setCount(1)}>Increment</button>
     </div>
@@ -930,9 +916,7 @@ function MyPreviousComponent(props) {
     <>
       <div>
         <h1>
-          Now:
-          {count()}, before:
-          {prevCount}
+          Now: {count()}, before: {prevCount}
         </h1>
         <button onClick={(event) => setCount(1)}>Increment</button>
       </div>
@@ -2146,7 +2130,7 @@ function FormComponent(props) {
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder-form-error-text pre-441bb54e\\">
+          <pre class=\\"builder-form-error-text pre-6c59c35e\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
@@ -2158,7 +2142,7 @@ function FormComponent(props) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-441bb54e {
+        .pre-6c59c35e {
           padding: 10px;
           color: red;
           text-align: center;
@@ -2515,6 +2499,30 @@ function FormInputComponent(props) {
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > Literal Space 1`] = `
+"function Hello(props) {
+  return <div>Hello {props.name ?? \\"World\\"}</div>;
+}
+
+export default Hello;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > Literal Space 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function Hello(props) {
+  return (
+    <>
+      <div>Hello {props.name ?? \\"World\\"}</div>
+    </>
+  );
+}
+
+export default Hello;
 "
 `;
 
@@ -2973,10 +2981,7 @@ function SmileReviews(props) {
                 src={review.avatar}
               />
               <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-                <div>
-                  N:
-                  {index}
-                </div>
+                <div>N: {index}</div>
                 <div>{review.author}</div>
                 <div>{review.reviewMessage}</div>
               </div>
@@ -3056,10 +3061,7 @@ function SmileReviews(props) {
               <div class=\\"div-8aa000e4\\" key={review.id}>
                 <img class=\\"img-8aa000e4\\" src={review.avatar} />
                 <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-                  <div>
-                    N:
-                    {index}
-                  </div>
+                  <div>N: {index}</div>
                   <div>{review.author}</div>
                   <div>{review.reviewMessage}</div>
                 </div>
@@ -3306,12 +3308,7 @@ function MyComponent(props) {
     setName(value);
   }
 
-  return (
-    <div>
-      Hello
-      {name()}
-    </div>
-  );
+  return <div>Hello {name()}</div>;
 }
 
 export default MyComponent;
@@ -3336,10 +3333,7 @@ function MyComponent(props) {
 
   return (
     <>
-      <div>
-        Hello
-        {name()}
-      </div>
+      <div>Hello {name()}</div>
     </>
   );
 }
@@ -3365,8 +3359,7 @@ function MyBasicForNoTagRefComponent(props) {
 
   return (
     <Dynamic component={TagNameGetter()}>
-      Hello
-      <Dynamic component={tag()}>{name()}</Dynamic>
+      Hello <Dynamic component={tag()}>{name()}</Dynamic>
       <For each={props.actions}>
         {(action, _index) => {
           const index = _index();
@@ -3406,8 +3399,7 @@ function MyBasicForNoTagRefComponent(props) {
   return (
     <>
       <Dynamic component={TagNameGetter()}>
-        Hello
-        <Dynamic component={tag()}>{name()}</Dynamic>
+        Hello <Dynamic component={tag()}>{name()}</Dynamic>
         <For each={props.actions}>
           {(action, _index) => {
             const index = _index();
@@ -3452,12 +3444,7 @@ function MyBasicOnUpdateReturnComponent(props) {
   }
   createEffect(on(() => [name()], onUpdateFn_0));
 
-  return (
-    <div>
-      Hello!
-      {name()}
-    </div>
-  );
+  return <div>Hello! {name()}</div>;
 }
 
 export default MyBasicOnUpdateReturnComponent;
@@ -3492,10 +3479,7 @@ function MyBasicOnUpdateReturnComponent(props) {
 
   return (
     <>
-      <div>
-        Hello!
-        {name()}
-      </div>
+      <div>Hello! {name()}</div>
     </>
   );
 }
@@ -4078,13 +4062,7 @@ exports[`Solid > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 };
 
 function ComponentWithTypes(props) {
-  return (
-    <div>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </div>
-  );
+  return <div> Hello {props.name || DEFAULT_VALUES.name}</div>;
 }
 
 export default ComponentWithTypes;
@@ -4101,11 +4079,7 @@ const DEFAULT_VALUES = {
 function ComponentWithTypes(props) {
   return (
     <>
-      <div>
-        {\\" \\"}
-        Hello
-        {props.name || DEFAULT_VALUES.name}
-      </div>
+      <div> Hello {props.name || DEFAULT_VALUES.name}</div>
     </>
   );
 }
@@ -4511,12 +4485,7 @@ export const defaultValues = {
 function OnInit(props) {
   const [name, setName] = createSignal(\\"\\");
 
-  return (
-    <div>
-      Default name defined by parent
-      {name()}
-    </div>
-  );
+  return <div>Default name defined by parent {name()}</div>;
 }
 
 export default OnInit;
@@ -4537,10 +4506,7 @@ function OnInit(props) {
 
   return (
     <>
-      <div>
-        Default name defined by parent
-        {name()}
-      </div>
+      <div>Default name defined by parent {name()}</div>
     </>
   );
 }
@@ -4698,10 +4664,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Javascript Test > preserveTyping 1`] = `
 "function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -4715,10 +4678,7 @@ exports[`Solid > jsx > Javascript Test > preserveTyping 2`] = `
 function MyBasicComponent(props) {
   return (
     <>
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {props.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
     </>
   );
 }
@@ -4772,10 +4732,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Javascript Test > propsInterface 1`] = `
 "function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -4789,10 +4746,7 @@ exports[`Solid > jsx > Javascript Test > propsInterface 2`] = `
 function MyBasicComponent(props) {
   return (
     <>
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {props.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
     </>
   );
 }
@@ -4804,10 +4758,7 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Javascript Test > propsType 1`] = `
 "function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -4821,10 +4772,7 @@ exports[`Solid > jsx > Javascript Test > propsType 2`] = `
 function MyBasicComponent(props) {
   return (
     <>
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {props.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
     </>
   );
 }
@@ -6237,10 +6185,7 @@ function MyBasicComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   return (
-    <div>
-      Hello
-      {name()}! I can run in React, Qwik, Vue, Solid, or Liquid!
-    </div>
+    <div>Hello {name()}! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
   );
 }
 
@@ -6259,8 +6204,7 @@ function MyBasicComponent(props) {
   return (
     <>
       <div>
-        Hello
-        {name()}! I can run in React, Qwik, Vue, Solid, or Liquid!
+        Hello {name()}! I can run in React, Qwik, Vue, Solid, or Liquid!
       </div>
     </>
   );
@@ -6462,9 +6406,8 @@ function MyBasicForShowComponent(props: any) {
                   setName(event.target.value + \\" and \\" + person);
                 }}
               />
-              Hello
-              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
-              Liquid!
+              Hello {person}! I can run in Qwik, Web Component, React, Vue,
+              Solid, or Liquid!
             </Show>
           );
         }}
@@ -6546,9 +6489,8 @@ function MyBasicForShowComponent(props: any) {
                     setName(event.target.value + \\" and \\" + person);
                   }}
                 />
-                Hello
-                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-                or Liquid!
+                Hello {person}! I can run in Qwik, Web Component, React, Vue,
+                Solid, or Liquid!
               </Show>
             );
           }}
@@ -6653,12 +6595,7 @@ function MyBasicOnMountUpdateComponent(props: Props) {
     setName(\\"PatrickJS onMount\\" + props.bye);
   });
 
-  return (
-    <div>
-      Hello
-      {name()}
-    </div>
-  );
+  return <div>Hello {name()}</div>;
 }
 
 export default MyBasicOnMountUpdateComponent;
@@ -6685,10 +6622,7 @@ function MyBasicOnMountUpdateComponent(props: Props) {
 
   return (
     <>
-      <div>
-        Hello
-        {name()}
-      </div>
+      <div>Hello {name()}</div>
     </>
   );
 }
@@ -6945,9 +6879,8 @@ function MyBasicForComponent(props: any) {
                   setName(event.target.value + \\" and \\" + person);
                 }}
               />
-              Hello
-              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
-              Liquid!
+              Hello {person}! I can run in Qwik, Web Component, React, Vue,
+              Solid, or Liquid!
             </>
           );
         }}
@@ -6988,9 +6921,8 @@ function MyBasicForComponent(props: any) {
                     setName(event.target.value + \\" and \\" + person);
                   }}
                 />
-                Hello
-                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-                or Liquid!
+                Hello {person}! I can run in Qwik, Web Component, React, Vue,
+                Solid, or Liquid!
               </>
             );
           }}
@@ -7204,9 +7136,7 @@ function MyPreviousComponent(props: Props) {
   return (
     <div>
       <h1>
-        Now:
-        {count()}, before:
-        {prevCount}
+        Now: {count()}, before: {prevCount}
       </h1>
       <button onClick={(event) => setCount(1)}>Increment</button>
     </div>
@@ -7250,9 +7180,7 @@ function MyPreviousComponent(props: Props) {
     <>
       <div>
         <h1>
-          Now:
-          {count()}, before:
-          {prevCount}
+          Now: {count()}, before: {prevCount}
         </h1>
         <button onClick={(event) => setCount(1)}>Increment</button>
       </div>
@@ -8609,7 +8537,7 @@ function FormComponent(props: FormProps) {
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder-form-error-text pre-0a36e30c\\">
+          <pre class=\\"builder-form-error-text pre-0f4ff540\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
@@ -8621,7 +8549,7 @@ function FormComponent(props: FormProps) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-0a36e30c {
+        .pre-0f4ff540 {
           padding: 10px;
           color: red;
           text-align: center;
@@ -9066,6 +8994,30 @@ function FormInputComponent(props: FormInputProps) {
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > Literal Space 1`] = `
+"function Hello(props: any) {
+  return <div>Hello {props.name ?? \\"World\\"}</div>;
+}
+
+export default Hello;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > Literal Space 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function Hello(props: any) {
+  return (
+    <>
+      <div>Hello {props.name ?? \\"World\\"}</div>
+    </>
+  );
+}
+
+export default Hello;
 "
 `;
 
@@ -9608,10 +9560,7 @@ function SmileReviews(props: SmileReviewsProps) {
                 src={review.avatar}
               />
               <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-                <div>
-                  N:
-                  {index}
-                </div>
+                <div>N: {index}</div>
                 <div>{review.author}</div>
                 <div>{review.reviewMessage}</div>
               </div>
@@ -9695,10 +9644,7 @@ function SmileReviews(props: SmileReviewsProps) {
               <div class=\\"div-66d09606\\" key={review.id}>
                 <img class=\\"img-66d09606\\" src={review.avatar} />
                 <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-                  <div>
-                    N:
-                    {index}
-                  </div>
+                  <div>N: {index}</div>
                   <div>{review.author}</div>
                   <div>{review.reviewMessage}</div>
                 </div>
@@ -10035,12 +9981,7 @@ function MyComponent(props: any) {
     setName(value);
   }
 
-  return (
-    <div>
-      Hello
-      {name()}
-    </div>
-  );
+  return <div>Hello {name()}</div>;
 }
 
 export default MyComponent;
@@ -10065,10 +10006,7 @@ function MyComponent(props: any) {
 
   return (
     <>
-      <div>
-        Hello
-        {name()}
-      </div>
+      <div>Hello {name()}</div>
     </>
   );
 }
@@ -10094,8 +10032,7 @@ function MyBasicForNoTagRefComponent(props: any) {
 
   return (
     <Dynamic component={TagNameGetter()}>
-      Hello
-      <Dynamic component={tag()}>{name()}</Dynamic>
+      Hello <Dynamic component={tag()}>{name()}</Dynamic>
       <For each={props.actions}>
         {(action, _index) => {
           const index = _index();
@@ -10135,8 +10072,7 @@ function MyBasicForNoTagRefComponent(props: any) {
   return (
     <>
       <Dynamic component={TagNameGetter()}>
-        Hello
-        <Dynamic component={tag()}>{name()}</Dynamic>
+        Hello <Dynamic component={tag()}>{name()}</Dynamic>
         <For each={props.actions}>
           {(action, _index) => {
             const index = _index();
@@ -10181,12 +10117,7 @@ function MyBasicOnUpdateReturnComponent(props: any) {
   }
   createEffect(on(() => [name()], onUpdateFn_0));
 
-  return (
-    <div>
-      Hello!
-      {name()}
-    </div>
-  );
+  return <div>Hello! {name()}</div>;
 }
 
 export default MyBasicOnUpdateReturnComponent;
@@ -10221,10 +10152,7 @@ function MyBasicOnUpdateReturnComponent(props: any) {
 
   return (
     <>
-      <div>
-        Hello!
-        {name()}
-      </div>
+      <div>Hello! {name()}</div>
     </>
   );
 }
@@ -10872,13 +10800,7 @@ const DEFAULT_VALUES: Props = {
 };
 
 function ComponentWithTypes(props: Props) {
-  return (
-    <div>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </div>
-  );
+  return <div> Hello {props.name || DEFAULT_VALUES.name}</div>;
 }
 
 export default ComponentWithTypes;
@@ -10898,11 +10820,7 @@ const DEFAULT_VALUES: Props = {
 function ComponentWithTypes(props: Props) {
   return (
     <>
-      <div>
-        {\\" \\"}
-        Hello
-        {props.name || DEFAULT_VALUES.name}
-      </div>
+      <div> Hello {props.name || DEFAULT_VALUES.name}</div>
     </>
   );
 }
@@ -11334,12 +11252,7 @@ export const defaultValues = {
 function OnInit(props: Props) {
   const [name, setName] = createSignal(\\"\\");
 
-  return (
-    <div>
-      Default name defined by parent
-      {name()}
-    </div>
-  );
+  return <div>Default name defined by parent {name()}</div>;
 }
 
 export default OnInit;
@@ -11363,10 +11276,7 @@ function OnInit(props: Props) {
 
   return (
     <>
-      <div>
-        Default name defined by parent
-        {name()}
-      </div>
+      <div>Default name defined by parent {name()}</div>
     </>
   );
 }
@@ -11563,10 +11473,7 @@ export interface MyBasicComponentProps {
 
 function MyBasicComponent(props: MyBasicComponentProps) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -11592,10 +11499,7 @@ export interface MyBasicComponentProps {
 function MyBasicComponent(props: MyBasicComponentProps) {
   return (
     <>
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {props.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
     </>
   );
 }
@@ -11663,10 +11567,7 @@ exports[`Solid > jsx > Typescript Test > propsInterface 1`] = `
 
 function MyBasicComponent(props: Person | never) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -11684,10 +11585,7 @@ interface Person {
 function MyBasicComponent(props: Person | never) {
   return (
     <>
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {props.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
     </>
   );
 }
@@ -11704,10 +11602,7 @@ exports[`Solid > jsx > Typescript Test > propsType 1`] = `
 
 function MyBasicComponent(props: Person) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -11725,10 +11620,7 @@ type Person = {
 function MyBasicComponent(props: Person) {
   return (
     <>
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {props.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
     </>
   );
 }
@@ -13321,14 +13213,8 @@ function MyComponent(props) {
         checked={fillings() === \\"Guac (extra)\\"}
         onInput={(event) => setFillings(event.target.value)}
       />
-      <p>
-        Tortilla:
-        {tortilla()}
-      </p>
-      <p>
-        Fillings:
-        {fillings()}
-      </p>
+      <p>Tortilla: {tortilla()}</p>
+      <p>Fillings: {fillings()}</p>
     </div>
   );
 }
@@ -13394,14 +13280,8 @@ function MyComponent(props) {
           checked={fillings() === \\"Guac (extra)\\"}
           onInput={(event) => setFillings(event.target.value)}
         />
-        <p>
-          Tortilla:
-          {tortilla()}
-        </p>
-        <p>
-          Fillings:
-          {fillings()}
-        </p>
+        <p>Tortilla: {tortilla()}</p>
+        <p>Fillings: {fillings()}</p>
       </div>
     </>
   );
@@ -13780,8 +13660,7 @@ function MyComponent(props) {
   return (
     <div>
       <input value={name()} />
-      Lowercase:
-      {lowercaseName()}
+      Lowercase: {lowercaseName()}
     </div>
   );
 }
@@ -13806,8 +13685,7 @@ function MyComponent(props) {
     <>
       <div>
         <input value={name()} />
-        Lowercase:
-        {lowercaseName()}
+        Lowercase: {lowercaseName()}
       </div>
     </>
   );
@@ -13848,8 +13726,7 @@ function MyComponent(props) {
         onInput={(event) => setB(event.target.value)}
         value={b()}
       />
-      Result:
-      {result()}
+      Result: {result()}
     </div>
   );
 }
@@ -13892,8 +13769,7 @@ function MyComponent(props) {
           onInput={(event) => setB(event.target.value)}
           value={b()}
         />
-        Result:
-        {result()}
+        Result: {result()}
       </div>
     </>
   );
@@ -14137,14 +14013,8 @@ function MyComponent(props: any) {
         checked={fillings() === \\"Guac (extra)\\"}
         onInput={(event) => setFillings(event.target.value)}
       />
-      <p>
-        Tortilla:
-        {tortilla()}
-      </p>
-      <p>
-        Fillings:
-        {fillings()}
-      </p>
+      <p>Tortilla: {tortilla()}</p>
+      <p>Fillings: {fillings()}</p>
     </div>
   );
 }
@@ -14210,14 +14080,8 @@ function MyComponent(props: any) {
           checked={fillings() === \\"Guac (extra)\\"}
           onInput={(event) => setFillings(event.target.value)}
         />
-        <p>
-          Tortilla:
-          {tortilla()}
-        </p>
-        <p>
-          Fillings:
-          {fillings()}
-        </p>
+        <p>Tortilla: {tortilla()}</p>
+        <p>Fillings: {fillings()}</p>
       </div>
     </>
   );
@@ -14596,8 +14460,7 @@ function MyComponent(props: any) {
   return (
     <div>
       <input value={name()} />
-      Lowercase:
-      {lowercaseName()}
+      Lowercase: {lowercaseName()}
     </div>
   );
 }
@@ -14622,8 +14485,7 @@ function MyComponent(props: any) {
     <>
       <div>
         <input value={name()} />
-        Lowercase:
-        {lowercaseName()}
+        Lowercase: {lowercaseName()}
       </div>
     </>
   );
@@ -14664,8 +14526,7 @@ function MyComponent(props: any) {
         onInput={(event) => setB(event.target.value)}
         value={b()}
       />
-      Result:
-      {result()}
+      Result: {result()}
     </div>
   );
 }
@@ -14708,8 +14569,7 @@ function MyComponent(props: any) {
           onInput={(event) => setB(event.target.value)}
           value={b()}
         />
-        Result:
-        {result()}
+        Result: {result()}
       </div>
     </>
   );

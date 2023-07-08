@@ -41,7 +41,6 @@ function MyBasicRefComponent(props) {
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </>
@@ -161,12 +160,7 @@ function MyBasicOnMountUpdateComponent(props) {
     setName(\\"PatrickJS onMount\\" + props.bye);
   }, []);
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyBasicOnMountUpdateComponent;
@@ -229,14 +223,9 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props) {
   return (
     <div>
-      {props.children}
-
-      {props.type}
-
+      {props.children} {props.type}
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent list={null} />
     </div>
   );
@@ -260,7 +249,6 @@ function MyBasicChildComponent(props) {
   return (
     <div>
       <MyBasicComponent id={dev} />
-
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </div>
@@ -345,7 +333,6 @@ function MyBasicRefComponent(props) {
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </>
@@ -419,11 +406,8 @@ function MyPreviousComponent(props) {
   return (
     <div>
       <h1>
-        Now:
-        {count}, before:
-        {prevCount.current}
+        Now: {count}, before: {prevCount.current}
       </h1>
-
       <button onClick={(event) => setCount(1)}>Increment</button>
     </div>
   );
@@ -450,7 +434,6 @@ function Button(props) {
           </a>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <button type=\\"button\\" {...props.attributes}>
@@ -495,9 +478,7 @@ function Column(props) {
       <div className=\\"builder-columns div\\">
         {props.columns?.map((column, index) => (
           <div className=\\"builder-column div-2\\">
-            {column.content}
-
-            {index}
+            {column.content} {index}
           </div>
         ))}
       </div>
@@ -537,11 +518,9 @@ function ContentSlotCode(props) {
   return (
     <div>
       {props.slotTesting}
-
       <div>
         <hr />
       </div>
-
       <div>{props.children}</div>
     </div>
   );
@@ -582,11 +561,9 @@ function ContentSlotJsxCode(props) {
             {showContent && props.slotContent ? (
               <>{props.slotContent || \\"{props.content}\\"}</>
             ) : null}
-
             <div>
               <hr />
             </div>
-
             <div>{props.children}</div>
           </div>
         </>
@@ -1105,10 +1082,8 @@ function Image(props) {
               />
             </>
           ) : null}
-
           <source srcset={props.srcset} />
         </picture>
-
         {props.children}
       </div>
       <style jsx>{\`
@@ -1198,6 +1173,17 @@ function FormInputComponent(props) {
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`React > jsx > Javascript Test > Literal Space 1`] = `
+"import * as React from \\"react\\";
+
+function Hello(props) {
+  return <div>Hello {props.name ?? \\"World\\"}</div>;
+}
+
+export default Hello;
 "
 `;
 
@@ -1325,9 +1311,7 @@ function SlotCode(props) {
   return (
     <div>
       {props.slotTop}
-
       {props.slotLeft || \\"Default left\\"}
-
       {props.children || \\"Default Child\\"}
     </div>
   );
@@ -1375,7 +1359,6 @@ function SmileReviews(props) {
         <button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </button>
-
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
@@ -1395,19 +1378,12 @@ function SmileReviews(props) {
             </button>
           </>
         ) : null}
-
         {reviews?.map((review, index) => (
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
-
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
@@ -1555,12 +1531,7 @@ function MyComponent(props) {
     setName(value);
   }
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyComponent;
@@ -1586,12 +1557,10 @@ function MyBasicForNoTagRefComponent(props) {
 
   return (
     <TagNameGetterRef>
-      Hello
-      <Tag>{name}</Tag>
+      Hello <Tag>{name}</Tag>
       {props.actions?.map((action) => (
         <TagName>
           <action.icon />
-
           <span>{action.text}</span>
         </TagName>
       ))}
@@ -1691,12 +1660,7 @@ function MyBasicOnUpdateReturnComponent(props) {
     };
   }, [name]);
 
-  return (
-    <div>
-      Hello!
-      {name}
-    </div>
-  );
+  return <div>Hello! {name}</div>;
 }
 
 export default MyBasicOnUpdateReturnComponent;
@@ -1929,7 +1893,6 @@ function Button(props) {
           </a>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <button
@@ -1975,7 +1938,6 @@ function Button(props) {
           </a>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <button
@@ -2010,13 +1972,7 @@ const DEFAULT_VALUES = {
 };
 
 function ComponentWithTypes(props) {
-  return (
-    <div>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </div>
-  );
+  return <div> Hello {props.name || DEFAULT_VALUES.name}</div>;
 }
 
 export default ComponentWithTypes;
@@ -2237,12 +2193,7 @@ function OnInit(props) {
     console.log(\\"set defaults with props\\");
   }, []);
 
-  return (
-    <div>
-      Default name defined by parent
-      {name}
-    </div>
-  );
+  return <div>Default name defined by parent {name}</div>;
 }
 
 export default OnInit;
@@ -2329,10 +2280,7 @@ exports[`React > jsx > Javascript Test > preserveTyping 1`] = `
 
 function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -2349,8 +2297,7 @@ function MyBasicComponent(props) {
 
   return (
     <div>
-      {props.children}
-      {props.type}
+      {props.children} {props.type}
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
   );
@@ -2365,10 +2312,7 @@ exports[`React > jsx > Javascript Test > propsInterface 1`] = `
 
 function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -2381,10 +2325,7 @@ exports[`React > jsx > Javascript Test > propsType 1`] = `
 
 function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -2661,7 +2602,6 @@ function RenderBlock(props) {
                     context={childrenContext()}
                   />
                 ))}
-
                 {childrenWithoutParentComponent()?.map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
@@ -2798,7 +2738,6 @@ function MyComponent(props) {
   return (
     <div>
       {props.name}
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce Wayne\\" />
@@ -2819,9 +2758,7 @@ function MyComponent(props) {
   return (
     <div>
       {props.name}
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce\\">
@@ -2958,9 +2895,7 @@ function SvgComponent(props) {
       <defs>
         <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </filter>
       </defs>
@@ -3081,10 +3016,7 @@ function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   return (
-    <div>
-      Hello
-      {name}! I can run in React, Qwik, Vue, Solid, or Liquid!
-    </div>
+    <div>Hello {name}! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
   );
 }
 
@@ -3137,7 +3069,6 @@ function MyBasicRefComponent(props: Props) {
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </>
@@ -3266,12 +3197,7 @@ function MyBasicOnMountUpdateComponent(props: Props) {
     setName(\\"PatrickJS onMount\\" + props.bye);
   }, []);
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyBasicOnMountUpdateComponent;
@@ -3339,14 +3265,9 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props: Props) {
   return (
     <div>
-      {props.children}
-
-      {props.type}
-
+      {props.children} {props.type}
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent list={null} />
     </div>
   );
@@ -3370,7 +3291,6 @@ function MyBasicChildComponent(props: any) {
   return (
     <div>
       <MyBasicComponent id={dev} />
-
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </div>
@@ -3459,7 +3379,6 @@ function MyBasicRefComponent(props: Props) {
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </>
@@ -3541,11 +3460,8 @@ function MyPreviousComponent(props: Props) {
   return (
     <div>
       <h1>
-        Now:
-        {count}, before:
-        {prevCount.current}
+        Now: {count}, before: {prevCount.current}
       </h1>
-
       <button onClick={(event) => setCount(1)}>Increment</button>
     </div>
   );
@@ -3579,7 +3495,6 @@ function Button(props: ButtonProps) {
           </a>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <button type=\\"button\\" {...props.attributes}>
@@ -3639,9 +3554,7 @@ function Column(props: ColumnProps) {
       <div className=\\"builder-columns div\\">
         {props.columns?.map((column, index) => (
           <div className=\\"builder-column div-2\\">
-            {column.content}
-
-            {index}
+            {column.content} {index}
           </div>
         ))}
       </div>
@@ -3687,11 +3600,9 @@ function ContentSlotCode(props: Props) {
   return (
     <div>
       {props.slotTesting}
-
       <div>
         <hr />
       </div>
-
       <div>{props.children}</div>
     </div>
   );
@@ -3737,11 +3648,9 @@ function ContentSlotJsxCode(props: Props) {
             {showContent && props.slotContent ? (
               <>{props.slotContent || \\"{props.content}\\"}</>
             ) : null}
-
             <div>
               <hr />
             </div>
-
             <div>{props.children}</div>
           </div>
         </>
@@ -4320,10 +4229,8 @@ function Image(props: ImageProps) {
               />
             </>
           ) : null}
-
           <source srcset={props.srcset} />
         </picture>
-
         {props.children}
       </div>
       <style jsx>{\`
@@ -4442,6 +4349,17 @@ function FormInputComponent(props: FormInputProps) {
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`React > jsx > Typescript Test > Literal Space 1`] = `
+"import * as React from \\"react\\";
+
+function Hello(props: any) {
+  return <div>Hello {props.name ?? \\"World\\"}</div>;
+}
+
+export default Hello;
 "
 `;
 
@@ -4608,9 +4526,7 @@ function SlotCode(props: Props) {
   return (
     <div>
       {props.slotTop}
-
       {props.slotLeft || \\"Default left\\"}
-
       {props.children || \\"Default Child\\"}
     </div>
   );
@@ -4663,7 +4579,6 @@ function SmileReviews(props: SmileReviewsProps) {
         <button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </button>
-
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
@@ -4683,19 +4598,12 @@ function SmileReviews(props: SmileReviewsProps) {
             </button>
           </>
         ) : null}
-
         {reviews?.map((review, index) => (
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
-
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
@@ -4891,12 +4799,7 @@ function MyComponent(props: any) {
     setName(value);
   }
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyComponent;
@@ -4922,12 +4825,10 @@ function MyBasicForNoTagRefComponent(props: any) {
 
   return (
     <TagNameGetterRef>
-      Hello
-      <Tag>{name}</Tag>
+      Hello <Tag>{name}</Tag>
       {props.actions?.map((action) => (
         <TagName>
           <action.icon />
-
           <span>{action.text}</span>
         </TagName>
       ))}
@@ -5037,12 +4938,7 @@ function MyBasicOnUpdateReturnComponent(props: any) {
     };
   }, [name]);
 
-  return (
-    <div>
-      Hello!
-      {name}
-    </div>
-  );
+  return <div>Hello! {name}</div>;
 }
 
 export default MyBasicOnUpdateReturnComponent;
@@ -5301,7 +5197,6 @@ function Button(props: ButtonProps) {
           </a>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <button
@@ -5355,7 +5250,6 @@ function Button(props: ButtonProps) {
           </a>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <button
@@ -5394,13 +5288,7 @@ const DEFAULT_VALUES: Props = {
 };
 
 function ComponentWithTypes(props: Props) {
-  return (
-    <div>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </div>
-  );
+  return <div> Hello {props.name || DEFAULT_VALUES.name}</div>;
 }
 
 export default ComponentWithTypes;
@@ -5637,12 +5525,7 @@ function OnInit(props: Props) {
     console.log(\\"set defaults with props\\");
   }, []);
 
-  return (
-    <div>
-      Default name defined by parent
-      {name}
-    </div>
-  );
+  return <div>Default name defined by parent {name}</div>;
 }
 
 export default OnInit;
@@ -5756,10 +5639,7 @@ export interface MyBasicComponentProps {
 
 function MyBasicComponent(props: MyBasicComponentProps) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -5781,8 +5661,7 @@ function MyBasicComponent(props: Props) {
 
   return (
     <div>
-      {props.children}
-      {props.type}
+      {props.children} {props.type}
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
   );
@@ -5802,10 +5681,7 @@ interface Person {
 
 function MyBasicComponent(props: Person | never) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -5823,10 +5699,7 @@ type Person = {
 
 function MyBasicComponent(props: Person) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -6116,7 +5989,6 @@ function RenderBlock(props: RenderBlockProps) {
                     context={childrenContext()}
                   />
                 ))}
-
                 {childrenWithoutParentComponent()?.map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
@@ -6272,7 +6144,6 @@ function MyComponent(props: any) {
   return (
     <div>
       {props.name}
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce Wayne\\" />
@@ -6293,9 +6164,7 @@ function MyComponent(props: any) {
   return (
     <div>
       {props.name}
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce\\">
@@ -6441,9 +6310,7 @@ function SvgComponent(props: any) {
       <defs>
         <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </filter>
       </defs>
@@ -6600,7 +6467,6 @@ function SmileReviews(props) {
         <button onClick={(event) => (state.showReviewPrompt = true)}>
           Write a review
         </button>
-
         {state.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
@@ -6620,21 +6486,14 @@ function SmileReviews(props) {
             </button>
           </>
         ) : null}
-
         {state.reviews?.map((review, index) => (
           <div className=\\"review-4e06abd9\\" key={review.id}>
             <img className=\\"img-4e06abd9\\" src={review.avatar} />
-
             <div
               className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
             >
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
@@ -6706,7 +6565,6 @@ function SmileReviews(props) {
         <button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </button>
-
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
@@ -6726,19 +6584,12 @@ function SmileReviews(props) {
             </button>
           </>
         ) : null}
-
         {reviews?.map((review, index) => (
           <div className=\\"review-33281325\\" key={review.id}>
             <img className=\\"img-33281325\\" src={review.avatar} />
-
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
@@ -6845,14 +6696,8 @@ function MyComponent(props) {
         checked={fillings === \\"Guac (extra)\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <p>
-        Tortilla:
-        {tortilla}
-      </p>
-      <p>
-        Fillings:
-        {fillings}
-      </p>
+      <p>Tortilla: {tortilla}</p>
+      <p>Fillings: {fillings}</p>
     </div>
   );
 }
@@ -7050,8 +6895,7 @@ function MyComponent(props) {
   return (
     <div>
       <input value={name} />
-      Lowercase:
-      {lowercaseName()}
+      Lowercase: {lowercaseName()}
     </div>
   );
 }
@@ -7091,8 +6935,7 @@ function MyComponent(props) {
         onChange={(event) => setB(event.target.value)}
         value={b}
       />
-      Result:
-      {result}
+      Result: {result}
     </div>
   );
 }
@@ -7240,14 +7083,8 @@ function MyComponent(props: any) {
         checked={fillings === \\"Guac (extra)\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <p>
-        Tortilla:
-        {tortilla}
-      </p>
-      <p>
-        Fillings:
-        {fillings}
-      </p>
+      <p>Tortilla: {tortilla}</p>
+      <p>Fillings: {fillings}</p>
     </div>
   );
 }
@@ -7445,8 +7282,7 @@ function MyComponent(props: any) {
   return (
     <div>
       <input value={name} />
-      Lowercase:
-      {lowercaseName()}
+      Lowercase: {lowercaseName()}
     </div>
   );
 }
@@ -7486,8 +7322,7 @@ function MyComponent(props: any) {
         onChange={(event) => setB(event.target.value)}
         value={b}
       />
-      Result:
-      {result}
+      Result: {result}
     </div>
   );
 }

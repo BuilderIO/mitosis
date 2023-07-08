@@ -47,7 +47,6 @@ export default class MyBasicRefComponent {
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </Fragment>
@@ -153,12 +152,7 @@ export default class MyBasicOnMountUpdateComponent {
   }
 
   render() {
-    return (
-      <div>
-        Hello
-        {this.name}
-      </div>
-    );
+    return <div>Hello {this.name}</div>;
   }
 }
 "
@@ -243,18 +237,13 @@ export default class MyBooleanAttribute {
   render() {
     return (
       <div>
-        {this.children}
-
-        {this.type}
-
+        {this.children} {this.type}
         <MyBooleanAttributeComponent
           toggle={true}
         ></MyBooleanAttributeComponent>
-
         <MyBooleanAttributeComponent
           toggle={true}
         ></MyBooleanAttributeComponent>
-
         <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
       </div>
     );
@@ -280,7 +269,6 @@ export default class MyBasicChildComponent {
     return (
       <div>
         <MyBasicComponent id={this.dev}></MyBasicComponent>
-
         <div>
           <MyBasicOnMountUpdateComponent
             hi={this.name}
@@ -319,9 +307,8 @@ export default class MyBasicForComponent {
                 this.name = event.target.value + \\" and \\" + person;
               }}
             />
-            Hello
-            {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
-            Liquid!
+            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+            or Liquid!
           </Fragment>
         ))}
       </div>
@@ -374,7 +361,6 @@ export default class MyBasicRefComponent {
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </Fragment>
@@ -443,11 +429,8 @@ export default class MyPreviousComponent {
     return (
       <div>
         <h1>
-          Now:
-          {this.count}, before:
-          {prevCount}
+          Now: {this.count}, before: {prevCount}
         </h1>
-
         <button onClick={(event) => (this.count += 1)}>Increment</button>
       </div>
     );
@@ -482,7 +465,6 @@ export default class Button {
             </a>
           </>
         ) : null}
-
         {!this.link ? (
           <>
             <button type=\\"button\\" {...props.attributes}>
@@ -550,9 +532,7 @@ export default class Column {
       <div class=\\"builder-columns div\\">
         {this.columns?.map((column, index) => (
           <div class=\\"builder-column div-2\\">
-            {column.content}
-
-            {index}
+            {column.content} {index}
           </div>
         ))}
       </div>
@@ -575,11 +555,9 @@ export default class ContentSlotCode {
     return (
       <div>
         <Slot name={this.slotTesting}></Slot>
-
         <div>
           <hr />
         </div>
-
         <div>
           <Slot></Slot>
         </div>
@@ -597,8 +575,8 @@ exports[`Stencil > jsx > Javascript Test > ContentSlotJSX 1`] = `
 > 33 |          {this.slotReference ? (
      |               ^
   34 |      <><div  class={state.cls}  name={this.slotContent ? 'name1' : 'name2'}  title={this.slotContent ? 'title1' : 'title2'}  {...(props.attributes)}  onClick={event => this.show()} >
-  35 |
-  36 | {this.showContent && this.slotContent ? ("
+  35 |        {this.showContent && this.slotContent ? (
+  36 |      <><Slot  name=\\"content\\" >{this.content}</Slot></>"
 `;
 
 exports[`Stencil > jsx > Javascript Test > CustomCode 1`] = `
@@ -1166,10 +1144,8 @@ export default class Image {
               />
             </>
           ) : null}
-
           <source srcset={this.srcset} />
         </picture>
-
         {this.children}
       </div>
     );
@@ -1270,6 +1246,22 @@ export default class FormInputComponent {
         required={this.required}
       />
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > Literal Space 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"hello\\",
+})
+export default class Hello {
+  @Prop() name: any;
+
+  render() {
+    return <div>Hello {this.name ?? \\"World\\"}</div>;
   }
 }
 "
@@ -1441,9 +1433,7 @@ export default class SlotCode {
     return (
       <div>
         <Slot name=\\"top\\"></Slot>
-
         <Slot name=\\"left\\">Default left</Slot>
-
         <Slot>Default Child</Slot>
       </div>
     );
@@ -1517,7 +1507,6 @@ export default class SmileReviews {
         <button onClick={(event) => (this.showReviewPrompt = true)}>
           Write a review
         </button>
-
         {this.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
@@ -1537,19 +1526,12 @@ export default class SmileReviews {
             </button>
           </>
         ) : null}
-
         {this.reviews?.map((review, index) => (
           <div class=\\"review\\" key={review.id}>
             <img class=\\"img\\" src={review.avatar} />
-
             <div class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
@@ -1706,12 +1688,7 @@ export default class MyComponent {
   }
 
   render() {
-    return (
-      <div>
-        Hello
-        {this.name}
-      </div>
-    );
+    return <div>Hello {this.name}</div>;
   }
 }
 "
@@ -1737,12 +1714,10 @@ export default class MyBasicForNoTagRefComponent {
   render() {
     return (
       <state.TagNameGetter>
-        Hello
-        <state.tag>{this.name}</state.tag>
+        Hello <state.tag>{this.name}</state.tag>
         {this.actions?.map((action) => (
           <state.TagName>
             <action.icon></action.icon>
-
             <span>{action.text}</span>
           </state.TagName>
         ))}
@@ -1844,12 +1819,7 @@ export default class MyBasicOnUpdateReturnComponent {
   }
 
   render() {
-    return (
-      <div>
-        Hello!
-        {this.name}
-      </div>
-    );
+    return <div>Hello! {this.name}</div>;
   }
 }
 "
@@ -2013,7 +1983,6 @@ export default class ComponentWithContext {
     return (
       <Fragment>
         <Fragment>{foo.value}</Fragment>
-
         <div>other</div>
       </Fragment>
     );
@@ -2069,7 +2038,6 @@ export default class Button {
             </a>
           </>
         ) : null}
-
         {!this.link ? (
           <>
             <button
@@ -2115,7 +2083,6 @@ export default class Button {
             </a>
           </>
         ) : null}
-
         {!this.link ? (
           <>
             <button
@@ -2148,13 +2115,7 @@ export default class ComponentWithTypes {
   @Prop() name: any;
 
   render() {
-    return (
-      <div>
-        {\\" \\"}
-        Hello
-        {this.name || DEFAULT_VALUES.name}
-      </div>
-    );
+    return <div> Hello {this.name || DEFAULT_VALUES.name}</div>;
   }
 }
 "
@@ -2302,12 +2263,7 @@ export default class OnInit {
   @State() name = \\"\\";
 
   render() {
-    return (
-      <div>
-        Default name defined by parent
-        {this.name}
-      </div>
-    );
+    return <div>Default name defined by parent {this.name}</div>;
   }
 }
 "
@@ -2406,10 +2362,7 @@ export default class MyBasicComponent {
 
   render() {
     return (
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {this.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {this.name}</div>
     );
   }
 }
@@ -2431,8 +2384,7 @@ export default class MyBasicComponent {
   render() {
     return (
       <div>
-        {this.children}
-        {this.type}
+        {this.children} {this.type}
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
     );
@@ -2452,10 +2404,7 @@ export default class MyBasicComponent {
 
   render() {
     return (
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {this.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {this.name}</div>
     );
   }
 }
@@ -2473,10 +2422,7 @@ export default class MyBasicComponent {
 
   render() {
     return (
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {this.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {this.name}</div>
     );
   }
 }
@@ -2519,7 +2465,7 @@ exports[`Stencil > jsx > Javascript Test > renderBlock 1`] = `
       |               ^
   206 |      <>{isEmptyHtmlElement(this.tag) ? (
   207 |      <><state.tag  {...(state.attributes)}  {...(state.actions)} ></state.tag></>
-  208 |    ) : null}"
+  208 |    ) : null}{!isEmptyHtmlElement(this.tag) && this.repeatItemData ? ("
 `;
 
 exports[`Stencil > jsx > Javascript Test > renderContentExample 1`] = `
@@ -2591,7 +2537,6 @@ export default class Button {
             </a>
           </>
         ) : null}
-
         {!this.link ? (
           <>
             <button type=\\"button\\" {...props.attributes}>
@@ -2619,7 +2564,6 @@ export default class MyComponent {
     return (
       <div>
         {this.name}
-
         {this.name === \\"Batman\\" ? (
           <>
             <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
@@ -2646,9 +2590,7 @@ export default class MyComponent {
     return (
       <div>
         {this.name}
-
         {this.children}
-
         {this.name === \\"Batman\\" ? (
           <>
             <MyComponent name=\\"Bruce\\">
@@ -2770,13 +2712,11 @@ export default class SvgComponent {
         <defs>
           <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
             <feFlood result=\\"BackgroundImageFix\\"></feFlood>
-
             <feBlend
               in=\\"SourceGraphic\\"
               in2=\\"BackgroundImageFix\\"
               result=\\"shape\\"
             ></feBlend>
-
             <feGaussianBlur
               result=\\"effect1_foregroundBlur\\"
               stdDeviation={7}
@@ -2910,8 +2850,7 @@ export default class MyBasicComponent {
   render() {
     return (
       <div>
-        Hello
-        {this.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
+        Hello {this.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
       </div>
     );
   }
@@ -2966,7 +2905,6 @@ export default class MyBasicRefComponent {
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </Fragment>
@@ -3072,12 +3010,7 @@ export default class MyBasicOnMountUpdateComponent {
   }
 
   render() {
-    return (
-      <div>
-        Hello
-        {this.name}
-      </div>
-    );
+    return <div>Hello {this.name}</div>;
   }
 }
 "
@@ -3162,18 +3095,13 @@ export default class MyBooleanAttribute {
   render() {
     return (
       <div>
-        {this.children}
-
-        {this.type}
-
+        {this.children} {this.type}
         <MyBooleanAttributeComponent
           toggle={true}
         ></MyBooleanAttributeComponent>
-
         <MyBooleanAttributeComponent
           toggle={true}
         ></MyBooleanAttributeComponent>
-
         <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
       </div>
     );
@@ -3199,7 +3127,6 @@ export default class MyBasicChildComponent {
     return (
       <div>
         <MyBasicComponent id={this.dev}></MyBasicComponent>
-
         <div>
           <MyBasicOnMountUpdateComponent
             hi={this.name}
@@ -3238,9 +3165,8 @@ export default class MyBasicForComponent {
                 this.name = event.target.value + \\" and \\" + person;
               }}
             />
-            Hello
-            {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
-            Liquid!
+            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+            or Liquid!
           </Fragment>
         ))}
       </div>
@@ -3293,7 +3219,6 @@ export default class MyBasicRefComponent {
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </Fragment>
@@ -3362,11 +3287,8 @@ export default class MyPreviousComponent {
     return (
       <div>
         <h1>
-          Now:
-          {this.count}, before:
-          {prevCount}
+          Now: {this.count}, before: {prevCount}
         </h1>
-
         <button onClick={(event) => (this.count += 1)}>Increment</button>
       </div>
     );
@@ -3401,7 +3323,6 @@ export default class Button {
             </a>
           </>
         ) : null}
-
         {!this.link ? (
           <>
             <button type=\\"button\\" {...props.attributes}>
@@ -3469,9 +3390,7 @@ export default class Column {
       <div class=\\"builder-columns div\\">
         {this.columns?.map((column, index) => (
           <div class=\\"builder-column div-2\\">
-            {column.content}
-
-            {index}
+            {column.content} {index}
           </div>
         ))}
       </div>
@@ -3496,11 +3415,9 @@ export default class ContentSlotCode {
     return (
       <div>
         <Slot name={this.slotTesting}></Slot>
-
         <div>
           <hr />
         </div>
-
         <div>
           <Slot></Slot>
         </div>
@@ -3518,8 +3435,8 @@ exports[`Stencil > jsx > Typescript Test > ContentSlotJSX 1`] = `
 > 38 |          {this.slotReference ? (
      |               ^
   39 |      <><div  class={state.cls}  name={this.slotContent ? 'name1' : 'name2'}  title={this.slotContent ? 'title1' : 'title2'}  {...(props.attributes)}  onClick={event => this.show()} >
-  40 |
-  41 | {this.showContent && this.slotContent ? ("
+  40 |        {this.showContent && this.slotContent ? (
+  41 |      <><Slot  name=\\"content\\" >{this.content}</Slot></>"
 `;
 
 exports[`Stencil > jsx > Typescript Test > CustomCode 1`] = `
@@ -4094,10 +4011,8 @@ export default class Image {
               />
             </>
           ) : null}
-
           <source srcset={this.srcset} />
         </picture>
-
         {this.children}
       </div>
     );
@@ -4198,6 +4113,22 @@ export default class FormInputComponent {
         required={this.required}
       />
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > Literal Space 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"hello\\",
+})
+export default class Hello {
+  @Prop() name: any;
+
+  render() {
+    return <div>Hello {this.name ?? \\"World\\"}</div>;
   }
 }
 "
@@ -4369,9 +4300,7 @@ export default class SlotCode {
     return (
       <div>
         <Slot name=\\"top\\"></Slot>
-
         <Slot name=\\"left\\">Default left</Slot>
-
         <Slot>Default Child</Slot>
       </div>
     );
@@ -4445,7 +4374,6 @@ export default class SmileReviews {
         <button onClick={(event) => (this.showReviewPrompt = true)}>
           Write a review
         </button>
-
         {this.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
@@ -4465,19 +4393,12 @@ export default class SmileReviews {
             </button>
           </>
         ) : null}
-
         {this.reviews?.map((review, index) => (
           <div class=\\"review\\" key={review.id}>
             <img class=\\"img\\" src={review.avatar} />
-
             <div class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
@@ -4634,12 +4555,7 @@ export default class MyComponent {
   }
 
   render() {
-    return (
-      <div>
-        Hello
-        {this.name}
-      </div>
-    );
+    return <div>Hello {this.name}</div>;
   }
 }
 "
@@ -4665,12 +4581,10 @@ export default class MyBasicForNoTagRefComponent {
   render() {
     return (
       <state.TagNameGetter>
-        Hello
-        <state.tag>{this.name}</state.tag>
+        Hello <state.tag>{this.name}</state.tag>
         {this.actions?.map((action) => (
           <state.TagName>
             <action.icon></action.icon>
-
             <span>{action.text}</span>
           </state.TagName>
         ))}
@@ -4772,12 +4686,7 @@ export default class MyBasicOnUpdateReturnComponent {
   }
 
   render() {
-    return (
-      <div>
-        Hello!
-        {this.name}
-      </div>
-    );
+    return <div>Hello! {this.name}</div>;
   }
 }
 "
@@ -4943,7 +4852,6 @@ export default class ComponentWithContext {
     return (
       <Fragment>
         <Fragment>{foo.value}</Fragment>
-
         <div>other</div>
       </Fragment>
     );
@@ -4999,7 +4907,6 @@ export default class Button {
             </a>
           </>
         ) : null}
-
         {!this.link ? (
           <>
             <button
@@ -5045,7 +4952,6 @@ export default class Button {
             </a>
           </>
         ) : null}
-
         {!this.link ? (
           <>
             <button
@@ -5078,13 +4984,7 @@ export default class ComponentWithTypes {
   @Prop() name: any;
 
   render() {
-    return (
-      <div>
-        {\\" \\"}
-        Hello
-        {this.name || DEFAULT_VALUES.name}
-      </div>
-    );
+    return <div> Hello {this.name || DEFAULT_VALUES.name}</div>;
   }
 }
 "
@@ -5233,12 +5133,7 @@ export default class OnInit {
   @State() name = \\"\\";
 
   render() {
-    return (
-      <div>
-        Default name defined by parent
-        {this.name}
-      </div>
-    );
+    return <div>Default name defined by parent {this.name}</div>;
   }
 }
 "
@@ -5337,10 +5232,7 @@ export default class MyBasicComponent {
 
   render() {
     return (
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {this.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {this.name}</div>
     );
   }
 }
@@ -5362,8 +5254,7 @@ export default class MyBasicComponent {
   render() {
     return (
       <div>
-        {this.children}
-        {this.type}
+        {this.children} {this.type}
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
     );
@@ -5383,10 +5274,7 @@ export default class MyBasicComponent {
 
   render() {
     return (
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {this.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {this.name}</div>
     );
   }
 }
@@ -5404,10 +5292,7 @@ export default class MyBasicComponent {
 
   render() {
     return (
-      <div>
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        {this.name}
-      </div>
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! {this.name}</div>
     );
   }
 }
@@ -5450,7 +5335,7 @@ exports[`Stencil > jsx > Typescript Test > renderBlock 1`] = `
       |               ^
   211 |      <>{isEmptyHtmlElement(this.tag) ? (
   212 |      <><state.tag  {...(state.attributes)}  {...(state.actions)} ></state.tag></>
-  213 |    ) : null}"
+  213 |    ) : null}{!isEmptyHtmlElement(this.tag) && this.repeatItemData ? ("
 `;
 
 exports[`Stencil > jsx > Typescript Test > renderContentExample 1`] = `
@@ -5522,7 +5407,6 @@ export default class Button {
             </a>
           </>
         ) : null}
-
         {!this.link ? (
           <>
             <button type=\\"button\\" {...props.attributes}>
@@ -5550,7 +5434,6 @@ export default class MyComponent {
     return (
       <div>
         {this.name}
-
         {this.name === \\"Batman\\" ? (
           <>
             <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
@@ -5577,9 +5460,7 @@ export default class MyComponent {
     return (
       <div>
         {this.name}
-
         {this.children}
-
         {this.name === \\"Batman\\" ? (
           <>
             <MyComponent name=\\"Bruce\\">
@@ -5701,13 +5582,11 @@ export default class SvgComponent {
         <defs>
           <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
             <feFlood result=\\"BackgroundImageFix\\"></feFlood>
-
             <feBlend
               in=\\"SourceGraphic\\"
               in2=\\"BackgroundImageFix\\"
               result=\\"shape\\"
             ></feBlend>
-
             <feGaussianBlur
               result=\\"effect1_foregroundBlur\\"
               stdDeviation={7}
@@ -5913,14 +5792,8 @@ export default class MyComponent {
           checked={this.fillings === \\"Guac (extra)\\"}
           onInput={(event) => (this.fillings = event.target.value)}
         />
-        <p>
-          Tortilla:
-          {this.tortilla}
-        </p>
-        <p>
-          Fillings:
-          {this.fillings}
-        </p>
+        <p>Tortilla: {this.tortilla}</p>
+        <p>Fillings: {this.fillings}</p>
       </div>
     );
   }
@@ -6122,8 +5995,7 @@ export default class MyComponent {
     return (
       <div>
         <input value={this.name} />
-        Lowercase:
-        {this.lowercaseName}
+        Lowercase: {this.lowercaseName}
       </div>
     );
   }
@@ -6163,8 +6035,7 @@ export default class MyComponent {
           onInput={(event) => (this.b = event.target.value)}
           value={this.b}
         />
-        Result:
-        {this.result}
+        Result: {this.result}
       </div>
     );
   }
@@ -6323,14 +6194,8 @@ export default class MyComponent {
           checked={this.fillings === \\"Guac (extra)\\"}
           onInput={(event) => (this.fillings = event.target.value)}
         />
-        <p>
-          Tortilla:
-          {this.tortilla}
-        </p>
-        <p>
-          Fillings:
-          {this.fillings}
-        </p>
+        <p>Tortilla: {this.tortilla}</p>
+        <p>Fillings: {this.fillings}</p>
       </div>
     );
   }
@@ -6532,8 +6397,7 @@ export default class MyComponent {
     return (
       <div>
         <input value={this.name} />
-        Lowercase:
-        {this.lowercaseName}
+        Lowercase: {this.lowercaseName}
       </div>
     );
   }
@@ -6573,8 +6437,7 @@ export default class MyComponent {
           onInput={(event) => (this.b = event.target.value)}
           value={this.b}
         />
-        Result:
-        {this.result}
+        Result: {this.result}
       </div>
     );
   }
