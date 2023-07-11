@@ -686,7 +686,7 @@ Object.assign(state, {
   },
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && isBrowser();
+    return !!props.lazy && state.isBrowser();
   },
   isBrowser: function isBrowser() {
     return (
@@ -704,7 +704,7 @@ if (state.useLazyLoading()) {
       const buffer = window.innerHeight / 2;
 
       if (rect.top < window.innerHeight + buffer) {
-        setLoad(true);
+        state.load = true;
         state.scrollListener = null;
         window.removeEventListener(\\"scroll\\", listener);
       }
@@ -729,7 +729,7 @@ useState({
   },
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && isBrowser();
+    return !!props.lazy && state.isBrowser();
   },
   isBrowser: function isBrowser() {
     return (
@@ -748,7 +748,7 @@ onMount(() => {
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
-          setLoad(true);
+          state.load = true;
           state.scrollListener = null;
           window.removeEventListener(\\"scroll\\", listener);
         }
@@ -780,7 +780,7 @@ export default function MyComponent(props) {
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && isBrowser();
+      return !!props.lazy && state.isBrowser();
     },
     isBrowser: function isBrowser() {
       return (
@@ -802,7 +802,7 @@ export default function MyComponent(props) {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            state.load = true;
             state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -1636,6 +1636,7 @@ exports[`Builder > extractStateHook 1`] = `
   "state": {
     "foo": {
       "code": "'bar'",
+      "propertyType": "normal",
       "type": "property",
     },
   },

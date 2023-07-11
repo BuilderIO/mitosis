@@ -1,0 +1,69 @@
+// Vitest Snapshot v1
+
+exports[`Signals type parsing > findSignals 1`] = `
+{
+  "context": Set {
+    "context",
+  },
+  "props": Set {
+    "k",
+  },
+  "state": Set {
+    "n",
+  },
+}
+`;
+
+exports[`Signals type parsing > mapSignalType > react 1`] = `
+"import { Signal, useState, useContext, createContext } from '@builder.io/mitosis';
+const FooContext = createContext({
+  foo: 'bar'
+}, {
+  reactive: true
+});
+const NormalContext = createContext({
+  foo: 'bar'
+});
+type K = string;
+type Props = {
+  k: K;
+  another: number;
+};
+export default function MyComponent(props: Props) {
+  const [n] = useState(123, {
+    reactive: true
+  });
+  const context = useContext(FooContext);
+  const normalContext = useContext(NormalContext);
+  console.log(n, n.value, props.k, props.k.value, context, context.value.foo, normalContext, normalContext.value.foo);
+  return <RenderBlock a={props.k} b={props.k.value} c={n} d={n.value} e={context} f={context.value.foo} g={normalContext} h={normalContext.value.foo} />;
+}
+"
+`;
+
+exports[`Signals type parsing > mapSignalType > svelte 1`] = `
+"import { Signal, useState, useContext, createContext } from '@builder.io/mitosis';
+const FooContext = createContext({
+  foo: 'bar'
+}, {
+  reactive: true
+});
+const NormalContext = createContext({
+  foo: 'bar'
+});
+type K = Writable<string>;
+type Props = {
+  k: K;
+  another: Writable<number>;
+};
+export default function MyComponent(props: Props) {
+  const [n] = useState(123, {
+    reactive: true
+  });
+  const context = useContext(FooContext);
+  const normalContext = useContext(NormalContext);
+  console.log(n, n.value, props.k, props.k.value, context, context.value.foo, normalContext, normalContext.value.foo);
+  return <RenderBlock a={props.k} b={props.k.value} c={n} d={n.value} e={context} f={context.value.foo} g={normalContext} h={normalContext.value.foo} />;
+}
+"
+`;

@@ -69,12 +69,39 @@ export const createCodeProcessorPlugin =
       const state = json.state[key];
       if (state) {
         state.code = codeProcessor('state', json)(state.code, key);
+
+        if (state.typeParameter) {
+          state.typeParameter = codeProcessor('types', json)(state.typeParameter, key);
+        }
+      }
+    }
+
+    for (const key in json.context.set) {
+      const set = json.context.set[key];
+      if (set.ref) {
+        set.ref = codeProcessor('context-set', json)(set.ref, key);
+      }
+      if (set.value) {
+        for (const key in set.value) {
+          const value = set.value[key];
+          if (value) {
+            value.code = codeProcessor('context-set', json)(value.code, key);
+          }
+        }
       }
     }
 
     traverseNodes(json, (node) => {
       preProcessNodeCode({ json: node, codeProcessor, parentComponent: json });
     });
+
+    if (json.types) {
+      json.types = json.types?.map((type) => codeProcessor('types', json)(type, ''));
+    }
+
+    if (json.propsTypeRef) {
+      json.propsTypeRef = codeProcessor('types', json)(json.propsTypeRef, '');
+    }
   };
 
 /**

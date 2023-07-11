@@ -90,7 +90,7 @@ export function generateCompositionApiScript(
 
     ${Object.values(component.context.set)
       ?.map((contextSet) => {
-        const contextValue = getContextValue({ json: component, options })(contextSet);
+        const contextValue = getContextValue(contextSet);
         const key = getContextKey(contextSet);
 
         return `provide(${key}, ${contextValue})`;

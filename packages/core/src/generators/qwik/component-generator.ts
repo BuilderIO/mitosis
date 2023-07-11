@@ -39,8 +39,11 @@ const PLUGINS: Plugin[] = [
   }),
   CODE_PROCESSOR_PLUGIN((codeType, json) => {
     switch (codeType) {
+      case 'types':
+        return (c) => c;
       case 'bindings':
       case 'state':
+      case 'context-set':
       case 'hooks':
       case 'hooks-deps':
       case 'properties':
@@ -87,7 +90,12 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
     // Make a copy we can safely mutate, similar to babel's toolchain
     let component = fastClone(_component);
 
-    const options = initializeOptions('qwik', DEFAULT_OPTIONS, userOptions);
+    const options = initializeOptions({
+      target: 'qwik',
+      component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: userOptions,
+    });
 
     component = runPreJsonPlugins(component, options.plugins);
     component = runPostJsonPlugins(component, options.plugins);
@@ -109,7 +117,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       emitImports(file, component);
       emitTypes(file, component);
       emitExports(file, component);
-      const metadata: Record<string, any> = component.meta.useMetadata || ({} as any);
+      const metadata = component.meta.useMetadata;
       const isLightComponent: boolean = metadata?.qwik?.component?.isLight || false;
       const mutable: string[] = metadata?.qwik?.mutable || [];
 
@@ -232,31 +240,36 @@ function emitJSX(file: File, component: MitosisComponent, mutable: string[]) {
 
 function emitUseContextProvider(file: File, component: MitosisComponent) {
   Object.entries(component.context.set).forEach(([_ctxKey, context]) => {
-    file.src.emit(`
-      ${file.import(file.qwikModule, 'useContextProvider').localName}(
-        ${context.name}, ${file.import(file.qwikModule, 'useStore').localName}({
-      `);
+    file.src.emit(
+      `${file.import(file.qwikModule, 'useContextProvider').localName}(${context.name}, `,
+    );
 
-    for (const [prop, propValue] of Object.entries(context.value || {})) {
-      file.src.emit(`${prop}: `);
-      switch (propValue?.type) {
-        case 'getter':
-          file.src.emit(`(()=>{
+    if (context.ref) {
+      file.src.emit(`${context.ref}`);
+    } else {
+      file.src.emit(`${file.import(file.qwikModule, 'useStore').localName}({`);
+      for (const [prop, propValue] of Object.entries(context.value || {})) {
+        file.src.emit(`${prop}: `);
+        switch (propValue?.type) {
+          case 'getter':
+            file.src.emit(`(()=>{
             ${extractGetterBody(propValue.code)}
           })()`);
-          break;
+            break;
 
-        case 'function':
-        case 'method':
-          throw new Error('Qwik: Functions are not supported in context');
+          case 'function':
+          case 'method':
+            throw new Error('Qwik: Functions are not supported in context');
 
-        case 'property':
-          file.src.emit(stableInject(propValue.code));
-          break;
+          case 'property':
+            file.src.emit(stableInject(propValue.code));
+            break;
+        }
+        file.src.emit(',');
       }
-      file.src.emit(',');
+      file.src.emit('})');
     }
-    file.src.emit('}));');
+    file.src.emit(');');
   });
 }
 

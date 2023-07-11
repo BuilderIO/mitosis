@@ -276,7 +276,12 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
     const stateVars = Object.keys(json?.state || {});
 
-    const options = initializeOptions('angular', DEFAULT_OPTIONS, userOptions);
+    const options = initializeOptions({
+      target: 'angular',
+      component: _component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: userOptions,
+    });
     options.plugins = [
       ...(options.plugins || []),
       CODE_PROCESSOR_PLUGIN((codeType) => {
@@ -314,8 +319,10 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             };
           case 'hooks-deps':
           case 'state':
+          case 'context-set':
           case 'properties':
           case 'dynamic-jsx-elements':
+          case 'types':
             return (x) => x;
         }
       }),

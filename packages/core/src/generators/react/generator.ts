@@ -102,7 +102,7 @@ function provideContext(json: MitosisComponent, options: ToReactOptions): string
       } else if (ref) {
         json.children = [
           createMitosisNode({
-            name: 'Context.Provider',
+            name: `${name}.Provider`,
             children: json.children,
             ...(ref && {
               bindings: {
@@ -170,7 +170,12 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       ? 'rsc'
       : 'react';
 
-    const options = initializeOptions(target, DEFAULT_OPTIONS, reactOptions);
+    const options = initializeOptions({
+      target,
+      component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: reactOptions,
+    });
 
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);

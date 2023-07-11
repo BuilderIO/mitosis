@@ -3898,7 +3898,7 @@ class Image extends HTMLElement {
       },
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!self.props.lazy && isBrowser();
+        return !!self.props.lazy && self.state.isBrowser();
       },
       isBrowser: function isBrowser() {
         return (
@@ -4024,7 +4024,8 @@ class Image extends HTMLElement {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.state.load = true;
+            this.update();
             this.state.scrollListener = null;
             this.update();
             window.removeEventListener(\\"scroll\\", listener);
@@ -10636,8 +10637,8 @@ class OnUpdate extends HTMLElement {
   onUpdate() {
     const self = this;
 
-    foo({
-      someOption: bar,
+    self.state.foo({
+      someOption: self.state.bar,
     });
   }
 
@@ -16702,7 +16703,7 @@ class Image extends HTMLElement {
       },
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!self.props.lazy && isBrowser();
+        return !!self.props.lazy && self.state.isBrowser();
       },
       isBrowser: function isBrowser() {
         return (
@@ -16828,7 +16829,8 @@ class Image extends HTMLElement {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.state.load = true;
+            this.update();
             this.state.scrollListener = null;
             this.update();
             window.removeEventListener(\\"scroll\\", listener);
@@ -23668,8 +23670,8 @@ class OnUpdate extends HTMLElement {
   onUpdate() {
     const self = this;
 
-    foo({
-      someOption: bar,
+    self.state.foo({
+      someOption: self.state.bar,
     });
   }
 

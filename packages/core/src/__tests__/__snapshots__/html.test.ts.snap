@@ -1854,7 +1854,7 @@ exports[`Html > jsx > Javascript Test > Image 1`] = `
       },
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!props.lazy && isBrowser();
+        return !!props.lazy && state.isBrowser();
       },
       isBrowser: function isBrowser() {
         return (
@@ -1938,7 +1938,8 @@ exports[`Html > jsx > Javascript Test > Image 1`] = `
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            state.load = true;
+            update();
             state.scrollListener = null;
             update();
             window.removeEventListener(\\"scroll\\", listener);
@@ -7903,7 +7904,7 @@ exports[`Html > jsx > Typescript Test > Image 1`] = `
       },
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!props.lazy && isBrowser();
+        return !!props.lazy && state.isBrowser();
       },
       isBrowser: function isBrowser() {
         return (
@@ -7987,7 +7988,8 @@ exports[`Html > jsx > Typescript Test > Image 1`] = `
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            state.load = true;
+            update();
             state.scrollListener = null;
             update();
             window.removeEventListener(\\"scroll\\", listener);

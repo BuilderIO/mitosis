@@ -4,6 +4,28 @@ import { Context, ParseMitosisOptions } from './types';
 
 const { types } = babel;
 
+export const mapImportDeclarationToMitosisImport = (
+  node: babel.types.ImportDeclaration,
+): MitosisImport => {
+  const importObject: MitosisImport = {
+    imports: {},
+    path: node.source.value,
+    importKind: node.importKind,
+  };
+  for (const specifier of node.specifiers) {
+    if (types.isImportSpecifier(specifier)) {
+      importObject.imports[specifier.local.name] = (
+        specifier.imported as babel.types.Identifier
+      ).name;
+    } else if (types.isImportDefaultSpecifier(specifier)) {
+      importObject.imports[specifier.local.name] = 'default';
+    } else if (types.isImportNamespaceSpecifier(specifier)) {
+      importObject.imports[specifier.local.name] = '*';
+    }
+  }
+  return importObject;
+};
+
 export const handleImportDeclaration = ({
   options,
   path,
@@ -23,22 +45,7 @@ export const handleImportDeclaration = ({
     path.remove();
     return;
   }
-  const importObject: MitosisImport = {
-    imports: {},
-    path: path.node.source.value,
-    importKind: path.node.importKind,
-  };
-  for (const specifier of path.node.specifiers) {
-    if (types.isImportSpecifier(specifier)) {
-      importObject.imports[specifier.local.name] = (
-        specifier.imported as babel.types.Identifier
-      ).name;
-    } else if (types.isImportDefaultSpecifier(specifier)) {
-      importObject.imports[specifier.local.name] = 'default';
-    } else if (types.isImportNamespaceSpecifier(specifier)) {
-      importObject.imports[specifier.local.name] = '*';
-    }
-  }
+  const importObject = mapImportDeclarationToMitosisImport(path.node);
   context.builder.component.imports.push(importObject);
 
   path.remove();

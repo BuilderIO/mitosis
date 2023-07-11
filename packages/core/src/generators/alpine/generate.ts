@@ -194,7 +194,7 @@ const blockToAlpine = (json: MitosisNode | ForNode, options: ToAlpineOptions = {
 export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
   (_options = {}) =>
   ({ component }) => {
-    const options = initializeOptions('alpine', _options);
+    const options = initializeOptions({ target: 'alpine', component, defaults: _options });
 
     let json = fastClone(component);
     if (options.plugins) {

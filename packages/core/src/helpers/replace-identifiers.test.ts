@@ -1,4 +1,5 @@
-import { replaceIdentifiers } from './replace-identifiers';
+import { types } from '@babel/core';
+import { replaceIdentifiers, replaceNodes } from './replace-identifiers';
 
 type Spec = Parameters<typeof replaceIdentifiers>[0];
 
@@ -71,5 +72,43 @@ describe('replaceIdentifiers', () => {
       const output = replaceIdentifiers(args);
       expect(output).toMatchSnapshot();
     });
+  });
+});
+
+describe('newReplacer', () => {
+  test('Check #1', () => {
+    const code = `
+  const [childrenContext] = useState(
+    useTarget({
+      reactNative: {
+        apiKey: props.context.value.apiKey,
+        apiVersion: props.context.value.apiVersion,
+        localState: props.context.value.localState,
+        rootState: props.context.value.rootState,
+        rootSetState: props.context.value.rootSetState,
+        content: props.context.value.content,
+        context: props.context.value.context,
+        registeredComponents: props.context.value.registeredComponents,
+        inheritedStyles: extractTextStyles(
+          getReactNativeBlockStyles({
+            block: state.useBlock,
+            context: props.context.value,
+            blockStyles: state.attributes.style,
+          })
+        ),
+      },
+      default: props.context.value,
+    }),
+    { reactive: true }
+  );
+`;
+    const thing = types.memberExpression(
+      types.memberExpression(types.identifier('props'), types.identifier('context')),
+      types.identifier('value'),
+    );
+
+    const to = types.memberExpression(types.identifier('props'), types.identifier('$context'));
+    const output = replaceNodes({ code, nodeMaps: [{ from: thing, to }] });
+    expect(output).toMatchSnapshot();
   });
 });
