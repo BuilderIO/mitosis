@@ -70,6 +70,7 @@ const PLUGINS: Plugin[] = [
 
               case 'function':
               case 'method':
+                return name;
               case 'property':
               case undefined:
                 return `state.${name}`;

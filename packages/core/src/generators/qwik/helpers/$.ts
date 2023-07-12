@@ -28,7 +28,6 @@ export function emitFunctions({ file, component }: { file: File; component: Mito
         // file.exportConst(functionName, 'function ' + code, true);
         const $Name = file.import(file.qwikModule, '$').localName;
 
-        console.log('$$$:', { functionName, code });
         file.src.const(
           functionName,
           `${$Name}(${stateValue.type === 'method' ? 'function' : ''} ${stateValue.code})`,
