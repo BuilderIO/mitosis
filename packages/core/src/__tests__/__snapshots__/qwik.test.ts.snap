@@ -1878,7 +1878,7 @@ export const MyBasicComponent = component$((props) => {
     <div>
       {myService.method(\\"hello\\") + state.name}
       Hello! I can run in React, Vue, Solid, or Liquid!
-      <input onChange$={(event) => state.onChange} />
+      <input onChange$={(event) => onChange} />
     </div>
   );
 });
@@ -2090,7 +2090,7 @@ export const MyBasicRefComponent = component$((props) => {
             class=\\"input-MyBasicRefComponent\\"
             ref={inputRef}
             value={state.name}
-            onBlur$={(event) => state.onBlur()}
+            onBlur$={(event) => onBlur()}
             onChange$={(event) => (state.name = event.target.value)}
           />
           <label for=\\"cars\\" ref={inputNoArgRef}>
@@ -2103,8 +2103,7 @@ export const MyBasicRefComponent = component$((props) => {
         </Fragment>
       ) : null}
       Hello
-      {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
-      Component!
+      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
     </div>
   );
 });
@@ -2133,7 +2132,7 @@ export const MyBasicRefAssignmentComponent = component$((props) => {
 
   return (
     <div>
-      <button onClick$={(event) => state.handlerClick(evt)}>Click</button>
+      <button onClick$={(event) => handlerClick(evt)}>Click</button>
     </div>
   );
 });
@@ -2228,14 +2227,14 @@ export const Column = component$((props) => {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   });
   const getWidth = $(function getWidth(index) {
-    const columns = state.getColumns();
+    const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   });
   const getColumnCssWidth = $(function getColumnCssWidth(index) {
-    const columns = state.getColumns();
-    const gutterSize = state.getGutterSize();
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
   });
 
   return (
@@ -2329,7 +2328,7 @@ export const ContentSlotJsxCode = component$((props) => {
           name={props.slotContent ? \\"name1\\" : \\"name2\\"}
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
-          onClick$={(event) => state.show()}
+          onClick$={(event) => show()}
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
@@ -2407,7 +2406,7 @@ export const CustomCode = component$((props) => {
     }
   });
   useVisibleTask$(() => {
-    state.findAndRunScripts();
+    findAndRunScripts();
   });
 
   return (
@@ -2481,7 +2480,7 @@ export const CustomCode = component$((props) => {
     }
   });
   useVisibleTask$(() => {
-    state.findAndRunScripts();
+    findAndRunScripts();
   });
 
   return (
@@ -2754,7 +2753,7 @@ export const FormComponent = component$((props) => {
       })()}
       method={props.method}
       name={props.name}
-      onSubmit$={(event) => state.onSubmit(event)}
+      onSubmit$={(event) => onSubmit(event)}
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
@@ -2834,7 +2833,7 @@ export const Image = component$((props) => {
   });
   const useLazyLoading = $(function useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && state.isBrowser();
+    return !!props.lazy && isBrowser();
   });
   const isBrowser = $(function isBrowser() {
     return (
@@ -2842,7 +2841,7 @@ export const Image = component$((props) => {
     );
   });
   useVisibleTask$(() => {
-    if (state.useLazyLoading()) {
+    if (useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef.value) {
@@ -2869,7 +2868,7 @@ export const Image = component$((props) => {
   return (
     <div>
       <picture ref={pictureRef}>
-        {!state.useLazyLoading() || state.load ? (
+        {!useLazyLoading() || state.load ? (
           <img
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -2879,7 +2878,7 @@ export const Image = component$((props) => {
               \\" img-Image\\"
             }
             src={props.image}
-            onLoad$={(event) => state.setLoaded()}
+            onLoad$={(event) => setLoaded()}
             srcset={props.srcset}
             sizes={props.sizes}
           />
@@ -3768,7 +3767,7 @@ export const RenderContent = component$((props) => {
 
   return (
     <RenderBlock
-      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
     ></RenderBlock>
   );
 });
@@ -4083,12 +4082,12 @@ export const OnUpdate = component$((props) => {
   const bar = $(function bar() {});
   const zoo = $(function zoo() {
     const params = {
-      cb: state.bar,
+      cb: bar,
     };
   });
   useTask$(({ track }) => {
-    state.foo({
-      someOption: state.bar,
+    foo({
+      someOption: bar,
     });
   });
 
@@ -4879,7 +4878,7 @@ export const MyBasicComponent = component$((props: any) => {
     <div>
       {myService.method(\\"hello\\") + state.name}
       Hello! I can run in React, Vue, Solid, or Liquid!
-      <input onChange$={(event) => state.onChange} />
+      <input onChange$={(event) => onChange} />
     </div>
   );
 });
@@ -5108,7 +5107,7 @@ export const MyBasicRefComponent = component$((props: Props) => {
             class=\\"input-MyBasicRefComponent\\"
             ref={inputRef}
             value={state.name}
-            onBlur$={(event) => state.onBlur()}
+            onBlur$={(event) => onBlur()}
             onChange$={(event) => (state.name = event.target.value)}
           />
           <label for=\\"cars\\" ref={inputNoArgRef}>
@@ -5121,8 +5120,7 @@ export const MyBasicRefComponent = component$((props: Props) => {
         </Fragment>
       ) : null}
       Hello
-      {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
-      Component!
+      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
     </div>
   );
 });
@@ -5154,7 +5152,7 @@ export const MyBasicRefAssignmentComponent = component$((props: Props) => {
 
   return (
     <div>
-      <button onClick$={(event) => state.handlerClick(evt)}>Click</button>
+      <button onClick$={(event) => handlerClick(evt)}>Click</button>
     </div>
   );
 });
@@ -5272,14 +5270,14 @@ export const Column = component$((props: ColumnProps) => {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   });
   const getWidth = $(function getWidth(index: number) {
-    const columns = state.getColumns();
+    const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   });
   const getColumnCssWidth = $(function getColumnCssWidth(index: number) {
-    const columns = state.getColumns();
-    const gutterSize = state.getGutterSize();
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
   });
 
   return (
@@ -5384,7 +5382,7 @@ export const ContentSlotJsxCode = component$((props: Props) => {
           name={props.slotContent ? \\"name1\\" : \\"name2\\"}
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
-          onClick$={(event) => state.show()}
+          onClick$={(event) => show()}
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
@@ -5466,7 +5464,7 @@ export const CustomCode = component$((props: CustomCodeProps) => {
     }
   });
   useVisibleTask$(() => {
-    state.findAndRunScripts();
+    findAndRunScripts();
   });
 
   return (
@@ -5544,7 +5542,7 @@ export const CustomCode = component$((props: CustomCodeProps) => {
     }
   });
   useVisibleTask$(() => {
-    state.findAndRunScripts();
+    findAndRunScripts();
   });
 
   return (
@@ -5847,7 +5845,7 @@ export const FormComponent = component$((props: FormProps) => {
       })()}
       method={props.method}
       name={props.name}
-      onSubmit$={(event) => state.onSubmit(event)}
+      onSubmit$={(event) => onSubmit(event)}
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
@@ -5945,7 +5943,7 @@ export const Image = component$((props: ImageProps) => {
   });
   const useLazyLoading = $(function useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && state.isBrowser();
+    return !!props.lazy && isBrowser();
   });
   const isBrowser = $(function isBrowser() {
     return (
@@ -5953,7 +5951,7 @@ export const Image = component$((props: ImageProps) => {
     );
   });
   useVisibleTask$(() => {
-    if (state.useLazyLoading()) {
+    if (useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef.value) {
@@ -5980,7 +5978,7 @@ export const Image = component$((props: ImageProps) => {
   return (
     <div>
       <picture ref={pictureRef}>
-        {!state.useLazyLoading() || state.load ? (
+        {!useLazyLoading() || state.load ? (
           <img
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -5990,7 +5988,7 @@ export const Image = component$((props: ImageProps) => {
               \\" img-Image\\"
             }
             src={props.image}
-            onLoad$={(event) => state.setLoaded()}
+            onLoad$={(event) => setLoaded()}
             srcset={props.srcset}
             sizes={props.sizes}
           />
@@ -7034,7 +7032,7 @@ export const RenderContent = component$((props: RenderContentProps) => {
 
   return (
     <RenderBlock
-      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
     ></RenderBlock>
   );
 });
@@ -7392,12 +7390,12 @@ export const OnUpdate = component$((props: any) => {
   const bar = $(function bar() {});
   const zoo = $(function zoo() {
     const params = {
-      cb: state.bar,
+      cb: bar,
     };
   });
   useTask$(({ track }) => {
-    state.foo({
-      someOption: state.bar,
+    foo({
+      someOption: bar,
     });
   });
 
@@ -8783,9 +8781,9 @@ export const MyComponent = component$((props) => {
 
   return (
     <div>
-      <button onClick$={(event) => state.log(\\"hi\\")}>Log</button>
-      <button onClick$={(event) => state.log(event)}>Log</button>
-      <button onClick$={(event) => state.log(event)}>Log</button>
+      <button onClick$={(event) => log(\\"hi\\")}>Log</button>
+      <button onClick$={(event) => log(event)}>Log</button>
+      <button onClick$={(event) => log(event)}>Log</button>
     </div>
   );
 });
@@ -8819,9 +8817,9 @@ export const MyComponent = component$((props) => {
   return (
     <>
       {state.show ? (
-        <button onClick$={(event) => state.toggle(event)}> Hide </button>
+        <button onClick$={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick$={(event) => state.toggle(event)}> Show </button>
+        <button onClick$={(event) => toggle(event)}> Show </button>
       )}
     </>
   );
@@ -8922,7 +8920,7 @@ export const MyComponent = component$((props) => {
   useTask$(({ track }) => {
     track(() => state.a);
     track(() => state.b);
-    state.calculateResult(state.a, state.b);
+    calculateResult(state.a, state.b);
   });
 
   return (
@@ -9192,9 +9190,9 @@ export const MyComponent = component$((props: any) => {
 
   return (
     <div>
-      <button onClick$={(event) => state.log(\\"hi\\")}>Log</button>
-      <button onClick$={(event) => state.log(event)}>Log</button>
-      <button onClick$={(event) => state.log(event)}>Log</button>
+      <button onClick$={(event) => log(\\"hi\\")}>Log</button>
+      <button onClick$={(event) => log(event)}>Log</button>
+      <button onClick$={(event) => log(event)}>Log</button>
     </div>
   );
 });
@@ -9228,9 +9226,9 @@ export const MyComponent = component$((props: any) => {
   return (
     <>
       {state.show ? (
-        <button onClick$={(event) => state.toggle(event)}> Hide </button>
+        <button onClick$={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick$={(event) => state.toggle(event)}> Show </button>
+        <button onClick$={(event) => toggle(event)}> Show </button>
       )}
     </>
   );
@@ -9331,7 +9329,7 @@ export const MyComponent = component$((props: any) => {
   useTask$(({ track }) => {
     track(() => state.a);
     track(() => state.b);
-    state.calculateResult(state.a, state.b);
+    calculateResult(state.a, state.b);
   });
 
   return (
