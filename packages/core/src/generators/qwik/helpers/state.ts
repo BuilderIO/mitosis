@@ -18,12 +18,12 @@ export function emitUseStore({
   const hasState = state && Object.keys(state).length > 0;
 
   if (hasState) {
-    file.src.emit('const state=', file.import(file.qwikModule, 'useStore').localName + '(');
+    file.src.emit('const state=', file.import(file.qwikModule, 'useStore').localName);
     if (file.options.isTypeScript) {
       file.src.emit('<any>');
     }
 
-    file.src.emit('{');
+    file.src.emit('({');
     for (const [key, value] of state) {
       file.src.emit(`'${key}': ${value?.code!},`);
     }

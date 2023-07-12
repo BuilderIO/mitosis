@@ -17,7 +17,6 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { emitFunctions } from './helpers/$';
 import { addPreventDefault } from './helpers/add-prevent-default';
-import { stableInject } from './helpers/stable-inject';
 import { emitUseStore } from './helpers/state';
 import { renderJSXNodes } from './jsx';
 import { File, SrcBuilder, arrowFnBlock, invoke } from './src-generator';
@@ -262,7 +261,7 @@ function emitUseContextProvider(file: File, component: MitosisComponent) {
             throw new Error('Qwik: Functions are not supported in context');
 
           case 'property':
-            file.src.emit(stableInject(propValue.code));
+            file.src.emit(propValue.code);
             break;
         }
         file.src.emit(',');
