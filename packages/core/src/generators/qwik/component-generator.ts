@@ -15,11 +15,12 @@ import {
 } from '../../modules/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
+import { emitFunctions } from './helpers/$';
 import { addPreventDefault } from './helpers/add-prevent-default';
 import { stableInject } from './helpers/stable-inject';
-import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
+import { emitUseStore } from './helpers/state';
 import { renderJSXNodes } from './jsx';
-import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
+import { File, SrcBuilder, arrowFnBlock, invoke } from './src-generator';
 
 Error.stackTraceLimit = 9999;
 
@@ -124,7 +125,6 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       const imports: Record<string, string> = metadata?.qwik?.imports || {};
       Object.keys(imports).forEach((key) => file.import(imports[key], key));
 
-      const state: StateInit = emitStateMethodsAndRewriteBindings(file, component, metadata);
       const hasState = checkHasState(component);
 
       let css: string | null = null;
@@ -136,8 +136,8 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
             css = emitUseStyles(file, component);
             emitUseContext(file, component);
             emitUseRef(file, component);
-            hasState &&
-              emitUseStore({ file, stateInit: state, isDeep: metadata?.qwik?.hasDeepStore });
+            hasState && emitUseStore({ file, component, isDeep: metadata?.qwik?.hasDeepStore });
+            emitFunctions({ file, component });
             emitUseComputed(file, component);
             emitUseContextProvider(file, component);
             emitUseClientEffect(file, component);
