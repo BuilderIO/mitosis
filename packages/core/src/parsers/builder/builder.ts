@@ -4,7 +4,7 @@ import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, merge, omit, omitBy, sortBy, upperFirst } from 'lodash';
 import traverse from 'traverse';
-import { hashCodeAsString, MitosisComponent, MitosisState } from '../..';
+import { MitosisComponent, MitosisState, hashCodeAsString } from '../..';
 import { Size, sizeNames, sizes } from '../../constants/media-sizes';
 import { createSingleBinding } from '../../helpers/bindings';
 import { capitalize } from '../../helpers/capitalize';
@@ -383,7 +383,7 @@ const componentMappers: {
       }),
     };
     const properties = { ...block.properties };
-    if (block.id) properties['block-id'] = block.id;
+    if (block.id) properties['builder-id'] = block.id;
     if (block.class) properties['class'] = block.class;
 
     if (block.layerName) {
