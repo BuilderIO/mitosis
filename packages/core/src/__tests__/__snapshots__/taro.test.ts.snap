@@ -42,7 +42,6 @@ function MyBasicRefComponent(props) {
 
             <View name=\\"cars\\" id=\\"cars\\">
               <View value=\\"supra\\">GR Supra</View>
-
               <View value=\\"86\\">GR 86</View>
             </View>
           </>
@@ -164,12 +163,7 @@ function MyBasicOnMountUpdateComponent(props) {
     setName(\\"PatrickJS onMount\\" + props.bye);
   }, []);
 
-  return (
-    <View>
-      Hello
-      {name}
-    </View>
-  );
+  return <View>Hello {name}</View>;
 }
 
 export default MyBasicOnMountUpdateComponent;
@@ -236,14 +230,9 @@ import { View, Text } from \\"@tarojs/components\\";
 function MyBooleanAttribute(props) {
   return (
     <View>
-      {props.children}
-
-      {props.type}
-
+      {props.children} {props.type}
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent list={null} />
     </View>
   );
@@ -268,7 +257,6 @@ function MyBasicChildComponent(props) {
   return (
     <View>
       <MyBasicComponent id={dev} />
-
       <View>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </View>
@@ -355,7 +343,6 @@ function MyBasicRefComponent(props) {
 
             <View name=\\"cars\\" id=\\"cars\\">
               <View value=\\"supra\\">GR Supra</View>
-
               <View value=\\"86\\">GR 86</View>
             </View>
           </>
@@ -430,11 +417,8 @@ function MyPreviousComponent(props) {
   return (
     <View>
       <View>
-        Now:
-        {count}, before:
-        {prevCount.current}
+        Now: {count}, before: {prevCount.current}
       </View>
-
       <Button onClick={(event) => setCount(1)}>Increment</Button>
     </View>
   );
@@ -462,7 +446,6 @@ function Button(props) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <Button type=\\"button\\" {...props.attributes}>
@@ -508,9 +491,7 @@ function Column(props) {
       <View className=\\"view\\">
         {props.columns?.map((column, index) => (
           <View className=\\"view-2\\">
-            {column.content}
-
-            {index}
+            {column.content} {index}
           </View>
         ))}
       </View>
@@ -551,11 +532,9 @@ function ContentSlotCode(props) {
   return (
     <View>
       {props.slotTesting}
-
       <View>
         <View />
       </View>
-
       <View>{props.children}</View>
     </View>
   );
@@ -596,11 +575,9 @@ function ContentSlotJsxCode(props) {
             {showContent && props.slotContent ? (
               <>{props.slotContent || \\"{props.content}\\"}</>
             ) : null}
-
             <View>
               <View />
             </View>
-
             <View>{props.children}</View>
           </View>
         </>
@@ -1103,10 +1080,8 @@ function Image(props) {
               />
             </>
           ) : null}
-
           <View srcset={props.srcset} />
         </View>
-
         {props.children}
       </View>
       <style jsx>{\`
@@ -1199,6 +1174,18 @@ function FormInputComponent(props) {
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > Literal Space 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function Hello(props) {
+  return <View>Hello {props.name ?? \\"World\\"}</View>;
+}
+
+export default Hello;
 "
 `;
 
@@ -1324,9 +1311,7 @@ function SlotCode(props) {
   return (
     <View>
       {props.slotTop}
-
       {props.slotLeft || \\"Default left\\"}
-
       {props.children || \\"Default Child\\"}
     </View>
   );
@@ -1375,7 +1360,6 @@ function SmileReviews(props) {
         <Button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </Button>
-
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <Input placeholder=\\"Email\\" />
@@ -1395,19 +1379,12 @@ function SmileReviews(props) {
             </Button>
           </>
         ) : null}
-
         {reviews?.map((review, index) => (
           <View className=\\"review\\" key={review.id}>
             <Image className=\\"image\\" src={review.avatar} />
-
             <View>
-              <View>
-                N:
-                {index}
-              </View>
-
+              <View>N: {index}</View>
               <View>{review.author}</View>
-
               <View>{review.reviewMessage}</View>
             </View>
           </View>
@@ -1560,12 +1537,7 @@ function MyComponent(props) {
     setName(value);
   }
 
-  return (
-    <View>
-      Hello
-      {name}
-    </View>
-  );
+  return <View>Hello {name}</View>;
 }
 
 export default MyComponent;
@@ -1592,12 +1564,10 @@ function MyBasicForNoTagRefComponent(props) {
 
   return (
     <TagNameGetterRef>
-      Hello
-      <View>{name}</View>
+      Hello <View>{name}</View>
       {props.actions?.map((action) => (
         <TagName>
           <View />
-
           <Text>{action.text}</Text>
         </TagName>
       ))}
@@ -1700,12 +1670,7 @@ function MyBasicOnUpdateReturnComponent(props) {
     };
   }, [name]);
 
-  return (
-    <View>
-      Hello!
-      {name}
-    </View>
-  );
+  return <View>Hello! {name}</View>;
 }
 
 export default MyBasicOnUpdateReturnComponent;
@@ -1947,7 +1912,6 @@ function Button(props) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <Button
@@ -1994,7 +1958,6 @@ function Button(props) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <Button
@@ -2029,13 +1992,7 @@ const DEFAULT_VALUES = {
 };
 
 function ComponentWithTypes(props) {
-  return (
-    <View>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </View>
-  );
+  return <View> Hello {props.name || DEFAULT_VALUES.name}</View>;
 }
 
 export default ComponentWithTypes;
@@ -2264,12 +2221,7 @@ function OnInit(props) {
     console.log(\\"set defaults with props\\");
   }, []);
 
-  return (
-    <View>
-      Default name defined by parent
-      {name}
-    </View>
-  );
+  return <View>Default name defined by parent {name}</View>;
 }
 
 export default OnInit;
@@ -2360,10 +2312,7 @@ import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   return (
-    <View>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </View>
+    <View>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</View>
   );
 }
 
@@ -2381,8 +2330,7 @@ function MyBasicComponent(props) {
 
   return (
     <View>
-      {props.children}
-      {props.type}
+      {props.children} {props.type}
       Hello! I can run in React, Vue, Solid, or Liquid!
     </View>
   );
@@ -2398,10 +2346,7 @@ import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   return (
-    <View>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </View>
+    <View>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</View>
   );
 }
 
@@ -2415,10 +2360,7 @@ import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   return (
-    <View>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </View>
+    <View>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</View>
   );
 }
 
@@ -2696,7 +2638,6 @@ function RenderBlock(props) {
                     context={childrenContext()}
                   />
                 ))}
-
                 {childrenWithoutParentComponent()?.map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
@@ -2840,7 +2781,6 @@ function MyComponent(props) {
   return (
     <View>
       {props.name}
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce Wayne\\" />
@@ -2862,9 +2802,7 @@ function MyComponent(props) {
   return (
     <View>
       {props.name}
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce\\">
@@ -3011,9 +2949,7 @@ function SvgComponent(props) {
       <View>
         <View id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </View>
       </View>
@@ -3140,10 +3076,7 @@ function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   return (
-    <View>
-      Hello
-      {name}! I can run in React, Qwik, Vue, Solid, or Liquid!
-    </View>
+    <View>Hello {name}! I can run in React, Qwik, Vue, Solid, or Liquid!</View>
   );
 }
 
@@ -3198,7 +3131,6 @@ function MyBasicRefComponent(props: Props) {
 
             <View name=\\"cars\\" id=\\"cars\\">
               <View value=\\"supra\\">GR Supra</View>
-
               <View value=\\"86\\">GR 86</View>
             </View>
           </>
@@ -3331,12 +3263,7 @@ function MyBasicOnMountUpdateComponent(props: Props) {
     setName(\\"PatrickJS onMount\\" + props.bye);
   }, []);
 
-  return (
-    <View>
-      Hello
-      {name}
-    </View>
-  );
+  return <View>Hello {name}</View>;
 }
 
 export default MyBasicOnMountUpdateComponent;
@@ -3408,14 +3335,9 @@ import { View, Text } from \\"@tarojs/components\\";
 function MyBooleanAttribute(props: Props) {
   return (
     <View>
-      {props.children}
-
-      {props.type}
-
+      {props.children} {props.type}
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent list={null} />
     </View>
   );
@@ -3440,7 +3362,6 @@ function MyBasicChildComponent(props: any) {
   return (
     <View>
       <MyBasicComponent id={dev} />
-
       <View>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </View>
@@ -3532,7 +3453,6 @@ function MyBasicRefComponent(props: Props) {
 
             <View name=\\"cars\\" id=\\"cars\\">
               <View value=\\"supra\\">GR Supra</View>
-
               <View value=\\"86\\">GR 86</View>
             </View>
           </>
@@ -3617,11 +3537,8 @@ function MyPreviousComponent(props: Props) {
   return (
     <View>
       <View>
-        Now:
-        {count}, before:
-        {prevCount.current}
+        Now: {count}, before: {prevCount.current}
       </View>
-
       <Button onClick={(event) => setCount(1)}>Increment</Button>
     </View>
   );
@@ -3657,7 +3574,6 @@ function Button(props: ButtonProps) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <Button type=\\"button\\" {...props.attributes}>
@@ -3719,9 +3635,7 @@ function Column(props: ColumnProps) {
       <View className=\\"view\\">
         {props.columns?.map((column, index) => (
           <View className=\\"view-2\\">
-            {column.content}
-
-            {index}
+            {column.content} {index}
           </View>
         ))}
       </View>
@@ -3768,11 +3682,9 @@ function ContentSlotCode(props: Props) {
   return (
     <View>
       {props.slotTesting}
-
       <View>
         <View />
       </View>
-
       <View>{props.children}</View>
     </View>
   );
@@ -3818,11 +3730,9 @@ function ContentSlotJsxCode(props: Props) {
             {showContent && props.slotContent ? (
               <>{props.slotContent || \\"{props.content}\\"}</>
             ) : null}
-
             <View>
               <View />
             </View>
-
             <View>{props.children}</View>
           </View>
         </>
@@ -4388,10 +4298,8 @@ function Image(props: ImageProps) {
               />
             </>
           ) : null}
-
           <View srcset={props.srcset} />
         </View>
-
         {props.children}
       </View>
       <style jsx>{\`
@@ -4513,6 +4421,18 @@ function FormInputComponent(props: FormInputProps) {
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > Literal Space 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function Hello(props: any) {
+  return <View>Hello {props.name ?? \\"World\\"}</View>;
+}
+
+export default Hello;
 "
 `;
 
@@ -4679,9 +4599,7 @@ function SlotCode(props: Props) {
   return (
     <View>
       {props.slotTop}
-
       {props.slotLeft || \\"Default left\\"}
-
       {props.children || \\"Default Child\\"}
     </View>
   );
@@ -4735,7 +4653,6 @@ function SmileReviews(props: SmileReviewsProps) {
         <Button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </Button>
-
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <Input placeholder=\\"Email\\" />
@@ -4755,19 +4672,12 @@ function SmileReviews(props: SmileReviewsProps) {
             </Button>
           </>
         ) : null}
-
         {reviews?.map((review, index) => (
           <View className=\\"review\\" key={review.id}>
             <Image className=\\"image\\" src={review.avatar} />
-
             <View>
-              <View>
-                N:
-                {index}
-              </View>
-
+              <View>N: {index}</View>
               <View>{review.author}</View>
-
               <View>{review.reviewMessage}</View>
             </View>
           </View>
@@ -4971,12 +4881,7 @@ function MyComponent(props: any) {
     setName(value);
   }
 
-  return (
-    <View>
-      Hello
-      {name}
-    </View>
-  );
+  return <View>Hello {name}</View>;
 }
 
 export default MyComponent;
@@ -5003,12 +4908,10 @@ function MyBasicForNoTagRefComponent(props: any) {
 
   return (
     <TagNameGetterRef>
-      Hello
-      <View>{name}</View>
+      Hello <View>{name}</View>
       {props.actions?.map((action) => (
         <TagName>
           <View />
-
           <Text>{action.text}</Text>
         </TagName>
       ))}
@@ -5123,12 +5026,7 @@ function MyBasicOnUpdateReturnComponent(props: any) {
     };
   }, [name]);
 
-  return (
-    <View>
-      Hello!
-      {name}
-    </View>
-  );
+  return <View>Hello! {name}</View>;
 }
 
 export default MyBasicOnUpdateReturnComponent;
@@ -5397,7 +5295,6 @@ function Button(props: ButtonProps) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <Button
@@ -5453,7 +5350,6 @@ function Button(props: ButtonProps) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <Button
@@ -5492,13 +5388,7 @@ const DEFAULT_VALUES: Props = {
 };
 
 function ComponentWithTypes(props: Props) {
-  return (
-    <View>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </View>
-  );
+  return <View> Hello {props.name || DEFAULT_VALUES.name}</View>;
 }
 
 export default ComponentWithTypes;
@@ -5744,12 +5634,7 @@ function OnInit(props: Props) {
     console.log(\\"set defaults with props\\");
   }, []);
 
-  return (
-    <View>
-      Default name defined by parent
-      {name}
-    </View>
-  );
+  return <View>Default name defined by parent {name}</View>;
 }
 
 export default OnInit;
@@ -5869,10 +5754,7 @@ import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: MyBasicComponentProps) {
   return (
-    <View>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </View>
+    <View>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</View>
   );
 }
 
@@ -5895,8 +5777,7 @@ function MyBasicComponent(props: Props) {
 
   return (
     <View>
-      {props.children}
-      {props.type}
+      {props.children} {props.type}
       Hello! I can run in React, Vue, Solid, or Liquid!
     </View>
   );
@@ -5918,10 +5799,7 @@ import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: Person | never) {
   return (
-    <View>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </View>
+    <View>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</View>
   );
 }
 
@@ -5940,10 +5818,7 @@ import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: Person) {
   return (
-    <View>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </View>
+    <View>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</View>
   );
 }
 
@@ -6234,7 +6109,6 @@ function RenderBlock(props: RenderBlockProps) {
                     context={childrenContext()}
                   />
                 ))}
-
                 {childrenWithoutParentComponent()?.map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
@@ -6399,7 +6273,6 @@ function MyComponent(props: any) {
   return (
     <View>
       {props.name}
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce Wayne\\" />
@@ -6421,9 +6294,7 @@ function MyComponent(props: any) {
   return (
     <View>
       {props.name}
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce\\">
@@ -6581,9 +6452,7 @@ function SvgComponent(props: any) {
       <View>
         <View id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </View>
       </View>
@@ -6784,14 +6653,8 @@ function MyComponent(props) {
         checked={fillings === \\"Guac (extra)\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <View>
-        Tortilla:
-        {tortilla}
-      </View>
-      <View>
-        Fillings:
-        {fillings}
-      </View>
+      <View>Tortilla: {tortilla}</View>
+      <View>Fillings: {fillings}</View>
     </View>
   );
 }
@@ -6992,8 +6855,7 @@ function MyComponent(props) {
   return (
     <View>
       <Input value={name} />
-      Lowercase:
-      {lowercaseName()}
+      Lowercase: {lowercaseName()}
     </View>
   );
 }
@@ -7034,8 +6896,7 @@ function MyComponent(props) {
         onChange={(event) => setB(event.target.value)}
         value={b}
       />
-      Result:
-      {result}
+      Result: {result}
     </View>
   );
 }
@@ -7188,14 +7049,8 @@ function MyComponent(props: any) {
         checked={fillings === \\"Guac (extra)\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <View>
-        Tortilla:
-        {tortilla}
-      </View>
-      <View>
-        Fillings:
-        {fillings}
-      </View>
+      <View>Tortilla: {tortilla}</View>
+      <View>Fillings: {fillings}</View>
     </View>
   );
 }
@@ -7396,8 +7251,7 @@ function MyComponent(props: any) {
   return (
     <View>
       <Input value={name} />
-      Lowercase:
-      {lowercaseName()}
+      Lowercase: {lowercaseName()}
     </View>
   );
 }
@@ -7438,8 +7292,7 @@ function MyComponent(props: any) {
         onChange={(event) => setB(event.target.value)}
         value={b}
       />
-      Result:
-      {result}
+      Result: {result}
     </View>
   );
 }

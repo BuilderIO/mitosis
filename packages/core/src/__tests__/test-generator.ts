@@ -40,6 +40,7 @@ const preserveExportOrLocalStatement = getRawFile(
 );
 const arrowFunctionInUseStore = getRawFile('./data/arrow-function-in-use-store.raw.tsx');
 const svgComponent = getRawFile('./data/svg.raw.tsx');
+const literalSpace = getRawFile('./data/literal-space.raw.tsx');
 
 const propsType = getRawFile('./data/types/component-props-type.raw.tsx');
 const propsInterface = getRawFile('./data/types/component-props-interface.raw.tsx');
@@ -177,6 +178,7 @@ const BASIC_TESTS: Tests = {
   'Basic Context': basicContext,
   'Basic Outputs Meta': basicOutputsMeta,
   'Basic Outputs': basicOutputs,
+  'Literal Space': literalSpace,
   className: classNameJsx,
   'Image State': imageState,
   'Basic OnMount Update': basicOnMountUpdate,

@@ -30,8 +30,8 @@ import {
   DO_NOT_USE_ARGS,
   DO_NOT_USE_CONTEXT_VARS_TRANSFORMS,
   DO_NOT_USE_VARS_TRANSFORMS,
-  stripStateAndPropsRefs,
   StripStateAndPropsRefsOptions,
+  stripStateAndPropsRefs,
 } from '../helpers/strip-state-and-props-refs';
 import { collectCss } from '../helpers/styles/collect-css';
 import {
@@ -41,7 +41,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { MitosisComponent } from '../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
@@ -183,7 +183,7 @@ const mappers: {
   ) => string;
 } = {
   Fragment: (json, options, blockOptions) => {
-    return json.children.map((item) => blockToHtml(item, options, blockOptions)).join('\n');
+    return json.children.map((item) => blockToHtml(item, options, blockOptions)).join('');
   },
 };
 
@@ -359,7 +359,7 @@ const blockToHtml = (
             scopeVars: localScopeVars,
           }),
         )
-        .join('\n');
+        .join('');
     }
     str += '</template>';
   } else if (json.name === 'Show') {
@@ -385,7 +385,7 @@ const blockToHtml = (
 
     str += `<template data-el="${elId}">`;
     if (json.children) {
-      str += json.children.map((item) => blockToHtml(item, options, blockOptions)).join('\n');
+      str += json.children.map((item) => blockToHtml(item, options, blockOptions)).join('');
     }
 
     str += '</template>';
@@ -531,7 +531,7 @@ const blockToHtml = (
     }
     str += '>';
     if (json.children) {
-      str += json.children.map((item) => blockToHtml(item, options, blockOptions)).join('\n');
+      str += json.children.map((item) => blockToHtml(item, options, blockOptions)).join('');
     }
     if (json.properties.innerHTML) {
       // Maybe put some kind of safety here for broken HTML such as no close tag
@@ -628,7 +628,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
       prefix: options.prefix,
     });
 
-    let str = json.children.map((item) => blockToHtml(item, options)).join('\n');
+    let str = json.children.map((item) => blockToHtml(item, options)).join('');
 
     if (css.trim().length) {
       str += `<style>${css}</style>`;
@@ -956,7 +956,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
           contextVars,
         }),
       )
-      .join('\n');
+      .join('');
     if (options?.experimental?.childrenHtml) {
       html = options?.experimental?.childrenHtml(html, kebabName, json, options);
     }

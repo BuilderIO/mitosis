@@ -20,7 +20,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { collectClassString } from './collect-class-string';
 
@@ -41,7 +41,7 @@ const blockToStencil = (json: MitosisNode, options: ToStencilOptions = {}): stri
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToStencil(item, options))
-      .join('\n')}${wrap ? '</>' : ''}
+      .join('')}${wrap ? '</>' : ''}
     ))}`;
   } else if (json.name === 'Show') {
     const wrap = json.children.length !== 1;
@@ -49,7 +49,7 @@ const blockToStencil = (json: MitosisNode, options: ToStencilOptions = {}): stri
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToStencil(item, options))
-      .join('\n')}${wrap ? '</>' : ''}
+      .join('')}${wrap ? '</>' : ''}
     ) : ${!json.meta.else ? 'null' : blockToStencil(json.meta.else as any, options)}}`;
   }
 
@@ -85,7 +85,7 @@ const blockToStencil = (json: MitosisNode, options: ToStencilOptions = {}): stri
   }
   str += '>';
   if (json.children) {
-    str += json.children.map((item) => blockToStencil(item, options)).join('\n');
+    str += json.children.map((item) => blockToStencil(item, options)).join('');
   }
 
   str += `</${json.name}>`;
@@ -200,7 +200,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
       render() {
         return (${wrap ? '<>' : ''}
         
-          ${json.children.map((item) => blockToStencil(item, options)).join('\n')}
+          ${json.children.map((item) => blockToStencil(item, options)).join('')}
 
         ${wrap ? '</>' : ''})
       }

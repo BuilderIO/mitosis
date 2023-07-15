@@ -1,4 +1,4 @@
-import { camelCase, curry, flow, flowRight as compose } from 'lodash';
+import { camelCase, flowRight as compose, curry, flow } from 'lodash';
 import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { babelTransformCode } from '../../helpers/babel-transform';
@@ -19,7 +19,7 @@ import {
   runPreJsonPlugins,
 } from '../../modules/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
+import { ForNode, MitosisNode, checkIsForNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { renderMountHook } from './render-mount-hook';
 import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
@@ -117,14 +117,14 @@ const mappers: {
       : `<template x-for="${json.scope.forName} in ${stripStateAndPropsRefs(
           json.bindings.each?.code,
         )}">
-    ${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('\n')}
+    ${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('')}
     </template>`,
   Fragment: (json, options) => blockToAlpine({ ...json, name: 'div' }, options),
   Show: (json, options) =>
     !isValidAlpineBinding(json.bindings.when?.code)
       ? ''
       : `<template x-if="${stripStateAndPropsRefs(json.bindings.when?.code)}">
-    ${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('\n')}
+    ${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('')}
     </template>`,
 };
 
@@ -186,7 +186,7 @@ const blockToAlpine = (json: MitosisNode | ForNode, options: ToAlpineOptions = {
   }
   return SELF_CLOSING_HTML_TAGS.has(json.name)
     ? `${str} />`
-    : `${str}>${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('\n')}</${
+    : `${str}>${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('')}</${
         json.name
       }>`;
 };
@@ -219,7 +219,7 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
     }
 
     let str = css.trim().length ? `<style>${css}</style>` : '';
-    str += json.children.map((item) => blockToAlpine(item, options)).join('\n');
+    str += json.children.map((item) => blockToAlpine(item, options)).join('');
 
     if (!options.inlineState) {
       str += `<script>

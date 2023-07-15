@@ -50,7 +50,6 @@ function MyBasicRefComponent(props) {
             <View value=\\"supra\\">
               <Text>GR Supra</Text>
             </View>
-
             <View value=\\"86\\">
               <Text>GR 86</Text>
             </View>
@@ -287,14 +286,9 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props) {
   return (
     <View>
-      {props.children}
-
-      <Text>{props.type}</Text>
-
+      {props.children} <Text>{props.type}</Text>
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent list={null} />
     </View>
   );
@@ -326,7 +320,6 @@ function MyBasicChildComponent(props) {
   return (
     <View>
       <MyBasicComponent id={dev} />
-
       <View>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </View>
@@ -430,7 +423,6 @@ function MyBasicRefComponent(props) {
             <View value=\\"supra\\">
               <Text>GR Supra</Text>
             </View>
-
             <View value=\\"86\\">
               <Text>GR 86</Text>
             </View>
@@ -525,7 +517,6 @@ function MyPreviousComponent(props) {
         <Text>, before: </Text>
         <Text>{prevCount.current}</Text>
       </View>
-
       <View onClick={(event) => setCount(1)}>
         <Text>Increment</Text>
       </View>
@@ -562,7 +553,6 @@ function Button(props) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <View type=\\"button\\" {...props.attributes}>
@@ -614,9 +604,7 @@ function Column(props) {
     <View style={styles.view1}>
       {props.columns?.map((column, index) => (
         <View style={styles.view2}>
-          <Text>{column.content}</Text>
-
-          <Text>{index}</Text>
+          <Text>{column.content}</Text> <Text>{index}</Text>
         </View>
       ))}
     </View>
@@ -647,11 +635,9 @@ function ContentSlotCode(props) {
   return (
     <View>
       {props.slotTesting}
-
       <View>
         <View />
       </View>
-
       <View>{props.children}</View>
     </View>
   );
@@ -699,11 +685,9 @@ function ContentSlotJsxCode(props) {
             {showContent && props.slotContent ? (
               <>{props.slotContent || <Text>{props.content}</Text>}</>
             ) : null}
-
             <View>
               <View />
             </View>
-
             <View>{props.children}</View>
           </View>
         </>
@@ -1219,10 +1203,8 @@ function Image(props) {
             />
           </>
         ) : null}
-
         <View srcset={props.srcset} />
       </View>
-
       {props.children}
     </View>
   );
@@ -1336,6 +1318,30 @@ function FormInputComponent(props) {
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Literal Space 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function Hello(props) {
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{props.name ?? \\"World\\"}</Text>
+    </View>
+  );
+}
+
+export default Hello;
 "
 `;
 
@@ -1518,9 +1524,7 @@ function SlotCode(props) {
   return (
     <View>
       {props.slotTop}
-
       {props.slotLeft || <Text>Default left</Text>}
-
       {props.children || <Text>Default Child</Text>}
     </View>
   );
@@ -1575,7 +1579,6 @@ function SmileReviews(props) {
       <View onClick={(event) => setShowReviewPrompt(true)}>
         <Text>Write a review</Text>
       </View>
-
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <View placeholder=\\"Email\\" />
@@ -1591,21 +1594,17 @@ function SmileReviews(props) {
           </View>
         </>
       ) : null}
-
       {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
           <View src={review.avatar} style={styles.view2} />
-
           <View>
             <View>
               <Text>N: </Text>
               <Text>{index}</Text>
             </View>
-
             <View>
               <Text>{review.author}</Text>
             </View>
-
             <View>
               <Text>{review.reviewMessage}</Text>
             </View>
@@ -1825,11 +1824,9 @@ function MyBasicForNoTagRefComponent(props) {
       <Tag>
         <Text>{name}</Text>
       </Tag>
-
       {props.actions?.map((action) => (
         <TagName>
           <action.icon />
-
           <View>
             <Text>{action.text}</Text>
           </View>
@@ -2245,7 +2242,6 @@ function Button(props) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <View
@@ -2299,7 +2295,6 @@ function Button(props) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <View
@@ -2796,9 +2791,7 @@ function MyBasicComponent(props) {
 
   return (
     <View>
-      {props.children}
-
-      <Text>{props.type}</Text>
+      {props.children} <Text>{props.type}</Text>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -3141,7 +3134,6 @@ function RenderBlock(props) {
                     context={childrenContext()}
                   />
                 ))}
-
                 {childrenWithoutParentComponent()?.map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
@@ -3313,7 +3305,6 @@ function MyComponent(props) {
   return (
     <View>
       <Text>{props.name}</Text>
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce Wayne\\" />
@@ -3342,9 +3333,7 @@ function MyComponent(props) {
   return (
     <View>
       <Text>{props.name}</Text>
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce\\">
@@ -3558,9 +3547,7 @@ function SvgComponent(props) {
       <View>
         <View id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </View>
       </View>
@@ -3782,7 +3769,6 @@ function MyBasicRefComponent(props: Props) {
             <View value=\\"supra\\">
               <Text>GR Supra</Text>
             </View>
-
             <View value=\\"86\\">
               <Text>GR 86</Text>
             </View>
@@ -4033,14 +4019,9 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props: Props) {
   return (
     <View>
-      {props.children}
-
-      <Text>{props.type}</Text>
-
+      {props.children} <Text>{props.type}</Text>
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent list={null} />
     </View>
   );
@@ -4072,7 +4053,6 @@ function MyBasicChildComponent(props: any) {
   return (
     <View>
       <MyBasicComponent id={dev} />
-
       <View>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </View>
@@ -4180,7 +4160,6 @@ function MyBasicRefComponent(props: Props) {
             <View value=\\"supra\\">
               <Text>GR Supra</Text>
             </View>
-
             <View value=\\"86\\">
               <Text>GR 86</Text>
             </View>
@@ -4283,7 +4262,6 @@ function MyPreviousComponent(props: Props) {
         <Text>, before: </Text>
         <Text>{prevCount.current}</Text>
       </View>
-
       <View onClick={(event) => setCount(1)}>
         <Text>Increment</Text>
       </View>
@@ -4327,7 +4305,6 @@ function Button(props: ButtonProps) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <View type=\\"button\\" {...props.attributes}>
@@ -4394,9 +4371,7 @@ function Column(props: ColumnProps) {
     <View style={styles.view1}>
       {props.columns?.map((column, index) => (
         <View style={styles.view2}>
-          <Text>{column.content}</Text>
-
-          <Text>{index}</Text>
+          <Text>{column.content}</Text> <Text>{index}</Text>
         </View>
       ))}
     </View>
@@ -4433,11 +4408,9 @@ function ContentSlotCode(props: Props) {
   return (
     <View>
       {props.slotTesting}
-
       <View>
         <View />
       </View>
-
       <View>{props.children}</View>
     </View>
   );
@@ -4490,11 +4463,9 @@ function ContentSlotJsxCode(props: Props) {
             {showContent && props.slotContent ? (
               <>{props.slotContent || <Text>{props.content}</Text>}</>
             ) : null}
-
             <View>
               <View />
             </View>
-
             <View>{props.children}</View>
           </View>
         </>
@@ -5070,10 +5041,8 @@ function Image(props: ImageProps) {
             />
           </>
         ) : null}
-
         <View srcset={props.srcset} />
       </View>
-
       {props.children}
     </View>
   );
@@ -5216,6 +5185,30 @@ function FormInputComponent(props: FormInputProps) {
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > Literal Space 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function Hello(props: any) {
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{props.name ?? \\"World\\"}</Text>
+    </View>
+  );
+}
+
+export default Hello;
 "
 `;
 
@@ -5437,9 +5430,7 @@ function SlotCode(props: Props) {
   return (
     <View>
       {props.slotTop}
-
       {props.slotLeft || <Text>Default left</Text>}
-
       {props.children || <Text>Default Child</Text>}
     </View>
   );
@@ -5499,7 +5490,6 @@ function SmileReviews(props: SmileReviewsProps) {
       <View onClick={(event) => setShowReviewPrompt(true)}>
         <Text>Write a review</Text>
       </View>
-
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <View placeholder=\\"Email\\" />
@@ -5515,21 +5505,17 @@ function SmileReviews(props: SmileReviewsProps) {
           </View>
         </>
       ) : null}
-
       {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
           <View src={review.avatar} style={styles.view2} />
-
           <View>
             <View>
               <Text>N: </Text>
               <Text>{index}</Text>
             </View>
-
             <View>
               <Text>{review.author}</Text>
             </View>
-
             <View>
               <Text>{review.reviewMessage}</Text>
             </View>
@@ -5797,11 +5783,9 @@ function MyBasicForNoTagRefComponent(props: any) {
       <Tag>
         <Text>{name}</Text>
       </Tag>
-
       {props.actions?.map((action) => (
         <TagName>
           <action.icon />
-
           <View>
             <Text>{action.text}</Text>
           </View>
@@ -6253,7 +6237,6 @@ function Button(props: ButtonProps) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <View
@@ -6315,7 +6298,6 @@ function Button(props: ButtonProps) {
           </View>
         </>
       ) : null}
-
       {!props.link ? (
         <>
           <View
@@ -6864,9 +6846,7 @@ function MyBasicComponent(props: Props) {
 
   return (
     <View>
-      {props.children}
-
-      <Text>{props.type}</Text>
+      {props.children} <Text>{props.type}</Text>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -7232,7 +7212,6 @@ function RenderBlock(props: RenderBlockProps) {
                     context={childrenContext()}
                   />
                 ))}
-
                 {childrenWithoutParentComponent()?.map((child) => (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
@@ -7423,7 +7402,6 @@ function MyComponent(props: any) {
   return (
     <View>
       <Text>{props.name}</Text>
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce Wayne\\" />
@@ -7452,9 +7430,7 @@ function MyComponent(props: any) {
   return (
     <View>
       <Text>{props.name}</Text>
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
         <>
           <MyComponent name=\\"Bruce\\">
@@ -7677,9 +7653,7 @@ function SvgComponent(props: any) {
       <View>
         <View id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </View>
       </View>
