@@ -5760,6 +5760,54 @@ exports[`Html > jsx > Javascript Test > styleClassAndCss 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"<div class=\\"builder-column div\\" data-el=\\"div-1\\"></div>
+<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        Object.assign(el.style, props.attributes.style);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > subComponent 1`] = `
 "<Foo></Foo>
 "
@@ -11799,6 +11847,54 @@ exports[`Html > jsx > Typescript Test > styleClassAndCss 1`] = `
         Object.assign(el.style, {
           width: \\"100%\\",
         });
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"<div class=\\"builder-column div\\" data-el=\\"div-1\\"></div>
+<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        Object.assign(el.style, props.attributes.style);
       });
 
       destroyAnyNodes();

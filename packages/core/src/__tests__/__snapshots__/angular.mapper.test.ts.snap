@@ -3952,6 +3952,41 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div class=\\"builder-column div\\" [ngStyle]=\\"attributes.style\\"></div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    \`,
+  ],
+})
+export class MyComponent {
+  @Input() attributes: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > subComponent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -8547,6 +8582,41 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div class=\\"builder-column div\\" [ngStyle]=\\"attributes.style\\"></div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    \`,
+  ],
+})
+export class MyComponent {
+  @Input() attributes: any;
+}
 
 @NgModule({
   declarations: [MyComponent],
