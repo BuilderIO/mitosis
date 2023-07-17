@@ -59,6 +59,7 @@ const useStyle = getRawFile('./data/styles/use-style.raw.tsx');
 const useStyleOutsideComponent = getRawFile('./data/styles/use-style-outside-component.raw.tsx');
 const useStyleAndCss = getRawFile('./data/styles/use-style-and-css.raw.tsx');
 const styleClassAndCss = getRawFile('./data/styles/style-class-and-css.raw.tsx');
+const stylePropClassAndCss = getRawFile('./data/styles/style-prop-class-and-css.raw.tsx');
 const useTarget = getRawFile('./data/use-target.raw.tsx');
 
 const button = getRawFile('./data/blocks/button.raw.tsx');
@@ -187,6 +188,7 @@ const BASIC_TESTS: Tests = {
   'use-style': useStyle,
   'use-style-and-css': useStyleAndCss,
   styleClassAndCss,
+  stylePropClassAndCss,
   'use-style-outside-component': useStyleOutsideComponent,
   'self-referencing component with children': selfRefCompWChildren,
   'self-referencing component': selfRefComp,
