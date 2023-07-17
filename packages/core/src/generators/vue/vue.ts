@@ -233,6 +233,11 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
 
     const tsLangAttribute = options.typescript ? `lang='ts'` : '';
 
+    if (component.name === 'ContentVariants') {
+      console.log('setting');
+      (global as any).TESTING = true;
+    }
+
     let str: string = dedent`
     ${
       template.trim().length > 0
@@ -286,6 +291,12 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
   `;
 
     str = runPreCodePlugins(str, options.plugins, { json: component });
+    if (component.name === 'ContentVariants') {
+      if (str.includes('<content')) {
+        console.log('found it before prettier');
+        // console.log(str);
+      }
+    }
     if (true || options.prettier !== false) {
       try {
         str = format(str, {
@@ -308,7 +319,6 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
       str = str.replace(pattern, '').trim();
     }
     str = str.replace(/<script(.*)>\n?<\/script>/g, '').trim();
-
     return str;
   };
 

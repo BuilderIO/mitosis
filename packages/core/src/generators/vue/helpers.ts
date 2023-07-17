@@ -46,6 +46,9 @@ export function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
 }
 
+export const mapMitosisComponentToKebabCase = (componentName: string) =>
+  componentName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
 // Transform <FooBar> to <foo-bar> as Vue2 needs
 export const renameMitosisComponentsToKebabCase = (str: string) =>
   str.replace(/<\/?\w+/g, (match) => {
@@ -53,7 +56,7 @@ export const renameMitosisComponentsToKebabCase = (str: string) =>
     if (VALID_HTML_TAGS.includes(tagName)) {
       return match;
     } else {
-      return match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+      return mapMitosisComponentToKebabCase(match);
     }
   });
 
