@@ -78,13 +78,31 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
 
     const styleSheetName = getStyleSheetName(item);
     const styleSheetAccess = `styles.${styleSheetName}`;
-
-    item.bindings.style = createSingleBinding({
-      code:
-        item.bindings.style?.code.replace(/}$/, `, ...${styleSheetAccess} }`) || styleSheetAccess,
-    });
-
     styleMap[styleSheetName] = cssValue;
+
+    if (!item.bindings.style) {
+      item.bindings.style = createSingleBinding({
+        code: styleSheetAccess,
+      });
+      return;
+    }
+    try {
+      // run the code below only if the style binding is a JSON object
+      json5.parse(item.bindings.style.code || '{}');
+
+      item.bindings.style = createSingleBinding({
+        code:
+          item.bindings.style?.code.replace(/}$/, `, ...${styleSheetAccess} }`) || styleSheetAccess,
+      });
+    } catch (e) {
+      // if not a JSON, then it's a property, so we should spread it.
+      item.bindings.style = createSingleBinding({
+        code: `{
+        ...${styleSheetAccess},
+        ...${item.bindings.style.code}
+        }`,
+      });
+    }
   });
 
   return styleMap;
