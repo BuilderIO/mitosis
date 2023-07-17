@@ -1,4 +1,4 @@
-export default function MyComponent(props) {
+export default function StylePropClassAndCss(props) {
   return (
     <div
       style={props.attributes.style}
