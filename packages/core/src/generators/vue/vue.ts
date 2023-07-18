@@ -104,7 +104,10 @@ const BASE_OPTIONS: ToVueOptions = {
 
 const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
   (userOptions) =>
-  ({ component, path }) => {
+  ({ component: _component, path }) => {
+    // Make a copy we can safely mutate, similar to babel's toolchain can be used
+    let component = fastClone(_component);
+
     const options = initializeOptions({
       target: userOptions?.vueVersion === 2 ? 'vue2' : 'vue3',
       component,
@@ -173,8 +176,6 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
       options.plugins.unshift(FUNCTION_HACK_PLUGIN);
       options.asyncComponentImports = false;
     }
-    // Make a copy we can safely mutate, similar to babel's toolchain can be used
-    component = fastClone(component);
     processHttpRequests(component);
     processDynamicComponents(component, options);
     processForKeys(component, options);

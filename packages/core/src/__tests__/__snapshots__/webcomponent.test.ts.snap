@@ -1814,9 +1814,13 @@ class MyBooleanAttribute extends HTMLElement {
 
     this._root.innerHTML = \`
       <div>
-        <slot></slot>
+        <template data-el=\\"show-my-boolean-attribute\\">
+          <slot></slot>
       
-        <template data-el=\\"div-my-boolean-attribute-2\\"><!-- props.type --></template>
+          <template data-el=\\"div-my-boolean-attribute-2\\">
+            <!-- props.type -->
+          </template>
+        </template>
       
         <my-boolean-attribute-component
           data-el=\\"my-boolean-attribute-component-my-boolean-attribute\\"
@@ -1836,6 +1840,26 @@ class MyBooleanAttribute extends HTMLElement {
     this.onMount();
     this.pendingUpdate = false;
     this.update();
+  }
+
+  showContent(el) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+    // grabs the content of a node that is between <template> tags
+    // iterates through child nodes to register all content including text elements
+    // attaches the content after the template
+
+    const elementFragment = el.content.cloneNode(true);
+    const children = Array.from(elementFragment.childNodes);
+    children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      this.nodesToDestroy.push(child);
+    });
+    el.after(elementFragment);
   }
 
   onMount() {}
@@ -1859,6 +1883,16 @@ class MyBooleanAttribute extends HTMLElement {
   }
 
   updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='show-my-boolean-attribute']\\")
+      .forEach((el) => {
+        const whenCondition = this.props.children;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
     this._root
       .querySelectorAll(\\"[data-el='div-my-boolean-attribute-2']\\")
       .forEach((el) => {
@@ -14662,9 +14696,13 @@ class MyBooleanAttribute extends HTMLElement {
 
     this._root.innerHTML = \`
       <div>
-        <slot></slot>
+        <template data-el=\\"show-my-boolean-attribute\\">
+          <slot></slot>
       
-        <template data-el=\\"div-my-boolean-attribute-2\\"><!-- props.type --></template>
+          <template data-el=\\"div-my-boolean-attribute-2\\">
+            <!-- props.type -->
+          </template>
+        </template>
       
         <my-boolean-attribute-component
           data-el=\\"my-boolean-attribute-component-my-boolean-attribute\\"
@@ -14684,6 +14722,26 @@ class MyBooleanAttribute extends HTMLElement {
     this.onMount();
     this.pendingUpdate = false;
     this.update();
+  }
+
+  showContent(el) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+    // grabs the content of a node that is between <template> tags
+    // iterates through child nodes to register all content including text elements
+    // attaches the content after the template
+
+    const elementFragment = el.content.cloneNode(true);
+    const children = Array.from(elementFragment.childNodes);
+    children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      this.nodesToDestroy.push(child);
+    });
+    el.after(elementFragment);
   }
 
   onMount() {}
@@ -14707,6 +14765,16 @@ class MyBooleanAttribute extends HTMLElement {
   }
 
   updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='show-my-boolean-attribute']\\")
+      .forEach((el) => {
+        const whenCondition = this.props.children;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
     this._root
       .querySelectorAll(\\"[data-el='div-my-boolean-attribute-2']\\")
       .forEach((el) => {

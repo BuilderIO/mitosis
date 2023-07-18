@@ -295,6 +295,10 @@ const NODE_MAPPERS: {
       `;
     }
 
+    if (slotName === 'default') {
+      return `<slot>${renderChildren()}</slot>`;
+    }
+
     return `<slot name="${stripSlotPrefix(
       slotName,
       SLOT_PREFIX,
@@ -415,7 +419,11 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
   const textCode = node.bindings._text?.code;
   if (textCode) {
     if (isSlotProperty(textCode, SLOT_PREFIX)) {
-      return `<slot name="${stripSlotPrefix(textCode, SLOT_PREFIX).toLowerCase()}"/>`;
+      const slotName = stripSlotPrefix(textCode, SLOT_PREFIX).toLowerCase();
+
+      if (slotName === 'default') return `<slot/>`;
+
+      return `<slot name="${slotName}"/>`;
     }
     return `{{${textCode}}}`;
   }
