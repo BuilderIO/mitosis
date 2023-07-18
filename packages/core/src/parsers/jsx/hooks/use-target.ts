@@ -68,9 +68,6 @@ export const getUseTargetStatements = (
     targetBlock[prop.key.name as unknown as 'default'] = {
       code: generate(targetCode).code,
     };
-
-    // TO-DO: replace the useTarget() call with a magic string
-    // this will be replaced with the actual target code later
   });
 
   return Object.keys(targetBlock).length ? targetBlock : undefined;

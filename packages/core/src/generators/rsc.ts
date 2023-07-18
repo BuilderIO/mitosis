@@ -1,7 +1,6 @@
 import traverse from 'traverse';
 import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
-import { fastClone } from '../helpers/fast-clone';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { mergeOptions } from '../helpers/merge-options';
 import { MitosisComponent } from '../types/mitosis-component';
@@ -62,19 +61,16 @@ const RSC_TRANSFORM_PLUGIN: Plugin = () => ({
 
 const DEFAULT_OPTIONS: Partial<ToRscOptions> = {
   plugins: [RSC_TRANSFORM_PLUGIN],
+  stylesType: 'style-tag',
+  stateType: 'variables',
+  contextType: 'prop-drill',
+  rsc: true,
 };
 
 export const componentToRsc: TranspilerGenerator<Partial<ToRscOptions>> =
   (_options = {}) =>
   ({ component, path }) => {
-    const json = fastClone(component);
+    const options = mergeOptions(DEFAULT_OPTIONS, _options);
 
-    const options = mergeOptions(DEFAULT_OPTIONS, _options, {
-      stylesType: 'style-tag',
-      stateType: 'variables',
-      contextType: 'prop-drill',
-      rsc: true,
-    });
-
-    return componentToReact(options)({ component: json, path });
+    return componentToReact(options)({ component, path });
   };
