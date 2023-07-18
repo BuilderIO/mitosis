@@ -156,16 +156,14 @@ function optionsApiStateAndPropsReplace(
   thisPrefix: string,
   codeType: ProcessBinding['codeType'],
 ) {
-  if (codeType === 'bindings') {
-    return isSlotProperty(name) ? replaceSlotsInString(name, (x) => `$slots.${x}`) : name;
-  }
+  const prefixToUse = codeType === 'bindings' ? '' : thisPrefix + '.';
 
   if (name === 'children' || name.startsWith('children.')) {
-    return `${thisPrefix}.$slots.default`;
+    return `${prefixToUse}$slots.default`;
   }
   return isSlotProperty(name)
-    ? replaceSlotsInString(name, (x) => `${thisPrefix}.$slots.${x}`)
-    : `${thisPrefix}.${name}`;
+    ? replaceSlotsInString(name, (x) => `${prefixToUse}$slots.${x}`)
+    : `${prefixToUse}${name}`;
 }
 
 type ProcessBinding = {
