@@ -1,5 +1,5 @@
-import { MitosisNode } from 'src/types/mitosis-node';
 import { MitosisComponent } from '../../../types/mitosis-component';
+import { MitosisNode } from '../../../types/mitosis-node';
 
 export type CodeType =
   | 'hooks'
