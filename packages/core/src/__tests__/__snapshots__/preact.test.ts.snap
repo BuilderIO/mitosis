@@ -1220,11 +1220,35 @@ function FormInputComponent(props) {
       value={props.value}
       defaultValue={props.defaultValue}
       required={props.required}
+      onChange={(event) => props.onChange?.(event.target.value)}
     />
   );
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > InputParent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props) {
+  function handleChange(event) {
+    console.log(\\"change\\", event);
+  }
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange={(value) => handleChange(value)}
+    />
+  );
+}
+
+export default Stepper;
 "
 `;
 
@@ -4565,6 +4589,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -4584,11 +4609,35 @@ function FormInputComponent(props: FormInputProps) {
       value={props.value}
       defaultValue={props.defaultValue}
       required={props.required}
+      onChange={(event) => props.onChange?.(event.target.value)}
     />
   );
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > InputParent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props: any) {
+  function handleChange(event: string) {
+    console.log(\\"change\\", event);
+  }
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange={(value) => handleChange(value)}
+    />
+  );
+}
+
+export default Stepper;
 "
 `;
 

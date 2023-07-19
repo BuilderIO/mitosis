@@ -1255,6 +1255,7 @@ export default class FormInputComponent {
   @Prop() name: any;
   @Prop() value: any;
   @Prop() required: any;
+  @Prop() onChange: any;
 
   render() {
     return (
@@ -1271,7 +1272,34 @@ export default class FormInputComponent {
         value={this.value}
         defaultValue={this.defaultValue}
         required={this.required}
+        onInput={(event) => this.onChange?.(event.target.value)}
       />
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"stepper\\",
+})
+export default class Stepper {
+  handleChange(event) {
+    console.log(\\"change\\", event);
+  }
+
+  render() {
+    return (
+      <FormInputComponent
+        name=\\"kingzez\\"
+        type=\\"text\\"
+        onChange={(value) => this.handleChange(value)}
+      ></FormInputComponent>
     );
   }
 }
@@ -4209,6 +4237,7 @@ export default class FormInputComponent {
   @Prop() name: any;
   @Prop() value: any;
   @Prop() required: any;
+  @Prop() onChange: any;
 
   render() {
     return (
@@ -4225,7 +4254,34 @@ export default class FormInputComponent {
         value={this.value}
         defaultValue={this.defaultValue}
         required={this.required}
+        onInput={(event) => this.onChange?.(event.target.value)}
       />
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"stepper\\",
+})
+export default class Stepper {
+  handleChange(event: string) {
+    console.log(\\"change\\", event);
+  }
+
+  render() {
+    return (
+      <FormInputComponent
+        name=\\"kingzez\\"
+        type=\\"text\\"
+        onChange={(value) => this.handleChange(value)}
+      ></FormInputComponent>
     );
   }
 }

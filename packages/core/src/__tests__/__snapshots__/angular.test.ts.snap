@@ -2823,6 +2823,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
+      (input)=\\"onChange?.($event.target.value)\\"
     />
   \`,
 })
@@ -2834,6 +2835,7 @@ export class FormInputComponent {
   @Input() name: any;
   @Input() value: any;
   @Input() required: any;
+  @Input() onChange: any;
 }
 
 @NgModule({
@@ -2862,6 +2864,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
+      (input)=\\"onChange?.($event.target.value)\\"
     />
   \`,
   standalone: true,
@@ -2875,6 +2878,66 @@ export class FormInputComponent {
   @Input() name: any;
   @Input() value: any;
   @Input() required: any;
+  @Input() onChange: any;
+}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > InputParent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+@Component({
+  selector: \\"stepper, Stepper\\",
+  template: \`
+    <form-input-component
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      (change)=\\"handleChange($event)\\"
+    ></form-input-component>
+  \`,
+})
+export class Stepper {
+  handleChange(event) {
+    console.log(\\"change\\", event);
+  }
+}
+
+@NgModule({
+  declarations: [Stepper],
+  imports: [CommonModule, FormInputComponentModule],
+  exports: [Stepper],
+})
+export class StepperModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > InputParent 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+@Component({
+  selector: \\"stepper, Stepper\\",
+  template: \`
+    <form-input-component
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      (change)=\\"handleChange($event)\\"
+    ></form-input-component>
+  \`,
+  standalone: true,
+  imports: [CommonModule, FormInputComponent],
+})
+export class Stepper {
+  handleChange(event) {
+    console.log(\\"change\\", event);
+  }
 }
 "
 `;
@@ -10722,6 +10785,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -10737,6 +10801,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
+      (input)=\\"onChange?.($event.target.value)\\"
     />
   \`,
 })
@@ -10748,6 +10813,7 @@ export class FormInputComponent {
   @Input() name: FormInputProps[\\"name\\"];
   @Input() value: FormInputProps[\\"value\\"];
   @Input() required: FormInputProps[\\"required\\"];
+  @Input() onChange: FormInputProps[\\"onChange\\"];
 }
 
 @NgModule({
@@ -10771,6 +10837,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -10786,6 +10853,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
+      (input)=\\"onChange?.($event.target.value)\\"
     />
   \`,
   standalone: true,
@@ -10799,6 +10867,66 @@ export class FormInputComponent {
   @Input() name: FormInputProps[\\"name\\"];
   @Input() value: FormInputProps[\\"value\\"];
   @Input() required: FormInputProps[\\"required\\"];
+  @Input() onChange: FormInputProps[\\"onChange\\"];
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > InputParent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+@Component({
+  selector: \\"stepper, Stepper\\",
+  template: \`
+    <form-input-component
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      (change)=\\"handleChange($event)\\"
+    ></form-input-component>
+  \`,
+})
+export class Stepper {
+  handleChange(event: string) {
+    console.log(\\"change\\", event);
+  }
+}
+
+@NgModule({
+  declarations: [Stepper],
+  imports: [CommonModule, FormInputComponentModule],
+  exports: [Stepper],
+})
+export class StepperModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > InputParent 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+@Component({
+  selector: \\"stepper, Stepper\\",
+  template: \`
+    <form-input-component
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      (change)=\\"handleChange($event)\\"
+    ></form-input-component>
+  \`,
+  standalone: true,
+  imports: [CommonModule, FormInputComponent],
+})
+export class Stepper {
+  handleChange(event: string) {
+    console.log(\\"change\\", event);
+  }
 }
 "
 `;

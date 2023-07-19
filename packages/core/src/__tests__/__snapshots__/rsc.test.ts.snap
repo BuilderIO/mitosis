@@ -1100,6 +1100,26 @@ export default FormInputComponent;
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > InputParent 1`] = `
+"import * as React from \\"react\\";
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    handleChange(event) {
+      console.log(\\"change\\", event);
+    },
+  };
+
+  return <FormInputComponent name=\\"kingzez\\" type=\\"text\\" _context={_context} />;
+}
+
+export default Stepper;
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
@@ -4191,6 +4211,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -4217,6 +4238,26 @@ function FormInputComponent(props: FormInputProps) {
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > InputParent 1`] = `
+"import * as React from \\"react\\";
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    handleChange(event: string) {
+      console.log(\\"change\\", event);
+    },
+  };
+
+  return <FormInputComponent name=\\"kingzez\\" type=\\"text\\" _context={_context} />;
+}
+
+export default Stepper;
 "
 `;
 

@@ -3005,11 +3005,36 @@ export const FormInputComponent = component$((props) => {
       value={props.value}
       defaultValue={props.defaultValue}
       required={props.required}
+      onChange$={(event) => props.onChange?.(event.target.value)}
     />
   );
 });
 
 export default FormInputComponent;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const handleChange = function handleChange(props, state, event) {
+  console.log(\\"change\\", event);
+};
+export const Stepper = component$((props) => {
+  const state = {};
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange$={(event) => handleChange(props, state, value)}
+    ></FormInputComponent>
+  );
+});
+
+export default Stepper;
 "
 `;
 
@@ -6181,6 +6206,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 export const FormInputComponent = component$((props: FormInputProps) => {
   return (
@@ -6197,11 +6223,36 @@ export const FormInputComponent = component$((props: FormInputProps) => {
       value={props.value}
       defaultValue={props.defaultValue}
       required={props.required}
+      onChange$={(event) => props.onChange?.(event.target.value)}
     />
   );
 });
 
 export default FormInputComponent;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const handleChange = function handleChange(props, state, event: string) {
+  console.log(\\"change\\", event);
+};
+export const Stepper = component$((props: any) => {
+  const state: any = {};
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange$={(event) => handleChange(props, state, value)}
+    ></FormInputComponent>
+  );
+});
+
+export default Stepper;
 "
 `;
 
