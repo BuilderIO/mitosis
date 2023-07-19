@@ -1,5 +1,8 @@
-import { pipe } from 'fp-ts/lib/function';
-import { getIdFromMatch, USE_TARGET_MAGIC_REGEX } from '../../parsers/jsx/hooks/use-target';
+import {
+  getIdFromMatch,
+  USE_TARGET_MAGIC_REGEX,
+  USE_TARGET_MAGIC_STRING,
+} from '../../parsers/jsx/hooks/use-target';
 import { Targets } from '../../targets';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { Plugin } from '../../types/plugins';
@@ -29,12 +32,33 @@ const getBlockForTarget = ({
 /**
  * Processes `useTarget()` blocks for a given target.
  */
-export const processTargetBlocks = (target: Targets): Plugin =>
-  pipe(
-    createCodeProcessorPlugin((_codeType, json) => (code) => {
+export const processTargetBlocks = (target: Targets): Plugin => {
+  const plugin = createCodeProcessorPlugin(
+    (codeType, json, node) => (code, key) => {
+      if (codeType === 'properties') {
+        const matches = code.includes(USE_TARGET_MAGIC_STRING);
+        const property = node?.properties[key];
+        if (!matches || !property) return code;
+
+        node.bindings[key] = {
+          code: '"' + property + '"',
+          type: 'single',
+        };
+
+        return () => {
+          console.log('deleting node');
+
+          delete node.properties[key];
+        };
+      }
+
       const matches = code.match(USE_TARGET_MAGIC_REGEX);
 
+      if (!matches && code.includes(USE_TARGET_MAGIC_STRING)) {
+        console.log('matches broke', code);
+      }
       if (!matches) return code;
+      console.log('matches yes', matches);
       for (const m of matches) {
         // get the captured ID of the target block
         const targetId = getIdFromMatch(m);
@@ -54,7 +78,23 @@ export const processTargetBlocks = (target: Targets): Plugin =>
       }
 
       return code;
-    }),
-    (plugin): Plugin =>
-      () => ({ json: { pre: plugin } }),
+    },
+    { processProperties: true },
   );
+
+  return () => ({
+    json: {
+      pre: (json) => {
+        const l = json.name === 'StylePropClassAndCss';
+
+        if (l) {
+          console.log('BEFORE JSON', json.children[0]);
+        }
+        plugin(json);
+        if (l) {
+          console.log('AFTER JSON', json.children[0]);
+        }
+      },
+    },
+  });
+};

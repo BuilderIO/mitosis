@@ -3338,7 +3338,10 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > stylePropClassAndCss 1`] = `
 "<template>
-  <div class=\\"builder-column div\\" :style=\\"attributes.style\\"></div>
+  <div
+    :style=\\"attributes.style\\"
+    :class=\\"_classStringToObject(attributes.className + ' div')\\"
+  ></div>
 </template>
 
 <script>
@@ -3348,6 +3351,20 @@ export default defineComponent({
   name: \\"style-prop-class-and-css\\",
 
   props: [\\"attributes\\"],
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
 });
 </script>
 
@@ -7271,7 +7288,10 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > stylePropClassAndCss 1`] = `
 "<template>
-  <div class=\\"builder-column div\\" :style=\\"attributes.style\\"></div>
+  <div
+    :style=\\"attributes.style\\"
+    :class=\\"_classStringToObject(attributes.className + ' div')\\"
+  ></div>
 </template>
 
 <script lang=\\"ts\\">
@@ -7281,6 +7301,20 @@ export default defineComponent({
   name: \\"style-prop-class-and-css\\",
 
   props: [\\"attributes\\"],
+
+  methods: {
+    _classStringToObject(str: string) {
+      const obj: Record<string, boolean> = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
 });
 </script>
 
