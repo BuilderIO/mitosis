@@ -46,19 +46,13 @@ export const processTargetBlocks = (target: Targets): Plugin => {
         };
 
         return () => {
-          console.log('deleting node');
-
           delete node.properties[key];
         };
       }
 
       const matches = code.match(USE_TARGET_MAGIC_REGEX);
 
-      if (!matches && code.includes(USE_TARGET_MAGIC_STRING)) {
-        console.log('matches broke', code);
-      }
       if (!matches) return code;
-      console.log('matches yes', matches);
       for (const m of matches) {
         // get the captured ID of the target block
         const targetId = getIdFromMatch(m);
@@ -82,19 +76,5 @@ export const processTargetBlocks = (target: Targets): Plugin => {
     { processProperties: true },
   );
 
-  return () => ({
-    json: {
-      pre: (json) => {
-        const l = json.name === 'StylePropClassAndCss';
-
-        if (l) {
-          console.log('BEFORE JSON', json.children[0]);
-        }
-        plugin(json);
-        if (l) {
-          console.log('AFTER JSON', json.children[0]);
-        }
-      },
-    },
-  });
+  return () => ({ json: { pre: plugin } });
 };
