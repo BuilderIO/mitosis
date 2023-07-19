@@ -1,4 +1,5 @@
 import { MitosisComponent } from '../../../types/mitosis-component';
+import { MitosisNode } from '../../../types/mitosis-node';
 
 export type CodeType =
   | 'hooks'
@@ -18,6 +19,7 @@ export type CodeType =
 declare function codeProcessor(
   codeType: CodeType,
   json: MitosisComponent,
-): (code: string, hookType: string) => string;
+  node?: MitosisNode,
+): (code: string, hookType: string) => string | (() => void);
 
 export type CodeProcessor = typeof codeProcessor;

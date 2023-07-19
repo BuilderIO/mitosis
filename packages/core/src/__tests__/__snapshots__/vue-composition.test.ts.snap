@@ -2733,11 +2733,26 @@ exports[`Vue > jsx > Javascript Test > styleClassAndCss 1`] = `
 
 exports[`Vue > jsx > Javascript Test > stylePropClassAndCss 1`] = `
 "<template>
-  <div class=\\"builder-column div\\" :style=\\"attributes.style\\"></div>
+  <div
+    :style=\\"attributes.style\\"
+    :class=\\"_classStringToObject(attributes.className + ' div')\\"
+  ></div>
 </template>
 
 <script setup>
 const props = defineProps([\\"attributes\\"]);
+
+function _classStringToObject(str) {
+  const obj = {};
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
+  const classNames = str.trim().split(/\\\\s+/);
+  for (const name of classNames) {
+    obj[name] = true;
+  }
+  return obj;
+}
 </script>
 
 <style scoped>
@@ -5945,11 +5960,26 @@ exports[`Vue > jsx > Typescript Test > styleClassAndCss 1`] = `
 
 exports[`Vue > jsx > Typescript Test > stylePropClassAndCss 1`] = `
 "<template>
-  <div class=\\"builder-column div\\" :style=\\"attributes.style\\"></div>
+  <div
+    :style=\\"attributes.style\\"
+    :class=\\"_classStringToObject(attributes.className + ' div')\\"
+  ></div>
 </template>
 
 <script setup lang=\\"ts\\">
 const props = defineProps([\\"attributes\\"]);
+
+function _classStringToObject(str: string) {
+  const obj: Record<string, boolean> = {};
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
+  const classNames = str.trim().split(/\\\\s+/);
+  for (const name of classNames) {
+    obj[name] = true;
+  }
+  return obj;
+}
 </script>
 
 <style scoped>
