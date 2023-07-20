@@ -134,11 +134,11 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
         [
           function (this: SrcBuilder) {
             css = emitUseStyles(file, component);
+            emitUseComputed(file, component);
             emitUseContext(file, component);
             emitUseRef(file, component);
             hasState &&
               emitUseStore({ file, stateInit: state, isDeep: metadata?.qwik?.hasDeepStore });
-            emitUseComputed(file, component);
             emitUseContextProvider(file, component);
             emitUseClientEffect(file, component);
             emitUseMount(file, component);
