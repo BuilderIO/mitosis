@@ -46,6 +46,9 @@ export function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
 }
 
+export const mapMitosisComponentToKebabCase = (componentName: string) =>
+  componentName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
 // Transform <FooBar> to <foo-bar> as Vue2 needs
 export const renameMitosisComponentsToKebabCase = (str: string) =>
   str.replace(/<\/?\w+/g, (match) => {
@@ -53,7 +56,7 @@ export const renameMitosisComponentsToKebabCase = (str: string) =>
     if (VALID_HTML_TAGS.includes(tagName)) {
       return match;
     } else {
-      return match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+      return mapMitosisComponentToKebabCase(match);
     }
   });
 
@@ -153,16 +156,14 @@ function optionsApiStateAndPropsReplace(
   thisPrefix: string,
   codeType: ProcessBinding['codeType'],
 ) {
-  if (codeType === 'bindings') {
-    return isSlotProperty(name) ? replaceSlotsInString(name, (x) => `$slots.${x}`) : name;
-  }
+  const prefixToUse = codeType === 'bindings' ? '' : thisPrefix + '.';
 
   if (name === 'children' || name.startsWith('children.')) {
-    return `${thisPrefix}.$slots.default`;
+    return `${prefixToUse}$slots.default`;
   }
   return isSlotProperty(name)
-    ? replaceSlotsInString(name, (x) => `${thisPrefix}.$slots.${x}`)
-    : `${thisPrefix}.${name}`;
+    ? replaceSlotsInString(name, (x) => `${prefixToUse}$slots.${x}`)
+    : `${prefixToUse}${name}`;
 }
 
 type ProcessBinding = {
@@ -191,16 +192,17 @@ export const processBinding = ({
         switch (options.api) {
           // keep pointing to `props.${value}`
           case 'composition':
-            if (codeType === 'bindings') {
-              return isSlotProperty(name) ? replaceSlotsInString(name, (x) => `$slots.${x}`) : name;
-            }
+            const slotPrefix = codeType === 'bindings' ? '$slots' : 'useSlots()';
 
             if (name === 'children' || name.startsWith('children.')) {
-              return `useSlots().default`;
+              return `${slotPrefix}.default`;
             }
             return isSlotProperty(name)
-              ? replaceSlotsInString(name, (x) => `useSlots().${x}`)
+              ? replaceSlotsInString(name, (x) => `${slotPrefix}.${x}`)
+              : codeType === 'bindings'
+              ? name
               : `props.${name}`;
+
           case 'options':
             return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
         }

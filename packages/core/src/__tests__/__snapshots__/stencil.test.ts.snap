@@ -243,9 +243,12 @@ export default class MyBooleanAttribute {
   render() {
     return (
       <div>
-        {this.children}
-
-        {this.type}
+        {this.children ? (
+          <>
+            {this.children}
+            {this.type}
+          </>
+        ) : null}
 
         <MyBooleanAttributeComponent
           toggle={true}
@@ -2735,6 +2738,34 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"style-prop-class-and-css\\",
+  styles: \`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+\`,
+})
+export default class StylePropClassAndCss {
+  @Prop() attributes: any;
+
+  render() {
+    return (
+      <div
+        class={props.attributes.class + \\" div\\"}
+        style={this.attributes.style}
+      ></div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > subComponent 1`] = `
 "import Foo from \\"./foo-sub-component.lite\\";
 
@@ -3162,9 +3193,12 @@ export default class MyBooleanAttribute {
   render() {
     return (
       <div>
-        {this.children}
-
-        {this.type}
+        {this.children ? (
+          <>
+            {this.children}
+            {this.type}
+          </>
+        ) : null}
 
         <MyBooleanAttributeComponent
           toggle={true}
@@ -5659,6 +5693,34 @@ export default class MyComponent {
         style={{
           width: \\"100%\\",
         }}
+      ></div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"style-prop-class-and-css\\",
+  styles: \`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+\`,
+})
+export default class StylePropClassAndCss {
+  @Prop() attributes: any;
+
+  render() {
+    return (
+      <div
+        class={props.attributes.class + \\" div\\"}
+        style={this.attributes.style}
       ></div>
     );
   }

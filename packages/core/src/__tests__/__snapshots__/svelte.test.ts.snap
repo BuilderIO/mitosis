@@ -208,8 +208,11 @@ exports[`Svelte > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 </script>
 
 <div>
-  <slot />
-  {type}
+  {#if $$slots.default}
+    <slot />
+
+    {type}
+  {/if}
   <MyBooleanAttributeComponent toggle={true} />
   <MyBooleanAttributeComponent toggle={true} />
   <MyBooleanAttributeComponent list={null} />
@@ -2485,6 +2488,35 @@ exports[`Svelte > jsx > Javascript Test > styleClassAndCss 1`] = `
 </style>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"<script>
+  export let attributes;
+
+  function mitosis_styling(node, vars) {
+    Object.entries(vars || {}).forEach(([p, v]) => {
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
+    });
+  }
+</script>
+
+<div
+  use:mitosis_styling={attributes.style}
+  class={attributes.classfdsa + \\" div\\"}
+/>
+
+<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > subComponent 1`] = `
 "<script>
   import Foo from \\"./foo-sub-component.svelte\\";
@@ -2819,8 +2851,11 @@ exports[`Svelte > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 </script>
 
 <div>
-  <slot />
-  {type}
+  {#if $$slots.default}
+    <slot />
+
+    {type}
+  {/if}
   <MyBooleanAttributeComponent toggle={true} />
   <MyBooleanAttributeComponent toggle={true} />
   <MyBooleanAttributeComponent list={null} />
@@ -5600,6 +5635,35 @@ exports[`Svelte > jsx > Typescript Test > styleClassAndCss 1`] = `
     width: \\"100%\\",
   }}
   class=\\"builder-column div\\"
+/>
+
+<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"<script lang=\\"ts\\">
+  export let attributes;
+
+  function mitosis_styling(node, vars) {
+    Object.entries(vars || {}).forEach(([p, v]) => {
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
+    });
+  }
+</script>
+
+<div
+  use:mitosis_styling={attributes.style}
+  class={attributes.classfdsa + \\" div\\"}
 />
 
 <style>

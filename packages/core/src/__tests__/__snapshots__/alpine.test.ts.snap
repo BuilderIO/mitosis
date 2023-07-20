@@ -204,9 +204,11 @@ exports[`Alpine.js > jsx > Javascript Test > BasicAttribute 1`] = `
 
 exports[`Alpine.js > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 "<div x-data=\\"myBooleanAttribute()\\">
-  <span x-html=\\"children\\"></span>
+  <template x-if=\\"children\\">
+    <span x-html=\\"children\\"></span>
 
-  <span x-html=\\"type\\"></span>
+    <span x-html=\\"type\\"></span>
+  </template>
 
   <MyBooleanAttributeComponent
     x-bind:toggle=\\"true\\"
@@ -2433,6 +2435,27 @@ exports[`Alpine.js > jsx > Javascript Test > styleClassAndCss 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>
+<div
+  x-data=\\"stylePropClassAndCss()\\"
+  x-bind:style=\\"attributes.style\\"
+  x-bind:class=\\"attributes.class + ' div'\\"
+></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"stylePropClassAndCss\\", () => ({}));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > subComponent 1`] = `
 "<Foo x-data=\\"subComponent()\\"></Foo>
 <script>
@@ -2779,9 +2802,11 @@ exports[`Alpine.js > jsx > Typescript Test > BasicAttribute 1`] = `
 
 exports[`Alpine.js > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 "<div x-data=\\"myBooleanAttribute()\\">
-  <span x-html=\\"children\\"></span>
+  <template x-if=\\"children\\">
+    <span x-html=\\"children\\"></span>
 
-  <span x-html=\\"type\\"></span>
+    <span x-html=\\"type\\"></span>
+  </template>
 
   <MyBooleanAttributeComponent
     x-bind:toggle=\\"true\\"
@@ -4995,6 +5020,27 @@ exports[`Alpine.js > jsx > Typescript Test > styleClassAndCss 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>
+<div
+  x-data=\\"stylePropClassAndCss()\\"
+  x-bind:style=\\"attributes.style\\"
+  x-bind:class=\\"attributes.class + ' div'\\"
+></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"stylePropClassAndCss\\", () => ({}));
   });
 </script>
 "

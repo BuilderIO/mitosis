@@ -287,9 +287,12 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props) {
   return (
     <View>
-      {props.children}
-
-      <Text>{props.type}</Text>
+      {props.children ? (
+        <>
+          {props.children}
+          <Text>{props.type}</Text>
+        </>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -2084,7 +2087,7 @@ function MyBasicComponent(props) {
   }));
 
   return (
-    <View style={styleState}>
+    <View style={{ ...styles.view1, ...styleState }}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -3523,6 +3526,29 @@ export default MyComponent;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function StylePropClassAndCss(props) {
+  return <View style={{ ...styles.view1, ...props.attributes.style }} />;
+}
+
+const styles = StyleSheet.create({
+  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
+});
+
+export default StylePropClassAndCss;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > subComponent 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -4041,9 +4067,12 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props: Props) {
   return (
     <View>
-      {props.children}
-
-      <Text>{props.type}</Text>
+      {props.children ? (
+        <>
+          {props.children}
+          <Text>{props.type}</Text>
+        </>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -6080,7 +6109,7 @@ function MyBasicComponent(props: any) {
   }));
 
   return (
-    <View style={styleState}>
+    <View style={{ ...styles.view1, ...styleState }}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -7647,6 +7676,29 @@ const styles = StyleSheet.create({
 });
 
 export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function StylePropClassAndCss(props: any) {
+  return <View style={{ ...styles.view1, ...props.attributes.style }} />;
+}
+
+const styles = StyleSheet.create({
+  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
+});
+
+export default StylePropClassAndCss;
 "
 `;
 

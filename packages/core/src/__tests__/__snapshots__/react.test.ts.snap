@@ -229,9 +229,12 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props) {
   return (
     <div>
-      {props.children}
-
-      {props.type}
+      {props.children ? (
+        <>
+          {props.children}
+          {props.type}
+        </>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -2939,6 +2942,31 @@ export default MyComponent;
 "
 `;
 
+exports[`React > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import * as React from \\"react\\";
+
+function StylePropClassAndCss(props) {
+  return (
+    <>
+      <div
+        style={props.attributes.style}
+        className={props.attributes.class + \\" div\\"}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
+
 exports[`React > jsx > Javascript Test > subComponent 1`] = `
 "import * as React from \\"react\\";
 import Foo from \\"./foo-sub-component.lite\\";
@@ -3347,9 +3375,12 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props: Props) {
   return (
     <div>
-      {props.children}
-
-      {props.type}
+      {props.children ? (
+        <>
+          {props.children}
+          {props.type}
+        </>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -6427,6 +6458,31 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import * as React from \\"react\\";
+
+function StylePropClassAndCss(props: any) {
+  return (
+    <>
+      <div
+        style={props.attributes.style}
+        className={props.attributes.class + \\" div\\"}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default StylePropClassAndCss;
 "
 `;
 

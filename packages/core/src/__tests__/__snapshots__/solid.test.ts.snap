@@ -515,13 +515,17 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
-"import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+"import { Show } from \\"solid-js\\";
+
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
 function MyBooleanAttribute(props) {
   return (
     <div>
-      {props.children}
-      {props.type}
+      <Show when={props.children}>
+        {props.children}
+        {props.type}
+      </Show>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
       <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
@@ -534,7 +538,9 @@ export default MyBooleanAttribute;
 `;
 
 exports[`Solid > jsx > Javascript Test > BasicBooleanAttribute 2`] = `
-"import { css } from \\"solid-styled-components\\";
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
 
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
@@ -542,8 +548,10 @@ function MyBooleanAttribute(props) {
   return (
     <>
       <div>
-        {props.children}
-        {props.type}
+        <Show when={props.children}>
+          {props.children}
+          {props.type}
+        </Show>
         <MyBooleanAttributeComponent
           toggle={true}
         ></MyBooleanAttributeComponent>
@@ -5936,6 +5944,55 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function StylePropClassAndCss(props) {
+  return (
+    <div
+      class={
+        props.attributes.class +
+        \\" \\" +
+        css({
+          display: \\"flex\\",
+          flexDirection: \\"column\\",
+          alignItems: \\"stretch\\",
+        })
+      }
+      style={props.attributes.style}
+    ></div>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > stylePropClassAndCss 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function StylePropClassAndCss(props) {
+  return (
+    <>
+      <div
+        class={props.attributes.class + \\" div-c622a300\\"}
+        style={props.attributes.style}
+      ></div>
+      <style jsx>{\`
+        .div-c622a300 {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > subComponent 1`] = `
 "import Foo from \\"./foo-sub-component.jsx\\";
 
@@ -6822,7 +6879,9 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
-"type Props = {
+"import { Show } from \\"solid-js\\";
+
+type Props = {
   children: any;
   type: string;
 };
@@ -6832,8 +6891,10 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props: Props) {
   return (
     <div>
-      {props.children}
-      {props.type}
+      <Show when={props.children}>
+        {props.children}
+        {props.type}
+      </Show>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
       <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
@@ -6846,7 +6907,9 @@ export default MyBooleanAttribute;
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicBooleanAttribute 2`] = `
-"import { css } from \\"solid-styled-components\\";
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
 type Props = {
   children: any;
   type: string;
@@ -6858,8 +6921,10 @@ function MyBooleanAttribute(props: Props) {
   return (
     <>
       <div>
-        {props.children}
-        {props.type}
+        <Show when={props.children}>
+          {props.children}
+          {props.type}
+        </Show>
         <MyBooleanAttributeComponent
           toggle={true}
         ></MyBooleanAttributeComponent>
@@ -12928,6 +12993,55 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function StylePropClassAndCss(props: any) {
+  return (
+    <div
+      class={
+        props.attributes.class +
+        \\" \\" +
+        css({
+          display: \\"flex\\",
+          flexDirection: \\"column\\",
+          alignItems: \\"stretch\\",
+        })
+      }
+      style={props.attributes.style}
+    ></div>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > stylePropClassAndCss 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function StylePropClassAndCss(props: any) {
+  return (
+    <>
+      <div
+        class={props.attributes.class + \\" div-c622a300\\"}
+        style={props.attributes.style}
+      ></div>
+      <style jsx>{\`
+        .div-c622a300 {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default StylePropClassAndCss;
 "
 `;
 

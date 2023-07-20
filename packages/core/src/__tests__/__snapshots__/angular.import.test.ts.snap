@@ -349,9 +349,11 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   selector: \\"my-boolean-attribute, MyBooleanAttribute\\",
   template: \`
     <div>
-      <ng-content></ng-content>
+      <ng-container *ngIf=\\"children\\">
+        <ng-content></ng-content>
 
-      {{type}}
+        {{type}}
+      </ng-container>
 
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
@@ -3866,6 +3868,40 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"style-prop-class-and-css, StylePropClassAndCss\\",
+  template: \`
+    <div [ngStyle]=\\"attributes.style\\" [class]=\\"attributes.class + ' div'\\"></div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    \`,
+  ],
+})
+export class StylePropClassAndCss {
+  @Input() attributes: any;
+}
+
+@NgModule({
+  declarations: [StylePropClassAndCss],
+  imports: [CommonModule],
+  exports: [StylePropClassAndCss],
+})
+export class StylePropClassAndCssModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > subComponent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -4484,9 +4520,11 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   selector: \\"my-boolean-attribute, MyBooleanAttribute\\",
   template: \`
     <div>
-      <ng-content></ng-content>
+      <ng-container *ngIf=\\"children\\">
+        <ng-content></ng-content>
 
-      {{type}}
+        {{type}}
+      </ng-container>
 
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
@@ -8373,6 +8411,40 @@ export class MyComponent {}
   exports: [MyComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"style-prop-class-and-css, StylePropClassAndCss\\",
+  template: \`
+    <div [ngStyle]=\\"attributes.style\\" [class]=\\"attributes.class + ' div'\\"></div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    \`,
+  ],
+})
+export class StylePropClassAndCss {
+  @Input() attributes: any;
+}
+
+@NgModule({
+  declarations: [StylePropClassAndCss],
+  imports: [CommonModule],
+  exports: [StylePropClassAndCss],
+})
+export class StylePropClassAndCssModule {}
 "
 `;
 

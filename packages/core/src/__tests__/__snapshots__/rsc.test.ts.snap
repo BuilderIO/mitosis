@@ -199,9 +199,12 @@ function MyBooleanAttribute(props) {
 
   return (
     <div>
-      {props.children}
-
-      {props.type}
+      {props.children ? (
+        <>
+          {props.children}
+          {props.type}
+        </>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} _context={_context} />
 
@@ -2756,6 +2759,32 @@ export default MyComponent;
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import * as React from \\"react\\";
+
+function StylePropClassAndCss(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <>
+      <div
+        style={props.attributes.style}
+        className={props.attributes.class + \\" div-5b92afc8\\"}
+      />
+
+      <style>{\`.div-5b92afc8 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
+    </>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > subComponent 1`] = `
 "import * as React from \\"react\\";
 import Foo from \\"./foo-sub-component.lite\\";
@@ -3164,9 +3193,12 @@ function MyBooleanAttribute(props: Props) {
 
   return (
     <div>
-      {props.children}
-
-      {props.type}
+      {props.children ? (
+        <>
+          {props.children}
+          {props.type}
+        </>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} _context={_context} />
 
@@ -6091,6 +6123,32 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import * as React from \\"react\\";
+
+function StylePropClassAndCss(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <>
+      <div
+        style={props.attributes.style}
+        className={props.attributes.class + \\" div-5b92afc8\\"}
+      />
+
+      <style>{\`.div-5b92afc8 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
+    </>
+  );
+}
+
+export default StylePropClassAndCss;
 "
 `;
 

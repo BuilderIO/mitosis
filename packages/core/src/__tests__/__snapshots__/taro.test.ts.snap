@@ -236,9 +236,12 @@ import { View, Text } from \\"@tarojs/components\\";
 function MyBooleanAttribute(props) {
   return (
     <View>
-      {props.children}
-
-      {props.type}
+      {props.children ? (
+        <>
+          {props.children}
+          {props.type}
+        </>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -2990,6 +2993,29 @@ export default MyComponent;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function StylePropClassAndCss(props) {
+  return (
+    <>
+      <View className=\\"view\\" style={props.attributes.style} />
+      <style jsx>{\`
+        .view {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
+
 exports[`Taro > jsx > Javascript Test > subComponent 1`] = `
 "import * as React from \\"react\\";
 import Foo from \\"./foo-sub-component.lite\\";
@@ -3416,9 +3442,12 @@ import { View, Text } from \\"@tarojs/components\\";
 function MyBooleanAttribute(props: Props) {
   return (
     <View>
-      {props.children}
-
-      {props.type}
+      {props.children ? (
+        <>
+          {props.children}
+          {props.type}
+        </>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -6565,6 +6594,29 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function StylePropClassAndCss(props: any) {
+  return (
+    <>
+      <View className=\\"view\\" style={props.attributes.style} />
+      <style jsx>{\`
+        .view {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default StylePropClassAndCss;
 "
 `;
 

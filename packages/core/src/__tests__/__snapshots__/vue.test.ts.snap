@@ -285,7 +285,12 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <template v-if=\\"$slots.default\\">
+      <slot />
+
+      {{ type }}
+    </template>
+
     <my-boolean-attribute-component
       :toggle=\\"true\\"
     ></my-boolean-attribute-component>
@@ -305,7 +310,7 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 
 export default defineComponent({
   name: \\"my-boolean-attribute\\",
-  components: { MyBooleanAttributeComponent: MyBooleanAttributeComponent },
+  components: { \\"my-boolean-attribute-component\\": MyBooleanAttributeComponent },
   props: [\\"type\\"],
 });
 </script>"
@@ -333,8 +338,8 @@ import MyBasicComponent from \\"./basic.raw\\";
 export default defineComponent({
   name: \\"my-basic-child-component\\",
   components: {
-    MyBasicComponent: MyBasicComponent,
-    MyBasicOnMountUpdateComponent: MyBasicOnMountUpdateComponent,
+    \\"my-basic-component\\": MyBasicComponent,
+    \\"my-basic-on-mount-update-component\\": MyBasicOnMountUpdateComponent,
   },
 
   data() {
@@ -923,8 +928,8 @@ import {
 export default defineComponent({
   name: \\"form-component\\",
   components: {
-    BuilderBlockComponent: BuilderBlockComponent,
-    BuilderBlocks: BuilderBlocks,
+    \\"builder-block-component\\": BuilderBlockComponent,
+    \\"builder-blocks\\": BuilderBlocks,
   },
   props: [
     \\"previewState\\",
@@ -1544,7 +1549,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { ContentSlotCode: ContentSlotCode },
+  components: { \\"content-slot-code\\": ContentSlotCode },
 });
 </script>"
 `;
@@ -1563,7 +1568,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { ContentSlotCode: ContentSlotCode },
+  components: { \\"content-slot-code\\": ContentSlotCode },
 });
 </script>"
 `;
@@ -2215,7 +2220,7 @@ import BuilderContext from \\"@dummy/context.vue\\";
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { BuilderContext: BuilderContext },
+  components: { \\"builder-context\\": BuilderContext },
   props: [\\"content\\", \\"customComponents\\"],
 
   provide() {
@@ -2382,7 +2387,7 @@ import RenderBlock from \\"./builder-render-block.raw\\";
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { RenderBlock: RenderBlock },
+  components: { \\"render-block\\": RenderBlock },
   props: [\\"renderContentProps\\"],
 
   methods: {
@@ -2871,10 +2876,10 @@ import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
 export default defineComponent({
   name: \\"render-block\\",
   components: {
-    RenderRepeatedBlock: RenderRepeatedBlock,
-    BlockStyles: BlockStyles,
-    RenderComponentWithContext: RenderComponentWithContext,
-    RenderComponent: RenderComponent,
+    \\"render-repeated-block\\": RenderRepeatedBlock,
+    \\"block-styles\\": BlockStyles,
+    \\"render-component-with-context\\": RenderComponentWithContext,
+    \\"render-component\\": RenderComponent,
   },
   props: [\\"block\\", \\"context\\"],
 
@@ -3080,7 +3085,10 @@ import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { RenderBlocks: RenderBlocks, BuilderContext: BuilderContext },
+  components: {
+    \\"render-blocks\\": RenderBlocks,
+    \\"builder-context\\": BuilderContext,
+  },
   props: [\\"content\\", \\"customComponents\\"],
 
   data() {
@@ -3336,6 +3344,47 @@ export default defineComponent({
 </style>"
 `;
 
+exports[`Vue > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"<template>
+  <div
+    :style=\\"attributes.style\\"
+    :class=\\"_classStringToObject(attributes.className + ' div')\\"
+  ></div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"style-prop-class-and-css\\",
+
+  props: [\\"attributes\\"],
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+});
+</script>
+
+<style scoped>
+.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+</style>"
+`;
+
 exports[`Vue > jsx > Javascript Test > subComponent 1`] = `
 "<template>
   <foo></foo>
@@ -3348,7 +3397,7 @@ import Foo from \\"./foo-sub-component.vue\\";
 
 export default defineComponent({
   name: \\"sub-component\\",
-  components: { Foo: Foo },
+  components: { foo: Foo },
 });
 </script>"
 `;
@@ -3813,7 +3862,12 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <template v-if=\\"$slots.default\\">
+      <slot />
+
+      {{ type }}
+    </template>
+
     <my-boolean-attribute-component
       :toggle=\\"true\\"
     ></my-boolean-attribute-component>
@@ -3838,7 +3892,7 @@ type Props = {
 
 export default defineComponent({
   name: \\"my-boolean-attribute\\",
-  components: { MyBooleanAttributeComponent: MyBooleanAttributeComponent },
+  components: { \\"my-boolean-attribute-component\\": MyBooleanAttributeComponent },
   props: [\\"type\\"],
 });
 </script>"
@@ -3866,8 +3920,8 @@ import MyBasicComponent from \\"./basic.raw\\";
 export default defineComponent({
   name: \\"my-basic-child-component\\",
   components: {
-    MyBasicComponent: MyBasicComponent,
-    MyBasicOnMountUpdateComponent: MyBasicOnMountUpdateComponent,
+    \\"my-basic-component\\": MyBasicComponent,
+    \\"my-basic-on-mount-update-component\\": MyBasicOnMountUpdateComponent,
   },
 
   data() {
@@ -4537,8 +4591,8 @@ export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"e
 export default defineComponent({
   name: \\"form-component\\",
   components: {
-    BuilderBlockComponent: BuilderBlockComponent,
-    BuilderBlocks: BuilderBlocks,
+    \\"builder-block-component\\": BuilderBlockComponent,
+    \\"builder-blocks\\": BuilderBlocks,
   },
   props: [
     \\"previewState\\",
@@ -5247,7 +5301,7 @@ type Props = {
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { ContentSlotCode: ContentSlotCode },
+  components: { \\"content-slot-code\\": ContentSlotCode },
 });
 </script>"
 `;
@@ -5270,7 +5324,7 @@ type Props = {
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { ContentSlotCode: ContentSlotCode },
+  components: { \\"content-slot-code\\": ContentSlotCode },
 });
 </script>"
 `;
@@ -6003,7 +6057,7 @@ import BuilderContext from \\"@dummy/context.vue\\";
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { BuilderContext: BuilderContext },
+  components: { \\"builder-context\\": BuilderContext },
   props: [\\"content\\", \\"customComponents\\"],
 
   provide() {
@@ -6199,7 +6253,7 @@ type RenderContentProps = {
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { RenderBlock: RenderBlock },
+  components: { \\"render-block\\": RenderBlock },
   props: [\\"renderContentProps\\"],
 
   methods: {
@@ -6752,10 +6806,10 @@ export type RenderBlockProps = {
 export default defineComponent({
   name: \\"render-block\\",
   components: {
-    RenderRepeatedBlock: RenderRepeatedBlock,
-    BlockStyles: BlockStyles,
-    RenderComponentWithContext: RenderComponentWithContext,
-    RenderComponent: RenderComponent,
+    \\"render-repeated-block\\": RenderRepeatedBlock,
+    \\"block-styles\\": BlockStyles,
+    \\"render-component-with-context\\": RenderComponentWithContext,
+    \\"render-component\\": RenderComponent,
   },
   props: [\\"block\\", \\"context\\"],
 
@@ -6969,7 +7023,10 @@ type Props = {
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { RenderBlocks: RenderBlocks, BuilderContext: BuilderContext },
+  components: {
+    \\"render-blocks\\": RenderBlocks,
+    \\"builder-context\\": BuilderContext,
+  },
   props: [\\"content\\", \\"customComponents\\"],
 
   data() {
@@ -7245,6 +7302,47 @@ export default defineComponent({
 </style>"
 `;
 
+exports[`Vue > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"<template>
+  <div
+    :style=\\"attributes.style\\"
+    :class=\\"_classStringToObject(attributes.className + ' div')\\"
+  ></div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"style-prop-class-and-css\\",
+
+  props: [\\"attributes\\"],
+
+  methods: {
+    _classStringToObject(str: string) {
+      const obj: Record<string, boolean> = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+});
+</script>
+
+<style scoped>
+.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+</style>"
+`;
+
 exports[`Vue > jsx > Typescript Test > subComponent 1`] = `
 "<template>
   <foo></foo>
@@ -7257,7 +7355,7 @@ import Foo from \\"./foo-sub-component.vue\\";
 
 export default defineComponent({
   name: \\"sub-component\\",
-  components: { Foo: Foo },
+  components: { foo: Foo },
 });
 </script>"
 `;
@@ -7679,7 +7777,7 @@ import Button from \\"./Button.vue\\";
 
 export default defineComponent({
   name: \\"my-component\\",
-  components: { Button: Button },
+  components: { button: Button },
 
   data() {
     return { disabled: false };
@@ -8115,7 +8213,7 @@ import Button from \\"./Button.vue\\";
 
 export default defineComponent({
   name: \\"my-component\\",
-  components: { Button: Button },
+  components: { button: Button },
 
   data() {
     return { disabled: false };

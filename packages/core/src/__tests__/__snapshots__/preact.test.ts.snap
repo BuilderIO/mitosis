@@ -237,9 +237,12 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props) {
   return (
     <div>
-      {props.children}
-
-      {props.type}
+      {props.children ? (
+        <Fragment>
+          {props.children}
+          {props.type}
+        </Fragment>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -3025,6 +3028,32 @@ export default MyComponent;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function StylePropClassAndCss(props) {
+  return (
+    <Fragment>
+      <div
+        style={props.attributes.style}
+        className={props.attributes.class + \\" div\\"}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > subComponent 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -3449,9 +3478,12 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props: Props) {
   return (
     <div>
-      {props.children}
-
-      {props.type}
+      {props.children ? (
+        <Fragment>
+          {props.children}
+          {props.type}
+        </Fragment>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -6607,6 +6639,32 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function StylePropClassAndCss(props: any) {
+  return (
+    <Fragment>
+      <div
+        style={props.attributes.style}
+        className={props.attributes.class + \\" div\\"}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default StylePropClassAndCss;
 "
 `;
 
