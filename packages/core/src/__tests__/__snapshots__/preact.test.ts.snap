@@ -237,9 +237,12 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props) {
   return (
     <div>
-      {props.children}
-
-      {props.type}
+      {props.children ? (
+        <Fragment>
+          {props.children}
+          {props.type}
+        </Fragment>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -3024,7 +3027,10 @@ import { h, Fragment } from \\"preact\\";
 function StylePropClassAndCss(props) {
   return (
     <Fragment>
-      <div className=\\"builder-column div\\" style={props.attributes.style} />
+      <div
+        style={props.attributes.style}
+        className={props.attributes.class + \\" div\\"}
+      />
       <style jsx>{\`
         .div {
           display: flex;
@@ -3464,9 +3470,12 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props: Props) {
   return (
     <div>
-      {props.children}
-
-      {props.type}
+      {props.children ? (
+        <Fragment>
+          {props.children}
+          {props.type}
+        </Fragment>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -6624,7 +6633,10 @@ import { h, Fragment } from \\"preact\\";
 function StylePropClassAndCss(props: any) {
   return (
     <Fragment>
-      <div className=\\"builder-column div\\" style={props.attributes.style} />
+      <div
+        style={props.attributes.style}
+        className={props.attributes.class + \\" div\\"}
+      />
       <style jsx>{\`
         .div {
           display: flex;

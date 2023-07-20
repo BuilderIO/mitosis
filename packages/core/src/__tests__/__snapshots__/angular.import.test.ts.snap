@@ -349,9 +349,11 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   selector: \\"my-boolean-attribute, MyBooleanAttribute\\",
   template: \`
     <div>
-      <ng-content></ng-content>
+      <ng-container *ngIf=\\"children\\">
+        <ng-content></ng-content>
 
-      {{type}}
+        {{type}}
+      </ng-container>
 
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
@@ -3875,7 +3877,7 @@ import { Component, Input } from \\"@angular/core\\";
 @Component({
   selector: \\"style-prop-class-and-css, StylePropClassAndCss\\",
   template: \`
-    <div class=\\"builder-column div\\" [ngStyle]=\\"attributes.style\\"></div>
+    <div [ngStyle]=\\"attributes.style\\" [class]=\\"attributes.class + ' div'\\"></div>
   \`,
   styles: [
     \`
@@ -4518,9 +4520,11 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   selector: \\"my-boolean-attribute, MyBooleanAttribute\\",
   template: \`
     <div>
-      <ng-content></ng-content>
+      <ng-container *ngIf=\\"children\\">
+        <ng-content></ng-content>
 
-      {{type}}
+        {{type}}
+      </ng-container>
 
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
@@ -8419,7 +8423,7 @@ import { Component, Input } from \\"@angular/core\\";
 @Component({
   selector: \\"style-prop-class-and-css, StylePropClassAndCss\\",
   template: \`
-    <div class=\\"builder-column div\\" [ngStyle]=\\"attributes.style\\"></div>
+    <div [ngStyle]=\\"attributes.style\\" [class]=\\"attributes.class + ' div'\\"></div>
   \`,
   styles: [
     \`

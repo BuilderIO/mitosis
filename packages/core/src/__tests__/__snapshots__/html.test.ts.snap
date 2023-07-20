@@ -626,9 +626,11 @@ exports[`Html > jsx > Javascript Test > BasicAttribute 1`] = `
 
 exports[`Html > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 "<div>
-  <slot></slot>
+  <template data-el=\\"show\\">
+    <slot></slot>
 
-  <template data-el=\\"div-2\\"><!-- props.type --></template>
+    <template data-el=\\"div-2\\"><!-- props.type --></template>
+  </template>
 
   <MyBooleanAttributeComponent
     data-el=\\"my-boolean-attribute-component\\"
@@ -665,6 +667,13 @@ exports[`Html > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
       }
       pendingUpdate = true;
 
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = props.children;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
       document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
         renderTextNode(el, props.type);
       });
@@ -694,6 +703,26 @@ exports[`Html > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 
     // Update with initial state on first load
     update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
 
     // Helper text DOM nodes
     function renderTextNode(el, text) {
@@ -5761,7 +5790,7 @@ exports[`Html > jsx > Javascript Test > styleClassAndCss 1`] = `
 `;
 
 exports[`Html > jsx > Javascript Test > stylePropClassAndCss 1`] = `
-"<div class=\\"builder-column div\\" data-el=\\"div-1\\"></div>
+"<div data-el=\\"div-1\\"></div>
 <style>
   .div {
     display: flex;
@@ -5794,6 +5823,8 @@ exports[`Html > jsx > Javascript Test > stylePropClassAndCss 1`] = `
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         Object.assign(el.style, props.attributes.style);
+
+        el.className = props.attributes.class + \\" div\\";
       });
 
       destroyAnyNodes();
@@ -6724,9 +6755,11 @@ exports[`Html > jsx > Typescript Test > BasicAttribute 1`] = `
 
 exports[`Html > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 "<div>
-  <slot></slot>
+  <template data-el=\\"show\\">
+    <slot></slot>
 
-  <template data-el=\\"div-2\\"><!-- props.type --></template>
+    <template data-el=\\"div-2\\"><!-- props.type --></template>
+  </template>
 
   <MyBooleanAttributeComponent
     data-el=\\"my-boolean-attribute-component\\"
@@ -6763,6 +6796,13 @@ exports[`Html > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
       }
       pendingUpdate = true;
 
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = props.children;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
       document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
         renderTextNode(el, props.type);
       });
@@ -6792,6 +6832,26 @@ exports[`Html > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 
     // Update with initial state on first load
     update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
 
     // Helper text DOM nodes
     function renderTextNode(el, text) {
@@ -11862,7 +11922,7 @@ exports[`Html > jsx > Typescript Test > styleClassAndCss 1`] = `
 `;
 
 exports[`Html > jsx > Typescript Test > stylePropClassAndCss 1`] = `
-"<div class=\\"builder-column div\\" data-el=\\"div-1\\"></div>
+"<div data-el=\\"div-1\\"></div>
 <style>
   .div {
     display: flex;
@@ -11895,6 +11955,8 @@ exports[`Html > jsx > Typescript Test > stylePropClassAndCss 1`] = `
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         Object.assign(el.style, props.attributes.style);
+
+        el.className = props.attributes.class + \\" div\\";
       });
 
       destroyAnyNodes();
