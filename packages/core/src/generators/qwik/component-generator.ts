@@ -17,9 +17,9 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { addPreventDefault } from './helpers/add-prevent-default';
 import { stableInject } from './helpers/stable-inject';
-import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
+import { StateInit, emitStateMethodsAndRewriteBindings, emitUseStore } from './helpers/state';
 import { renderJSXNodes } from './jsx';
-import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
+import { File, SrcBuilder, arrowFnBlock, invoke } from './src-generator';
 
 Error.stackTraceLimit = 9999;
 
@@ -129,16 +129,19 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
 
       let css: string | null = null;
 
+      const emitStore = () =>
+        hasState && emitUseStore({ file, stateInit: state, isDeep: metadata?.qwik?.hasDeepStore });
+
       const componentFn = arrowFnBlock(
         ['props'],
         [
           function (this: SrcBuilder) {
+            if (metadata?.qwik?.setUseStoreFirst) emitStore();
             css = emitUseStyles(file, component);
             emitUseComputed(file, component);
             emitUseContext(file, component);
             emitUseRef(file, component);
-            hasState &&
-              emitUseStore({ file, stateInit: state, isDeep: metadata?.qwik?.hasDeepStore });
+            if (!metadata?.qwik?.setUseStoreFirst) emitStore();
             emitUseContextProvider(file, component);
             emitUseClientEffect(file, component);
             emitUseMount(file, component);

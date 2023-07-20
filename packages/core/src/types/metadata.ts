@@ -14,6 +14,7 @@ export type ComponentMetadata = {
     component?: {
       isLight?: boolean;
     };
+    setUseStoreFirst?: boolean;
     hasDeepStore?: boolean;
     mutable?: string[];
     imports?: Dictionary<string>;
@@ -21,5 +22,8 @@ export type ComponentMetadata = {
   };
   solid?: {
     state?: Dictionary<SolidState>;
+  };
+  rsc?: {
+    isRSC?: boolean;
   };
 };
