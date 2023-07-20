@@ -23,7 +23,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { collectClassString } from './collect-class-string';
 
@@ -134,7 +134,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
 
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     const props = getProps(component);
     let css = collectCss(json);
@@ -143,7 +143,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
     mapRefs(component, (refName) => `this.${camelCase(refName)}`);
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     stripMetaProperties(json);
 
@@ -284,7 +284,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
   `;
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -297,7 +297,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };

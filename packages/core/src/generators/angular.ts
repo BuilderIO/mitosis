@@ -31,7 +31,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 import { MitosisComponent } from '..';
@@ -329,7 +329,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     ];
 
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
 
     const [forwardProp, hasPropRef] = getPropsRef(json, true);
@@ -395,7 +395,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     let css = collectCss(json);
     if (options.prettier !== false) {
@@ -579,13 +579,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       str = generateNgModule(str, json.name, componentsUsed, json, options.bootstrapMapper);
     }
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       str = tryFormat(str, 'typescript');
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
 
     return str;

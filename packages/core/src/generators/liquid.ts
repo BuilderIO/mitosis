@@ -11,7 +11,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToLiquidOptions extends BaseTranspilerOptions {
@@ -141,12 +141,12 @@ export const componentToLiquid: TranspilerGenerator<ToLiquidOptions> =
   ({ component }) => {
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     const css = collectCss(json);
     stripMetaProperties(json);
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     let str = json.children.map((item) => blockToLiquid(item)).join('\n');
 
@@ -166,7 +166,7 @@ export const componentToLiquid: TranspilerGenerator<ToLiquidOptions> =
     }
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -185,7 +185,7 @@ export const componentToLiquid: TranspilerGenerator<ToLiquidOptions> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };

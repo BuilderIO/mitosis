@@ -30,8 +30,8 @@ import {
   DO_NOT_USE_ARGS,
   DO_NOT_USE_CONTEXT_VARS_TRANSFORMS,
   DO_NOT_USE_VARS_TRANSFORMS,
-  stripStateAndPropsRefs,
   StripStateAndPropsRefsOptions,
+  stripStateAndPropsRefs,
 } from '../helpers/strip-state-and-props-refs';
 import { collectCss } from '../helpers/styles/collect-css';
 import {
@@ -41,7 +41,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { MitosisComponent } from '../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
@@ -612,7 +612,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
     });
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     addUpdateAfterSet(json, options);
     const componentHasProps = hasProps(json);
@@ -622,7 +622,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
     const hasTextBinding = hasBindingsText(json);
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     const css = collectCss(json, {
       prefix: options.prefix,
@@ -845,7 +845,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
     }
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -864,7 +864,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };
@@ -890,7 +890,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
     });
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
 
     const [forwardProp, hasPropRef] = getPropsRef(json, true);
@@ -930,7 +930,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
     const hasShow = hasComponent('Show', json);
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     let css = '';
     if (options?.experimental?.css) {
@@ -1495,7 +1495,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
     `;
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -1514,7 +1514,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
 
     return str;

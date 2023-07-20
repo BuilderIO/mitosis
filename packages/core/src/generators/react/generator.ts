@@ -180,17 +180,23 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
         stateType === 'variables'
           ? [
               CODE_PROCESSOR_PLUGIN((codeType, json) => (code, hookType) => {
-                code = replaceStateIdentifier(null)(code);
-
                 code = replaceNodes({
                   code,
                   nodeMaps: Object.entries(json.state)
                     .filter(([key, value]) => value?.type === 'getter')
-                    .map(([key, value]) => ({
-                      from: types.identifier(key),
-                      to: types.callExpression(types.identifier(key), []),
-                    })),
+                    .map(([key, value]) => {
+                      const expr = types.memberExpression(
+                        types.identifier('state'),
+                        types.identifier(key),
+                      );
+                      return {
+                        from: expr,
+                        // condition: (path) => !types.isObjectMethod(path.parent),
+                        to: types.callExpression(expr, []),
+                      };
+                    }),
                 });
+                code = replaceStateIdentifier(null)(code);
 
                 return code;
               }),
@@ -206,7 +212,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
     });
 
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
 
     let str = _componentToReact(json, options);
@@ -216,7 +222,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       json.subComponents.map((item) => _componentToReact(item, options, true)).join('\n\n\n');
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -235,7 +241,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };
@@ -320,7 +326,7 @@ const _componentToReact = (
 
   const useStateCode = options.stateType === 'useState' ? getUseStateCode(json, options) : '';
   if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
+    json = runPostJsonPlugins({ json, plugins: options.plugins });
   }
 
   const css =

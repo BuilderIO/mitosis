@@ -20,7 +20,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { collectClassString } from './collect-class-string';
 
@@ -103,7 +103,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     const options = initializeOptions({ target: 'stencil', component, defaults: _options });
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     const props = getProps(component);
     let css = collectCss(json);
@@ -111,7 +111,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     mapRefs(component, (refName) => `this.${refName}`);
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     stripMetaProperties(json);
 
@@ -208,7 +208,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
   `;
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       str = format(str, {
@@ -217,7 +217,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
       });
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };

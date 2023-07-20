@@ -1,4 +1,4 @@
-import { camelCase, curry, flow, flowRight as compose } from 'lodash';
+import { camelCase, flowRight as compose, curry, flow } from 'lodash';
 import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { babelTransformCode } from '../../helpers/babel-transform';
@@ -19,7 +19,7 @@ import {
   runPreJsonPlugins,
 } from '../../modules/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
+import { ForNode, MitosisNode, checkIsForNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { renderMountHook } from './render-mount-hook';
 import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
@@ -198,12 +198,12 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
 
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     const css = collectCss(json);
     stripMetaProperties(json);
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
 
     const componentName = camelCase(json.name) || 'MyComponent';
@@ -230,7 +230,7 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
     }
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -249,7 +249,7 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };

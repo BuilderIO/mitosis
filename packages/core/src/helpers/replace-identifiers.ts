@@ -187,17 +187,20 @@ export const replaceNodes = ({
   code: string;
   nodeMaps: {
     from: types.Node;
+    condition?: (path: babel.NodePath<types.Node>) => boolean;
     to: types.Node;
   }[];
 }) => {
   const searchAndReplace = (path: babel.NodePath<types.Node>) => {
     if (isNewlyGenerated(path.node) || isNewlyGenerated(path.parent)) return;
 
-    for (const { from, to } of nodeMaps) {
+    for (const { from, to, condition } of nodeMaps) {
       if (isNewlyGenerated(path.node) || isNewlyGenerated(path.parent)) return;
       // if (path.node.type !== from.type) return;
 
-      if (generate(path.node).code === generate(from).code) {
+      const matchesCondition = condition ? condition(path) : true;
+
+      if (generate(path.node).code === generate(from).code && matchesCondition) {
         const x = types.cloneNode(to);
         (x as AllowMeta)._builder_meta = { newlyGenerated: true };
         try {
@@ -208,6 +211,8 @@ export const replaceNodes = ({
             orig: generate(path.node).code,
             to: generate(x).code,
           });
+          console.log({ parent: path.parent });
+
           // throw err;
         }
       }

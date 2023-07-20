@@ -97,8 +97,8 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       userOptions: userOptions,
     });
 
-    component = runPreJsonPlugins(component, options.plugins);
-    component = runPostJsonPlugins(component, options.plugins);
+    component = runPreJsonPlugins({ json: component, plugins: options.plugins });
+    component = runPostJsonPlugins({ json: component, plugins: options.plugins });
 
     const isTypeScript = !!options.typescript;
     const file = new File(
@@ -164,8 +164,16 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       emitStyles(file, css);
       DEBUG && file.exportConst('COMPONENT', JSON.stringify(component));
       let sourceFile = file.toString();
-      sourceFile = runPreCodePlugins(sourceFile, options.plugins);
-      sourceFile = runPostCodePlugins(sourceFile, options.plugins);
+      sourceFile = runPreCodePlugins({
+        json: component,
+        code: sourceFile,
+        plugins: options.plugins,
+      });
+      sourceFile = runPostCodePlugins({
+        json: component,
+        code: sourceFile,
+        plugins: options.plugins,
+      });
       return sourceFile;
     } catch (e) {
       console.error(e);
