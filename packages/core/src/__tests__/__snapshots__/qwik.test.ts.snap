@@ -1864,7 +1864,7 @@ exports[`qwik > jsx > Javascript Test > Basic Context 1`] = `
 
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
-export const onChange = function onChange(props, state, myService) {
+export const onChange = function onChange(props, state, myService, onChange) {
   const change = myService.method(\\"change\\");
   console.log(change);
 };
@@ -2078,7 +2078,14 @@ exports[`qwik > jsx > Javascript Test > BasicRef 1`] = `
   useStylesScoped$,
 } from \\"@builder.io/qwik\\";
 
-export const onBlur = function onBlur(props, state, inputRef, inputNoArgRef) {
+export const onBlur = function onBlur(
+  props,
+  state,
+  inputRef,
+  inputNoArgRef,
+  onBlur,
+  lowerCaseName
+) {
   // Maintain focus
   inputRef.value.focus();
 };
@@ -2086,7 +2093,9 @@ export const lowerCaseName = function lowerCaseName(
   props,
   state,
   inputRef,
-  inputNoArgRef
+  inputNoArgRef,
+  onBlur,
+  lowerCaseName
 ) {
   return state.name.toLowerCase();
 };
@@ -2141,6 +2150,7 @@ export const handlerClick = function handlerClick(
   props,
   state,
   holdValueRef,
+  handlerClick,
   event
 ) {
   event.preventDefault();
@@ -2337,14 +2347,15 @@ import {
   useStore,
 } from \\"@builder.io/qwik\\";
 
-export const show = function show(props, state) {
+export const show = function show(props, state, cls) {
   props.slotContent ? 1 : \\"\\";
 };
 export const ContentSlotJsxCode = component$((props) => {
-  const state = useStore({ name: \\"king\\", showContent: false });
   const cls = useComputed$(() => {
     return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
   });
+  const state = useStore({ name: \\"king\\", showContent: false });
+
   return (
     <>
       {props.slotReference ? (
@@ -2352,7 +2363,7 @@ export const ContentSlotJsxCode = component$((props) => {
           name={props.slotContent ? \\"name1\\" : \\"name2\\"}
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
-          onClick$={(event) => show(props, state)}
+          onClick$={(event) => show(props, state, cls)}
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
@@ -2548,7 +2559,13 @@ import {
   set,
 } from \\"@fake\\";
 
-export const onSubmit = function onSubmit(props, state, formRef, event) {
+export const onSubmit = function onSubmit(
+  props,
+  state,
+  formRef,
+  submissionState,
+  event
+) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
   if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -2764,15 +2781,16 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
 export const FormComponent = component$((props) => {
   useStylesScoped$(STYLES);
 
+  const submissionState = useComputed$(() => {
+    return (Builder.isEditing && props.previewState) || state.formState;
+  });
   const formRef = useSignal();
   const state = useStore({
     formErrorMessage: \\"\\",
     formState: \\"unsubmitted\\",
     responseData: null,
   });
-  const submissionState = useComputed$(() => {
-    return (Builder.isEditing && props.previewState) || state.formState;
-  });
+
   return (
     <form
       validate={props.validate}
@@ -2782,7 +2800,9 @@ export const FormComponent = component$((props) => {
       })()}
       method={props.method}
       name={props.name}
-      onSubmit$={(event) => onSubmit(props, state, formRef, event)}
+      onSubmit$={(event) =>
+        onSubmit(props, state, formRef, submissionState, event)
+      }
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
@@ -2847,18 +2867,29 @@ exports[`qwik > jsx > Javascript Test > Image 1`] = `
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
-export const setLoaded = function setLoaded(props, state, pictureRef) {
+export const setLoaded = function setLoaded(
+  props,
+  state,
+  pictureRef,
+  isBrowser
+) {
   state.imageLoaded = true;
 };
 export const useLazyLoading = function useLazyLoading(
   props,
   state,
-  pictureRef
+  pictureRef,
+  isBrowser
 ) {
   // TODO: Add more checks here, like testing for real web browsers
   return !!props.lazy && state.isBrowser();
 };
-export const isBrowser = function isBrowser(props, state, pictureRef) {
+export const isBrowser = function isBrowser(
+  props,
+  state,
+  pictureRef,
+  isBrowser
+) {
   return (
     typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
   );
@@ -2873,7 +2904,7 @@ export const Image = component$((props) => {
     scrollListener: null,
   });
   useVisibleTask$(() => {
-    if (useLazyLoading(props, state, pictureRef)) {
+    if (useLazyLoading(props, state, pictureRef, isBrowser)) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef.value) {
@@ -2900,7 +2931,7 @@ export const Image = component$((props) => {
   return (
     <div>
       <picture ref={pictureRef}>
-        {!useLazyLoading(props, state, pictureRef) || state.load ? (
+        {!useLazyLoading(props, state, pictureRef, isBrowser) || state.load ? (
           <img
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -2910,7 +2941,7 @@ export const Image = component$((props) => {
               \\" img-Image\\"
             }
             src={props.image}
-            onLoad$={(event) => setLoaded(props, state, pictureRef)}
+            onLoad$={(event) => setLoaded(props, state, pictureRef, isBrowser)}
             srcset={props.srcset}
             sizes={props.sizes}
           />
@@ -3435,10 +3466,11 @@ exports[`qwik > jsx > Javascript Test > basicForNoTagReference 1`] = `
 } from \\"@builder.io/qwik\\";
 
 export const MyBasicForNoTagRefComponent = component$((props) => {
-  const state = useStore({ TagName: \\"div\\", name: \\"VincentW\\", tag: \\"span\\" });
   const TagNameGetter = useComputed$(() => {
     return \\"span\\";
   });
+  const state = useStore({ TagName: \\"div\\", name: \\"VincentW\\", tag: \\"span\\" });
+
   return (
     <TagNameGetter.value>
       Hello <state.tag>{state.name}</state.tag>
@@ -4113,9 +4145,9 @@ export default MyBasicComponent;
 exports[`qwik > jsx > Javascript Test > referencingFunInsideHook 1`] = `
 "import { Fragment, component$, h, useTask$ } from \\"@builder.io/qwik\\";
 
-export const foo = function foo(props, state, params) {};
-export const bar = function bar(props, state) {};
-export const zoo = function zoo(props, state) {
+export const foo = function foo(props, state, foo, bar, zoo, params) {};
+export const bar = function bar(props, state, foo, bar, zoo) {};
+export const zoo = function zoo(props, state, foo, bar, zoo) {
   const params = {
     cb: state.bar,
   };
@@ -4167,7 +4199,6 @@ import RenderRepeatedBlock from \\"./render-repeated-block\\";
 import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
 
 export const RenderBlock = component$((props) => {
-  const state = {};
   const component = useComputed$(() => {
     const componentName = getProcessedBlock({
       block: props.block,
@@ -4340,6 +4371,8 @@ export const RenderBlock = component$((props) => {
       return RenderComponent;
     }
   });
+  const state = {};
+
   return (
     <>
       {shouldWrap.value ? (
@@ -4798,11 +4831,12 @@ exports[`qwik > jsx > Javascript Test > useTarget 1`] = `
 "import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
 
 export const UseTargetComponent = component$((props) => {
-  const state = {};
   const name = useComputed$(() => {
     const prefix = \\"q\\";
     return prefix + \\"foo\\";
   });
+  const state = {};
+
   return <div>{name.value}</div>;
 });
 
@@ -4918,7 +4952,7 @@ exports[`qwik > jsx > Typescript Test > Basic Context 1`] = `
 
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
-export const onChange = function onChange(props, state, myService) {
+export const onChange = function onChange(props, state, myService, onChange) {
   const change = myService.method(\\"change\\");
   console.log(change);
 };
@@ -5149,7 +5183,14 @@ exports[`qwik > jsx > Typescript Test > BasicRef 1`] = `
 export interface Props {
   showInput: boolean;
 }
-export const onBlur = function onBlur(props, state, inputRef, inputNoArgRef) {
+export const onBlur = function onBlur(
+  props,
+  state,
+  inputRef,
+  inputNoArgRef,
+  onBlur,
+  lowerCaseName
+) {
   // Maintain focus
   inputRef.value.focus();
 };
@@ -5157,7 +5198,9 @@ export const lowerCaseName = function lowerCaseName(
   props,
   state,
   inputRef,
-  inputNoArgRef
+  inputNoArgRef,
+  onBlur,
+  lowerCaseName
 ) {
   return state.name.toLowerCase();
 };
@@ -5215,6 +5258,7 @@ export const handlerClick = function handlerClick(
   props,
   state,
   holdValueRef,
+  handlerClick,
   event: Event
 ) {
   event.preventDefault();
@@ -5445,14 +5489,15 @@ import {
 type Props = {
   [key: string]: string | JSX.Element;
 };
-export const show = function show(props, state) {
+export const show = function show(props, state, cls) {
   props.slotContent ? 1 : \\"\\";
 };
 export const ContentSlotJsxCode = component$((props: Props) => {
-  const state = useStore<any>({ name: \\"king\\", showContent: false });
   const cls = useComputed$(() => {
     return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
   });
+  const state = useStore<any>({ name: \\"king\\", showContent: false });
+
   return (
     <>
       {props.slotReference ? (
@@ -5460,7 +5505,7 @@ export const ContentSlotJsxCode = component$((props: Props) => {
           name={props.slotContent ? \\"name1\\" : \\"name2\\"}
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
-          onClick$={(event) => show(props, state)}
+          onClick$={(event) => show(props, state, cls)}
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
@@ -5691,6 +5736,7 @@ export const onSubmit = function onSubmit(
   props,
   state,
   formRef,
+  submissionState,
   event: Event & {
     currentTarget: HTMLFormElement;
   }
@@ -5913,15 +5959,16 @@ export const onSubmit = function onSubmit(
 export const FormComponent = component$((props: FormProps) => {
   useStylesScoped$(STYLES);
 
+  const submissionState = useComputed$(() => {
+    return (Builder.isEditing && props.previewState) || state.formState;
+  });
   const formRef = useSignal<Element>();
   const state = useStore<any>({
     formErrorMessage: \\"\\",
     formState: \\"unsubmitted\\",
     responseData: null,
   });
-  const submissionState = useComputed$(() => {
-    return (Builder.isEditing && props.previewState) || state.formState;
-  });
+
   return (
     <form
       validate={props.validate}
@@ -5931,7 +5978,9 @@ export const FormComponent = component$((props: FormProps) => {
       })()}
       method={props.method}
       name={props.name}
-      onSubmit$={(event) => onSubmit(props, state, formRef, event)}
+      onSubmit$={(event) =>
+        onSubmit(props, state, formRef, submissionState, event)
+      }
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
@@ -6014,18 +6063,29 @@ export interface ImageProps {
 
   children?: any;
 }
-export const setLoaded = function setLoaded(props, state, pictureRef) {
+export const setLoaded = function setLoaded(
+  props,
+  state,
+  pictureRef,
+  isBrowser
+) {
   state.imageLoaded = true;
 };
 export const useLazyLoading = function useLazyLoading(
   props,
   state,
-  pictureRef
+  pictureRef,
+  isBrowser
 ) {
   // TODO: Add more checks here, like testing for real web browsers
   return !!props.lazy && state.isBrowser();
 };
-export const isBrowser = function isBrowser(props, state, pictureRef) {
+export const isBrowser = function isBrowser(
+  props,
+  state,
+  pictureRef,
+  isBrowser
+) {
   return (
     typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
   );
@@ -6040,7 +6100,7 @@ export const Image = component$((props: ImageProps) => {
     scrollListener: null,
   });
   useVisibleTask$(() => {
-    if (useLazyLoading(props, state, pictureRef)) {
+    if (useLazyLoading(props, state, pictureRef, isBrowser)) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef.value) {
@@ -6067,7 +6127,7 @@ export const Image = component$((props: ImageProps) => {
   return (
     <div>
       <picture ref={pictureRef}>
-        {!useLazyLoading(props, state, pictureRef) || state.load ? (
+        {!useLazyLoading(props, state, pictureRef, isBrowser) || state.load ? (
           <img
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -6077,7 +6137,7 @@ export const Image = component$((props: ImageProps) => {
               \\" img-Image\\"
             }
             src={props.image}
-            onLoad$={(event) => setLoaded(props, state, pictureRef)}
+            onLoad$={(event) => setLoaded(props, state, pictureRef, isBrowser)}
             srcset={props.srcset}
             sizes={props.sizes}
           />
@@ -6710,14 +6770,15 @@ exports[`qwik > jsx > Typescript Test > basicForNoTagReference 1`] = `
 } from \\"@builder.io/qwik\\";
 
 export const MyBasicForNoTagRefComponent = component$((props: any) => {
+  const TagNameGetter = useComputed$(() => {
+    return \\"span\\";
+  });
   const state = useStore<any>({
     TagName: \\"div\\",
     name: \\"VincentW\\",
     tag: \\"span\\",
   });
-  const TagNameGetter = useComputed$(() => {
-    return \\"span\\";
-  });
+
   return (
     <TagNameGetter.value>
       Hello <state.tag>{state.name}</state.tag>
@@ -7478,9 +7539,9 @@ export default MyBasicComponent;
 exports[`qwik > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 "import { Fragment, component$, h, useTask$ } from \\"@builder.io/qwik\\";
 
-export const foo = function foo(props, state, params) {};
-export const bar = function bar(props, state) {};
-export const zoo = function zoo(props, state) {
+export const foo = function foo(props, state, foo, bar, zoo, params) {};
+export const bar = function bar(props, state, foo, bar, zoo) {};
+export const zoo = function zoo(props, state, foo, bar, zoo) {
   const params = {
     cb: state.bar,
   };
@@ -7550,7 +7611,6 @@ export type RenderBlockProps = {
   context: BuilderContextInterface;
 };
 export const RenderBlock = component$((props: RenderBlockProps) => {
-  const state: any = {};
   const component = useComputed$(() => {
     const componentName = getProcessedBlock({
       block: props.block,
@@ -7723,6 +7783,8 @@ export const RenderBlock = component$((props: RenderBlockProps) => {
       return RenderComponent;
     }
   });
+  const state: any = {};
+
   return (
     <>
       {shouldWrap.value ? (
@@ -8212,11 +8274,12 @@ exports[`qwik > jsx > Typescript Test > useTarget 1`] = `
 "import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
 
 export const UseTargetComponent = component$((props: any) => {
-  const state: any = {};
   const name = useComputed$(() => {
     const prefix = \\"q\\";
     return prefix + \\"foo\\";
   });
+  const state: any = {};
+
   return <div>{name.value}</div>;
 });
 
@@ -8893,7 +8956,7 @@ export default MyComponent;
 exports[`qwik > svelte > Javascript Test > eventHandlers 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
-export const log = function log(props, state, msg = \\"hello\\") {
+export const log = function log(props, state, log, msg = \\"hello\\") {
   console.log(msg);
 };
 export const MyComponent = component$((props) => {
@@ -8928,7 +8991,7 @@ export default MyComponent;
 exports[`qwik > svelte > Javascript Test > ifElse 1`] = `
 "import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
-export const toggle = function toggle(props, state) {
+export const toggle = function toggle(props, state, toggle) {
   state.show = !state.show;
 };
 export const MyComponent = component$((props) => {
@@ -9006,10 +9069,11 @@ exports[`qwik > svelte > Javascript Test > reactive 1`] = `
 } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props) => {
-  const state = useStore({ name: \\"Steve\\" });
   const lowercaseName = useComputed$(() => {
     return state.name.toLowerCase();
   });
+  const state = useStore({ name: \\"Steve\\" });
+
   return (
     <div>
       <input value={state.name} />
@@ -9025,7 +9089,13 @@ export default MyComponent;
 exports[`qwik > svelte > Javascript Test > reactiveWithFn 1`] = `
 "import { Fragment, component$, h, useStore, useTask$ } from \\"@builder.io/qwik\\";
 
-export const calculateResult = function calculateResult(props, state, a_, b_) {
+export const calculateResult = function calculateResult(
+  props,
+  state,
+  calculateResult,
+  a_,
+  b_
+) {
   state.result = a_ * b_;
 };
 export const MyComponent = component$((props) => {
@@ -9295,7 +9365,7 @@ export default MyComponent;
 exports[`qwik > svelte > Typescript Test > eventHandlers 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
-export const log = function log(props, state, msg = \\"hello\\") {
+export const log = function log(props, state, log, msg = \\"hello\\") {
   console.log(msg);
 };
 export const MyComponent = component$((props: any) => {
@@ -9330,7 +9400,7 @@ export default MyComponent;
 exports[`qwik > svelte > Typescript Test > ifElse 1`] = `
 "import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
-export const toggle = function toggle(props, state) {
+export const toggle = function toggle(props, state, toggle) {
   state.show = !state.show;
 };
 export const MyComponent = component$((props: any) => {
@@ -9408,10 +9478,11 @@ exports[`qwik > svelte > Typescript Test > reactive 1`] = `
 } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props: any) => {
-  const state = useStore<any>({ name: \\"Steve\\" });
   const lowercaseName = useComputed$(() => {
     return state.name.toLowerCase();
   });
+  const state = useStore<any>({ name: \\"Steve\\" });
+
   return (
     <div>
       <input value={state.name} />
@@ -9427,7 +9498,13 @@ export default MyComponent;
 exports[`qwik > svelte > Typescript Test > reactiveWithFn 1`] = `
 "import { Fragment, component$, h, useStore, useTask$ } from \\"@builder.io/qwik\\";
 
-export const calculateResult = function calculateResult(props, state, a_, b_) {
+export const calculateResult = function calculateResult(
+  props,
+  state,
+  calculateResult,
+  a_,
+  b_
+) {
   state.result = a_ * b_;
 };
 export const MyComponent = component$((props: any) => {
