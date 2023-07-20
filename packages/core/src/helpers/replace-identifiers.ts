@@ -174,6 +174,8 @@ export const replaceStateIdentifier = (to: ReplaceArgs['to']) => (code: string) 
 export const replacePropsIdentifier = (to: ReplaceArgs['to']) => (code: string) =>
   replaceIdentifiers({ code, from: 'props', to });
 
+const isNewlyGenerated = (node: types.Node) => (node as AllowMeta)?._builder_meta?.newlyGenerated;
+
 /**
  * Replaces all instances of a Babel AST Node with a new Node within a code string.
  * Uses `generate()` to convert the Node to a string and compare them.
@@ -189,14 +191,10 @@ export const replaceNodes = ({
   }[];
 }) => {
   const searchAndReplace = (path: babel.NodePath<types.Node>) => {
-    if ((path.node as AllowMeta)?._builder_meta?.newlyGenerated) {
-      return;
-    }
+    if (isNewlyGenerated(path.node) || isNewlyGenerated(path.parent)) return;
 
     for (const { from, to } of nodeMaps) {
-      if ((path.node as AllowMeta)?._builder_meta?.newlyGenerated) {
-        return;
-      }
+      if (isNewlyGenerated(path.node) || isNewlyGenerated(path.parent)) return;
       // if (path.node.type !== from.type) return;
 
       if (generate(path.node).code === generate(from).code) {

@@ -4,8 +4,8 @@ import { MitosisContext } from '../types/mitosis-context';
 type ValueMapper = (
   code: string,
   type: 'data' | 'function' | 'getter',
-  typeParameter?: string,
-  key?: string,
+  typeParameter: string | undefined,
+  key: string | undefined,
 ) => string;
 
 interface GetStateObjectStringOptions {
@@ -47,20 +47,21 @@ const convertStateMemberToString =
           code,
           'function',
           typeParameter,
+          key,
         )}`;
       }
       case 'method': {
         if (functions === false || typeof code !== 'string') {
           return undefined;
         }
-        return `${keyPrefix} ${valueMapper(code, 'function', typeParameter)}`;
+        return `${keyPrefix} ${valueMapper(code, 'function', typeParameter, key)}`;
       }
       case 'getter': {
         if (getters === false || typeof code !== 'string') {
           return undefined;
         }
 
-        return `${keyPrefix} ${valueMapper(code, 'getter', typeParameter)}`;
+        return `${keyPrefix} ${valueMapper(code, 'getter', typeParameter, key)}`;
       }
       case 'property': {
         if (data === false) {

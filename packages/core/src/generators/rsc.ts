@@ -1,11 +1,10 @@
 import traverse from 'traverse';
 import { Plugin } from '..';
-import { createSingleBinding } from '../helpers/bindings';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { mergeOptions } from '../helpers/merge-options';
 import { MitosisComponent } from '../types/mitosis-component';
 import { TranspilerGenerator } from '../types/transpiler';
-import { componentToReact, contextPropDrillingKey, ToReactOptions } from './react';
+import { componentToReact, ToReactOptions } from './react';
 
 export type ToRscOptions = ToReactOptions;
 
@@ -36,41 +35,46 @@ const RSC_TRANSFORM_PLUGIN: Plugin = () => ({
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
           const isComponent = node.name.match(/[A-Z]/);
-          if (isComponent) {
-            // Drill context down, aka
-            // function (props) { return <Component _context{props._context} /> }
-            if (!node.bindings[contextPropDrillingKey]) {
-              node.bindings[contextPropDrillingKey] = createSingleBinding({
-                code: contextPropDrillingKey,
-              });
-            }
-          }
+          // if (isComponent) {
+          //   // Drill context down, aka
+          //   // function (props) { return <Component _context{props._context} /> }
+          //   if (!node.bindings[contextPropDrillingKey]) {
+          //     node.bindings[contextPropDrillingKey] = createSingleBinding({
+          //       code: contextPropDrillingKey,
+          //     });
+          //   }
+          // }
           if (node.bindings.ref) {
             delete node.bindings.ref;
           }
-          for (const key in node.bindings) {
-            if (key.match(/^on[A-Z]/)) {
-              delete node.bindings[key];
-            }
-          }
+          // for (const key in node.bindings) {
+          //   if (key.match(/^on[A-Z]/)) {
+          //     delete node.bindings[key];
+          //   }
+          // }
         }
       });
     },
   },
 });
 
-const DEFAULT_OPTIONS: Partial<ToRscOptions> = {
-  // plugins: [RSC_TRANSFORM_PLUGIN],
-  // stylesType: 'style-tag',
-  // stateType: 'variables',
-  // contextType: 'prop-drill',
-  rsc: true,
+const RscOptions: Partial<ToRscOptions> = {
+  plugins: [RSC_TRANSFORM_PLUGIN],
+  stateType: 'variables',
 };
 
 export const componentToRsc: TranspilerGenerator<Partial<ToRscOptions>> =
   (_options = {}) =>
   ({ component, path }) => {
-    const options = mergeOptions(DEFAULT_OPTIONS, _options);
+    const isRSC = component.meta.useMetadata?.rsc?.isRSC;
+
+    const options = mergeOptions<Partial<ToRscOptions>>(
+      {
+        rsc: true,
+        ...(isRSC ? RscOptions : {}),
+      },
+      _options,
+    );
 
     return componentToReact(options)({ component, path });
   };
