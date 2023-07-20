@@ -1,7 +1,6 @@
 import {
   contextToQwik,
   contextToReact,
-  contextToRsc,
   contextToSolid,
   contextToSvelte,
   contextToVue,
@@ -46,11 +45,10 @@ export const generateContextFile = async ({
         });
       case 'react':
       case 'reactNative':
+      case 'rsc':
         return contextToReact({ typescript: checkShouldOutputTypeScript({ options, target }) })({
           context,
         });
-      case 'rsc':
-        return contextToRsc()({ context });
       case 'qwik':
         return contextToQwik()({ context });
       default:

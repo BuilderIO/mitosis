@@ -60,10 +60,10 @@ const RSC_TRANSFORM_PLUGIN: Plugin = () => ({
 });
 
 const DEFAULT_OPTIONS: Partial<ToRscOptions> = {
-  plugins: [RSC_TRANSFORM_PLUGIN],
-  stylesType: 'style-tag',
-  stateType: 'variables',
-  contextType: 'prop-drill',
+  // plugins: [RSC_TRANSFORM_PLUGIN],
+  // stylesType: 'style-tag',
+  // stateType: 'variables',
+  // contextType: 'prop-drill',
   rsc: true,
 };
 
