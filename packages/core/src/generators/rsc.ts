@@ -19,19 +19,13 @@ export type ToRscOptions = ToReactOptions;
 const RSC_TRANSFORM_PLUGIN: Plugin = () => ({
   json: {
     pre: (json: MitosisComponent) => {
-      if (json.hooks.onMount) {
-        delete json.hooks.onMount;
-      }
-      if (json.hooks.onUnMount) {
-        delete json.hooks.onUnMount;
-      }
-      if (json.hooks.onUpdate) {
-        delete json.hooks.onUpdate;
-      }
+      delete json.hooks.onMount;
+      delete json.hooks.onUnMount;
+      delete json.hooks.onUpdate;
+      json.refs = {};
 
-      if (json.refs) {
-        json.refs = {};
-      }
+      json.context.get = {};
+      json.context.set = {};
 
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
