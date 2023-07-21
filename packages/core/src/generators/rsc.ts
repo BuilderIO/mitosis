@@ -32,6 +32,13 @@ const RSC_TRANSFORM_PLUGIN: Plugin = () => ({
         json.refs = {};
       }
 
+      for (const key in json.state) {
+        if (json.state[key]?.type === 'property') {
+          json.state[key]!.type = 'getter';
+          // TO-DO: throw if there is a setter for this property.
+        }
+      }
+
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
           const isComponent = node.name.match(/[A-Z]/);
