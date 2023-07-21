@@ -180,7 +180,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     processDynamicComponents(component, options);
     processForKeys(component, options);
 
-    component = runPreJsonPlugins(component, options.plugins);
+    component = runPreJsonPlugins({ json: component, plugins: options.plugins });
 
     if (options.api === 'options') {
       mapRefs(component, (refName) => `this.$refs.${refName}`);
@@ -191,7 +191,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     const elementProps = props.filter((prop) => !isSlotProperty(prop));
     const slotsProps = props.filter((prop) => isSlotProperty(prop));
 
-    component = runPostJsonPlugins(component, options.plugins);
+    component = runPostJsonPlugins({ json: component, plugins: options.plugins });
 
     const css = collectCss(component, {
       prefix: options.cssNamespace?.() ?? undefined,
@@ -286,7 +286,12 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     }
   `;
 
-    str = runPreCodePlugins(str, options.plugins, { json: component });
+    str = runPreCodePlugins({
+      json: component,
+      code: str,
+      plugins: options.plugins,
+      options: { json: component },
+    });
     if (true || options.prettier !== false) {
       try {
         str = format(str, {
@@ -303,7 +308,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
         console.warn('Could not prettify', { string: str }, err);
       }
     }
-    str = runPostCodePlugins(str, options.plugins);
+    str = runPostCodePlugins({ json: component, code: str, plugins: options.plugins });
 
     for (const pattern of removePatterns) {
       str = str.replace(pattern, '').trim();

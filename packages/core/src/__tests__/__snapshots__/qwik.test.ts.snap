@@ -4828,14 +4828,25 @@ button {
 `;
 
 exports[`qwik > jsx > Javascript Test > useTarget 1`] = `
-"import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
+"import {
+  Fragment,
+  component$,
+  h,
+  useComputed$,
+  useStore,
+  useVisibleTask$,
+} from \\"@builder.io/qwik\\";
 
 export const UseTargetComponent = component$((props) => {
   const name = useComputed$(() => {
     const prefix = \\"q\\";
     return prefix + \\"foo\\";
   });
-  const state = {};
+  const state = useStore({ lastName: \\"bar\\" });
+  useVisibleTask$(() => {
+    console.log(\\"qwik\\");
+    state.lastName = \\"baz\\";
+  });
 
   return <div>{name.value}</div>;
 });
@@ -8271,14 +8282,25 @@ button {
 `;
 
 exports[`qwik > jsx > Typescript Test > useTarget 1`] = `
-"import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
+"import {
+  Fragment,
+  component$,
+  h,
+  useComputed$,
+  useStore,
+  useVisibleTask$,
+} from \\"@builder.io/qwik\\";
 
 export const UseTargetComponent = component$((props: any) => {
   const name = useComputed$(() => {
     const prefix = \\"q\\";
     return prefix + \\"foo\\";
   });
-  const state: any = {};
+  const state = useStore<any>({ lastName: \\"bar\\" });
+  useVisibleTask$(() => {
+    console.log(\\"qwik\\");
+    state.lastName = \\"baz\\";
+  });
 
   return <div>{name.value}</div>;
 });

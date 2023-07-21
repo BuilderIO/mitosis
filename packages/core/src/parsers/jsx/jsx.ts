@@ -127,7 +127,7 @@ export function parseJsx(
                     if (!types.isIdentifier(path.node.callee)) return;
                     if (path.node.callee.name !== HOOKS.TARGET) return;
 
-                    const targetBlock = getUseTargetStatements(path.node);
+                    const targetBlock = getUseTargetStatements(path);
 
                     if (!targetBlock) return;
 

@@ -102,11 +102,11 @@ export const componentToTemplate: TranspilerGenerator<ToTemplateOptions> =
   ({ component }) => {
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     const css = collectCss(json);
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     let str = json.children.map((item) => blockToTemplate(item)).join('\n');
 
@@ -124,7 +124,7 @@ export const componentToTemplate: TranspilerGenerator<ToTemplateOptions> =
   `;
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
 
     if (options.prettier !== false) {
@@ -145,7 +145,7 @@ export const componentToTemplate: TranspilerGenerator<ToTemplateOptions> =
     }
 
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };
