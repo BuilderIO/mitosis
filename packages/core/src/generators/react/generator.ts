@@ -170,6 +170,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
     const stateType = reactOptions.stateType || 'useState';
 
     const DEFAULT_OPTIONS: ToReactOptions = {
+      addUseClientDirectiveIfNeeded: true,
       stateType,
       stylesType: 'styled-jsx',
       type: 'dom',
@@ -493,7 +494,12 @@ const _componentToReact = (
     );
   `;
 
+  const isRsc = options.rsc && json.meta.useMetadata?.rsc?.componentType === 'server';
+  const shouldAddUseClientDirective = options.addUseClientDirectiveIfNeeded && !isRsc;
+  console.log('shouldAddUseClientDirective', { shouldAddUseClientDirective, name: json.name });
+
   const str = dedent`
+  ${shouldAddUseClientDirective ? `'use client';` : ''}
   ${getDefaultImport(json, options)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${

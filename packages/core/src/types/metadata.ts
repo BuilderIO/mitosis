@@ -24,6 +24,6 @@ export type ComponentMetadata = {
     state?: Dictionary<SolidState>;
   };
   rsc?: {
-    isRSC?: boolean;
+    componentType?: 'client' | 'server';
   };
 };

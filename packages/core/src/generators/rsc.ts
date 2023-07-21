@@ -2,6 +2,7 @@ import traverse from 'traverse';
 import { Plugin } from '..';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { mergeOptions } from '../helpers/merge-options';
+import { checkIsDefined } from '../helpers/nullable';
 import { MitosisComponent } from '../types/mitosis-component';
 import { TranspilerGenerator } from '../types/transpiler';
 import { componentToReact, ToReactOptions } from './react';
@@ -58,6 +59,18 @@ const RSC_TRANSFORM_PLUGIN: Plugin = () => ({
   },
 });
 
+const checkIfIsRsc = (json: MitosisComponent) => {
+  if (json.hooks.onMount) return false;
+  if (json.hooks.onUnMount) return false;
+  if (json.hooks.onUpdate) return false;
+  if (Object.keys(json.refs).length) return false;
+  if (Object.keys(json.context.get).length) return false;
+  if (Object.keys(json.context.set).length) return false;
+  if (Object.values(json.state).filter((s) => s?.type === 'property').length) return false;
+
+  return true;
+};
+
 const RscOptions: Partial<ToRscOptions> = {
   plugins: [RSC_TRANSFORM_PLUGIN],
   stateType: 'variables',
@@ -66,7 +79,21 @@ const RscOptions: Partial<ToRscOptions> = {
 export const componentToRsc: TranspilerGenerator<Partial<ToRscOptions>> =
   (_options = {}) =>
   ({ component, path }) => {
-    const isRSC = component.meta.useMetadata?.rsc?.isRSC;
+    if (
+      !checkIsDefined(component.meta.useMetadata?.rsc?.componentType) &&
+      checkIfIsRsc(component)
+    ) {
+      console.log('comp type is not defined. setting as RSC: ', component.name);
+
+      component.meta.useMetadata = {
+        ...component.meta.useMetadata,
+        rsc: {
+          ...component.meta.useMetadata?.rsc,
+          componentType: 'server',
+        },
+      };
+    }
+    const isRSC = component.meta.useMetadata?.rsc?.componentType === 'server';
 
     const options = mergeOptions<Partial<ToRscOptions>>(
       {
