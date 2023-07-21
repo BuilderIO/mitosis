@@ -4,22 +4,17 @@ import {
   USE_TARGET_MAGIC_STRING,
 } from '../../parsers/jsx/hooks/use-target';
 import { Targets } from '../../targets';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { TargetBlockDefinition } from '../../types/mitosis-component';
 import { Plugin } from '../../types/plugins';
 import { createCodeProcessorPlugin } from './process-code';
 
 const getBlockForTarget = ({
   target,
-  json,
-  targetId,
+  targetBlock,
 }: {
   target: Targets;
-  json: MitosisComponent;
-  targetId: string;
+  targetBlock: TargetBlockDefinition;
 }) => {
-  const targetBlock = json.targetBlocks?.[targetId];
-  if (!targetBlock) return undefined;
-
   switch (target) {
     case 'vue3':
     case 'vue':
@@ -60,15 +55,27 @@ export const processTargetBlocks = (target: Targets): Plugin => {
         if (!targetId) continue;
 
         // find the target block in the component, or the default target block
-        const targetBlock = getBlockForTarget({ target, json, targetId });
+        const targetBlock = json.targetBlocks?.[targetId];
 
         if (!targetBlock) {
-          throw new Error(
-            `Could not find \`useTarget()\` value in "${json.name}" for target "${target}", and no default value was set.`,
-          );
+          throw new Error(`Could not find \`useTarget()\` value in "${json.name}".`);
         }
 
-        code = code.replaceAll(m, targetBlock.code);
+        const block = getBlockForTarget({ target, targetBlock });
+
+        if (!block) {
+          if (targetBlock.settings.requiresDefault) {
+            throw new Error(
+              `Could not find \`useTarget()\` value in "${json.name}" for target "${target}", and no default value was set.`,
+            );
+          } else {
+            // if we don't need a default, then that means we allow for nothing to be injected, e.g. when we are in a function body.
+            code = code.replaceAll(m, '');
+            continue;
+          }
+        }
+
+        code = code.replaceAll(m, block.code);
       }
 
       return code;

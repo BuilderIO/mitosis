@@ -1,4 +1,4 @@
-import { useStore, useTarget } from '@builder.io/mitosis';
+import { onMount, useStore, useTarget } from '@builder.io/mitosis';
 
 export default function UseTargetComponent() {
   const state = useStore({
@@ -31,6 +31,21 @@ export default function UseTargetComponent() {
       });
       return prefix + 'foo';
     },
+
+    lastName: 'bar',
+  });
+
+  onMount(() => {
+    useTarget({
+      react: () => {
+        console.log('react');
+        state.lastName = 'baz';
+      },
+      qwik: () => {
+        console.log('qwik');
+        state.lastName = 'baz';
+      },
+    });
   });
 
   return <div>{state.name}</div>;
