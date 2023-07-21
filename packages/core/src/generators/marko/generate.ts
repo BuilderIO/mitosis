@@ -24,7 +24,7 @@ import {
   runPreJsonPlugins,
 } from '../../modules/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
+import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
