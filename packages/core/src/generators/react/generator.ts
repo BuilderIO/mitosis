@@ -177,6 +177,8 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
         stateType === 'variables'
           ? [
               CODE_PROCESSOR_PLUGIN((codeType, json) => (code, hookType) => {
+                if (codeType === 'types') return code;
+
                 code = replaceNodes({
                   code,
                   nodeMaps: Object.entries(json.state)
@@ -193,6 +195,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
                       };
                     }),
                 });
+
                 code = replaceStateIdentifier(null)(code);
 
                 return code;
