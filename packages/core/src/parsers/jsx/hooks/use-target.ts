@@ -1,11 +1,7 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { targets } from '../../../targets';
-import {
-  MitosisComponent,
-  TargetBlockCode,
-  TargetBlockDefinition,
-} from '../../../types/mitosis-component';
+import { MitosisComponent, TargetBlockDefinition } from '../../../types/mitosis-component';
 
 const { types } = babel;
 
@@ -41,9 +37,7 @@ export const getIdFromMatch = (match: string) => {
 /**
  * This function finds `useTarget()` and converts it our JSON representation
  */
-export const getUseTargetStatements = (
-  path: babel.NodePath<babel.types.CallExpression>,
-): TargetBlockCode | undefined => {
+export const getUseTargetStatements = (path: babel.NodePath<babel.types.CallExpression>) => {
   const useTargetHook = path.node;
   const obj = useTargetHook.arguments[0];
 
