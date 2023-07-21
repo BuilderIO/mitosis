@@ -496,7 +496,6 @@ const _componentToReact = (
 
   const isRsc = options.rsc && json.meta.useMetadata?.rsc?.componentType === 'server';
   const shouldAddUseClientDirective = options.addUseClientDirectiveIfNeeded && !isRsc;
-  console.log('shouldAddUseClientDirective', { shouldAddUseClientDirective, name: json.name });
 
   const str = dedent`
   ${shouldAddUseClientDirective ? `'use client';` : ''}
