@@ -303,7 +303,8 @@ const _componentToReact = (
   const allRefs = Object.keys(json.refs);
   mapRefs(json, (refName) => `${refName}.current`);
 
-  let hasState = checkHasState(json);
+  // Always use state if we are generate Builder react code
+  const hasState = options.stateType === 'builder' || checkHasState(json);
 
   const [forwardRef, hasPropRef] = getPropsRef(json);
   const isForwardRef = !options.preact && Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
@@ -315,11 +316,6 @@ const _componentToReact = (
     options.typescript && json.propsTypeRef && forwardRef && json.propsTypeRef !== 'any'
       ? `<${json.propsTypeRef}["${forwardRef}"]>`
       : '';
-
-  if (options.stateType === 'builder') {
-    // Always use state if we are generate Builder react code
-    hasState = true;
-  }
 
   const useStateCode = options.stateType === 'useState' ? getUseStateCode(json, options) : '';
   if (options.plugins) {
