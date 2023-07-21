@@ -211,8 +211,6 @@ export const replaceNodes = ({
             orig: generate(path.node).code,
             to: generate(x).code,
           });
-          console.log({ parent: path.parent });
-
           // throw err;
         }
       }
