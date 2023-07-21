@@ -77,8 +77,6 @@ export const componentToRsc: TranspilerGenerator<Partial<ToRscOptions>> =
       !checkIsDefined(component.meta.useMetadata?.rsc?.componentType) &&
       checkIfIsRsc(component)
     ) {
-      console.log('comp type is not defined. setting as RSC: ', component.name);
-
       component.meta.useMetadata = {
         ...component.meta.useMetadata,
         rsc: {
