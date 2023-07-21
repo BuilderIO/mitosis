@@ -167,9 +167,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       ? 'rsc'
       : 'react';
 
-    const isRsc = json.meta.useMetadata?.rsc?.isRSC;
-    const stateType: ToReactOptions['stateType'] =
-      target === 'rsc' && isRsc ? 'variables' : reactOptions.stateType || 'useState';
+    const stateType = reactOptions.stateType || 'useState';
 
     const DEFAULT_OPTIONS: ToReactOptions = {
       stateType,
