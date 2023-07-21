@@ -65,6 +65,7 @@ export const getUseTargetStatements = (path: babel.NodePath<babel.types.CallExpr
     if (!Object.keys(targets).concat('default').includes(prop.key.name)) {
       throw new Error('ERROR Parsing `useTarget()`: Invalid target: ' + prop.key.name);
     }
+    const keyName = prop.key.name as unknown as 'default';
 
     const targetCode = prop.value;
 
@@ -74,17 +75,20 @@ export const getUseTargetStatements = (path: babel.NodePath<babel.types.CallExpr
       const body = targetCode.body;
       if (types.isBlockStatement(body)) {
         let code = '';
-        body.body.map((statement) => {
+        body.body.forEach((statement) => {
           code += generate(statement).code + '\n';
         });
+        targetBlock[keyName] = {
+          code,
+        };
       } else {
-        targetBlock[prop.key.name as unknown as 'default'] = {
+        targetBlock[keyName] = {
           code: generate(body).code,
         };
       }
     } else {
       if (!types.isExpression(targetCode)) return undefined;
-      targetBlock[prop.key.name as unknown as 'default'] = {
+      targetBlock[keyName] = {
         code: generate(targetCode).code,
       };
     }
