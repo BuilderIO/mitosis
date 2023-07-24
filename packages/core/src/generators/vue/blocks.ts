@@ -1,5 +1,5 @@
 import { identity, pipe } from 'fp-ts/lib/function';
-import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
+import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
@@ -311,6 +311,8 @@ const SPECIAL_HTML_TAGS = ['style', 'script'];
 const stringifyBinding =
   (node: MitosisNode) =>
   ([key, value]: [string, Binding]) => {
+    const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name);
+
     if (value.type === 'spread') {
       return ''; // we handle this after
     } else if (key === 'class') {
@@ -321,7 +323,8 @@ const stringifyBinding =
       // TODO: proper babel transform to replace. Util for this
       const useValue = value?.code || '';
 
-      if (key.startsWith('on')) {
+      if (key.startsWith('on') && isValidHtmlTag) {
+        // handle html native on[event] props
         const { arguments: cusArgs = ['event'] } = value!;
         let event = key.replace('on', '').toLowerCase();
         if (event === 'change' && node.name === 'input') {
@@ -343,6 +346,10 @@ const stringifyBinding =
         const eventHandlerKey = `${SPECIAL_PROPERTIES.V_ON_AT}${event}`;
 
         return `${eventHandlerKey}="${eventHandlerValue}"`;
+      } else if (key.startsWith('on')) {
+        // handle on[custom event] props
+        const { arguments: cusArgs = ['event'] } = node.bindings[key]!;
+        return `:${key}="(${cusArgs.join(',')}) => ${encodeQuotes(useValue)}"`;
       } else if (key === 'ref') {
         return `ref="${encodeQuotes(useValue)}"`;
       } else if (BINDING_MAPPERS[key]) {

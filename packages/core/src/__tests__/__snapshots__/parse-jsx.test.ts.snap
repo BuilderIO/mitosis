@@ -4578,6 +4578,13 @@ exports[`Parse JSX > Javascript > Input 1`] = `
           "code": "props.name",
           "type": "single",
         },
+        "onChange": {
+          "arguments": [
+            "event",
+          ],
+          "code": "props.onChange?.(event.target.value)",
+          "type": "single",
+        },
         "placeholder": {
           "code": "props.placeholder",
           "type": "single",
@@ -4627,6 +4634,62 @@ exports[`Parse JSX > Javascript > Input 1`] = `
   "name": "FormInputComponent",
   "refs": {},
   "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Parse JSX > Javascript > InputParent 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "onChange": {
+          "arguments": [
+            "value",
+          ],
+          "code": "state.handleChange(value)",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "FormInputComponent",
+      "properties": {
+        "name": "kingzez",
+        "type": "text",
+      },
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {},
+  "imports": [
+    {
+      "importKind": "value",
+      "imports": {
+        "FormInputComponent": "default",
+      },
+      "path": "./input.raw",
+    },
+  ],
+  "inputs": [],
+  "meta": {},
+  "name": "Stepper",
+  "refs": {},
+  "state": {
+    "handleChange": {
+      "code": "handleChange(value) {
+  console.log(value);
+}",
+      "type": "method",
+    },
+  },
   "subComponents": [],
 }
 `;
@@ -16832,6 +16895,13 @@ exports[`Parse JSX > Typescript > Input 1`] = `
           "code": "props.name",
           "type": "single",
         },
+        "onChange": {
+          "arguments": [
+            "event",
+          ],
+          "code": "props.onChange?.(event.target.value)",
+          "type": "single",
+        },
         "placeholder": {
           "code": "props.placeholder",
           "type": "single",
@@ -16892,8 +16962,65 @@ exports[`Parse JSX > Typescript > Input 1`] = `
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }",
   ],
+}
+`;
+
+exports[`Parse JSX > Typescript > InputParent 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "onChange": {
+          "arguments": [
+            "value",
+          ],
+          "code": "state.handleChange(value)",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "FormInputComponent",
+      "properties": {
+        "name": "kingzez",
+        "type": "text",
+      },
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {},
+  "imports": [
+    {
+      "importKind": "value",
+      "imports": {
+        "FormInputComponent": "default",
+      },
+      "path": "./input.raw",
+    },
+  ],
+  "inputs": [],
+  "meta": {},
+  "name": "Stepper",
+  "refs": {},
+  "state": {
+    "handleChange": {
+      "code": "handleChange(value: string) {
+  console.log(value);
+}",
+      "type": "method",
+    },
+  },
+  "subComponents": [],
 }
 `;
 

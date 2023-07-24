@@ -1365,6 +1365,7 @@ exports[`Vue > jsx > Javascript Test > Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    @input=\\"onChange?.($event.target.value)\\"
     v-bind=\\"attributes\\"
   />
 </template>
@@ -1385,7 +1386,35 @@ export default defineComponent({
     \\"name\\",
     \\"value\\",
     \\"required\\",
+    \\"onChange\\",
   ],
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > InputParent 1`] = `
+"<template>
+  <form-input-component
+    name=\\"kingzez\\"
+    type=\\"text\\"
+    :onChange=\\"(value) => handleChange(value)\\"
+  ></form-input-component>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+export default defineComponent({
+  name: \\"stepper\\",
+  components: { \\"form-input-component\\": FormInputComponent },
+
+  methods: {
+    handleChange(value) {
+      console.log(value);
+    },
+  },
 });
 </script>"
 `;
@@ -5067,6 +5096,7 @@ exports[`Vue > jsx > Typescript Test > Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    @input=\\"onChange?.($event.target.value)\\"
     v-bind=\\"attributes\\"
   />
 </template>
@@ -5084,6 +5114,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 export default defineComponent({
@@ -5097,7 +5128,35 @@ export default defineComponent({
     \\"name\\",
     \\"value\\",
     \\"required\\",
+    \\"onChange\\",
   ],
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > InputParent 1`] = `
+"<template>
+  <form-input-component
+    name=\\"kingzez\\"
+    type=\\"text\\"
+    :onChange=\\"(value) => handleChange(value)\\"
+  ></form-input-component>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+export default defineComponent({
+  name: \\"stepper\\",
+  components: { \\"form-input-component\\": FormInputComponent },
+
+  methods: {
+    handleChange(value: string) {
+      console.log(value);
+    },
+  },
 });
 </script>"
 `;

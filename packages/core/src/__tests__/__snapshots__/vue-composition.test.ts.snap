@@ -1191,6 +1191,7 @@ exports[`Vue > jsx > Javascript Test > Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    @input=\\"onChange?.($event.target.value)\\"
     v-bind=\\"attributes\\"
   />
 </template>
@@ -1206,7 +1207,26 @@ const props = defineProps([
   \\"name\\",
   \\"value\\",
   \\"required\\",
+  \\"onChange\\",
 ]);
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > InputParent 1`] = `
+"<template>
+  <form-input-component
+    name=\\"kingzez\\"
+    type=\\"text\\"
+    :onChange=\\"(value) => handleChange(value)\\"
+  ></form-input-component>
+</template>
+
+<script setup>
+import FormInputComponent from \\"./input.raw\\";
+
+function handleChange(value) {
+  console.log(value);
+}
 </script>"
 `;
 
@@ -4194,6 +4214,7 @@ exports[`Vue > jsx > Typescript Test > Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    @input=\\"onChange?.($event.target.value)\\"
     v-bind=\\"attributes\\"
   />
 </template>
@@ -4209,9 +4230,28 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 const props = defineProps<FormInputProps>();
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > InputParent 1`] = `
+"<template>
+  <form-input-component
+    name=\\"kingzez\\"
+    type=\\"text\\"
+    :onChange=\\"(value) => handleChange(value)\\"
+  ></form-input-component>
+</template>
+
+<script setup lang=\\"ts\\">
+import FormInputComponent from \\"./input.raw\\";
+
+function handleChange(value: string) {
+  console.log(value);
+}
 </script>"
 `;
 
