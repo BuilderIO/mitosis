@@ -1,8 +1,7 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { HOOKS } from '../../../constants/hooks';
 import { targets } from '../../../targets';
-import { MitosisComponent, TargetBlockCode } from '../../../types/mitosis-component';
+import { MitosisComponent, TargetBlockDefinition } from '../../../types/mitosis-component';
 
 const { types } = babel;
 
@@ -38,39 +37,61 @@ export const getIdFromMatch = (match: string) => {
 /**
  * This function finds `useTarget()` and converts it our JSON representation
  */
-export const getUseTargetStatements = (
-  useTargetHook: babel.types.CallExpression,
-): TargetBlockCode | undefined => {
-  if (!types.isIdentifier(useTargetHook.callee)) return undefined;
-  if (useTargetHook.callee.name !== HOOKS.TARGET) return undefined;
-
+export const getUseTargetStatements = (path: babel.NodePath<babel.types.CallExpression>) => {
+  const useTargetHook = path.node;
   const obj = useTargetHook.arguments[0];
 
   if (!types.isObjectExpression(obj)) return undefined;
 
-  const targetBlock: TargetBlockCode = {};
+  const isInlinedCodeInsideFunctionBody =
+    types.isExpressionStatement(path.parent) && types.isBlockStatement(path.parentPath.parent);
+
+  const targetBlock: TargetBlockDefinition = {
+    settings: {
+      requiresDefault: !isInlinedCodeInsideFunctionBody,
+    },
+  };
 
   obj.properties.forEach((prop) => {
     if (!types.isObjectProperty(prop)) {
-      throw new Error('useTarget properties cannot be spread or references');
+      throw new Error('ERROR Parsing `useTarget()`: properties cannot be spread or references');
     }
     if (!types.isIdentifier(prop.key)) {
-      throw new Error('Expected an identifier, instead got: ' + prop.key);
+      throw new Error(
+        'ERROR Parsing `useTarget()`: Expected an identifier, instead got: ' + prop.key,
+      );
     }
 
     if (!Object.keys(targets).concat('default').includes(prop.key.name)) {
-      throw new Error('Invalid target: ' + prop.key.name);
+      throw new Error('ERROR Parsing `useTarget()`: Invalid target: ' + prop.key.name);
     }
+    const keyName = prop.key.name as unknown as 'default';
 
     const targetCode = prop.value;
-    if (!types.isExpression(targetCode)) return undefined;
 
-    targetBlock[prop.key.name as unknown as 'default'] = {
-      code: generate(targetCode).code,
-    };
-
-    // TO-DO: replace the useTarget() call with a magic string
-    // this will be replaced with the actual target code later
+    if (isInlinedCodeInsideFunctionBody) {
+      if (!(types.isArrowFunctionExpression(targetCode) || types.isFunctionExpression(targetCode)))
+        return undefined;
+      const body = targetCode.body;
+      if (types.isBlockStatement(body)) {
+        let code = '';
+        body.body.forEach((statement) => {
+          code += generate(statement).code + '\n';
+        });
+        targetBlock[keyName] = {
+          code,
+        };
+      } else {
+        targetBlock[keyName] = {
+          code: generate(body).code,
+        };
+      }
+    } else {
+      if (!types.isExpression(targetCode)) return undefined;
+      targetBlock[keyName] = {
+        code: generate(targetCode).code,
+      };
+    }
   });
 
   return Object.keys(targetBlock).length ? targetBlock : undefined;

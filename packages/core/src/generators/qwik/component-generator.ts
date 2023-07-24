@@ -97,8 +97,8 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       userOptions: userOptions,
     });
 
-    component = runPreJsonPlugins(component, options.plugins);
-    component = runPostJsonPlugins(component, options.plugins);
+    component = runPreJsonPlugins({ json: component, plugins: options.plugins });
+    component = runPostJsonPlugins({ json: component, plugins: options.plugins });
 
     const isTypeScript = !!options.typescript;
     const file = new File(
@@ -129,16 +129,19 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
 
       let css: string | null = null;
 
+      const emitStore = () =>
+        hasState && emitUseStore({ file, stateInit: state, isDeep: metadata?.qwik?.hasDeepStore });
+
       const componentFn = arrowFnBlock(
         ['props'],
         [
           function (this: SrcBuilder) {
+            if (metadata?.qwik?.setUseStoreFirst) emitStore();
             css = emitUseStyles(file, component);
+            emitUseComputed(file, component);
             emitUseContext(file, component);
             emitUseRef(file, component);
-            hasState &&
-              emitUseStore({ file, stateInit: state, isDeep: metadata?.qwik?.hasDeepStore });
-            emitUseComputed(file, component);
+            if (!metadata?.qwik?.setUseStoreFirst) emitStore();
             emitUseContextProvider(file, component);
             emitUseClientEffect(file, component);
             emitUseMount(file, component);
@@ -161,8 +164,16 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       emitStyles(file, css);
       DEBUG && file.exportConst('COMPONENT', JSON.stringify(component));
       let sourceFile = file.toString();
-      sourceFile = runPreCodePlugins(sourceFile, options.plugins);
-      sourceFile = runPostCodePlugins(sourceFile, options.plugins);
+      sourceFile = runPreCodePlugins({
+        json: component,
+        code: sourceFile,
+        plugins: options.plugins,
+      });
+      sourceFile = runPostCodePlugins({
+        json: component,
+        code: sourceFile,
+        plugins: options.plugins,
+      });
       return sourceFile;
     } catch (e) {
       console.error(e);

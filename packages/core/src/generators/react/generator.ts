@@ -1,3 +1,4 @@
+import { types } from '@babel/core';
 import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
@@ -16,8 +17,10 @@ import { handleMissingState } from '../../helpers/handle-missing-state';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { mapRefs } from '../../helpers/map-refs';
 import { initializeOptions } from '../../helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { processHttpRequests } from '../../helpers/process-http-requests';
 import { renderPreComponent } from '../../helpers/render-imports';
+import { replaceNodes, replaceStateIdentifier } from '../../helpers/replace-identifiers';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 import { checkHasState } from '../../helpers/state';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
@@ -141,12 +144,6 @@ type ReactExports =
   | 'useContext'
   | 'forwardRef';
 
-const DEFAULT_OPTIONS: ToReactOptions = {
-  stateType: 'useState',
-  stylesType: 'styled-jsx',
-  type: 'dom',
-};
-
 export const componentToPreact: TranspilerGenerator<Partial<ToReactOptions>> = (
   reactOptions = {},
 ) =>
@@ -170,6 +167,44 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       ? 'rsc'
       : 'react';
 
+    const stateType = reactOptions.stateType || 'useState';
+
+    const DEFAULT_OPTIONS: ToReactOptions = {
+      addUseClientDirectiveIfNeeded: true,
+      stateType,
+      stylesType: 'styled-jsx',
+      type: 'dom',
+      plugins:
+        stateType === 'variables'
+          ? [
+              CODE_PROCESSOR_PLUGIN((codeType, json) => (code, hookType) => {
+                if (codeType === 'types') return code;
+
+                code = replaceNodes({
+                  code,
+                  nodeMaps: Object.entries(json.state)
+                    .filter(([key, value]) => value?.type === 'getter')
+                    .map(([key, value]) => {
+                      const expr = types.memberExpression(
+                        types.identifier('state'),
+                        types.identifier(key),
+                      );
+                      return {
+                        from: expr,
+                        // condition: (path) => !types.isObjectMethod(path.parent),
+                        to: types.callExpression(expr, []),
+                      };
+                    }),
+                });
+
+                code = replaceStateIdentifier(null)(code);
+
+                return code;
+              }),
+            ]
+          : [],
+    };
+
     const options = initializeOptions({
       target,
       component,
@@ -178,7 +213,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
     });
 
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
 
     let str = _componentToReact(json, options);
@@ -188,7 +223,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       json.subComponents.map((item) => _componentToReact(item, options, true)).join('\n\n\n');
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -207,7 +242,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };
@@ -272,7 +307,8 @@ const _componentToReact = (
   const allRefs = Object.keys(json.refs);
   mapRefs(json, (refName) => `${refName}.current`);
 
-  let hasState = checkHasState(json);
+  // Always use state if we are generate Builder react code
+  const hasState = options.stateType === 'builder' || checkHasState(json);
 
   const [forwardRef, hasPropRef] = getPropsRef(json);
   const isForwardRef = !options.preact && Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
@@ -285,14 +321,9 @@ const _componentToReact = (
       ? `<${json.propsTypeRef}["${forwardRef}"]>`
       : '';
 
-  if (options.stateType === 'builder') {
-    // Always use state if we are generate Builder react code
-    hasState = true;
-  }
-
   const useStateCode = options.stateType === 'useState' ? getUseStateCode(json, options) : '';
   if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
+    json = runPostJsonPlugins({ json, plugins: options.plugins });
   }
 
   const css =
@@ -381,7 +412,15 @@ const _componentToReact = (
           : options.stateType === 'builder'
           ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
           : options.stateType === 'variables'
-          ? `const state = ${getStateObjectStringFromComponent(json)};`
+          ? getStateObjectStringFromComponent(json, {
+              format: 'variables',
+              keyPrefix: 'const',
+              valueMapper: (code, type, _, key) => {
+                if (type === 'getter') return `${key} = function ${code.replace('get ', '')}`;
+                if (type === 'function') return `${key} = function ${code}`;
+                return code;
+              },
+            })
           : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
         : ''
     }
@@ -455,7 +494,11 @@ const _componentToReact = (
     );
   `;
 
+  const isRsc = options.rsc && json.meta.useMetadata?.rsc?.componentType === 'server';
+  const shouldAddUseClientDirective = options.addUseClientDirectiveIfNeeded && !isRsc;
+
   const str = dedent`
+  ${shouldAddUseClientDirective ? `'use client';` : ''}
   ${getDefaultImport(json, options)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${

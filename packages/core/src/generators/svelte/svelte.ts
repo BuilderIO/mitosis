@@ -179,7 +179,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(component);
-    json = runPreJsonPlugins(json, options.plugins);
+    json = runPreJsonPlugins({ json, plugins: options.plugins });
 
     useBindValue(json, options);
 
@@ -197,7 +197,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       .map(stripStateAndProps({ json, options }))
       .filter((x) => !props.includes(x));
 
-    json = runPostJsonPlugins(json, options.plugins);
+    json = runPostJsonPlugins({ json, plugins: options.plugins });
 
     const css = collectCss(json);
     stripMetaProperties(json);
@@ -401,7 +401,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     }
   `;
 
-    str = runPreCodePlugins(str, options.plugins);
+    str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
 
     if (options.prettier !== false) {
       try {
@@ -424,7 +424,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     str = str.replace(/<script>\n<\/script>/g, '').trim();
 
-    str = runPostCodePlugins(str, options.plugins);
+    str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
 
     return str;
   };

@@ -128,7 +128,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     ];
 
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     addProviderComponents(json, options);
     const componentHasStyles = hasCss(json);
@@ -144,7 +144,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     const foundDynamicComponents = processDynamicComponents(json, options);
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     stripMetaProperties(json);
     const css = options.stylesType === 'style-tag' && collectCss(json, { prefix: hash(json) });
@@ -228,7 +228,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
   `;
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       str = format(str, {
@@ -237,7 +237,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
       });
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };

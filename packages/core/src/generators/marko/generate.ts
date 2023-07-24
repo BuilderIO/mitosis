@@ -162,7 +162,7 @@ export const componentToMarko: TranspilerGenerator<ToMarkoOptions> =
     });
 
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     let css = collectCss(json, {
       prefix: hash(json),
@@ -172,7 +172,7 @@ export const componentToMarko: TranspilerGenerator<ToMarkoOptions> =
     mapRefs(json, (refName) => `this.${camelCase(refName)}`);
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     stripMetaProperties(json);
 
@@ -287,7 +287,7 @@ ${htmlString}
       .trim();
 
     if (options.plugins) {
-      finalStr = runPreCodePlugins(finalStr, options.plugins);
+      finalStr = runPreCodePlugins({ json, code: finalStr, plugins: options.plugins });
     }
 
     if (USE_MARKO_PRETTIER && options.prettier !== false) {
@@ -300,7 +300,7 @@ ${htmlString}
     }
 
     if (options.plugins) {
-      finalStr = runPostCodePlugins(finalStr, options.plugins);
+      finalStr = runPostCodePlugins({ json, code: finalStr, plugins: options.plugins });
     }
     return finalStr;
   };

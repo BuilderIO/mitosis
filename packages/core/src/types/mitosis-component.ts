@@ -84,6 +84,12 @@ export type TargetBlockCode = TargetBlock<{
   code: string;
 }>;
 
+export type TargetBlockDefinition = TargetBlockCode & {
+  settings: {
+    requiresDefault: boolean;
+  };
+};
+
 export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
   name: string;
@@ -119,7 +125,7 @@ export type MitosisComponent = {
     postComponent?: extendedHook;
     onUpdate?: extendedHook[];
   };
-  targetBlocks?: Dictionary<TargetBlockCode>;
+  targetBlocks?: Dictionary<TargetBlockDefinition>;
   children: MitosisNode[];
   subComponents: MitosisComponent[];
   types?: string[];

@@ -111,7 +111,16 @@ const checkIsObjectWithCodeBlock = (obj: any): obj is { code: string } => {
 };
 
 export function getLexicalScopeVars(component: MitosisComponent) {
-  return ['props', 'state', ...Object.keys(component.refs), ...Object.keys(component.context.get)];
+  return [
+    'props',
+    'state',
+    ...Object.keys(component.refs),
+    ...Object.keys(component.context.get),
+    ...Object.keys(component.state).filter((key) => {
+      const stateType = component.state[key]?.type;
+      return stateType === 'getter' || stateType === 'function';
+    }),
+  ];
 }
 
 function rewriteCodeExpr(

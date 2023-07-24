@@ -198,12 +198,12 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
 
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     const css = collectCss(json);
     stripMetaProperties(json);
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
 
     const componentName = camelCase(json.name) || 'MyComponent';
@@ -230,7 +230,7 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
     }
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -249,7 +249,7 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };
