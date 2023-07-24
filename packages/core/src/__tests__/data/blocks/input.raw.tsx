@@ -9,6 +9,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 export default function FormInputComponent(props: FormInputProps) {
@@ -22,6 +23,7 @@ export default function FormInputComponent(props: FormInputProps) {
       value={props.value}
       defaultValue={props.defaultValue}
       required={props.required}
+      onChange={(event) => props.onChange?.(event.target.value)}
     />
   );
 }

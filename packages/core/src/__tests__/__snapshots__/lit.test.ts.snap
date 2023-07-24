@@ -1469,6 +1469,7 @@ export default class FormInputComponent extends LitElement {
   @property() name: any;
   @property() value: any;
   @property() required: any;
+  @property() onChange: any;
 
   render() {
     return html\`
@@ -1477,8 +1478,38 @@ export default class FormInputComponent extends LitElement {
       Builder.isEditing && this.defaultValue ? this.defaultValue : \\"default-key\\"
     } .placeholder=\${this.placeholder}
         .type=\${this.type} .name=\${this.name} .value=\${this.value}
-        .defaultValue=\${this.defaultValue} .required=\${this.required} />
+        .defaultValue=\${this.defaultValue} .required=\${this.required} @input=\${(
+      event
+    ) => this.onChange?.(event.target.value)} />
 
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-stepper\\")
+export default class Stepper extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  handleChange(value) {
+    console.log(value);
+  }
+
+  render() {
+    return html\`
+
+          <form-input-component  name=\\"kingzez\\"  type=\\"text\\"  @change=\${(
+            value
+          ) => this.handleChange(value)} ></form-input-component>
         \`;
   }
 }
@@ -5628,6 +5659,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 const spread = (properties) =>
@@ -5651,6 +5683,7 @@ export default class FormInputComponent extends LitElement {
   @property() name: any;
   @property() value: any;
   @property() required: any;
+  @property() onChange: any;
 
   render() {
     return html\`
@@ -5659,8 +5692,38 @@ export default class FormInputComponent extends LitElement {
       Builder.isEditing && this.defaultValue ? this.defaultValue : \\"default-key\\"
     } .placeholder=\${this.placeholder}
         .type=\${this.type} .name=\${this.name} .value=\${this.value}
-        .defaultValue=\${this.defaultValue} .required=\${this.required} />
+        .defaultValue=\${this.defaultValue} .required=\${this.required} @input=\${(
+      event
+    ) => this.onChange?.(event.target.value)} />
 
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-stepper\\")
+export default class Stepper extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  handleChange(value: string) {
+    console.log(value);
+  }
+
+  render() {
+    return html\`
+
+          <form-input-component  name=\\"kingzez\\"  type=\\"text\\"  @change=\${(
+            value
+          ) => this.handleChange(value)} ></form-input-component>
         \`;
   }
 }

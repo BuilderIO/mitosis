@@ -2208,11 +2208,76 @@ exports[`Html > jsx > Javascript Test > Input 1`] = `
         el.setAttribute(\\"defaultValue\\", props.defaultValue);
 
         el.setAttribute(\\"required\\", props.required);
+
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
       });
 
       destroyAnyNodes();
 
       pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      props.onChange?.(event.target.value);
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > InputParent 1`] = `
+"<FormInputComponent
+  name=\\"kingzez\\"
+  type=\\"text\\"
+  data-el=\\"form-input-component\\"
+></FormInputComponent>
+<script>
+  (() => {
+    const state = {
+      handleChange(value) {
+        console.log(value);
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document
+        .querySelectorAll(\\"[data-el='form-input-component']\\")
+        .forEach((el) => {
+          el.removeEventListener(\\"change\\", onFormInputComponentChange);
+          el.addEventListener(\\"change\\", onFormInputComponentChange);
+        });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'change' event on form-input-component
+    function onFormInputComponentChange(value) {
+      state.handleChange(value);
     }
 
     // Update with initial state on first load
@@ -8338,11 +8403,76 @@ exports[`Html > jsx > Typescript Test > Input 1`] = `
         el.setAttribute(\\"defaultValue\\", props.defaultValue);
 
         el.setAttribute(\\"required\\", props.required);
+
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
       });
 
       destroyAnyNodes();
 
       pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      props.onChange?.(event.target.value);
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > InputParent 1`] = `
+"<FormInputComponent
+  name=\\"kingzez\\"
+  type=\\"text\\"
+  data-el=\\"form-input-component\\"
+></FormInputComponent>
+<script>
+  (() => {
+    const state = {
+      handleChange(value: string) {
+        console.log(value);
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document
+        .querySelectorAll(\\"[data-el='form-input-component']\\")
+        .forEach((el) => {
+          el.removeEventListener(\\"change\\", onFormInputComponentChange);
+          el.addEventListener(\\"change\\", onFormInputComponentChange);
+        });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'change' event on form-input-component
+    function onFormInputComponentChange(value) {
+      state.handleChange(value);
     }
 
     // Update with initial state on first load

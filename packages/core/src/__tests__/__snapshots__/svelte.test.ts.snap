@@ -1082,6 +1082,7 @@ exports[`Svelte > jsx > Javascript Test > Input 1`] = `
   export let name;
   export let value;
   export let required;
+  export let onChange;
 </script>
 
 <input
@@ -1093,6 +1094,25 @@ exports[`Svelte > jsx > Javascript Test > Input 1`] = `
   {value}
   {defaultValue}
   {required}
+  on:change={(event) => {
+    onChange?.(event.target.value);
+  }}
+/>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > InputParent 1`] = `
+"<script>
+  import FormInputComponent from \\"./input.raw\\";
+
+  function handleChange(value) {
+    console.log(value);
+  }
+</script>
+
+<FormInputComponent
+  name=\\"kingzez\\"
+  type=\\"text\\"
+  onChange={(value) => handleChange(value)}
 />"
 `;
 
@@ -3870,6 +3890,7 @@ exports[`Svelte > jsx > Typescript Test > Input 1`] = `
     placeholder?: string;
     defaultValue?: string;
     required?: boolean;
+    onChange?: (value: string) => void;
   }
 </script>
 
@@ -3883,6 +3904,7 @@ exports[`Svelte > jsx > Typescript Test > Input 1`] = `
   export let name: FormInputProps[\\"name\\"];
   export let value: FormInputProps[\\"value\\"];
   export let required: FormInputProps[\\"required\\"];
+  export let onChange: FormInputProps[\\"onChange\\"];
 </script>
 
 <input
@@ -3894,6 +3916,25 @@ exports[`Svelte > jsx > Typescript Test > Input 1`] = `
   {value}
   {defaultValue}
   {required}
+  on:change={(event) => {
+    onChange?.(event.target.value);
+  }}
+/>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > InputParent 1`] = `
+"<script lang=\\"ts\\">
+  import FormInputComponent from \\"./input.raw\\";
+
+  function handleChange(value: string) {
+    console.log(value);
+  }
+</script>
+
+<FormInputComponent
+  name=\\"kingzez\\"
+  type=\\"text\\"
+  onChange={(value) => handleChange(value)}
 />"
 `;
 
