@@ -45,7 +45,11 @@ export default function MyComponent(props: Props) {
 };
 `;
 describe('Signals type parsing', () => {
-  // we piggyback on the e2e-app TS project to avoid having to setup one for this test.
+  /**
+   * We can piggyback on the `core` project's TS config, since we are allowed to reference `@builder.io/mitosis`
+   * recursively inside of itself.
+   * This avoids the need to create a mock TS project just for testing.
+   */
   const tsProject = createTypescriptProject(__dirname + '/../../../tsconfig.json');
 
   test(findSignals.name, () => {
