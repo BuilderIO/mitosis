@@ -1864,7 +1864,7 @@ exports[`qwik > jsx > Javascript Test > Basic Context 1`] = `
 
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
-export const onChange = function onChange(props, state, myService, onChange) {
+export const onChange = function onChange(props, state, myService) {
   const change = myService.method(\\"change\\");
   console.log(change);
 };
@@ -2078,14 +2078,7 @@ exports[`qwik > jsx > Javascript Test > BasicRef 1`] = `
   useStylesScoped$,
 } from \\"@builder.io/qwik\\";
 
-export const onBlur = function onBlur(
-  props,
-  state,
-  inputRef,
-  inputNoArgRef,
-  onBlur,
-  lowerCaseName
-) {
+export const onBlur = function onBlur(props, state, inputRef, inputNoArgRef) {
   // Maintain focus
   inputRef.value.focus();
 };
@@ -2093,9 +2086,7 @@ export const lowerCaseName = function lowerCaseName(
   props,
   state,
   inputRef,
-  inputNoArgRef,
-  onBlur,
-  lowerCaseName
+  inputNoArgRef
 ) {
   return state.name.toLowerCase();
 };
@@ -2150,7 +2141,6 @@ export const handlerClick = function handlerClick(
   props,
   state,
   holdValueRef,
-  handlerClick,
   event
 ) {
   event.preventDefault();
@@ -2347,7 +2337,7 @@ import {
   useStore,
 } from \\"@builder.io/qwik\\";
 
-export const show = function show(props, state, cls) {
+export const show = function show(props, state) {
   props.slotContent ? 1 : \\"\\";
 };
 export const ContentSlotJsxCode = component$((props) => {
@@ -2363,7 +2353,7 @@ export const ContentSlotJsxCode = component$((props) => {
           name={props.slotContent ? \\"name1\\" : \\"name2\\"}
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
-          onClick$={(event) => show(props, state, cls)}
+          onClick$={(event) => show(props, state)}
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
@@ -2559,13 +2549,7 @@ import {
   set,
 } from \\"@fake\\";
 
-export const onSubmit = function onSubmit(
-  props,
-  state,
-  formRef,
-  submissionState,
-  event
-) {
+export const onSubmit = function onSubmit(props, state, formRef, event) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
   if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -2800,9 +2784,7 @@ export const FormComponent = component$((props) => {
       })()}
       method={props.method}
       name={props.name}
-      onSubmit$={(event) =>
-        onSubmit(props, state, formRef, submissionState, event)
-      }
+      onSubmit$={(event) => onSubmit(props, state, formRef, event)}
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
@@ -2867,29 +2849,18 @@ exports[`qwik > jsx > Javascript Test > Image 1`] = `
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
-export const setLoaded = function setLoaded(
-  props,
-  state,
-  pictureRef,
-  isBrowser
-) {
+export const setLoaded = function setLoaded(props, state, pictureRef) {
   state.imageLoaded = true;
 };
 export const useLazyLoading = function useLazyLoading(
   props,
   state,
-  pictureRef,
-  isBrowser
+  pictureRef
 ) {
   // TODO: Add more checks here, like testing for real web browsers
   return !!props.lazy && state.isBrowser();
 };
-export const isBrowser = function isBrowser(
-  props,
-  state,
-  pictureRef,
-  isBrowser
-) {
+export const isBrowser = function isBrowser(props, state, pictureRef) {
   return (
     typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
   );
@@ -2904,7 +2875,7 @@ export const Image = component$((props) => {
     scrollListener: null,
   });
   useVisibleTask$(() => {
-    if (useLazyLoading(props, state, pictureRef, isBrowser)) {
+    if (useLazyLoading(props, state, pictureRef)) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef.value) {
@@ -2931,7 +2902,7 @@ export const Image = component$((props) => {
   return (
     <div>
       <picture ref={pictureRef}>
-        {!useLazyLoading(props, state, pictureRef, isBrowser) || state.load ? (
+        {!useLazyLoading(props, state, pictureRef) || state.load ? (
           <img
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -2941,7 +2912,7 @@ export const Image = component$((props) => {
               \\" img-Image\\"
             }
             src={props.image}
-            onLoad$={(event) => setLoaded(props, state, pictureRef, isBrowser)}
+            onLoad$={(event) => setLoaded(props, state, pictureRef)}
             srcset={props.srcset}
             sizes={props.sizes}
           />
@@ -4170,9 +4141,9 @@ export default MyBasicComponent;
 exports[`qwik > jsx > Javascript Test > referencingFunInsideHook 1`] = `
 "import { Fragment, component$, h, useTask$ } from \\"@builder.io/qwik\\";
 
-export const foo = function foo(props, state, foo, bar, zoo, params) {};
-export const bar = function bar(props, state, foo, bar, zoo) {};
-export const zoo = function zoo(props, state, foo, bar, zoo) {
+export const foo = function foo(props, state, params) {};
+export const bar = function bar(props, state) {};
+export const zoo = function zoo(props, state) {
   const params = {
     cb: state.bar,
   };
@@ -4988,7 +4959,7 @@ exports[`qwik > jsx > Typescript Test > Basic Context 1`] = `
 
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
-export const onChange = function onChange(props, state, myService, onChange) {
+export const onChange = function onChange(props, state, myService) {
   const change = myService.method(\\"change\\");
   console.log(change);
 };
@@ -5219,14 +5190,7 @@ exports[`qwik > jsx > Typescript Test > BasicRef 1`] = `
 export interface Props {
   showInput: boolean;
 }
-export const onBlur = function onBlur(
-  props,
-  state,
-  inputRef,
-  inputNoArgRef,
-  onBlur,
-  lowerCaseName
-) {
+export const onBlur = function onBlur(props, state, inputRef, inputNoArgRef) {
   // Maintain focus
   inputRef.value.focus();
 };
@@ -5234,9 +5198,7 @@ export const lowerCaseName = function lowerCaseName(
   props,
   state,
   inputRef,
-  inputNoArgRef,
-  onBlur,
-  lowerCaseName
+  inputNoArgRef
 ) {
   return state.name.toLowerCase();
 };
@@ -5294,7 +5256,6 @@ export const handlerClick = function handlerClick(
   props,
   state,
   holdValueRef,
-  handlerClick,
   event: Event
 ) {
   event.preventDefault();
@@ -5525,7 +5486,7 @@ import {
 type Props = {
   [key: string]: string | JSX.Element;
 };
-export const show = function show(props, state, cls) {
+export const show = function show(props, state) {
   props.slotContent ? 1 : \\"\\";
 };
 export const ContentSlotJsxCode = component$((props: Props) => {
@@ -5541,7 +5502,7 @@ export const ContentSlotJsxCode = component$((props: Props) => {
           name={props.slotContent ? \\"name1\\" : \\"name2\\"}
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
-          onClick$={(event) => show(props, state, cls)}
+          onClick$={(event) => show(props, state)}
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
@@ -5772,7 +5733,6 @@ export const onSubmit = function onSubmit(
   props,
   state,
   formRef,
-  submissionState,
   event: Event & {
     currentTarget: HTMLFormElement;
   }
@@ -6014,9 +5974,7 @@ export const FormComponent = component$((props: FormProps) => {
       })()}
       method={props.method}
       name={props.name}
-      onSubmit$={(event) =>
-        onSubmit(props, state, formRef, submissionState, event)
-      }
+      onSubmit$={(event) => onSubmit(props, state, formRef, event)}
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
@@ -6099,29 +6057,18 @@ export interface ImageProps {
 
   children?: any;
 }
-export const setLoaded = function setLoaded(
-  props,
-  state,
-  pictureRef,
-  isBrowser
-) {
+export const setLoaded = function setLoaded(props, state, pictureRef) {
   state.imageLoaded = true;
 };
 export const useLazyLoading = function useLazyLoading(
   props,
   state,
-  pictureRef,
-  isBrowser
+  pictureRef
 ) {
   // TODO: Add more checks here, like testing for real web browsers
   return !!props.lazy && state.isBrowser();
 };
-export const isBrowser = function isBrowser(
-  props,
-  state,
-  pictureRef,
-  isBrowser
-) {
+export const isBrowser = function isBrowser(props, state, pictureRef) {
   return (
     typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
   );
@@ -6136,7 +6083,7 @@ export const Image = component$((props: ImageProps) => {
     scrollListener: null,
   });
   useVisibleTask$(() => {
-    if (useLazyLoading(props, state, pictureRef, isBrowser)) {
+    if (useLazyLoading(props, state, pictureRef)) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef.value) {
@@ -6163,7 +6110,7 @@ export const Image = component$((props: ImageProps) => {
   return (
     <div>
       <picture ref={pictureRef}>
-        {!useLazyLoading(props, state, pictureRef, isBrowser) || state.load ? (
+        {!useLazyLoading(props, state, pictureRef) || state.load ? (
           <img
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -6173,7 +6120,7 @@ export const Image = component$((props: ImageProps) => {
               \\" img-Image\\"
             }
             src={props.image}
-            onLoad$={(event) => setLoaded(props, state, pictureRef, isBrowser)}
+            onLoad$={(event) => setLoaded(props, state, pictureRef)}
             srcset={props.srcset}
             sizes={props.sizes}
           />
@@ -7601,9 +7548,9 @@ export default MyBasicComponent;
 exports[`qwik > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 "import { Fragment, component$, h, useTask$ } from \\"@builder.io/qwik\\";
 
-export const foo = function foo(props, state, foo, bar, zoo, params) {};
-export const bar = function bar(props, state, foo, bar, zoo) {};
-export const zoo = function zoo(props, state, foo, bar, zoo) {
+export const foo = function foo(props, state, params) {};
+export const bar = function bar(props, state) {};
+export const zoo = function zoo(props, state) {
   const params = {
     cb: state.bar,
   };
@@ -9029,7 +8976,7 @@ export default MyComponent;
 exports[`qwik > svelte > Javascript Test > eventHandlers 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
-export const log = function log(props, state, log, msg = \\"hello\\") {
+export const log = function log(props, state, msg = \\"hello\\") {
   console.log(msg);
 };
 export const MyComponent = component$((props) => {
@@ -9064,7 +9011,7 @@ export default MyComponent;
 exports[`qwik > svelte > Javascript Test > ifElse 1`] = `
 "import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
-export const toggle = function toggle(props, state, toggle) {
+export const toggle = function toggle(props, state) {
   state.show = !state.show;
 };
 export const MyComponent = component$((props) => {
@@ -9162,13 +9109,7 @@ export default MyComponent;
 exports[`qwik > svelte > Javascript Test > reactiveWithFn 1`] = `
 "import { Fragment, component$, h, useStore, useTask$ } from \\"@builder.io/qwik\\";
 
-export const calculateResult = function calculateResult(
-  props,
-  state,
-  calculateResult,
-  a_,
-  b_
-) {
+export const calculateResult = function calculateResult(props, state, a_, b_) {
   state.result = a_ * b_;
 };
 export const MyComponent = component$((props) => {
@@ -9438,7 +9379,7 @@ export default MyComponent;
 exports[`qwik > svelte > Typescript Test > eventHandlers 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
-export const log = function log(props, state, log, msg = \\"hello\\") {
+export const log = function log(props, state, msg = \\"hello\\") {
   console.log(msg);
 };
 export const MyComponent = component$((props: any) => {
@@ -9473,7 +9414,7 @@ export default MyComponent;
 exports[`qwik > svelte > Typescript Test > ifElse 1`] = `
 "import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
-export const toggle = function toggle(props, state, toggle) {
+export const toggle = function toggle(props, state) {
   state.show = !state.show;
 };
 export const MyComponent = component$((props: any) => {
@@ -9571,13 +9512,7 @@ export default MyComponent;
 exports[`qwik > svelte > Typescript Test > reactiveWithFn 1`] = `
 "import { Fragment, component$, h, useStore, useTask$ } from \\"@builder.io/qwik\\";
 
-export const calculateResult = function calculateResult(
-  props,
-  state,
-  calculateResult,
-  a_,
-  b_
-) {
+export const calculateResult = function calculateResult(props, state, a_, b_) {
   state.result = a_ * b_;
 };
 export const MyComponent = component$((props: any) => {
