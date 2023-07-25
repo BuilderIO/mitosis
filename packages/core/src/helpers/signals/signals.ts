@@ -118,9 +118,9 @@ export const mapSignalType = ({
 
 /**
  * Processes the `Signal` type usage in a plain TS file:
- * - Finds the Signal import name
- * - Maps the Signal type to the target's equivalent
- * - Adds the equivalent of the Signal import to the file
+ * - Finds the `Signal` import name
+ * - Maps the `Signal` type to the target's equivalent
+ * - Adds the equivalent of the `Signal` import to the file
  */
 export const mapSignalTypeInTSFile = ({ code, target }: { code: string; target: Target }) => {
   const signalImportName = getSignalImportName(code);
