@@ -7,6 +7,7 @@ import { HOOKS } from '../../constants/hooks';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { tryParseJson } from '../../helpers/json';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
+import { getSignalImportName } from '../../helpers/signals';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { jsonToAst } from './ast';
 import { collectTypes, isTypeOrInterface } from './component-types';
@@ -19,9 +20,9 @@ import { collectModuleScopeHooks } from './hooks';
 import { getMagicString, getTargetId, getUseTargetStatements } from './hooks/use-target';
 import { handleImportDeclaration } from './imports';
 import { undoPropsDestructure } from './props';
+import { findSignals } from './signals';
 import { mapStateIdentifiers } from './state';
 import { Context, ParseMitosisOptions } from './types';
-import { findSignals, getSignalImportName } from './types-identification';
 
 const { types } = babel;
 

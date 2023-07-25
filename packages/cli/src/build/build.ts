@@ -26,6 +26,7 @@ import {
   MitosisConfig,
   parseJsx,
   parseSvelte,
+  removeMitosisImport,
   Target,
   TranspilerGenerator,
 } from '@builder.io/mitosis';
@@ -499,6 +500,7 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
         await transpileIfNecessary({ path, target, options, content: file }),
         transformImports({ target, options }),
         (code) => mapSignalTypeInTSFile({ code, target }),
+        removeMitosisImport,
       );
 
       return { output, path };

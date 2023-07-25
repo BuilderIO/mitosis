@@ -1,4 +1,6 @@
-import { createTypescriptProject, findSignals, mapSignalType } from './types-identification';
+import { mapSignalType } from '../../helpers/signals';
+import { createTypescriptProject } from '../../helpers/typescript-project';
+import { findSignals } from './signals';
 
 const code = `
 import { Signal, useState, useContext, createContext } from '@builder.io/mitosis';
