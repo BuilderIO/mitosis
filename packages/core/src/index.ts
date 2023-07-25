@@ -30,6 +30,8 @@ export * from './generators/taro';
 export * from './generators/template';
 export * from './generators/vue';
 export * from './helpers/is-mitosis-node';
+export * from './helpers/signals';
+export * from './helpers/typescript-project';
 export * from './parsers/angular';
 export * from './parsers/builder';
 export * from './parsers/context';

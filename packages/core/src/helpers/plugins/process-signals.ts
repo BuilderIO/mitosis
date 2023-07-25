@@ -1,15 +1,12 @@
 import { Node, types } from '@babel/core';
 import generate from '@babel/generator';
-import {
-  getSignalMitosisImportForTarget,
-  mapSignalType,
-} from '../../parsers/jsx/types-identification';
 import { Target } from '../../types/config';
 import { Plugin } from '../../types/plugins';
 import { babelTransformExpression } from '../babel-transform';
 import { capitalize } from '../capitalize';
 import { checkIsDefined } from '../nullable';
 import { replaceNodes } from '../replace-identifiers';
+import { getSignalMitosisImportForTarget, mapSignalType } from '../signals';
 import { createCodeProcessorPlugin } from './process-code';
 
 export const replaceSignalSetters = ({

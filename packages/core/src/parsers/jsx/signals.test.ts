@@ -1,4 +1,6 @@
-import { createTypescriptProject, findSignals, mapSignalType } from './types-identification';
+import { mapSignalType } from '../../helpers/signals';
+import { createTypescriptProject } from '../../helpers/typescript-project';
+import { findSignals } from './signals';
 
 const code = `
 import { Signal, useState, useContext, createContext } from '@builder.io/mitosis';
@@ -43,33 +45,26 @@ export default function MyComponent(props: Props) {
 };
 `;
 describe('Signals type parsing', () => {
+  /**
+   * We can piggyback on the `core` project's TS config, since we are allowed to reference `@builder.io/mitosis`
+   * recursively inside of itself.
+   * This avoids the need to create a mock TS project just for testing.
+   */
+  const tsProject = createTypescriptProject(__dirname + '/../../../tsconfig.json');
+
   test(findSignals.name, () => {
-    const result = findSignals({
-      code,
-      // we piggyback on the e2e-app TS project to avoid having to setup one for this test.
-      ...createTypescriptProject(__dirname + '/../../../../../e2e/e2e-app/tsconfig.json'),
-    });
+    const result = findSignals({ code, ...tsProject });
     expect(result).toMatchSnapshot();
   });
 
   describe(mapSignalType.name, () => {
     test('svelte', () => {
-      const result = mapSignalType({
-        target: 'svelte',
-        code,
-        // we piggyback on the e2e-app TS project to avoid having to setup one for this test.
-        ...createTypescriptProject(__dirname + '/../../../../../e2e/e2e-app/tsconfig.json'),
-      });
+      const result = mapSignalType({ target: 'svelte', code, ...tsProject });
       expect(result).toMatchSnapshot();
     });
 
     test('react', () => {
-      const result = mapSignalType({
-        target: 'react',
-        code,
-        // we piggyback on the e2e-app TS project to avoid having to setup one for this test.
-        ...createTypescriptProject(__dirname + '/../../../../../e2e/e2e-app/tsconfig.json'),
-      });
+      const result = mapSignalType({ target: 'react', code, ...tsProject });
       expect(result).toMatchSnapshot();
     });
   });
