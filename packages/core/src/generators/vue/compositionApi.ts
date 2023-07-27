@@ -132,7 +132,7 @@ export function generateCompositionApiScript(
         .join('\n') || ''
     }
 
-    ${onUpdateWithoutDeps?.map((hook) => `onUpdated(() => ${hook.code})`).join('\n') || ''}
+    ${onUpdateWithoutDeps?.map((hook) => `onUpdated(() => {${hook.code}})`).join('\n') || ''}
 
     ${
       onUpdateWithDeps
