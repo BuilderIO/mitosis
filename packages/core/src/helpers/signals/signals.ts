@@ -4,7 +4,7 @@ import { babelTransformExpression } from '../../helpers/babel-transform';
 import { Target } from '../../types/config';
 import { mapImportDeclarationToMitosisImport } from '../mitosis-imports';
 
-export const getSignalMappingForTarget = (target: Target) => {
+const getSignalMappingForTarget = (target: Target) => {
   switch (target) {
     case 'svelte':
       const importDeclaration = types.importDeclaration(

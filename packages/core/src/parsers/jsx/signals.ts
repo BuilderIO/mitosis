@@ -1,4 +1,4 @@
-import { Node, Project, Symbol } from 'ts-morph';
+import { Node, Project, Symbol, Type, ts } from 'ts-morph';
 import { getContextSymbols, getPropsSymbol } from '../../helpers/typescript-project';
 
 export const findSignals = (args: {
@@ -10,7 +10,7 @@ export const findSignals = (args: {
   const { project, signalSymbol } = args;
 
   const ast = args.code
-    ? args.project.createSourceFile('homepage2.lite.tsx', args.code)
+    ? args.project.createSourceFile('temp.lite.tsx', args.code)
     : args.filePath
     ? args.project.getSourceFileOrThrow(args.filePath)
     : undefined;
@@ -29,11 +29,32 @@ export const findSignals = (args: {
 
   const contextSymbols = getContextSymbols(ast);
 
+  const checkIsSignalSymbol = (type: Type<ts.Type>) => type.getTargetType()?.getAliasSymbol() === signalSymbol
+
+  const checkIsOptionalSignal = (node: Node) => {
+    let hasUndefined = false;
+    let hasSignal = false;
+
+    const perfectMatch = node.getType().getUnionTypes().every(type => {
+      if (type.isUndefined()) {
+        hasUndefined = true;
+        return true
+      } else if (checkIsSignalSymbol(type)) {
+        hasSignal = true;
+        return true
+      }
+
+      return false
+    })
+
+    return perfectMatch && hasUndefined && hasSignal;
+  }
+
   ast.forEachDescendant((parentNode) => {
     if (Node.isPropertyAccessExpression(parentNode)) {
       const node = parentNode.getExpression();
-      const aliasSymbol = node.getType().getTargetType()?.getAliasSymbol();
-      const isSignal = aliasSymbol === signalSymbol;
+      const isOptionalAccess = parentNode.hasQuestionDotToken()
+      const isSignal = isOptionalAccess ? checkIsOptionalSignal(node) : checkIsSignalSymbol( node.getType());
 
       if (!isSignal) return;
 
