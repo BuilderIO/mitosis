@@ -229,7 +229,6 @@ export const getSignalAccessPlugin =
             code = replaceNodes({ code, nodeMaps });
           }
 
-
           return code;
         })(x);
       },
