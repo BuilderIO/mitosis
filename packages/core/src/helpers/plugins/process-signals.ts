@@ -225,6 +225,11 @@ export const getSignalAccessPlugin =
             code = replaceSignalSetters({ code, nodeMaps: filteredNodeMaps });
           }
 
+          const isK = x.name === 'Blocks' && code.includes('props.context?.value');
+          if (isK) {
+            console.log({ before: code });
+          }
+
           if (nodeMaps.length) {
             code = replaceNodes({ code, nodeMaps });
           }
