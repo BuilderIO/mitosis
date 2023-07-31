@@ -111,11 +111,11 @@ export const mapSignalType = ({
 
       path.replaceWith(newType);
     }
-  }
+  };
 
   return babelTransformExpression(code, {
     TSTypeReference(path) {
-      map(path)
+      map(path);
     },
   });
 };

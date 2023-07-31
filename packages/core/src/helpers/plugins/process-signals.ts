@@ -141,25 +141,29 @@ export const getSignalAccessPlugin =
 
           for (const propName in json.props) {
             if (json.props[propName].propertyType === 'reactive') {
-              const getter = types.memberExpression(types.identifier('props'), mapSignal.getter(propName));
+              const getter = types.memberExpression(
+                types.identifier('props'),
+                mapSignal.getter(propName),
+              );
               const setter = mapSignal.setter
                 ? types.memberExpression(types.identifier('props'), mapSignal.setter(propName))
                 : undefined;
-                
-                nodeMaps.push({
-                  from: types.memberExpression(
-                    types.memberExpression(types.identifier('props'), types.identifier(propName)),
-                    types.identifier('value'),
-                  ),
-                  to: getter,
-                  setTo: setter,
-                });
+
+              nodeMaps.push({
+                from: types.memberExpression(
+                  types.memberExpression(types.identifier('props'), types.identifier(propName)),
+                  types.identifier('value'),
+                ),
+                to: getter,
+                setTo: setter,
+              });
 
               nodeMaps.push({
                 from: types.optionalMemberExpression(
                   types.memberExpression(types.identifier('props'), types.identifier(propName)),
                   types.identifier('value'),
-                  false, true
+                  false,
+                  true,
                 ),
                 to: getter,
                 setTo: setter,
@@ -179,7 +183,10 @@ export const getSignalAccessPlugin =
 
           for (const propName in json.state) {
             if (json.state[propName]?.propertyType === 'reactive') {
-              const to = types.memberExpression(types.identifier('state'), mapSignal.getter(propName));
+              const to = types.memberExpression(
+                types.identifier('state'),
+                mapSignal.getter(propName),
+              );
               const setTO = mapSignal.setter ? mapSignal.setter(propName) : undefined;
 
               nodeMaps.push({
@@ -195,11 +202,12 @@ export const getSignalAccessPlugin =
                 from: types.optionalMemberExpression(
                   types.memberExpression(types.identifier('state'), types.identifier(propName)),
                   types.identifier('value'),
-                  false, true
+                  false,
+                  true,
                 ),
                 to: to,
                 setTo: setTO,
-              })
+              });
             }
           }
 
@@ -219,7 +227,7 @@ export const getSignalAccessPlugin =
 
           const isK = x.name === 'Blocks' && code.includes('props.context?.value');
           if (isK) {
-            console.log({before: code});
+            console.log({ before: code });
           }
 
           if (nodeMaps.length) {
@@ -227,7 +235,7 @@ export const getSignalAccessPlugin =
           }
 
           if (isK) {
-            console.log({after: code});
+            console.log({ after: code });
           }
 
           return code;

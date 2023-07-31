@@ -1,4 +1,4 @@
-import { Node, Project, Symbol, Type, ts } from 'ts-morph';
+import { Node, Project, Symbol, ts, Type } from 'ts-morph';
 import { getContextSymbols, getPropsSymbol } from '../../helpers/typescript-project';
 
 export const findSignals = (args: {
@@ -29,32 +29,38 @@ export const findSignals = (args: {
 
   const contextSymbols = getContextSymbols(ast);
 
-  const checkIsSignalSymbol = (type: Type<ts.Type>) => type.getTargetType()?.getAliasSymbol() === signalSymbol
+  const checkIsSignalSymbol = (type: Type<ts.Type>) =>
+    type.getTargetType()?.getAliasSymbol() === signalSymbol;
 
   const checkIsOptionalSignal = (node: Node) => {
     let hasUndefined = false;
     let hasSignal = false;
 
-    const perfectMatch = node.getType().getUnionTypes().every(type => {
-      if (type.isUndefined()) {
-        hasUndefined = true;
-        return true
-      } else if (checkIsSignalSymbol(type)) {
-        hasSignal = true;
-        return true
-      }
+    const perfectMatch = node
+      .getType()
+      .getUnionTypes()
+      .every((type) => {
+        if (type.isUndefined()) {
+          hasUndefined = true;
+          return true;
+        } else if (checkIsSignalSymbol(type)) {
+          hasSignal = true;
+          return true;
+        }
 
-      return false
-    })
+        return false;
+      });
 
     return perfectMatch && hasUndefined && hasSignal;
-  }
+  };
 
   ast.forEachDescendant((parentNode) => {
     if (Node.isPropertyAccessExpression(parentNode)) {
       const node = parentNode.getExpression();
-      const isOptionalAccess = parentNode.hasQuestionDotToken()
-      const isSignal = isOptionalAccess ? checkIsOptionalSignal(node) : checkIsSignalSymbol( node.getType());
+      const isOptionalAccess = parentNode.hasQuestionDotToken();
+      const isSignal = isOptionalAccess
+        ? checkIsOptionalSignal(node)
+        : checkIsSignalSymbol(node.getType());
 
       if (!isSignal) return;
 
