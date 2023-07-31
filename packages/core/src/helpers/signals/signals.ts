@@ -1,4 +1,4 @@
-import { types } from '@babel/core';
+import { NodePath, types } from '@babel/core';
 import { pipe } from 'fp-ts/lib/function';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { Target } from '../../types/config';
@@ -100,18 +100,22 @@ export const mapSignalType = ({
 }) => {
   const signalType = getSignalMappingForTarget(target);
 
+  const map = (path: NodePath<types.TSTypeReference>) => {
+    if (types.isIdentifier(path.node.typeName) && path.node.typeName.name === signalImportName) {
+      const params = path.node.typeParameters?.params || [];
+
+      const newType = signalType?.getTypeReference
+        ? signalType.getTypeReference(params)
+        : // if no mapping exists, drop `Signal` and just use the generic type passed to `Signal` as-is.
+          params[0];
+
+      path.replaceWith(newType);
+    }
+  }
+
   return babelTransformExpression(code, {
     TSTypeReference(path) {
-      if (types.isIdentifier(path.node.typeName) && path.node.typeName.name === signalImportName) {
-        const params = path.node.typeParameters?.params || [];
-
-        const newType = signalType?.getTypeReference
-          ? signalType.getTypeReference(params)
-          : // if no mapping exists, drop `Signal` and just use the generic type passed to `Signal` as-is.
-            params[0];
-
-        path.replaceWith(newType);
-      }
+      map(path)
     },
   });
 };
