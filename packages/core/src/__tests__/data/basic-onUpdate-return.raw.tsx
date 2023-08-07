@@ -1,4 +1,4 @@
-import { useStore, onUpdate } from '@builder.io/mitosis';
+import { onUpdate, useStore } from '@builder.io/mitosis';
 
 export default function MyBasicOnUpdateReturnComponent() {
   const state = useStore({

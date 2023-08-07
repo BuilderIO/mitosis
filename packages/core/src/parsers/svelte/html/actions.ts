@@ -1,5 +1,5 @@
-import { uniqueName } from '../helpers/string';
 import { generate } from 'astring';
+import { uniqueName } from '../helpers/string';
 
 import type { Element } from 'svelte/types/compiler/interfaces';
 import type { SveltosisComponent } from '../types';
@@ -21,6 +21,7 @@ export function parseAction(
   json.state[actionHandler] = {
     code: 'null',
     type: 'property',
+    propertyType: 'normal',
   };
 
   const initHandler = `if (${nodeReference}) { ${actionHandler} = ${methodName}(${nodeReference}, ${parameters}); };\n`;

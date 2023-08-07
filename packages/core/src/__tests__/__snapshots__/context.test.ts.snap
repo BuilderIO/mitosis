@@ -7,14 +7,17 @@ exports[`Context > Parse context 1`] = `
   "value": {
     "content": {
       "code": "null",
+      "propertyType": "normal",
       "type": "property",
     },
     "context": {
       "code": "{}",
+      "propertyType": "normal",
       "type": "property",
     },
     "foo": {
       "code": "'bar'",
+      "propertyType": "normal",
       "type": "property",
     },
     "fooUpperCase": {
@@ -31,6 +34,7 @@ exports[`Context > Parse context 1`] = `
     },
     "state": {
       "code": "{}",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -334,54 +338,63 @@ exports[`Context > Use and set context in complex components 1`] = `
   "hooks": {},
   "imports": [
     {
-      "imports": {
-        "getBlockComponentOptions": "getBlockComponentOptions",
-      },
-      "path": "../functions/get-block-component-options",
-    },
-    {
-      "imports": {
-        "getBlockProperties": "getBlockProperties",
-      },
-      "path": "../functions/get-block-properties",
-    },
-    {
-      "imports": {
-        "getBlockStyles": "getBlockStyles",
-      },
-      "path": "../functions/get-block-styles",
-    },
-    {
-      "imports": {
-        "getBlockTag": "getBlockTag",
-      },
-      "path": "../functions/get-block-tag",
-    },
-    {
-      "imports": {
-        "components": "components",
-      },
-      "path": "../functions/register-component",
-    },
-    {
+      "importKind": "value",
       "imports": {
         "BuilderContext": "default",
       },
       "path": "../context/builder.context.lite",
     },
     {
+      "importKind": "value",
       "imports": {
         "getBlockActions": "getBlockActions",
       },
       "path": "../functions/get-block-actions",
     },
     {
+      "importKind": "value",
+      "imports": {
+        "getBlockComponentOptions": "getBlockComponentOptions",
+      },
+      "path": "../functions/get-block-component-options",
+    },
+    {
+      "importKind": "value",
+      "imports": {
+        "getBlockProperties": "getBlockProperties",
+      },
+      "path": "../functions/get-block-properties",
+    },
+    {
+      "importKind": "value",
+      "imports": {
+        "getBlockStyles": "getBlockStyles",
+      },
+      "path": "../functions/get-block-styles",
+    },
+    {
+      "importKind": "value",
+      "imports": {
+        "getBlockTag": "getBlockTag",
+      },
+      "path": "../functions/get-block-tag",
+    },
+    {
+      "importKind": "value",
       "imports": {
         "getProcessedBlock": "getProcessedBlock",
       },
       "path": "../functions/get-processed-block",
     },
     {
+      "importKind": "value",
+      "imports": {
+        "components": "components",
+      },
+      "path": "../functions/register-component",
+    },
+    {
+      "importKind": "value",
       "imports": {
         "BlockStyles": "default",
       },
@@ -391,7 +404,6 @@ exports[`Context > Use and set context in complex components 1`] = `
   "inputs": [],
   "meta": {},
   "name": "RenderBlock",
-  "propsTypeRef": "RenderBlockProps",
   "refs": {},
   "state": {
     "actions": {
@@ -412,7 +424,7 @@ exports[`Context > Use and set context in complex components 1`] = `
     return null;
   }
 
-  const ref = components[state.useBlock.component?.name!];
+  const ref = components[state.useBlock.component?.name];
 
   if (componentName && !ref) {
     // TODO: Public doc page with more info about this message
@@ -457,7 +469,7 @@ exports[`Context > Use and set context in complex components 1`] = `
     },
     "tagName": {
       "code": "get tagName() {
-  return (getBlockTag(state.useBlock) as any);
+  return getBlockTag(state.useBlock);
 }",
       "type": "getter",
     },
@@ -473,29 +485,24 @@ exports[`Context > Use and set context in complex components 1`] = `
     },
   },
   "subComponents": [],
-  "types": [
-    "export type RenderBlockProps = {
-  block: BuilderBlock;
-  index: number;
-};",
-  ],
 }
 `;
 
 exports[`Context > Use and set context in complex components 2`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import { useContext } from \\"react\\";
+import BuilderContext from \\"../context/builder.context\\";
+import { getBlockActions } from \\"../functions/get-block-actions\\";
 import { getBlockComponentOptions } from \\"../functions/get-block-component-options\\";
 import { getBlockProperties } from \\"../functions/get-block-properties\\";
 import { getBlockStyles } from \\"../functions/get-block-styles\\";
 import { getBlockTag } from \\"../functions/get-block-tag\\";
-import { components } from \\"../functions/register-component\\";
-import BuilderContext from \\"../context/builder.context.js\\";
-import { getBlockActions } from \\"../functions/get-block-actions\\";
 import { getProcessedBlock } from \\"../functions/get-processed-block\\";
+import { components } from \\"../functions/register-component\\";
 import BlockStyles from \\"./block-styles.lite\\";
 
-export default function RenderBlock(props) {
+function RenderBlock(props) {
   function component() {
     const componentName = useBlock().component?.name;
 
@@ -508,8 +515,8 @@ export default function RenderBlock(props) {
     if (componentName && !ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-        Could not find a registered component named \\"\${componentName}\\".
-        If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
     }
 
     return ref;
@@ -585,6 +592,8 @@ export default function RenderBlock(props) {
     </>
   );
 }
+
+export default RenderBlock;
 "
 `;
 
@@ -670,6 +679,7 @@ exports[`Context > Use and set context in components 1`] = `
           },
           "foo": {
             "code": "'bar'",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -679,6 +689,7 @@ exports[`Context > Use and set context in components 1`] = `
         "value": {
           "bar": {
             "code": "'baz'",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -689,12 +700,14 @@ exports[`Context > Use and set context in components 1`] = `
   "hooks": {},
   "imports": [
     {
+      "importKind": "value",
       "imports": {
         "Context1": "default",
       },
       "path": "@dummy/1",
     },
     {
+      "importKind": "value",
       "imports": {
         "Context2": "default",
       },
@@ -704,25 +717,20 @@ exports[`Context > Use and set context in components 1`] = `
   "inputs": [],
   "meta": {},
   "name": "ComponentWithContext",
-  "propsTypeRef": "ComponentWithContextProps",
   "refs": {},
   "state": {},
   "subComponents": [],
-  "types": [
-    "export interface ComponentWithContextProps {
-  content: string
-}",
-  ],
 }
 `;
 
 exports[`Context > Use and set context in components 2`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props) {
+function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
@@ -745,11 +753,14 @@ export default function ComponentWithContext(props) {
     </Context2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;
 
 exports[`Context > Use and set context in components 3`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -762,7 +773,7 @@ import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props) {
+function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
@@ -787,5 +798,7 @@ export default function ComponentWithContext(props) {
     </Context2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;

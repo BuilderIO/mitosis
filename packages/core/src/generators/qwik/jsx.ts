@@ -1,8 +1,8 @@
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { Binding, MitosisNode } from '../../types/mitosis-node';
 import { DIRECTIVES } from './directives';
-import { File, invoke, SrcBuilder, quote, lastProperty } from './src-generator';
-import { CssStyles } from './styles';
+import { CssStyles } from './helpers/styles';
+import { File, invoke, lastProperty, quote, SrcBuilder } from './src-generator';
 
 /**
  * Convert a Mitosis nodes to a JSX nodes.
@@ -12,6 +12,7 @@ import { CssStyles } from './styles';
  * @param handlers A set of handlers which we came across so that they can be rendered
  * @param children A list of children to convert to JSX
  * @param styles Store for styles which we came across so that they can be rendered.
+ * @param key Key to be used for the node if needed
  * @param parentSymbolBindings A set of bindings from parent to be written into the child.
  * @param root True if this is the root JSX, and may need a Fragment wrapper.
  * @returns
@@ -22,6 +23,7 @@ export function renderJSXNodes(
   handlers: Map<string, string>,
   children: MitosisNode[],
   styles: Map<string, CssStyles>,
+  key: string | null | undefined,
   parentSymbolBindings: Record<string, string>,
   root = true,
 ): any {
@@ -30,7 +32,9 @@ export function renderJSXNodes(
     if (children.length == 0) return;
     if (root) this.emit('(');
     const needsFragment =
-      root && (children.length > 1 || (children.length && isInlinedDirective(children[0])));
+      root &&
+      (children.length > 1 ||
+        (children.length && (isInlinedDirective(children[0]) || isTextNode(children[0]))));
     file.import(file.qwikModule, 'h');
     const fragmentSymbol = file.import(file.qwikModule, 'Fragment');
     if (needsFragment) {
@@ -64,14 +68,11 @@ export function renderJSXNodes(
           });
           this.emit(directive(child, blockFn));
           !this.isJSX && this.emit(',');
+          includedHelperDirectives(directive.toString(), directives);
         } else {
           if (typeof directive == 'string') {
             directives.set(childName, directive);
-            Array.from(directive.matchAll(/(__[^_]+__)/g)).forEach((match) => {
-              const name = match[0];
-              const code = DIRECTIVES[name];
-              typeof code == 'string' && directives.set(name, code);
-            });
+            includedHelperDirectives(directive, directives);
             if (file.module !== 'med' && file.imports.hasImport(childName)) {
               file.import('./med.js', childName);
             }
@@ -99,6 +100,14 @@ export function renderJSXNodes(
               props.class = addClass(styleProps.CLASS_NAME, props.class);
             }
           }
+          key = props['builder-id'] || key;
+          if (props.innerHTML) {
+            // Special case. innerHTML requires `key` in Qwik
+            props = {
+              key: key || 'default',
+              ...props,
+            };
+          }
           const symbolBindings: Record<string, string> = {};
           const bindings = rewriteHandlers(file, handlers, child.bindings, symbolBindings);
           this.jsxBegin(childName, props, {
@@ -112,6 +121,7 @@ export function renderJSXNodes(
             handlers,
             child.children,
             styles,
+            key,
             symbolBindings,
             false,
           ).call(this);
@@ -130,15 +140,29 @@ export function renderJSXNodes(
         const childNeedsFragment =
           children.length > 1 || (children.length && isTextNode(children[0]));
         childNeedsFragment && srcBuilder.jsxBeginFragment(fragmentSymbol);
-        renderJSXNodes(file, directives, handlers, children, styles, {}, false).call(srcBuilder);
+        renderJSXNodes(file, directives, handlers, children, styles, null, {}, false).call(
+          srcBuilder,
+        );
         childNeedsFragment && srcBuilder.jsxEndFragment();
       };
     }
   };
 }
 
+function includedHelperDirectives(directive: string, directives: Map<string, string>) {
+  Array.from(directive.matchAll(/(__[\w]+__)/g)).forEach((match) => {
+    const name = match[0];
+    const code = DIRECTIVES[name];
+    typeof code == 'string' && directives.set(name, code);
+  });
+}
+
 function isSymbol(name: string): boolean {
-  return name.charAt(0) == name.charAt(0).toUpperCase();
+  return (
+    name.charAt(0) === name.charAt(0).toUpperCase() &&
+    // we want to exclude any property access, as that can't be a symbol
+    !name.includes('.')
+  );
 }
 
 function addClass(className: string, existingClass: string | undefined): string {
@@ -189,16 +213,16 @@ function rewriteHandlers(
     if (Object.prototype.hasOwnProperty.call(bindings, key)) {
       const bindingValue = bindings[key]!;
       let bindingExpr: string = bindingValue.code;
-      let handlerBlock: string | undefined;
+      const handlerBlock = handlers.get(bindingExpr);
 
       if (key == 'css') {
         continue;
-      } else if ((handlerBlock = handlers.get(bindingExpr))) {
+      } else if (handlerBlock) {
         key = `${key}$`;
         bindingExpr = invoke(file.import(file.qwikModule, 'qrl'), [
           quote(file.qrlPrefix + 'high.js'),
           quote(handlerBlock),
-          '[state]',
+          file.options.isBuilder ? '[s,l]' : '[state]',
         ]) as any;
       } else if (symbolBindings && key.startsWith('symbol.data.')) {
         symbolBindings[lastProperty(key)] = bindingExpr;

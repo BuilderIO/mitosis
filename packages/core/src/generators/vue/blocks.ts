@@ -1,21 +1,21 @@
-import { pipe, identity } from 'fp-ts/lib/function';
-import { Dictionary } from '../../helpers/typescript';
+import { identity, pipe } from 'fp-ts/lib/function';
+import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { checkIsDefined } from '../../helpers/nullable';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { replaceSlotsInString, stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
-import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisNode, ForNode, Binding, SpreadType } from '../../types/mitosis-node';
+import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
+import { Dictionary } from '../../helpers/typescript';
+import { Binding, ForNode, MitosisNode, SpreadType } from '../../types/mitosis-node';
 import {
-  encodeQuotes,
   addBindingsToJson,
   addPropertiesToJson,
+  encodeQuotes,
   invertBooleanExpression,
 } from './helpers';
 import { ToVueOptions } from './types';
-import { checkIsDefined } from '../../helpers/nullable';
 
 const SPECIAL_PROPERTIES = {
   V_IF: 'v-if',
@@ -26,6 +26,13 @@ const SPECIAL_PROPERTIES = {
   V_ON_AT: '@',
   V_BIND: 'v-bind',
 } as const;
+
+/**
+ * blockToVue executed after processBinding,
+ * when processBinding is executed,
+ * SLOT_PREFIX from `slot` change to `$slots.`
+ */
+const SLOT_PREFIX = '$slots.';
 
 type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) => string;
 
@@ -43,10 +50,20 @@ const NODE_MAPPERS: {
 } = {
   Fragment(json, options, scope) {
     const children = json.children.filter(filterEmptyTextNodes);
-    if (options.vueVersion === 2 && scope?.isRootNode && children.length > 1) {
-      throw new Error('Vue 2 template should have a single root element');
+    const shouldAddDivFallback =
+      options.vueVersion === 2 && scope?.isRootNode && children.length > 1;
+
+    const childrenStr = children.map((item) => blockToVue(item, options)).join('\n');
+
+    if (shouldAddDivFallback) {
+      console.warn(
+        'WARNING: Vue 2 forbids multiple root elements. You provided a root Fragment with multiple elements. Wrapping elements in div as a workaround.',
+      );
+
+      return `<div>${childrenStr}</div>`;
+    } else {
+      return childrenStr;
     }
-    return children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(_json, options) {
     const json = _json as ForNode;
@@ -80,10 +97,7 @@ const NODE_MAPPERS: {
       : '';
   },
   Show(json, options, scope) {
-    const ifValue = replaceSlotsInString(
-      json.bindings.when?.code || '',
-      (slotName) => `$slots.${slotName}`,
-    );
+    const ifValue = json.bindings.when?.code || '';
 
     const defaultShowTemplate = `
     <template ${SPECIAL_PROPERTIES.V_IF}="${encodeQuotes(ifValue)}">
@@ -281,13 +295,24 @@ const NODE_MAPPERS: {
       `;
     }
 
-    return `<slot name="${stripSlotPrefix(slotName).toLowerCase()}">${renderChildren()}</slot>`;
+    if (slotName === 'default') {
+      return `<slot>${renderChildren()}</slot>`;
+    }
+
+    return `<slot name="${stripSlotPrefix(
+      slotName,
+      SLOT_PREFIX,
+    ).toLowerCase()}">${renderChildren()}</slot>`;
   },
 };
+
+const SPECIAL_HTML_TAGS = ['style', 'script'];
 
 const stringifyBinding =
   (node: MitosisNode) =>
   ([key, value]: [string, Binding]) => {
+    const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name);
+
     if (value.type === 'spread') {
       return ''; // we handle this after
     } else if (key === 'class') {
@@ -298,7 +323,8 @@ const stringifyBinding =
       // TODO: proper babel transform to replace. Util for this
       const useValue = value?.code || '';
 
-      if (key.startsWith('on')) {
+      if (key.startsWith('on') && isValidHtmlTag) {
+        // handle html native on[event] props
         const { arguments: cusArgs = ['event'] } = value!;
         let event = key.replace('on', '').toLowerCase();
         if (event === 'change' && node.name === 'input') {
@@ -320,6 +346,10 @@ const stringifyBinding =
         const eventHandlerKey = `${SPECIAL_PROPERTIES.V_ON_AT}${event}`;
 
         return `${eventHandlerKey}="${eventHandlerValue}"`;
+      } else if (key.startsWith('on')) {
+        // handle on[custom event] props
+        const { arguments: cusArgs = ['event'] } = node.bindings[key]!;
+        return `:${key}="(${cusArgs.join(',')}) => ${encodeQuotes(useValue)}"`;
       } else if (key === 'ref') {
         return `ref="${encodeQuotes(useValue)}"`;
       } else if (BINDING_MAPPERS[key]) {
@@ -383,11 +413,10 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     return `<slot/>`;
   }
 
-  if (node.name === 'style') {
-    // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
-    // <component is="'style'">...</component>
+  if (SPECIAL_HTML_TAGS.includes(node.name)) {
+    // Vue doesn't allow style/script tags in templates, but does support them through dynamic components.
+    node.bindings.is = { code: `'${node.name}'`, type: 'single' };
     node.name = 'component';
-    node.bindings.is = { code: "'style'", type: 'single' };
   }
 
   if (node.properties._text) {
@@ -396,8 +425,12 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   const textCode = node.bindings._text?.code;
   if (textCode) {
-    if (isSlotProperty(textCode)) {
-      return `<slot name="${stripSlotPrefix(textCode).toLowerCase()}"/>`;
+    if (isSlotProperty(textCode, SLOT_PREFIX)) {
+      const slotName = stripSlotPrefix(textCode, SLOT_PREFIX).toLowerCase();
+
+      if (slotName === 'default') return `<slot/>`;
+
+      return `<slot name="${slotName}"/>`;
     }
     return `{{${textCode}}}`;
   }
@@ -406,7 +439,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   str += getBlockBindings(node);
 
-  if (selfClosingTags.has(node.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(node.name)) {
     return str + ' />';
   }
 

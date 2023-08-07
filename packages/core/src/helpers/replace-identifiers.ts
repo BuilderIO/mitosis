@@ -15,10 +15,15 @@ type AllowMeta<T = types.Node> = T & {
   };
 };
 
+export type ReplaceTo =
+  | string
+  | ((accessedProperty: string, matchedIdentifier: string) => string)
+  | null;
+
 type ReplaceArgs = {
   code: string;
   from: string | string[];
-  to: string | ((identifier: string) => string) | null;
+  to: ReplaceTo;
 };
 
 /**
@@ -83,7 +88,7 @@ const _replaceIdentifiers = (
         try {
           const newMemberExpression = pipe(
             getToParam(path),
-            to,
+            (x) => to(x, memberExpressionObject.name),
             (expression) => {
               const [head, ...tail] = expression.split('.');
               return [head, tail.join('.')];
@@ -110,13 +115,13 @@ const _replaceIdentifiers = (
           (newMemberExpression as AllowMeta)._builder_meta = { newlyGenerated: true };
           path.replaceWith(newMemberExpression);
         } catch (err) {
-          console.debug('Could not replace', path.node, 'with', to.toString());
+          console.debug('Could not replace node.');
           // throw err;
         }
       }
     } else {
       if (types.isIdentifier(path.node)) {
-        console.debug(`Could not replace Identifier '${from.toString()}' with nothing.`);
+        console.debug(`Could not replace Identifier with nothing.`);
       } else {
         // if we're looking at a member expression, e.g. `props.foo` and no `to` was provided, then we want to strip out
         // the identifier and end up with `foo`. So we replace the member expression with just its `property` value.
@@ -126,6 +131,9 @@ const _replaceIdentifiers = (
   }
 };
 
+/**
+ * @deprecated Use `replaceNodes` instead.
+ */
 export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
   try {
     return pipe(
@@ -156,11 +164,68 @@ export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
       (code) => code.trim(),
     );
   } catch (err) {
-    // console.error('could not replace identifiers for ', {
-    //   code,
-    //   from: from.toString(),
-    //   to: to?.toString(),
-    // });
     throw err;
   }
+};
+
+export const replaceStateIdentifier = (to: ReplaceArgs['to']) => (code: string) =>
+  replaceIdentifiers({ code, from: 'state', to });
+
+export const replacePropsIdentifier = (to: ReplaceArgs['to']) => (code: string) =>
+  replaceIdentifiers({ code, from: 'props', to });
+
+const isNewlyGenerated = (node: types.Node) => (node as AllowMeta)?._builder_meta?.newlyGenerated;
+
+/**
+ * Replaces all instances of a Babel AST Node with a new Node within a code string.
+ * Uses `generate()` to convert the Node to a string and compare them.
+ */
+export const replaceNodes = ({
+  code,
+  nodeMaps,
+}: {
+  code: string;
+  nodeMaps: {
+    from: types.Node;
+    condition?: (path: babel.NodePath<types.Node>) => boolean;
+    to: types.Node;
+  }[];
+}) => {
+  const searchAndReplace = (path: babel.NodePath<types.Node>) => {
+    if (isNewlyGenerated(path.node) || isNewlyGenerated(path.parent)) return;
+
+    for (const { from, to, condition } of nodeMaps) {
+      if (isNewlyGenerated(path.node) || isNewlyGenerated(path.parent)) return;
+      // if (path.node.type !== from.type) return;
+
+      const matchesCondition = condition ? condition(path) : true;
+
+      if (generate(path.node).code === generate(from).code && matchesCondition) {
+        const x = types.cloneNode(to);
+        (x as AllowMeta)._builder_meta = { newlyGenerated: true };
+        try {
+          path.replaceWith(x);
+        } catch (err) {
+          console.log('error replacing', {
+            code,
+            orig: generate(path.node).code,
+            to: generate(x).code,
+          });
+          // throw err;
+        }
+      }
+    }
+  };
+
+  return babelTransformExpression(code, {
+    MemberExpression(path) {
+      searchAndReplace(path);
+    },
+    Identifier(path) {
+      searchAndReplace(path);
+    },
+    OptionalMemberExpression(path) {
+      searchAndReplace(path);
+    },
+  });
 };

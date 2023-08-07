@@ -1,17 +1,17 @@
-import ts from 'typescript';
 import { parseTemplate } from '@angular/compiler';
-import { Node, Element, Template, Text, BoundText } from '@angular/compiler/src/render3/r3_ast';
 import { ASTWithSource } from '@angular/compiler/src/expression_parser/ast';
+import { BoundText, Element, Node, Template, Text } from '@angular/compiler/src/render3/r3_ast';
+import { types } from '@babel/core';
+import { omit } from 'lodash';
+import ts from 'typescript';
+import { babelTransformCode } from '../helpers/babel-transform';
+import { createSingleBinding } from '../helpers/bindings';
+import { capitalize } from '../helpers/capitalize';
 import { createMitosisComponent } from '../helpers/create-mitosis-component';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
-import { Binding, MitosisNode } from '../types/mitosis-node';
-import { omit } from 'lodash';
-import { babelTransformCode } from '../helpers/babel-transform';
-import { types } from '@babel/core';
-import { MitosisComponent } from '../types/mitosis-component';
-import { capitalize } from '../helpers/capitalize';
-import { createSingleBinding } from '../helpers/bindings';
 import { Dictionary } from '../helpers/typescript';
+import { MitosisComponent } from '../types/mitosis-component';
+import { Binding, MitosisNode } from '../types/mitosis-node';
 
 const getTsAST = (code: string) => {
   return ts.createSourceFile('code.ts', code, ts.ScriptTarget.Latest, true);

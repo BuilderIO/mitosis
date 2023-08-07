@@ -85,14 +85,14 @@ exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-790d468a {
+  .input-a14666dc {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-790d468a\\"
+      class=\\"input-a14666dc\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -129,11 +129,11 @@ class {
 }
 
 style { 
-  .div-48c79144 {
+  .div-976c8936 {
     padding: 10px;
   }
 }
-<div class=\\"test div-48c79144\\">
+<div class=\\"test div-976c8936\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -168,7 +168,7 @@ exports[`Marko > jsx > Javascript Test > Basic 2`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > Basic Context 1`] = `
-"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+"import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 class {
   onChange = function onChange() {
@@ -250,7 +250,7 @@ exports[`Marko > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 class {}
 
 <div>
-  \${input.children} \${input.type}
+  <if(input.children)> \${input.children} \${input.type}</if>
 
   <MyBooleanAttributeComponent toggle=(true)></MyBooleanAttributeComponent>
 
@@ -261,8 +261,8 @@ class {}
 `;
 
 exports[`Marko > jsx > Javascript Test > BasicChildComponent 1`] = `
-"import MyBasicComponent from \\"./basic.raw\\";
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+"import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 class {
   onCreate() {
@@ -331,14 +331,14 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-cbb647ea {
+  .input-a32ae644 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-cbb647ea\\"
+      class=\\"input-a32ae644\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -374,10 +374,10 @@ exports[`Marko > jsx > Javascript Test > BasicRefAssignment 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"export function usePrevious<T>(value: T) {
+"export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -443,29 +443,29 @@ exports[`Marko > jsx > Javascript Test > Columns 1`] = `
 }
 
 style { 
-  .div-f5d75200 {
+  .div-1737bee5 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-f5d75200 {
+    .div-1737bee5 {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-f5d75200 {
+    .div-1737bee5 {
       flex-direction: row-reverse;
     }
   }
-  .div-f5d75200-2 {
+  .div-1737bee5-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-f5d75200\\">
+<div class=\\"builder-columns div-1737bee5\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-f5d75200-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-1737bee5-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -487,17 +487,37 @@ exports[`Marko > jsx > Javascript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > ContentSlotJSX 1`] = `
-"class {}
+"class {
+  get cls() {
+    return this.input.slotContent && this.input.children
+      ? \`\${this.state.name}-content\`
+      : \\"\\";
+  }
+  show() {
+    this.input.slotContent ? 1 : \\"\\";
+  }
 
-<div>
-  <if(input.slotTesting)> <div>\${input.slotTesting}</div></if>
+  onCreate(input) {
+    this.state = { name: \\"king\\", showContent: false };
+  }
+}
 
-  <div>
-    <hr />
-  </div>
+<if(input.slotReference)>
+  <div
+    name=(input.slotContent ? 'name1' : 'name2')
+    title=(input.slotContent ? 'title1' : 'title2')  ...(props.attributes)
+    on-click(event => component.show())
+    class=(component.cls)
+  >
+    <if(state.showContent && input.slotContent)>
+      <slot name=\\"content\\">\${input.content}</slot></if>
 
-  <div>\${input.children}</div>
-</div>"
+    <div>
+      <hr />
+    </div>
+
+    <div>\${input.children}</div>
+  </div></if>"
 `;
 
 exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
@@ -631,11 +651,13 @@ exports[`Marko > jsx > Javascript Test > Embed 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > Form 1`] = `
-"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+"import { Builder, builder } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 class {
   get submissionState() {
@@ -872,7 +894,7 @@ class {
 }
 
 style { 
-  .pre-37eea1bf {
+  .pre-1e20cf46 {
     padding: 10px;
     color: red;
     text-align: center;
@@ -907,7 +929,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-37eea1bf\\">
+    <pre class=\\"builder-form-error-text pre-1e20cf46\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -929,7 +951,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.input.lazy && isBrowser();
+    return !!this.input.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -954,7 +976,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.state.load = true;
             this.state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -977,7 +999,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
 }
 
 style { 
-  .img-45432c52 {
+  .img-d13c78c4 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -990,7 +1012,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-45432c52')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-d13c78c4')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -1048,7 +1070,24 @@ class {}
   value=(input.value)
   defaultValue=(input.defaultValue)
   required=(input.required)
+  on-input(event => input.onChange?.(event.target.value))
 />"
+`;
+
+exports[`Marko > jsx > Javascript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+class {
+  handleChange(value) {
+    console.log(value);
+  }
+}
+
+<FormInputComponent
+  name=\\"kingzez\\"
+  type=\\"text\\"
+  on-change(value => component.handleChange(value))
+></FormInputComponent>"
 `;
 
 exports[`Marko > jsx > Javascript Test > RawText 1`] = `
@@ -1156,8 +1195,7 @@ exports[`Marko > jsx > Javascript Test > SlotNamed 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > Stamped.io 1`] = `
-"import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+"import { kebabCase, snakeCase } from \\"lodash\\";
 
 class {
   kebabCaseValue() {
@@ -1185,16 +1223,16 @@ class {
 }
 
 style { 
-  .input-c3470f28 {
+  .input-4e06abd9 {
     display: block;
   }
-  .textarea-c3470f28 {
+  .textarea-4e06abd9 {
     display: block;
   }
-  .button-c3470f28 {
+  .button-4e06abd9 {
     display: block;
   }
-  .review-c3470f28 {
+  .review-4e06abd9 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -1202,7 +1240,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-c3470f28 {
+  .img-4e06abd9 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -1215,13 +1253,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-c3470f28\\" />
+    <input placeholder=\\"Title\\" class=\\"input-4e06abd9\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-c3470f28\\"
+      class=\\"textarea-4e06abd9\\"
     ></textarea>
     <button
-      class=\\"button-c3470f28\\"
+      class=\\"button-4e06abd9\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -1231,8 +1269,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-c3470f28\\" key=(review.id)>
-      <img class=\\"img-c3470f28\\" src=(review.avatar) />
+    <div class=\\"review-4e06abd9\\" key=(review.id)>
+      <img class=\\"img-4e06abd9\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -1327,6 +1365,31 @@ exports[`Marko > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 <div>Hello \${state.name}</div>"
 `;
 
+exports[`Marko > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"class {
+  get TagNameGetter() {
+    return \\"span\\";
+  }
+
+  onCreate(input) {
+    this.state = { name: \\"VincentW\\", TagName: \\"div\\", tag: \\"span\\" };
+  }
+}
+
+<state.TagNameGetter>
+  Hello
+  <state.tag>\${state.name}</state.tag>
+
+  <for|action| of=(input.actions)>
+    <state.TagName>
+      <action.icon></action.icon>
+
+      <span>\${action.text}</span>
+    </state.TagName>
+  </for>
+</state.TagNameGetter>"
+`;
+
 exports[`Marko > jsx > Javascript Test > basicForwardRef 1`] = `
 "class {
   onCreate(input) {
@@ -1339,13 +1402,13 @@ exports[`Marko > jsx > Javascript Test > basicForwardRef 1`] = `
 }
 
 style { 
-  .input-014e706f {
+  .input-e7ad93d6 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-014e706f\\"
+    class=\\"input-e7ad93d6\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -1365,13 +1428,13 @@ exports[`Marko > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 }
 
 style { 
-  .input-53a59b24 {
+  .input-5cb14a59 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-53a59b24\\"
+    class=\\"input-5cb14a59\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -1472,11 +1535,11 @@ exports[`Marko > jsx > Javascript Test > classState 1`] = `
 }
 
 style { 
-  .div-52624371 {
+  .div-c8374fb4 {
     padding: 10px;
   }
 }
-<div class=(state.classState + ' div-52624371') style=(state.styleState)>
+<div class=(state.classState + ' div-c8374fb4') style=(state.styleState)>
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
@@ -1558,7 +1621,7 @@ exports[`Marko > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > defaultValsWithTypes 1`] = `
-"const DEFAULT_VALUES: Props = {
+"const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
@@ -1662,23 +1725,33 @@ exports[`Marko > jsx > Javascript Test > nestedStyles 1`] = `
 "class {}
 
 style { 
-  .div-04b41bf9 {
+  .div-8f6e8a44 {
     display: flex;
-    foo: var(--bar);
+    --bar: red;
+    color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
-    .div-04b41bf9 {
+    .div-8f6e8a44 {
       display: block;
     }
   }
-  .div-04b41bf9:hover {
+  .div-8f6e8a44:hover {
     display: flex;
   }
-  .div-04b41bf9 .nested-selector {
+  .div-8f6e8a44:active {
+    display: inline;
+  }
+  .div-8f6e8a44 .nested-selector {
     display: grid;
   }
+  .div-8f6e8a44 .nested-selector:hover {
+    display: block;
+  }
+  .div-8f6e8a44.nested-selector:active {
+    display: inline-block;
+  }
 }
-<div class=\\"div-04b41bf9\\">Hello world</div>"
+<div class=\\"div-8f6e8a44\\">Hello world</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > onInit & onMount 1`] = `
@@ -1752,7 +1825,7 @@ exports[`Marko > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
 class {}
 
@@ -1801,8 +1874,8 @@ exports[`Marko > jsx > Javascript Test > referencingFunInsideHook 1`] = `
   };
 
   onRender() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 }
@@ -1811,20 +1884,20 @@ exports[`Marko > jsx > Javascript Test > referencingFunInsideHook 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > renderBlock 1`] = `
-"import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+"import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.marko\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.marko\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.marko\\";
 import RenderComponent from \\"./render-component.marko\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.marko\\";
 
 class {
   get component() {
@@ -1844,8 +1917,8 @@ class {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-         Could not find a registered component named \\"\${componentName}\\". 
-         If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -2045,12 +2118,12 @@ class {
 `;
 
 exports[`Marko > jsx > Javascript Test > renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
+"import BuilderContext from \\"@dummy/context.marko\\";
+import {
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.marko\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 class {
@@ -2064,12 +2137,12 @@ class {
 }
 
 style { 
-  .div-c8eb54c0 {
+  .div-0a15b5e6 {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-c8eb54c0\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-0a15b5e6\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -2130,6 +2203,13 @@ exports[`Marko > jsx > Javascript Test > showWithFor 1`] = `
 <else><div>else-condition-A</div></else>"
 `;
 
+exports[`Marko > jsx > Javascript Test > showWithRootText 1`] = `
+"class {}
+
+<if(input.conditionA)> ContentA </if>
+<else><div>else-condition-A</div></else>"
+`;
+
 exports[`Marko > jsx > Javascript Test > spreadAttrs 1`] = `
 "class {}
 
@@ -2146,6 +2226,40 @@ exports[`Marko > jsx > Javascript Test > spreadProps 1`] = `
 "class {}
 
 <input ...(props) />"
+`;
+
+exports[`Marko > jsx > Javascript Test > styleClassAndCss 1`] = `
+"class {}
+
+style { 
+  .div-644d49ee {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+<div
+  class=\\"builder-column div-644d49ee\\"
+  style=({
+  width: '100%'
+})
+></div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"class {}
+
+style { 
+  .div-6ffaca58 {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+<div
+  style=(input.attributes.style)
+  class=(input.attributes.class + ' div-6ffaca58')
+></div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > subComponent 1`] = `
@@ -2209,14 +2323,14 @@ exports[`Marko > jsx > Javascript Test > use-style-and-css 1`] = `
 "class {}
 
 style { 
-  .button-0b7811fa {
-    background: blue;
-    color: white;
-  }
-
   button {
     font-size: 12px;
     outline: 1px solid black;
+  }
+
+  .button-0b7811fa {
+    background: blue;
+    color: white;
   }
 }
 <button type=\\"button\\" class=\\"button-0b7811fa\\">Button</button>"
@@ -2234,6 +2348,21 @@ style {
   }
 }
 <button type=\\"button\\">Button</button>"
+`;
+
+exports[`Marko > jsx > Javascript Test > useTarget 1`] = `
+"class {
+  get name() {
+    const prefix = \\"m\\";
+    return prefix + \\"foo\\";
+  }
+
+  onCreate() {
+    this.state = { lastName: \\"bar\\" };
+  }
+}
+
+<div>\${component.name}</div>"
 `;
 
 exports[`Marko > jsx > Remove Internal mitosis package 1`] = `
@@ -2275,14 +2404,14 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-790d468a {
+  .input-545daac6 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-790d468a\\"
+      class=\\"input-545daac6\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -2319,11 +2448,11 @@ class {
 }
 
 style { 
-  .div-48c79144 {
+  .div-28c0e84e {
     padding: 10px;
   }
 }
-<div class=\\"test div-48c79144\\">
+<div class=\\"test div-28c0e84e\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -2358,7 +2487,7 @@ exports[`Marko > jsx > Typescript Test > Basic 2`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > Basic Context 1`] = `
-"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+"import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 class {
   onChange = function onChange() {
@@ -2440,7 +2569,7 @@ exports[`Marko > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 class {}
 
 <div>
-  \${input.children} \${input.type}
+  <if(input.children)> \${input.children} \${input.type}</if>
 
   <MyBooleanAttributeComponent toggle=(true)></MyBooleanAttributeComponent>
 
@@ -2451,8 +2580,8 @@ class {}
 `;
 
 exports[`Marko > jsx > Typescript Test > BasicChildComponent 1`] = `
-"import MyBasicComponent from \\"./basic.raw\\";
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+"import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 class {
   onCreate() {
@@ -2521,14 +2650,14 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-cbb647ea {
+  .input-092e8daa {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-cbb647ea\\"
+      class=\\"input-092e8daa\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -2551,7 +2680,7 @@ style {
 
 exports[`Marko > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "class {
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", this.holdValueRef);
     this.holdValueRef = this.holdValueRef + \\"JS\\";
@@ -2620,11 +2749,11 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
   getGutterSize() {
     return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -2633,35 +2762,37 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
 }
 
 style { 
-  .div-f5d75200 {
+  .div-24014cea {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-f5d75200 {
+    .div-24014cea {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-f5d75200 {
+    .div-24014cea {
       flex-direction: row-reverse;
     }
   }
-  .div-f5d75200-2 {
+  .div-24014cea-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-f5d75200\\">
+<div class=\\"builder-columns div-24014cea\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-f5d75200-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-24014cea-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"class {}
+"import type { JSX } from \\"../../../../jsx-runtime\\";
+
+class {}
 
 <div>
   <slot name=(input.slotTesting)></slot>
@@ -2677,17 +2808,39 @@ exports[`Marko > jsx > Typescript Test > ContentSlotHtml 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"class {}
+"import type { JSX } from \\"../../../../jsx-runtime\\";
 
-<div>
-  <if(input.slotTesting)> <div>\${input.slotTesting}</div></if>
+class {
+  get cls() {
+    return this.input.slotContent && this.input.children
+      ? \`\${this.state.name}-content\`
+      : \\"\\";
+  }
+  show() {
+    this.input.slotContent ? 1 : \\"\\";
+  }
 
-  <div>
-    <hr />
-  </div>
+  onCreate(input) {
+    this.state = { name: \\"king\\", showContent: false };
+  }
+}
 
-  <div>\${input.children}</div>
-</div>"
+<if(input.slotReference)>
+  <div
+    name=(input.slotContent ? 'name1' : 'name2')
+    title=(input.slotContent ? 'title1' : 'title2')  ...(props.attributes)
+    on-click(event => component.show())
+    class=(component.cls)
+  >
+    <if(state.showContent && input.slotContent)>
+      <slot name=\\"content\\">\${input.content}</slot></if>
+
+    <div>
+      <hr />
+    </div>
+
+    <div>\${input.children}</div>
+  </div></if>"
 `;
 
 exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
@@ -2821,11 +2974,13 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > Form 1`] = `
-"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+"import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 class {
   get submissionState() {
@@ -2833,7 +2988,11 @@ class {
       (Builder.isEditing && this.input.previewState) || this.state.formState
     );
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs =
       this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
 
@@ -2848,16 +3007,19 @@ class {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.input.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -2883,7 +3045,7 @@ class {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -2950,7 +3112,7 @@ class {
         this.input.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
-        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
+        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -3062,7 +3224,7 @@ class {
 }
 
 style { 
-  .pre-37eea1bf {
+  .pre-3c6996d6 {
     padding: 10px;
     color: red;
     text-align: center;
@@ -3087,17 +3249,17 @@ style {
   <if(component.submissionState === 'error')>
     <BuilderBlocks
       dataPath=\\"errorMessage\\"
-      blocks=(input.errorMessage)
+      blocks=(input.errorMessage!)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'sending')>
     <BuilderBlocks
       dataPath=\\"sendingMessage\\"
-      blocks=(input.sendingMessage)
+      blocks=(input.sendingMessage!)
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-37eea1bf\\">
+    <pre class=\\"builder-form-error-text pre-3c6996d6\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -3107,7 +3269,7 @@ style {
   <if(component.submissionState === 'success')>
     <BuilderBlocks
       dataPath=\\"successMessage\\"
-      blocks=(input.successMessage)
+      blocks=(input.successMessage!)
     ></BuilderBlocks></if>
 </form>"
 `;
@@ -3119,7 +3281,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.input.lazy && isBrowser();
+    return !!this.input.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -3144,7 +3306,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.state.load = true;
             this.state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -3167,7 +3329,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 }
 
 style { 
-  .img-45432c52 {
+  .img-78c9bd0c {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -3180,7 +3342,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-45432c52')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-78c9bd0c')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -3238,7 +3400,24 @@ class {}
   value=(input.value)
   defaultValue=(input.defaultValue)
   required=(input.required)
+  on-input(event => input.onChange?.(event.target.value))
 />"
+`;
+
+exports[`Marko > jsx > Typescript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+class {
+  handleChange(value: string) {
+    console.log(value);
+  }
+}
+
+<FormInputComponent
+  name=\\"kingzez\\"
+  type=\\"text\\"
+  on-change(value => component.handleChange(value))
+></FormInputComponent>"
 `;
 
 exports[`Marko > jsx > Typescript Test > RawText 1`] = `
@@ -3346,8 +3525,7 @@ exports[`Marko > jsx > Typescript Test > SlotNamed 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > Stamped.io 1`] = `
-"import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+"import { kebabCase, snakeCase } from \\"lodash\\";
 
 class {
   kebabCaseValue() {
@@ -3375,16 +3553,16 @@ class {
 }
 
 style { 
-  .input-c3470f28 {
+  .input-6053db04 {
     display: block;
   }
-  .textarea-c3470f28 {
+  .textarea-6053db04 {
     display: block;
   }
-  .button-c3470f28 {
+  .button-6053db04 {
     display: block;
   }
-  .review-c3470f28 {
+  .review-6053db04 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -3392,7 +3570,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-c3470f28 {
+  .img-6053db04 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -3405,13 +3583,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-c3470f28\\" />
+    <input placeholder=\\"Title\\" class=\\"input-6053db04\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-c3470f28\\"
+      class=\\"textarea-6053db04\\"
     ></textarea>
     <button
-      class=\\"button-c3470f28\\"
+      class=\\"button-6053db04\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -3421,8 +3599,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-c3470f28\\" key=(review.id)>
-      <img class=\\"img-c3470f28\\" src=(review.avatar) />
+    <div class=\\"review-6053db04\\" key=(review.id)>
+      <img class=\\"img-6053db04\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -3517,6 +3695,31 @@ exports[`Marko > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 <div>Hello \${state.name}</div>"
 `;
 
+exports[`Marko > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"class {
+  get TagNameGetter() {
+    return \\"span\\";
+  }
+
+  onCreate(input) {
+    this.state = { name: \\"VincentW\\", TagName: \\"div\\", tag: \\"span\\" };
+  }
+}
+
+<state.TagNameGetter>
+  Hello
+  <state.tag>\${state.name}</state.tag>
+
+  <for|action| of=(input.actions)>
+    <state.TagName>
+      <action.icon></action.icon>
+
+      <span>\${action.text}</span>
+    </state.TagName>
+  </for>
+</state.TagNameGetter>"
+`;
+
 exports[`Marko > jsx > Typescript Test > basicForwardRef 1`] = `
 "class {
   onCreate(input) {
@@ -3529,13 +3732,13 @@ exports[`Marko > jsx > Typescript Test > basicForwardRef 1`] = `
 }
 
 style { 
-  .input-014e706f {
+  .input-62b3918a {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-014e706f\\"
+    class=\\"input-62b3918a\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -3555,13 +3758,13 @@ exports[`Marko > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 }
 
 style { 
-  .input-53a59b24 {
+  .input-18392024 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-53a59b24\\"
+    class=\\"input-18392024\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -3636,7 +3839,9 @@ style {
 `;
 
 exports[`Marko > jsx > Typescript Test > className 1`] = `
-"class {
+"import type { JSX } from \\"../../../../jsx-runtime\\";
+
+class {
   onCreate() {
     this.state = { bindings: \\"a binding\\" };
   }
@@ -3662,11 +3867,11 @@ exports[`Marko > jsx > Typescript Test > classState 1`] = `
 }
 
 style { 
-  .div-52624371 {
+  .div-c8374fb4 {
     padding: 10px;
   }
 }
-<div class=(state.classState + ' div-52624371') style=(state.styleState)>
+<div class=(state.classState + ' div-c8374fb4') style=(state.styleState)>
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
@@ -3772,7 +3977,8 @@ exports[`Marko > jsx > Typescript Test > expressionState 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > import types 1`] = `
-"import RenderBlock from \\"./builder-render-block.raw\\";
+"import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 class {
   getRenderContentProps(block, index) {
@@ -3852,23 +4058,33 @@ exports[`Marko > jsx > Typescript Test > nestedStyles 1`] = `
 "class {}
 
 style { 
-  .div-04b41bf9 {
+  .div-8f6e8a44 {
     display: flex;
-    foo: var(--bar);
+    --bar: red;
+    color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
-    .div-04b41bf9 {
+    .div-8f6e8a44 {
       display: block;
     }
   }
-  .div-04b41bf9:hover {
+  .div-8f6e8a44:hover {
     display: flex;
   }
-  .div-04b41bf9 .nested-selector {
+  .div-8f6e8a44:active {
+    display: inline;
+  }
+  .div-8f6e8a44 .nested-selector {
     display: grid;
   }
+  .div-8f6e8a44 .nested-selector:hover {
+    display: block;
+  }
+  .div-8f6e8a44.nested-selector:active {
+    display: inline-block;
+  }
 }
-<div class=\\"div-04b41bf9\\">Hello world</div>"
+<div class=\\"div-8f6e8a44\\">Hello world</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > onInit & onMount 1`] = `
@@ -3991,8 +4207,8 @@ exports[`Marko > jsx > Typescript Test > referencingFunInsideHook 1`] = `
   };
 
   onRender() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 }
@@ -4001,20 +4217,28 @@ exports[`Marko > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > renderBlock 1`] = `
-"import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+"import { TARGET } from \\"../../constants/target.js\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
 import BlockStyles from \\"./block-styles.marko\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.marko\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.marko\\";
+import type { RenderComponentProps } from \\"./render-component.marko\\";
 import RenderComponent from \\"./render-component.marko\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.marko\\";
+import type { RepeatData } from \\"./types.js\\";
 
 class {
   get component() {
@@ -4034,8 +4258,8 @@ class {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-         Could not find a registered component named \\"\${componentName}\\". 
-         If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -4142,7 +4366,7 @@ class {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.input.context,
         state: {
@@ -4235,12 +4459,12 @@ class {
 `;
 
 exports[`Marko > jsx > Typescript Test > renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
+"import BuilderContext from \\"@dummy/context.marko\\";
+import {
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.marko\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 class {
@@ -4254,12 +4478,12 @@ class {
 }
 
 style { 
-  .div-c8eb54c0 {
+  .div-25870d9c {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-c8eb54c0\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-25870d9c\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -4320,6 +4544,13 @@ exports[`Marko > jsx > Typescript Test > showWithFor 1`] = `
 <else><div>else-condition-A</div></else>"
 `;
 
+exports[`Marko > jsx > Typescript Test > showWithRootText 1`] = `
+"class {}
+
+<if(input.conditionA)> ContentA </if>
+<else><div>else-condition-A</div></else>"
+`;
+
 exports[`Marko > jsx > Typescript Test > spreadAttrs 1`] = `
 "class {}
 
@@ -4336,6 +4567,40 @@ exports[`Marko > jsx > Typescript Test > spreadProps 1`] = `
 "class {}
 
 <input ...(props) />"
+`;
+
+exports[`Marko > jsx > Typescript Test > styleClassAndCss 1`] = `
+"class {}
+
+style { 
+  .div-644d49ee {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+<div
+  class=\\"builder-column div-644d49ee\\"
+  style=({
+  width: '100%'
+})
+></div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"class {}
+
+style { 
+  .div-6ffaca58 {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+<div
+  style=(input.attributes.style)
+  class=(input.attributes.class + ' div-6ffaca58')
+></div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > subComponent 1`] = `
@@ -4376,7 +4641,10 @@ exports[`Marko > jsx > Typescript Test > svgComponent 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > typeDependency 1`] = `
-"class {}
+"import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export.marko\\";
+
+class {}
 
 <div>\${input.foo}</div>"
 `;
@@ -4399,14 +4667,14 @@ exports[`Marko > jsx > Typescript Test > use-style-and-css 1`] = `
 "class {}
 
 style { 
-  .button-0b7811fa {
-    background: blue;
-    color: white;
-  }
-
   button {
     font-size: 12px;
     outline: 1px solid black;
+  }
+
+  .button-0b7811fa {
+    background: blue;
+    color: white;
   }
 }
 <button type=\\"button\\" class=\\"button-0b7811fa\\">Button</button>"
@@ -4424,6 +4692,21 @@ style {
   }
 }
 <button type=\\"button\\">Button</button>"
+`;
+
+exports[`Marko > jsx > Typescript Test > useTarget 1`] = `
+"class {
+  get name() {
+    const prefix = \\"m\\";
+    return prefix + \\"foo\\";
+  }
+
+  onCreate() {
+    this.state = { lastName: \\"bar\\" };
+  }
+}
+
+<div>\${component.name}</div>"
 `;
 
 exports[`Marko > svelte > Javascript Test > basic 1`] = `

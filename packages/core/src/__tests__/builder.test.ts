@@ -1,17 +1,18 @@
-import dedent from 'dedent';
+import { componentToReact, ToMitosisOptions } from '..';
 import { componentToBuilder } from '../generators/builder';
-import { componentToMitosis } from '../generators/mitosis';
 import { componentToHtml } from '../generators/html';
+import { componentToMitosis } from '../generators/mitosis';
+import { dedent } from '../helpers/dedent';
 import { builderContentToMitosisComponent, extractStateHook } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
 import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
-import { componentToReact, ToMitosisOptions } from '..';
 
-import stamped from './data/blocks/stamped-io.raw.tsx?raw';
+import { BuilderComponent } from '@builder.io/react';
+import columns from './data/blocks/columns.raw.tsx?raw';
 import customCode from './data/blocks/custom-code.raw.tsx?raw';
 import embed from './data/blocks/embed.raw.tsx?raw';
 import image from './data/blocks/image.raw.tsx?raw';
-import columns from './data/blocks/columns.raw.tsx?raw';
+import stamped from './data/blocks/stamped-io.raw.tsx?raw';
 import lazyLoadSection from './data/builder/lazy-load-section.json?raw';
 
 const mitosisOptions: ToMitosisOptions = {
@@ -192,6 +193,40 @@ describe('Builder', () => {
       component: backToMitosis,
     });
     expect(mitosis.trim()).toEqual(code.trim());
+  });
+
+  test('Regenerate loop with Text node when using CSS', () => {
+    const builderJson: BuilderComponent = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element',
+            '@version': 2,
+            repeat: {
+              collection: 'state.submenusItem.menuItems',
+            },
+            id: 'builder-ID',
+            class: 'class-id',
+            component: {
+              name: 'Text',
+              options: {
+                text: 'text-content',
+              },
+            },
+            responsiveStyles: {
+              large: {
+                padding: '2px',
+              },
+            },
+          },
+        ],
+      },
+    } as BuilderComponent;
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
+    });
+    expect(mitosis.trim()).toMatchSnapshot();
   });
 
   test('Regenerate custom Hero', () => {

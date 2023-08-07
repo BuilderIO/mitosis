@@ -1,4 +1,5 @@
-import { MitosisComponent } from './mitosis-component';
+import type { ParseMitosisOptions } from '../parsers/jsx/types';
+import type { MitosisComponent } from './mitosis-component';
 
 export type Format = 'esm' | 'cjs';
 export type Language = 'js' | 'ts';
@@ -15,6 +16,7 @@ export type GeneratorOptions = {
 };
 
 export type MitosisConfig = {
+  commonOptions?: { typescript?: boolean };
   /**
    * List of targets to compile to.
    */
@@ -69,4 +71,16 @@ export type MitosisConfig = {
    * If you provide this function, you must provide a value for every target yourself.
    */
   getTargetPath: ({ target }: { target: Target }) => string;
+
+  /**
+   * Provide options to the parser.
+   */
+  parserOptions?: {
+    jsx: Partial<ParseMitosisOptions> & {
+      /**
+       * Path to your project's `tsconfig.json` file. Needed for advanced types parsing (e.g. signals).
+       */
+      tsConfigFilePath?: string;
+    };
+  };
 };

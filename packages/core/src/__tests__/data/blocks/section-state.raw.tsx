@@ -1,4 +1,4 @@
-import { useStore, Show, For } from '@builder.io/mitosis';
+import { For, Show, useStore } from '@builder.io/mitosis';
 
 export interface SectionProps {
   maxWidth?: number;

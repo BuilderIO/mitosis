@@ -1,5 +1,7 @@
 import { Dictionary } from '../helpers/typescript';
+import { Target } from './config';
 import { JSONObject } from './json';
+import { ComponentMetadata } from './metadata';
 import { MitosisNode } from './mitosis-node';
 
 /**
@@ -28,13 +30,19 @@ export interface MitosisImport {
   imports: {
     [key: string]: string | undefined;
   };
+  importKind?: 'type' | 'typeof' | 'value' | null;
 }
 
-export interface ContextGetInfo {
+export type ReactivityType = 'normal' | 'reactive';
+
+export type ContextOptions = {
+  type?: ReactivityType;
+};
+export interface ContextGetInfo extends ContextOptions {
   name: string;
   path: string;
 }
-export interface ContextSetInfo {
+export interface ContextSetInfo extends ContextOptions {
   name: string;
   value?: MitosisState;
   ref?: string;
@@ -61,11 +69,26 @@ export type StateValueType = 'function' | 'getter' | 'method' | 'property';
 
 export type StateValue = {
   code: string;
-  type: StateValueType;
   typeParameter?: string;
+  type: StateValueType;
+  propertyType?: ReactivityType;
 };
 
 export type MitosisState = Dictionary<StateValue | undefined>;
+
+export type TargetBlock<Return, Targets extends Target = Target> = Partial<{
+  [T in Targets | 'default']?: Return;
+}>;
+
+export type TargetBlockCode = TargetBlock<{
+  code: string;
+}>;
+
+export type TargetBlockDefinition = TargetBlockCode & {
+  settings: {
+    requiresDefault: boolean;
+  };
+};
 
 export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
@@ -73,13 +96,19 @@ export type MitosisComponent = {
   imports: MitosisImport[];
   exports?: MitosisExports;
   meta: JSONObject & {
-    useMetadata?: JSONObject;
+    useMetadata?: ComponentMetadata;
   };
   inputs: MitosisComponentInput[];
   state: MitosisState;
   context: {
     get: Dictionary<ContextGetInfo>;
     set: Dictionary<ContextSetInfo>;
+  };
+  signals?: {
+    signalTypeImportName?: string;
+  };
+  props?: {
+    [name: string]: { propertyType: ReactivityType };
   };
   refs: {
     [useRef: string]: {
@@ -96,6 +125,7 @@ export type MitosisComponent = {
     postComponent?: extendedHook;
     onUpdate?: extendedHook[];
   };
+  targetBlocks?: Dictionary<TargetBlockDefinition>;
   children: MitosisNode[];
   subComponents: MitosisComponent[];
   types?: string[];

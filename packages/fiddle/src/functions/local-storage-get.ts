@@ -4,6 +4,7 @@ export type LocalStorageGetOptions = {
 
 export const localStorageGet = (key: string, options: LocalStorageGetOptions = {}): any => {
   try {
+    if (typeof window === 'undefined') return null;
     const val = localStorage.getItem(key);
     if (typeof val === 'string') {
       return JSON.parse(val);

@@ -32,31 +32,29 @@ We need your help! If you found a bug, it's best to [create an issue](https://gi
 
 ## Developing for Core & Testing
 
-In `core`, we use jest snapshots for testing. If you are solving a problem that is reproducible by a fiddle in [mitosis.builder.io](https://mitosis.builder.io), we highly recommend the following flow:
+In `core`, we use vitest snapshots & integeration tests for test coverage. If you are solving a problem that is reproducible by a fiddle in [mitosis.builder.io](https://mitosis.builder.io), we highly recommend the following flow:
 
-- copy your component from the fiddle into a file in `packages/core/src/__tests__/data`. See [packages/core/src/**tests**/data/basic.raw.tsx](/packages/core/src/__tests__/data/basic.raw.tsx) as an example.
-- Create a test that shows how compiling this component to a certain target causes the bug. See [context.test.ts](/packages/core/src/__tests__/context.test.ts) as an example of using `builder-render-block.raw.tsx`
-- run `jest` in watch mode: `yarn test --watch`
-- run the development server: `yarn start`
-- keep iterating until your test passes!
-- after making your changes, run `yarn run fmt:prettier` in the root directory.
+### Snapshot test
+
+- copy your fiddle component into a file in `packages/core/src/__tests__/data`. See [packages/core/src/**tests**/data/basic.raw.tsx](/packages/core/src/__tests__/data/basic.raw.tsx) as an example.
+- add that test to the [test generator](/packages/core/src/__tests__/test-generator.ts), most likely in `BASIC_TESTS`.
+- run `yarn test:watch` in the `packages/core` directory to run the snapshot tests in watch mode
 
 PS: don't worry about failing imports in the raw test TSX files. These are not an issue, since the files are standalone and don't actually belong to a cohesive project.
 
-## Pre-submit: run the CI locally, including E2E tests
+### Integration test
 
-Before submitting a change, run roughly the same process as in CI, including
-Playwright E2E tests.
+- copy your fiddle component into a `.lite.tsx` Mitosis component in the [e2e app](/e2e/e2e-app/src)
+- add your component to the [e2e-app component map](/e2e/e2e-app/src/component-map.ts)
+- add an integration test in [e2e/e2e-app/tests](/e2e/e2e-app/tests) that makes sure your component works as expected
+- this integration test will run against every server that exists in [e2e/](/e2e/).
+- run `yarn ci:e2e-prep` to install playwright browsers
+- run `yarn ci:e2e` to run the integration tests against all servers
 
-```bash
-yarn
-yarn ci
-```
+### Test your changes
 
-Playwright is in `devDependencies` only at the top level `package.json`, to
-ensure only a single copy is installed for the whole project. See the
-`README.md` for each E2E test harness for commands to run just one.
+From there, you can keep iterating until the snapshots look as expected, and the integration tests pass!
 
-The E2E tests, run by the above command, will also update the E2E status table
-in the project-level README - please let this happen, rather than manually
-updating that table.
+### Pre-submit
+
+- format: `yarn run fmt:prettier`

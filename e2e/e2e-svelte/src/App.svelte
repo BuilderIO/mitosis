@@ -1,13 +1,6 @@
-<script>
-  // Mitosis generated Svelte JavaScript components; we are testing from a
-  //TypeScript app, so we ts-ignore when importing:
-
+<script lang="ts">
   // @ts-ignore
-  import MyComponent from '@builder.io/e2e-app/svelte/components/my-component.svelte';
-
-  // Mitosis could emit TypeScript Svelte in the future, ideally following the
-  // Svelte guidance:
-  // https://github.com/sveltejs/language-tools/blob/master/docs/preprocessors/typescript.md#typing-components-authoring-packages
+  import E2eApp from '@builder.io/e2e-app/svelte';
 </script>
 
-<MyComponent></MyComponent>
+<E2eApp />

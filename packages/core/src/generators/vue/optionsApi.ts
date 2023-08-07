@@ -1,13 +1,19 @@
 import json5 from 'json5';
-import { uniq, kebabCase, size } from 'lodash';
+import { kebabCase, size, uniq } from 'lodash';
+import { DefaultProps, PropsDefinition } from 'vue/types/options';
 import { getComponentsUsed } from '../../helpers/get-components-used';
 import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
-import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
-import { PropsDefinition, DefaultProps } from 'vue/types/options';
-import { encodeQuotes, getContextKey, getContextValue, getOnUpdateHookName } from './helpers';
+import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
+import {
+  encodeQuotes,
+  getContextKey,
+  getContextValue,
+  getOnUpdateHookName,
+  mapMitosisComponentToKebabCase,
+} from './helpers';
 import { ToVueOptions } from './types';
 
 const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) => {
@@ -15,7 +21,7 @@ const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) 
     ${Object.values(json.context.set)
       .map((setVal) => {
         const key = getContextKey(setVal);
-        return `[${key}]: ${getContextValue({ options, json, thisPrefix: '_this' })(setVal)}`;
+        return `[${key}]: ${getContextValue(setVal)}`;
       })
       .join(',')}
   }`;
@@ -42,6 +48,8 @@ const generateComponentImport =
   (componentName: string): string => {
     if (options.vueVersion >= 3 && options.asyncComponentImports) {
       return `'${componentName}': defineAsyncComponent(${componentName})`;
+    } else if (options.vueVersion === 2) {
+      return `'${mapMitosisComponentToKebabCase(componentName)}': ${componentName}`;
     } else {
       return `'${componentName}': ${componentName}`;
     }
@@ -75,6 +83,7 @@ export function generateOptionsApiScript(
   const { exports: localExports } = component;
   const localVarAsData: string[] = [];
   const localVarAsFunc: string[] = [];
+  const isTs = options.typescript;
   if (localExports) {
     Object.keys(localExports).forEach((key) => {
       if (localExports[key].usedInLocal) {
@@ -120,8 +129,8 @@ export function generateOptionsApiScript(
   if (includeClassMapHelper) {
     functionsString = functionsString.replace(
       /}\s*$/,
-      `_classStringToObject(str) {
-        const obj = {};
+      `_classStringToObject(str${isTs ? ': string' : ''}) {
+        const obj${isTs ? ': Record<string, boolean>' : ''} = {};
         if (typeof str !== 'string') { return obj }
         const classNames = str.trim().split(/\\s+/);
         for (const name of classNames) {
@@ -180,7 +189,7 @@ export function generateOptionsApiScript(
   };
 
   return `
-        export default {
+        export default ${options.defineComponent ? 'defineComponent(' : ''} {
         ${
           !component.name
             ? ''
@@ -271,5 +280,6 @@ export function generateOptionsApiScript(
         ${Object.entries(component.meta.vueConfig || {})
           .map(([k, v]) => `${k}: ${v}`)
           .join(',')}
-      }`;
+        }
+        ${options.defineComponent ? ')' : ''}`;
 }

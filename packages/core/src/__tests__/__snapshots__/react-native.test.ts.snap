@@ -1,7 +1,8 @@
 // Vitest Snapshot v1
 
 exports[`React Native > jsx > Javascript Test > AdvancedRef 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -12,7 +13,7 @@ import {
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export default function MyBasicRefComponent(props) {
+function MyBasicRefComponent(props) {
   const inputRef = useRef(null);
   const inputNoArgRef = useRef(null);
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -65,11 +66,14 @@ export default function MyBasicRefComponent(props) {
 }
 
 const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+
+export default MyBasicRefComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Basic 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -84,7 +88,7 @@ export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   function underscore_fn_name() {
@@ -107,11 +111,14 @@ export default function MyBasicComponent(props) {
 }
 
 const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Basic Context 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -121,9 +128,9 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onChange() {
@@ -144,20 +151,23 @@ export default function MyBasicComponent(props) {
   }, []);
 
   return (
-    <Context.Provider value={createInjector()}>
+    <Injector.Provider value={createInjector()}>
       <View>
         <Text>{myService.method(\\"hello\\") + name}</Text>
         <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
         <View onChange={(event) => onChange} />
       </View>
-    </Context.Provider>
+    </Injector.Provider>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Basic OnMount Update 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -168,7 +178,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOnMountUpdateComponent(props) {
+function MyBasicOnMountUpdateComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
@@ -188,11 +198,14 @@ export default function MyBasicOnMountUpdateComponent(props) {
     </View>
   );
 }
+
+export default MyBasicOnMountUpdateComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Basic Outputs 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -203,7 +216,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOutputsComponent(props) {
+function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -213,11 +226,14 @@ export default function MyBasicOutputsComponent(props) {
 
   return <View />;
 }
+
+export default MyBasicOutputsComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -228,7 +244,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOutputsComponent(props) {
+function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -238,11 +254,14 @@ export default function MyBasicOutputsComponent(props) {
 
   return <View />;
 }
+
+export default MyBasicOutputsComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > BasicAttribute 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -252,14 +271,17 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   return <View autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -270,12 +292,15 @@ import {
 } from \\"react-native\\";
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-export default function MyBooleanAttribute(props) {
+function MyBooleanAttribute(props) {
   return (
     <View>
-      <Text>{props.children}</Text>
-
-      <Text>{props.type}</Text>
+      {props.children ? (
+        <>
+          {props.children}
+          <Text>{props.type}</Text>
+        </>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -285,11 +310,14 @@ export default function MyBooleanAttribute(props) {
     </View>
   );
 }
+
+export default MyBooleanAttribute;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > BasicChildComponent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -299,10 +327,10 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
-export default function MyBasicChildComponent(props) {
+function MyBasicChildComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
@@ -317,11 +345,14 @@ export default function MyBasicChildComponent(props) {
     </View>
   );
 }
+
+export default MyBasicChildComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > BasicFor 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -332,7 +363,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicForComponent(props) {
+function MyBasicForComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
@@ -361,11 +392,14 @@ export default function MyBasicForComponent(props) {
     </View>
   );
 }
+
+export default MyBasicForComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > BasicRef 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -376,7 +410,7 @@ import {
 } from \\"react-native\\";
 import { useState, useRef } from \\"react\\";
 
-export default function MyBasicRefComponent(props) {
+function MyBasicRefComponent(props) {
   const inputRef = useRef(null);
   const inputNoArgRef = useRef(null);
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -425,11 +459,14 @@ export default function MyBasicRefComponent(props) {
 }
 
 const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+
+export default MyBasicRefComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > BasicRefAssignment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -440,7 +477,7 @@ import {
 } from \\"react-native\\";
 import { useRef } from \\"react\\";
 
-export default function MyBasicRefAssignmentComponent(props) {
+function MyBasicRefAssignmentComponent(props) {
   const holdValueRef = useRef(\\"Patrick\\");
   function handlerClick(event) {
     event.preventDefault();
@@ -456,11 +493,14 @@ export default function MyBasicRefAssignmentComponent(props) {
     </View>
   );
 }
+
+export default MyBasicRefAssignmentComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -471,10 +511,10 @@ import {
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export function usePrevious<T>(value: T) {
+export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -484,7 +524,7 @@ export function usePrevious<T>(value: T) {
   return ref;
 }
 
-export default function MyPreviousComponent(props) {
+function MyPreviousComponent(props) {
   const [count, setCount] = useState(() => 0);
 
   const prevCount = useRef(count);
@@ -508,11 +548,14 @@ export default function MyPreviousComponent(props) {
     </View>
   );
 }
+
+export default MyPreviousComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Button 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -522,7 +565,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function Button(props) {
+function Button(props) {
   return (
     <View>
       {props.link ? (
@@ -547,11 +590,14 @@ export default function Button(props) {
     </View>
   );
 }
+
+export default Button;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Columns 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -561,7 +607,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function Column(props) {
+function Column(props) {
   function getColumns() {
     return props.columns || [];
   }
@@ -597,13 +643,16 @@ export default function Column(props) {
 
 const styles = StyleSheet.create({
   view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
-  view2: { flexGrow: 1 },
+  view2: { flexGrow: \\"1\\" },
 });
+
+export default Column;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > ContentSlotHtml 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -613,7 +662,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function ContentSlotCode(props) {
+function ContentSlotCode(props) {
   return (
     <View>
       {props.slotTesting}
@@ -626,11 +675,14 @@ export default function ContentSlotCode(props) {
     </View>
   );
 }
+
+export default ContentSlotCode;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > ContentSlotJSX 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -639,33 +691,60 @@ import {
   Image,
   Text,
 } from \\"react-native\\";
+import { useState } from \\"react\\";
 
-export default function ContentSlotJsxCode(props) {
+function ContentSlotJsxCode(props) {
+  const [name, setName] = useState(() => \\"king\\");
+
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <View>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <View>
-            <Text>{props.slotTesting}</Text>
+          <View
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || <Text>{props.content}</Text>}</>
+            ) : null}
+
+            <View>
+              <View />
+            </View>
+
+            <View>{props.children}</View>
           </View>
         </>
       ) : null}
-
-      <View>
-        <View />
-      </View>
-
-      <View>
-        <Text>{props.children}</Text>
-      </View>
-    </View>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: undefined,
+};
+
+export default ContentSlotJsxCode;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > CustomCode 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -676,7 +755,7 @@ import {
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export default function CustomCode(props) {
+function CustomCode(props) {
   const elem = useRef(null);
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
@@ -730,11 +809,14 @@ export default function CustomCode(props) {
 
   return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
+
+export default CustomCode;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Embed 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -745,7 +827,7 @@ import {
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export default function CustomCode(props) {
+function CustomCode(props) {
   const elem = useRef(null);
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
@@ -799,11 +881,14 @@ export default function CustomCode(props) {
 
   return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
+
+export default CustomCode;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Form 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -813,13 +898,15 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState, useRef } from \\"react\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
-export default function FormComponent(props) {
+function FormComponent(props) {
   const formRef = useRef(null);
   const [formState, setFormState] = useState(() => \\"unsubmitted\\");
 
@@ -958,7 +1045,7 @@ export default function FormComponent(props) {
               get(body, props.errorMessagePath);
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message =
+                /* TODO: ideally convert json to yaml so it woul dbe like          error: - email has been taken */ message =
                   JSON.stringify(message);
               }
               setFormErrorMessage(message);
@@ -1067,11 +1154,13 @@ export default function FormComponent(props) {
 const styles = StyleSheet.create({
   view1: { padding: 10, color: \\"red\\", textAlign: \\"center\\" },
 });
+export default FormComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Image 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1082,7 +1171,7 @@ import {
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export default function Image(props) {
+function Image(props) {
   const pictureRef = useRef(null);
   const [scrollListener, setScrollListener] = useState(() => null);
 
@@ -1158,24 +1247,27 @@ export default function Image(props) {
         <View srcset={props.srcset} />
       </View>
 
-      <Text>{props.children}</Text>
+      {props.children}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   view1: {
-    opacity: 1,
+    opacity: \\"1\\",
     transition: \\"opacity 0.2s ease-in-out\\",
     objectFit: \\"cover\\",
     objectPosition: \\"center\\",
   },
 });
+
+export default Image;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Image State 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1186,7 +1278,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function ImgStateComponent(props) {
+function ImgStateComponent(props) {
   const [canShow, setCanShow] = useState(() => true);
 
   const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
@@ -1201,11 +1293,14 @@ export default function ImgStateComponent(props) {
     </View>
   );
 }
+
+export default ImgStateComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Img 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1216,7 +1311,7 @@ import {
 } from \\"react-native\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function ImgComponent(props) {
+function ImgComponent(props) {
   return (
     <View
       style={{
@@ -1230,11 +1325,14 @@ export default function ImgComponent(props) {
     />
   );
 }
+
+export default ImgComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Input 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1245,7 +1343,7 @@ import {
 } from \\"react-native\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function FormInputComponent(props) {
+function FormInputComponent(props) {
   return (
     <View
       {...props.attributes}
@@ -1260,14 +1358,49 @@ export default function FormInputComponent(props) {
       value={props.value}
       defaultValue={props.defaultValue}
       required={props.required}
+      onChange={(event) => props.onChange?.(event.target.value)}
     />
   );
 }
+
+export default FormInputComponent;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > InputParent 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props) {
+  function handleChange(value) {
+    console.log(value);
+  }
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange={(value) => handleChange(value)}
+    />
+  );
+}
+
+export default Stepper;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > RawText 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1277,14 +1410,17 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function RawText(props) {
+function RawText(props) {
   return <View dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }} />;
 }
+
+export default RawText;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Section 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1294,7 +1430,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function SectionComponent(props) {
+function SectionComponent(props) {
   return (
     <View
       {...props.attributes}
@@ -1306,15 +1442,18 @@ export default function SectionComponent(props) {
           : undefined
       }
     >
-      <Text>{props.children}</Text>
+      {props.children}
     </View>
   );
 }
+
+export default SectionComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Select 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1325,7 +1464,7 @@ import {
 } from \\"react-native\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function SelectComponent(props) {
+function SelectComponent(props) {
   return (
     <View
       {...props.attributes}
@@ -1346,11 +1485,14 @@ export default function SelectComponent(props) {
     </View>
   );
 }
+
+export default SelectComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > SlotDefault 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1360,22 +1502,25 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function SlotCode(props) {
-  return <View>{props.children}</View>;
+function SlotCode(props) {
+  return (
+    <View>
+      {props.children || (
+        <View>
+          <Text>Default content</Text>
+        </View>
+      )}
+    </View>
+  );
 }
 
-SlotCode.defaultProps = {
-  children: (
-    <View>
-      <Text>Default content</Text>
-    </View>
-  ),
-};
+export default SlotCode;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > SlotHtml 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1386,18 +1531,21 @@ import {
 } from \\"react-native\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default function SlotCode(props) {
+function SlotCode(props) {
   return (
     <View>
       <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
     </View>
   );
 }
+
+export default SlotCode;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > SlotJsx 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1408,18 +1556,21 @@ import {
 } from \\"react-native\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default function SlotCode(props) {
+function SlotCode(props) {
   return (
     <View>
       <ContentSlotCode slotTesting={<div>Hello</div>} />
     </View>
   );
 }
+
+export default SlotCode;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > SlotNamed 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1429,27 +1580,25 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function SlotCode(props) {
+function SlotCode(props) {
   return (
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || <Text>Default left</Text>}
 
-      {props.children}
+      {props.children || <Text>Default Child</Text>}
     </View>
   );
 }
 
-SlotCode.defaultProps = {
-  slotLeft: <Text>Default left</Text>,
-  children: <Text>Default Child</Text>,
-};
+export default SlotCode;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Stamped.io 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1459,10 +1608,9 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
-export default function SmileReviews(props) {
+function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
 
   const [name, setName] = useState(() => \\"test\\");
@@ -1498,14 +1646,13 @@ export default function SmileReviews(props) {
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <View placeholder=\\"Email\\" />
-          <View placeholder=\\"Title\\" style={styles.view1} />
-          <View placeholder=\\"How was your experience?\\" style={styles.view2} />
+          <View placeholder=\\"Title\\" />
+          <View placeholder=\\"How was your experience?\\" />
           <View
             onClick={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
             }}
-            style={styles.view3}
           >
             <Text>Submit</Text>
           </View>
@@ -1513,8 +1660,8 @@ export default function SmileReviews(props) {
       ) : null}
 
       {reviews?.map((review, index) => (
-        <View key={review.id} style={styles.view4}>
-          <View src={review.avatar} style={styles.view5} />
+        <View key={review.id} style={styles.view1}>
+          <View src={review.avatar} style={styles.view2} />
 
           <View>
             <View>
@@ -1537,24 +1684,24 @@ export default function SmileReviews(props) {
 }
 
 const styles = StyleSheet.create({
-  view1: { display: \\"block\\" },
-  view2: { display: \\"block\\" },
-  view3: { display: \\"block\\" },
-  view4: {
+  view1: {
     margin: 10,
     padding: 10,
     background: \\"white\\",
     display: \\"flex\\",
     borderRadius: 5,
-    boxShadow: 0,
+    boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
   },
-  view5: { height: 30, width: 30, marginRight: 10 },
+  view2: { height: 30, width: 30, marginRight: 10 },
 });
+
+export default SmileReviews;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Submit 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1564,18 +1711,21 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function SubmitButton(props) {
+function SubmitButton(props) {
   return (
     <View type=\\"submit\\" {...props.attributes}>
       <Text>{props.text}</Text>
     </View>
   );
 }
+
+export default SubmitButton;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Text 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1587,7 +1737,7 @@ import {
 import { useState } from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function Text(props) {
+function Text(props) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
@@ -1606,11 +1756,14 @@ export default function Text(props) {
     />
   );
 }
+
+export default Text;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Textarea 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1620,7 +1773,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function Textarea(props) {
+function Textarea(props) {
   return (
     <View
       {...props.attributes}
@@ -1631,11 +1784,14 @@ export default function Textarea(props) {
     />
   );
 }
+
+export default Textarea;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > Video 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1645,7 +1801,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function Video(props) {
+function Video(props) {
   return (
     <View
       preload=\\"none\\"
@@ -1669,11 +1825,14 @@ export default function Video(props) {
     />
   );
 }
+
+export default Video;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1684,7 +1843,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [name, setName] = useState(() => \\"steve\\");
 
   function setName(value) {
@@ -1702,11 +1861,64 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      <Text>Hello </Text>
+      <Tag>
+        <Text>{name}</Text>
+      </Tag>
+
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <View>
+            <Text>{action.text}</Text>
+          </View>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > basicForwardRef 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1717,27 +1929,32 @@ import {
 } from \\"react-native\\";
 import { useState, forwardRef } from \\"react\\";
 
-export default forwardRef(function MyBasicForwardRefComponent(props, inputRef) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+const MyBasicForwardRefComponent = forwardRef(
+  function MyBasicForwardRefComponent(props, inputRef) {
+    const [name, setName] = useState(() => \\"PatrickJS\\");
 
-  return (
-    <View>
-      <View
-        ref={inputRef}
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-        style={styles.view1}
-      />
-    </View>
-  );
-});
+    return (
+      <View>
+        <View
+          ref={inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          style={styles.view1}
+        />
+      </View>
+    );
+  }
+);
 
 const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+
+export default MyBasicForwardRefComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1748,27 +1965,32 @@ import {
 } from \\"react-native\\";
 import { useState, forwardRef } from \\"react\\";
 
-export default forwardRef(function MyBasicForwardRefComponent(props, inputRef) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+const MyBasicForwardRefComponent = forwardRef(
+  function MyBasicForwardRefComponent(props, inputRef) {
+    const [name, setName] = useState(() => \\"PatrickJS\\");
 
-  return (
-    <View>
-      <View
-        ref={inputRef}
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-        style={styles.view1}
-      />
-    </View>
-  );
-});
+    return (
+      <View>
+        <View
+          ref={inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          style={styles.view1}
+        />
+      </View>
+    );
+  }
+);
 
 const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+
+export default MyBasicForwardRefComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1779,7 +2001,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOnUpdateReturnComponent(props) {
+function MyBasicOnUpdateReturnComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -1806,11 +2028,14 @@ export default function MyBasicOnUpdateReturnComponent(props) {
     </View>
   );
 }
+
+export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > class + ClassName + css 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1820,7 +2045,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   return (
     <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
@@ -1829,11 +2054,14 @@ export default function MyBasicComponent(props) {
 }
 
 const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > class + css 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1843,7 +2071,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   return (
     <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
@@ -1852,11 +2080,14 @@ export default function MyBasicComponent(props) {
 }
 
 const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > className + css 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1866,7 +2097,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   return (
     <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
@@ -1875,11 +2106,14 @@ export default function MyBasicComponent(props) {
 }
 
 const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > className 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1890,7 +2124,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function ClassNameCode(props) {
+function ClassNameCode(props) {
   const [bindings, setBindings] = useState(() => \\"a binding\\");
 
   return (
@@ -1905,11 +2139,14 @@ export default function ClassNameCode(props) {
     </View>
   );
 }
+
+export default ClassNameCode;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > classState 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1920,7 +2157,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   const [classState, setClassState] = useState(() => \\"testClassName\\");
 
   const [styleState, setStyleState] = useState(() => ({
@@ -1928,18 +2165,21 @@ export default function MyBasicComponent(props) {
   }));
 
   return (
-    <View style={styles.view1}>
+    <View style={{ ...styles.view1, ...styleState }}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > componentWithContext 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1952,7 +2192,7 @@ import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props) {
+function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
@@ -1977,11 +2217,14 @@ export default function ComponentWithContext(props) {
     </Context2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -1994,7 +2237,7 @@ import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props) {
+function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
@@ -2023,11 +2266,14 @@ export default function ComponentWithContext(props) {
     </Context2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > contentState 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2039,7 +2285,7 @@ import {
 import { useContext } from \\"react\\";
 import BuilderContext from \\"@dummy/context.lite\\";
 
-export default function RenderContent(props) {
+function RenderContent(props) {
   return (
     <BuilderContext.Provider
       value={{
@@ -2053,11 +2299,14 @@ export default function RenderContent(props) {
     </BuilderContext.Provider>
   );
 }
+
+export default RenderContent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > defaultProps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2067,7 +2316,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function Button(props) {
+function Button(props) {
   return (
     <View>
       {props.link ? (
@@ -2105,11 +2354,14 @@ Button.defaultProps = {
     console.log(\\"hi\\");
   },
 };
+
+export default Button;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2119,7 +2371,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function Button(props) {
+function Button(props) {
   return (
     <View>
       {props.link ? (
@@ -2155,11 +2407,14 @@ Button.defaultProps = {
   openLinkInNewTab: false,
   onClick: () => {},
 };
+
+export default Button;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > defaultValsWithTypes 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2169,11 +2424,11 @@ import {
   Text,
 } from \\"react-native\\";
 
-const DEFAULT_VALUES: Props = {
+const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
-export default function ComponentWithTypes(props) {
+function ComponentWithTypes(props) {
   return (
     <View>
       <Text> Hello </Text>
@@ -2181,11 +2436,14 @@ export default function ComponentWithTypes(props) {
     </View>
   );
 }
+
+export default ComponentWithTypes;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > expressionState 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2196,7 +2454,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [refToUse, setRefToUse] = useState(() =>
     !(props.componentRef instanceof Function) ? props.componentRef : null
   );
@@ -2207,11 +2465,14 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > import types 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2222,7 +2483,7 @@ import {
 } from \\"react-native\\";
 import RenderBlock from \\"./builder-render-block.raw\\";
 
-export default function RenderContent(props) {
+function RenderContent(props) {
   function getRenderContentProps(block, index) {
     return {
       block: block,
@@ -2236,11 +2497,14 @@ export default function RenderContent(props) {
     />
   );
 }
+
+export default RenderContent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > multipleOnUpdate 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2251,7 +2515,7 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function MultipleOnUpdate(props) {
+function MultipleOnUpdate(props) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -2261,11 +2525,14 @@ export default function MultipleOnUpdate(props) {
 
   return <View />;
 }
+
+export default MultipleOnUpdate;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2276,7 +2543,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MultipleOnUpdateWithDeps(props) {
+function MultipleOnUpdateWithDeps(props) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -2302,11 +2569,14 @@ export default function MultipleOnUpdateWithDeps(props) {
 
   return <View />;
 }
+
+export default MultipleOnUpdateWithDeps;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > multipleSpreads 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2317,18 +2587,21 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   const [attrs, setAttrs] = useState(() => ({
     hello: \\"world\\",
   }));
 
   return <View {...state.attrs} {...props} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > nestedShow 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2338,7 +2611,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function NestedShow(props) {
+function NestedShow(props) {
   return (
     <>
       {props.conditionA ? (
@@ -2363,11 +2636,14 @@ export default function NestedShow(props) {
     </>
   );
 }
+
+export default NestedShow;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > nestedStyles 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2377,7 +2653,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function NestedStyles(props) {
+function NestedStyles(props) {
   return (
     <View style={styles.view1}>
       <Text>Hello world</Text>
@@ -2388,16 +2664,23 @@ export default function NestedStyles(props) {
 const styles = StyleSheet.create({
   view1: {
     display: \\"flex\\",
-    foo: \\"var(--bar)\\",
+    \\"--bar\\": \\"red\\",
+    color: \\"var(--bar)\\",
     \\"&:hover\\": { display: \\"flex\\" },
+    \\":active\\": { display: \\"inline\\" },
     \\".nested-selector\\": { display: \\"grid\\" },
+    \\".nested-selector:hover\\": { display: \\"block\\" },
+    \\"&.nested-selector:active\\": { display: \\"inline-block\\" },
   },
 });
+
+export default NestedStyles;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > onInit & onMount 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2408,7 +2691,7 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function OnInit(props) {
+function OnInit(props) {
   useEffect(() => {
     console.log(\\"onInit\\");
   }, []);
@@ -2419,11 +2702,14 @@ export default function OnInit(props) {
 
   return <View />;
 }
+
+export default OnInit;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > onInit 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2438,7 +2724,7 @@ export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
-export default function OnInit(props) {
+function OnInit(props) {
   const [name, setName] = useState(() => \\"\\");
 
   useEffect(() => {
@@ -2453,11 +2739,14 @@ export default function OnInit(props) {
     </View>
   );
 }
+
+export default OnInit;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > onMount 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2468,7 +2757,7 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function Comp(props) {
+function Comp(props) {
   useEffect(() => {
     console.log(\\"Runs on mount\\");
   }, []);
@@ -2481,11 +2770,14 @@ export default function Comp(props) {
 
   return <View />;
 }
+
+export default Comp;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > onUpdate 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2496,18 +2788,21 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function OnUpdate(props) {
+function OnUpdate(props) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
 
   return <View />;
 }
+
+export default OnUpdate;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > onUpdateWithDeps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2518,7 +2813,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function OnUpdateWithDeps(props) {
+function OnUpdateWithDeps(props) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -2529,11 +2824,14 @@ export default function OnUpdateWithDeps(props) {
 
   return <View />;
 }
+
+export default OnUpdateWithDeps;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2547,16 +2845,19 @@ const b = 3;
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   return <View />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > preserveTyping 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2566,7 +2867,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   return (
     <View>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
@@ -2574,11 +2875,14 @@ export default function MyBasicComponent(props) {
     </View>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > propsDestructure 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2589,23 +2893,26 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
     <View>
-      <Text>{props.children}</Text>
+      {props.children}
 
       <Text>{props.type}</Text>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > propsInterface 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2615,7 +2922,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   return (
     <View>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
@@ -2623,11 +2930,14 @@ export default function MyBasicComponent(props) {
     </View>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > propsType 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2637,7 +2947,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   return (
     <View>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
@@ -2645,11 +2955,14 @@ export default function MyBasicComponent(props) {
     </View>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > referencingFunInsideHook 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2660,7 +2973,7 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function OnUpdate(props) {
+function OnUpdate(props) {
   function foo(params) {}
 
   function bar() {}
@@ -2679,11 +2992,14 @@ export default function OnUpdate(props) {
 
   return <View />;
 }
+
+export default OnUpdate;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > renderBlock 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2693,22 +3009,22 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
 
-export default function RenderBlock(props) {
+function RenderBlock(props) {
   function component() {
     const componentName = getProcessedBlock({
       block: props.block,
@@ -2726,8 +3042,8 @@ export default function RenderBlock(props) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-        Could not find a registered component named \\"\${componentName}\\". 
-        If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -2897,6 +3213,7 @@ export default function RenderBlock(props) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
 
   return (
     <>
@@ -2904,7 +3221,7 @@ export default function RenderBlock(props) {
         <>
           {isEmptyHtmlElement(tag()) ? (
             <>
-              <View {...attributes()} {...actions()} />
+              <TagRef {...attributes()} {...actions()} />
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
@@ -2920,7 +3237,7 @@ export default function RenderBlock(props) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
             <>
-              <View {...attributes()} {...actions()}>
+              <TagRef {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
                 {childrenWithoutParentComponent()?.map((child) => (
@@ -2938,21 +3255,26 @@ export default function RenderBlock(props) {
                     context={childrenContext()}
                   />
                 ))}
-              </View>
+              </TagRef>
             </>
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
 }
+
+export default RenderBlock;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > renderContentExample 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -2962,15 +3284,15 @@ import {
   Text,
 } from \\"react-native\\";
 import { useContext, useEffect } from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-export default function RenderContent(props) {
+function RenderContent(props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
@@ -3004,11 +3326,14 @@ export default function RenderContent(props) {
 const styles = StyleSheet.create({
   view1: { display: \\"flex\\", flexDirection: \\"columns\\" },
 });
+
+export default RenderContent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3018,7 +3343,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function Button(props) {
+function Button(props) {
   return (
     <>
       {props.link ? (
@@ -3043,11 +3368,14 @@ export default function Button(props) {
     </>
   );
 }
+
+export default Button;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > rootShow 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3057,7 +3385,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function RenderStyles(props) {
+function RenderStyles(props) {
   return (
     <>
       {props.foo === \\"bar\\" ? (
@@ -3074,11 +3402,14 @@ export default function RenderStyles(props) {
     </>
   );
 }
+
+export default RenderStyles;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > self-referencing component 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3088,7 +3419,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   return (
     <View>
       <Text>{props.name}</Text>
@@ -3101,11 +3432,14 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > self-referencing component with children 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3115,12 +3449,12 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   return (
     <View>
       <Text>{props.name}</Text>
 
-      <Text>{props.children}</Text>
+      {props.children}
 
       {props.name === \\"Batman\\" ? (
         <>
@@ -3134,11 +3468,14 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > showWithFor 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3148,7 +3485,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function NestedShow(props) {
+function NestedShow(props) {
   return (
     <>
       {props.conditionA ? (
@@ -3167,11 +3504,46 @@ export default function NestedShow(props) {
     </>
   );
 }
+
+export default NestedShow;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > showWithRootText 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function ShowRootText(props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          <Text>ContentA</Text>
+        </>
+      ) : (
+        <View>
+          <Text>else-condition-A</Text>
+        </View>
+      )}
+    </>
+  );
+}
+
+export default ShowRootText;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > spreadAttrs 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3181,14 +3553,17 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   return <View {...attrs} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > spreadNestedProps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3198,14 +3573,17 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   return <View {...props.nested} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > spreadProps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3215,14 +3593,72 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   return <View {...props} />;
 }
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > styleClassAndCss 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function MyComponent(props) {
+  return (
+    <View
+      style={{
+        width: \\"100%\\",
+        ...styles.view1,
+      }}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
+});
+
+export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function StylePropClassAndCss(props) {
+  return <View style={{ ...styles.view1, ...props.attributes.style }} />;
+}
+
+const styles = StyleSheet.create({
+  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
+});
+
+export default StylePropClassAndCss;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > subComponent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3233,14 +3669,17 @@ import {
 } from \\"react-native\\";
 import Foo from \\"./foo-sub-component.lite\\";
 
-export default function SubComponent(props) {
+function SubComponent(props) {
   return <Foo />;
 }
+
+export default SubComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > svgComponent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3250,7 +3689,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function SvgComponent(props) {
+function SvgComponent(props) {
   return (
     <View
       fill=\\"none\\"
@@ -3271,11 +3710,14 @@ export default function SvgComponent(props) {
     </View>
   );
 }
+
+export default SvgComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > typeDependency 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3285,18 +3727,21 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function TypeDependency(props) {
+function TypeDependency(props) {
   return (
     <View>
       <Text>{props.foo}</Text>
     </View>
   );
 }
+
+export default TypeDependency;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > use-style 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3306,7 +3751,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   return (
     <View type=\\"button\\">
       <Text>Button</Text>
@@ -3315,11 +3760,14 @@ export default function MyComponent(props) {
 }
 
 const styles = StyleSheet.create({});
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > use-style-and-css 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3329,7 +3777,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   return (
     <View type=\\"button\\" style={styles.view1}>
       <Text>Button</Text>
@@ -3340,11 +3788,14 @@ export default function MyComponent(props) {
 const styles = StyleSheet.create({
   view1: { background: \\"blue\\", color: \\"white\\" },
 });
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Javascript Test > use-style-outside-component 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3354,7 +3805,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   return (
     <View type=\\"button\\">
       <Text>Button</Text>
@@ -3363,11 +3814,14 @@ export default function MyComponent(props) {
 }
 
 const styles = StyleSheet.create({});
+
+export default MyComponent;
 "
 `;
 
-exports[`React Native > jsx > Remove Internal mitosis package 1`] = `
-"import * as React from \\"react\\";
+exports[`React Native > jsx > Javascript Test > useTarget 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3378,7 +3832,39 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props) {
+function UseTargetComponent(props) {
+  function name() {
+    const prefix = \\"rn\\";
+    return prefix + \\"foo\\";
+  }
+
+  const [lastName, setLastName] = useState(() => \\"bar\\");
+
+  return (
+    <View>
+      <Text>{name()}</Text>
+    </View>
+  );
+}
+
+export default UseTargetComponent;
+"
+`;
+
+exports[`React Native > jsx > Remove Internal mitosis package 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   return (
@@ -3389,11 +3875,14 @@ export default function MyBasicComponent(props) {
     </View>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > AdvancedRef 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3408,7 +3897,7 @@ export interface Props {
   showInput: boolean;
 }
 
-export default function MyBasicRefComponent(props: Props) {
+function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputNoArgRef = useRef<HTMLLabelElement>(null);
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -3461,11 +3950,14 @@ export default function MyBasicRefComponent(props: Props) {
 }
 
 const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+
+export default MyBasicRefComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Basic 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3484,7 +3976,7 @@ export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-export default function MyBasicComponent(props: MyBasicComponentProps) {
+function MyBasicComponent(props: MyBasicComponentProps) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   function underscore_fn_name() {
@@ -3507,11 +3999,14 @@ export default function MyBasicComponent(props: MyBasicComponentProps) {
 }
 
 const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Basic Context 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3521,9 +4016,9 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onChange() {
@@ -3544,20 +4039,23 @@ export default function MyBasicComponent(props: any) {
   }, []);
 
   return (
-    <Context.Provider value={createInjector()}>
+    <Injector.Provider value={createInjector()}>
       <View>
         <Text>{myService.method(\\"hello\\") + name}</Text>
         <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
         <View onChange={(event) => onChange} />
       </View>
-    </Context.Provider>
+    </Injector.Provider>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Basic OnMount Update 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3573,7 +4071,7 @@ export interface Props {
   bye: string;
 }
 
-export default function MyBasicOnMountUpdateComponent(props: Props) {
+function MyBasicOnMountUpdateComponent(props: Props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
@@ -3593,11 +4091,14 @@ export default function MyBasicOnMountUpdateComponent(props: Props) {
     </View>
   );
 }
+
+export default MyBasicOnMountUpdateComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Basic Outputs 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3608,7 +4109,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOutputsComponent(props: any) {
+function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -3618,11 +4119,14 @@ export default function MyBasicOutputsComponent(props: any) {
 
   return <View />;
 }
+
+export default MyBasicOutputsComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3633,7 +4137,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOutputsComponent(props: any) {
+function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -3643,11 +4147,14 @@ export default function MyBasicOutputsComponent(props: any) {
 
   return <View />;
 }
+
+export default MyBasicOutputsComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > BasicAttribute 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3657,14 +4164,17 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return <View autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3680,12 +4190,15 @@ type Props = {
 };
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-export default function MyBooleanAttribute(props: Props) {
+function MyBooleanAttribute(props: Props) {
   return (
     <View>
-      <Text>{props.children}</Text>
-
-      <Text>{props.type}</Text>
+      {props.children ? (
+        <>
+          {props.children}
+          <Text>{props.type}</Text>
+        </>
+      ) : null}
 
       <MyBooleanAttributeComponent toggle={true} />
 
@@ -3695,11 +4208,14 @@ export default function MyBooleanAttribute(props: Props) {
     </View>
   );
 }
+
+export default MyBooleanAttribute;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > BasicChildComponent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3709,10 +4225,10 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
-export default function MyBasicChildComponent(props: any) {
+function MyBasicChildComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
@@ -3727,11 +4243,14 @@ export default function MyBasicChildComponent(props: any) {
     </View>
   );
 }
+
+export default MyBasicChildComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > BasicFor 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3742,7 +4261,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicForComponent(props: any) {
+function MyBasicForComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
@@ -3771,11 +4290,14 @@ export default function MyBasicForComponent(props: any) {
     </View>
   );
 }
+
+export default MyBasicForComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > BasicRef 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3790,7 +4312,7 @@ export interface Props {
   showInput: boolean;
 }
 
-export default function MyBasicRefComponent(props: Props) {
+function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputNoArgRef = useRef<HTMLLabelElement>(null);
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -3839,11 +4361,14 @@ export default function MyBasicRefComponent(props: Props) {
 }
 
 const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+
+export default MyBasicRefComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > BasicRefAssignment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3858,9 +4383,9 @@ export interface Props {
   showInput: boolean;
 }
 
-export default function MyBasicRefAssignmentComponent(props: Props) {
+function MyBasicRefAssignmentComponent(props: Props) {
   const holdValueRef = useRef(\\"Patrick\\");
-  function handlerClick(event) {
+  function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef.current);
     holdValueRef.current = holdValueRef.current + \\"JS\\";
@@ -3874,11 +4399,14 @@ export default function MyBasicRefAssignmentComponent(props: Props) {
     </View>
   );
 }
+
+export default MyBasicRefAssignmentComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3906,7 +4434,7 @@ export function usePrevious<T>(value: T) {
   return ref;
 }
 
-export default function MyPreviousComponent(props: Props) {
+function MyPreviousComponent(props: Props) {
   const [count, setCount] = useState(() => 0);
 
   const prevCount = useRef(count);
@@ -3930,11 +4458,14 @@ export default function MyPreviousComponent(props: Props) {
     </View>
   );
 }
+
+export default MyPreviousComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Button 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -3951,7 +4482,7 @@ export interface ButtonProps {
   openLinkInNewTab?: boolean;
 }
 
-export default function Button(props: ButtonProps) {
+function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
@@ -3976,11 +4507,14 @@ export default function Button(props: ButtonProps) {
     </View>
   );
 }
+
+export default Button;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Columns 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4005,7 +4539,7 @@ export interface ColumnProps {
   reverseColumnsWhenStacked?: boolean;
 }
 
-export default function Column(props: ColumnProps) {
+function Column(props: ColumnProps) {
   function getColumns() {
     return props.columns || [];
   }
@@ -4014,12 +4548,12 @@ export default function Column(props: ColumnProps) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -4041,13 +4575,16 @@ export default function Column(props: ColumnProps) {
 
 const styles = StyleSheet.create({
   view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
-  view2: { flexGrow: 1 },
+  view2: { flexGrow: \\"1\\" },
 });
+
+export default Column;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4061,8 +4598,9 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
-export default function ContentSlotCode(props: Props) {
+function ContentSlotCode(props: Props) {
   return (
     <View>
       {props.slotTesting}
@@ -4075,11 +4613,14 @@ export default function ContentSlotCode(props: Props) {
     </View>
   );
 }
+
+export default ContentSlotCode;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4088,37 +4629,65 @@ import {
   Image,
   Text,
 } from \\"react-native\\";
+import { useState } from \\"react\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
-export default function ContentSlotJsxCode(props: Props) {
+function ContentSlotJsxCode(props: Props) {
+  const [name, setName] = useState(() => \\"king\\");
+
+  const [showContent, setShowContent] = useState(() => false);
+
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
+
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
+
   return (
-    <View>
-      {props.slotTesting ? (
+    <>
+      {props.slotReference ? (
         <>
-          <View>
-            <Text>{props.slotTesting}</Text>
+          <View
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.slotContent || <Text>{props.content}</Text>}</>
+            ) : null}
+
+            <View>
+              <View />
+            </View>
+
+            <View>{props.children}</View>
           </View>
         </>
       ) : null}
-
-      <View>
-        <View />
-      </View>
-
-      <View>
-        <Text>{props.children}</Text>
-      </View>
-    </View>
+    </>
   );
 }
+
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: undefined,
+};
+
+export default ContentSlotJsxCode;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > CustomCode 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4134,7 +4703,7 @@ export interface CustomCodeProps {
   replaceNodes?: boolean;
 }
 
-export default function CustomCode(props: CustomCodeProps) {
+function CustomCode(props: CustomCodeProps) {
   const elem = useRef<HTMLDivElement>(null);
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
@@ -4188,11 +4757,14 @@ export default function CustomCode(props: CustomCodeProps) {
 
   return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
+
+export default CustomCode;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Embed 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4208,7 +4780,7 @@ export interface CustomCodeProps {
   replaceNodes?: boolean;
 }
 
-export default function CustomCode(props: CustomCodeProps) {
+function CustomCode(props: CustomCodeProps) {
   const elem = useRef<HTMLDivElement>(null);
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
@@ -4262,11 +4834,14 @@ export default function CustomCode(props: CustomCodeProps) {
 
   return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
+
+export default CustomCode;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Form 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4300,13 +4875,15 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
-export default function FormComponent(props: FormProps) {
+function FormComponent(props: FormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [formState, setFormState] = useState(() => \\"unsubmitted\\");
 
@@ -4318,7 +4895,11 @@ export default function FormComponent(props: FormProps) {
     return (Builder.isEditing && props.previewState) || formState;
   }
 
-  function onSubmit(event) {
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -4332,16 +4913,19 @@ export default function FormComponent(props: FormProps) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -4367,7 +4951,7 @@ export default function FormComponent(props: FormProps) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -4429,7 +5013,7 @@ export default function FormComponent(props: FormProps) {
       fetch(
         props.sendSubmissionsTo === \\"email\\"
           ? formUrl
-          : props.action /* TODO: throw error if no action URL */,
+          : props.action! /* TODO: throw error if no action URL */,
         { body, headers, method: props.method || \\"post\\" }
       ).then(
         async (res) => {
@@ -4445,7 +5029,7 @@ export default function FormComponent(props: FormProps) {
               get(body, props.errorMessagePath);
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message =
+                /* TODO: ideally convert json to yaml so it woul dbe like          error: - email has been taken */ message =
                   JSON.stringify(message);
               }
               setFormErrorMessage(message);
@@ -4521,14 +5105,14 @@ export default function FormComponent(props: FormProps) {
       ) : null}{\\" \\"}
       {submissionState() === \\"error\\" ? (
         <>
-          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
+          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage!} />
         </>
       ) : null}{\\" \\"}
       {submissionState() === \\"sending\\" ? (
         <>
           <BuilderBlocks
             dataPath=\\"sendingMessage\\"
-            blocks={props.sendingMessage}
+            blocks={props.sendingMessage!}
           />
         </>
       ) : null}{\\" \\"}
@@ -4544,7 +5128,7 @@ export default function FormComponent(props: FormProps) {
         <>
           <BuilderBlocks
             dataPath=\\"successMessage\\"
-            blocks={props.successMessage}
+            blocks={props.successMessage!}
           />
         </>
       ) : null}{\\" \\"}
@@ -4554,11 +5138,13 @@ export default function FormComponent(props: FormProps) {
 const styles = StyleSheet.create({
   view1: { padding: 10, color: \\"red\\", textAlign: \\"center\\" },
 });
+export default FormComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Image 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4588,7 +5174,7 @@ export interface ImageProps {
   children?: any;
 }
 
-export default function Image(props: ImageProps) {
+function Image(props: ImageProps) {
   const pictureRef = useRef<HTMLElement>(null);
   const [scrollListener, setScrollListener] = useState(() => null);
 
@@ -4664,24 +5250,27 @@ export default function Image(props: ImageProps) {
         <View srcset={props.srcset} />
       </View>
 
-      <Text>{props.children}</Text>
+      {props.children}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   view1: {
-    opacity: 1,
+    opacity: \\"1\\",
     transition: \\"opacity 0.2s ease-in-out\\",
     objectFit: \\"cover\\",
     objectPosition: \\"center\\",
   },
 });
+
+export default Image;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Image State 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4692,7 +5281,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function ImgStateComponent(props: any) {
+function ImgStateComponent(props: any) {
   const [canShow, setCanShow] = useState(() => true);
 
   const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
@@ -4707,11 +5296,14 @@ export default function ImgStateComponent(props: any) {
     </View>
   );
 }
+
+export default ImgStateComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Img 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4740,7 +5332,7 @@ export interface ImgProps {
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function ImgComponent(props: ImgProps) {
+function ImgComponent(props: ImgProps) {
   return (
     <View
       style={{
@@ -4754,11 +5346,14 @@ export default function ImgComponent(props: ImgProps) {
     />
   );
 }
+
+export default ImgComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Input 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4776,11 +5371,12 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function FormInputComponent(props: FormInputProps) {
+function FormInputComponent(props: FormInputProps) {
   return (
     <View
       {...props.attributes}
@@ -4795,14 +5391,49 @@ export default function FormInputComponent(props: FormInputProps) {
       value={props.value}
       defaultValue={props.defaultValue}
       required={props.required}
+      onChange={(event) => props.onChange?.(event.target.value)}
     />
   );
 }
+
+export default FormInputComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > InputParent 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props: any) {
+  function handleChange(value: string) {
+    console.log(value);
+  }
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange={(value) => handleChange(value)}
+    />
+  );
+}
+
+export default Stepper;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > RawText 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4817,14 +5448,17 @@ export interface RawTextProps {
   text?: string; // builderBlock?: any;
 }
 
-export default function RawText(props: RawTextProps) {
+function RawText(props: RawTextProps) {
   return <View dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }} />;
 }
+
+export default RawText;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Section 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4840,7 +5474,7 @@ export interface SectionProps {
   children?: any;
 }
 
-export default function SectionComponent(props: SectionProps) {
+function SectionComponent(props: SectionProps) {
   return (
     <View
       {...props.attributes}
@@ -4852,15 +5486,18 @@ export default function SectionComponent(props: SectionProps) {
           : undefined
       }
     >
-      <Text>{props.children}</Text>
+      {props.children}
     </View>
   );
 }
+
+export default SectionComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Select 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4883,7 +5520,7 @@ export interface FormSelectProps {
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function SelectComponent(props: FormSelectProps) {
+function SelectComponent(props: FormSelectProps) {
   return (
     <View
       {...props.attributes}
@@ -4904,11 +5541,14 @@ export default function SelectComponent(props: FormSelectProps) {
     </View>
   );
 }
+
+export default SelectComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > SlotDefault 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4922,22 +5562,25 @@ type Props = {
   [key: string]: string;
 };
 
-export default function SlotCode(props: Props) {
-  return <View>{props.children}</View>;
+function SlotCode(props: Props) {
+  return (
+    <View>
+      {props.children || (
+        <View>
+          <Text>Default content</Text>
+        </View>
+      )}
+    </View>
+  );
 }
 
-SlotCode.defaultProps = {
-  children: (
-    <View>
-      <Text>Default content</Text>
-    </View>
-  ),
-};
+export default SlotCode;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > SlotHtml 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4952,18 +5595,21 @@ type Props = {
 };
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default function SlotCode(props: Props) {
+function SlotCode(props: Props) {
   return (
     <View>
       <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
     </View>
   );
 }
+
+export default SlotCode;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > SlotJsx 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -4978,18 +5624,21 @@ type Props = {
 };
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default function SlotCode(props: Props) {
+function SlotCode(props: Props) {
   return (
     <View>
       <ContentSlotCode slotTesting={<div>Hello</div>} />
     </View>
   );
 }
+
+export default SlotCode;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > SlotNamed 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5003,27 +5652,25 @@ type Props = {
   [key: string]: string;
 };
 
-export default function SlotCode(props: Props) {
+function SlotCode(props: Props) {
   return (
     <View>
       {props.slotTop}
 
-      {props.slotLeft}
+      {props.slotLeft || <Text>Default left</Text>}
 
-      {props.children}
+      {props.children || <Text>Default Child</Text>}
     </View>
   );
 }
 
-SlotCode.defaultProps = {
-  slotLeft: <Text>Default left</Text>,
-  children: <Text>Default Child</Text>,
-};
+export default SlotCode;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Stamped.io 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5038,10 +5685,9 @@ type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
-export default function SmileReviews(props: SmileReviewsProps) {
+function SmileReviews(props: SmileReviewsProps) {
   const [reviews, setReviews] = useState(() => []);
 
   const [name, setName] = useState(() => \\"test\\");
@@ -5077,14 +5723,13 @@ export default function SmileReviews(props: SmileReviewsProps) {
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <View placeholder=\\"Email\\" />
-          <View placeholder=\\"Title\\" style={styles.view1} />
-          <View placeholder=\\"How was your experience?\\" style={styles.view2} />
+          <View placeholder=\\"Title\\" />
+          <View placeholder=\\"How was your experience?\\" />
           <View
             onClick={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
             }}
-            style={styles.view3}
           >
             <Text>Submit</Text>
           </View>
@@ -5092,8 +5737,8 @@ export default function SmileReviews(props: SmileReviewsProps) {
       ) : null}
 
       {reviews?.map((review, index) => (
-        <View key={review.id} style={styles.view4}>
-          <View src={review.avatar} style={styles.view5} />
+        <View key={review.id} style={styles.view1}>
+          <View src={review.avatar} style={styles.view2} />
 
           <View>
             <View>
@@ -5116,24 +5761,24 @@ export default function SmileReviews(props: SmileReviewsProps) {
 }
 
 const styles = StyleSheet.create({
-  view1: { display: \\"block\\" },
-  view2: { display: \\"block\\" },
-  view3: { display: \\"block\\" },
-  view4: {
+  view1: {
     margin: 10,
     padding: 10,
     background: \\"white\\",
     display: \\"flex\\",
     borderRadius: 5,
-    boxShadow: 0,
+    boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
   },
-  view5: { height: 30, width: 30, marginRight: 10 },
+  view2: { height: 30, width: 30, marginRight: 10 },
 });
+
+export default SmileReviews;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Submit 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5148,18 +5793,21 @@ export interface ButtonProps {
   text?: string;
 }
 
-export default function SubmitButton(props: ButtonProps) {
+function SubmitButton(props: ButtonProps) {
   return (
     <View type=\\"submit\\" {...props.attributes}>
       <Text>{props.text}</Text>
     </View>
   );
 }
+
+export default SubmitButton;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Text 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5180,7 +5828,7 @@ export interface TextProps {
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function Text(props: TextProps) {
+function Text(props: TextProps) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
@@ -5199,11 +5847,14 @@ export default function Text(props: TextProps) {
     />
   );
 }
+
+export default Text;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Textarea 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5221,7 +5872,7 @@ export interface TextareaProps {
   placeholder?: string;
 }
 
-export default function Textarea(props: TextareaProps) {
+function Textarea(props: TextareaProps) {
   return (
     <View
       {...props.attributes}
@@ -5232,11 +5883,14 @@ export default function Textarea(props: TextareaProps) {
     />
   );
 }
+
+export default Textarea;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > Video 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5272,7 +5926,7 @@ export interface VideoProps {
   lazyLoad?: boolean;
 }
 
-export default function Video(props: VideoProps) {
+function Video(props: VideoProps) {
   return (
     <View
       preload=\\"none\\"
@@ -5296,11 +5950,14 @@ export default function Video(props: VideoProps) {
     />
   );
 }
+
+export default Video;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5311,7 +5968,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [name, setName] = useState(() => \\"steve\\");
 
   function setName(value) {
@@ -5329,11 +5986,64 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function MyBasicForNoTagRefComponent(props: any) {
+  const [name, setName] = useState(() => \\"VincentW\\");
+
+  const [TagName, setTagName] = useState(() => \\"div\\");
+
+  function TagNameGetter() {
+    return \\"span\\";
+  }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
+
+  const TagNameGetterRef = TagNameGetter();
+
+  return (
+    <TagNameGetterRef>
+      <Text>Hello </Text>
+      <Tag>
+        <Text>{name}</Text>
+      </Tag>
+
+      {props.actions?.map((action) => (
+        <TagName>
+          <action.icon />
+
+          <View>
+            <Text>{action.text}</Text>
+          </View>
+        </TagName>
+      ))}
+    </TagNameGetterRef>
+  );
+}
+
+export default MyBasicForNoTagRefComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > basicForwardRef 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5349,7 +6059,7 @@ export interface Props {
   inputRef: HTMLInputElement;
 }
 
-export default forwardRef<Props[\\"inputRef\\"]>(
+const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
   function MyBasicForwardRefComponent(props: Props, inputRef) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
@@ -5367,11 +6077,14 @@ export default forwardRef<Props[\\"inputRef\\"]>(
 );
 
 const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+
+export default MyBasicForwardRefComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5387,7 +6100,7 @@ export interface Props {
   inputRef: HTMLInputElement;
 }
 
-export default forwardRef<Props[\\"inputRef\\"]>(
+const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
   function MyBasicForwardRefComponent(props: Props, inputRef) {
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
@@ -5405,11 +6118,14 @@ export default forwardRef<Props[\\"inputRef\\"]>(
 );
 
 const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+
+export default MyBasicForwardRefComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5420,7 +6136,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOnUpdateReturnComponent(props: any) {
+function MyBasicOnUpdateReturnComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -5447,11 +6163,14 @@ export default function MyBasicOnUpdateReturnComponent(props: any) {
     </View>
   );
 }
+
+export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > class + ClassName + css 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5461,7 +6180,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   return (
     <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
@@ -5470,11 +6189,14 @@ export default function MyBasicComponent(props: any) {
 }
 
 const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > class + css 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5484,7 +6206,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   return (
     <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
@@ -5493,11 +6215,14 @@ export default function MyBasicComponent(props: any) {
 }
 
 const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > className + css 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5507,7 +6232,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   return (
     <View style={styles.view1}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
@@ -5516,11 +6241,14 @@ export default function MyBasicComponent(props: any) {
 }
 
 const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > className 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5535,8 +6263,9 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
-export default function ClassNameCode(props: Props) {
+function ClassNameCode(props: Props) {
   const [bindings, setBindings] = useState(() => \\"a binding\\");
 
   return (
@@ -5551,11 +6280,14 @@ export default function ClassNameCode(props: Props) {
     </View>
   );
 }
+
+export default ClassNameCode;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > classState 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5566,7 +6298,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   const [classState, setClassState] = useState(() => \\"testClassName\\");
 
   const [styleState, setStyleState] = useState(() => ({
@@ -5574,18 +6306,21 @@ export default function MyBasicComponent(props: any) {
   }));
 
   return (
-    <View style={styles.view1}>
+    <View style={{ ...styles.view1, ...styleState }}>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > componentWithContext 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5603,7 +6338,7 @@ export interface ComponentWithContextProps {
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props: ComponentWithContextProps) {
+function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
@@ -5628,11 +6363,14 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
     </Context2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5650,7 +6388,7 @@ export interface ComponentWithContextProps {
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props: ComponentWithContextProps) {
+function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
@@ -5679,11 +6417,14 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
     </Context2.Provider>
   );
 }
+
+export default ComponentWithContext;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > contentState 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5695,7 +6436,7 @@ import {
 import { useContext } from \\"react\\";
 import BuilderContext from \\"@dummy/context.lite\\";
 
-export default function RenderContent(props: any) {
+function RenderContent(props: any) {
   return (
     <BuilderContext.Provider
       value={{
@@ -5709,11 +6450,14 @@ export default function RenderContent(props: any) {
     </BuilderContext.Provider>
   );
 }
+
+export default RenderContent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > defaultProps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5733,7 +6477,7 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-export default function Button(props: ButtonProps) {
+function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
@@ -5771,11 +6515,14 @@ Button.defaultProps = {
     console.log(\\"hi\\");
   },
 };
+
+export default Button;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5793,7 +6540,7 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-export default function Button(props: ButtonProps) {
+function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
@@ -5829,11 +6576,14 @@ Button.defaultProps = {
   openLinkInNewTab: false,
   onClick: () => {},
 };
+
+export default Button;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > defaultValsWithTypes 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5851,7 +6601,7 @@ const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
-export default function ComponentWithTypes(props: Props) {
+function ComponentWithTypes(props: Props) {
   return (
     <View>
       <Text> Hello </Text>
@@ -5859,11 +6609,14 @@ export default function ComponentWithTypes(props: Props) {
     </View>
   );
 }
+
+export default ComponentWithTypes;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > expressionState 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5874,7 +6627,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [refToUse, setRefToUse] = useState(() =>
     !(props.componentRef instanceof Function) ? props.componentRef : null
   );
@@ -5885,11 +6638,14 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > import types 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5904,9 +6660,10 @@ type RenderContentProps = {
   content: BuilderContent;
   renderContentProps: RenderBlockProps;
 };
-import RenderBlock from \\"./builder-render-block.raw\\";
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
-export default function RenderContent(props: RenderContentProps) {
+function RenderContent(props: RenderContentProps) {
   function getRenderContentProps(block, index) {
     return {
       block: block,
@@ -5920,11 +6677,14 @@ export default function RenderContent(props: RenderContentProps) {
     />
   );
 }
+
+export default RenderContent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > multipleOnUpdate 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5935,7 +6695,7 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function MultipleOnUpdate(props: any) {
+function MultipleOnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -5945,11 +6705,14 @@ export default function MultipleOnUpdate(props: any) {
 
   return <View />;
 }
+
+export default MultipleOnUpdate;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -5960,7 +6723,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MultipleOnUpdateWithDeps(props: any) {
+function MultipleOnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -5986,11 +6749,14 @@ export default function MultipleOnUpdateWithDeps(props: any) {
 
   return <View />;
 }
+
+export default MultipleOnUpdateWithDeps;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > multipleSpreads 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6001,18 +6767,21 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   const [attrs, setAttrs] = useState(() => ({
     hello: \\"world\\",
   }));
 
   return <View {...state.attrs} {...props} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > nestedShow 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6027,7 +6796,7 @@ interface Props {
   conditionB: boolean;
 }
 
-export default function NestedShow(props: Props) {
+function NestedShow(props: Props) {
   return (
     <>
       {props.conditionA ? (
@@ -6052,11 +6821,14 @@ export default function NestedShow(props: Props) {
     </>
   );
 }
+
+export default NestedShow;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > nestedStyles 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6066,7 +6838,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function NestedStyles(props: any) {
+function NestedStyles(props: any) {
   return (
     <View style={styles.view1}>
       <Text>Hello world</Text>
@@ -6077,16 +6849,23 @@ export default function NestedStyles(props: any) {
 const styles = StyleSheet.create({
   view1: {
     display: \\"flex\\",
-    foo: \\"var(--bar)\\",
+    \\"--bar\\": \\"red\\",
+    color: \\"var(--bar)\\",
     \\"&:hover\\": { display: \\"flex\\" },
+    \\":active\\": { display: \\"inline\\" },
     \\".nested-selector\\": { display: \\"grid\\" },
+    \\".nested-selector:hover\\": { display: \\"block\\" },
+    \\"&.nested-selector:active\\": { display: \\"inline-block\\" },
   },
 });
+
+export default NestedStyles;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > onInit & onMount 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6097,7 +6876,7 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function OnInit(props: any) {
+function OnInit(props: any) {
   useEffect(() => {
     console.log(\\"onInit\\");
   }, []);
@@ -6108,11 +6887,14 @@ export default function OnInit(props: any) {
 
   return <View />;
 }
+
+export default OnInit;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > onInit 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6131,7 +6913,7 @@ export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
-export default function OnInit(props: Props) {
+function OnInit(props: Props) {
   const [name, setName] = useState(() => \\"\\");
 
   useEffect(() => {
@@ -6146,11 +6928,14 @@ export default function OnInit(props: Props) {
     </View>
   );
 }
+
+export default OnInit;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > onMount 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6161,7 +6946,7 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function Comp(props: any) {
+function Comp(props: any) {
   useEffect(() => {
     console.log(\\"Runs on mount\\");
   }, []);
@@ -6174,11 +6959,14 @@ export default function Comp(props: any) {
 
   return <View />;
 }
+
+export default Comp;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > onUpdate 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6189,18 +6977,21 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function OnUpdate(props: any) {
+function OnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
 
   return <View />;
 }
+
+export default OnUpdate;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > onUpdateWithDeps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6215,7 +7006,7 @@ type Props = {
   size: string;
 };
 
-export default function OnUpdateWithDeps(props: Props) {
+function OnUpdateWithDeps(props: Props) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -6226,11 +7017,14 @@ export default function OnUpdateWithDeps(props: Props) {
 
   return <View />;
 }
+
+export default OnUpdateWithDeps;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6256,14 +7050,17 @@ export const a = 3;
 export const bar = () => {};
 export function run<T>(value: T) {}
 
-export default function MyBasicComponent(props: MyBasicComponentProps) {
+function MyBasicComponent(props: MyBasicComponentProps) {
   return <View />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > preserveTyping 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6286,7 +7083,7 @@ export interface MyBasicComponentProps {
   age?: number;
 }
 
-export default function MyBasicComponent(props: MyBasicComponentProps) {
+function MyBasicComponent(props: MyBasicComponentProps) {
   return (
     <View>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
@@ -6294,11 +7091,14 @@ export default function MyBasicComponent(props: MyBasicComponentProps) {
     </View>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > propsDestructure 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6314,23 +7114,26 @@ type Props = {
   type: string;
 };
 
-export default function MyBasicComponent(props: Props) {
+function MyBasicComponent(props: Props) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
     <View>
-      <Text>{props.children}</Text>
+      {props.children}
 
       <Text>{props.type}</Text>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > propsInterface 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6345,7 +7148,7 @@ interface Person {
   age?: number;
 }
 
-export default function MyBasicComponent(props: Person | never) {
+function MyBasicComponent(props: Person | never) {
   return (
     <View>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
@@ -6353,11 +7156,14 @@ export default function MyBasicComponent(props: Person | never) {
     </View>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > propsType 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6372,7 +7178,7 @@ type Person = {
   age?: number;
 };
 
-export default function MyBasicComponent(props: Person) {
+function MyBasicComponent(props: Person) {
   return (
     <View>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
@@ -6380,11 +7186,14 @@ export default function MyBasicComponent(props: Person) {
     </View>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > referencingFunInsideHook 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6395,7 +7204,7 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function OnUpdate(props: any) {
+function OnUpdate(props: any) {
   function foo(params) {}
 
   function bar() {}
@@ -6414,11 +7223,14 @@ export default function OnUpdate(props: any) {
 
   return <View />;
 }
+
+export default OnUpdate;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > renderBlock 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6428,34 +7240,35 @@ import {
   Text,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
-import type {
-  BuilderContextInterface,
-  RegisteredComponent,
-} from \\"../../context/types.js\\";
-import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-import type { Nullable } from \\"../../types/typescript.js\\";
-import type { RenderComponentProps } from \\"./render-component\\";
-import type { RepeatData } from \\"./types.js\\";
+
 export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
 };
+import { TARGET } from \\"../../constants/target.js\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
 import BlockStyles from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import type { RenderComponentProps } from \\"./render-component.lite\\";
 import RenderComponent from \\"./render-component.lite\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
+import type { RepeatData } from \\"./types.js\\";
 
-export default function RenderBlock(props: RenderBlockProps) {
+function RenderBlock(props: RenderBlockProps) {
   function component() {
     const componentName = getProcessedBlock({
       block: props.block,
@@ -6473,8 +7286,8 @@ export default function RenderBlock(props: RenderBlockProps) {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-        Could not find a registered component named \\"\${componentName}\\". 
-        If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -6590,7 +7403,7 @@ export default function RenderBlock(props: RenderBlockProps) {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...props.context,
         state: {
@@ -6644,6 +7457,7 @@ export default function RenderBlock(props: RenderBlockProps) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
 
   return (
     <>
@@ -6651,7 +7465,7 @@ export default function RenderBlock(props: RenderBlockProps) {
         <>
           {isEmptyHtmlElement(tag()) ? (
             <>
-              <View {...attributes()} {...actions()} />
+              <TagRef {...attributes()} {...actions()} />
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
@@ -6667,7 +7481,7 @@ export default function RenderBlock(props: RenderBlockProps) {
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
             <>
-              <View {...attributes()} {...actions()}>
+              <TagRef {...attributes()} {...actions()}>
                 <RenderComponentTagRef {...renderComponentProps()} />
 
                 {childrenWithoutParentComponent()?.map((child) => (
@@ -6685,21 +7499,26 @@ export default function RenderBlock(props: RenderBlockProps) {
                     context={childrenContext()}
                   />
                 ))}
-              </View>
+              </TagRef>
             </>
           ) : null}
         </>
       ) : (
-        <RenderComponentTagRef {...renderComponentProps()} />
+        <>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </>
       )}
     </>
   );
 }
+
+export default RenderBlock;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > renderContentExample 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6717,15 +7536,15 @@ type Props = {
     id: string;
   };
 };
+import BuilderContext from \\"@dummy/context.lite\\";
 import {
-  sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-export default function RenderContent(props: Props) {
+function RenderContent(props: Props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
@@ -6759,11 +7578,14 @@ export default function RenderContent(props: Props) {
 const styles = StyleSheet.create({
   view1: { display: \\"flex\\", flexDirection: \\"columns\\" },
 });
+
+export default RenderContent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6780,7 +7602,7 @@ export interface ButtonProps {
   openLinkInNewTab?: boolean;
 }
 
-export default function Button(props: ButtonProps) {
+function Button(props: ButtonProps) {
   return (
     <>
       {props.link ? (
@@ -6805,11 +7627,14 @@ export default function Button(props: ButtonProps) {
     </>
   );
 }
+
+export default Button;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > rootShow 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6823,7 +7648,7 @@ export interface RenderStylesProps {
   foo: string;
 }
 
-export default function RenderStyles(props: RenderStylesProps) {
+function RenderStyles(props: RenderStylesProps) {
   return (
     <>
       {props.foo === \\"bar\\" ? (
@@ -6840,11 +7665,14 @@ export default function RenderStyles(props: RenderStylesProps) {
     </>
   );
 }
+
+export default RenderStyles;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > self-referencing component 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6854,7 +7682,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return (
     <View>
       <Text>{props.name}</Text>
@@ -6867,11 +7695,14 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > self-referencing component with children 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6881,12 +7712,12 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return (
     <View>
       <Text>{props.name}</Text>
 
-      <Text>{props.children}</Text>
+      {props.children}
 
       {props.name === \\"Batman\\" ? (
         <>
@@ -6900,11 +7731,14 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > showWithFor 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6919,7 +7753,7 @@ interface Props {
   items: string[];
 }
 
-export default function NestedShow(props: Props) {
+function NestedShow(props: Props) {
   return (
     <>
       {props.conditionA ? (
@@ -6938,11 +7772,50 @@ export default function NestedShow(props: Props) {
     </>
   );
 }
+
+export default NestedShow;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > showWithRootText 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowRootText(props: Props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          <Text>ContentA</Text>
+        </>
+      ) : (
+        <View>
+          <Text>else-condition-A</Text>
+        </View>
+      )}
+    </>
+  );
+}
+
+export default ShowRootText;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > spreadAttrs 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6952,14 +7825,17 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   return <View {...attrs} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > spreadNestedProps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6969,14 +7845,17 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   return <View {...props.nested} />;
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > spreadProps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -6986,14 +7865,72 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyBasicComponent(props: any) {
+function MyBasicComponent(props: any) {
   return <View {...props} />;
 }
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > styleClassAndCss 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function MyComponent(props: any) {
+  return (
+    <View
+      style={{
+        width: \\"100%\\",
+        ...styles.view1,
+      }}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
+});
+
+export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function StylePropClassAndCss(props: any) {
+  return <View style={{ ...styles.view1, ...props.attributes.style }} />;
+}
+
+const styles = StyleSheet.create({
+  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
+});
+
+export default StylePropClassAndCss;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > subComponent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7004,14 +7941,17 @@ import {
 } from \\"react-native\\";
 import Foo from \\"./foo-sub-component.lite\\";
 
-export default function SubComponent(props: any) {
+function SubComponent(props: any) {
   return <Foo />;
 }
+
+export default SubComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > svgComponent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7021,7 +7961,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function SvgComponent(props: any) {
+function SvgComponent(props: any) {
   return (
     <View
       fill=\\"none\\"
@@ -7042,11 +7982,14 @@ export default function SvgComponent(props: any) {
     </View>
   );
 }
+
+export default SvgComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > typeDependency 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7055,25 +7998,29 @@ import {
   Image,
   Text,
 } from \\"react-native\\";
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
+
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
 };
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export.lite\\";
 
-export default function TypeDependency(props: TypeDependencyProps) {
+function TypeDependency(props: TypeDependencyProps) {
   return (
     <View>
       <Text>{props.foo}</Text>
     </View>
   );
 }
+
+export default TypeDependency;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > use-style 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7083,7 +8030,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return (
     <View type=\\"button\\">
       <Text>Button</Text>
@@ -7092,11 +8039,14 @@ export default function MyComponent(props: any) {
 }
 
 const styles = StyleSheet.create({});
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > use-style-and-css 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7106,7 +8056,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return (
     <View type=\\"button\\" style={styles.view1}>
       <Text>Button</Text>
@@ -7117,11 +8067,14 @@ export default function MyComponent(props: any) {
 const styles = StyleSheet.create({
   view1: { background: \\"blue\\", color: \\"white\\" },
 });
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > jsx > Typescript Test > use-style-outside-component 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7131,7 +8084,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return (
     <View type=\\"button\\">
       <Text>Button</Text>
@@ -7140,11 +8093,46 @@ export default function MyComponent(props: any) {
 }
 
 const styles = StyleSheet.create({});
+
+export default MyComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > useTarget 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function UseTargetComponent(props: any) {
+  function name() {
+    const prefix = \\"rn\\";
+    return prefix + \\"foo\\";
+  }
+
+  const [lastName, setLastName] = useState(() => \\"bar\\");
+
+  return (
+    <View>
+      <Text>{name()}</Text>
+    </View>
+  );
+}
+
+export default UseTargetComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > basic 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7155,7 +8143,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   return (
@@ -7165,11 +8153,14 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > bindGroup 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7180,7 +8171,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [tortilla, setTortilla] = useState(() => \\"Plain\\");
 
   const [fillings, setFillings] = useState(() => []);
@@ -7242,11 +8233,14 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > bindProperty 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7257,16 +8251,19 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [value, setValue] = useState(() => \\"hello\\");
 
   return <View value={value} />;
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > classDirective 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7277,46 +8274,32 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [focus, setFocus] = useState(() => true);
 
   return <View />;
 }
 
 MyComponent.defaultProps = {};
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > context 1`] = `
-"import * as React from \\"react\\";
-import {
-  FlatList,
-  ScrollView,
-  View,
-  StyleSheet,
-  Image,
-  Text,
-} from \\"react-native\\";
-import { useState, useContext } from \\"react\\";
-
-export default function MyComponent(props) {
-  const [activeTab, setActiveTab] = useState(() => 0);
-
-  const disabled = useContext(\\"disabled\\");
-
-  return (
-    <Context.Provider value={activeTab}>
-      <View>
-        <Text>{activeTab}</Text>
-      </View>
-    </Context.Provider>
-  );
-}
-"
+"'>' expected. (34:13)
+  32 | return (
+  33 |
+> 34 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+     |             ^
+  35 |
+  36 |
+  37 |"
 `;
 
 exports[`React Native > svelte > Javascript Test > each 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7327,7 +8310,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
 
   return (
@@ -7340,11 +8323,14 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > eventHandlers 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7354,7 +8340,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   function log(msg = \\"hello\\") {
     console.log(msg);
   }
@@ -7373,11 +8359,14 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > html 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7388,16 +8377,19 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
 
   return <View dangerouslySetInnerHTML={{ __html: html }} />;
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > ifElse 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7408,7 +8400,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [show, setShow] = useState(() => true);
 
   function toggle() {
@@ -7429,11 +8421,14 @@ export default function MyComponent(props) {
     </>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > imports 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7445,7 +8440,7 @@ import {
 import { useState } from \\"react\\";
 import Button from \\"./Button.lite\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [disabled, setDisabled] = useState(() => false);
 
   return (
@@ -7456,11 +8451,14 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > lifecycleHooks 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7471,7 +8469,7 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
@@ -7488,11 +8486,14 @@ export default function MyComponent(props) {
 
   return <View />;
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > reactive 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7503,7 +8504,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   function lowercaseName() {
@@ -7518,11 +8519,14 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > reactiveWithFn 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7533,7 +8537,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [a, setA] = useState(() => 2);
 
   const [b, setB] = useState(() => 5);
@@ -7565,11 +8569,14 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > slots 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7579,28 +8586,26 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || <Text>default</Text>}
+      {props.slotTest || (
+        <View>
+          <Text>default</Text>
+        </View>
+      )}
     </View>
   );
 }
 
-MyComponent.defaultProps = {
-  children: <Text>default</Text>,
-  slotTest: (
-    <View>
-      <Text>default</Text>
-    </View>
-  ),
-};
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > style 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7610,16 +8615,19 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   return <View />;
 }
 
 const styles = StyleSheet.create({});
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > textExpressions 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7630,7 +8638,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props) {
+function MyComponent(props) {
   const [a, setA] = useState(() => 5);
 
   const [b, setB] = useState(() => 12);
@@ -7645,11 +8653,14 @@ export default function MyComponent(props) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > basic 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7660,7 +8671,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   return (
@@ -7670,11 +8681,14 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > bindGroup 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7685,7 +8699,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [tortilla, setTortilla] = useState(() => \\"Plain\\");
 
   const [fillings, setFillings] = useState(() => []);
@@ -7747,11 +8761,14 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > bindProperty 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7762,16 +8779,19 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [value, setValue] = useState(() => \\"hello\\");
 
   return <View value={value} />;
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > classDirective 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7782,46 +8802,32 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [focus, setFocus] = useState(() => true);
 
   return <View />;
 }
 
 MyComponent.defaultProps = {};
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > context 1`] = `
-"import * as React from \\"react\\";
-import {
-  FlatList,
-  ScrollView,
-  View,
-  StyleSheet,
-  Image,
-  Text,
-} from \\"react-native\\";
-import { useState, useContext } from \\"react\\";
-
-export default function MyComponent(props: any) {
-  const [activeTab, setActiveTab] = useState(() => 0);
-
-  const disabled = useContext(\\"disabled\\");
-
-  return (
-    <Context.Provider value={activeTab}>
-      <View>
-        <Text>{activeTab}</Text>
-      </View>
-    </Context.Provider>
-  );
-}
-"
+"'>' expected. (34:13)
+  32 | return (
+  33 |
+> 34 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+     |             ^
+  35 |
+  36 |
+  37 |"
 `;
 
 exports[`React Native > svelte > Typescript Test > each 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7832,7 +8838,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
 
   return (
@@ -7845,11 +8851,14 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > eventHandlers 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7859,7 +8868,7 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   function log(msg = \\"hello\\") {
     console.log(msg);
   }
@@ -7878,11 +8887,14 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > html 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7893,16 +8905,19 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
 
   return <View dangerouslySetInnerHTML={{ __html: html }} />;
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > ifElse 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7913,7 +8928,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [show, setShow] = useState(() => true);
 
   function toggle() {
@@ -7934,11 +8949,14 @@ export default function MyComponent(props: any) {
     </>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > imports 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7950,7 +8968,7 @@ import {
 import { useState } from \\"react\\";
 import Button from \\"./Button.lite\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [disabled, setDisabled] = useState(() => false);
 
   return (
@@ -7961,11 +8979,14 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > lifecycleHooks 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -7976,7 +8997,7 @@ import {
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
@@ -7993,11 +9014,14 @@ export default function MyComponent(props: any) {
 
   return <View />;
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > reactive 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -8008,7 +9032,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   function lowercaseName() {
@@ -8023,11 +9047,14 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > reactiveWithFn 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -8038,7 +9065,7 @@ import {
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [a, setA] = useState(() => 2);
 
   const [b, setB] = useState(() => 5);
@@ -8070,11 +9097,14 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > slots 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -8084,28 +9114,26 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return (
     <View>
-      {props.children}
-      {props.slotTest}
+      {props.children || <Text>default</Text>}
+      {props.slotTest || (
+        <View>
+          <Text>default</Text>
+        </View>
+      )}
     </View>
   );
 }
 
-MyComponent.defaultProps = {
-  children: <Text>default</Text>,
-  slotTest: (
-    <View>
-      <Text>default</Text>
-    </View>
-  ),
-};
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > style 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -8115,16 +9143,19 @@ import {
   Text,
 } from \\"react-native\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   return <View />;
 }
 
 const styles = StyleSheet.create({});
+
+export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > textExpressions 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import {
   FlatList,
   ScrollView,
@@ -8135,7 +9166,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyComponent(props: any) {
+function MyComponent(props: any) {
   const [a, setA] = useState(() => 5);
 
   const [b, setB] = useState(() => 12);
@@ -8150,5 +9181,7 @@ export default function MyComponent(props: any) {
     </View>
   );
 }
+
+export default MyComponent;
 "
 `;

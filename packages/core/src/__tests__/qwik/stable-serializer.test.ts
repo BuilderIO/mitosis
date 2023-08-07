@@ -1,4 +1,4 @@
-import { stableJSONserialize } from '../../generators/qwik/stable-serialize';
+import { stableJSONserialize } from '../../generators/qwik/helpers/stable-serialize';
 
 describe('stable-serializer', () => {
   test('is an expression', () => {

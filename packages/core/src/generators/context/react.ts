@@ -4,15 +4,19 @@ import { MitosisContext } from '../../types/mitosis-context';
 
 type ContextToReactOptions = {
   format?: boolean;
+  preact?: boolean;
+  typescript?: boolean;
 };
 
 export const contextToReact =
-  (options: ContextToReactOptions = {}) =>
+  (options: ContextToReactOptions = { typescript: false, preact: false }) =>
   ({ context }: { context: MitosisContext }): string => {
     let str = `
-  import { createContext } from 'react';
+  import { createContext } from '${options.preact ? 'preact' : 'react'}';
 
-  export default createContext(${stringifyContextValue(context.value)})
+  export default createContext${options.typescript ? '<any>' : ''}(${stringifyContextValue(
+      context.value,
+    )})
   `;
 
     if (options.format !== false) {

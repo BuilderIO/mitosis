@@ -1,21 +1,23 @@
 import * as babel from '@babel/core';
-const jsxPlugin = require('@babel/plugin-syntax-jsx');
-const tsPreset = require('@babel/preset-typescript');
-const decorators = require('@babel/plugin-syntax-decorators');
+import decorators from '@babel/plugin-syntax-decorators';
+import tsPlugin from '@babel/plugin-syntax-typescript';
+import tsPreset from '@babel/preset-typescript';
 import type { Visitor } from '@babel/traverse';
-import { pipe } from 'fp-ts/lib/function';
-import { checkIsGetter } from './patterns';
+import { identity, pipe } from 'fp-ts/lib/function';
+import { checkIsGetter, replaceFunctionWithGetter, replaceGetterWithFunction } from './patterns';
 
 const handleErrorOrExpression = <VisitorContextType = any>({
   code,
   useCode,
   result,
   visitor,
+  stripTypes,
 }: {
   code: string;
   useCode: string;
   result: string | null;
   visitor: Visitor<VisitorContextType>;
+  stripTypes: boolean;
 }) => {
   try {
     // If it can't, e.g. this is an expression or code fragment, modify the code below and try again
@@ -39,7 +41,7 @@ const handleErrorOrExpression = <VisitorContextType = any>({
       // e.g. if the code parsed is { ... } babel will treat that as a block by deafult, unless processed as an expression
       // that is an object
       `let _ = ${useCode}`,
-      (code) => babelTransformCode(code, visitor),
+      (code) => babelTransformCode(code, visitor, stripTypes),
       trimSemicolons,
       // Remove our fake variable assignment
       (str) => str.replace(/let _ =\s/, ''),
@@ -56,23 +58,34 @@ const handleErrorOrExpression = <VisitorContextType = any>({
   }
 };
 
-export const babelTransform = <VisitorContextType = any>(
-  code: string,
-  visitor?: Visitor<VisitorContextType>,
-) => {
+const babelTransform = <VisitorContextType = any>({
+  code,
+  visitor,
+  stripTypes,
+}: {
+  code: string;
+  visitor?: Visitor<VisitorContextType>;
+  stripTypes: boolean;
+}) => {
   return babel.transform(code, {
     sourceFileName: 'file.tsx',
     configFile: false,
     babelrc: false,
-    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     parserOpts: { allowReturnOutsideFunction: true },
-    plugins: [[decorators, { legacy: true }], jsxPlugin, ...(visitor ? [() => ({ visitor })] : [])],
+    ...(stripTypes ? { presets: [[tsPreset, { isTSX: true, allExtensions: true }]] } : {}),
+    plugins: [
+      [tsPlugin, { isTSX: true }],
+      [decorators, { legacy: true }],
+      ...(visitor ? [() => ({ visitor })] : []),
+    ],
   });
 };
+
 export const babelTransformCode = <VisitorContextType = any>(
   code: string,
   visitor?: Visitor<VisitorContextType>,
-) => babelTransform(code, visitor)?.code || '';
+  stripTypes = false,
+) => babelTransform({ code, visitor, stripTypes })?.code || '';
 
 // Babel adds trailing semicolons, but for expressions we need those gone
 // TODO: maybe detect if the original code ended with one, and keep it if so, for the case
@@ -112,6 +125,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
   code: string,
   visitor: Visitor<VisitorContextType>,
   initialType: ExpressionType = 'unknown',
+  stripTypes = false,
 ): string => {
   if (!code) {
     return '';
@@ -121,9 +135,8 @@ export const babelTransformExpression = <VisitorContextType = any>(
 
   return pipe(
     code,
+    isGetter ? replaceGetterWithFunction : identity,
     (code) => {
-      code = isGetter ? code.replace('get', 'function ') : code;
-
       const type = getType(code, initialType);
 
       const useCode = type === 'functionBody' ? `function(){${code}}` : code;
@@ -133,16 +146,17 @@ export const babelTransformExpression = <VisitorContextType = any>(
     ({ type, useCode }) => {
       if (type !== 'expression') {
         try {
-          return pipe(babelTransformCode(useCode, visitor), trimExpression(type));
+          return pipe(babelTransformCode(useCode, visitor, stripTypes), trimExpression(type));
         } catch (error) {
-          return handleErrorOrExpression({ code, useCode, result: null, visitor });
+          return handleErrorOrExpression({ code, useCode, result: null, visitor, stripTypes });
         }
       } else {
-        return handleErrorOrExpression({ code, useCode, result: null, visitor });
+        return handleErrorOrExpression({ code, useCode, result: null, visitor, stripTypes });
       }
     },
-    (transformed) => {
-      return isGetter ? transformed.replace('function ', 'get ') : transformed;
-    },
+    isGetter ? replaceFunctionWithGetter : identity,
   );
 };
+
+export const convertTypeScriptToJS = (code: string): string =>
+  babelTransformExpression(code, {}, 'unknown', true);

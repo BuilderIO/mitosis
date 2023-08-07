@@ -1,16 +1,20 @@
-import { Nullable } from '../../helpers/nullable';
+import { types } from '@babel/core';
+import { flow, identity, pipe } from 'fp-ts/lib/function';
+import { pickBy } from 'lodash';
+import { VALID_HTML_TAGS } from '../../constants/html_tags';
+import { babelTransformExpression } from '../../helpers/babel-transform';
 import { stringifyContextValue } from '../../helpers/get-state-object-string';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { Nullable } from '../../helpers/nullable';
+import { stripGetter } from '../../helpers/patterns';
+import {
+  replaceIdentifiers,
+  replacePropsIdentifier,
+  replaceStateIdentifier,
+} from '../../helpers/replace-identifiers';
+import { isSlotProperty, replaceSlotsInString } from '../../helpers/slots';
 import { ContextGetInfo, ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { ToVueOptions } from './types';
-import { pipe } from 'fp-ts/lib/function';
-import { babelTransformExpression } from '../../helpers/babel-transform';
-import { types } from '@babel/core';
-import { pickBy } from 'lodash';
-import { stripGetter } from '../../helpers/patterns';
-import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { VALID_HTML_TAGS } from '../../constants/html_tags';
 
 export const addPropertiesToJson =
   (properties: MitosisNode['properties']) =>
@@ -42,6 +46,9 @@ export function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
 }
 
+export const mapMitosisComponentToKebabCase = (componentName: string) =>
+  componentName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
 // Transform <FooBar> to <foo-bar> as Vue2 needs
 export const renameMitosisComponentsToKebabCase = (str: string) =>
   str.replace(/<\/?\w+/g, (match) => {
@@ -49,7 +56,7 @@ export const renameMitosisComponentsToKebabCase = (str: string) =>
     if (VALID_HTML_TAGS.includes(tagName)) {
       return match;
     } else {
-      return match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+      return mapMitosisComponentToKebabCase(match);
     }
   });
 
@@ -144,12 +151,28 @@ function prefixMethodsWithThis(input: string, component: MitosisComponent, optio
   }
 }
 
+function optionsApiStateAndPropsReplace(
+  name: string,
+  thisPrefix: string,
+  codeType: ProcessBinding['codeType'],
+) {
+  const prefixToUse = codeType === 'bindings' ? '' : thisPrefix + '.';
+
+  if (name === 'children' || name.startsWith('children.')) {
+    return `${prefixToUse}$slots.default`;
+  }
+  return isSlotProperty(name)
+    ? replaceSlotsInString(name, (x) => `${prefixToUse}$slots.${x}`)
+    : `${prefixToUse}${name}`;
+}
+
 type ProcessBinding = {
   code: string;
   options: ToVueOptions;
   json: MitosisComponent;
   preserveGetter?: boolean;
   thisPrefix?: 'this' | '_this';
+  codeType?: 'state' | 'hooks' | 'bindings' | 'hooks-deps' | 'properties';
 };
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
@@ -160,54 +183,57 @@ export const processBinding = ({
   json,
   preserveGetter = false,
   thisPrefix = 'this',
+  codeType,
 }: ProcessBinding): string => {
   try {
     return pipe(
-      stripStateAndPropsRefs(code, {
-        includeState: true,
-        // we don't want to process `props` in the Composition API because it has a `props` ref,
-        // therefore we can keep pointing to `props.${value}`
-        includeProps: options.api === 'options',
-        replaceWith: (name) => {
-          switch (options.api) {
-            case 'composition':
-              return name;
-            case 'options':
-              if (name === 'children' || name.startsWith('children.')) {
-                return '${thisPrefix}.$slots.default';
-              }
-              return `${thisPrefix}.${name}`;
-          }
-        },
+      code,
+      replacePropsIdentifier((name) => {
+        switch (options.api) {
+          // keep pointing to `props.${value}`
+          case 'composition':
+            const slotPrefix = codeType === 'bindings' ? '$slots' : 'useSlots()';
+
+            if (name === 'children' || name.startsWith('children.')) {
+              return `${slotPrefix}.default`;
+            }
+            return isSlotProperty(name)
+              ? replaceSlotsInString(name, (x) => `${slotPrefix}.${x}`)
+              : codeType === 'bindings'
+              ? name
+              : `props.${name}`;
+
+          case 'options':
+            return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
+        }
       }),
-      (x) => {
-        return pipe(
-          x,
-          (code) => processRefs({ input: code, component: json, options, thisPrefix }),
-          (code) => prefixMethodsWithThis(code, json, options),
-          (code) => (preserveGetter === false ? stripGetter(code) : code),
-        );
-      },
+      replaceStateIdentifier((name) => {
+        switch (options.api) {
+          case 'composition':
+            return name;
+          case 'options':
+            return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
+        }
+      }),
+      codeType === 'bindings'
+        ? identity
+        : flow(
+            (x) => processRefs({ input: x, component: json, options, thisPrefix }),
+            (x) => prefixMethodsWithThis(x, json, options),
+          ),
+      preserveGetter === false ? stripGetter : identity,
     );
   } catch (e) {
-    console.log('could not process bindings in ', { code });
+    console.error('could not process bindings in ', { code });
     throw e;
   }
 };
 
-export const getContextValue =
-  (args: Pick<ProcessBinding, 'options' | 'json' | 'thisPrefix'>) =>
-  ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
-    const valueStr = value
-      ? stringifyContextValue(value, {
-          valueMapper: (code) => processBinding({ code, ...args, preserveGetter: true }),
-        })
-      : ref
-      ? processBinding({ code: ref, ...args, preserveGetter: true })
-      : null;
+export const getContextValue = ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
+  const valueStr = value ? stringifyContextValue(value) : ref;
 
-    return valueStr;
-  };
+  return valueStr;
+};
 
 export const checkIfContextHasStrName = (context: ContextGetInfo | ContextSetInfo) => {
   // check if the name is wrapped in single or double quotes

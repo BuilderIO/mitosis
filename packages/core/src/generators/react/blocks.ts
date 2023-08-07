@@ -1,10 +1,13 @@
 import { camelCase, upperFirst } from 'lodash';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import isChildren from '../../helpers/is-children';
+import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
 import { getForArguments } from '../../helpers/nodes/for';
-import { selfClosingTags } from '../../parsers/jsx';
+import { isSlotProperty } from '../../helpers/slots';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode, ForNode } from '../../types/mitosis-node';
+import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
 import { closeFrag, getFragment, openFrag, processBinding, wrapInFragment } from './helpers';
 import { updateStateSettersInCode } from './state';
 import { ToReactOptions } from './types';
@@ -53,16 +56,8 @@ const NODE_MAPPERS: {
         return '';
       }
 
-      if (hasChildren) {
-        component.defaultProps = {
-          ...(component.defaultProps || {}),
-          children: {
-            code: renderChildren(),
-            type: 'property',
-          },
-        };
-      }
-      return `{${processBinding('props.children', options)}}`;
+      const children = processBinding('props.children', options);
+      return `{${children} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
     }
 
     let slotProp = processBinding(slotName as string, options).replace('name=', '');
@@ -71,16 +66,7 @@ const NODE_MAPPERS: {
       slotProp = `props.slot${upperFirst(camelCase(slotProp))}`;
     }
 
-    if (hasChildren) {
-      component.defaultProps = {
-        ...(component.defaultProps || {}),
-        [slotProp.replace('props.', '')]: {
-          code: renderChildren(),
-          type: 'property',
-        },
-      };
-    }
-    return `{${slotProp}}`;
+    return `{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
   },
   Fragment(json, options, component) {
     const wrap = wrapInFragment(json);
@@ -103,13 +89,22 @@ const NODE_MAPPERS: {
     ))}`;
   },
   Show(json, options, component) {
-    const wrap = wrapInFragment(json);
+    const wrap = wrapInFragment(json) || isRootTextNode(json);
+    const wrapElse =
+      json.meta.else &&
+      (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options, component))
       .join('\n')}${wrap ? closeFrag(options) : ''}
-    ) : ${!json.meta.else ? 'null' : blockToReact(json.meta.else as any, options, component)}}`;
+    ) : ${
+      !json.meta.else
+        ? 'null'
+        : (wrapElse ? openFrag(options) : '') +
+          blockToReact(json.meta.else as any, options, component) +
+          (wrapElse ? closeFrag(options) : '')
+    }}`;
   },
 };
 
@@ -127,6 +122,9 @@ const BINDING_MAPPERS: {
     | ((key: string, value: string, options?: ToReactOptions) => [string, string]);
 } = {
   ref(ref, value, options) {
+    if (options?.preact) {
+      return [ref, value];
+    }
     const regexp = /(.+)?props\.(.+)( |\)|;|\()?$/m;
     if (regexp.test(value)) {
       const match = regexp.exec(value);
@@ -161,8 +159,12 @@ export const blockToReact = (
     return text;
   }
   if (json.bindings._text?.code) {
-    const processed = processBinding(json.bindings._text.code as string, options);
-    if (options.type === 'native') {
+    const processed = processBinding(json.bindings._text.code, options);
+    if (
+      options.type === 'native' &&
+      !isChildren({ node: json }) &&
+      !isSlotProperty(json.bindings._text.code.split('.')[1] || '')
+    ) {
       return `<Text>{${processed}}</Text>`;
     }
     return `{${processed}}`;
@@ -222,6 +224,9 @@ export const blockToReact = (
       } else {
         str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
       }
+    } else if (key === 'style' && options.type === 'native' && json.name === 'ScrollView') {
+      // React Native's ScrollView has a different prop for styles: `contentContainerStyle`
+      str += ` contentContainerStyle={${useBindingValue}} `;
     } else {
       if (isValidAttributeName(key)) {
         str += ` ${key}={${useBindingValue}} `;
@@ -229,7 +234,7 @@ export const blockToReact = (
     }
   }
 
-  if (selfClosingTags.has(json.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
 

@@ -1,30 +1,31 @@
-import dedent from 'dedent';
+import { camelCase, some } from 'lodash';
 import { format } from 'prettier/standalone';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
+import { dashCase } from '../../helpers/dash-case';
+import { dedent } from '../../helpers/dedent';
+import { fastClone } from '../../helpers/fast-clone';
+import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import { getProps } from '../../helpers/get-props';
+import { getRefs } from '../../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
+import { has } from '../../helpers/has';
+import { indent } from '../../helpers/indent';
+import { isUpperCase } from '../../helpers/is-upper-case';
+import { mapRefs } from '../../helpers/map-refs';
+import { initializeOptions } from '../../helpers/merge-options';
 import { renderPreComponent } from '../../helpers/render-imports';
-import { selfClosingTags } from '../../parsers/jsx';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { collectCss } from '../../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { fastClone } from '../../helpers/fast-clone';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { collectClassString } from './collect-class-string';
-import { getProps } from '../../helpers/get-props';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import { dashCase } from '../../helpers/dash-case';
-import { collectCss } from '../../helpers/styles/collect-css';
-import { indent } from '../../helpers/indent';
-import { mapRefs } from '../../helpers/map-refs';
-import { getRefs } from '../../helpers/get-refs';
-import { camelCase, some } from 'lodash';
-import { isUpperCase } from '../../helpers/is-upper-case';
-import { has } from '../../helpers/has';
 
 const getCustomTagName = (name: string, options: ToLitOptions) => {
   if (!name || !isUpperCase(name[0])) {
@@ -109,7 +110,7 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
       }
     }
   }
-  if (selfClosingTags.has(json.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
   str += '>';
@@ -127,11 +128,13 @@ function processBinding(code: string) {
 }
 
 export const componentToLit: TranspilerGenerator<ToLitOptions> =
-  (options = {}) =>
+  (_options = {}) =>
   ({ component }) => {
+    const options = initializeOptions({ target: 'lit', component, defaults: _options });
+
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     const props = getProps(component);
     let css = collectCss(json);
@@ -140,7 +143,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
     mapRefs(component, (refName) => `this.${camelCase(refName)}`);
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     stripMetaProperties(json);
 
@@ -281,7 +284,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
   `;
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -294,7 +297,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };

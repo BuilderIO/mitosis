@@ -1,16 +1,16 @@
 import { Builder } from '@builder.io/react';
+import { BuilderElement } from '@builder.io/sdk';
+import json5, * as JSON5 from 'json5';
 import { omit, pick } from 'lodash';
 import traverse, { TraverseContext } from 'traverse';
+import { Plugin } from '..';
+import { createSingleBinding } from '../helpers/bindings';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
+import { builderElementToMitosisNode } from '../parsers/builder';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
-import * as JSON5 from 'json5';
-import { BuilderElement } from '@builder.io/sdk';
-import { builderElementToMitosisNode } from '../parsers/builder';
-import { Plugin } from '..';
-import { createSingleBinding } from '../helpers/bindings';
 
 function getComponentInputNames(componentName: string): string[] {
   const componentInfo = Builder.components.find((item) => item.name === componentName);
@@ -56,6 +56,16 @@ export const components: CompileAwayComponentsMap = {
     const properties: Record<string, string> = {};
     const bindings: Record<string, string> = {};
 
+    if (!node.properties.href && node.bindings.css) {
+      const css = json5.parse(node.bindings.css.code);
+      // When using button tag ensure we have all: unset and
+      // be sure that is the first style in the list
+      node.bindings.css.code = json5.stringify({
+        all: 'unset',
+        ...css,
+      });
+    }
+
     if ('link' in node.properties) {
       properties.href = node.properties.link!;
     }
@@ -63,10 +73,22 @@ export const components: CompileAwayComponentsMap = {
       bindings.href = node.properties.link!;
     }
     if ('text' in node.properties) {
-      properties.innerHTML = node.properties.text!;
+      node.children = [
+        createMitosisNode({
+          properties: {
+            _text: node.properties.text!,
+          },
+        }),
+      ];
     }
     if ('text' in node.bindings) {
-      bindings.innerHTML = node.properties.text!;
+      node.children = [
+        createMitosisNode({
+          bindings: {
+            _text: node.bindings.text!,
+          },
+        }),
+      ];
     }
     if ('openInNewTab' in node.bindings) {
       bindings.target = `${node.bindings.openInNewTab} ? '_blank' : '_self'`;
@@ -79,7 +101,7 @@ export const components: CompileAwayComponentsMap = {
     return createMitosisNode({
       ...node,
       // TODO: use 'button' tag for no link, and add `all: unset` to CSS string only then
-      name: hasLink ? 'a' : node.properties.$tagName || 'span',
+      name: hasLink ? 'a' : 'button',
       properties: {
         ...omit(node.properties, omitFields),
         ...properties,

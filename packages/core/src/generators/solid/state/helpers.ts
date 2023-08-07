@@ -1,10 +1,11 @@
 import { types } from '@babel/core';
+import { flow, identity } from 'fp-ts/lib/function';
+import { capitalize } from '../../../helpers/capitalize';
+import { replaceStateIdentifier } from '../../../helpers/replace-identifiers';
 import { stripStateAndPropsRefs } from '../../../helpers/strip-state-and-props-refs';
+import { transformStateSetters } from '../../../helpers/transform-state-setters';
 import { MitosisComponent } from '../../../types/mitosis-component';
 import { ToSolidOptions } from '../types';
-import { flow, identity } from 'fp-ts/lib/function';
-import { transformStateSetters } from '../../../helpers/transform-state-setters';
-import { capitalize } from '../../../helpers/capitalize';
 
 export const getStateSetterName = (stateName: string) => `set${capitalize(stateName)}`;
 
@@ -20,8 +21,7 @@ export const getStateTypeForValue = ({
   // e.g. state.useContent?.blocks[0].id => useContent
   const extractStateSliceName = stripStateAndPropsRefs(value).split('.')[0].split('?')[0];
 
-  const stateOverrideForValue: ToSolidOptions['state'] = (component.meta?.useMetadata?.solid as any)
-    ?.state?.[extractStateSliceName];
+  const stateOverrideForValue = component.meta?.useMetadata?.solid?.state?.[extractStateSliceName];
 
   const stateType = stateOverrideForValue || options.state;
 
@@ -89,34 +89,28 @@ const updateStateSettersInCode =
     }
   };
 
-const updateStateGettersInCode =
-  (options: ToSolidOptions, component: MitosisComponent) =>
-  (value: string): string =>
-    stripStateAndPropsRefs(value, {
-      includeState: true,
-      includeProps: false,
-      replaceWith: (name): string => {
-        const stateType = getStateTypeForValue({ value: name, component, options });
-        const state = component.state[name];
-        switch (stateType) {
-          case 'signals':
-            if (
-              // signal accessors are lazy, so we need to add a function call to property calls
-              state?.type === 'property' ||
-              // getters become plain functions, requiring a function call to access their value
-              state?.type === 'getter'
-            ) {
-              return `${name}()`;
-            } else {
-              return name;
-            }
-
-          case 'store':
-          case 'mutable':
-            return name;
+const updateStateGettersInCode = (options: ToSolidOptions, component: MitosisComponent) =>
+  replaceStateIdentifier((name) => {
+    const stateType = getStateTypeForValue({ value: name, component, options });
+    const state = component.state[name];
+    switch (stateType) {
+      case 'signals':
+        if (
+          // signal accessors are lazy, so we need to add a function call to property calls
+          state?.type === 'property' ||
+          // getters become plain functions, requiring a function call to access their value
+          state?.type === 'getter'
+        ) {
+          return `${name}()`;
+        } else {
+          return name;
         }
-      },
-    });
+
+      case 'store':
+      case 'mutable':
+        return name;
+    }
+  });
 
 export const updateStateCode = ({
   options,

@@ -8,7 +8,9 @@ type Props = {
 export default function MyBooleanAttribute(props: Props) {
   return (
     <div>
-      {props.children} {props.type}
+      <Show when={props.children}>
+        {props.children} {props.type}
+      </Show>
       <MyBooleanAttributeComponent toggle />
       <MyBooleanAttributeComponent toggle={true} />
       <MyBooleanAttributeComponent list={null} />

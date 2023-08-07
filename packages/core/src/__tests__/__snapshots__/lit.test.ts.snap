@@ -4,10 +4,6 @@ exports[`Lit > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-export interface Props {
-  showInput: boolean;
-}
-
 @customElement(\\"my-basic-ref-component\\")
 export default class MyBasicRefComponent extends LitElement {
   createRenderRoot() {
@@ -38,16 +34,16 @@ export default class MyBasicRefComponent extends LitElement {
 
   render() {
     return html\`
-         <style>.input {
- color: red;
+          <style>.input {
+  color: red;
 }
 </style>
-         <div>
-         \${
-           this.showInput
-             ? html\`<my-fragment>
+          <div>
+          \${
+            this.showInput
+              ? html\`<my-fragment>
            <input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                 this.onBlur()}
+                  this.onBlur()}
            @input=\${(event) => (this.name = event.target.value)} />
 
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
@@ -58,12 +54,12 @@ export default class MyBasicRefComponent extends LitElement {
              <option value=\\"86\\">GR 86</option>
            </select> </my-fragment
          >\`
-             : null
-         } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
-         Solid, or Web Component!
-       </div>
+              : null
+          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
+          Solid, or Web Component!
+        </div>
 
-       \`;
+        \`;
   }
 }
 "
@@ -76,10 +72,6 @@ exports[`Lit > jsx > Javascript Test > Basic 1`] = `
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface MyBasicComponentProps {
-  id: string;
-}
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
@@ -97,18 +89,20 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-padding: 10px;
+          <style>.div {
+  padding: 10px;
 }
 </style>
-        <div>
-        <input .value=\${DEFAULT_VALUES.name || this.name} @input=\${(myEvent) =>
+          <div>
+          <input .value=\${DEFAULT_VALUES.name || this.name} @input=\${(
+      myEvent
+    ) =>
       (this.name =
         myEvent.target.value)} /> Hello! I can run in React, Vue, Solid, or
-        Liquid!
-      </div>
+          Liquid!
+        </div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -129,29 +123,29 @@ export default class MyBasicForShowComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      \${this.names?.map(
-        (person, index) =>
-          html\`\${
-            person === this.name
-              ? html\`<input .value=\${this.name} @input=\${(event) => {
-                  this.name = event.target.value + \\" and \\" + person;
-                }} /> Hello \${person} ! I can run in
-      Qwik, Web Component, React, Vue, Solid, or Liquid! \`
-              : null
-          }\`
-      )}
-    </div>
 
-    \`;
+          <div>
+          \${this.names?.map(
+            (person, index) =>
+              html\`\${
+                person === this.name
+                  ? html\`<input .value=\${this.name} @input=\${(event) => {
+                      this.name = event.target.value + \\" and \\" + person;
+                    }} /> Hello \${person} ! I can run in
+          Qwik, Web Component, React, Vue, Solid, or Liquid! \`
+                  : null
+              }\`
+          )}
+        </div>
+
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Javascript Test > Basic Context 1`] = `
-"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+"import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -176,13 +170,15 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        \${myService.method(\\"hello\\") + this.name} Hello! I can run in React, Vue,
-        Solid, or Liquid! <input @input=\${(event) => this.onChange} />
-      </div>
 
-      \`;
+          <div>
+          \${
+            myService.method(\\"hello\\") + this.name
+          } Hello! I can run in React, Vue,
+          Solid, or Liquid! <input @input=\${(event) => this.onChange} />
+        </div>
+
+        \`;
   }
 }
 "
@@ -191,11 +187,6 @@ export default class MyBasicComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > Basic OnMount Update 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface Props {
-  hi: string;
-  bye: string;
-}
 
 @customElement(\\"my-basic-on-mount-update-component\\")
 export default class MyBasicOnMountUpdateComponent extends LitElement {
@@ -215,10 +206,10 @@ export default class MyBasicOnMountUpdateComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello \${this.name}</div>
 
-      \`;
+          <div>Hello \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -247,10 +238,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -279,10 +270,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -300,10 +291,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <input autocapitalize=\\"on\\" autocomplete=\\"on\\" .spellcheck=\\"\${true}\\" />
 
-    \`;
+          <input autocapitalize=\\"on\\" autocomplete=\\"on\\" .spellcheck=\\"\${true}\\" />
+
+        \`;
   }
 }
 "
@@ -314,11 +305,6 @@ exports[`Lit > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type Props = {
-  children: any;
-  type: string;
-};
 
 @customElement(\\"my-boolean-attribute\\")
 export default class MyBooleanAttribute extends LitElement {
@@ -331,32 +317,32 @@ export default class MyBooleanAttribute extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        \${this.children} \${this.type}
 
-        <my-boolean-attribute-component
-          .toggle=\\"\${true}\\"
-        ></my-boolean-attribute-component>
+          <div>
+          \${this.children ? html\`\${this.children} \${this.type}\` : null}
 
-        <my-boolean-attribute-component
-          .toggle=\\"\${true}\\"
-        ></my-boolean-attribute-component>
+          <my-boolean-attribute-component
+            .toggle=\\"\${true}\\"
+          ></my-boolean-attribute-component>
 
-        <my-boolean-attribute-component
-          .list=\\"\${null}\\"
-        ></my-boolean-attribute-component>
-      </div>
+          <my-boolean-attribute-component
+            .toggle=\\"\${true}\\"
+          ></my-boolean-attribute-component>
 
-      \`;
+          <my-boolean-attribute-component
+            .list=\\"\${null}\\"
+          ></my-boolean-attribute-component>
+        </div>
+
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Javascript Test > BasicChildComponent 1`] = `
-"import MyBasicComponent from \\"./basic.raw\\";
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+"import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -372,19 +358,19 @@ export default class MyBasicChildComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      <my-basic-component .id=\\"\${this.dev}\\"></my-basic-component>
 
-      <div>
-        <my-basic-on-mount-update-component
-          .hi=\\"\${this.name}\\"
-          .bye=\\"\${this.dev}\\"
-        ></my-basic-on-mount-update-component>
-      </div>
-    </div>
+          <div>
+          <my-basic-component .id=\\"\${this.dev}\\"></my-basic-component>
 
-    \`;
+          <div>
+            <my-basic-on-mount-update-component
+              .hi=\\"\${this.name}\\"
+              .bye=\\"\${this.dev}\\"
+            ></my-basic-on-mount-update-component>
+          </div>
+        </div>
+
+        \`;
   }
 }
 "
@@ -409,19 +395,19 @@ export default class MyBasicForComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      \${this.names?.map(
-        (person, index) => html\`<my-fragment>
+
+          <div>
+          \${this.names?.map(
+            (person, index) => html\`<my-fragment>
         <input .value=\${this.name} @input=\${(event) => {
-          this.name = event.target.value + \\" and \\" + person;
-        }} /> Hello \${person} ! I can run in
+              this.name = event.target.value + \\" and \\" + person;
+            }} /> Hello \${person} ! I can run in
         Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
       >\`
-      )}
-    </div>
+          )}
+        </div>
 
-    \`;
+        \`;
   }
 }
 "
@@ -430,10 +416,6 @@ export default class MyBasicForComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > BasicRef 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface Props {
-  showInput: boolean;
-}
 
 @customElement(\\"my-basic-ref-component\\")
 export default class MyBasicRefComponent extends LitElement {
@@ -461,16 +443,16 @@ export default class MyBasicRefComponent extends LitElement {
 
   render() {
     return html\`
-         <style>.input {
- color: red;
+          <style>.input {
+  color: red;
 }
 </style>
-         <div>
-         \${
-           this.showInput
-             ? html\`<my-fragment>
+          <div>
+          \${
+            this.showInput
+              ? html\`<my-fragment>
            <input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                 this.onBlur()}
+                  this.onBlur()}
            @input=\${(event) => (this.name = event.target.value)} />
 
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
@@ -481,12 +463,12 @@ export default class MyBasicRefComponent extends LitElement {
              <option value=\\"86\\">GR 86</option>
            </select> </my-fragment
          >\`
-             : null
-         } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
-         Solid, or Web Component!
-       </div>
+              : null
+          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
+          Solid, or Web Component!
+        </div>
 
-       \`;
+        \`;
   }
 }
 "
@@ -495,10 +477,6 @@ export default class MyBasicRefComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > BasicRefAssignment 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface Props {
-  showInput: boolean;
-}
 
 @customElement(\\"my-basic-ref-assignment-component\\")
 export default class MyBasicRefAssignmentComponent extends LitElement {
@@ -514,23 +492,23 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      <button  @click=\${(evt) => this.handlerClick(evt)} >Click</button>
 
-          </div>
-      \`;
+          <div >
+
+        <button  @click=\${(evt) => this.handlerClick(evt)} >Click</button>
+
+            </div>
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"export function usePrevious<T>(value: T) {
+"export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -542,10 +520,6 @@ exports[`Lit > jsx > Javascript Test > BasicRefPrevious 1`] = `
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface Props {
-  showInput: boolean;
-}
 
 @customElement(\\"my-previous-component\\")
 export default class MyPreviousComponent extends LitElement {
@@ -561,22 +535,22 @@ export default class MyPreviousComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      <h1 >
-              Now: 
-      \${this.count}
-      , before: 
-      \${prevCount}
 
-            </h1>
+          <div >
 
-            
-      <button  @click=\${(event) => (this.count += 1)} >Increment</button>
+        <h1 >
+                Now:
+        \${this.count}
+        , before:
+        \${prevCount}
 
-          </div>
-      \`;
+              </h1>
+
+
+        <button  @click=\${(event) => (this.count += 1)} >Increment</button>
+
+            </div>
+        \`;
   }
 }
 "
@@ -585,13 +559,6 @@ export default class MyPreviousComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > Button 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -614,34 +581,34 @@ export default class Button extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      \${
-        this.link
-          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
-              this.openLinkInNewTab ? \\"_blank\\" : undefined
-            } >
-                
-      \${this.text}
 
-              </a>\`
-          : null
-      }
+          <div >
 
-            
-      \${
-        !this.link
-          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
-                
-      \${this.text}
+        \${
+          this.link
+            ? html\`<a  \${spread(props.attributes)}  .href=\${
+                this.link
+              }  .target=\${this.openLinkInNewTab ? \\"_blank\\" : undefined} >
 
-              </button>\`
-          : null
-      }
+    \${this.text}
 
-          </div>
-      \`;
+            </a>\`
+            : null
+        }
+
+
+        \${
+          !this.link
+            ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
+
+    \${this.text}
+
+            </button>\`
+            : null
+        }
+
+            </div>
+        \`;
   }
 }
 "
@@ -650,21 +617,6 @@ export default class Button extends LitElement {
 exports[`Lit > jsx > Javascript Test > Columns 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
-
-  width?: number;
-};
-export interface ColumnProps {
-  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
-
-  space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
-
-  reverseColumnsWhenStacked?: boolean;
-}
 
 @customElement(\\"my-column\\")
 export default class Column extends LitElement {
@@ -694,35 +646,35 @@ export default class Column extends LitElement {
 
   render() {
     return html\`
-         <style>.div {
- display: flex;
- flex-direction: column;
- align-items: stretch;
- line-height: normal;
+          <style>.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
 }
 @media (max-width: 999px) {
- .div {
-   flex-direction: row;
- }
+  .div {
+    flex-direction: row;
+  }
 }
 @media (max-width: 639px) {
- .div {
-   flex-direction: row-reverse;
- }
+  .div {
+    flex-direction: row-reverse;
+  }
 }
 .div-2 {
- flex-grow: 1;
+  flex-grow: 1;
 }
 </style>
-         <div>
-         \${this.columns?.map(
-           (column, index) => html\`
+          <div>
+          \${this.columns?.map(
+            (column, index) => html\`
          <div>\${column.content} \${index}</div>
          \`
-         )}
-       </div>
+          )}
+        </div>
 
-       \`;
+        \`;
   }
 }
 "
@@ -731,11 +683,6 @@ export default class Column extends LitElement {
 exports[`Lit > jsx > Javascript Test > ContentSlotHtml 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};
 
 @customElement(\\"content-slot-code\\")
 export default class ContentSlotCode extends LitElement {
@@ -747,20 +694,20 @@ export default class ContentSlotCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <my-slot .name=\\"\${this.slotTesting}\\"></my-slot>
 
-        <div>
-          <hr />
+          <div>
+          <my-slot .name=\\"\${this.slotTesting}\\"></my-slot>
+
+          <div>
+            <hr />
+          </div>
+
+          <div>
+            <my-slot></my-slot>
+          </div>
         </div>
 
-        <div>
-          <my-slot></my-slot>
-        </div>
-      </div>
-
-      \`;
+        \`;
   }
 }
 "
@@ -770,9 +717,13 @@ exports[`Lit > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-type Props = {
-  [key: string]: string | JSX.Element;
-};
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
 
 @customElement(\\"content-slot-jsx-code\\")
 export default class ContentSlotJsxCode extends LitElement {
@@ -780,29 +731,53 @@ export default class ContentSlotJsxCode extends LitElement {
     return this;
   }
 
-  @property() slotTesting: any;
+  @property() slotContent: any;
   @property() children: any;
+  @property() slotReference: any;
+  @property() attributes: any;
+  @property() content: any;
+
+  @state() name = \\"king\\";
+  @state() showContent = false;
+
+  get cls() {
+    return this.slotContent && this.children ? \`\${this.name}-content\` : \\"\\";
+  }
+  show() {
+    this.slotContent ? 1 : \\"\\";
+  }
 
   render() {
     return html\`
-        
-        <div>
-        \${
-          this.slotTesting
-            ? html\`
-        <div>\${this.slotTesting}</div>
-        \`
-            : null
-        }
 
-        <div>
-          <hr />
-        </div>
+          \${
+            this.slotReference
+              ? html\`<div  class={state.cls}  .name=\${
+                  this.slotContent ? \\"name1\\" : \\"name2\\"
+                }  .title=\${this.slotContent ? \\"title1\\" : \\"title2\\"}  \${spread(
+                  props.attributes
+                )}  @click=\${(event) => this.show()} >
 
-        <div>\${this.children}</div>
-      </div>
+       \${
+         this.showContent && this.slotContent
+           ? html\`<my-slot  name=\\"content\\" >\${this.content}</my-slot>\`
+           : null
+       }
 
-      \`;
+
+       <div >
+
+       <hr  />
+
+               </div>
+
+
+       <div >\${this.children}</div>
+
+             </div>\`
+              : null
+          }
+        \`;
   }
 }
 "
@@ -812,11 +787,6 @@ exports[`Lit > jsx > Javascript Test > CustomCode 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
-
 @customElement(\\"custom-code\\")
 export default class CustomCode extends LitElement {
   createRenderRoot() {
@@ -880,9 +850,9 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-      \`;
+
+          <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+        \`;
   }
 }
 "
@@ -892,11 +862,6 @@ exports[`Lit > jsx > Javascript Test > Embed 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
-
 @customElement(\\"custom-code\\")
 export default class CustomCode extends LitElement {
   createRenderRoot() {
@@ -960,47 +925,25 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-      \`;
+
+          <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Javascript Test > Form 1`] = `
-"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+"import { Builder, builder } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface FormProps {
-  attributes?: any;
-  name?: string;
-  action?: string;
-  validate?: boolean;
-  method?: string;
-  builderBlock?: BuilderElement;
-  sendSubmissionsTo?: string;
-  sendSubmissionsToEmail?: string;
-  sendWithJs?: boolean;
-  contentType?: string;
-  customHeaders?: {
-    [key: string]: string;
-  };
-  successUrl?: string;
-  previewState?: FormState;
-  successMessage?: BuilderElement[];
-  errorMessage?: BuilderElement[];
-  sendingMessage?: BuilderElement[];
-  resetFormOnSubmit?: boolean;
-  errorMessagePath?: string;
-}
-export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 const spread = (properties) =>
   directive((part) => {
@@ -1261,60 +1204,60 @@ export default class FormComponent extends LitElement {
 
   render() {
     return html\`
-         <style>.pre {
- padding: 10px;
- color: red;
- text-align: center;
+          <style>.pre {
+  padding: 10px;
+  color: red;
+  text-align: center;
 }
 </style>
-         <form  .validate=\${this.validate}  ref=\\"formRef\\"  .action=\${
+          <form  .validate=\${this.validate}  ref=\\"formRef\\"  .action=\${
       !this.sendWithJs && this.action
     }  .method=\${this.method}  .name=\${this.name}  @submit=\${(event) =>
       this.onSubmit(event)}  \${spread(props.attributes)} >
-             
-       \${
-         this.builderBlock && this.builderBlock.children
-           ? html\`\${this.builderBlock?.children?.map(
-               (block, index) =>
-                 html\`<builder-block-component  .key=\${block.id}  .block=\${block}  .index=\${index} ></builder-block-component>\`
-             )}\`
-           : null
-       }
 
-             
-       \${
-         this.submissionState === \\"error\\"
-           ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this.errorMessage} ></builder-blocks>\`
-           : null
-       }
+        \${
+          this.builderBlock && this.builderBlock.children
+            ? html\`\${this.builderBlock?.children?.map(
+                (block, index) =>
+                  html\`<builder-block-component  .key=\${block.id}  .block=\${block}  .index=\${index} ></builder-block-component>\`
+              )}\`
+            : null
+        }
 
-             
-       \${
-         this.submissionState === \\"sending\\"
-           ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this.sendingMessage} ></builder-blocks>\`
-           : null
-       }
 
-             
-       \${
-         this.submissionState === \\"error\\" && this.responseData
-           ? html\`<pre >
-                 
+        \${
+          this.submissionState === \\"error\\"
+            ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this.errorMessage} ></builder-blocks>\`
+            : null
+        }
+
+
+        \${
+          this.submissionState === \\"sending\\"
+            ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this.sendingMessage} ></builder-blocks>\`
+            : null
+        }
+
+
+        \${
+          this.submissionState === \\"error\\" && this.responseData
+            ? html\`<pre >
+
        \${JSON.stringify(this.responseData, null, 2)}
 
                </pre>\`
-           : null
-       }
+            : null
+        }
 
-             
-       \${
-         this.submissionState === \\"success\\"
-           ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this.successMessage} ></builder-blocks>\`
-           : null
-       }
 
-           </form>
-       \`;
+        \${
+          this.submissionState === \\"success\\"
+            ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this.successMessage} ></builder-blocks>\`
+            : null
+        }
+
+            </form>
+        \`;
   }
 }
 "
@@ -1323,25 +1266,6 @@ export default class FormComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > Image 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-// TODO: AMP Support?
-export interface ImageProps {
-  _class?: string;
-  image: string;
-  sizes?: string;
-  lazy?: boolean;
-  height?: number;
-  width?: number;
-  altText?: string;
-  backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-
-  srcset?: string; // TODO: Implement support for custom aspect ratios
-
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
-
-  children?: any;
-}
 
 @customElement(\\"my-image\\")
 export default class Image extends LitElement {
@@ -1369,7 +1293,7 @@ export default class Image extends LitElement {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -1386,7 +1310,7 @@ export default class Image extends LitElement {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -1409,36 +1333,36 @@ export default class Image extends LitElement {
 
   render() {
     return html\`
-         <style>.img {
- opacity: 1;
- transition: opacity 0.2s ease-in-out;
- object-fit: cover;
- object-position: center;
+          <style>.img {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
 }
 </style>
-         <div>
-         <picture ref=\\"pictureRef\\">
-           \${
-             !this.useLazyLoading() || this.load
-               ? html\`<img class={'builder-image' +
+          <div>
+          <picture ref=\\"pictureRef\\">
+            \${
+              !this.useLazyLoading() || this.load
+                ? html\`<img class={'builder-image' +
            (props._class ? ' ' + props._class : '') + ' img'} .alt=\${
              this.altText
            }
            aria-role=\${this.altText ? \\"presentation\\" : undefined} .src=\${
-                   this.image
-                 }
+                    this.image
+                  }
            @load=\${(event) => this.setLoaded()} .srcset=\${this.srcset}
            .sizes=\${this.sizes} />\`
-               : null
-           }
+                : null
+            }
 
-           <source .srcset=\\"\${this.srcset}\\" />
-         </picture>
+            <source .srcset=\\"\${this.srcset}\\" />
+          </picture>
 
-         \${this.children}
-       </div>
+          \${this.children}
+        </div>
 
-       \`;
+        \`;
   }
 }
 "
@@ -1459,16 +1383,16 @@ export default class ImgStateComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      \${this.images?.map(
-        (item, index) => html\`<my-fragment>
+
+          <div>
+          \${this.images?.map(
+            (item, index) => html\`<my-fragment>
         <img .src=\\"\${item}\\" .key=\\"\${itemIndex}\\" /> </my-fragment
       >\`
-      )}
-    </div>
+          )}
+        </div>
 
-    \`;
+        \`;
   }
 }
 "
@@ -1479,23 +1403,6 @@ exports[`Lit > jsx > Javascript Test > Img 1`] = `
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface ImgProps {
-  attributes?: any;
-  imgSrc?: string;
-  altText?: string;
-  backgroundSize?: \\"cover\\" | \\"contain\\";
-  backgroundPosition?:
-    | \\"center\\"
-    | \\"top\\"
-    | \\"left\\"
-    | \\"right\\"
-    | \\"bottom\\"
-    | \\"top left\\"
-    | \\"top right\\"
-    | \\"bottom left\\"
-    | \\"bottom right\\";
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -1519,17 +1426,17 @@ export default class ImgComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <img .style=\${{
-          objectFit: this.backgroundSize || \\"cover\\",
-          objectPosition: this.backgroundPosition || \\"center\\",
-        }} \${spread(props.attributes)}
-      .key=\${(Builder.isEditing && this.imgSrc) || \\"default-key\\"} .alt=\${
+
+          <img .style=\${{
+            objectFit: this.backgroundSize || \\"cover\\",
+            objectPosition: this.backgroundPosition || \\"center\\",
+          }} \${spread(props.attributes)}
+        .key=\${(Builder.isEditing && this.imgSrc) || \\"default-key\\"} .alt=\${
       this.altText
     }
-      .src=\${this.imgSrc} />
+        .src=\${this.imgSrc} />
 
-      \`;
+        \`;
   }
 }
 "
@@ -1540,16 +1447,6 @@ exports[`Lit > jsx > Javascript Test > Input 1`] = `
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface FormInputProps {
-  type?: string;
-  attributes?: any;
-  name?: string;
-  value?: string;
-  placeholder?: string;
-  defaultValue?: string;
-  required?: boolean;
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -1572,17 +1469,48 @@ export default class FormInputComponent extends LitElement {
   @property() name: any;
   @property() value: any;
   @property() required: any;
+  @property() onChange: any;
 
   render() {
     return html\`
-        
-        <input \${spread(props.attributes)} .key=\${
+
+          <input \${spread(props.attributes)} .key=\${
       Builder.isEditing && this.defaultValue ? this.defaultValue : \\"default-key\\"
     } .placeholder=\${this.placeholder}
-      .type=\${this.type} .name=\${this.name} .value=\${this.value}
-      .defaultValue=\${this.defaultValue} .required=\${this.required} />
+        .type=\${this.type} .name=\${this.name} .value=\${this.value}
+        .defaultValue=\${this.defaultValue} .required=\${this.required} @input=\${(
+      event
+    ) => this.onChange?.(event.target.value)} />
 
-      \`;
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-stepper\\")
+export default class Stepper extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  handleChange(value) {
+    console.log(value);
+  }
+
+  render() {
+    return html\`
+
+          <form-input-component  name=\\"kingzez\\"  type=\\"text\\"  @change=\${(
+            value
+          ) => this.handleChange(value)} ></form-input-component>
+        \`;
   }
 }
 "
@@ -1591,11 +1519,6 @@ export default class FormInputComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > RawText 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface RawTextProps {
-  attributes?: any;
-  text?: string; // builderBlock?: any;
-}
 
 @customElement(\\"raw-text\\")
 export default class RawText extends LitElement {
@@ -1608,11 +1531,11 @@ export default class RawText extends LitElement {
 
   render() {
     return html\`
-        
-        <span  class={props.attributes?.class || props.attributes?.className}  .innerHTML=\${
-          this.text || \\"\\"
-        } ></span>
-      \`;
+
+          <span  class={props.attributes?.class || props.attributes?.className}  .innerHTML=\${
+            this.text || \\"\\"
+          } ></span>
+        \`;
   }
 }
 "
@@ -1621,12 +1544,6 @@ export default class RawText extends LitElement {
 exports[`Lit > jsx > Javascript Test > Section 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface SectionProps {
-  maxWidth?: number;
-  attributes?: any;
-  children?: any;
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -1648,19 +1565,19 @@ export default class SectionComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <section  \${spread(props.attributes)}  .style=\${
+
+          <section  \${spread(props.attributes)}  .style=\${
       this.maxWidth && typeof this.maxWidth === \\"number\\"
         ? {
             maxWidth: this.maxWidth,
           }
         : undefined
     } >
-            
-      \${this.children}
 
-          </section>
-      \`;
+        \${this.children}
+
+            </section>
+        \`;
   }
 }
 "
@@ -1669,12 +1586,6 @@ export default class SectionComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > Section 2`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface SectionProps {
-  maxWidth?: number;
-  attributes?: any;
-  children?: any;
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -1698,22 +1609,22 @@ export default class SectionStateComponent extends LitElement {
 
   render() {
     return html\`
-        
-        \${
-          this.max
-            ? html\`\${this.items?.map(
-                (item, index) =>
-                  html\`<section  \${spread(props.attributes)}  .style=\${{
-                    maxWidth: item + this.max,
-                  }} >
-                  
-      \${this.children}
 
-                </section>\`
-              )}\`
-            : null
-        }
-      \`;
+          \${
+            this.max
+              ? html\`\${this.items?.map(
+                  (item, index) =>
+                    html\`<section  \${spread(props.attributes)}  .style=\${{
+                      maxWidth: item + this.max,
+                    }} >
+
+        \${this.children}
+
+                  </section>\`
+                )}\`
+              : null
+          }
+        \`;
   }
 }
 "
@@ -1724,17 +1635,6 @@ exports[`Lit > jsx > Javascript Test > Select 1`] = `
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface FormSelectProps {
-  options?: {
-    name?: string;
-    value: string;
-  }[];
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -1758,22 +1658,22 @@ export default class SelectComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <select  \${spread(props.attributes)}  .value=\${this.value}  .key=\${
+
+          <select  \${spread(props.attributes)}  .value=\${this.value}  .key=\${
       Builder.isEditing && this.defaultValue ? this.defaultValue : \\"default-key\\"
     }  .defaultValue=\${this.defaultValue}  .name=\${this.name} >
-            
-      \${this.options?.map(
-        (option, index) =>
-          html\`<option  .value=\${option.value}  data-index=\${index} >
-                  
-      \${option.name || option.value}
 
-                </option>\`
-      )}
+        \${this.options?.map(
+          (option, index) =>
+            html\`<option  .value=\${option.value}  data-index=\${index} >
 
-          </select>
-      \`;
+    \${option.name || option.value}
+
+              </option>\`
+        )}
+
+            </select>
+        \`;
   }
 }
 "
@@ -1783,10 +1683,6 @@ exports[`Lit > jsx > Javascript Test > SlotDefault 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-type Props = {
-  [key: string]: string;
-};
-
 @customElement(\\"slot-code\\")
 export default class SlotCode extends LitElement {
   createRenderRoot() {
@@ -1795,14 +1691,14 @@ export default class SlotCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <my-slot>
-          <div>Default content</div>
-        </my-slot>
-      </div>
 
-      \`;
+          <div>
+          <my-slot>
+            <div>Default content</div>
+          </my-slot>
+        </div>
+
+        \`;
   }
 }
 "
@@ -1814,10 +1710,6 @@ exports[`Lit > jsx > Javascript Test > SlotHtml 1`] = `
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-type Props = {
-  [key: string]: string;
-};
-
 @customElement(\\"slot-code\\")
 export default class SlotCode extends LitElement {
   createRenderRoot() {
@@ -1826,17 +1718,17 @@ export default class SlotCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      <content-slot-code >
-              
-      <my-slot  .testing=\${(<div>Hello</div>)} ></my-slot>
 
-            </content-slot-code>
+          <div >
 
-          </div>
-      \`;
+        <content-slot-code >
+
+        <my-slot  .testing=\${(<div>Hello</div>)} ></my-slot>
+
+              </content-slot-code>
+
+            </div>
+        \`;
   }
 }
 "
@@ -1848,10 +1740,6 @@ exports[`Lit > jsx > Javascript Test > SlotJsx 1`] = `
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-type Props = {
-  [key: string]: string;
-};
-
 @customElement(\\"slot-code\\")
 export default class SlotCode extends LitElement {
   createRenderRoot() {
@@ -1860,15 +1748,15 @@ export default class SlotCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      <content-slot-code  .slotTesting=\${(
-        <div>Hello</div>
-      )} ></content-slot-code>
 
-          </div>
-      \`;
+          <div >
+
+        <content-slot-code  .slotTesting=\${(
+          <div>Hello</div>
+        )} ></content-slot-code>
+
+            </div>
+        \`;
   }
 }
 "
@@ -1878,10 +1766,6 @@ exports[`Lit > jsx > Javascript Test > SlotNamed 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-type Props = {
-  [key: string]: string;
-};
-
 @customElement(\\"slot-code\\")
 export default class SlotCode extends LitElement {
   createRenderRoot() {
@@ -1890,32 +1774,26 @@ export default class SlotCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <my-slot name=\\"top\\"></my-slot>
 
-        <my-slot name=\\"left\\">Default left</my-slot>
+          <div>
+          <my-slot name=\\"top\\"></my-slot>
 
-        <my-slot>Default Child</my-slot>
-      </div>
+          <my-slot name=\\"left\\">Default left</my-slot>
 
-      \`;
+          <my-slot>Default Child</my-slot>
+        </div>
+
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Javascript Test > Stamped.io 1`] = `
-"import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+"import { kebabCase, snakeCase } from \\"lodash\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
-};
 
 @customElement(\\"smile-reviews\\")
 export default class SmileReviews extends LitElement {
@@ -1951,38 +1829,38 @@ export default class SmileReviews extends LitElement {
 
   render() {
     return html\`
-         <style>.input {
- display: block;
+          <style>.input {
+  display: block;
 }
 .textarea {
- display: block;
+  display: block;
 }
 .button {
- display: block;
+  display: block;
 }
 .review {
- margin: 10px;
- padding: 10px;
- background: white;
- display: flex;
- border-radius: 5px;
- box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 .img {
- height: 30px;
- width: 30px;
- margin-right: 10px;
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
 }
 </style>
-         <div  data-user=\${this.name} >
-             
-       <button  @click=\${(event) =>
-         (this.showReviewPrompt = true)} >Write a review</button>
+          <div  data-user=\${this.name} >
 
-             
-       \${
-         this.showReviewPrompt || \\"asdf\\"
-           ? html\`<input  placeholder=\\"Email\\"  />
+        <button  @click=\${(event) =>
+          (this.showReviewPrompt = true)} >Write a review</button>
+
+
+        \${
+          this.showReviewPrompt || \\"asdf\\"
+            ? html\`<input  placeholder=\\"Email\\"  />
        <input  placeholder=\\"Title\\"  />
        <textarea  placeholder=\\"How was your experience?\\" ></textarea>
        <button  @click=\${(event) => {
@@ -1991,35 +1869,35 @@ export default class SmileReviews extends LitElement {
        }} >
                  Submit
                </button>\`
-           : null
-       }
+            : null
+        }
 
-             
-       \${this.reviews?.map(
-         (review, index) =>
-           html\`<div  .key=\${review.id} >
-                   
+
+        \${this.reviews?.map(
+          (review, index) =>
+            html\`<div  .key=\${review.id} >
+
        <img  .src=\${review.avatar}  />
 
-                   
+
        <div  class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'} >
-                     
-       <div >N: 
+
+       <div >N:
        \${index}</div>
 
-                     
+
        <div >\${review.author}</div>
 
-                     
+
        <div >\${review.reviewMessage}</div>
 
                    </div>
 
                  </div>\`
-       )}
+        )}
 
-           </div>
-       \`;
+            </div>
+        \`;
   }
 }
 "
@@ -2028,11 +1906,6 @@ export default class SmileReviews extends LitElement {
 exports[`Lit > jsx > Javascript Test > Submit 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -2053,10 +1926,12 @@ export default class SubmitButton extends LitElement {
 
   render() {
     return html\`
-        
-        <button type=\\"submit\\" \${spread(props.attributes)}>\${this.text}</button>
 
-      \`;
+          <button type=\\"submit\\" \${spread(props.attributes)}>\${
+      this.text
+    }</button>
+
+        \`;
   }
 }
 "
@@ -2067,14 +1942,6 @@ exports[`Lit > jsx > Javascript Test > Text 1`] = `
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface TextProps {
-  attributes?: any;
-  rtlMode: boolean;
-  text?: string;
-  content?: string;
-  builderBlock?: any;
-}
 
 @customElement(\\"my-text\\")
 export default class Text extends LitElement {
@@ -2089,13 +1956,13 @@ export default class Text extends LitElement {
 
   render() {
     return html\`
-        
-        <div  .contentEditable=\${allowEditingText || undefined}  data-name=\${{
+
+          <div  .contentEditable=\${allowEditingText || undefined}  data-name=\${{
       test: this.name || \\"any name\\",
     }}  .innerHTML=\${
       this.text || this.content || this.name || '<p class=\\"text-lg\\">my name</p>'
     } ></div>
-      \`;
+        \`;
   }
 }
 "
@@ -2104,14 +1971,6 @@ export default class Text extends LitElement {
 exports[`Lit > jsx > Javascript Test > Textarea 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface TextareaProps {
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-  placeholder?: string;
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -2135,16 +1994,16 @@ export default class Textarea extends LitElement {
 
   render() {
     return html\`
-        
-        <textarea
-        \${spread(props.attributes)}
-        .placeholder=\\"\${this.placeholder}\\"
-        .name=\\"\${this.name}\\"
-        .value=\\"\${this.value}\\"
-        .defaultValue=\\"\${this.defaultValue}\\"
-      ></textarea>
 
-      \`;
+          <textarea
+          \${spread(props.attributes)}
+          .placeholder=\\"\${this.placeholder}\\"
+          .name=\\"\${this.name}\\"
+          .value=\\"\${this.value}\\"
+          .defaultValue=\\"\${this.defaultValue}\\"
+        ></textarea>
+
+        \`;
   }
 }
 "
@@ -2153,32 +2012,6 @@ export default class Textarea extends LitElement {
 exports[`Lit > jsx > Javascript Test > Video 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface VideoProps {
-  attributes?: any;
-  video?: string;
-  autoPlay?: boolean;
-  controls?: boolean;
-  muted?: boolean;
-  loop?: boolean;
-  playsInline?: boolean;
-  aspectRatio?: number;
-  width?: number;
-  height?: number;
-  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
-  position?:
-    | \\"center\\"
-    | \\"top\\"
-    | \\"left\\"
-    | \\"right\\"
-    | \\"bottom\\"
-    | \\"top left\\"
-    | \\"top right\\"
-    | \\"bottom left\\"
-    | \\"bottom right\\";
-  posterImage?: string;
-  lazyLoad?: boolean;
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -2206,8 +2039,8 @@ export default class Video extends LitElement {
 
   render() {
     return html\`
-        
-        <video  preload=\\"none\\"  \${spread(props.attributes)}  .style=\${{
+
+          <video  preload=\\"none\\"  \${spread(props.attributes)}  .style=\${{
       width: \\"100%\\",
       height: \\"100%\\",
       ...this.attributes?.style,
@@ -2221,7 +2054,7 @@ export default class Video extends LitElement {
     }  .autoplay=\${this.autoPlay}  .muted=\${this.muted}  .controls=\${
       this.controls
     }  .loop=\${this.loop} ></video>
-      \`;
+        \`;
   }
 }
 "
@@ -2248,10 +2081,52 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>Hello \${this.name}</div>
 
-       \`;
+          <div>Hello \${this.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > basicForNoTagReference 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-for-no-tag-ref-component\\")
+export default class MyBasicForNoTagRefComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() actions: any;
+
+  @state() name = \\"VincentW\\";
+  @state() TagName = \\"div\\";
+  @state() tag = \\"span\\";
+
+  get TagNameGetter() {
+    return \\"span\\";
+  }
+
+  render() {
+    return html\`
+
+          <state.TagNameGetter>
+          Hello
+          <state.tag>\${this.name}</state.tag>
+
+          \${this.actions?.map(
+            (action, index) => html\`<state.TagName>
+          <action.icon></action.icon>
+
+          <span>\${action.text}</span> </state.TagName
+        >\`
+          )}
+        </state.TagNameGetter>
+
+        \`;
   }
 }
 "
@@ -2261,11 +2136,6 @@ exports[`Lit > jsx > Javascript Test > basicForwardRef 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}
-
 @customElement(\\"my-basic-forward-ref-component\\")
 export default class MyBasicForwardRefComponent extends LitElement {
   createRenderRoot() {
@@ -2281,16 +2151,16 @@ export default class MyBasicForwardRefComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.input {
-color: red;
+          <style>.input {
+  color: red;
 }
 </style>
-        <div>
-        <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+          <div>
+          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
       (this.name = event.target.value)} />
-      </div>
+        </div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -2300,11 +2170,6 @@ exports[`Lit > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}
-
 @customElement(\\"my-basic-forward-ref-component\\")
 export default class MyBasicForwardRefComponent extends LitElement {
   createRenderRoot() {
@@ -2320,16 +2185,16 @@ export default class MyBasicForwardRefComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.input {
-color: red;
+          <style>.input {
+  color: red;
 }
 </style>
-        <div>
-        <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+          <div>
+          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
       (this.name = event.target.value)} />
-      </div>
+        </div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -2366,10 +2231,10 @@ export default class MyBasicOnUpdateReturnComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello! \${this.name}</div>
 
-      \`;
+          <div>Hello! \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -2387,13 +2252,13 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-padding: 10px;
+          <style>.div {
+  padding: 10px;
 }
 </style>
-        <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+          <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -2411,13 +2276,13 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-padding: 10px;
+          <style>.div {
+  padding: 10px;
 }
 </style>
-        <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+          <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -2435,13 +2300,13 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-padding: 10px;
+          <style>.div {
+  padding: 10px;
 }
 </style>
-        <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+          <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -2450,11 +2315,6 @@ padding: 10px;
 exports[`Lit > jsx > Javascript Test > className 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};
 
 @customElement(\\"class-name-code\\")
 export default class ClassNameCode extends LitElement {
@@ -2466,14 +2326,14 @@ export default class ClassNameCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <div>Without Binding</div>
 
-        <div class=\\"{state.bindings}\\">With binding</div>
-      </div>
+          <div>
+          <div>Without Binding</div>
 
-      \`;
+          <div class=\\"{state.bindings}\\">With binding</div>
+        </div>
+
+        \`;
   }
 }
 "
@@ -2496,14 +2356,14 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-padding: 10px;
+          <style>.div {
+  padding: 10px;
 }
 </style>
-        <div  class={state.classState + ' div'}  .style=\${this.styleState} >
-            Hello! I can run in React, Vue, Solid, or Liquid!
-          </div>
-      \`;
+          <div  class={state.classState + ' div'}  .style=\${this.styleState} >
+              Hello! I can run in React, Vue, Solid, or Liquid!
+            </div>
+        \`;
   }
 }
 "
@@ -2516,10 +2376,6 @@ import Context2 from \\"@dummy/2\\";
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-export interface ComponentWithContextProps {
-  content: string;
-}
-
 @customElement(\\"component-with-context\\")
 export default class ComponentWithContext extends LitElement {
   createRenderRoot() {
@@ -2530,12 +2386,12 @@ export default class ComponentWithContext extends LitElement {
 
   render() {
     return html\`
-        
-        <my-fragment>
-        <my-fragment>\${foo.value}</my-fragment>
-      </my-fragment>
 
-      \`;
+          <my-fragment>
+          <my-fragment>\${foo.value}</my-fragment>
+        </my-fragment>
+
+        \`;
   }
 }
 "
@@ -2548,10 +2404,6 @@ import Context2 from \\"@dummy/2\\";
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-export interface ComponentWithContextProps {
-  content: string;
-}
-
 @customElement(\\"component-with-context\\")
 export default class ComponentWithContext extends LitElement {
   createRenderRoot() {
@@ -2562,14 +2414,14 @@ export default class ComponentWithContext extends LitElement {
 
   render() {
     return html\`
-        
-        <my-fragment>
-        <my-fragment>\${foo.value}</my-fragment>
 
-        <div>other</div>
-      </my-fragment>
+          <my-fragment>
+          <my-fragment>\${foo.value}</my-fragment>
 
-      \`;
+          <div>other</div>
+        </my-fragment>
+
+        \`;
   }
 }
 "
@@ -2592,10 +2444,10 @@ export default class RenderContent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>setting context</div>
 
-    \`;
+          <div>setting context</div>
+
+        \`;
   }
 }
 "
@@ -2604,16 +2456,6 @@ export default class RenderContent extends LitElement {
 exports[`Lit > jsx > Javascript Test > defaultProps 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  buttonText?: string; // no default value
-
-  link?: string;
-  openLinkInNewTab?: boolean;
-  onClick?: () => void;
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -2638,36 +2480,36 @@ export default class Button extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      \${
-        this.link
-          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
-              this.openLinkInNewTab ? \\"_blank\\" : undefined
-            } >
-                
-      \${this.text}
 
-              </a>\`
-          : null
-      }
+          <div >
 
-            
-      \${
-        !this.link
-          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)}  @click=\${(
-              event
-            ) => this.onClick(event)} >
-                
-      \${this.buttonText}
+        \${
+          this.link
+            ? html\`<a  \${spread(props.attributes)}  .href=\${
+                this.link
+              }  .target=\${this.openLinkInNewTab ? \\"_blank\\" : undefined} >
 
-              </button>\`
-          : null
-      }
+    \${this.text}
 
-          </div>
-      \`;
+            </a>\`
+            : null
+        }
+
+
+        \${
+          !this.link
+            ? html\`<button  type=\\"button\\"  \${spread(
+                props.attributes
+              )}  @click=\${(event) => this.onClick(event)} >
+
+    \${this.buttonText}
+
+            </button>\`
+            : null
+        }
+
+            </div>
+        \`;
   }
 }
 "
@@ -2676,14 +2518,6 @@ export default class Button extends LitElement {
 exports[`Lit > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-  onClick: () => void;
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -2707,52 +2541,48 @@ export default class Button extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      \${
-        this.link
-          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
-              this.openLinkInNewTab ? \\"_blank\\" : undefined
-            } >
-                
-      \${this.text}
 
-              </a>\`
-          : null
-      }
+          <div >
 
-            
-      \${
-        !this.link
-          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)}  @click=\${(
-              event
-            ) => this.onClick(event)} >
-                
-      \${this.text}
+        \${
+          this.link
+            ? html\`<a  \${spread(props.attributes)}  .href=\${
+                this.link
+              }  .target=\${this.openLinkInNewTab ? \\"_blank\\" : undefined} >
 
-              </button>\`
-          : null
-      }
+    \${this.text}
 
-          </div>
-      \`;
+            </a>\`
+            : null
+        }
+
+
+        \${
+          !this.link
+            ? html\`<button  type=\\"button\\"  \${spread(
+                props.attributes
+              )}  @click=\${(event) => this.onClick(event)} >
+
+    \${this.text}
+
+            </button>\`
+            : null
+        }
+
+            </div>
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Javascript Test > defaultValsWithTypes 1`] = `
-"const DEFAULT_VALUES: Props = {
+"const DEFAULT_VALUES = {
   name: \\"Sami\\",
 };
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type Props = {
-  name: string;
-};
 
 @customElement(\\"component-with-types\\")
 export default class ComponentWithTypes extends LitElement {
@@ -2764,10 +2594,10 @@ export default class ComponentWithTypes extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello \${this.name || DEFAULT_VALUES.name}</div>
 
-      \`;
+          <div>Hello \${this.name || DEFAULT_VALUES.name}</div>
+
+        \`;
   }
 }
 "
@@ -2791,10 +2621,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>\${this.refToUse}</div>
 
-    \`;
+          <div>\${this.refToUse}</div>
+
+        \`;
   }
 }
 "
@@ -2805,12 +2635,6 @@ exports[`Lit > jsx > Javascript Test > import types 1`] = `
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type RenderContentProps = {
-  options?: GetContentOptions;
-  content: BuilderContent;
-  renderContentProps: RenderBlockProps;
-};
 
 const spread = (properties) =>
   directive((part) => {
@@ -2837,14 +2661,14 @@ export default class RenderContent extends LitElement {
 
   render() {
     return html\`
-        
-        <render-block
-        \${spread(
-          state.getRenderContentProps(props.renderContentProps.block, 0)
-        )}
-      ></render-block>
 
-      \`;
+          <render-block
+          \${spread(
+            state.getRenderContentProps(props.renderContentProps.block, 0)
+          )}
+        ></render-block>
+
+        \`;
   }
 }
 "
@@ -2868,10 +2692,10 @@ export default class MultipleOnUpdate extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -2908,10 +2732,10 @@ export default class MultipleOnUpdateWithDeps extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
 
-      \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -2941,10 +2765,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <input \${spread(state.attrs)} \${spread(props)} />
 
-      \`;
+          <input \${spread(state.attrs)} \${spread(props)} />
+
+        \`;
   }
 }
 "
@@ -2953,11 +2777,6 @@ export default class MyBasicComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > nestedShow 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-interface Props {
-  conditionA: boolean;
-  conditionB: boolean;
-}
 
 @customElement(\\"nested-show\\")
 export default class NestedShow extends LitElement {
@@ -2970,24 +2789,24 @@ export default class NestedShow extends LitElement {
 
   render() {
     return html\`
-        
-        \${
-          this.conditionA
-            ? html\`\${
-                !this.conditionB
-                  ? html\`
-      <div>if condition A and condition B</div>
-      \`
-                  : html\`
-      <div>else-condition-B</div>
-      \`
-              }\`
-            : html\`
-      <div>else-condition-A</div>
-      \`
-        }
 
-      \`;
+          \${
+            this.conditionA
+              ? html\`\${
+                  !this.conditionB
+                    ? html\`
+        <div>if condition A and condition B</div>
+        \`
+                    : html\`
+        <div>else-condition-B</div>
+        \`
+                }\`
+              : html\`
+    <div>else-condition-A</div>
+    \`
+          }
+
+        \`;
   }
 }
 "
@@ -3005,25 +2824,35 @@ export default class NestedStyles extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-display: flex;
-foo: var(--bar);
+          <style>.div {
+  display: flex;
+  --bar: red;
+  color: var(--bar);
 }
 @media (max-width: env(--mobile)) {
-.div {
-  display: block;
-}
+  .div {
+    display: block;
+  }
 }
 .div:hover {
-display: flex;
+  display: flex;
+}
+.div:active {
+  display: inline;
 }
 .div .nested-selector {
-display: grid;
+  display: grid;
+}
+.div .nested-selector:hover {
+  display: block;
+}
+.div.nested-selector:active {
+  display: inline-block;
 }
 </style>
-        <div>Hello world</div>
+          <div>Hello world</div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -3045,10 +2874,10 @@ export default class OnInit extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -3062,10 +2891,6 @@ exports[`Lit > jsx > Javascript Test > onInit 1`] = `
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-type Props = {
-  name: string;
-};
-
 @customElement(\\"on-init\\")
 export default class OnInit extends LitElement {
   createRenderRoot() {
@@ -3078,10 +2903,10 @@ export default class OnInit extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Default name defined by parent \${this.name}</div>
 
-      \`;
+          <div>Default name defined by parent \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -3106,10 +2931,10 @@ export default class Comp extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -3131,10 +2956,10 @@ export default class OnUpdate extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -3143,10 +2968,6 @@ export default class OnUpdate extends LitElement {
 exports[`Lit > jsx > Javascript Test > onUpdateWithDeps 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type Props = {
-  size: string;
-};
 
 @customElement(\\"on-update-with-deps\\")
 export default class OnUpdateWithDeps extends LitElement {
@@ -3165,10 +2986,10 @@ export default class OnUpdateWithDeps extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
 
-      \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -3179,20 +3000,10 @@ exports[`Lit > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
-export function run<T>(value: T) {}
+export function run(value) {}
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type Types = {
-  s: any[];
-};
-interface IPost {
-  len: number;
-}
-export interface MyBasicComponentProps {
-  id: string;
-}
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
@@ -3202,10 +3013,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
 
-      \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -3214,19 +3025,6 @@ export default class MyBasicComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > preserveTyping 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export type A = \\"test\\";
-export interface C {
-  n: \\"test\\";
-}
-type B = \\"test2\\";
-interface D {
-  n: \\"test\\";
-}
-export interface MyBasicComponentProps {
-  name: string;
-  age?: number;
-}
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
@@ -3238,10 +3036,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
-      \`;
+          <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -3250,11 +3048,6 @@ export default class MyBasicComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > propsDestructure 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type Props = {
-  children: any;
-  type: string;
-};
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
@@ -3269,13 +3062,13 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        \${this.children} \${this.type} Hello! I can run in React, Vue, Solid, or
-        Liquid!
-      </div>
 
-      \`;
+          <div>
+          \${this.children} \${this.type} Hello! I can run in React, Vue, Solid, or
+          Liquid!
+        </div>
+
+        \`;
   }
 }
 "
@@ -3285,11 +3078,6 @@ exports[`Lit > jsx > Javascript Test > propsInterface 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-interface Person {
-  name: string;
-  age?: number;
-}
-
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
   createRenderRoot() {
@@ -3300,10 +3088,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
-      \`;
+          <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -3313,11 +3101,6 @@ exports[`Lit > jsx > Javascript Test > propsType 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-type Person = {
-  name: string;
-  age?: number;
-};
-
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
   createRenderRoot() {
@@ -3328,10 +3111,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
-      \`;
+          <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -3356,53 +3139,40 @@ export default class OnUpdate extends LitElement {
   };
 
   updated() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 
   render() {
     return html\`
-         
-         <div></div>
 
-       \`;
+          <div></div>
+
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Javascript Test > renderBlock 1`] = `
-"import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+"import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
 import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
 import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import \\"./block-styles.js\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import \\"./render-repeated-block.js\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
 import \\"./render-component-with-context.js\\";
 import \\"./render-component.js\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import \\"./render-repeated-block.js\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-import type {
-  BuilderContextInterface,
-  RegisteredComponent,
-} from \\"../../context/types.js\\";
-import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-import type { Nullable } from \\"../../types/typescript.js\\";
-import type { RenderComponentProps } from \\"./render-component\\";
-import type { RepeatData } from \\"./types.js\\";
-export type RenderBlockProps = {
-  block: BuilderBlock;
-  context: BuilderContextInterface;
-};
 
 const spread = (properties) =>
   directive((part) => {
@@ -3438,8 +3208,8 @@ export default class RenderBlock extends LitElement {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-         Could not find a registered component named \\"\${componentName}\\". 
-         If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -3596,16 +3366,16 @@ export default class RenderBlock extends LitElement {
 
   render() {
     return html\`
-         
-         \${
-           this.shouldWrap
-             ? html\`\${
-                 isEmptyHtmlElement(this.tag)
-                   ? html\`<state.tag  \${spread(state.attributes)}  \${spread(
-                       state.actions
-                     )} ></state.tag>\`
-                   : null
-               }
+
+          \${
+            this.shouldWrap
+              ? html\`\${
+                  isEmptyHtmlElement(this.tag)
+                    ? html\`<state.tag  \${spread(state.attributes)}  \${spread(
+                        state.actions
+                      )} ></state.tag>\`
+                    : null
+                }
        \${
          !isEmptyHtmlElement(this.tag) && this.repeatItemData
            ? html\`\${this.repeatItemData?.map(
@@ -3619,65 +3389,57 @@ export default class RenderBlock extends LitElement {
            ? html\`<state.tag  \${spread(state.attributes)}  \${spread(
                state.actions
              )} >
-                 
-       <state.renderComponentTag  \${spread(
-         state.renderComponentProps
-       )} ></state.renderComponentTag>
 
-                 
+        <state.renderComponentTag  \${spread(
+          state.renderComponentProps
+        )} ></state.renderComponentTag>
 
-                 
-       \${this.childrenWithoutParentComponent?.map(
-         (child, index) =>
-           html\`<render-block  .key=\${
-             \\"render-block-\\" + child.id
-           }  .block=\${child}  .context=\${
-             this.childrenContext
-           } ></render-block>\`
-       )}
 
-                 
-       \${this.childrenWithoutParentComponent?.map(
-         (child, index) =>
-           html\`<block-styles  .key=\${
-             \\"block-style-\\" + child.id
-           }  .block=\${child}  .context=\${
-             this.childrenContext
-           } ></block-styles>\`
-       )}
 
-               </state.tag>\`
+
+        \${this.childrenWithoutParentComponent?.map(
+          (child, index) =>
+            html\`<render-block  .key=\${
+              \\"render-block-\\" + child.id
+            }  .block=\${child}  .context=\${
+              this.childrenContext
+            } ></render-block>\`
+        )}
+
+
+        \${this.childrenWithoutParentComponent?.map(
+          (child, index) =>
+            html\`<block-styles  .key=\${
+              \\"block-style-\\" + child.id
+            }  .block=\${child}  .context=\${
+              this.childrenContext
+            } ></block-styles>\`
+        )}
+
+                </state.tag>\`
            : null
        }\`
-             : html\`<state.renderComponentTag  \${spread(
-                 state.renderComponentProps
-               )} ></state.renderComponentTag>\`
-         }
-       \`;
+              : html\`<state.renderComponentTag  \${spread(
+                  state.renderComponentProps
+                )} ></state.renderComponentTag>\`
+          }
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Javascript Test > renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
+"import \\"@dummy/context.js\\";
+import {
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import \\"@dummy/context.js\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};
 
 @customElement(\\"render-content\\")
 export default class RenderContent extends LitElement {
@@ -3698,17 +3460,17 @@ export default class RenderContent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-display: flex;
-flex-direction: columns;
+          <style>.div {
+  display: flex;
+  flex-direction: columns;
 }
 </style>
-        <div  @click=\${(event) => trackClick(this.content.id)} >
-            
-      <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
+          <div  @click=\${(event) => trackClick(this.content.id)} >
 
-          </div>
-      \`;
+        <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
+
+            </div>
+        \`;
   }
 }
 "
@@ -3717,13 +3479,6 @@ flex-direction: columns;
 exports[`Lit > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}
 
 const spread = (properties) =>
   directive((part) => {
@@ -3746,34 +3501,34 @@ export default class Button extends LitElement {
 
   render() {
     return html\`
-        
-        <my-fragment >
-            
-      \${
-        this.link
-          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
-              this.openLinkInNewTab ? \\"_blank\\" : undefined
-            } >
-                
-      \${this.text}
 
-              </a>\`
-          : null
-      }
+          <my-fragment >
 
-            
-      \${
-        !this.link
-          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
-                
-      \${this.text}
+        \${
+          this.link
+            ? html\`<a  \${spread(props.attributes)}  .href=\${
+                this.link
+              }  .target=\${this.openLinkInNewTab ? \\"_blank\\" : undefined} >
 
-              </button>\`
-          : null
-      }
+    \${this.text}
 
-          </my-fragment>
-      \`;
+            </a>\`
+            : null
+        }
+
+
+        \${
+          !this.link
+            ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
+
+    \${this.text}
+
+            </button>\`
+            : null
+        }
+
+            </my-fragment>
+        \`;
   }
 }
 "
@@ -3782,10 +3537,6 @@ export default class Button extends LitElement {
 exports[`Lit > jsx > Javascript Test > rootShow 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-export interface RenderStylesProps {
-  foo: string;
-}
 
 @customElement(\\"render-styles\\")
 export default class RenderStyles extends LitElement {
@@ -3797,18 +3548,18 @@ export default class RenderStyles extends LitElement {
 
   render() {
     return html\`
-        
-        \${
-          this.foo === \\"bar\\"
-            ? html\`
-      <div>Bar</div>
-      \`
-            : html\`
-      <div>Foo</div>
-      \`
-        }
 
-      \`;
+          \${
+            this.foo === \\"bar\\"
+              ? html\`
+    <div>Bar</div>
+    \`
+              : html\`
+    <div>Foo</div>
+    \`
+          }
+
+        \`;
   }
 }
 "
@@ -3828,9 +3579,9 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      \${this.name} \${
+
+          <div>
+          \${this.name} \${
       this.name === \\"Batman\\"
         ? html\`<my-component
         name=\\"Bruce Wayne\\"
@@ -3838,9 +3589,9 @@ export default class MyComponent extends LitElement {
       >\`
         : null
     }
-    </div>
+        </div>
 
-    \`;
+        \`;
   }
 }
 "
@@ -3861,9 +3612,9 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      \${this.name} \${this.children} \${
+
+          <div>
+          \${this.name} \${this.children} \${
       this.name === \\"Batman\\"
         ? html\`<my-component
         name=\\"Bruce\\"
@@ -3872,9 +3623,9 @@ export default class MyComponent extends LitElement {
       >\`
         : null
     }
-    </div>
+        </div>
 
-    \`;
+        \`;
   }
 }
 "
@@ -3883,11 +3634,6 @@ export default class MyComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > showWithFor 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-interface Props {
-  conditionA: boolean;
-  items: string[];
-}
 
 @customElement(\\"nested-show\\")
 export default class NestedShow extends LitElement {
@@ -3900,20 +3646,49 @@ export default class NestedShow extends LitElement {
 
   render() {
     return html\`
-        
-        \${
-          this.conditionA
-            ? html\`\${this.items?.map(
-                (item, index) => html\`
-      <div .key=\\"\${idx}\\">\${item}</div>
-      \`
-              )}\`
-            : html\`
-      <div>else-condition-A</div>
-      \`
-        }
 
-      \`;
+          \${
+            this.conditionA
+              ? html\`\${this.items?.map(
+                  (item, index) => html\`
+        <div .key=\\"\${idx}\\">\${item}</div>
+        \`
+                )}\`
+              : html\`
+    <div>else-condition-A</div>
+    \`
+          }
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > showWithRootText 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"show-root-text\\")
+export default class ShowRootText extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() conditionA: any;
+
+  render() {
+    return html\`
+
+          \${
+            this.conditionA
+              ? html\` ContentA \`
+              : html\`
+    <div>else-condition-A</div>
+    \`
+          }
+
+        \`;
   }
 }
 "
@@ -3939,10 +3714,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <input \${spread(attrs)} />
 
-    \`;
+          <input \${spread(attrs)} />
+
+        \`;
   }
 }
 "
@@ -3970,10 +3745,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <input \${spread(props.nested)} />
 
-    \`;
+          <input \${spread(props.nested)} />
+
+        \`;
   }
 }
 "
@@ -3999,10 +3774,64 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <input \${spread(props)} />
 
-    \`;
+          <input \${spread(props)} />
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > styleClassAndCss 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+          <style>.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+</style>
+          <div  .style=\${{
+            width: \\"100%\\",
+          }} ></div>
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"style-prop-class-and-css\\")
+export default class StylePropClassAndCss extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() attributes: any;
+
+  render() {
+    return html\`
+          <style>.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+</style>
+          <div  class={props.attributes.class + ' div'}  .style=\${this.attributes.style} ></div>
+        \`;
   }
 }
 "
@@ -4022,10 +3851,10 @@ export default class SubComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <my-foo></my-foo>
 
-    \`;
+          <my-foo></my-foo>
+
+        \`;
   }
 }
 "
@@ -4043,29 +3872,29 @@ export default class SvgComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <svg  fill=\\"none\\"  role=\\"img\\"  .viewBox=\${
-        \\"0 0 \\" + 42 + \\" \\" + 42
-      }  .width=\${42}  .height=\${42} >
-          
-    <defs >
-            
-    <filter  id=\\"prefix__filter0_f\\"  filterUnits=\\"userSpaceOnUse\\" >
-              
-    <feFlood  result=\\"BackgroundImageFix\\" ></feFlood>
 
-              
-    <feBlend  in=\\"SourceGraphic\\"  in2=\\"BackgroundImageFix\\"  result=\\"shape\\" ></feBlend>
+          <svg  fill=\\"none\\"  role=\\"img\\"  .viewBox=\${
+            \\"0 0 \\" + 42 + \\" \\" + 42
+          }  .width=\${42}  .height=\${42} >
 
-              
-    <feGaussianBlur  result=\\"effect1_foregroundBlur\\"  .stdDeviation=\${7} ></feGaussianBlur>
+        <defs >
 
-            </filter>
+        <filter  id=\\"prefix__filter0_f\\"  filterUnits=\\"userSpaceOnUse\\" >
 
-          </defs>
+        <feFlood  result=\\"BackgroundImageFix\\" ></feFlood>
 
-        </svg>
-    \`;
+
+        <feBlend  in=\\"SourceGraphic\\"  in2=\\"BackgroundImageFix\\"  result=\\"shape\\" ></feBlend>
+
+
+        <feGaussianBlur  result=\\"effect1_foregroundBlur\\"  .stdDeviation=\${7} ></feGaussianBlur>
+
+                </filter>
+
+              </defs>
+
+            </svg>
+        \`;
   }
 }
 "
@@ -4074,13 +3903,6 @@ export default class SvgComponent extends LitElement {
 exports[`Lit > jsx > Javascript Test > typeDependency 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
-export type TypeDependencyProps = {
-  foo: Foo;
-  foo2: Foo2;
-};
 
 @customElement(\\"type-dependency\\")
 export default class TypeDependency extends LitElement {
@@ -4092,10 +3914,10 @@ export default class TypeDependency extends LitElement {
 
   render() {
     return html\`
-        
-        <div>\${this.foo}</div>
 
-      \`;
+          <div>\${this.foo}</div>
+
+        \`;
   }
 }
 "
@@ -4113,16 +3935,16 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        <style>button {
-background: blue;
-color: white;
-font-size: 12px;
-outline: 1px solid black;
+          <style>button {
+  background: blue;
+  color: white;
+  font-size: 12px;
+  outline: 1px solid black;
 }
 </style>
-        <button type=\\"button\\">Button</button>
+          <button type=\\"button\\">Button</button>
 
-      \`;
+        \`;
   }
 }
 "
@@ -4140,19 +3962,19 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.button {
-background: blue;
-color: white;
+          <style>button {
+  font-size: 12px;
+  outline: 1px solid black;
 }
 
-button {
-font-size: 12px;
-outline: 1px solid black;
+.button {
+  background: blue;
+  color: white;
 }
 </style>
-        <button type=\\"button\\">Button</button>
+          <button type=\\"button\\">Button</button>
 
-      \`;
+        \`;
   }
 }
 "
@@ -4170,16 +3992,44 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        <style>button {
-background: blue;
-color: white;
-font-size: 12px;
-outline: 1px solid black;
+          <style>button {
+  background: blue;
+  color: white;
+  font-size: 12px;
+  outline: 1px solid black;
 }
 </style>
-        <button type=\\"button\\">Button</button>
+          <button type=\\"button\\">Button</button>
 
-      \`;
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > useTarget 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"use-target-component\\")
+export default class UseTargetComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() lastName = \\"bar\\";
+
+  get name() {
+    const prefix = \\"li\\";
+    return prefix + \\"foo\\";
+  }
+
+  render() {
+    return html\`
+
+          <div>\${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -4199,10 +4049,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>Hello \${this.name} ! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
 
-    \`;
+          <div>Hello \${this.name} ! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
+
+        \`;
   }
 }
 "
@@ -4246,16 +4096,16 @@ export default class MyBasicRefComponent extends LitElement {
 
   render() {
     return html\`
-         <style>.input {
- color: red;
+          <style>.input {
+  color: red;
 }
 </style>
-         <div>
-         \${
-           this.showInput
-             ? html\`<my-fragment>
+          <div>
+          \${
+            this.showInput
+              ? html\`<my-fragment>
            <input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                 this.onBlur()}
+                  this.onBlur()}
            @input=\${(event) => (this.name = event.target.value)} />
 
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
@@ -4266,12 +4116,12 @@ export default class MyBasicRefComponent extends LitElement {
              <option value=\\"86\\">GR 86</option>
            </select> </my-fragment
          >\`
-             : null
-         } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
-         Solid, or Web Component!
-       </div>
+              : null
+          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
+          Solid, or Web Component!
+        </div>
 
-       \`;
+        \`;
   }
 }
 "
@@ -4305,18 +4155,20 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-padding: 10px;
+          <style>.div {
+  padding: 10px;
 }
 </style>
-        <div>
-        <input .value=\${DEFAULT_VALUES.name || this.name} @input=\${(myEvent) =>
+          <div>
+          <input .value=\${DEFAULT_VALUES.name || this.name} @input=\${(
+      myEvent
+    ) =>
       (this.name =
         myEvent.target.value)} /> Hello! I can run in React, Vue, Solid, or
-        Liquid!
-      </div>
+          Liquid!
+        </div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -4337,29 +4189,29 @@ export default class MyBasicForShowComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      \${this.names?.map(
-        (person, index) =>
-          html\`\${
-            person === this.name
-              ? html\`<input .value=\${this.name} @input=\${(event) => {
-                  this.name = event.target.value + \\" and \\" + person;
-                }} /> Hello \${person} ! I can run in
-      Qwik, Web Component, React, Vue, Solid, or Liquid! \`
-              : null
-          }\`
-      )}
-    </div>
 
-    \`;
+          <div>
+          \${this.names?.map(
+            (person, index) =>
+              html\`\${
+                person === this.name
+                  ? html\`<input .value=\${this.name} @input=\${(event) => {
+                      this.name = event.target.value + \\" and \\" + person;
+                    }} /> Hello \${person} ! I can run in
+          Qwik, Web Component, React, Vue, Solid, or Liquid! \`
+                  : null
+              }\`
+          )}
+        </div>
+
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Typescript Test > Basic Context 1`] = `
-"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+"import { createInjector, Injector, MyService } from \\"@dummy/injection-js\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -4384,13 +4236,15 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        \${myService.method(\\"hello\\") + this.name} Hello! I can run in React, Vue,
-        Solid, or Liquid! <input @input=\${(event) => this.onChange} />
-      </div>
 
-      \`;
+          <div>
+          \${
+            myService.method(\\"hello\\") + this.name
+          } Hello! I can run in React, Vue,
+          Solid, or Liquid! <input @input=\${(event) => this.onChange} />
+        </div>
+
+        \`;
   }
 }
 "
@@ -4423,10 +4277,10 @@ export default class MyBasicOnMountUpdateComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello \${this.name}</div>
 
-      \`;
+          <div>Hello \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -4455,10 +4309,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -4487,10 +4341,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -4508,10 +4362,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <input autocapitalize=\\"on\\" autocomplete=\\"on\\" .spellcheck=\\"\${true}\\" />
 
-    \`;
+          <input autocapitalize=\\"on\\" autocomplete=\\"on\\" .spellcheck=\\"\${true}\\" />
+
+        \`;
   }
 }
 "
@@ -4539,32 +4393,32 @@ export default class MyBooleanAttribute extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        \${this.children} \${this.type}
 
-        <my-boolean-attribute-component
-          .toggle=\\"\${true}\\"
-        ></my-boolean-attribute-component>
+          <div>
+          \${this.children ? html\`\${this.children} \${this.type}\` : null}
 
-        <my-boolean-attribute-component
-          .toggle=\\"\${true}\\"
-        ></my-boolean-attribute-component>
+          <my-boolean-attribute-component
+            .toggle=\\"\${true}\\"
+          ></my-boolean-attribute-component>
 
-        <my-boolean-attribute-component
-          .list=\\"\${null}\\"
-        ></my-boolean-attribute-component>
-      </div>
+          <my-boolean-attribute-component
+            .toggle=\\"\${true}\\"
+          ></my-boolean-attribute-component>
 
-      \`;
+          <my-boolean-attribute-component
+            .list=\\"\${null}\\"
+          ></my-boolean-attribute-component>
+        </div>
+
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Typescript Test > BasicChildComponent 1`] = `
-"import MyBasicComponent from \\"./basic.raw\\";
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+"import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -4580,19 +4434,19 @@ export default class MyBasicChildComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      <my-basic-component .id=\\"\${this.dev}\\"></my-basic-component>
 
-      <div>
-        <my-basic-on-mount-update-component
-          .hi=\\"\${this.name}\\"
-          .bye=\\"\${this.dev}\\"
-        ></my-basic-on-mount-update-component>
-      </div>
-    </div>
+          <div>
+          <my-basic-component .id=\\"\${this.dev}\\"></my-basic-component>
 
-    \`;
+          <div>
+            <my-basic-on-mount-update-component
+              .hi=\\"\${this.name}\\"
+              .bye=\\"\${this.dev}\\"
+            ></my-basic-on-mount-update-component>
+          </div>
+        </div>
+
+        \`;
   }
 }
 "
@@ -4617,19 +4471,19 @@ export default class MyBasicForComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      \${this.names?.map(
-        (person, index) => html\`<my-fragment>
+
+          <div>
+          \${this.names?.map(
+            (person, index) => html\`<my-fragment>
         <input .value=\${this.name} @input=\${(event) => {
-          this.name = event.target.value + \\" and \\" + person;
-        }} /> Hello \${person} ! I can run in
+              this.name = event.target.value + \\" and \\" + person;
+            }} /> Hello \${person} ! I can run in
         Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
       >\`
-      )}
-    </div>
+          )}
+        </div>
 
-    \`;
+        \`;
   }
 }
 "
@@ -4669,16 +4523,16 @@ export default class MyBasicRefComponent extends LitElement {
 
   render() {
     return html\`
-         <style>.input {
- color: red;
+          <style>.input {
+  color: red;
 }
 </style>
-         <div>
-         \${
-           this.showInput
-             ? html\`<my-fragment>
+          <div>
+          \${
+            this.showInput
+              ? html\`<my-fragment>
            <input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                 this.onBlur()}
+                  this.onBlur()}
            @input=\${(event) => (this.name = event.target.value)} />
 
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
@@ -4689,12 +4543,12 @@ export default class MyBasicRefComponent extends LitElement {
              <option value=\\"86\\">GR 86</option>
            </select> </my-fragment
          >\`
-             : null
-         } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
-         Solid, or Web Component!
-       </div>
+              : null
+          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
+          Solid, or Web Component!
+        </div>
 
-       \`;
+        \`;
   }
 }
 "
@@ -4714,7 +4568,7 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
     return this;
   }
 
-  handlerClick = function handlerClick(event) {
+  handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
@@ -4722,13 +4576,13 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      <button  @click=\${(evt) => this.handlerClick(evt)} >Click</button>
 
-          </div>
-      \`;
+          <div >
+
+        <button  @click=\${(evt) => this.handlerClick(evt)} >Click</button>
+
+            </div>
+        \`;
   }
 }
 "
@@ -4769,22 +4623,22 @@ export default class MyPreviousComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      <h1 >
-              Now: 
-      \${this.count}
-      , before: 
-      \${prevCount}
 
-            </h1>
+          <div >
 
-            
-      <button  @click=\${(event) => (this.count += 1)} >Increment</button>
+        <h1 >
+                Now:
+        \${this.count}
+        , before:
+        \${prevCount}
 
-          </div>
-      \`;
+              </h1>
+
+
+        <button  @click=\${(event) => (this.count += 1)} >Increment</button>
+
+            </div>
+        \`;
   }
 }
 "
@@ -4822,34 +4676,34 @@ export default class Button extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      \${
-        this.link
-          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
-              this.openLinkInNewTab ? \\"_blank\\" : undefined
-            } >
-                
+
+          <div >
+
+        \${
+          this.link
+            ? html\`<a  \${spread(props.attributes)}  .href=\${
+                this.link
+              }  .target=\${this.openLinkInNewTab ? \\"_blank\\" : undefined} >
+
       \${this.text}
 
               </a>\`
-          : null
-      }
+            : null
+        }
 
-            
-      \${
-        !this.link
-          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
-                
+
+        \${
+          !this.link
+            ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
+
       \${this.text}
 
               </button>\`
-          : null
-      }
+            : null
+        }
 
-          </div>
-      \`;
+            </div>
+        \`;
   }
 }
 "
@@ -4889,11 +4743,11 @@ export default class Column extends LitElement {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index) {
+  getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index) {
+  getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -4902,42 +4756,44 @@ export default class Column extends LitElement {
 
   render() {
     return html\`
-         <style>.div {
- display: flex;
- flex-direction: column;
- align-items: stretch;
- line-height: normal;
+          <style>.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
 }
 @media (max-width: 999px) {
- .div {
-   flex-direction: row;
- }
+  .div {
+    flex-direction: row;
+  }
 }
 @media (max-width: 639px) {
- .div {
-   flex-direction: row-reverse;
- }
+  .div {
+    flex-direction: row-reverse;
+  }
 }
 .div-2 {
- flex-grow: 1;
+  flex-grow: 1;
 }
 </style>
-         <div>
-         \${this.columns?.map(
-           (column, index) => html\`
+          <div>
+          \${this.columns?.map(
+            (column, index) => html\`
          <div>\${column.content} \${index}</div>
          \`
-         )}
-       </div>
+          )}
+        </div>
 
-       \`;
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"import type { JSX } from \\"../../../../jsx-runtime\\";
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Props = {
@@ -4955,32 +4811,42 @@ export default class ContentSlotCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <my-slot .name=\\"\${this.slotTesting}\\"></my-slot>
 
-        <div>
-          <hr />
+          <div>
+          <my-slot .name=\\"\${this.slotTesting}\\"></my-slot>
+
+          <div>
+            <hr />
+          </div>
+
+          <div>
+            <my-slot></my-slot>
+          </div>
         </div>
 
-        <div>
-          <my-slot></my-slot>
-        </div>
-      </div>
-
-      \`;
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"import type { JSX } from \\"../../../../jsx-runtime\\";
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
 };
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
 
 @customElement(\\"content-slot-jsx-code\\")
 export default class ContentSlotJsxCode extends LitElement {
@@ -4988,29 +4854,53 @@ export default class ContentSlotJsxCode extends LitElement {
     return this;
   }
 
-  @property() slotTesting: any;
+  @property() slotContent: any;
   @property() children: any;
+  @property() slotReference: any;
+  @property() attributes: any;
+  @property() content: any;
+
+  @state() name = \\"king\\";
+  @state() showContent = false;
+
+  get cls() {
+    return this.slotContent && this.children ? \`\${this.name}-content\` : \\"\\";
+  }
+  show() {
+    this.slotContent ? 1 : \\"\\";
+  }
 
   render() {
     return html\`
-        
-        <div>
-        \${
-          this.slotTesting
-            ? html\`
-        <div>\${this.slotTesting}</div>
-        \`
-            : null
-        }
 
-        <div>
-          <hr />
-        </div>
+          \${
+            this.slotReference
+              ? html\`<div  class={state.cls}  .name=\${
+                  this.slotContent ? \\"name1\\" : \\"name2\\"
+                }  .title=\${this.slotContent ? \\"title1\\" : \\"title2\\"}  \${spread(
+                  props.attributes
+                )}  @click=\${(event) => this.show()} >
 
-        <div>\${this.children}</div>
-      </div>
+       \${
+         this.showContent && this.slotContent
+           ? html\`<my-slot  name=\\"content\\" >\${this.content}</my-slot>\`
+           : null
+       }
 
-      \`;
+
+       <div >
+
+       <hr  />
+
+               </div>
+
+
+       <div >\${this.children}</div>
+
+             </div>\`
+              : null
+          }
+        \`;
   }
 }
 "
@@ -5088,9 +4978,9 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-      \`;
+
+          <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+        \`;
   }
 }
 "
@@ -5168,20 +5058,22 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-      \`;
+
+          <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Typescript Test > Form 1`] = `
-"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
+"import { Builder, builder, BuilderElement } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -5253,7 +5145,11 @@ export default class FormComponent extends LitElement {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(event) {
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -5267,16 +5163,19 @@ export default class FormComponent extends LitElement {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -5302,7 +5201,7 @@ export default class FormComponent extends LitElement {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -5369,7 +5268,7 @@ export default class FormComponent extends LitElement {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -5469,60 +5368,63 @@ export default class FormComponent extends LitElement {
 
   render() {
     return html\`
-         <style>.pre {
- padding: 10px;
- color: red;
- text-align: center;
+          <style>.pre {
+  padding: 10px;
+  color: red;
+  text-align: center;
 }
 </style>
-         <form  .validate=\${this.validate}  ref=\\"formRef\\"  .action=\${
+          <form  .validate=\${this.validate}  ref=\\"formRef\\"  .action=\${
       !this.sendWithJs && this.action
     }  .method=\${this.method}  .name=\${this.name}  @submit=\${(event) =>
       this.onSubmit(event)}  \${spread(props.attributes)} >
-             
-       \${
-         this.builderBlock && this.builderBlock.children
-           ? html\`\${this.builderBlock?.children?.map(
-               (block, index) =>
-                 html\`<builder-block-component  .key=\${block.id}  .block=\${block}  .index=\${index} ></builder-block-component>\`
-             )}\`
-           : null
-       }
 
-             
-       \${
-         this.submissionState === \\"error\\"
-           ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this.errorMessage} ></builder-blocks>\`
-           : null
-       }
+        \${
+          this.builderBlock && this.builderBlock.children
+            ? html\`\${this.builderBlock?.children?.map(
+                (block, index) =>
+                  html\`<builder-block-component  .key=\${block.id}  .block=\${block}  .index=\${index} ></builder-block-component>\`
+              )}\`
+            : null
+        }
 
-             
-       \${
-         this.submissionState === \\"sending\\"
-           ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this.sendingMessage} ></builder-blocks>\`
-           : null
-       }
 
-             
-       \${
-         this.submissionState === \\"error\\" && this.responseData
-           ? html\`<pre >
-                 
+        \${
+          this.submissionState === \\"error\\"
+            ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this
+                .errorMessage!} ></builder-blocks>\`
+            : null
+        }
+
+
+        \${
+          this.submissionState === \\"sending\\"
+            ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this
+                .sendingMessage!} ></builder-blocks>\`
+            : null
+        }
+
+
+        \${
+          this.submissionState === \\"error\\" && this.responseData
+            ? html\`<pre >
+
        \${JSON.stringify(this.responseData, null, 2)}
 
                </pre>\`
-           : null
-       }
+            : null
+        }
 
-             
-       \${
-         this.submissionState === \\"success\\"
-           ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this.successMessage} ></builder-blocks>\`
-           : null
-       }
 
-           </form>
-       \`;
+        \${
+          this.submissionState === \\"success\\"
+            ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this
+                .successMessage!} ></builder-blocks>\`
+            : null
+        }
+
+            </form>
+        \`;
   }
 }
 "
@@ -5577,7 +5479,7 @@ export default class Image extends LitElement {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -5594,7 +5496,7 @@ export default class Image extends LitElement {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -5617,36 +5519,36 @@ export default class Image extends LitElement {
 
   render() {
     return html\`
-         <style>.img {
- opacity: 1;
- transition: opacity 0.2s ease-in-out;
- object-fit: cover;
- object-position: center;
+          <style>.img {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
 }
 </style>
-         <div>
-         <picture ref=\\"pictureRef\\">
-           \${
-             !this.useLazyLoading() || this.load
-               ? html\`<img class={'builder-image' +
+          <div>
+          <picture ref=\\"pictureRef\\">
+            \${
+              !this.useLazyLoading() || this.load
+                ? html\`<img class={'builder-image' +
            (props._class ? ' ' + props._class : '') + ' img'} .alt=\${
              this.altText
            }
            aria-role=\${this.altText ? \\"presentation\\" : undefined} .src=\${
-                   this.image
-                 }
+                    this.image
+                  }
            @load=\${(event) => this.setLoaded()} .srcset=\${this.srcset}
            .sizes=\${this.sizes} />\`
-               : null
-           }
+                : null
+            }
 
-           <source .srcset=\\"\${this.srcset}\\" />
-         </picture>
+            <source .srcset=\\"\${this.srcset}\\" />
+          </picture>
 
-         \${this.children}
-       </div>
+          \${this.children}
+        </div>
 
-       \`;
+        \`;
   }
 }
 "
@@ -5667,16 +5569,16 @@ export default class ImgStateComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      \${this.images?.map(
-        (item, index) => html\`<my-fragment>
+
+          <div>
+          \${this.images?.map(
+            (item, index) => html\`<my-fragment>
         <img .src=\\"\${item}\\" .key=\\"\${itemIndex}\\" /> </my-fragment
       >\`
-      )}
-    </div>
+          )}
+        </div>
 
-    \`;
+        \`;
   }
 }
 "
@@ -5727,17 +5629,17 @@ export default class ImgComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <img .style=\${{
-          objectFit: this.backgroundSize || \\"cover\\",
-          objectPosition: this.backgroundPosition || \\"center\\",
-        }} \${spread(props.attributes)}
-      .key=\${(Builder.isEditing && this.imgSrc) || \\"default-key\\"} .alt=\${
+
+          <img .style=\${{
+            objectFit: this.backgroundSize || \\"cover\\",
+            objectPosition: this.backgroundPosition || \\"center\\",
+          }} \${spread(props.attributes)}
+        .key=\${(Builder.isEditing && this.imgSrc) || \\"default-key\\"} .alt=\${
       this.altText
     }
-      .src=\${this.imgSrc} />
+        .src=\${this.imgSrc} />
 
-      \`;
+        \`;
   }
 }
 "
@@ -5757,6 +5659,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 const spread = (properties) =>
@@ -5780,17 +5683,48 @@ export default class FormInputComponent extends LitElement {
   @property() name: any;
   @property() value: any;
   @property() required: any;
+  @property() onChange: any;
 
   render() {
     return html\`
-        
-        <input \${spread(props.attributes)} .key=\${
+
+          <input \${spread(props.attributes)} .key=\${
       Builder.isEditing && this.defaultValue ? this.defaultValue : \\"default-key\\"
     } .placeholder=\${this.placeholder}
-      .type=\${this.type} .name=\${this.name} .value=\${this.value}
-      .defaultValue=\${this.defaultValue} .required=\${this.required} />
+        .type=\${this.type} .name=\${this.name} .value=\${this.value}
+        .defaultValue=\${this.defaultValue} .required=\${this.required} @input=\${(
+      event
+    ) => this.onChange?.(event.target.value)} />
 
-      \`;
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-stepper\\")
+export default class Stepper extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  handleChange(value: string) {
+    console.log(value);
+  }
+
+  render() {
+    return html\`
+
+          <form-input-component  name=\\"kingzez\\"  type=\\"text\\"  @change=\${(
+            value
+          ) => this.handleChange(value)} ></form-input-component>
+        \`;
   }
 }
 "
@@ -5816,11 +5750,11 @@ export default class RawText extends LitElement {
 
   render() {
     return html\`
-        
-        <span  class={props.attributes?.class || props.attributes?.className}  .innerHTML=\${
-          this.text || \\"\\"
-        } ></span>
-      \`;
+
+          <span  class={props.attributes?.class || props.attributes?.className}  .innerHTML=\${
+            this.text || \\"\\"
+          } ></span>
+        \`;
   }
 }
 "
@@ -5856,19 +5790,19 @@ export default class SectionComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <section  \${spread(props.attributes)}  .style=\${
+
+          <section  \${spread(props.attributes)}  .style=\${
       this.maxWidth && typeof this.maxWidth === \\"number\\"
         ? {
             maxWidth: this.maxWidth,
           }
         : undefined
     } >
-            
-      \${this.children}
 
-          </section>
-      \`;
+        \${this.children}
+
+            </section>
+        \`;
   }
 }
 "
@@ -5906,22 +5840,22 @@ export default class SectionStateComponent extends LitElement {
 
   render() {
     return html\`
-        
-        \${
-          this.max
-            ? html\`\${this.items?.map(
-                (item, index) =>
-                  html\`<section  \${spread(props.attributes)}  .style=\${{
-                    maxWidth: item + this.max,
-                  }} >
-                  
-      \${this.children}
 
-                </section>\`
-              )}\`
-            : null
-        }
-      \`;
+          \${
+            this.max
+              ? html\`\${this.items?.map(
+                  (item, index) =>
+                    html\`<section  \${spread(props.attributes)}  .style=\${{
+                      maxWidth: item + this.max,
+                    }} >
+
+        \${this.children}
+
+                  </section>\`
+                )}\`
+              : null
+          }
+        \`;
   }
 }
 "
@@ -5966,22 +5900,22 @@ export default class SelectComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <select  \${spread(props.attributes)}  .value=\${this.value}  .key=\${
+
+          <select  \${spread(props.attributes)}  .value=\${this.value}  .key=\${
       Builder.isEditing && this.defaultValue ? this.defaultValue : \\"default-key\\"
     }  .defaultValue=\${this.defaultValue}  .name=\${this.name} >
-            
-      \${this.options?.map(
-        (option, index) =>
-          html\`<option  .value=\${option.value}  data-index=\${index} >
-                  
+
+        \${this.options?.map(
+          (option, index) =>
+            html\`<option  .value=\${option.value}  data-index=\${index} >
+
       \${option.name || option.value}
 
                 </option>\`
-      )}
+        )}
 
-          </select>
-      \`;
+            </select>
+        \`;
   }
 }
 "
@@ -6003,14 +5937,14 @@ export default class SlotCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <my-slot>
-          <div>Default content</div>
-        </my-slot>
-      </div>
 
-      \`;
+          <div>
+          <my-slot>
+            <div>Default content</div>
+          </my-slot>
+        </div>
+
+        \`;
   }
 }
 "
@@ -6034,17 +5968,17 @@ export default class SlotCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      <content-slot-code >
-              
-      <my-slot  .testing=\${(<div>Hello</div>)} ></my-slot>
 
-            </content-slot-code>
+          <div >
 
-          </div>
-      \`;
+        <content-slot-code >
+
+        <my-slot  .testing=\${(<div>Hello</div>)} ></my-slot>
+
+              </content-slot-code>
+
+            </div>
+        \`;
   }
 }
 "
@@ -6068,15 +6002,15 @@ export default class SlotCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      <content-slot-code  .slotTesting=\${(
-        <div>Hello</div>
-      )} ></content-slot-code>
 
-          </div>
-      \`;
+          <div >
+
+        <content-slot-code  .slotTesting=\${(
+          <div>Hello</div>
+        )} ></content-slot-code>
+
+            </div>
+        \`;
   }
 }
 "
@@ -6098,24 +6032,23 @@ export default class SlotCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <my-slot name=\\"top\\"></my-slot>
 
-        <my-slot name=\\"left\\">Default left</my-slot>
+          <div>
+          <my-slot name=\\"top\\"></my-slot>
 
-        <my-slot>Default Child</my-slot>
-      </div>
+          <my-slot name=\\"left\\">Default left</my-slot>
 
-      \`;
+          <my-slot>Default Child</my-slot>
+        </div>
+
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Typescript Test > Stamped.io 1`] = `
-"import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
+"import { kebabCase, snakeCase } from \\"lodash\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -6159,38 +6092,38 @@ export default class SmileReviews extends LitElement {
 
   render() {
     return html\`
-         <style>.input {
- display: block;
+          <style>.input {
+  display: block;
 }
 .textarea {
- display: block;
+  display: block;
 }
 .button {
- display: block;
+  display: block;
 }
 .review {
- margin: 10px;
- padding: 10px;
- background: white;
- display: flex;
- border-radius: 5px;
- box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 .img {
- height: 30px;
- width: 30px;
- margin-right: 10px;
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
 }
 </style>
-         <div  data-user=\${this.name} >
-             
-       <button  @click=\${(event) =>
-         (this.showReviewPrompt = true)} >Write a review</button>
+          <div  data-user=\${this.name} >
 
-             
-       \${
-         this.showReviewPrompt || \\"asdf\\"
-           ? html\`<input  placeholder=\\"Email\\"  />
+        <button  @click=\${(event) =>
+          (this.showReviewPrompt = true)} >Write a review</button>
+
+
+        \${
+          this.showReviewPrompt || \\"asdf\\"
+            ? html\`<input  placeholder=\\"Email\\"  />
        <input  placeholder=\\"Title\\"  />
        <textarea  placeholder=\\"How was your experience?\\" ></textarea>
        <button  @click=\${(event) => {
@@ -6199,35 +6132,35 @@ export default class SmileReviews extends LitElement {
        }} >
                  Submit
                </button>\`
-           : null
-       }
+            : null
+        }
 
-             
-       \${this.reviews?.map(
-         (review, index) =>
-           html\`<div  .key=\${review.id} >
-                   
+
+        \${this.reviews?.map(
+          (review, index) =>
+            html\`<div  .key=\${review.id} >
+
        <img  .src=\${review.avatar}  />
 
-                   
+
        <div  class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'} >
-                     
-       <div >N: 
+
+       <div >N:
        \${index}</div>
 
-                     
+
        <div >\${review.author}</div>
 
-                     
+
        <div >\${review.reviewMessage}</div>
 
                    </div>
 
                  </div>\`
-       )}
+        )}
 
-           </div>
-       \`;
+            </div>
+        \`;
   }
 }
 "
@@ -6261,10 +6194,12 @@ export default class SubmitButton extends LitElement {
 
   render() {
     return html\`
-        
-        <button type=\\"submit\\" \${spread(props.attributes)}>\${this.text}</button>
 
-      \`;
+          <button type=\\"submit\\" \${spread(props.attributes)}>\${
+      this.text
+    }</button>
+
+        \`;
   }
 }
 "
@@ -6297,13 +6232,13 @@ export default class Text extends LitElement {
 
   render() {
     return html\`
-        
-        <div  .contentEditable=\${allowEditingText || undefined}  data-name=\${{
+
+          <div  .contentEditable=\${allowEditingText || undefined}  data-name=\${{
       test: this.name || \\"any name\\",
     }}  .innerHTML=\${
       this.text || this.content || this.name || '<p class=\\"text-lg\\">my name</p>'
     } ></div>
-      \`;
+        \`;
   }
 }
 "
@@ -6343,16 +6278,16 @@ export default class Textarea extends LitElement {
 
   render() {
     return html\`
-        
-        <textarea
-        \${spread(props.attributes)}
-        .placeholder=\\"\${this.placeholder}\\"
-        .name=\\"\${this.name}\\"
-        .value=\\"\${this.value}\\"
-        .defaultValue=\\"\${this.defaultValue}\\"
-      ></textarea>
 
-      \`;
+          <textarea
+          \${spread(props.attributes)}
+          .placeholder=\\"\${this.placeholder}\\"
+          .name=\\"\${this.name}\\"
+          .value=\\"\${this.value}\\"
+          .defaultValue=\\"\${this.defaultValue}\\"
+        ></textarea>
+
+        \`;
   }
 }
 "
@@ -6414,8 +6349,8 @@ export default class Video extends LitElement {
 
   render() {
     return html\`
-        
-        <video  preload=\\"none\\"  \${spread(props.attributes)}  .style=\${{
+
+          <video  preload=\\"none\\"  \${spread(props.attributes)}  .style=\${{
       width: \\"100%\\",
       height: \\"100%\\",
       ...this.attributes?.style,
@@ -6429,7 +6364,7 @@ export default class Video extends LitElement {
     }  .autoplay=\${this.autoPlay}  .muted=\${this.muted}  .controls=\${
       this.controls
     }  .loop=\${this.loop} ></video>
-      \`;
+        \`;
   }
 }
 "
@@ -6456,10 +6391,52 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>Hello \${this.name}</div>
 
-       \`;
+          <div>Hello \${this.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > basicForNoTagReference 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-for-no-tag-ref-component\\")
+export default class MyBasicForNoTagRefComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() actions: any;
+
+  @state() name = \\"VincentW\\";
+  @state() TagName = \\"div\\";
+  @state() tag = \\"span\\";
+
+  get TagNameGetter() {
+    return \\"span\\";
+  }
+
+  render() {
+    return html\`
+
+          <state.TagNameGetter>
+          Hello
+          <state.tag>\${this.name}</state.tag>
+
+          \${this.actions?.map(
+            (action, index) => html\`<state.TagName>
+          <action.icon></action.icon>
+
+          <span>\${action.text}</span> </state.TagName
+        >\`
+          )}
+        </state.TagNameGetter>
+
+        \`;
   }
 }
 "
@@ -6489,16 +6466,16 @@ export default class MyBasicForwardRefComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.input {
-color: red;
+          <style>.input {
+  color: red;
 }
 </style>
-        <div>
-        <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+          <div>
+          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
       (this.name = event.target.value)} />
-      </div>
+        </div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -6528,16 +6505,16 @@ export default class MyBasicForwardRefComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.input {
-color: red;
+          <style>.input {
+  color: red;
 }
 </style>
-        <div>
-        <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+          <div>
+          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
       (this.name = event.target.value)} />
-      </div>
+        </div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -6574,10 +6551,10 @@ export default class MyBasicOnUpdateReturnComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello! \${this.name}</div>
 
-      \`;
+          <div>Hello! \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -6595,13 +6572,13 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-padding: 10px;
+          <style>.div {
+  padding: 10px;
 }
 </style>
-        <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+          <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -6619,13 +6596,13 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-padding: 10px;
+          <style>.div {
+  padding: 10px;
 }
 </style>
-        <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+          <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -6643,20 +6620,22 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-padding: 10px;
+          <style>.div {
+  padding: 10px;
 }
 </style>
-        <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+          <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
 
-      \`;
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Typescript Test > className 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"import type { JSX } from \\"../../../../jsx-runtime\\";
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Props = {
@@ -6674,14 +6653,14 @@ export default class ClassNameCode extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <div>Without Binding</div>
 
-        <div class=\\"{state.bindings}\\">With binding</div>
-      </div>
+          <div>
+          <div>Without Binding</div>
 
-      \`;
+          <div class=\\"{state.bindings}\\">With binding</div>
+        </div>
+
+        \`;
   }
 }
 "
@@ -6704,14 +6683,14 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-padding: 10px;
+          <style>.div {
+  padding: 10px;
 }
 </style>
-        <div  class={state.classState + ' div'}  .style=\${this.styleState} >
-            Hello! I can run in React, Vue, Solid, or Liquid!
-          </div>
-      \`;
+          <div  class={state.classState + ' div'}  .style=\${this.styleState} >
+              Hello! I can run in React, Vue, Solid, or Liquid!
+            </div>
+        \`;
   }
 }
 "
@@ -6738,12 +6717,12 @@ export default class ComponentWithContext extends LitElement {
 
   render() {
     return html\`
-        
-        <my-fragment>
-        <my-fragment>\${foo.value}</my-fragment>
-      </my-fragment>
 
-      \`;
+          <my-fragment>
+          <my-fragment>\${foo.value}</my-fragment>
+        </my-fragment>
+
+        \`;
   }
 }
 "
@@ -6770,14 +6749,14 @@ export default class ComponentWithContext extends LitElement {
 
   render() {
     return html\`
-        
-        <my-fragment>
-        <my-fragment>\${foo.value}</my-fragment>
 
-        <div>other</div>
-      </my-fragment>
+          <my-fragment>
+          <my-fragment>\${foo.value}</my-fragment>
 
-      \`;
+          <div>other</div>
+        </my-fragment>
+
+        \`;
   }
 }
 "
@@ -6800,10 +6779,10 @@ export default class RenderContent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>setting context</div>
 
-    \`;
+          <div>setting context</div>
+
+        \`;
   }
 }
 "
@@ -6846,36 +6825,36 @@ export default class Button extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      \${
-        this.link
-          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
-              this.openLinkInNewTab ? \\"_blank\\" : undefined
-            } >
-                
+
+          <div >
+
+        \${
+          this.link
+            ? html\`<a  \${spread(props.attributes)}  .href=\${
+                this.link
+              }  .target=\${this.openLinkInNewTab ? \\"_blank\\" : undefined} >
+
       \${this.text}
 
               </a>\`
-          : null
-      }
+            : null
+        }
 
-            
-      \${
-        !this.link
-          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)}  @click=\${(
-              event
-            ) => this.onClick(event)} >
-                
+
+        \${
+          !this.link
+            ? html\`<button  type=\\"button\\"  \${spread(
+                props.attributes
+              )}  @click=\${(event) => this.onClick(event)} >
+
       \${this.buttonText}
 
               </button>\`
-          : null
-      }
+            : null
+        }
 
-          </div>
-      \`;
+            </div>
+        \`;
   }
 }
 "
@@ -6915,36 +6894,36 @@ export default class Button extends LitElement {
 
   render() {
     return html\`
-        
-        <div >
-            
-      \${
-        this.link
-          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
-              this.openLinkInNewTab ? \\"_blank\\" : undefined
-            } >
-                
+
+          <div >
+
+        \${
+          this.link
+            ? html\`<a  \${spread(props.attributes)}  .href=\${
+                this.link
+              }  .target=\${this.openLinkInNewTab ? \\"_blank\\" : undefined} >
+
       \${this.text}
 
               </a>\`
-          : null
-      }
+            : null
+        }
 
-            
-      \${
-        !this.link
-          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)}  @click=\${(
-              event
-            ) => this.onClick(event)} >
-                
+
+        \${
+          !this.link
+            ? html\`<button  type=\\"button\\"  \${spread(
+                props.attributes
+              )}  @click=\${(event) => this.onClick(event)} >
+
       \${this.text}
 
               </button>\`
-          : null
-      }
+            : null
+        }
 
-          </div>
-      \`;
+            </div>
+        \`;
   }
 }
 "
@@ -6972,10 +6951,10 @@ export default class ComponentWithTypes extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello \${this.name || DEFAULT_VALUES.name}</div>
 
-      \`;
+          <div>Hello \${this.name || DEFAULT_VALUES.name}</div>
+
+        \`;
   }
 }
 "
@@ -6999,17 +6978,18 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>\${this.refToUse}</div>
 
-    \`;
+          <div>\${this.refToUse}</div>
+
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Typescript Test > import types 1`] = `
-"import RenderBlock from \\"./builder-render-block.raw\\";
+"import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -7045,14 +7025,14 @@ export default class RenderContent extends LitElement {
 
   render() {
     return html\`
-        
-        <render-block
-        \${spread(
-          state.getRenderContentProps(props.renderContentProps.block, 0)
-        )}
-      ></render-block>
 
-      \`;
+          <render-block
+          \${spread(
+            state.getRenderContentProps(props.renderContentProps.block, 0)
+          )}
+        ></render-block>
+
+        \`;
   }
 }
 "
@@ -7076,10 +7056,10 @@ export default class MultipleOnUpdate extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -7116,10 +7096,10 @@ export default class MultipleOnUpdateWithDeps extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
 
-      \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -7149,10 +7129,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <input \${spread(state.attrs)} \${spread(props)} />
 
-      \`;
+          <input \${spread(state.attrs)} \${spread(props)} />
+
+        \`;
   }
 }
 "
@@ -7178,24 +7158,24 @@ export default class NestedShow extends LitElement {
 
   render() {
     return html\`
-        
-        \${
-          this.conditionA
-            ? html\`\${
-                !this.conditionB
-                  ? html\`
-      <div>if condition A and condition B</div>
-      \`
-                  : html\`
-      <div>else-condition-B</div>
-      \`
-              }\`
-            : html\`
+
+          \${
+            this.conditionA
+              ? html\`\${
+                  !this.conditionB
+                    ? html\`
+        <div>if condition A and condition B</div>
+        \`
+                    : html\`
+        <div>else-condition-B</div>
+        \`
+                }\`
+              : html\`
       <div>else-condition-A</div>
       \`
-        }
+          }
 
-      \`;
+        \`;
   }
 }
 "
@@ -7213,25 +7193,35 @@ export default class NestedStyles extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-display: flex;
-foo: var(--bar);
+          <style>.div {
+  display: flex;
+  --bar: red;
+  color: var(--bar);
 }
 @media (max-width: env(--mobile)) {
-.div {
-  display: block;
-}
+  .div {
+    display: block;
+  }
 }
 .div:hover {
-display: flex;
+  display: flex;
+}
+.div:active {
+  display: inline;
 }
 .div .nested-selector {
-display: grid;
+  display: grid;
+}
+.div .nested-selector:hover {
+  display: block;
+}
+.div.nested-selector:active {
+  display: inline-block;
 }
 </style>
-        <div>Hello world</div>
+          <div>Hello world</div>
 
-      \`;
+        \`;
   }
 }
 "
@@ -7253,10 +7243,10 @@ export default class OnInit extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -7286,10 +7276,10 @@ export default class OnInit extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Default name defined by parent \${this.name}</div>
 
-      \`;
+          <div>Default name defined by parent \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -7314,10 +7304,10 @@ export default class Comp extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -7339,10 +7329,10 @@ export default class OnUpdate extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -7373,10 +7363,10 @@ export default class OnUpdateWithDeps extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
 
-      \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -7410,10 +7400,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
 
-      \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -7446,10 +7436,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
-      \`;
+          <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -7477,13 +7467,13 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        \${this.children} \${this.type} Hello! I can run in React, Vue, Solid, or
-        Liquid!
-      </div>
 
-      \`;
+          <div>
+          \${this.children} \${this.type} Hello! I can run in React, Vue, Solid, or
+          Liquid!
+        </div>
+
+        \`;
   }
 }
 "
@@ -7508,10 +7498,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
-      \`;
+          <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -7536,10 +7526,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
-      \`;
+          <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -7564,49 +7554,49 @@ export default class OnUpdate extends LitElement {
   };
 
   updated() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 
   render() {
     return html\`
-         
-         <div></div>
 
-       \`;
+          <div></div>
+
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Typescript Test > renderBlock 1`] = `
-"import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
-import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
-import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
-import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
-import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
-import \\"./block-styles.js\\";
-import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import \\"./render-repeated-block.js\\";
-import { TARGET } from \\"../../constants/target.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
-import \\"./render-component-with-context.js\\";
-import \\"./render-component.js\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-
-import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
+"import { TARGET } from \\"../../constants/target.js\\";
 import type {
   BuilderContextInterface,
   RegisteredComponent,
 } from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
+import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
+import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
+import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
-import type { RenderComponentProps } from \\"./render-component\\";
+import \\"./block-styles.js\\";
+import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import \\"./render-component-with-context.js\\";
+import \\"./render-component.js\\";
+import \\"./render-component.js\\";
+import \\"./render-repeated-block.js\\";
 import type { RepeatData } from \\"./types.js\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
 export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
@@ -7646,8 +7636,8 @@ export default class RenderBlock extends LitElement {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-         Could not find a registered component named \\"\${componentName}\\". 
-         If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
       return ref;
@@ -7754,7 +7744,7 @@ export default class RenderBlock extends LitElement {
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.context,
         this: {
@@ -7804,16 +7794,16 @@ export default class RenderBlock extends LitElement {
 
   render() {
     return html\`
-         
-         \${
-           this.shouldWrap
-             ? html\`\${
-                 isEmptyHtmlElement(this.tag)
-                   ? html\`<state.tag  \${spread(state.attributes)}  \${spread(
-                       state.actions
-                     )} ></state.tag>\`
-                   : null
-               }
+
+          \${
+            this.shouldWrap
+              ? html\`\${
+                  isEmptyHtmlElement(this.tag)
+                    ? html\`<state.tag  \${spread(state.attributes)}  \${spread(
+                        state.actions
+                      )} ></state.tag>\`
+                    : null
+                }
        \${
          !isEmptyHtmlElement(this.tag) && this.repeatItemData
            ? html\`\${this.repeatItemData?.map(
@@ -7827,53 +7817,53 @@ export default class RenderBlock extends LitElement {
            ? html\`<state.tag  \${spread(state.attributes)}  \${spread(
                state.actions
              )} >
-                 
-       <state.renderComponentTag  \${spread(
-         state.renderComponentProps
-       )} ></state.renderComponentTag>
 
-                 
+        <state.renderComponentTag  \${spread(
+          state.renderComponentProps
+        )} ></state.renderComponentTag>
 
-                 
-       \${this.childrenWithoutParentComponent?.map(
-         (child, index) =>
-           html\`<render-block  .key=\${
-             \\"render-block-\\" + child.id
-           }  .block=\${child}  .context=\${
-             this.childrenContext
-           } ></render-block>\`
-       )}
 
-                 
-       \${this.childrenWithoutParentComponent?.map(
-         (child, index) =>
-           html\`<block-styles  .key=\${
-             \\"block-style-\\" + child.id
-           }  .block=\${child}  .context=\${
-             this.childrenContext
-           } ></block-styles>\`
-       )}
 
-               </state.tag>\`
+
+        \${this.childrenWithoutParentComponent?.map(
+          (child, index) =>
+            html\`<render-block  .key=\${
+              \\"render-block-\\" + child.id
+            }  .block=\${child}  .context=\${
+              this.childrenContext
+            } ></render-block>\`
+        )}
+
+
+        \${this.childrenWithoutParentComponent?.map(
+          (child, index) =>
+            html\`<block-styles  .key=\${
+              \\"block-style-\\" + child.id
+            }  .block=\${child}  .context=\${
+              this.childrenContext
+            } ></block-styles>\`
+        )}
+
+                </state.tag>\`
            : null
        }\`
-             : html\`<state.renderComponentTag  \${spread(
-                 state.renderComponentProps
-               )} ></state.renderComponentTag>\`
-         }
-       \`;
+              : html\`<state.renderComponentTag  \${spread(
+                  state.renderComponentProps
+                )} ></state.renderComponentTag>\`
+          }
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Typescript Test > renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
+"import \\"@dummy/context.js\\";
+import {
   dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import \\"@dummy/context.js\\";
 import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 import { LitElement, html, css } from \\"lit\\";
@@ -7906,17 +7896,17 @@ export default class RenderContent extends LitElement {
 
   render() {
     return html\`
-        <style>.div {
-display: flex;
-flex-direction: columns;
+          <style>.div {
+  display: flex;
+  flex-direction: columns;
 }
 </style>
-        <div  @click=\${(event) => trackClick(this.content.id)} >
-            
-      <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
+          <div  @click=\${(event) => trackClick(this.content.id)} >
 
-          </div>
-      \`;
+        <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
+
+            </div>
+        \`;
   }
 }
 "
@@ -7954,34 +7944,34 @@ export default class Button extends LitElement {
 
   render() {
     return html\`
-        
-        <my-fragment >
-            
-      \${
-        this.link
-          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
-              this.openLinkInNewTab ? \\"_blank\\" : undefined
-            } >
-                
+
+          <my-fragment >
+
+        \${
+          this.link
+            ? html\`<a  \${spread(props.attributes)}  .href=\${
+                this.link
+              }  .target=\${this.openLinkInNewTab ? \\"_blank\\" : undefined} >
+
       \${this.text}
 
               </a>\`
-          : null
-      }
+            : null
+        }
 
-            
-      \${
-        !this.link
-          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
-                
+
+        \${
+          !this.link
+            ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
+
       \${this.text}
 
               </button>\`
-          : null
-      }
+            : null
+        }
 
-          </my-fragment>
-      \`;
+            </my-fragment>
+        \`;
   }
 }
 "
@@ -8005,18 +7995,18 @@ export default class RenderStyles extends LitElement {
 
   render() {
     return html\`
-        
-        \${
-          this.foo === \\"bar\\"
-            ? html\`
+
+          \${
+            this.foo === \\"bar\\"
+              ? html\`
       <div>Bar</div>
       \`
-            : html\`
+              : html\`
       <div>Foo</div>
       \`
-        }
+          }
 
-      \`;
+        \`;
   }
 }
 "
@@ -8036,9 +8026,9 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      \${this.name} \${
+
+          <div>
+          \${this.name} \${
       this.name === \\"Batman\\"
         ? html\`<my-component
         name=\\"Bruce Wayne\\"
@@ -8046,9 +8036,9 @@ export default class MyComponent extends LitElement {
       >\`
         : null
     }
-    </div>
+        </div>
 
-    \`;
+        \`;
   }
 }
 "
@@ -8069,9 +8059,9 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      \${this.name} \${this.children} \${
+
+          <div>
+          \${this.name} \${this.children} \${
       this.name === \\"Batman\\"
         ? html\`<my-component
         name=\\"Bruce\\"
@@ -8080,9 +8070,9 @@ export default class MyComponent extends LitElement {
       >\`
         : null
     }
-    </div>
+        </div>
 
-    \`;
+        \`;
   }
 }
 "
@@ -8108,20 +8098,53 @@ export default class NestedShow extends LitElement {
 
   render() {
     return html\`
-        
-        \${
-          this.conditionA
-            ? html\`\${this.items?.map(
-                (item, index) => html\`
-      <div .key=\\"\${idx}\\">\${item}</div>
-      \`
-              )}\`
-            : html\`
+
+          \${
+            this.conditionA
+              ? html\`\${this.items?.map(
+                  (item, index) => html\`
+        <div .key=\\"\${idx}\\">\${item}</div>
+        \`
+                )}\`
+              : html\`
       <div>else-condition-A</div>
       \`
-        }
+          }
 
-      \`;
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > showWithRootText 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+@customElement(\\"show-root-text\\")
+export default class ShowRootText extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() conditionA: any;
+
+  render() {
+    return html\`
+
+          \${
+            this.conditionA
+              ? html\` ContentA \`
+              : html\`
+      <div>else-condition-A</div>
+      \`
+          }
+
+        \`;
   }
 }
 "
@@ -8147,10 +8170,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <input \${spread(attrs)} />
 
-    \`;
+          <input \${spread(attrs)} />
+
+        \`;
   }
 }
 "
@@ -8178,10 +8201,10 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <input \${spread(props.nested)} />
 
-    \`;
+          <input \${spread(props.nested)} />
+
+        \`;
   }
 }
 "
@@ -8207,10 +8230,64 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <input \${spread(props)} />
 
-    \`;
+          <input \${spread(props)} />
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > styleClassAndCss 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+          <style>.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+</style>
+          <div  .style=\${{
+            width: \\"100%\\",
+          }} ></div>
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"style-prop-class-and-css\\")
+export default class StylePropClassAndCss extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() attributes: any;
+
+  render() {
+    return html\`
+          <style>.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+</style>
+          <div  class={props.attributes.class + ' div'}  .style=\${this.attributes.style} ></div>
+        \`;
   }
 }
 "
@@ -8230,10 +8307,10 @@ export default class SubComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <my-foo></my-foo>
 
-    \`;
+          <my-foo></my-foo>
+
+        \`;
   }
 }
 "
@@ -8251,40 +8328,41 @@ export default class SvgComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <svg  fill=\\"none\\"  role=\\"img\\"  .viewBox=\${
-        \\"0 0 \\" + 42 + \\" \\" + 42
-      }  .width=\${42}  .height=\${42} >
-          
-    <defs >
-            
-    <filter  id=\\"prefix__filter0_f\\"  filterUnits=\\"userSpaceOnUse\\" >
-              
-    <feFlood  result=\\"BackgroundImageFix\\" ></feFlood>
 
-              
-    <feBlend  in=\\"SourceGraphic\\"  in2=\\"BackgroundImageFix\\"  result=\\"shape\\" ></feBlend>
+          <svg  fill=\\"none\\"  role=\\"img\\"  .viewBox=\${
+            \\"0 0 \\" + 42 + \\" \\" + 42
+          }  .width=\${42}  .height=\${42} >
 
-              
-    <feGaussianBlur  result=\\"effect1_foregroundBlur\\"  .stdDeviation=\${7} ></feGaussianBlur>
+        <defs >
 
-            </filter>
+        <filter  id=\\"prefix__filter0_f\\"  filterUnits=\\"userSpaceOnUse\\" >
 
-          </defs>
+        <feFlood  result=\\"BackgroundImageFix\\" ></feFlood>
 
-        </svg>
-    \`;
+
+        <feBlend  in=\\"SourceGraphic\\"  in2=\\"BackgroundImageFix\\"  result=\\"shape\\" ></feBlend>
+
+
+        <feGaussianBlur  result=\\"effect1_foregroundBlur\\"  .stdDeviation=\${7} ></feGaussianBlur>
+
+                </filter>
+
+              </defs>
+
+            </svg>
+        \`;
   }
 }
 "
 `;
 
 exports[`Lit > jsx > Typescript Test > typeDependency 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"import type { Foo } from \\"./foo-type\\";
+import \\"./type-export.js\\";
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
 export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
@@ -8300,10 +8378,10 @@ export default class TypeDependency extends LitElement {
 
   render() {
     return html\`
-        
-        <div>\${this.foo}</div>
 
-      \`;
+          <div>\${this.foo}</div>
+
+        \`;
   }
 }
 "
@@ -8321,16 +8399,16 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        <style>button {
-background: blue;
-color: white;
-font-size: 12px;
-outline: 1px solid black;
+          <style>button {
+  background: blue;
+  color: white;
+  font-size: 12px;
+  outline: 1px solid black;
 }
 </style>
-        <button type=\\"button\\">Button</button>
+          <button type=\\"button\\">Button</button>
 
-      \`;
+        \`;
   }
 }
 "
@@ -8348,19 +8426,19 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        <style>.button {
-background: blue;
-color: white;
+          <style>button {
+  font-size: 12px;
+  outline: 1px solid black;
 }
 
-button {
-font-size: 12px;
-outline: 1px solid black;
+.button {
+  background: blue;
+  color: white;
 }
 </style>
-        <button type=\\"button\\">Button</button>
+          <button type=\\"button\\">Button</button>
 
-      \`;
+        \`;
   }
 }
 "
@@ -8378,16 +8456,44 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        <style>button {
-background: blue;
-color: white;
-font-size: 12px;
-outline: 1px solid black;
+          <style>button {
+  background: blue;
+  color: white;
+  font-size: 12px;
+  outline: 1px solid black;
 }
 </style>
-        <button type=\\"button\\">Button</button>
+          <button type=\\"button\\">Button</button>
 
-      \`;
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > useTarget 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"use-target-component\\")
+export default class UseTargetComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() lastName = \\"bar\\";
+
+  get name() {
+    const prefix = \\"li\\";
+    return prefix + \\"foo\\";
+  }
+
+  render() {
+    return html\`
+
+          <div>\${this.name}</div>
+
+        \`;
   }
 }
 "
@@ -8407,15 +8513,15 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      <input @input=\${(event) => (this.name = event.target.value)} .value=\${
+
+          <div>
+          <input @input=\${(event) => (this.name = event.target.value)} .value=\${
       this.name
     }
-      /> Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+          /> Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
 
-    \`;
+        \`;
   }
 }
 "
@@ -8430,53 +8536,53 @@ import { customElement, property, state, query } from 'lit/decorators.js';
 
 @customElement('my-component')
 export default class MyComponent extends LitElement {
-  
+
     createRenderRoot() {
       return this;
     }
-    
-
-  
-
-  
 
 
-  
+
+
+
+
+
+
 
     @state()  tortilla= \\"Plain\\"
 @state()  fillings= []
 
-    
-  
-    
-    
-    
+
+
+
+
+
 
   render() {
     return html\`
-      
-      <div>
-      <input type=\\"radio\\" value=\\"Plain\\" .checked=\${this.tortilla === 'Plain'}
-      @input=\${event => this.tortilla = event.target.value} /> <input type=\\"radio\\"
-      value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'} @input=\${event
-      => this.tortilla = event.target.value} /> <input type=\\"radio\\" value=\\"Spinach\\"
-      .checked=\${this.tortilla === 'Spinach'} @input=\${event => this.tortilla =
-      event.target.value} />
-      <br />
-      <br />
-      <input type=\\"checkbox\\" value=\\"Rice\\" .checked=\${this.fillings === 'Rice'}
-      @input=\${event => this.fillings = event.target.value} /> <input
-      type=\\"checkbox\\" value=\\"Beans\\" .checked=\${this.fillings === 'Beans'}
-      @input=\${event => this.fillings = event.target.value} /> <input
-      type=\\"checkbox\\" value=\\"Cheese\\" .checked=\${this.fillings === 'Cheese'}
-      @input=\${event => this.fillings = event.target.value} /> <input
-      type=\\"checkbox\\" value=\\"Guac (extra)\\" .checked=\${this.fillings === 'Guac
-      (extra)'} @input=\${event => this.fillings = event.target.value} />
-      <p>Tortilla: \${this.tortilla}</p>
-      <p>Fillings: \${this.fillings}</p>
-    </div>
 
-    \`
+          <div>
+          <input type=\\"radio\\" value=\\"Plain\\" .checked=\${this.tortilla === 'Plain'}
+          @input=\${event => this.tortilla = event.target.value} /> <input type=\\"radio\\"
+          value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'} @input=\${event
+          => this.tortilla = event.target.value} /> <input type=\\"radio\\" value=\\"Spinach\\"
+          .checked=\${this.tortilla === 'Spinach'} @input=\${event => this.tortilla =
+          event.target.value} />
+          <br />
+          <br />
+          <input type=\\"checkbox\\" value=\\"Rice\\" .checked=\${this.fillings === 'Rice'}
+          @input=\${event => this.fillings = event.target.value} /> <input
+          type=\\"checkbox\\" value=\\"Beans\\" .checked=\${this.fillings === 'Beans'}
+          @input=\${event => this.fillings = event.target.value} /> <input
+          type=\\"checkbox\\" value=\\"Cheese\\" .checked=\${this.fillings === 'Cheese'}
+          @input=\${event => this.fillings = event.target.value} /> <input
+          type=\\"checkbox\\" value=\\"Guac (extra)\\" .checked=\${this.fillings === 'Guac
+          (extra)'} @input=\${event => this.fillings = event.target.value} />
+          <p>Tortilla: \${this.tortilla}</p>
+          <p>Fillings: \${this.fillings}</p>
+        </div>
+
+        \`
   }
 }"
 `;
@@ -8495,10 +8601,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <input .value=\\"\${this.value}\\" />
 
-    \`;
+          <input .value=\\"\${this.value}\\" />
+
+        \`;
   }
 }
 "
@@ -8513,34 +8619,34 @@ import { customElement, property, state, query } from 'lit/decorators.js';
 
 @customElement('my-component')
 export default class MyComponent extends LitElement {
-  
+
     createRenderRoot() {
       return this;
     }
-    
 
-  
 
-  
+
+
+
 
 
   @property() disabled: any
 
     @state()  focus= true
 
-    
-  
-    
-    
-    
+
+
+
+
+
 
   render() {
     return html\`
-      
-      <input class={\`form-input \${props.disabled ? 'disabled' : ''} \${state.focus ?
+
+          <input class={\`form-input \${props.disabled ? 'disabled' : ''} \${state.focus ?
     'focus' : ''}\`} />
 
-    \`
+        \`
   }
 }"
 `;
@@ -8559,10 +8665,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>\${this.activeTab}</div>
 
-    \`;
+          <div>\${this.activeTab}</div>
+
+        \`;
   }
 }
 "
@@ -8582,16 +8688,16 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <ul>
-      \${this.numbers?.map(
-        (num, index) => html\`
+
+          <ul>
+          \${this.numbers?.map(
+            (num, index) => html\`
       <li>\${num}</li>
       \`
-      )}
-    </ul>
+          )}
+        </ul>
 
-    \`;
+        \`;
   }
 }
 "
@@ -8613,11 +8719,11 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div ><button  @click=\${(a) => this.log(\\"hi\\")} >Log</button>
-      <button  @click=\${(event) => this.log(event)} >Log</button>
-      <button  @click=\${(event) => this.log(event)} >Log</button></div>
-      \`;
+
+          <div ><button  @click=\${(a) => this.log(\\"hi\\")} >Log</button>
+        <button  @click=\${(event) => this.log(event)} >Log</button>
+        <button  @click=\${(event) => this.log(event)} >Log</button></div>
+        \`;
   }
 }
 "
@@ -8637,10 +8743,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div .innerHTML=\\"\${this.html}\\"></div>
 
-    \`;
+          <div .innerHTML=\\"\${this.html}\\"></div>
+
+        \`;
   }
 }
 "
@@ -8664,15 +8770,15 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        
-        \${
-          this.show
-            ? html\`<button  @click=\${(event) =>
-                this.toggle(event)} > Hide </button>\`
-            : html\`<button  @click=\${(event) =>
-                this.toggle(event)} > Show </button>\`
-        }
-      \`;
+
+          \${
+            this.show
+              ? html\`<button  @click=\${(event) =>
+                  this.toggle(event)} > Hide </button>\`
+              : html\`<button  @click=\${(event) =>
+                  this.toggle(event)} > Show </button>\`
+          }
+        \`;
   }
 }
 "
@@ -8694,14 +8800,14 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      <my-button type=\\"button\\" .disabled=\\"\${this.disabled}\\"
-        ><my-slot></my-slot
-      ></my-button>
-    </div>
 
-    \`;
+          <div>
+          <my-button type=\\"button\\" .disabled=\\"\${this.disabled}\\"
+            ><my-slot></my-slot
+          ></my-button>
+        </div>
+
+        \`;
   }
 }
 "
@@ -8729,10 +8835,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -8756,14 +8862,14 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <input .value=\\"\${this.name}\\" />
 
-        Lowercase: \${this.lowercaseName}
-      </div>
+          <div>
+          <input .value=\\"\${this.name}\\" />
 
-      \`;
+          Lowercase: \${this.lowercaseName}
+        </div>
+
+        \`;
   }
 }
 "
@@ -8793,14 +8899,15 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <input type=\\"number\\" @input=\${(event) => (this.a = event.target.value)}
-        .value=\${this.a} /> <input type=\\"number\\" @input=\${(event) =>
-      (this.b = event.target.value)} .value=\${this.b} /> Result: \${this.result}
-      </div>
 
-      \`;
+          <div>
+          <input type=\\"number\\" @input=\${(event) =>
+            (this.a = event.target.value)}
+          .value=\${this.a} /> <input type=\\"number\\" @input=\${(event) =>
+      (this.b = event.target.value)} .value=\${this.b} /> Result: \${this.result}
+        </div>
+
+        \`;
   }
 }
 "
@@ -8818,12 +8925,12 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      <my-slot>default</my-slot> <my-slot name=\\"Test\\"><div>default</div></my-slot>
-    </div>
 
-    \`;
+          <div>
+          <my-slot>default</my-slot> <my-slot name=\\"Test\\"><div>default</div></my-slot>
+        </div>
+
+        \`;
   }
 }
 "
@@ -8841,18 +8948,18 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        <style>input {
-color: red;
-font-size: 12px;
+          <style>input {
+  color: red;
+  font-size: 12px;
 }
 
 .form-input:focus {
-outline: 1px solid blue;
+  outline: 1px solid blue;
 }
 </style>
-        <input />
+          <input />
 
-      \`;
+        \`;
   }
 }
 "
@@ -8873,15 +8980,15 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      normal: \${this.a + this.b}
-      <br />
 
-      conditional \${this.a > 2 ? \\"hello\\" : \\"bye\\"}
-    </div>
+          <div>
+          normal: \${this.a + this.b}
+          <br />
 
-    \`;
+          conditional \${this.a > 2 ? \\"hello\\" : \\"bye\\"}
+        </div>
+
+        \`;
   }
 }
 "
@@ -8901,15 +9008,15 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      <input @input=\${(event) => (this.name = event.target.value)} .value=\${
+
+          <div>
+          <input @input=\${(event) => (this.name = event.target.value)} .value=\${
       this.name
     }
-      /> Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+          /> Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
 
-    \`;
+        \`;
   }
 }
 "
@@ -8924,53 +9031,53 @@ import { customElement, property, state, query } from 'lit/decorators.js';
 
 @customElement('my-component')
 export default class MyComponent extends LitElement {
-  
+
     createRenderRoot() {
       return this;
     }
-    
-
-  
-
-  
 
 
-  
+
+
+
+
+
+
 
     @state()  tortilla= \\"Plain\\"
 @state()  fillings= []
 
-    
-  
-    
-    
-    
+
+
+
+
+
 
   render() {
     return html\`
-      
-      <div>
-      <input type=\\"radio\\" value=\\"Plain\\" .checked=\${this.tortilla === 'Plain'}
-      @input=\${event => this.tortilla = event.target.value} /> <input type=\\"radio\\"
-      value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'} @input=\${event
-      => this.tortilla = event.target.value} /> <input type=\\"radio\\" value=\\"Spinach\\"
-      .checked=\${this.tortilla === 'Spinach'} @input=\${event => this.tortilla =
-      event.target.value} />
-      <br />
-      <br />
-      <input type=\\"checkbox\\" value=\\"Rice\\" .checked=\${this.fillings === 'Rice'}
-      @input=\${event => this.fillings = event.target.value} /> <input
-      type=\\"checkbox\\" value=\\"Beans\\" .checked=\${this.fillings === 'Beans'}
-      @input=\${event => this.fillings = event.target.value} /> <input
-      type=\\"checkbox\\" value=\\"Cheese\\" .checked=\${this.fillings === 'Cheese'}
-      @input=\${event => this.fillings = event.target.value} /> <input
-      type=\\"checkbox\\" value=\\"Guac (extra)\\" .checked=\${this.fillings === 'Guac
-      (extra)'} @input=\${event => this.fillings = event.target.value} />
-      <p>Tortilla: \${this.tortilla}</p>
-      <p>Fillings: \${this.fillings}</p>
-    </div>
 
-    \`
+          <div>
+          <input type=\\"radio\\" value=\\"Plain\\" .checked=\${this.tortilla === 'Plain'}
+          @input=\${event => this.tortilla = event.target.value} /> <input type=\\"radio\\"
+          value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'} @input=\${event
+          => this.tortilla = event.target.value} /> <input type=\\"radio\\" value=\\"Spinach\\"
+          .checked=\${this.tortilla === 'Spinach'} @input=\${event => this.tortilla =
+          event.target.value} />
+          <br />
+          <br />
+          <input type=\\"checkbox\\" value=\\"Rice\\" .checked=\${this.fillings === 'Rice'}
+          @input=\${event => this.fillings = event.target.value} /> <input
+          type=\\"checkbox\\" value=\\"Beans\\" .checked=\${this.fillings === 'Beans'}
+          @input=\${event => this.fillings = event.target.value} /> <input
+          type=\\"checkbox\\" value=\\"Cheese\\" .checked=\${this.fillings === 'Cheese'}
+          @input=\${event => this.fillings = event.target.value} /> <input
+          type=\\"checkbox\\" value=\\"Guac (extra)\\" .checked=\${this.fillings === 'Guac
+          (extra)'} @input=\${event => this.fillings = event.target.value} />
+          <p>Tortilla: \${this.tortilla}</p>
+          <p>Fillings: \${this.fillings}</p>
+        </div>
+
+        \`
   }
 }"
 `;
@@ -8989,10 +9096,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <input .value=\\"\${this.value}\\" />
 
-    \`;
+          <input .value=\\"\${this.value}\\" />
+
+        \`;
   }
 }
 "
@@ -9007,34 +9114,34 @@ import { customElement, property, state, query } from 'lit/decorators.js';
 
 @customElement('my-component')
 export default class MyComponent extends LitElement {
-  
+
     createRenderRoot() {
       return this;
     }
-    
 
-  
 
-  
+
+
+
 
 
   @property() disabled: any
 
     @state()  focus= true
 
-    
-  
-    
-    
-    
+
+
+
+
+
 
   render() {
     return html\`
-      
-      <input class={\`form-input \${props.disabled ? 'disabled' : ''} \${state.focus ?
+
+          <input class={\`form-input \${props.disabled ? 'disabled' : ''} \${state.focus ?
     'focus' : ''}\`} />
 
-    \`
+        \`
   }
 }"
 `;
@@ -9053,10 +9160,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>\${this.activeTab}</div>
 
-    \`;
+          <div>\${this.activeTab}</div>
+
+        \`;
   }
 }
 "
@@ -9076,16 +9183,16 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <ul>
-      \${this.numbers?.map(
-        (num, index) => html\`
+
+          <ul>
+          \${this.numbers?.map(
+            (num, index) => html\`
       <li>\${num}</li>
       \`
-      )}
-    </ul>
+          )}
+        </ul>
 
-    \`;
+        \`;
   }
 }
 "
@@ -9107,11 +9214,11 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div ><button  @click=\${(a) => this.log(\\"hi\\")} >Log</button>
-      <button  @click=\${(event) => this.log(event)} >Log</button>
-      <button  @click=\${(event) => this.log(event)} >Log</button></div>
-      \`;
+
+          <div ><button  @click=\${(a) => this.log(\\"hi\\")} >Log</button>
+        <button  @click=\${(event) => this.log(event)} >Log</button>
+        <button  @click=\${(event) => this.log(event)} >Log</button></div>
+        \`;
   }
 }
 "
@@ -9131,10 +9238,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div .innerHTML=\\"\${this.html}\\"></div>
 
-    \`;
+          <div .innerHTML=\\"\${this.html}\\"></div>
+
+        \`;
   }
 }
 "
@@ -9158,15 +9265,15 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        
-        \${
-          this.show
-            ? html\`<button  @click=\${(event) =>
-                this.toggle(event)} > Hide </button>\`
-            : html\`<button  @click=\${(event) =>
-                this.toggle(event)} > Show </button>\`
-        }
-      \`;
+
+          \${
+            this.show
+              ? html\`<button  @click=\${(event) =>
+                  this.toggle(event)} > Hide </button>\`
+              : html\`<button  @click=\${(event) =>
+                  this.toggle(event)} > Show </button>\`
+          }
+        \`;
   }
 }
 "
@@ -9188,14 +9295,14 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      <my-button type=\\"button\\" .disabled=\\"\${this.disabled}\\"
-        ><my-slot></my-slot
-      ></my-button>
-    </div>
 
-    \`;
+          <div>
+          <my-button type=\\"button\\" .disabled=\\"\${this.disabled}\\"
+            ><my-slot></my-slot
+          ></my-button>
+        </div>
+
+        \`;
   }
 }
 "
@@ -9223,10 +9330,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div></div>
 
-    \`;
+          <div></div>
+
+        \`;
   }
 }
 "
@@ -9250,14 +9357,14 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <input .value=\\"\${this.name}\\" />
 
-        Lowercase: \${this.lowercaseName}
-      </div>
+          <div>
+          <input .value=\\"\${this.name}\\" />
 
-      \`;
+          Lowercase: \${this.lowercaseName}
+        </div>
+
+        \`;
   }
 }
 "
@@ -9287,14 +9394,15 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        
-        <div>
-        <input type=\\"number\\" @input=\${(event) => (this.a = event.target.value)}
-        .value=\${this.a} /> <input type=\\"number\\" @input=\${(event) =>
-      (this.b = event.target.value)} .value=\${this.b} /> Result: \${this.result}
-      </div>
 
-      \`;
+          <div>
+          <input type=\\"number\\" @input=\${(event) =>
+            (this.a = event.target.value)}
+          .value=\${this.a} /> <input type=\\"number\\" @input=\${(event) =>
+      (this.b = event.target.value)} .value=\${this.b} /> Result: \${this.result}
+        </div>
+
+        \`;
   }
 }
 "
@@ -9312,12 +9420,12 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      <my-slot>default</my-slot> <my-slot name=\\"Test\\"><div>default</div></my-slot>
-    </div>
 
-    \`;
+          <div>
+          <my-slot>default</my-slot> <my-slot name=\\"Test\\"><div>default</div></my-slot>
+        </div>
+
+        \`;
   }
 }
 "
@@ -9335,18 +9443,18 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-        <style>input {
-color: red;
-font-size: 12px;
+          <style>input {
+  color: red;
+  font-size: 12px;
 }
 
 .form-input:focus {
-outline: 1px solid blue;
+  outline: 1px solid blue;
 }
 </style>
-        <input />
+          <input />
 
-      \`;
+        \`;
   }
 }
 "
@@ -9367,15 +9475,15 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-      
-      <div>
-      normal: \${this.a + this.b}
-      <br />
 
-      conditional \${this.a > 2 ? \\"hello\\" : \\"bye\\"}
-    </div>
+          <div>
+          normal: \${this.a + this.b}
+          <br />
 
-    \`;
+          conditional \${this.a > 2 ? \\"hello\\" : \\"bye\\"}
+        </div>
+
+        \`;
   }
 }
 "

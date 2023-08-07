@@ -4,10 +4,11 @@ import { babelTransformExpression } from './babel-transform';
 const SLOT_PREFIX = 'slot';
 export type SlotMapper = (slotName: string) => string;
 
-export const isSlotProperty = (key: string): boolean => key.startsWith(SLOT_PREFIX);
+export const isSlotProperty = (key: string, slotPrefix: string = SLOT_PREFIX): boolean =>
+  key.startsWith(slotPrefix);
 
-export const stripSlotPrefix = (key: string): string =>
-  isSlotProperty(key) ? key.substring(SLOT_PREFIX.length) : key;
+export const stripSlotPrefix = (key: string, slotPrefix: string = SLOT_PREFIX): string =>
+  isSlotProperty(key, slotPrefix) ? key.substring(slotPrefix.length) : key;
 
 export function replaceSlotsInString(code: string, mapper: SlotMapper) {
   return babelTransformExpression(code, {

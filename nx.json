@@ -3,29 +3,20 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "build"
-        ],
+        "cacheableOperations": ["build"],
         "accessToken": "N2JjNTFkZDMtZmU1ZS00ZTU1LTgzMjYtYzNkMzFjYWNmYjFmfHJlYWQ="
       }
     }
   },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "!{projectRoot}/dist/**/*"],
-    "production": []
+    "production": ["!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)"]
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "default",
-        "^default"
-      ],
-      "outputs": [
-        "{projectRoot}/dist"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"],
+      "outputs": ["{projectRoot}/dist"]
     }
   },
   "defaultBase": "main"

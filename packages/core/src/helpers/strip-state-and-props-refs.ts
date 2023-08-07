@@ -1,4 +1,4 @@
-import { replaceIdentifiers } from './replace-identifiers';
+import { replacePropsIdentifier, replaceStateIdentifier } from './replace-identifiers';
 
 export type StripStateAndPropsRefsOptions = {
   replaceWith?: string | ((name: string) => string);
@@ -116,7 +116,7 @@ export const stripStateAndPropsRefs = (
   };
 
   if (includeProps !== false) {
-    newCode = replaceIdentifiers({ code: newCode, from: 'props', to: replaceWith || null });
+    newCode = replacePropsIdentifier(replaceWith)(newCode);
 
     // TODO: webcomponent edge-case
     if (/el\.this\.props/.test(newCode)) {
@@ -124,7 +124,7 @@ export const stripStateAndPropsRefs = (
     }
   }
   if (includeState !== false) {
-    newCode = replaceIdentifiers({ code: newCode, from: 'state', to: replaceWith || null });
+    newCode = replaceStateIdentifier(replaceWith)(newCode);
   }
 
   return newCode;

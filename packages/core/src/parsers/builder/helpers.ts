@@ -1,7 +1,7 @@
-import { GETTER } from '../../helpers/patterns';
-import { MitosisComponent, StateValue, StateValueType } from '../../types/mitosis-component';
-import { JSONObject } from '../../types/json';
 import { mapValues } from 'lodash';
+import { GETTER } from '../../helpers/patterns';
+import { JSONObject } from '../../types/json';
+import { MitosisComponent, StateValue, StateValueType } from '../../types/mitosis-component';
 
 const __DO_NOT_USE_FUNCTION_LITERAL_PREFIX = `@builder.io/mitosis/function:`;
 const __DO_NOT_USE_METHOD_LITERAL_PREFIX = `@builder.io/mitosis/method:`;
@@ -20,7 +20,7 @@ const mapJsonToStateValue = (value: any): StateValue => {
       return { type, code: strippedValue };
     }
   }
-  return { type: 'property', code: JSON.stringify(value) };
+  return { type: 'property', code: JSON.stringify(value), propertyType: 'normal' };
 };
 
 export const mapBuilderContentStateToMitosisState = (

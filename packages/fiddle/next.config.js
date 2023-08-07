@@ -15,6 +15,8 @@ const nextConfig = {
 
     config.resolve.plugins = [...config.resolve.plugins, new TsconfigPathsPlugin()];
 
+    config.resolve.alias['globby'] = false;
+
     config.module.rules.push({
       test: /svelte-preprocess.+d\.ts/,
       loader: 'ignore-loader',
