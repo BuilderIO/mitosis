@@ -79,28 +79,29 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => ({
 });
 
 async function clean(options: MitosisConfig, target: Target) {
-  const pattern = `${options.dest}/${options.getTargetPath({ target })}/${options.files}`;
-  const newFiles = getFiles({ files: options.files, exclude: options.exclude }).filter(
-    (path) => checkIsMitosisComponentFilePath(path) || path.endsWith('.js') || path.endsWith('.ts'),
-  );
-  const files = getFiles({ files: pattern, exclude: options.exclude });
+  const outputPattern = `${options.dest}/${options.getTargetPath({ target })}/${options.files}`;
+  const oldFiles = getFiles({ files: outputPattern, exclude: options.exclude });
+
+  const newFilenames = getFiles({ files: options.files, exclude: options.exclude })
+    .map((path) =>
+      checkIsMitosisComponentFilePath(path)
+        ? getComponentOutputFileName({ target, path, options })
+        : path.endsWith('.js') || path.endsWith('.ts')
+        ? getNonComponentOutputFileName({ target, path, options })
+        : undefined,
+    )
+    .filter(Boolean);
+
   await Promise.all(
-    files.map(async (file) => {
-      // the output file paths include the output folder structure, so we need to check the ending
-      if (
-        !newFiles.some((newFile) => {
-          // get output file path for
-          if (checkIsMitosisComponentFilePath(newFile)) {
-            newFile =
-              newFile.split('.')[0] +
-              getFileExtensionForTarget({ type: 'filename', target, options });
-          } else if (newFile.endsWith('.ts') && !checkShouldOutputTypeScript({ target, options })) {
-            newFile = newFile.split('.')[0] + '.js';
-          }
-          return file.endsWith(newFile);
-        })
-      ) {
-        await remove(file);
+    oldFiles.map(async (oldFile) => {
+      const fileExists = newFilenames.some((newFile) => oldFile.endsWith(newFile));
+
+      /**
+       * We only remove files that were removed from the input files.
+       * Modified files will be overwritten, and new files will be created.
+       */
+      if (!fileExists) {
+        await remove(oldFile);
       }
     }),
   );
@@ -391,6 +392,16 @@ const getNonComponentFileExtension = flow(checkShouldOutputTypeScript, (shouldOu
   shouldOutputTypeScript ? '.ts' : '.js',
 );
 
+const getNonComponentOutputFileName = ({
+  target,
+  options,
+  path,
+}: {
+  path: string;
+  target: Target;
+  options: MitosisConfig;
+}) => path.replace(/\.tsx?$/, getNonComponentFileExtension({ target, options }));
+
 /**
  * Outputs non-component files to the destination directory, without modifying them.
  */
@@ -403,11 +414,13 @@ const outputNonComponentFiles = async ({
   files: { path: string; output: string }[];
   options: MitosisConfig;
 }) => {
-  const extension = getNonComponentFileExtension({ target, options });
   const folderPath = `${options.dest}/${outputPath}`;
   return await Promise.all(
     files.map(({ path, output }) =>
-      outputFile(`${folderPath}/${path.replace(/\.tsx?$/, extension)}`, output),
+      outputFile(
+        `${folderPath}/${getNonComponentOutputFileName({ options, path, target })}`,
+        output,
+      ),
     ),
   );
 };
