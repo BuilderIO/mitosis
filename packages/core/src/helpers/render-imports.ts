@@ -1,5 +1,6 @@
 import { Target } from '../types/config';
 import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
+import { getComponentFileExtensionForTarget } from './component-file-extensions';
 
 const DEFAULT_IMPORT = 'default';
 const STAR_IMPORT = '*';
@@ -23,46 +24,28 @@ const getDefaultImport = ({ theImport }: { theImport: MitosisImport }): string |
   return null;
 };
 
-const getFileExtensionForTarget = (target: Target): string => {
-  switch (target) {
-    case 'svelte':
-      return '.svelte';
-    case 'solid':
-      return '.jsx';
-    case 'vue':
-    case 'vue2':
-    case 'vue3':
-      return '.vue';
-    case 'marko':
-      return '.marko';
-    case 'lit':
-      return '.js';
-    case 'angular':
-      return '';
-    // these `.lite` extensions are handled in the `transpile` step of the CLI.
-    // TO-DO: consolidate file-extension renaming to this file, and remove `.lite` replaces from the CLI `transpile`. (outdated) ?
-    // Bit team wanted to make sure React and Angular behaved the same in regards to imports - ALU 10/05/22
-    case 'qwik':
-    default:
-      return '.lite';
-  }
-};
-
 export const checkIsComponentImport = (theImport: MitosisImport) =>
   theImport.path.endsWith('.lite') && !theImport.path.endsWith('.context.lite');
 
-const transformImportPath = (
-  theImport: MitosisImport,
-  target: Target,
-  preserveFileExtensions: boolean,
-) => {
+export const transformImportPath = ({
+  theImport,
+  target,
+  preserveFileExtensions,
+}: {
+  theImport: MitosisImport;
+  target: Target;
+  preserveFileExtensions: boolean;
+}) => {
   // We need to drop the `.lite` from context files, because the context generator does so as well.
   if (theImport.path.endsWith('.context.lite')) {
     return theImport.path.replace('.lite', '');
   }
 
   if (checkIsComponentImport(theImport) && !preserveFileExtensions) {
-    return theImport.path.replace('.lite', getFileExtensionForTarget(target));
+    return theImport.path.replace(
+      '.lite',
+      getComponentFileExtensionForTarget({ target, type: 'import' }),
+    );
   }
 
   return theImport.path;
@@ -123,7 +106,7 @@ export const renderImport = ({
 }): string => {
   const importedValues = getImportedValues({ theImport });
 
-  const path = transformImportPath(theImport, target, preserveFileExtensions);
+  const path = transformImportPath({ theImport, target, preserveFileExtensions });
   const importValue = getImportValue(importedValues);
 
   const isComponentImport = checkIsComponentImport(theImport);

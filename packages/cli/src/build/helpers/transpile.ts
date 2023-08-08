@@ -1,6 +1,5 @@
-import { MitosisConfig, Target } from '@builder.io/mitosis';
+import { getComponentFileExtensionForTarget, MitosisConfig, Target } from '@builder.io/mitosis';
 import * as esbuild from 'esbuild';
-import { getFileExtensionForTarget } from './extensions';
 import { checkIsMitosisComponentFilePath, INPUT_EXTENSION_IMPORT_REGEX } from './inputs-extensions';
 import { checkShouldOutputTypeScript } from './options';
 
@@ -26,7 +25,10 @@ export const transformImports =
       // afterwards, we replace all component imports with the correct file extension
       .replace(
         INPUT_EXTENSION_IMPORT_REGEX,
-        `${getFileExtensionForTarget({ type: 'import', target, options })}$4`,
+        `${getComponentFileExtensionForTarget({
+          type: 'import',
+          target,
+        })}$4`,
       );
 
 /**

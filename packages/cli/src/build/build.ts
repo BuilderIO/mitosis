@@ -21,6 +21,7 @@ import {
   componentToVue2,
   componentToVue3,
   createTypescriptProject,
+  getComponentFileExtensionForTarget,
   mapSignalTypeInTSFile,
   MitosisComponent,
   MitosisConfig,
@@ -36,7 +37,6 @@ import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
-import { getFileExtensionForTarget } from './helpers/extensions';
 import { getFiles } from './helpers/files';
 import {
   checkIsMitosisComponentFilePath,
@@ -363,7 +363,11 @@ const getComponentOutputFileName = ({
 }) => {
   return path.replace(
     INPUT_EXTENSION_REGEX,
-    getFileExtensionForTarget({ type: 'filename', target, options }),
+    getComponentFileExtensionForTarget({
+      type: 'filename',
+      target,
+      isTypescript: checkShouldOutputTypeScript({ target, options }),
+    }),
   );
 };
 

@@ -29,6 +29,7 @@ export * from './generators/swift-ui';
 export * from './generators/taro';
 export * from './generators/template';
 export * from './generators/vue';
+export { getComponentFileExtensionForTarget } from './helpers/component-file-extensions';
 export * from './helpers/is-mitosis-node';
 export * from './helpers/signals';
 export * from './helpers/typescript-project';
