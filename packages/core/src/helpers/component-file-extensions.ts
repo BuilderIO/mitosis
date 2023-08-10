@@ -1,4 +1,61 @@
-import { Target } from '@builder.io/mitosis';
+import { MitosisConfig, Target } from '@builder.io/mitosis';
+import { checkShouldOutputTypeScript } from './output';
+
+const COMPONENT_EXTENSIONS = {
+  jsx: ['.lite.tsx', '.lite.jsx'],
+  svelte: ['.svelte'],
+};
+
+export const COMPONENT_IMPORT_EXTENSIONS = [COMPONENT_EXTENSIONS.svelte, COMPONENT_EXTENSIONS.jsx]
+  .flat()
+  .concat(['.lite']);
+
+export const checkIsSvelteComponentFilePath = (filePath: string) =>
+  COMPONENT_EXTENSIONS.svelte.some((x) => filePath.endsWith(x));
+
+export const checkIsLiteComponentFilePath = (filePath: string) =>
+  COMPONENT_EXTENSIONS.jsx.some((x) => filePath.endsWith(x));
+
+export const checkIsMitosisComponentFilePath = (filePath: string) =>
+  checkIsLiteComponentFilePath(filePath) || checkIsSvelteComponentFilePath(filePath);
+
+/**
+ * Matches `.svelte`, `.lite.tsx`, `.lite.jsx` files (with optional `.jsx`/`.tsx` extension)
+ */
+const INPUT_EXTENSION_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))/g;
+
+export const renameComponentFile = ({
+  path,
+  target,
+  options,
+}: {
+  path: string;
+  target: Target;
+  options: MitosisConfig;
+}) =>
+  path.replace(
+    INPUT_EXTENSION_REGEX,
+    getComponentFileExtensionForTarget({
+      type: 'filename',
+      target,
+      isTypescript: checkShouldOutputTypeScript({ target, options }),
+    }),
+  );
+
+/**
+ * just like `INPUT_EXTENSION_REGEX`, but adds trailing quotes to the end of import paths.
+ */
+const INPUT_EXTENSION_IMPORT_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))(?<quote>['"])/g;
+
+export const renameImport = ({ importPath, target }: { importPath: string; target: Target }) => {
+  return importPath.replace(
+    INPUT_EXTENSION_IMPORT_REGEX,
+    `${getComponentFileExtensionForTarget({
+      type: 'import',
+      target,
+    })}$4`,
+  );
+};
 
 type Args = { target: Target } & (
   | {

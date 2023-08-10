@@ -1,7 +1,11 @@
-import { getComponentFileExtensionForTarget, MitosisConfig, Target } from '@builder.io/mitosis';
+import {
+  checkIsLiteComponentFilePath,
+  checkShouldOutputTypeScript,
+  MitosisConfig,
+  renameImport,
+  Target,
+} from '@builder.io/mitosis';
 import * as esbuild from 'esbuild';
-import { checkIsMitosisComponentFilePath, INPUT_EXTENSION_IMPORT_REGEX } from './inputs-extensions';
-import { checkShouldOutputTypeScript } from './options';
 
 /**
  * Remove `.lite` or `.svelte` extensions from imports without having to load a slow parser like babel
@@ -13,23 +17,15 @@ import { checkShouldOutputTypeScript } from './options';
  */
 export const transformImports =
   ({ target, options }: { target: Target; options: MitosisConfig }) =>
-  (code: string) =>
-    code
-      .replace(
-        // we start by replacing all `context.lite` imports with `context`
-        // This Context replace is only needed for non-mitosis components, i.e. plain `.js`/`.ts` files.
-        // Mitosis components have logic that transform context import paths correctly.
-        /\.context\.lite['"]/g,
-        `.context$1`,
-      )
-      // afterwards, we replace all component imports with the correct file extension
-      .replace(
-        INPUT_EXTENSION_IMPORT_REGEX,
-        `${getComponentFileExtensionForTarget({
-          type: 'import',
-          target,
-        })}$4`,
-      );
+  (code: string) => {
+    // we start by replacing all `context.lite` imports with `context`
+    // This Context replace is only needed for non-mitosis components, i.e. plain `.js`/`.ts` files.
+    // Mitosis components have logic that transform context import paths correctly.
+    code = code.replace(/\.context\.lite(.js|.ts)?(['"])/g, `.context.js$2`);
+
+    // afterwards, we replace all component imports with the correct file extension
+    return renameImport({ importPath: code, target: target });
+  };
 
 /**
  * Runs `esbuild` on a file, and performs some additional transformations.
@@ -55,7 +51,7 @@ export const transpile = async ({
        * Collisions occur between TSX and TS Generic syntax. We want to only provide this loader config if the file is
        * a mitosis `.lite.tsx` file.
        */
-      loader: checkIsMitosisComponentFilePath(path) ? 'tsx' : 'ts',
+      loader: checkIsLiteComponentFilePath(path) ? 'tsx' : 'ts',
       target: 'es6',
     });
 
