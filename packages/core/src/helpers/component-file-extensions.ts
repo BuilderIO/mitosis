@@ -1,4 +1,4 @@
-import { Target } from '@builder.io/mitosis';
+import { MitosisConfig, Target, checkShouldOutputTypeScript } from '@builder.io/mitosis';
 
 const COMPONENT_EXTENSIONS = {
   jsx: ['.lite.tsx', '.lite.jsx'],
@@ -26,18 +26,18 @@ export const INPUT_EXTENSION_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))/g;
 export const renameComponentFile = ({
   path,
   target,
-  isTypescript,
+  options,
 }: {
   path: string;
   target: Target;
-  isTypescript: boolean;
+  options: MitosisConfig;
 }) =>
   path.replace(
     INPUT_EXTENSION_REGEX,
     getComponentFileExtensionForTarget({
       type: 'filename',
       target,
-      isTypescript,
+      isTypescript: checkShouldOutputTypeScript({ options, target }),
     }),
   );
 
