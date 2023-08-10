@@ -50,7 +50,7 @@ export const transformImportPath = ({
     let path = theImport.path;
     CONTEXT_IMPORTS.forEach((contextPath) => {
       if (path.endsWith(contextPath)) {
-        path = path.replace(contextPath, 'js');
+        path = path.replace(contextPath, 'context.js');
       }
     });
     return path;
