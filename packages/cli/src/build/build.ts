@@ -1,4 +1,7 @@
 import {
+  checkIsMitosisComponentFilePath,
+  checkIsSvelteComponentFilePath,
+  checkShouldOutputTypeScript,
   componentToAlpine,
   componentToAngular,
   componentToCustomElement,
@@ -27,6 +30,7 @@ import {
   parseJsx,
   parseSvelte,
   removeMitosisImport,
+  renameComponentFile,
   Target,
   TranspilerGenerator,
 } from '@builder.io/mitosis';
@@ -36,14 +40,7 @@ import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
-import { getFileExtensionForTarget } from './helpers/extensions';
 import { getFiles } from './helpers/files';
-import {
-  checkIsMitosisComponentFilePath,
-  INPUT_EXTENSIONS,
-  INPUT_EXTENSION_REGEX,
-} from './helpers/inputs-extensions';
-import { checkShouldOutputTypeScript } from './helpers/options';
 import { getOverrideFile } from './helpers/overrides';
 import { transformImports, transpile, transpileIfNecessary } from './helpers/transpile';
 
@@ -88,7 +85,7 @@ async function clean(options: MitosisConfig, target: Target) {
   const newFilenames = getFiles({ files: options.files, exclude: options.exclude })
     .map((path) =>
       checkIsMitosisComponentFilePath(path)
-        ? getComponentOutputFileName({ target, path, options })
+        ? renameComponentFile({ target, path, options })
         : path.endsWith('.js') || path.endsWith('.ts')
         ? getNonComponentOutputFileName({ target, path, options })
         : undefined,
@@ -230,7 +227,7 @@ const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedM
     paths.map(async (path) => {
       try {
         const file = await readFile(path, 'utf8');
-        if (INPUT_EXTENSIONS.svelte.some((x) => path.endsWith(x))) {
+        if (checkIsSvelteComponentFilePath(path)) {
           return await parseSvelteComponent({ path, file });
         } else {
           return await parseJsxComponent({ options, path, file, tsProject });
@@ -352,21 +349,6 @@ const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['g
   }
 };
 
-const getComponentOutputFileName = ({
-  target,
-  path,
-  options,
-}: {
-  target: Target;
-  path: string;
-  options: MitosisConfig;
-}) => {
-  return path.replace(
-    INPUT_EXTENSION_REGEX,
-    getFileExtensionForTarget({ type: 'filename', target, options }),
-  );
-};
-
 /**
  * Transpiles and outputs Mitosis component files.
  */
@@ -381,7 +363,7 @@ async function buildAndOutputComponentFiles({
   const shouldOutputTypescript = checkShouldOutputTypeScript({ options, target });
 
   const output = files.map(async ({ path, typescriptMitosisJson, javascriptMitosisJson }) => {
-    const outputFilePath = getComponentOutputFileName({ target, path, options });
+    const outputFilePath = renameComponentFile({ target, path, options });
 
     /**
      * Try to find override file.
