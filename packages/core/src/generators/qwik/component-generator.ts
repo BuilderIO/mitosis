@@ -18,9 +18,9 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { addPreventDefault } from './helpers/add-prevent-default';
 import { stableInject } from './helpers/stable-inject';
-import { StateInit, emitStateMethodsAndRewriteBindings, emitUseStore } from './helpers/state';
+import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
 import { renderJSXNodes } from './jsx';
-import { File, SrcBuilder, arrowFnBlock, invoke } from './src-generator';
+import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 
 Error.stackTraceLimit = 9999;
 

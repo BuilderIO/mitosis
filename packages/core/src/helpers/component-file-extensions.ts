@@ -1,4 +1,4 @@
-import { MitosisConfig, Target, checkShouldOutputTypeScript } from '@builder.io/mitosis';
+import { checkShouldOutputTypeScript, MitosisConfig, Target } from '@builder.io/mitosis';
 
 const COMPONENT_EXTENSIONS = {
   jsx: ['.lite.tsx', '.lite.jsx'],
