@@ -38,7 +38,7 @@ export const transformImportPath = ({
 }) => {
   // We need to drop the `.lite` from context files, because the context generator does so as well.
   if (theImport.path.endsWith('.context.lite')) {
-    return theImport.path.replace('.lite', '');
+    return theImport.path.replace('.lite', '.js');
   }
 
   if (checkIsComponentImport(theImport) && !preserveFileExtensions) {
