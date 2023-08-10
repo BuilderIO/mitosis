@@ -59,6 +59,8 @@ const useStyle = getRawFile('./data/styles/use-style.raw.tsx');
 const useStyleOutsideComponent = getRawFile('./data/styles/use-style-outside-component.raw.tsx');
 const useStyleAndCss = getRawFile('./data/styles/use-style-and-css.raw.tsx');
 const styleClassAndCss = getRawFile('./data/styles/style-class-and-css.raw.tsx');
+const stylePropClassAndCss = getRawFile('./data/styles/style-prop-class-and-css.raw.tsx');
+const useTarget = getRawFile('./data/use-target.raw.tsx');
 
 const button = getRawFile('./data/blocks/button.raw.tsx');
 const classNameJsx = getRawFile('./data/blocks/classname-jsx.raw.tsx');
@@ -71,6 +73,7 @@ const image = getRawFile('./data/blocks/image.raw.tsx');
 const imageState = getRawFile('./data/blocks/img-state.raw.tsx');
 const img = getRawFile('./data/blocks/img.raw.tsx');
 const inputBlock = getRawFile('./data/blocks/input.raw.tsx');
+const inputParentBlock = getRawFile('./data/blocks/input-parent.raw.tsx');
 const multipleOnUpdate = getRawFile('./data/blocks/multiple-onUpdate.raw.tsx');
 const multipleOnUpdateWithDeps = getRawFile('./data/blocks/multiple-onUpdateWithDeps.raw.tsx');
 const onInit = getRawFile('./data/blocks/onInit.raw.tsx');
@@ -143,6 +146,7 @@ const BASIC_TESTS: Tests = {
   BasicFor: basicFor,
   basicForNoTagReference: basicForNoTagReference,
   Input: inputBlock,
+  InputParent: inputParentBlock,
   Submit: submitButtonBlock,
   Select: selectBlock,
   Button: button,
@@ -186,6 +190,7 @@ const BASIC_TESTS: Tests = {
   'use-style': useStyle,
   'use-style-and-css': useStyleAndCss,
   styleClassAndCss,
+  stylePropClassAndCss,
   'use-style-outside-component': useStyleOutsideComponent,
   'self-referencing component with children': selfRefCompWChildren,
   'self-referencing component': selfRefComp,
@@ -201,6 +206,7 @@ const BASIC_TESTS: Tests = {
   referencingFunInsideHook,
   svgComponent,
   renderBlock,
+  useTarget,
 };
 
 const SLOTS_TESTS: Tests = {

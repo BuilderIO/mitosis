@@ -49,3 +49,5 @@ export const targets = {
   rsc,
   taro,
 } as const;
+
+export type Targets = keyof typeof targets;

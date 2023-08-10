@@ -1,4 +1,4 @@
-import { selfClosingTags } from '../../parsers/jsx';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseNode, Binding, ForNode, MitosisNode } from '../../types/mitosis-node';
 
@@ -128,19 +128,41 @@ const getTagName = ({
     return SVELTE_SPECIAL_TAGS.SELF;
   }
 
+  /**
+   * These are special HTML tags that svelte requires `<svelte:element this={TAG}>`
+   */
+  const SPECIAL_HTML_TAGS = ['style', 'script', 'template'];
+
+  if (SPECIAL_HTML_TAGS.includes(json.name)) {
+    json.bindings.this = createSingleBinding({
+      code:
+        json.name === 'style'
+          ? // We have to obfuscate `"style"` due to a limitation in the svelte-preprocessor plugin.
+            // https://github.com/sveltejs/vite-plugin-svelte/issues/315#issuecomment-1109000027
+            `"sty" + "le"`
+          : `"${json.name}"`,
+    });
+
+    return SVELTE_SPECIAL_TAGS.ELEMENT;
+  }
+
   const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name);
+
   const isSpecialSvelteTag = json.name.startsWith('svelte:');
+
   // Check if any import matches `json.name`
   const hasMatchingImport = parentComponent.imports.some(({ imports }) =>
     Object.keys(imports).some((name) => name === json.name),
   );
 
-  // TO-DO: no way to decide between <svelte:component> and <svelte:element>...need to do that through metadata
-  // overrides for now
+  // If none of these are true, then we have some type of dynamic tag name
   if (!isValidHtmlTag && !isSpecialSvelteTag && !hasMatchingImport) {
     json.bindings.this = createSingleBinding({
       code: stripStateAndProps({ json: parentComponent, options })(json.name),
     });
+
+    // TO-DO: no way to perfectly decide between <svelte:component> and <svelte:element> for dynamic
+    // values...need to do that through metadata overrides for now.
     return SVELTE_SPECIAL_TAGS.COMPONENT;
   }
 
@@ -154,18 +176,20 @@ type BlockToSvelte<T extends BaseNode = MitosisNode> = (props: {
 }) => string;
 
 const stringifyBinding =
-  (options: ToSvelteOptions) =>
+  (node: MitosisNode, options: ToSvelteOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
     if (key === 'innerHTML' || !binding) {
       return '';
     }
 
     const { code, arguments: cusArgs = ['event'], type } = binding;
+    const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name);
 
     if (type === 'spread') {
       const spreadValue = key === 'props' ? '$$props' : code;
       return ` {...${spreadValue}} `;
-    } else if (key.startsWith('on')) {
+    } else if (key.startsWith('on') && isValidHtmlTag) {
+      // handle html native on[event] props
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
 
@@ -175,6 +199,15 @@ const stringifyBinding =
         return ` on:${event}={${valueWithoutBlock}} `;
       } else {
         return ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
+      }
+    } else if (key.startsWith('on')) {
+      // handle on[custom event] props
+      const valueWithoutBlock = removeSurroundingBlock(code);
+
+      if (valueWithoutBlock === key) {
+        return ` ${key}={${valueWithoutBlock}} `;
+      } else {
+        return ` ${key}={(${cusArgs.join(',')}) => ${valueWithoutBlock}}`;
       }
     } else if (key === 'ref') {
       return ` bind:this={${code}} `;
@@ -229,7 +262,9 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     str += ` ${key}="${value}" `;
   }
 
-  const stringifiedBindings = Object.entries(json.bindings).map(stringifyBinding(options)).join('');
+  const stringifiedBindings = Object.entries(json.bindings)
+    .map(stringifyBinding(json, options))
+    .join('');
 
   str += stringifiedBindings;
 
@@ -242,7 +277,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     return str;
   }
 
-  if (selfClosingTags.has(tagName)) {
+  if (SELF_CLOSING_HTML_TAGS.has(tagName)) {
     return str + ' />';
   }
   str += '>';

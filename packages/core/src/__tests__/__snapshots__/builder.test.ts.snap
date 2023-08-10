@@ -686,7 +686,7 @@ Object.assign(state, {
   },
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && isBrowser();
+    return !!props.lazy && state.isBrowser();
   },
   isBrowser: function isBrowser() {
     return (
@@ -704,7 +704,7 @@ if (state.useLazyLoading()) {
       const buffer = window.innerHeight / 2;
 
       if (rect.top < window.innerHeight + buffer) {
-        setLoad(true);
+        state.load = true;
         state.scrollListener = null;
         window.removeEventListener(\\"scroll\\", listener);
       }
@@ -729,7 +729,7 @@ useState({
   },
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && isBrowser();
+    return !!props.lazy && state.isBrowser();
   },
   isBrowser: function isBrowser() {
     return (
@@ -748,7 +748,7 @@ onMount(() => {
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
-          setLoad(true);
+          state.load = true;
           state.scrollListener = null;
           window.removeEventListener(\\"scroll\\", listener);
         }
@@ -780,7 +780,7 @@ export default function MyComponent(props) {
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && isBrowser();
+      return !!props.lazy && state.isBrowser();
     },
     isBrowser: function isBrowser() {
       return (
@@ -802,7 +802,7 @@ export default function MyComponent(props) {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            state.load = true;
             state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -848,7 +848,8 @@ export default function MyComponent(props) {
 `;
 
 exports[`Builder > Regenerate Image 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import { useState } from \\"react\\";
 import { Image } from \\"@components\\";
 
@@ -1049,7 +1050,7 @@ export default function MyComponent(props) {
     <For each={state.submenusItem.menuItems}>
       {(item, index) => (
         <div
-          block-id=\\"builder-ID\\"
+          builder-id=\\"builder-ID\\"
           class=\\"class-id\\"
           css={{
             padding: \\"2px\\",
@@ -1064,16 +1065,16 @@ export default function MyComponent(props) {
 `;
 
 exports[`Builder > Section 1`] = `
-"<div block-id=\\"builder-82a5c11482a644a8aa74dca341e3d6f1\\" class=\\"div\\">
+"<div builder-id=\\"builder-82a5c11482a644a8aa74dca341e3d6f1\\" class=\\"div\\">
   <p>EAGER LOAD</p>
 </div>
 <div
-  block-id=\\"builder-6f37b822156149cc9033e4cbee511d2f\\"
+  builder-id=\\"builder-6f37b822156149cc9033e4cbee511d2f\\"
   class=\\"div-2\\"
   data-el=\\"div-1\\"
 >
   <section
-    block-id=\\"builder-6f37b822156149cc9033e4cbee511d2f\\"
+    builder-id=\\"builder-6f37b822156149cc9033e4cbee511d2f\\"
     lazyLoad=\\"true\\"
     class=\\"section\\"
   >
@@ -1636,6 +1637,7 @@ exports[`Builder > extractStateHook 1`] = `
   "state": {
     "foo": {
       "code": "'bar'",
+      "propertyType": "normal",
       "type": "property",
     },
   },

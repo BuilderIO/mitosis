@@ -285,7 +285,12 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <template v-if=\\"$slots.default\\">
+      <slot />
+
+      {{ type }}
+    </template>
+
     <my-boolean-attribute-component
       :toggle=\\"true\\"
     ></my-boolean-attribute-component>
@@ -305,7 +310,7 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 
 export default defineComponent({
   name: \\"my-boolean-attribute\\",
-  components: { MyBooleanAttributeComponent: MyBooleanAttributeComponent },
+  components: { \\"my-boolean-attribute-component\\": MyBooleanAttributeComponent },
   props: [\\"type\\"],
 });
 </script>"
@@ -333,8 +338,8 @@ import MyBasicComponent from \\"./basic.raw\\";
 export default defineComponent({
   name: \\"my-basic-child-component\\",
   components: {
-    MyBasicComponent: MyBasicComponent,
-    MyBasicOnMountUpdateComponent: MyBasicOnMountUpdateComponent,
+    \\"my-basic-component\\": MyBasicComponent,
+    \\"my-basic-on-mount-update-component\\": MyBasicOnMountUpdateComponent,
   },
 
   data() {
@@ -923,8 +928,8 @@ import {
 export default defineComponent({
   name: \\"form-component\\",
   components: {
-    BuilderBlockComponent: BuilderBlockComponent,
-    BuilderBlocks: BuilderBlocks,
+    \\"builder-block-component\\": BuilderBlockComponent,
+    \\"builder-blocks\\": BuilderBlocks,
   },
   props: [
     \\"previewState\\",
@@ -1236,7 +1241,7 @@ export default defineComponent({
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -1360,6 +1365,7 @@ exports[`Vue > jsx > Javascript Test > Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    @input=\\"onChange?.($event.target.value)\\"
     v-bind=\\"attributes\\"
   />
 </template>
@@ -1380,7 +1386,35 @@ export default defineComponent({
     \\"name\\",
     \\"value\\",
     \\"required\\",
+    \\"onChange\\",
   ],
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > InputParent 1`] = `
+"<template>
+  <form-input-component
+    name=\\"kingzez\\"
+    type=\\"text\\"
+    :onChange=\\"(value) => handleChange(value)\\"
+  ></form-input-component>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+export default defineComponent({
+  name: \\"stepper\\",
+  components: { \\"form-input-component\\": FormInputComponent },
+
+  methods: {
+    handleChange(value) {
+      console.log(value);
+    },
+  },
 });
 </script>"
 `;
@@ -1544,7 +1578,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { ContentSlotCode: ContentSlotCode },
+  components: { \\"content-slot-code\\": ContentSlotCode },
 });
 </script>"
 `;
@@ -1563,7 +1597,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { ContentSlotCode: ContentSlotCode },
+  components: { \\"content-slot-code\\": ContentSlotCode },
 });
 </script>"
 `;
@@ -2211,11 +2245,11 @@ exports[`Vue > jsx > Javascript Test > contentState 1`] = `
 <script>
 import { defineComponent } from \\"vue\\";
 
-import BuilderContext from \\"@dummy/context.vue\\";
+import BuilderContext from \\"@dummy/context.js\\";
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { BuilderContext: BuilderContext },
+
   props: [\\"content\\", \\"customComponents\\"],
 
   provide() {
@@ -2374,7 +2408,7 @@ import RenderBlock from \\"./builder-render-block.raw\\";
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { RenderBlock: RenderBlock },
+  components: { \\"render-block\\": RenderBlock },
   props: [\\"renderContentProps\\"],
 
   methods: {
@@ -2856,17 +2890,16 @@ import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.vue\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context.vue\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
 import RenderComponent from \\"./render-component.vue\\";
 import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
 
 export default defineComponent({
   name: \\"render-block\\",
   components: {
-    RenderRepeatedBlock: RenderRepeatedBlock,
-    BlockStyles: BlockStyles,
-    RenderComponentWithContext: RenderComponentWithContext,
-    RenderComponent: RenderComponent,
+    \\"render-repeated-block\\": RenderRepeatedBlock,
+    \\"block-styles\\": BlockStyles,
+    \\"render-component\\": RenderComponent,
   },
   props: [\\"block\\", \\"context\\"],
 
@@ -3062,17 +3095,17 @@ exports[`Vue > jsx > Javascript Test > renderContentExample 1`] = `
 <script>
 import { defineComponent } from \\"vue\\";
 
-import BuilderContext from \\"@dummy/context.vue\\";
+import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.vue\\";
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { RenderBlocks: RenderBlocks, BuilderContext: BuilderContext },
+  components: { \\"render-blocks\\": RenderBlocks },
   props: [\\"content\\", \\"customComponents\\"],
 
   data() {
@@ -3328,6 +3361,47 @@ export default defineComponent({
 </style>"
 `;
 
+exports[`Vue > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"<template>
+  <div
+    :style=\\"attributes.style\\"
+    :class=\\"_classStringToObject(attributes.className + ' div')\\"
+  ></div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"style-prop-class-and-css\\",
+
+  props: [\\"attributes\\"],
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+});
+</script>
+
+<style scoped>
+.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+</style>"
+`;
+
 exports[`Vue > jsx > Javascript Test > subComponent 1`] = `
 "<template>
   <foo></foo>
@@ -3340,7 +3414,7 @@ import Foo from \\"./foo-sub-component.vue\\";
 
 export default defineComponent({
   name: \\"sub-component\\",
-  components: { Foo: Foo },
+  components: { foo: Foo },
 });
 </script>"
 `;
@@ -3433,14 +3507,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.button {
-  background: blue;
-  color: white;
-}
-
 button {
   font-size: 12px;
   outline: 1px solid black;
+}
+
+.button {
+  background: blue;
+  color: white;
 }
 </style>"
 `;
@@ -3466,6 +3540,31 @@ button {
   outline: 1px solid black;
 }
 </style>"
+`;
+
+exports[`Vue > jsx > Javascript Test > useTarget 1`] = `
+"<template>
+  <div>{{ name }}</div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"use-target-component\\",
+
+  data() {
+    return { lastName: \\"bar\\" };
+  },
+
+  computed: {
+    name() {
+      const prefix = \\"v2\\";
+      return prefix + \\"foo\\";
+    },
+  },
+});
+</script>"
 `;
 
 exports[`Vue > jsx > Remove Internal mitosis package 1`] = `
@@ -3784,7 +3883,12 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <template v-if=\\"$slots.default\\">
+      <slot />
+
+      {{ type }}
+    </template>
+
     <my-boolean-attribute-component
       :toggle=\\"true\\"
     ></my-boolean-attribute-component>
@@ -3809,7 +3913,7 @@ type Props = {
 
 export default defineComponent({
   name: \\"my-boolean-attribute\\",
-  components: { MyBooleanAttributeComponent: MyBooleanAttributeComponent },
+  components: { \\"my-boolean-attribute-component\\": MyBooleanAttributeComponent },
   props: [\\"type\\"],
 });
 </script>"
@@ -3837,8 +3941,8 @@ import MyBasicComponent from \\"./basic.raw\\";
 export default defineComponent({
   name: \\"my-basic-child-component\\",
   components: {
-    MyBasicComponent: MyBasicComponent,
-    MyBasicOnMountUpdateComponent: MyBasicOnMountUpdateComponent,
+    \\"my-basic-component\\": MyBasicComponent,
+    \\"my-basic-on-mount-update-component\\": MyBasicOnMountUpdateComponent,
   },
 
   data() {
@@ -4508,8 +4612,8 @@ export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"e
 export default defineComponent({
   name: \\"form-component\\",
   components: {
-    BuilderBlockComponent: BuilderBlockComponent,
-    BuilderBlocks: BuilderBlocks,
+    \\"builder-block-component\\": BuilderBlockComponent,
+    \\"builder-blocks\\": BuilderBlocks,
   },
   props: [
     \\"previewState\\",
@@ -4847,7 +4951,7 @@ export default defineComponent({
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -4988,6 +5092,7 @@ exports[`Vue > jsx > Typescript Test > Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    @input=\\"onChange?.($event.target.value)\\"
     v-bind=\\"attributes\\"
   />
 </template>
@@ -5005,6 +5110,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 export default defineComponent({
@@ -5018,7 +5124,35 @@ export default defineComponent({
     \\"name\\",
     \\"value\\",
     \\"required\\",
+    \\"onChange\\",
   ],
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > InputParent 1`] = `
+"<template>
+  <form-input-component
+    name=\\"kingzez\\"
+    type=\\"text\\"
+    :onChange=\\"(value) => handleChange(value)\\"
+  ></form-input-component>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+export default defineComponent({
+  name: \\"stepper\\",
+  components: { \\"form-input-component\\": FormInputComponent },
+
+  methods: {
+    handleChange(value: string) {
+      console.log(value);
+    },
+  },
 });
 </script>"
 `;
@@ -5218,7 +5352,7 @@ type Props = {
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { ContentSlotCode: ContentSlotCode },
+  components: { \\"content-slot-code\\": ContentSlotCode },
 });
 </script>"
 `;
@@ -5241,7 +5375,7 @@ type Props = {
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { ContentSlotCode: ContentSlotCode },
+  components: { \\"content-slot-code\\": ContentSlotCode },
 });
 </script>"
 `;
@@ -5970,11 +6104,11 @@ exports[`Vue > jsx > Typescript Test > contentState 1`] = `
 <script lang=\\"ts\\">
 import { defineComponent } from \\"vue\\";
 
-import BuilderContext from \\"@dummy/context.vue\\";
+import BuilderContext from \\"@dummy/context.js\\";
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { BuilderContext: BuilderContext },
+
   props: [\\"content\\", \\"customComponents\\"],
 
   provide() {
@@ -6162,7 +6296,7 @@ type RenderContentProps = {
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { RenderBlock: RenderBlock },
+  components: { \\"render-block\\": RenderBlock },
   props: [\\"renderContentProps\\"],
 
   methods: {
@@ -6701,7 +6835,7 @@ import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
 import BlockStyles from \\"./block-styles.vue\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context.vue\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
 import type { RenderComponentProps } from \\"./render-component.vue\\";
 import RenderComponent from \\"./render-component.vue\\";
 import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
@@ -6715,10 +6849,9 @@ export type RenderBlockProps = {
 export default defineComponent({
   name: \\"render-block\\",
   components: {
-    RenderRepeatedBlock: RenderRepeatedBlock,
-    BlockStyles: BlockStyles,
-    RenderComponentWithContext: RenderComponentWithContext,
-    RenderComponent: RenderComponent,
+    \\"render-repeated-block\\": RenderRepeatedBlock,
+    \\"block-styles\\": BlockStyles,
+    \\"render-component\\": RenderComponent,
   },
   props: [\\"block\\", \\"context\\"],
 
@@ -6914,13 +7047,13 @@ exports[`Vue > jsx > Typescript Test > renderContentExample 1`] = `
 <script lang=\\"ts\\">
 import { defineComponent } from \\"vue\\";
 
-import BuilderContext from \\"@dummy/context.vue\\";
+import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.vue\\";
 
 type Props = {
   customComponents: string[];
@@ -6932,7 +7065,7 @@ type Props = {
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { RenderBlocks: RenderBlocks, BuilderContext: BuilderContext },
+  components: { \\"render-blocks\\": RenderBlocks },
   props: [\\"content\\", \\"customComponents\\"],
 
   data() {
@@ -7208,6 +7341,47 @@ export default defineComponent({
 </style>"
 `;
 
+exports[`Vue > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"<template>
+  <div
+    :style=\\"attributes.style\\"
+    :class=\\"_classStringToObject(attributes.className + ' div')\\"
+  ></div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"style-prop-class-and-css\\",
+
+  props: [\\"attributes\\"],
+
+  methods: {
+    _classStringToObject(str: string) {
+      const obj: Record<string, boolean> = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+});
+</script>
+
+<style scoped>
+.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+</style>"
+`;
+
 exports[`Vue > jsx > Typescript Test > subComponent 1`] = `
 "<template>
   <foo></foo>
@@ -7220,7 +7394,7 @@ import Foo from \\"./foo-sub-component.vue\\";
 
 export default defineComponent({
   name: \\"sub-component\\",
-  components: { Foo: Foo },
+  components: { foo: Foo },
 });
 </script>"
 `;
@@ -7321,14 +7495,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.button {
-  background: blue;
-  color: white;
-}
-
 button {
   font-size: 12px;
   outline: 1px solid black;
+}
+
+.button {
+  background: blue;
+  color: white;
 }
 </style>"
 `;
@@ -7354,6 +7528,31 @@ button {
   outline: 1px solid black;
 }
 </style>"
+`;
+
+exports[`Vue > jsx > Typescript Test > useTarget 1`] = `
+"<template>
+  <div>{{ name }}</div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"use-target-component\\",
+
+  data() {
+    return { lastName: \\"bar\\" };
+  },
+
+  computed: {
+    name() {
+      const prefix = \\"v2\\";
+      return prefix + \\"foo\\";
+    },
+  },
+});
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > basic 1`] = `
@@ -7621,7 +7820,7 @@ import Button from \\"./Button.vue\\";
 
 export default defineComponent({
   name: \\"my-component\\",
-  components: { Button: Button },
+  components: { button: Button },
 
   data() {
     return { disabled: false };
@@ -8057,7 +8256,7 @@ import Button from \\"./Button.vue\\";
 
 export default defineComponent({
   name: \\"my-component\\",
-  components: { Button: Button },
+  components: { button: Button },
 
   data() {
     return { disabled: false };

@@ -1,7 +1,7 @@
 import {
+  checkShouldOutputTypeScript,
   contextToQwik,
   contextToReact,
-  contextToRsc,
   contextToSolid,
   contextToSvelte,
   contextToVue,
@@ -11,7 +11,6 @@ import {
 } from '@builder.io/mitosis';
 import { readFile } from 'fs-extra';
 import { camelCase, last, upperFirst } from 'lodash';
-import { checkShouldOutputTypeScript } from './options';
 
 export const generateContextFile = async ({
   path,
@@ -46,11 +45,10 @@ export const generateContextFile = async ({
         });
       case 'react':
       case 'reactNative':
+      case 'rsc':
         return contextToReact({ typescript: checkShouldOutputTypeScript({ options, target }) })({
           context,
         });
-      case 'rsc':
-        return contextToRsc()({ context });
       case 'qwik':
         return contextToQwik()({ context });
       default:

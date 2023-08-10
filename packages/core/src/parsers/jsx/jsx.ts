@@ -1,9 +1,13 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
+import tsPlugin from '@babel/plugin-syntax-typescript';
+import tsPreset from '@babel/preset-typescript';
 import { pipe } from 'fp-ts/lib/function';
+import { HOOKS } from '../../constants/hooks';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { tryParseJson } from '../../helpers/json';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
+import { getSignalImportName } from '../../helpers/signals';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { jsonToAst } from './ast';
 import { collectTypes, isTypeOrInterface } from './component-types';
@@ -13,13 +17,12 @@ import { generateExports } from './exports';
 import { componentFunctionToJson } from './function-parser';
 import { isImportOrDefaultExport } from './helpers';
 import { collectModuleScopeHooks } from './hooks';
+import { getMagicString, getTargetId, getUseTargetStatements } from './hooks/use-target';
 import { handleImportDeclaration } from './imports';
 import { undoPropsDestructure } from './props';
+import { findSignals } from './signals';
 import { mapStateIdentifiers } from './state';
 import { Context, ParseMitosisOptions } from './types';
-
-import tsPlugin from '@babel/plugin-syntax-typescript';
-import tsPreset from '@babel/preset-typescript';
 
 const { types } = babel;
 
@@ -99,8 +102,7 @@ export function parseJsx(
 
             const preComponentCode = pipe(
               path.node.body.filter((statement) => !isImportOrDefaultExport(statement)),
-              (statements) =>
-                collectModuleScopeHooks(statements, context.builder.component, options),
+              collectModuleScopeHooks(context.builder.component, options),
               types.program,
               generate,
               (generatorResult) => generatorResult.code,
@@ -116,6 +118,32 @@ export function parseJsx(
             if (types.isIdentifier(node.id)) {
               const name = node.id.name;
               if (name[0].toUpperCase() === name[0]) {
+                path.traverse({
+                  /**
+                   * Plugin to find all `useTarget()` assignment calls inside of the component function body
+                   * and replace them with a magic string.
+                   */
+                  CallExpression(path) {
+                    if (!types.isCallExpression(path.node)) return;
+                    if (!types.isIdentifier(path.node.callee)) return;
+                    if (path.node.callee.name !== HOOKS.TARGET) return;
+
+                    const targetBlock = getUseTargetStatements(path);
+
+                    if (!targetBlock) return;
+
+                    const blockId = getTargetId(context.builder.component);
+
+                    // replace the useTarget() call with a magic string
+                    path.replaceWith(types.stringLiteral(getMagicString(blockId)));
+
+                    // store the target block in the component
+                    context.builder.component.targetBlocks = {
+                      ...context.builder.component.targetBlocks,
+                      [blockId]: targetBlock,
+                    };
+                  },
+                });
                 path.replaceWith(jsonToAst(componentFunctionToJson(node, context)));
               }
             }
@@ -150,9 +178,13 @@ export function parseJsx(
     ],
   });
 
-  const toParse = stripNewlinesInStrings(
-    output!
-      .code!.trim()
+  if (!output || !output.code) {
+    throw new Error('Could not parse JSX');
+  }
+
+  const stringifiedMitosisComponent = stripNewlinesInStrings(
+    output.code
+      .trim()
       // Occasional issues where comments get kicked to the top. Full fix should strip these sooner
       .replace(/^\/\*[\s\S]*?\*\/\s*/, '')
       // Weird bug with adding a newline in a normal at end of a normal string that can't have one
@@ -161,12 +193,44 @@ export function parseJsx(
       .replace(/^\({/, '{')
       .replace(/}\);$/, '}'),
   );
-  const parsed = tryParseJson(toParse);
 
-  mapStateIdentifiers(parsed);
-  extractContextComponents(parsed);
+  const mitosisComponent: MitosisComponent = tryParseJson(stringifiedMitosisComponent);
 
-  parsed.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
+  mapStateIdentifiers(mitosisComponent);
+  extractContextComponents(mitosisComponent);
 
-  return parsed;
+  mitosisComponent.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
+
+  const signalTypeImportName = getSignalImportName(jsxToUse);
+
+  if (signalTypeImportName) {
+    mitosisComponent.signals = { signalTypeImportName };
+  }
+
+  if (options.tsProject && options.filePath) {
+    const reactiveValues = findSignals({
+      filePath: options.filePath,
+      project: options.tsProject.project,
+      signalSymbol: options.tsProject.signalSymbol,
+    });
+
+    reactiveValues.props.forEach((prop) => {
+      mitosisComponent.props = {
+        ...mitosisComponent.props,
+        [prop]: { propertyType: 'reactive' },
+      };
+    });
+
+    reactiveValues.state.forEach((state) => {
+      if (!mitosisComponent.state[state]) return;
+      mitosisComponent.state[state]!.propertyType = 'reactive';
+    });
+
+    reactiveValues.context.forEach((context) => {
+      if (!mitosisComponent.context.get[context]) return;
+      mitosisComponent.context.get[context].type = 'reactive';
+    });
+  }
+
+  return mitosisComponent;
 }

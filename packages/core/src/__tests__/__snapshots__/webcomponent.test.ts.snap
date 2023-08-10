@@ -77,22 +77,24 @@ class SmileReviews extends HTMLElement {
       
           <input
             placeholder=\\"Title\\"
-            class=\\"input\\"
+            class=\\"input-smile-reviews\\"
             data-dom-state=\\"SmileReviews-input-smile-reviews-2\\"
           />
       
           <textarea
             placeholder=\\"How was your experience?\\"
-            class=\\"textarea\\"
+            class=\\"textarea-smile-reviews\\"
             data-dom-state=\\"SmileReviews-textarea-smile-reviews-1\\"
           ></textarea>
       
-          <button class=\\"button\\" data-el=\\"button-smile-reviews-2\\">Submit</button>
+          <button class=\\"button-smile-reviews\\" data-el=\\"button-smile-reviews-2\\">
+            Submit
+          </button>
         </template>
       
         <template data-el=\\"for-smile-reviews\\">
-          <div class=\\"review\\" data-el=\\"div-smile-reviews-2\\">
-            <img class=\\"img\\" data-el=\\"img-smile-reviews-1\\" />
+          <div class=\\"review-smile-reviews\\" data-el=\\"div-smile-reviews-2\\">
+            <img class=\\"img-smile-reviews\\" data-el=\\"img-smile-reviews-1\\" />
       
             <div data-el=\\"div-smile-reviews-3\\">
               <div>
@@ -116,16 +118,16 @@ class SmileReviews extends HTMLElement {
         </template>
       </div>
       <style>
-        .input {
+        .input-smile-reviews {
           display: block;
         }
-        .textarea {
+        .textarea-smile-reviews {
           display: block;
         }
-        .button {
+        .button-smile-reviews {
           display: block;
         }
-        .review {
+        .review-smile-reviews {
           margin: 10px;
           padding: 10px;
           background: white;
@@ -133,7 +135,7 @@ class SmileReviews extends HTMLElement {
           border-radius: 5px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .img {
+        .img-smile-reviews {
           height: 30px;
           width: 30px;
           margin-right: 10px;
@@ -480,7 +482,7 @@ class MyBasicRefComponent extends HTMLElement {
       <div>
         <template data-el=\\"show-my-basic-ref-component\\">
           <input
-            class=\\"input\\"
+            class=\\"input-my-basic-ref-component\\"
             data-el=\\"input-my-basic-ref-component-1\\"
             data-dom-state=\\"MyBasicRefComponent-input-my-basic-ref-component-1\\"
             data-ref=\\"MyBasicRefComponent-inputRef\\"
@@ -513,7 +515,7 @@ class MyBasicRefComponent extends HTMLElement {
         ! I can run in React, Qwik, Vue, Solid, or Web Component!
       </div>
       <style>
-        .input {
+        .input-my-basic-ref-component {
           color: red;
         }
       </style>\`;
@@ -714,7 +716,7 @@ class MyBasicComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"test div\\">
+      <div class=\\"test div-my-basic-component\\">
         <input
           data-el=\\"input-my-basic-component-1\\"
           data-dom-state=\\"MyBasicComponent-input-my-basic-component-1\\"
@@ -723,7 +725,7 @@ class MyBasicComponent extends HTMLElement {
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style>
-        .div {
+        .div-my-basic-component {
           padding: 10px;
         }
       </style>\`;
@@ -1812,9 +1814,13 @@ class MyBooleanAttribute extends HTMLElement {
 
     this._root.innerHTML = \`
       <div>
-        <slot></slot>
+        <template data-el=\\"show-my-boolean-attribute\\">
+          <slot></slot>
       
-        <template data-el=\\"div-my-boolean-attribute-2\\"><!-- props.type --></template>
+          <template data-el=\\"div-my-boolean-attribute-2\\">
+            <!-- props.type -->
+          </template>
+        </template>
       
         <my-boolean-attribute-component
           data-el=\\"my-boolean-attribute-component-my-boolean-attribute\\"
@@ -1834,6 +1840,26 @@ class MyBooleanAttribute extends HTMLElement {
     this.onMount();
     this.pendingUpdate = false;
     this.update();
+  }
+
+  showContent(el) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+    // grabs the content of a node that is between <template> tags
+    // iterates through child nodes to register all content including text elements
+    // attaches the content after the template
+
+    const elementFragment = el.content.cloneNode(true);
+    const children = Array.from(elementFragment.childNodes);
+    children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      this.nodesToDestroy.push(child);
+    });
+    el.after(elementFragment);
   }
 
   onMount() {}
@@ -1857,6 +1883,16 @@ class MyBooleanAttribute extends HTMLElement {
   }
 
   updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='show-my-boolean-attribute']\\")
+      .forEach((el) => {
+        const whenCondition = this.props.children;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
     this._root
       .querySelectorAll(\\"[data-el='div-my-boolean-attribute-2']\\")
       .forEach((el) => {
@@ -2396,7 +2432,7 @@ class MyBasicRefComponent extends HTMLElement {
       <div>
         <template data-el=\\"show-my-basic-ref-component\\">
           <input
-            class=\\"input\\"
+            class=\\"input-my-basic-ref-component\\"
             data-el=\\"input-my-basic-ref-component-1\\"
             data-dom-state=\\"MyBasicRefComponent-input-my-basic-ref-component-1\\"
             data-ref=\\"MyBasicRefComponent-inputRef\\"
@@ -2429,7 +2465,7 @@ class MyBasicRefComponent extends HTMLElement {
         ! I can run in React, Qwik, Vue, Solid, or Web Component!
       </div>
       <style>
-        .input {
+        .input-my-basic-ref-component {
           color: red;
         }
       </style>\`;
@@ -3079,9 +3115,9 @@ class Column extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <div class=\\"builder-columns div\\">
+      <div class=\\"builder-columns div-column\\">
         <template data-el=\\"for-column\\">
-          <div class=\\"builder-column div-2\\">
+          <div class=\\"builder-column div-column-2\\">
             <template data-el=\\"div-column-1\\"><!-- column.content --></template>
       
             <template data-el=\\"div-column-2\\"><!-- index --></template>
@@ -3089,23 +3125,23 @@ class Column extends HTMLElement {
         </template>
       </div>
       <style>
-        .div {
+        .div-column {
           display: flex;
           flex-direction: column;
           align-items: stretch;
           line-height: normal;
         }
         @media (max-width: 999px) {
-          .div {
+          .div-column {
             flex-direction: row;
           }
         }
         @media (max-width: 639px) {
-          .div {
+          .div-column {
             flex-direction: row-reverse;
           }
         }
-        .div-2 {
+        .div-column-2 {
           flex-grow: 1;
         }
       </style>\`;
@@ -3896,7 +3932,7 @@ class Image extends HTMLElement {
       },
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!self.props.lazy && isBrowser();
+        return !!self.props.lazy && self.state.isBrowser();
       },
       isBrowser: function isBrowser() {
         return (
@@ -3976,7 +4012,7 @@ class Image extends HTMLElement {
         <slot></slot>
       </div>
       <style>
-        .img {
+        .img-image {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -4022,7 +4058,8 @@ class Image extends HTMLElement {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.state.load = true;
+            this.update();
             this.state.scrollListener = null;
             this.update();
             window.removeEventListener(\\"scroll\\", listener);
@@ -4076,7 +4113,7 @@ class Image extends HTMLElement {
       el.className =
         \\"builder-image\\" +
         (this.props._class ? \\" \\" + this.props._class : \\"\\") +
-        \\" img\\";
+        \\" img-image\\";
       el.setAttribute(\\"src\\", this.props.image);
       el.removeEventListener(\\"load\\", this.onImgImage1Load);
       el.addEventListener(\\"load\\", this.onImgImage1Load);
@@ -4422,12 +4459,18 @@ class FormInputComponent extends HTMLElement {
       \\"name\\",
       \\"value\\",
       \\"required\\",
+      \\"onChange\\",
     ];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
     this.pendingUpdate = false;
+
+    // Event handler for 'input' event on input-form-input-component-1
+    this.onInputFormInputComponent1Input = (event) => {
+      this.props.onChange?.(event.target.value);
+    };
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -4538,6 +4581,8 @@ class FormInputComponent extends HTMLElement {
         el.value = this.props.value;
         el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
         el.setAttribute(\\"required\\", this.props.required);
+        el.removeEventListener(\\"input\\", this.onInputFormInputComponent1Input);
+        el.addEventListener(\\"input\\", this.onInputFormInputComponent1Input);
       });
   }
 
@@ -4556,6 +4601,119 @@ class FormInputComponent extends HTMLElement {
 }
 
 customElements.define(\\"form-input-component\\", FormInputComponent);
+"
+`;
+
+exports[`webcomponent > jsx > Javascript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+/**
+ * Usage:
+ *
+ *  <stepper></stepper>
+ *
+ */
+class Stepper extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      handleChange(value) {
+        console.log(value);
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    // Event handler for 'change' event on form-input-component-stepper
+    this.onFormInputComponentStepperChange = (value) => {
+      this.state.handleChange(value);
+    };
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <form-input-component
+        name=\\"kingzez\\"
+        type=\\"text\\"
+        data-el=\\"form-input-component-stepper\\"
+      ></form-input-component>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='form-input-component-stepper']\\")
+      .forEach((el) => {
+        el.removeEventListener(
+          \\"change\\",
+          this.onFormInputComponentStepperChange
+        );
+        el.addEventListener(\\"change\\", this.onFormInputComponentStepperChange);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"stepper\\", Stepper);
 "
 `;
 
@@ -5725,22 +5883,24 @@ class SmileReviews extends HTMLElement {
       
           <input
             placeholder=\\"Title\\"
-            class=\\"input\\"
+            class=\\"input-smile-reviews\\"
             data-dom-state=\\"SmileReviews-input-smile-reviews-2\\"
           />
       
           <textarea
             placeholder=\\"How was your experience?\\"
-            class=\\"textarea\\"
+            class=\\"textarea-smile-reviews\\"
             data-dom-state=\\"SmileReviews-textarea-smile-reviews-1\\"
           ></textarea>
       
-          <button class=\\"button\\" data-el=\\"button-smile-reviews-2\\">Submit</button>
+          <button class=\\"button-smile-reviews\\" data-el=\\"button-smile-reviews-2\\">
+            Submit
+          </button>
         </template>
       
         <template data-el=\\"for-smile-reviews\\">
-          <div class=\\"review\\" data-el=\\"div-smile-reviews-2\\">
-            <img class=\\"img\\" data-el=\\"img-smile-reviews-1\\" />
+          <div class=\\"review-smile-reviews\\" data-el=\\"div-smile-reviews-2\\">
+            <img class=\\"img-smile-reviews\\" data-el=\\"img-smile-reviews-1\\" />
       
             <div data-el=\\"div-smile-reviews-3\\">
               <div>
@@ -5764,16 +5924,16 @@ class SmileReviews extends HTMLElement {
         </template>
       </div>
       <style>
-        .input {
+        .input-smile-reviews {
           display: block;
         }
-        .textarea {
+        .textarea-smile-reviews {
           display: block;
         }
-        .button {
+        .button-smile-reviews {
           display: block;
         }
-        .review {
+        .review-smile-reviews {
           margin: 10px;
           padding: 10px;
           background: white;
@@ -5781,7 +5941,7 @@ class SmileReviews extends HTMLElement {
           border-radius: 5px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .img {
+        .img-smile-reviews {
           height: 30px;
           width: 30px;
           margin-right: 10px;
@@ -6914,13 +7074,13 @@ class MyBasicForwardRefComponent extends HTMLElement {
     this._root.innerHTML = \`
       <div>
         <input
-          class=\\"input\\"
+          class=\\"input-my-basic-forward-ref-component\\"
           data-el=\\"input-my-basic-forward-ref-component-1\\"
           data-dom-state=\\"MyBasicForwardRefComponent-input-my-basic-forward-ref-component-1\\"
         />
       </div>
       <style>
-        .input {
+        .input-my-basic-forward-ref-component {
           color: red;
         }
       </style>\`;
@@ -7073,13 +7233,13 @@ class MyBasicForwardRefComponent extends HTMLElement {
     this._root.innerHTML = \`
       <div>
         <input
-          class=\\"input\\"
+          class=\\"input-my-basic-forward-ref-component\\"
           data-el=\\"input-my-basic-forward-ref-component-1\\"
           data-dom-state=\\"MyBasicForwardRefComponent-input-my-basic-forward-ref-component-1\\"
         />
       </div>
       <style>
-        .input {
+        .input-my-basic-forward-ref-component {
           color: red;
         }
       </style>\`;
@@ -7351,11 +7511,11 @@ class MyBasicComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"test2 test div\\">
+      <div class=\\"test2 test div-my-basic-component\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style>
-        .div {
+        .div-my-basic-component {
           padding: 10px;
         }
       </style>\`;
@@ -7446,9 +7606,11 @@ class MyBasicComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
+      <div class=\\"test div-my-basic-component\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
       <style>
-        .div {
+        .div-my-basic-component {
           padding: 10px;
         }
       </style>\`;
@@ -7539,9 +7701,11 @@ class MyBasicComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
+      <div class=\\"test div-my-basic-component\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
       <style>
-        .div {
+        .div-my-basic-component {
           padding: 10px;
         }
       </style>\`;
@@ -7739,7 +7903,7 @@ class MyBasicComponent extends HTMLElement {
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style>
-        .div {
+        .div-my-basic-component {
           padding: 10px;
         }
       </style>\`;
@@ -7775,7 +7939,7 @@ class MyBasicComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-el='div-my-basic-component-1']\\")
       .forEach((el) => {
-        el.className = this.state.classState + \\" div\\";
+        el.className = this.state.classState + \\" div-my-basic-component\\";
         Object.assign(el.style, this.state.styleState);
       });
   }
@@ -8059,7 +8223,7 @@ customElements.define(\\"component-with-context\\", ComponentWithContext);
 `;
 
 exports[`webcomponent > jsx > Javascript Test > contentState 1`] = `
-"import BuilderContext from \\"@dummy/context.lite\\";
+"import BuilderContext from \\"@dummy/context.js\\";
 
 /**
  * Usage:
@@ -9408,31 +9572,31 @@ class NestedStyles extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"div\\">Hello world</div>
+      <div class=\\"div-nested-styles\\">Hello world</div>
       <style>
-        .div {
+        .div-nested-styles {
           display: flex;
           --bar: red;
           color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
-          .div {
+          .div-nested-styles {
             display: block;
           }
         }
-        .div:hover {
+        .div-nested-styles:hover {
           display: flex;
         }
-        .div:active {
+        .div-nested-styles:active {
           display: inline;
         }
-        .div .nested-selector {
+        .div-nested-styles .nested-selector {
           display: grid;
         }
-        .div .nested-selector:hover {
+        .div-nested-styles .nested-selector:hover {
           display: block;
         }
-        .div.nested-selector:active {
+        .div-nested-styles.nested-selector:active {
           display: inline-block;
         }
       </style>\`;
@@ -10628,8 +10792,8 @@ class OnUpdate extends HTMLElement {
   onUpdate() {
     const self = this;
 
-    foo({
-      someOption: bar,
+    self.state.foo({
+      someOption: self.state.bar,
     });
   }
 
@@ -10680,13 +10844,13 @@ exports[`webcomponent > jsx > Javascript Test > renderBlock 1`] = `
 `;
 
 exports[`webcomponent > jsx > Javascript Test > renderContentExample 1`] = `
-"import BuilderContext from \\"@dummy/context.lite\\";
+"import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.js\\";
 
 /**
  * Usage:
@@ -10748,11 +10912,11 @@ class RenderContent extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <div class=\\"div\\" data-el=\\"div-render-content-1\\">
+      <div class=\\"div-render-content\\" data-el=\\"div-render-content-1\\">
         <render-blocks data-el=\\"render-blocks-render-content\\"></render-blocks>
       </div>
       <style>
-        .div {
+        .div-render-content {
           display: flex;
           flex-direction: columns;
         }
@@ -12219,9 +12383,9 @@ class MyComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"builder-column div\\" data-el=\\"div-my-component-1\\"></div>
+      <div class=\\"builder-column div-my-component\\" data-el=\\"div-my-component-1\\"></div>
       <style>
-        .div {
+        .div-my-component {
           display: flex;
           flex-direction: column;
           align-items: stretch;
@@ -12283,8 +12447,126 @@ customElements.define(\\"my-component\\", MyComponent);
 "
 `;
 
+exports[`webcomponent > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"/**
+ * Usage:
+ *
+ *  <style-prop-class-and-css></style-prop-class-and-css>
+ *
+ */
+class StylePropClassAndCss extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {};
+    if (!this.props) {
+      this.props = {};
+    }
+
+    this.componentProps = [\\"attributes\\"];
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
+    this._root.innerHTML = \`
+      <div data-el=\\"div-style-prop-class-and-css-1\\"></div>
+      <style>
+        .div-style-prop-class-and-css {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      </style>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='div-style-prop-class-and-css-1']\\")
+      .forEach((el) => {
+        Object.assign(el.style, this.props.attributes.style);
+        el.className =
+          this.props.attributes.class + \\" div-style-prop-class-and-css\\";
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"style-prop-class-and-css\\", StylePropClassAndCss);
+"
+`;
+
 exports[`webcomponent > jsx > Javascript Test > subComponent 1`] = `
-"import Foo from \\"./foo-sub-component.lite\\";
+"import Foo from \\"./foo-sub-component.js\\";
 
 /**
  * Usage:
@@ -12738,16 +13020,16 @@ class MyComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <button type=\\"button\\" class=\\"button\\">Button</button>
+      <button type=\\"button\\" class=\\"button-my-component\\">Button</button>
       <style>
-        .button {
-          background: blue;
-          color: white;
-        }
-      
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+      
+        .button-my-component {
+          background: blue;
+          color: white;
         }
       </style>\`;
     this.pendingUpdate = true;
@@ -12891,6 +13173,108 @@ class MyComponent extends HTMLElement {
 }
 
 customElements.define(\\"my-component\\", MyComponent);
+"
+`;
+
+exports[`webcomponent > jsx > Javascript Test > useTarget 1`] = `
+"/**
+ * Usage:
+ *
+ *  <use-target-component></use-target-component>
+ *
+ */
+class UseTargetComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      get name() {
+        const prefix = \\"c\\";
+        return prefix + \\"foo\\";
+      },
+      lastName: \\"bar\\",
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <template data-el=\\"div-use-target-component-1\\"><!-- state.name --></template>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='div-use-target-component-1']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.state.name);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"use-target-component\\", UseTargetComponent);
 "
 `;
 
@@ -13087,7 +13471,7 @@ class MyBasicRefComponent extends HTMLElement {
       <div>
         <template data-el=\\"show-my-basic-ref-component\\">
           <input
-            class=\\"input\\"
+            class=\\"input-my-basic-ref-component\\"
             data-el=\\"input-my-basic-ref-component-1\\"
             data-dom-state=\\"MyBasicRefComponent-input-my-basic-ref-component-1\\"
             data-ref=\\"MyBasicRefComponent-inputRef\\"
@@ -13120,7 +13504,7 @@ class MyBasicRefComponent extends HTMLElement {
         ! I can run in React, Qwik, Vue, Solid, or Web Component!
       </div>
       <style>
-        .input {
+        .input-my-basic-ref-component {
           color: red;
         }
       </style>\`;
@@ -13325,7 +13709,7 @@ class MyBasicComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"test div\\">
+      <div class=\\"test div-my-basic-component\\">
         <input
           data-el=\\"input-my-basic-component-1\\"
           data-dom-state=\\"MyBasicComponent-input-my-basic-component-1\\"
@@ -13334,7 +13718,7 @@ class MyBasicComponent extends HTMLElement {
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style>
-        .div {
+        .div-my-basic-component {
           padding: 10px;
         }
       </style>\`;
@@ -14433,9 +14817,13 @@ class MyBooleanAttribute extends HTMLElement {
 
     this._root.innerHTML = \`
       <div>
-        <slot></slot>
+        <template data-el=\\"show-my-boolean-attribute\\">
+          <slot></slot>
       
-        <template data-el=\\"div-my-boolean-attribute-2\\"><!-- props.type --></template>
+          <template data-el=\\"div-my-boolean-attribute-2\\">
+            <!-- props.type -->
+          </template>
+        </template>
       
         <my-boolean-attribute-component
           data-el=\\"my-boolean-attribute-component-my-boolean-attribute\\"
@@ -14455,6 +14843,26 @@ class MyBooleanAttribute extends HTMLElement {
     this.onMount();
     this.pendingUpdate = false;
     this.update();
+  }
+
+  showContent(el) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+    // grabs the content of a node that is between <template> tags
+    // iterates through child nodes to register all content including text elements
+    // attaches the content after the template
+
+    const elementFragment = el.content.cloneNode(true);
+    const children = Array.from(elementFragment.childNodes);
+    children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      this.nodesToDestroy.push(child);
+    });
+    el.after(elementFragment);
   }
 
   onMount() {}
@@ -14478,6 +14886,16 @@ class MyBooleanAttribute extends HTMLElement {
   }
 
   updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='show-my-boolean-attribute']\\")
+      .forEach((el) => {
+        const whenCondition = this.props.children;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
     this._root
       .querySelectorAll(\\"[data-el='div-my-boolean-attribute-2']\\")
       .forEach((el) => {
@@ -15021,7 +15439,7 @@ class MyBasicRefComponent extends HTMLElement {
       <div>
         <template data-el=\\"show-my-basic-ref-component\\">
           <input
-            class=\\"input\\"
+            class=\\"input-my-basic-ref-component\\"
             data-el=\\"input-my-basic-ref-component-1\\"
             data-dom-state=\\"MyBasicRefComponent-input-my-basic-ref-component-1\\"
             data-ref=\\"MyBasicRefComponent-inputRef\\"
@@ -15054,7 +15472,7 @@ class MyBasicRefComponent extends HTMLElement {
         ! I can run in React, Qwik, Vue, Solid, or Web Component!
       </div>
       <style>
-        .input {
+        .input-my-basic-ref-component {
           color: red;
         }
       </style>\`;
@@ -15734,9 +16152,9 @@ class Column extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <div class=\\"builder-columns div\\">
+      <div class=\\"builder-columns div-column\\">
         <template data-el=\\"for-column\\">
-          <div class=\\"builder-column div-2\\">
+          <div class=\\"builder-column div-column-2\\">
             <template data-el=\\"div-column-1\\"><!-- column.content --></template>
       
             <template data-el=\\"div-column-2\\"><!-- index --></template>
@@ -15744,23 +16162,23 @@ class Column extends HTMLElement {
         </template>
       </div>
       <style>
-        .div {
+        .div-column {
           display: flex;
           flex-direction: column;
           align-items: stretch;
           line-height: normal;
         }
         @media (max-width: 999px) {
-          .div {
+          .div-column {
             flex-direction: row;
           }
         }
         @media (max-width: 639px) {
-          .div {
+          .div-column {
             flex-direction: row-reverse;
           }
         }
-        .div-2 {
+        .div-column-2 {
           flex-grow: 1;
         }
       </style>\`;
@@ -16593,7 +17011,7 @@ class Image extends HTMLElement {
       },
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!self.props.lazy && isBrowser();
+        return !!self.props.lazy && self.state.isBrowser();
       },
       isBrowser: function isBrowser() {
         return (
@@ -16673,7 +17091,7 @@ class Image extends HTMLElement {
         <slot></slot>
       </div>
       <style>
-        .img {
+        .img-image {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -16719,7 +17137,8 @@ class Image extends HTMLElement {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.state.load = true;
+            this.update();
             this.state.scrollListener = null;
             this.update();
             window.removeEventListener(\\"scroll\\", listener);
@@ -16773,7 +17192,7 @@ class Image extends HTMLElement {
       el.className =
         \\"builder-image\\" +
         (this.props._class ? \\" \\" + this.props._class : \\"\\") +
-        \\" img\\";
+        \\" img-image\\";
       el.setAttribute(\\"src\\", this.props.image);
       el.removeEventListener(\\"load\\", this.onImgImage1Load);
       el.addEventListener(\\"load\\", this.onImgImage1Load);
@@ -17114,6 +17533,7 @@ exports[`webcomponent > jsx > Typescript Test > Input 1`] = `
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -17146,12 +17566,18 @@ class FormInputComponent extends HTMLElement {
       \\"name\\",
       \\"value\\",
       \\"required\\",
+      \\"onChange\\",
     ];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
     this.pendingUpdate = false;
+
+    // Event handler for 'input' event on input-form-input-component-1
+    this.onInputFormInputComponent1Input = (event) => {
+      this.props.onChange?.(event.target.value);
+    };
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -17262,6 +17688,8 @@ class FormInputComponent extends HTMLElement {
         el.value = this.props.value;
         el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
         el.setAttribute(\\"required\\", this.props.required);
+        el.removeEventListener(\\"input\\", this.onInputFormInputComponent1Input);
+        el.addEventListener(\\"input\\", this.onInputFormInputComponent1Input);
       });
   }
 
@@ -17280,6 +17708,119 @@ class FormInputComponent extends HTMLElement {
 }
 
 customElements.define(\\"form-input-component\\", FormInputComponent);
+"
+`;
+
+exports[`webcomponent > jsx > Typescript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+/**
+ * Usage:
+ *
+ *  <stepper></stepper>
+ *
+ */
+class Stepper extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      handleChange(value: string) {
+        console.log(value);
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    // Event handler for 'change' event on form-input-component-stepper
+    this.onFormInputComponentStepperChange = (value) => {
+      this.state.handleChange(value);
+    };
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <form-input-component
+        name=\\"kingzez\\"
+        type=\\"text\\"
+        data-el=\\"form-input-component-stepper\\"
+      ></form-input-component>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='form-input-component-stepper']\\")
+      .forEach((el) => {
+        el.removeEventListener(
+          \\"change\\",
+          this.onFormInputComponentStepperChange
+        );
+        el.addEventListener(\\"change\\", this.onFormInputComponentStepperChange);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"stepper\\", Stepper);
 "
 `;
 
@@ -18498,22 +19039,24 @@ class SmileReviews extends HTMLElement {
       
           <input
             placeholder=\\"Title\\"
-            class=\\"input\\"
+            class=\\"input-smile-reviews\\"
             data-dom-state=\\"SmileReviews-input-smile-reviews-2\\"
           />
       
           <textarea
             placeholder=\\"How was your experience?\\"
-            class=\\"textarea\\"
+            class=\\"textarea-smile-reviews\\"
             data-dom-state=\\"SmileReviews-textarea-smile-reviews-1\\"
           ></textarea>
       
-          <button class=\\"button\\" data-el=\\"button-smile-reviews-2\\">Submit</button>
+          <button class=\\"button-smile-reviews\\" data-el=\\"button-smile-reviews-2\\">
+            Submit
+          </button>
         </template>
       
         <template data-el=\\"for-smile-reviews\\">
-          <div class=\\"review\\" data-el=\\"div-smile-reviews-2\\">
-            <img class=\\"img\\" data-el=\\"img-smile-reviews-1\\" />
+          <div class=\\"review-smile-reviews\\" data-el=\\"div-smile-reviews-2\\">
+            <img class=\\"img-smile-reviews\\" data-el=\\"img-smile-reviews-1\\" />
       
             <div data-el=\\"div-smile-reviews-3\\">
               <div>
@@ -18537,16 +19080,16 @@ class SmileReviews extends HTMLElement {
         </template>
       </div>
       <style>
-        .input {
+        .input-smile-reviews {
           display: block;
         }
-        .textarea {
+        .textarea-smile-reviews {
           display: block;
         }
-        .button {
+        .button-smile-reviews {
           display: block;
         }
-        .review {
+        .review-smile-reviews {
           margin: 10px;
           padding: 10px;
           background: white;
@@ -18554,7 +19097,7 @@ class SmileReviews extends HTMLElement {
           border-radius: 5px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .img {
+        .img-smile-reviews {
           height: 30px;
           width: 30px;
           margin-right: 10px;
@@ -19739,13 +20282,13 @@ class MyBasicForwardRefComponent extends HTMLElement {
     this._root.innerHTML = \`
       <div>
         <input
-          class=\\"input\\"
+          class=\\"input-my-basic-forward-ref-component\\"
           data-el=\\"input-my-basic-forward-ref-component-1\\"
           data-dom-state=\\"MyBasicForwardRefComponent-input-my-basic-forward-ref-component-1\\"
         />
       </div>
       <style>
-        .input {
+        .input-my-basic-forward-ref-component {
           color: red;
         }
       </style>\`;
@@ -19903,13 +20446,13 @@ class MyBasicForwardRefComponent extends HTMLElement {
     this._root.innerHTML = \`
       <div>
         <input
-          class=\\"input\\"
+          class=\\"input-my-basic-forward-ref-component\\"
           data-el=\\"input-my-basic-forward-ref-component-1\\"
           data-dom-state=\\"MyBasicForwardRefComponent-input-my-basic-forward-ref-component-1\\"
         />
       </div>
       <style>
-        .input {
+        .input-my-basic-forward-ref-component {
           color: red;
         }
       </style>\`;
@@ -20181,11 +20724,11 @@ class MyBasicComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"test2 test div\\">
+      <div class=\\"test2 test div-my-basic-component\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style>
-        .div {
+        .div-my-basic-component {
           padding: 10px;
         }
       </style>\`;
@@ -20276,9 +20819,11 @@ class MyBasicComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
+      <div class=\\"test div-my-basic-component\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
       <style>
-        .div {
+        .div-my-basic-component {
           padding: 10px;
         }
       </style>\`;
@@ -20369,9 +20914,11 @@ class MyBasicComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
+      <div class=\\"test div-my-basic-component\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
       <style>
-        .div {
+        .div-my-basic-component {
           padding: 10px;
         }
       </style>\`;
@@ -20576,7 +21123,7 @@ class MyBasicComponent extends HTMLElement {
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style>
-        .div {
+        .div-my-basic-component {
           padding: 10px;
         }
       </style>\`;
@@ -20612,7 +21159,7 @@ class MyBasicComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-el='div-my-basic-component-1']\\")
       .forEach((el) => {
-        el.className = this.state.classState + \\" div\\";
+        el.className = this.state.classState + \\" div-my-basic-component\\";
         Object.assign(el.style, this.state.styleState);
       });
   }
@@ -20904,7 +21451,7 @@ customElements.define(\\"component-with-context\\", ComponentWithContext);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > contentState 1`] = `
-"import BuilderContext from \\"@dummy/context.lite\\";
+"import BuilderContext from \\"@dummy/context.js\\";
 
 /**
  * Usage:
@@ -22287,31 +22834,31 @@ class NestedStyles extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"div\\">Hello world</div>
+      <div class=\\"div-nested-styles\\">Hello world</div>
       <style>
-        .div {
+        .div-nested-styles {
           display: flex;
           --bar: red;
           color: var(--bar);
         }
         @media (max-width: env(--mobile)) {
-          .div {
+          .div-nested-styles {
             display: block;
           }
         }
-        .div:hover {
+        .div-nested-styles:hover {
           display: flex;
         }
-        .div:active {
+        .div-nested-styles:active {
           display: inline;
         }
-        .div .nested-selector {
+        .div-nested-styles .nested-selector {
           display: grid;
         }
-        .div .nested-selector:hover {
+        .div-nested-styles .nested-selector:hover {
           display: block;
         }
-        .div.nested-selector:active {
+        .div-nested-styles.nested-selector:active {
           display: inline-block;
         }
       </style>\`;
@@ -23553,8 +24100,8 @@ class OnUpdate extends HTMLElement {
   onUpdate() {
     const self = this;
 
-    foo({
-      someOption: bar,
+    self.state.foo({
+      someOption: self.state.bar,
     });
   }
 
@@ -23613,13 +24160,13 @@ exports[`webcomponent > jsx > Typescript Test > renderContentExample 1`] = `
   };
 };
 
-import BuilderContext from \\"@dummy/context.lite\\";
+import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.js\\";
 
 /**
  * Usage:
@@ -23681,11 +24228,11 @@ class RenderContent extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <div class=\\"div\\" data-el=\\"div-render-content-1\\">
+      <div class=\\"div-render-content\\" data-el=\\"div-render-content-1\\">
         <render-blocks data-el=\\"render-blocks-render-content\\"></render-blocks>
       </div>
       <style>
-        .div {
+        .div-render-content {
           display: flex;
           flex-direction: columns;
         }
@@ -25172,9 +25719,9 @@ class MyComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div class=\\"builder-column div\\" data-el=\\"div-my-component-1\\"></div>
+      <div class=\\"builder-column div-my-component\\" data-el=\\"div-my-component-1\\"></div>
       <style>
-        .div {
+        .div-my-component {
           display: flex;
           flex-direction: column;
           align-items: stretch;
@@ -25236,8 +25783,126 @@ customElements.define(\\"my-component\\", MyComponent);
 "
 `;
 
+exports[`webcomponent > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"/**
+ * Usage:
+ *
+ *  <style-prop-class-and-css></style-prop-class-and-css>
+ *
+ */
+class StylePropClassAndCss extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {};
+    if (!this.props) {
+      this.props = {};
+    }
+
+    this.componentProps = [\\"attributes\\"];
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
+    this._root.innerHTML = \`
+      <div data-el=\\"div-style-prop-class-and-css-1\\"></div>
+      <style>
+        .div-style-prop-class-and-css {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      </style>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='div-style-prop-class-and-css-1']\\")
+      .forEach((el) => {
+        Object.assign(el.style, this.props.attributes.style);
+        el.className =
+          this.props.attributes.class + \\" div-style-prop-class-and-css\\";
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"style-prop-class-and-css\\", StylePropClassAndCss);
+"
+`;
+
 exports[`webcomponent > jsx > Typescript Test > subComponent 1`] = `
-"import Foo from \\"./foo-sub-component.lite\\";
+"import Foo from \\"./foo-sub-component.js\\";
 
 /**
  * Usage:
@@ -25452,7 +26117,7 @@ exports[`webcomponent > jsx > Typescript Test > typeDependency 1`] = `
 };
 
 import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export.lite\\";
+import type { Foo as Foo2 } from \\"./type-export.js\\";
 
 /**
  * Usage:
@@ -25699,16 +26364,16 @@ class MyComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <button type=\\"button\\" class=\\"button\\">Button</button>
+      <button type=\\"button\\" class=\\"button-my-component\\">Button</button>
       <style>
-        .button {
-          background: blue;
-          color: white;
-        }
-      
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+      
+        .button-my-component {
+          background: blue;
+          color: white;
         }
       </style>\`;
     this.pendingUpdate = true;
@@ -25852,6 +26517,108 @@ class MyComponent extends HTMLElement {
 }
 
 customElements.define(\\"my-component\\", MyComponent);
+"
+`;
+
+exports[`webcomponent > jsx > Typescript Test > useTarget 1`] = `
+"/**
+ * Usage:
+ *
+ *  <use-target-component></use-target-component>
+ *
+ */
+class UseTargetComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      get name() {
+        const prefix = \\"c\\";
+        return prefix + \\"foo\\";
+      },
+      lastName: \\"bar\\",
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <template data-el=\\"div-use-target-component-1\\"><!-- state.name --></template>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='div-use-target-component-1']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.state.name);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"use-target-component\\", UseTargetComponent);
 "
 `;
 
@@ -27214,7 +27981,7 @@ customElements.define(\\"my-component\\", MyComponent);
 `;
 
 exports[`webcomponent > svelte > Javascript Test > imports 1`] = `
-"import Button from \\"./Button.lite\\";
+"import Button from \\"./Button.js\\";
 
 /**
  * Usage:
@@ -29453,7 +30220,7 @@ customElements.define(\\"my-component\\", MyComponent);
 `;
 
 exports[`webcomponent > svelte > Typescript Test > imports 1`] = `
-"import Button from \\"./Button.lite\\";
+"import Button from \\"./Button.js\\";
 
 /**
  * Usage:

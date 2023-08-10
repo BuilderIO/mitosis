@@ -1,4 +1,7 @@
 import {
+  checkIsMitosisComponentFilePath,
+  checkIsSvelteComponentFilePath,
+  checkShouldOutputTypeScript,
   componentToAlpine,
   componentToAngular,
   componentToCustomElement,
@@ -20,10 +23,14 @@ import {
   componentToTemplate,
   componentToVue2,
   componentToVue3,
+  createTypescriptProject,
+  mapSignalTypeInTSFile,
   MitosisComponent,
   MitosisConfig,
   parseJsx,
   parseSvelte,
+  removeMitosisImport,
+  renameComponentFile,
   Target,
   TranspilerGenerator,
 } from '@builder.io/mitosis';
@@ -33,14 +40,7 @@ import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
-import { getFileExtensionForTarget } from './helpers/extensions';
 import { getFiles } from './helpers/files';
-import {
-  checkIsMitosisComponentFilePath,
-  INPUT_EXTENSIONS,
-  INPUT_EXTENSION_REGEX,
-} from './helpers/inputs-extensions';
-import { checkShouldOutputTypeScript } from './helpers/options';
 import { getOverrideFile } from './helpers/overrides';
 import { transformImports, transpile, transpileIfNecessary } from './helpers/transpile';
 
@@ -78,14 +78,31 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => ({
   },
 });
 
-async function clean(options: MitosisConfig) {
-  const patterns = options.targets.map(
-    (target) => `${options.dest}/${options.getTargetPath({ target })}/${options.files}`,
-  );
-  const files = getFiles({ files: patterns, exclude: options.exclude });
+async function clean(options: MitosisConfig, target: Target) {
+  const outputPattern = `${options.dest}/${options.getTargetPath({ target })}/${options.files}`;
+  const oldFiles = getFiles({ files: outputPattern, exclude: options.exclude });
+
+  const newFilenames = getFiles({ files: options.files, exclude: options.exclude })
+    .map((path) =>
+      checkIsMitosisComponentFilePath(path)
+        ? renameComponentFile({ target, path, options })
+        : path.endsWith('.js') || path.endsWith('.ts')
+        ? getNonComponentOutputFileName({ target, path, options })
+        : undefined,
+    )
+    .filter(Boolean);
+
   await Promise.all(
-    files.map(async (file) => {
-      await remove(file);
+    oldFiles.map(async (oldFile) => {
+      const fileExists = newFilenames.some((newFile) => oldFile.endsWith(newFile));
+
+      /**
+       * We only remove files that were removed from the input files.
+       * Modified files will be overwritten, and new files will be created.
+       */
+      if (!fileExists) {
+        await remove(oldFile);
+      }
     }),
   );
 }
@@ -101,7 +118,9 @@ const getRequiredParsers = (
 ): { javascript: boolean; typescript: boolean } => {
   const targetsOptions = Object.values(options.options);
 
-  const targetsRequiringTypeScript = targetsOptions.filter((option) => option.typescript).length;
+  const targetsRequiringTypeScript = targetsOptions.filter(
+    (option) => option.typescript || options.commonOptions?.typescript,
+  ).length;
   const needsTypeScript = targetsRequiringTypeScript > 0;
 
   /**
@@ -126,25 +145,33 @@ const parseJsxComponent = async ({
   options,
   path,
   file,
+  tsProject,
 }: {
   options: MitosisConfig;
   path: string;
   file: string;
+  tsProject: Parameters<typeof parseJsx>[1]['tsProject'];
 }) => {
   const requiredParses = getRequiredParsers(options);
   let typescriptMitosisJson: ParsedMitosisJson['typescriptMitosisJson'];
   let javascriptMitosisJson: ParsedMitosisJson['javascriptMitosisJson'];
+
+  const jsxArgs: Parameters<typeof parseJsx>[1] = {
+    ...options.parserOptions?.jsx,
+    tsProject,
+    filePath: path,
+  };
   if (requiredParses.typescript && requiredParses.javascript) {
     typescriptMitosisJson = options.parser
       ? await options.parser(file, path)
-      : parseJsx(file, { typescript: true });
+      : parseJsx(file, { ...jsxArgs, typescript: true });
     javascriptMitosisJson = options.parser
       ? await options.parser(file, path)
-      : parseJsx(file, { typescript: false });
+      : parseJsx(file, { ...jsxArgs, typescript: false });
   } else {
     const singleParse = options.parser
       ? await options.parser(file, path)
-      : parseJsx(file, { typescript: requiredParses.typescript });
+      : parseJsx(file, { ...jsxArgs, typescript: requiredParses.typescript });
 
     // technically only one of these will be used, but we set both to simplify things types-wise.
     typescriptMitosisJson = singleParse;
@@ -171,18 +198,39 @@ const parseSvelteComponent = async ({ path, file }: { path: string; file: string
   return output;
 };
 
+const findTsConfigFile = (options: MitosisConfig) => {
+  const optionPath = options.parserOptions?.jsx?.tsConfigFilePath;
+
+  if (optionPath && pathExists(optionPath)) {
+    return optionPath;
+  }
+
+  const defaultPath = [cwd, 'tsconfig.json'].join('/');
+
+  if (pathExists(defaultPath)) {
+    return defaultPath;
+  }
+
+  return undefined;
+};
+
 const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
   const paths = getFiles({ files: options.files, exclude: options.exclude }).filter(
     checkIsMitosisComponentFilePath,
   );
+
+  const tsConfigFilePath = findTsConfigFile(options);
+
+  const tsProject = tsConfigFilePath ? createTypescriptProject(tsConfigFilePath) : undefined;
+
   return Promise.all(
-    paths.map(async (path): Promise<ParsedMitosisJson> => {
+    paths.map(async (path) => {
       try {
         const file = await readFile(path, 'utf8');
-        if (INPUT_EXTENSIONS.svelte.some((x) => path.endsWith(x))) {
+        if (checkIsSvelteComponentFilePath(path)) {
           return await parseSvelteComponent({ path, file });
         } else {
-          return await parseJsxComponent({ options, path, file });
+          return await parseJsxComponent({ options, path, file, tsProject });
         }
       } catch (err) {
         console.error('Could not parse file:', path);
@@ -220,9 +268,6 @@ export async function build(config?: MitosisConfig) {
   // merge default options
   const options = getOptions(config);
 
-  // clean output directory
-  await clean(options);
-
   // get all mitosis component JSONs
   const mitosisComponents = await getMitosisComponentJSONs(options);
 
@@ -230,6 +275,8 @@ export async function build(config?: MitosisConfig) {
 
   await Promise.all(
     targetContexts.map(async (targetContext) => {
+      // clean output directory
+      await clean(options, targetContext.target);
       // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
       // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
       const files = fastClone(mitosisComponents);
@@ -302,21 +349,6 @@ const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['g
   }
 };
 
-const getComponentOutputFileName = ({
-  target,
-  path,
-  options,
-}: {
-  target: Target;
-  path: string;
-  options: MitosisConfig;
-}) => {
-  return path.replace(
-    INPUT_EXTENSION_REGEX,
-    getFileExtensionForTarget({ type: 'filename', target, options }),
-  );
-};
-
 /**
  * Transpiles and outputs Mitosis component files.
  */
@@ -331,7 +363,7 @@ async function buildAndOutputComponentFiles({
   const shouldOutputTypescript = checkShouldOutputTypeScript({ options, target });
 
   const output = files.map(async ({ path, typescriptMitosisJson, javascriptMitosisJson }) => {
-    const outputFilePath = getComponentOutputFileName({ target, path, options });
+    const outputFilePath = renameComponentFile({ target, path, options });
 
     /**
      * Try to find override file.
@@ -376,6 +408,16 @@ const getNonComponentFileExtension = flow(checkShouldOutputTypeScript, (shouldOu
   shouldOutputTypeScript ? '.ts' : '.js',
 );
 
+const getNonComponentOutputFileName = ({
+  target,
+  options,
+  path,
+}: {
+  path: string;
+  target: Target;
+  options: MitosisConfig;
+}) => path.replace(/\.tsx?$/, getNonComponentFileExtension({ target, options }));
+
 /**
  * Outputs non-component files to the destination directory, without modifying them.
  */
@@ -388,11 +430,13 @@ const outputNonComponentFiles = async ({
   files: { path: string; output: string }[];
   options: MitosisConfig;
 }) => {
-  const extension = getNonComponentFileExtension({ target, options });
   const folderPath = `${options.dest}/${outputPath}`;
   return await Promise.all(
     files.map(({ path, output }) =>
-      outputFile(`${folderPath}/${path.replace(/\.tsx?$/, extension)}`, output),
+      outputFile(
+        `${folderPath}/${getNonComponentOutputFileName({ options, path, target })}`,
+        output,
+      ),
     ),
   );
 };
@@ -464,6 +508,8 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
       const output = pipe(
         await transpileIfNecessary({ path, target, options, content: file }),
         transformImports({ target, options }),
+        (code) => mapSignalTypeInTSFile({ code, target }),
+        removeMitosisImport,
       );
 
       return { output, path };

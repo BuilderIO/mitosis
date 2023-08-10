@@ -1,4 +1,10 @@
-import { expect, test } from '@playwright/test';
+import { expect, test as playwrightTest } from '@playwright/test';
+import { PackageName } from '../src/testConfig';
+
+const test = playwrightTest.extend<{ packageName: PackageName | 'DEFAULT' }>({
+  // this is provided by `playwright.config.ts`
+  packageName: ['DEFAULT', { option: true }],
+});
 
 test.describe('e2e', () => {
   test('todo list add', async ({ page }) => {
@@ -33,5 +39,33 @@ test.describe('e2e', () => {
     await expect(page.locator('text=number :1')).toBeVisible();
     await expect(page.locator('text=number :2')).toBeVisible();
     await expect(page.locator('text=number :3')).toBeVisible();
+  });
+
+  test.describe('special HTML tags', () => {
+    test('template tag', async ({ page, packageName }) => {
+      await page.goto('/special-tags/');
+
+      await expect(page.locator('template')).toBeDefined();
+    });
+
+    test('script tag', async ({ page, packageName }) => {
+      if (['e2e-solid', 'e2e-react'].includes(packageName)) {
+        test.skip();
+      }
+
+      const consoleMsg: string[] = [];
+      page.on('console', (msg) => consoleMsg.push(msg.text()));
+
+      await page.goto('/special-tags/');
+
+      await expect(consoleMsg.includes('hello from script tag.')).toBe(true);
+    });
+
+    test('style tag', async ({ page, packageName }) => {
+      await page.goto('/special-tags/');
+
+      const div = page.locator('.wrap');
+      await expect(div).toHaveCSS('background-color', 'rgb(255, 0, 0)');
+    });
   });
 });

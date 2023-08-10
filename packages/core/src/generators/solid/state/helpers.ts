@@ -21,8 +21,7 @@ export const getStateTypeForValue = ({
   // e.g. state.useContent?.blocks[0].id => useContent
   const extractStateSliceName = stripStateAndPropsRefs(value).split('.')[0].split('?')[0];
 
-  const stateOverrideForValue: ToSolidOptions['state'] = (component.meta?.useMetadata?.solid as any)
-    ?.state?.[extractStateSliceName];
+  const stateOverrideForValue = component.meta?.useMetadata?.solid?.state?.[extractStateSliceName];
 
   const stateType = stateOverrideForValue || options.state;
 

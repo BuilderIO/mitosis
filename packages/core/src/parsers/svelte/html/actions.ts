@@ -21,6 +21,7 @@ export function parseAction(
   json.state[actionHandler] = {
     code: 'null',
     type: 'property',
+    propertyType: 'normal',
   };
 
   const initHandler = `if (${nodeReference}) { ${actionHandler} = ${methodName}(${nodeReference}, ${parameters}); };\n`;

@@ -243,9 +243,12 @@ export default class MyBooleanAttribute {
   render() {
     return (
       <div>
-        {this.children}
-
-        {this.type}
+        {this.children ? (
+          <>
+            {this.children}
+            {this.type}
+          </>
+        ) : null}
 
         <MyBooleanAttributeComponent
           toggle={true}
@@ -1107,7 +1110,7 @@ export default class Image {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -1124,7 +1127,7 @@ export default class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -1252,6 +1255,7 @@ export default class FormInputComponent {
   @Prop() name: any;
   @Prop() value: any;
   @Prop() required: any;
+  @Prop() onChange: any;
 
   render() {
     return (
@@ -1268,7 +1272,34 @@ export default class FormInputComponent {
         value={this.value}
         defaultValue={this.defaultValue}
         required={this.required}
+        onInput={(event) => this.onChange?.(event.target.value)}
       />
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"stepper\\",
+})
+export default class Stepper {
+  handleChange(value) {
+    console.log(value);
+  }
+
+  render() {
+    return (
+      <FormInputComponent
+        name=\\"kingzez\\"
+        type=\\"text\\"
+        onChange={(value) => this.handleChange(value)}
+      ></FormInputComponent>
     );
   }
 }
@@ -2023,7 +2054,7 @@ export default class ComponentWithContext {
 `;
 
 exports[`Stencil > jsx > Javascript Test > contentState 1`] = `
-"import BuilderContext from \\"@dummy/context.lite\\";
+"import BuilderContext from \\"@dummy/context.js\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -2499,8 +2530,8 @@ export default class OnUpdate {
   };
 
   componentDidUpdate() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 
@@ -2523,13 +2554,13 @@ exports[`Stencil > jsx > Javascript Test > renderBlock 1`] = `
 `;
 
 exports[`Stencil > jsx > Javascript Test > renderContentExample 1`] = `
-"import BuilderContext from \\"@dummy/context.lite\\";
+"import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -2735,8 +2766,36 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"style-prop-class-and-css\\",
+  styles: \`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+\`,
+})
+export default class StylePropClassAndCss {
+  @Prop() attributes: any;
+
+  render() {
+    return (
+      <div
+        class={props.attributes.class + \\" div\\"}
+        style={this.attributes.style}
+      ></div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > subComponent 1`] = `
-"import Foo from \\"./foo-sub-component.lite\\";
+"import Foo from \\"./foo-sub-component\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -2834,14 +2893,14 @@ exports[`Stencil > jsx > Javascript Test > use-style-and-css 1`] = `
 @Component({
   tag: \\"my-component\\",
   styles: \`
-        .button {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button {
+          background: blue;
+          color: white;
         }
 \`,
 })
@@ -2874,6 +2933,27 @@ exports[`Stencil > jsx > Javascript Test > use-style-outside-component 1`] = `
 export default class MyComponent {
   render() {
     return <button type=\\"button\\">Button</button>;
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > useTarget 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"use-target-component\\",
+})
+export default class UseTargetComponent {
+  @State() lastName = \\"bar\\";
+
+  get name() {
+    const prefix = \\"st\\";
+    return prefix + \\"foo\\";
+  }
+
+  render() {
+    return <div>{this.name}</div>;
   }
 }
 "
@@ -3143,9 +3223,12 @@ export default class MyBooleanAttribute {
   render() {
     return (
       <div>
-        {this.children}
-
-        {this.type}
+        {this.children ? (
+          <>
+            {this.children}
+            {this.type}
+          </>
+        ) : null}
 
         <MyBooleanAttributeComponent
           toggle={true}
@@ -4016,7 +4099,7 @@ export default class Image {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -4033,7 +4116,7 @@ export default class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -4161,6 +4244,7 @@ export default class FormInputComponent {
   @Prop() name: any;
   @Prop() value: any;
   @Prop() required: any;
+  @Prop() onChange: any;
 
   render() {
     return (
@@ -4177,7 +4261,34 @@ export default class FormInputComponent {
         value={this.value}
         defaultValue={this.defaultValue}
         required={this.required}
+        onInput={(event) => this.onChange?.(event.target.value)}
       />
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > InputParent 1`] = `
+"import FormInputComponent from \\"./input.raw\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"stepper\\",
+})
+export default class Stepper {
+  handleChange(value: string) {
+    console.log(value);
+  }
+
+  render() {
+    return (
+      <FormInputComponent
+        name=\\"kingzez\\"
+        type=\\"text\\"
+        onChange={(value) => this.handleChange(value)}
+      ></FormInputComponent>
     );
   }
 }
@@ -4934,7 +5045,7 @@ export default class ComponentWithContext {
 `;
 
 exports[`Stencil > jsx > Typescript Test > contentState 1`] = `
-"import BuilderContext from \\"@dummy/context.lite\\";
+"import BuilderContext from \\"@dummy/context.js\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -5411,8 +5522,8 @@ export default class OnUpdate {
   };
 
   componentDidUpdate() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 
@@ -5435,13 +5546,13 @@ exports[`Stencil > jsx > Typescript Test > renderBlock 1`] = `
 `;
 
 exports[`Stencil > jsx > Typescript Test > renderContentExample 1`] = `
-"import BuilderContext from \\"@dummy/context.lite\\";
+"import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -5647,8 +5758,36 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"style-prop-class-and-css\\",
+  styles: \`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+\`,
+})
+export default class StylePropClassAndCss {
+  @Prop() attributes: any;
+
+  render() {
+    return (
+      <div
+        class={props.attributes.class + \\" div\\"}
+        style={this.attributes.style}
+      ></div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Typescript Test > subComponent 1`] = `
-"import Foo from \\"./foo-sub-component.lite\\";
+"import Foo from \\"./foo-sub-component\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -5704,7 +5843,7 @@ export default class SvgComponent {
 
 exports[`Stencil > jsx > Typescript Test > typeDependency 1`] = `
 "import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export.lite\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -5749,14 +5888,14 @@ exports[`Stencil > jsx > Typescript Test > use-style-and-css 1`] = `
 @Component({
   tag: \\"my-component\\",
   styles: \`
-        .button {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button {
+          background: blue;
+          color: white;
         }
 \`,
 })
@@ -5789,6 +5928,27 @@ exports[`Stencil > jsx > Typescript Test > use-style-outside-component 1`] = `
 export default class MyComponent {
   render() {
     return <button type=\\"button\\">Button</button>;
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > useTarget 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"use-target-component\\",
+})
+export default class UseTargetComponent {
+  @State() lastName = \\"bar\\";
+
+  get name() {
+    const prefix = \\"st\\";
+    return prefix + \\"foo\\";
+  }
+
+  render() {
+    return <div>{this.name}</div>;
   }
 }
 "
@@ -6020,7 +6180,7 @@ exports[`Stencil > svelte > Javascript Test > ifElse 1`] = `
 `;
 
 exports[`Stencil > svelte > Javascript Test > imports 1`] = `
-"import Button from \\"./Button.lite\\";
+"import Button from \\"./Button\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -6430,7 +6590,7 @@ exports[`Stencil > svelte > Typescript Test > ifElse 1`] = `
 `;
 
 exports[`Stencil > svelte > Typescript Test > imports 1`] = `
-"import Button from \\"./Button.lite\\";
+"import Button from \\"./Button\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 

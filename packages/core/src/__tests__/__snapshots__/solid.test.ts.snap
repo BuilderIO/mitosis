@@ -88,7 +88,7 @@ function MyBasicRefComponent(props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-e7ed2dac\\"
+              class=\\"input-c489f784\\"
               ref={inputRef}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -108,7 +108,7 @@ function MyBasicRefComponent(props) {
         Component!
       </div>
       <style jsx>{\`
-        .input-e7ed2dac {
+        .input-c489f784 {
           color: red;
         }
       \`}</style>
@@ -220,7 +220,7 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <div class=\\"test div-06b5c74d\\">
+      <div class=\\"test div-1229b316\\">
         <input
           value={DEFAULT_VALUES.name || name()}
           onInput={(myEvent) => setName(myEvent.target.value)}
@@ -228,7 +228,7 @@ function MyBasicComponent(props) {
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style jsx>{\`
-        .div-06b5c74d {
+        .div-1229b316 {
           padding: 10px;
         }
       \`}</style>
@@ -301,7 +301,7 @@ function MyBasicComponent(props) {
   });
 
   return (
-    <Injector.Provider>
+    <Injector.Provider value={createInjector()}>
       <div>
         {myService.method(\\"hello\\") + name()}
         Hello! I can run in React, Vue, Solid, or Liquid!
@@ -339,7 +339,7 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <Injector.Provider>
+      <Injector.Provider value={createInjector()}>
         <div>
           {myService.method(\\"hello\\") + name()}
           Hello! I can run in React, Vue, Solid, or Liquid!
@@ -515,13 +515,17 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
-"import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+"import { Show } from \\"solid-js\\";
+
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
 function MyBooleanAttribute(props) {
   return (
     <div>
-      {props.children}
-      {props.type}
+      <Show when={props.children}>
+        {props.children}
+        {props.type}
+      </Show>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
       <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
@@ -534,7 +538,9 @@ export default MyBooleanAttribute;
 `;
 
 exports[`Solid > jsx > Javascript Test > BasicBooleanAttribute 2`] = `
-"import { css } from \\"solid-styled-components\\";
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
 
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
@@ -542,8 +548,10 @@ function MyBooleanAttribute(props) {
   return (
     <>
       <div>
-        {props.children}
-        {props.type}
+        <Show when={props.children}>
+          {props.children}
+          {props.type}
+        </Show>
         <MyBooleanAttributeComponent
           toggle={true}
         ></MyBooleanAttributeComponent>
@@ -782,7 +790,7 @@ function MyBasicRefComponent(props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-aaba0a9c\\"
+              class=\\"input-e2440972\\"
               ref={inputRef}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -802,7 +810,7 @@ function MyBasicRefComponent(props) {
         Component!
       </div>
       <style jsx>{\`
-        .input-aaba0a9c {
+        .input-e2440972 {
           color: red;
         }
       \`}</style>
@@ -2146,7 +2154,7 @@ function FormComponent(props) {
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder-form-error-text pre-0a577d7f\\">
+          <pre class=\\"builder-form-error-text pre-441bb54e\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
@@ -2158,7 +2166,7 @@ function FormComponent(props) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-0a577d7f {
+        .pre-441bb54e {
           padding: 10px;
           color: red;
           text-align: center;
@@ -2324,7 +2332,7 @@ function Image(props) {
               class={
                 \\"builder-image\\" +
                 (props._class ? \\" \\" + props._class : \\"\\") +
-                \\" img-1c92aec4\\"
+                \\" img-6647a904\\"
               }
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -2339,7 +2347,7 @@ function Image(props) {
         {props.children}
       </div>
       <style jsx>{\`
-        .img-1c92aec4 {
+        .img-6647a904 {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -2480,6 +2488,7 @@ function FormInputComponent(props) {
       value={props.value}
       defaultValue={props.defaultValue}
       required={props.required}
+      onInput={(event) => props.onChange?.(event.target.value)}
     />
   );
 }
@@ -2509,12 +2518,63 @@ function FormInputComponent(props) {
         value={props.value}
         defaultValue={props.defaultValue}
         required={props.required}
+        onInput={(event) => props.onChange?.(event.target.value)}
       />
     </>
   );
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > InputParent 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props) {
+  function handleChange(value) {
+    console.log(value);
+  }
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange={(value) => handleChange(value)}
+    ></FormInputComponent>
+  );
+}
+
+export default Stepper;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > InputParent 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props) {
+  function handleChange(value) {
+    console.log(value);
+  }
+
+  return (
+    <>
+      <FormInputComponent
+        name=\\"kingzez\\"
+        type=\\"text\\"
+        onChange={(value) => handleChange(value)}
+      ></FormInputComponent>
+    </>
+  );
+}
+
+export default Stepper;
 "
 `;
 
@@ -3034,13 +3094,13 @@ function SmileReviews(props) {
         </button>
         <Show when={showReviewPrompt() || \\"asdf\\"}>
           <input placeholder=\\"Email\\" />
-          <input class=\\"input-c5075be6\\" placeholder=\\"Title\\" />
+          <input class=\\"input-8aa000e4\\" placeholder=\\"Title\\" />
           <textarea
-            class=\\"textarea-c5075be6\\"
+            class=\\"textarea-8aa000e4\\"
             placeholder=\\"How was your experience?\\"
           ></textarea>
           <button
-            class=\\"button-c5075be6\\"
+            class=\\"button-8aa000e4\\"
             onClick={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
@@ -3053,8 +3113,8 @@ function SmileReviews(props) {
           {(review, _index) => {
             const index = _index();
             return (
-              <div class=\\"div-c5075be6\\" key={review.id}>
-                <img class=\\"img-c5075be6\\" src={review.avatar} />
+              <div class=\\"div-8aa000e4\\" key={review.id}>
+                <img class=\\"img-8aa000e4\\" src={review.avatar} />
                 <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
                   <div>
                     N:
@@ -3069,16 +3129,16 @@ function SmileReviews(props) {
         </For>
       </div>
       <style jsx>{\`
-        .input-c5075be6 {
+        .input-8aa000e4 {
           display: block;
         }
-        .textarea-c5075be6 {
+        .textarea-8aa000e4 {
           display: block;
         }
-        .button-c5075be6 {
+        .button-8aa000e4 {
           display: block;
         }
-        .div-c5075be6 {
+        .div-8aa000e4 {
           margin: 10px;
           padding: 10px;
           background: white;
@@ -3086,7 +3146,7 @@ function SmileReviews(props) {
           border-radius: 5px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .img-c5075be6 {
+        .img-8aa000e4 {
           height: 30px;
           width: 30px;
           margin-right: 10px;
@@ -3722,11 +3782,11 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <div class={classState() + \\" div-db099e36\\"} style={styleState()}>
+      <div class={classState() + \\" div-6542e5ae\\"} style={styleState()}>
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style jsx>{\`
-        .div-db099e36 {
+        .div-6542e5ae {
           padding: 10px;
         }
       \`}</style>
@@ -3893,7 +3953,7 @@ export default ComponentWithContext;
 `;
 
 exports[`Solid > jsx > Javascript Test > contentState 1`] = `
-"import BuilderContext from \\"@dummy/context.jsx\\";
+"import BuilderContext from \\"@dummy/context.js\\";
 
 function RenderContent(props) {
   return (
@@ -3915,7 +3975,7 @@ export default RenderContent;
 exports[`Solid > jsx > Javascript Test > contentState 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-import BuilderContext from \\"@dummy/context.jsx\\";
+import BuilderContext from \\"@dummy/context.js\\";
 
 function RenderContent(props) {
   return (
@@ -4894,11 +4954,11 @@ import { getBlockProperties } from \\"../../functions/get-block-properties.js\\"
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-import BlockStyles from \\"./block-styles.jsx\\";
+import BlockStyles from \\"./block-styles\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context.jsx\\";
-import RenderComponent from \\"./render-component.jsx\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.jsx\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
+import RenderComponent from \\"./render-component\\";
+import RenderRepeatedBlock from \\"./render-repeated-block\\";
 
 function RenderBlock(props) {
   function component() {
@@ -5168,11 +5228,11 @@ import { getBlockProperties } from \\"../../functions/get-block-properties.js\\"
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-import BlockStyles from \\"./block-styles.jsx\\";
+import BlockStyles from \\"./block-styles\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context.jsx\\";
-import RenderComponent from \\"./render-component.jsx\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.jsx\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
+import RenderComponent from \\"./render-component\\";
+import RenderRepeatedBlock from \\"./render-repeated-block\\";
 
 function RenderBlock(props) {
   function component() {
@@ -5434,13 +5494,13 @@ exports[`Solid > jsx > Javascript Test > renderContentExample 1`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-import BuilderContext from \\"@dummy/context.jsx\\";
+import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks\\";
 
 function RenderContent(props) {
   onMount(() => {
@@ -5486,13 +5546,13 @@ exports[`Solid > jsx > Javascript Test > renderContentExample 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-import BuilderContext from \\"@dummy/context.jsx\\";
+import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks\\";
 
 function RenderContent(props) {
   onMount(() => {
@@ -5920,8 +5980,57 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function StylePropClassAndCss(props) {
+  return (
+    <div
+      class={
+        props.attributes.class +
+        \\" \\" +
+        css({
+          display: \\"flex\\",
+          flexDirection: \\"column\\",
+          alignItems: \\"stretch\\",
+        })
+      }
+      style={props.attributes.style}
+    ></div>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > stylePropClassAndCss 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function StylePropClassAndCss(props) {
+  return (
+    <>
+      <div
+        class={props.attributes.class + \\" div-6ffaca58\\"}
+        style={props.attributes.style}
+      ></div>
+      <style jsx>{\`
+        .div-6ffaca58 {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > subComponent 1`] = `
-"import Foo from \\"./foo-sub-component.jsx\\";
+"import Foo from \\"./foo-sub-component\\";
 
 function SubComponent(props) {
   return <Foo></Foo>;
@@ -5934,7 +6043,7 @@ export default SubComponent;
 exports[`Solid > jsx > Javascript Test > subComponent 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-import Foo from \\"./foo-sub-component.jsx\\";
+import Foo from \\"./foo-sub-component\\";
 
 function SubComponent(props) {
   return (
@@ -6044,7 +6153,20 @@ exports[`Solid > jsx > Javascript Test > use-style 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
 function MyComponent(props) {
-  return <button type=\\"button\\">Button</button>;
+  return (
+    <>
+      <button type=\\"button\\">Button</button>
+
+      <style>{\`
+        button {
+            background: blue;
+            color: white;
+            font-size: 12px;
+            outline: 1px solid black;
+        }
+    \`}</style>
+    </>
+  );
 }
 
 export default MyComponent;
@@ -6079,15 +6201,24 @@ exports[`Solid > jsx > Javascript Test > use-style-and-css 1`] = `
 
 function MyComponent(props) {
   return (
-    <button
-      class={css({
-        background: \\"blue\\",
-        color: \\"white\\",
-      })}
-      type=\\"button\\"
-    >
-      Button
-    </button>
+    <>
+      <button
+        class={css({
+          background: \\"blue\\",
+          color: \\"white\\",
+        })}
+        type=\\"button\\"
+      >
+        Button
+      </button>
+
+      <style>{\`
+        button {
+            font-size: 12px;
+            outline: 1px solid black;
+        }
+    \`}</style>
+    </>
   );
 }
 
@@ -6105,14 +6236,14 @@ function MyComponent(props) {
         Button
       </button>
       <style jsx>{\`
-        .button-0b7811fa {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button-0b7811fa {
+          background: blue;
+          color: white;
         }
       \`}</style>
     </>
@@ -6127,7 +6258,20 @@ exports[`Solid > jsx > Javascript Test > use-style-outside-component 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
 function MyComponent(props) {
-  return <button type=\\"button\\">Button</button>;
+  return (
+    <>
+      <button type=\\"button\\">Button</button>
+
+      <style>{\`
+  button {
+      background: blue;
+      color: white;
+      font-size: 12px;
+      outline: 1px solid black;
+  }
+\`}</style>
+    </>
+  );
 }
 
 export default MyComponent;
@@ -6154,6 +6298,48 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > useTarget 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+function UseTargetComponent(props) {
+  const [lastName, setLastName] = createSignal(\\"bar\\");
+
+  function name() {
+    const prefix = \\"so\\";
+    return prefix + \\"foo\\";
+  }
+
+  return <div>{name()}</div>;
+}
+
+export default UseTargetComponent;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > useTarget 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function UseTargetComponent(props) {
+  const [lastName, setLastName] = createSignal(\\"bar\\");
+
+  function name() {
+    const prefix = \\"so\\";
+    return prefix + \\"foo\\";
+  }
+
+  return (
+    <>
+      <div>{name()}</div>
+    </>
+  );
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -6291,7 +6477,7 @@ function MyBasicRefComponent(props: Props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-593943a4\\"
+              class=\\"input-482c52a6\\"
               ref={inputRef!}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -6311,7 +6497,7 @@ function MyBasicRefComponent(props: Props) {
         Component!
       </div>
       <style jsx>{\`
-        .input-593943a4 {
+        .input-482c52a6 {
           color: red;
         }
       \`}</style>
@@ -6429,7 +6615,7 @@ function MyBasicComponent(props: MyBasicComponentProps) {
 
   return (
     <>
-      <div class=\\"test div-0de70668\\">
+      <div class=\\"test div-2c7efd31\\">
         <input
           value={DEFAULT_VALUES.name || name()}
           onInput={(myEvent) => setName(myEvent.target.value)}
@@ -6437,7 +6623,7 @@ function MyBasicComponent(props: MyBasicComponentProps) {
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style jsx>{\`
-        .div-0de70668 {
+        .div-2c7efd31 {
           padding: 10px;
         }
       \`}</style>
@@ -6510,7 +6696,7 @@ function MyBasicComponent(props: any) {
   });
 
   return (
-    <Injector.Provider>
+    <Injector.Provider value={createInjector()}>
       <div>
         {myService.method(\\"hello\\") + name()}
         Hello! I can run in React, Vue, Solid, or Liquid!
@@ -6548,7 +6734,7 @@ function MyBasicComponent(props: any) {
 
   return (
     <>
-      <Injector.Provider>
+      <Injector.Provider value={createInjector()}>
         <div>
           {myService.method(\\"hello\\") + name()}
           Hello! I can run in React, Vue, Solid, or Liquid!
@@ -6733,7 +6919,9 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
-"type Props = {
+"import { Show } from \\"solid-js\\";
+
+type Props = {
   children: any;
   type: string;
 };
@@ -6743,8 +6931,10 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 function MyBooleanAttribute(props: Props) {
   return (
     <div>
-      {props.children}
-      {props.type}
+      <Show when={props.children}>
+        {props.children}
+        {props.type}
+      </Show>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
       <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
       <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
@@ -6757,7 +6947,9 @@ export default MyBooleanAttribute;
 `;
 
 exports[`Solid > jsx > Typescript Test > BasicBooleanAttribute 2`] = `
-"import { css } from \\"solid-styled-components\\";
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
 type Props = {
   children: any;
   type: string;
@@ -6769,8 +6961,10 @@ function MyBooleanAttribute(props: Props) {
   return (
     <>
       <div>
-        {props.children}
-        {props.type}
+        <Show when={props.children}>
+          {props.children}
+          {props.type}
+        </Show>
         <MyBooleanAttributeComponent
           toggle={true}
         ></MyBooleanAttributeComponent>
@@ -7015,7 +7209,7 @@ function MyBasicRefComponent(props: Props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-c02ab02c\\"
+              class=\\"input-4b35386e\\"
               ref={inputRef!}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -7035,7 +7229,7 @@ function MyBasicRefComponent(props: Props) {
         Component!
       </div>
       <style jsx>{\`
-        .input-c02ab02c {
+        .input-4b35386e {
           color: red;
         }
       \`}</style>
@@ -7390,12 +7584,12 @@ function Column(props: ColumnProps) {
 
   return (
     <>
-      <div class=\\"builder-columns div-f5d75200\\">
+      <div class=\\"builder-columns div-24014cea\\">
         <For each={props.columns}>
           {(column, _index) => {
             const index = _index();
             return (
-              <div class=\\"builder-column div-f5d75200-2\\">
+              <div class=\\"builder-column div-24014cea-2\\">
                 {column.content}
                 {index}
               </div>
@@ -7404,23 +7598,23 @@ function Column(props: ColumnProps) {
         </For>
       </div>
       <style jsx>{\`
-        .div-f5d75200 {
+        .div-24014cea {
           display: flex;
           flex-direction: column;
           align-items: stretch;
           line-height: normal;
         }
         @media (max-width: 999px) {
-          .div-f5d75200 {
+          .div-24014cea {
             flex-direction: row;
           }
         }
         @media (max-width: 639px) {
-          .div-f5d75200 {
+          .div-24014cea {
             flex-direction: row-reverse;
           }
         }
-        .div-f5d75200-2 {
+        .div-24014cea-2 {
           flex-grow: 1;
         }
       \`}</style>
@@ -8536,7 +8730,7 @@ function FormComponent(props: FormProps) {
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder-form-error-text pre-61cfe984\\">
+          <pre class=\\"builder-form-error-text pre-0a36e30c\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
@@ -8548,7 +8742,7 @@ function FormComponent(props: FormProps) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-61cfe984 {
+        .pre-0a36e30c {
           padding: 10px;
           color: red;
           text-align: center;
@@ -8750,7 +8944,7 @@ function Image(props: ImageProps) {
               class={
                 \\"builder-image\\" +
                 (props._class ? \\" \\" + props._class : \\"\\") +
-                \\" img-0a07dada\\"
+                \\" img-dc2dd53c\\"
               }
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -8765,7 +8959,7 @@ function Image(props: ImageProps) {
         {props.children}
       </div>
       <style jsx>{\`
-        .img-0a07dada {
+        .img-dc2dd53c {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -8930,6 +9124,7 @@ exports[`Solid > jsx > Typescript Test > Input 1`] = `
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -8949,6 +9144,7 @@ function FormInputComponent(props: FormInputProps) {
       value={props.value}
       defaultValue={props.defaultValue}
       required={props.required}
+      onInput={(event) => props.onChange?.(event.target.value)}
     />
   );
 }
@@ -8967,6 +9163,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -8987,12 +9184,63 @@ function FormInputComponent(props: FormInputProps) {
         value={props.value}
         defaultValue={props.defaultValue}
         required={props.required}
+        onInput={(event) => props.onChange?.(event.target.value)}
       />
     </>
   );
 }
 
 export default FormInputComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > InputParent 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props: any) {
+  function handleChange(value: string) {
+    console.log(value);
+  }
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange={(value) => handleChange(value)}
+    ></FormInputComponent>
+  );
+}
+
+export default Stepper;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > InputParent 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props: any) {
+  function handleChange(value: string) {
+    console.log(value);
+  }
+
+  return (
+    <>
+      <FormInputComponent
+        name=\\"kingzez\\"
+        type=\\"text\\"
+        onChange={(value) => handleChange(value)}
+      ></FormInputComponent>
+    </>
+  );
+}
+
+export default Stepper;
 "
 `;
 
@@ -9600,13 +9848,13 @@ function SmileReviews(props: SmileReviewsProps) {
         </button>
         <Show when={showReviewPrompt() || \\"asdf\\"}>
           <input placeholder=\\"Email\\" />
-          <input class=\\"input-8c75401c\\" placeholder=\\"Title\\" />
+          <input class=\\"input-66d09606\\" placeholder=\\"Title\\" />
           <textarea
-            class=\\"textarea-8c75401c\\"
+            class=\\"textarea-66d09606\\"
             placeholder=\\"How was your experience?\\"
           ></textarea>
           <button
-            class=\\"button-8c75401c\\"
+            class=\\"button-66d09606\\"
             onClick={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
@@ -9619,8 +9867,8 @@ function SmileReviews(props: SmileReviewsProps) {
           {(review, _index) => {
             const index = _index();
             return (
-              <div class=\\"div-8c75401c\\" key={review.id}>
-                <img class=\\"img-8c75401c\\" src={review.avatar} />
+              <div class=\\"div-66d09606\\" key={review.id}>
+                <img class=\\"img-66d09606\\" src={review.avatar} />
                 <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
                   <div>
                     N:
@@ -9635,16 +9883,16 @@ function SmileReviews(props: SmileReviewsProps) {
         </For>
       </div>
       <style jsx>{\`
-        .input-8c75401c {
+        .input-66d09606 {
           display: block;
         }
-        .textarea-8c75401c {
+        .textarea-66d09606 {
           display: block;
         }
-        .button-8c75401c {
+        .button-66d09606 {
           display: block;
         }
-        .div-8c75401c {
+        .div-66d09606 {
           margin: 10px;
           padding: 10px;
           background: white;
@@ -9652,7 +9900,7 @@ function SmileReviews(props: SmileReviewsProps) {
           border-radius: 5px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .img-8c75401c {
+        .img-66d09606 {
           height: 30px;
           width: 30px;
           margin-right: 10px;
@@ -10391,11 +10639,11 @@ function MyBasicComponent(props: any) {
 
   return (
     <>
-      <div class={classState() + \\" div-db099e36\\"} style={styleState()}>
+      <div class={classState() + \\" div-6542e5ae\\"} style={styleState()}>
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style jsx>{\`
-        .div-db099e36 {
+        .div-6542e5ae {
           padding: 10px;
         }
       \`}</style>
@@ -10576,7 +10824,7 @@ export default ComponentWithContext;
 `;
 
 exports[`Solid > jsx > Typescript Test > contentState 1`] = `
-"import BuilderContext from \\"@dummy/context.jsx\\";
+"import BuilderContext from \\"@dummy/context.js\\";
 
 function RenderContent(props: any) {
   return (
@@ -10598,7 +10846,7 @@ export default RenderContent;
 exports[`Solid > jsx > Typescript Test > contentState 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-import BuilderContext from \\"@dummy/context.jsx\\";
+import BuilderContext from \\"@dummy/context.js\\";
 
 function RenderContent(props: any) {
   return (
@@ -11736,12 +11984,12 @@ import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
-import BlockStyles from \\"./block-styles.jsx\\";
+import BlockStyles from \\"./block-styles\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context.jsx\\";
-import type { RenderComponentProps } from \\"./render-component.jsx\\";
-import RenderComponent from \\"./render-component.jsx\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.jsx\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
+import type { RenderComponentProps } from \\"./render-component\\";
+import RenderComponent from \\"./render-component\\";
+import RenderRepeatedBlock from \\"./render-repeated-block\\";
 import type { RepeatData } from \\"./types.js\\";
 
 function RenderBlock(props: RenderBlockProps) {
@@ -12022,12 +12270,12 @@ import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
-import BlockStyles from \\"./block-styles.jsx\\";
+import BlockStyles from \\"./block-styles\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context.jsx\\";
-import type { RenderComponentProps } from \\"./render-component.jsx\\";
-import RenderComponent from \\"./render-component.jsx\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.jsx\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
+import type { RenderComponentProps } from \\"./render-component\\";
+import RenderComponent from \\"./render-component\\";
+import RenderRepeatedBlock from \\"./render-repeated-block\\";
 import type { RepeatData } from \\"./types.js\\";
 
 function RenderBlock(props: RenderBlockProps) {
@@ -12297,13 +12545,13 @@ type Props = {
   };
 };
 
-import BuilderContext from \\"@dummy/context.jsx\\";
+import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks\\";
 
 function RenderContent(props: Props) {
   onMount(() => {
@@ -12356,13 +12604,13 @@ type Props = {
   };
 };
 
-import BuilderContext from \\"@dummy/context.jsx\\";
+import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks\\";
 
 function RenderContent(props: Props) {
   onMount(() => {
@@ -12388,14 +12636,14 @@ function RenderContent(props: Props) {
         }}
       >
         <div
-          class=\\"div-73bee9a2\\"
+          class=\\"div-5140f838\\"
           onClick={(event) => trackClick(props.content.id)}
         >
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
       </BuilderContext.Provider>
       <style jsx>{\`
-        .div-73bee9a2 {
+        .div-5140f838 {
           display: flex;
           flex-direction: columns;
         }
@@ -12826,8 +13074,57 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function StylePropClassAndCss(props: any) {
+  return (
+    <div
+      class={
+        props.attributes.class +
+        \\" \\" +
+        css({
+          display: \\"flex\\",
+          flexDirection: \\"column\\",
+          alignItems: \\"stretch\\",
+        })
+      }
+      style={props.attributes.style}
+    ></div>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > stylePropClassAndCss 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function StylePropClassAndCss(props: any) {
+  return (
+    <>
+      <div
+        class={props.attributes.class + \\" div-6ffaca58\\"}
+        style={props.attributes.style}
+      ></div>
+      <style jsx>{\`
+        .div-6ffaca58 {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
+
 exports[`Solid > jsx > Typescript Test > subComponent 1`] = `
-"import Foo from \\"./foo-sub-component.jsx\\";
+"import Foo from \\"./foo-sub-component\\";
 
 function SubComponent(props: any) {
   return <Foo></Foo>;
@@ -12840,7 +13137,7 @@ export default SubComponent;
 exports[`Solid > jsx > Typescript Test > subComponent 2`] = `
 "import { css } from \\"solid-styled-components\\";
 
-import Foo from \\"./foo-sub-component.jsx\\";
+import Foo from \\"./foo-sub-component\\";
 
 function SubComponent(props: any) {
   return (
@@ -12929,7 +13226,7 @@ exports[`Solid > jsx > Typescript Test > typeDependency 1`] = `
 };
 
 import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export.jsx\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
 
 function TypeDependency(props: TypeDependencyProps) {
   return <div>{props.foo}</div>;
@@ -12947,7 +13244,7 @@ export type TypeDependencyProps = {
 };
 
 import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export.jsx\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
 
 function TypeDependency(props: TypeDependencyProps) {
   return (
@@ -12965,7 +13262,20 @@ exports[`Solid > jsx > Typescript Test > use-style 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
 function MyComponent(props: any) {
-  return <button type=\\"button\\">Button</button>;
+  return (
+    <>
+      <button type=\\"button\\">Button</button>
+
+      <style>{\`
+        button {
+            background: blue;
+            color: white;
+            font-size: 12px;
+            outline: 1px solid black;
+        }
+    \`}</style>
+    </>
+  );
 }
 
 export default MyComponent;
@@ -13000,15 +13310,24 @@ exports[`Solid > jsx > Typescript Test > use-style-and-css 1`] = `
 
 function MyComponent(props: any) {
   return (
-    <button
-      class={css({
-        background: \\"blue\\",
-        color: \\"white\\",
-      })}
-      type=\\"button\\"
-    >
-      Button
-    </button>
+    <>
+      <button
+        class={css({
+          background: \\"blue\\",
+          color: \\"white\\",
+        })}
+        type=\\"button\\"
+      >
+        Button
+      </button>
+
+      <style>{\`
+        button {
+            font-size: 12px;
+            outline: 1px solid black;
+        }
+    \`}</style>
+    </>
   );
 }
 
@@ -13026,14 +13345,14 @@ function MyComponent(props: any) {
         Button
       </button>
       <style jsx>{\`
-        .button-0b7811fa {
-          background: blue;
-          color: white;
-        }
-
         button {
           font-size: 12px;
           outline: 1px solid black;
+        }
+
+        .button-0b7811fa {
+          background: blue;
+          color: white;
         }
       \`}</style>
     </>
@@ -13048,7 +13367,20 @@ exports[`Solid > jsx > Typescript Test > use-style-outside-component 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
 function MyComponent(props: any) {
-  return <button type=\\"button\\">Button</button>;
+  return (
+    <>
+      <button type=\\"button\\">Button</button>
+
+      <style>{\`
+  button {
+      background: blue;
+      color: white;
+      font-size: 12px;
+      outline: 1px solid black;
+  }
+\`}</style>
+    </>
+  );
 }
 
 export default MyComponent;
@@ -13075,6 +13407,48 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > useTarget 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+function UseTargetComponent(props: any) {
+  const [lastName, setLastName] = createSignal(\\"bar\\");
+
+  function name() {
+    const prefix = \\"so\\";
+    return prefix + \\"foo\\";
+  }
+
+  return <div>{name()}</div>;
+}
+
+export default UseTargetComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > useTarget 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function UseTargetComponent(props: any) {
+  const [lastName, setLastName] = createSignal(\\"bar\\");
+
+  function name() {
+    const prefix = \\"so\\";
+    return prefix + \\"foo\\";
+  }
+
+  return (
+    <>
+      <div>{name()}</div>
+    </>
+  );
+}
+
+export default UseTargetComponent;
 "
 `;
 
@@ -13343,22 +13717,22 @@ exports[`Solid > svelte > Javascript Test > context 1`] = `
 "'>' expected. (28:19)
   26 |
   27 |     return (
-> 28 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+> 28 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
      |                   ^
   29 |
-  30 |       )
-  31 |   }"
+  30 |
+  31 |       )"
 `;
 
 exports[`Solid > svelte > Javascript Test > context 2`] = `
 "Identifier expected. (28:8)
   26 |
   27 |     return (<>
-> 28 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+> 28 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
      |        ^
   29 |
-  30 |       </>)
-  31 |   }"
+  30 |
+  31 |       </>)"
 `;
 
 exports[`Solid > svelte > Javascript Test > each 1`] = `
@@ -13542,7 +13916,7 @@ export default MyComponent;
 exports[`Solid > svelte > Javascript Test > imports 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-import Button from \\"./Button.jsx\\";
+import Button from \\"./Button\\";
 
 function MyComponent(props) {
   const [disabled, setDisabled] = createSignal(false);
@@ -13565,7 +13939,7 @@ exports[`Solid > svelte > Javascript Test > imports 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-import Button from \\"./Button.jsx\\";
+import Button from \\"./Button\\";
 
 function MyComponent(props) {
   const [disabled, setDisabled] = createSignal(false);
@@ -13797,7 +14171,22 @@ exports[`Solid > svelte > Javascript Test > style 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
 function MyComponent(props) {
-  return <input class=\\"form-input\\" />;
+  return (
+    <>
+      <input class=\\"form-input\\" />
+
+      <style>{\`
+  input {
+    color: red;
+    font-size: 12px;
+  }
+
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
+\`}</style>
+    </>
+  );
 }
 
 export default MyComponent;
@@ -14144,22 +14533,22 @@ exports[`Solid > svelte > Typescript Test > context 1`] = `
 "'>' expected. (28:19)
   26 |
   27 |     return (
-> 28 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+> 28 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
      |                   ^
   29 |
-  30 |       )
-  31 |   }"
+  30 |
+  31 |       )"
 `;
 
 exports[`Solid > svelte > Typescript Test > context 2`] = `
 "Identifier expected. (28:8)
   26 |
   27 |     return (<>
-> 28 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+> 28 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
      |        ^
   29 |
-  30 |       </>)
-  31 |   }"
+  30 |
+  31 |       </>)"
 `;
 
 exports[`Solid > svelte > Typescript Test > each 1`] = `
@@ -14343,7 +14732,7 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > imports 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
-import Button from \\"./Button.jsx\\";
+import Button from \\"./Button\\";
 
 function MyComponent(props: any) {
   const [disabled, setDisabled] = createSignal(false);
@@ -14366,7 +14755,7 @@ exports[`Solid > svelte > Typescript Test > imports 2`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-import Button from \\"./Button.jsx\\";
+import Button from \\"./Button\\";
 
 function MyComponent(props: any) {
   const [disabled, setDisabled] = createSignal(false);
@@ -14598,7 +14987,22 @@ exports[`Solid > svelte > Typescript Test > style 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
 function MyComponent(props: any) {
-  return <input class=\\"form-input\\" />;
+  return (
+    <>
+      <input class=\\"form-input\\" />
+
+      <style>{\`
+  input {
+    color: red;
+    font-size: 12px;
+  }
+
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
+\`}</style>
+    </>
+  );
 }
 
 export default MyComponent;

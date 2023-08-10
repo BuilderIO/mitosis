@@ -312,7 +312,7 @@ exports[`Parse JSX > Javascript > AdvancedRef 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "console.log('Received an update');",
+        "code": "console.log('Received an update')",
         "deps": "[inputRef, inputNoArgRef]",
       },
     ],
@@ -338,6 +338,7 @@ exports[`Parse JSX > Javascript > AdvancedRef 1`] = `
     },
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onBlur": {
@@ -444,14 +445,17 @@ exports[`Parse JSX > Javascript > Basic 1`] = `
   "state": {
     "age": {
       "code": "1",
+      "propertyType": "normal",
       "type": "property",
     },
     "name": {
       "code": "'Steve'",
+      "propertyType": "normal",
       "type": "property",
     },
     "sports": {
       "code": "['']",
+      "propertyType": "normal",
       "type": "property",
     },
     "underscore_fn_name": {
@@ -623,10 +627,12 @@ exports[`Parse JSX > Javascript > Basic 2`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "names": {
       "code": "['Steve', 'PatrickJS']",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -732,11 +738,11 @@ exports[`Parse JSX > Javascript > Basic Context 1`] = `
   "hooks": {
     "onInit": {
       "code": "const hi = myService.method('hi');
-  console.log(hi);",
+console.log(hi)",
     },
     "onMount": {
       "code": "const bye = myService.method('hi');
-  console.log(bye);",
+console.log(bye)",
     },
   },
   "imports": [
@@ -757,6 +763,7 @@ exports[`Parse JSX > Javascript > Basic Context 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onChange": {
@@ -818,10 +825,10 @@ exports[`Parse JSX > Javascript > Basic OnMount Update 1`] = `
   "exports": {},
   "hooks": {
     "onInit": {
-      "code": "state.name = 'PatrickJS onInit' + props.hi;",
+      "code": "state.name = 'PatrickJS onInit' + props.hi",
     },
     "onMount": {
-      "code": "state.name = 'PatrickJS onMount' + props.bye;",
+      "code": "state.name = 'PatrickJS onMount' + props.bye",
     },
   },
   "imports": [],
@@ -832,10 +839,12 @@ exports[`Parse JSX > Javascript > Basic OnMount Update 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "names": {
       "code": "['Steve', 'PatrickJS']",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -865,7 +874,7 @@ exports[`Parse JSX > Javascript > Basic Outputs 1`] = `
   "hooks": {
     "onMount": {
       "code": "props.onMessage(state.name);
-  props.onEvent(props.message);",
+props.onEvent(props.message)",
     },
   },
   "imports": [],
@@ -876,6 +885,7 @@ exports[`Parse JSX > Javascript > Basic Outputs 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -905,7 +915,7 @@ exports[`Parse JSX > Javascript > Basic Outputs Meta 1`] = `
   "hooks": {
     "onMount": {
       "code": "props.onMessage(state.name);
-  props.onEvent(props.message);",
+props.onEvent(props.message)",
     },
   },
   "imports": [],
@@ -924,6 +934,7 @@ exports[`Parse JSX > Javascript > Basic Outputs Meta 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -992,39 +1003,78 @@ exports[`Parse JSX > Javascript > BasicBooleanAttribute 1`] = `
         {
           "@type": "@builder.io/mitosis/node",
           "bindings": {
-            "_text": {
+            "when": {
               "code": "props.children",
               "type": "single",
             },
           },
-          "children": [],
-          "meta": {},
-          "name": "div",
-          "properties": {},
-          "scope": {},
-        },
-        {
-          "@type": "@builder.io/mitosis/node",
-          "bindings": {},
-          "children": [],
-          "meta": {},
-          "name": "div",
-          "properties": {
-            "_text": " ",
-          },
-          "scope": {},
-        },
-        {
-          "@type": "@builder.io/mitosis/node",
-          "bindings": {
-            "_text": {
-              "code": "props.type",
-              "type": "single",
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+        ",
+              },
+              "scope": {},
             },
-          },
-          "children": [],
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {
+                "_text": {
+                  "code": "props.children",
+                  "type": "single",
+                },
+              },
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {},
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": " ",
+              },
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {
+                "_text": {
+                  "code": "props.type",
+                  "type": "single",
+                },
+              },
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {},
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+      ",
+              },
+              "scope": {},
+            },
+          ],
           "meta": {},
-          "name": "div",
+          "name": "Show",
           "properties": {},
           "scope": {},
         },
@@ -1295,10 +1345,12 @@ exports[`Parse JSX > Javascript > BasicChildComponent 1`] = `
   "state": {
     "dev": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "name": {
       "code": "'Steve'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -1452,7 +1504,7 @@ exports[`Parse JSX > Javascript > BasicFor 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "console.log('onMount code');",
+      "code": "console.log('onMount code')",
     },
   },
   "imports": [],
@@ -1463,10 +1515,12 @@ exports[`Parse JSX > Javascript > BasicFor 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "names": {
       "code": "['Steve', 'PatrickJS']",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -1805,6 +1859,7 @@ exports[`Parse JSX > Javascript > BasicRef 1`] = `
     },
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onBlur": {
@@ -2091,7 +2146,7 @@ exports[`Parse JSX > Javascript > BasicRefPrevious 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "prevCount = state.count;",
+        "code": "prevCount = state.count",
         "deps": "[state.count]",
       },
     ],
@@ -2108,6 +2163,7 @@ exports[`Parse JSX > Javascript > BasicRefPrevious 1`] = `
   "state": {
     "count": {
       "code": "0",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -3022,14 +3078,17 @@ exports[`Parse JSX > Javascript > ContentSlotJSX 1`] = `
   "defaultProps": {
     "content": {
       "code": "''",
+      "propertyType": "normal",
       "type": "property",
     },
     "slotContent": {
       "code": "undefined",
+      "propertyType": "normal",
       "type": "property",
     },
     "slotReference": {
       "code": "undefined",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -3049,6 +3108,7 @@ exports[`Parse JSX > Javascript > ContentSlotJSX 1`] = `
     },
     "name": {
       "code": "'king'",
+      "propertyType": "normal",
       "type": "property",
     },
     "show": {
@@ -3059,6 +3119,7 @@ exports[`Parse JSX > Javascript > ContentSlotJSX 1`] = `
     },
     "showContent": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -3100,7 +3161,7 @@ exports[`Parse JSX > Javascript > CustomCode 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "state.findAndRunScripts();",
+      "code": "state.findAndRunScripts()",
     },
   },
   "imports": [],
@@ -3152,10 +3213,12 @@ exports[`Parse JSX > Javascript > CustomCode 1`] = `
     },
     "scriptsInserted": {
       "code": "[]",
+      "propertyType": "normal",
       "type": "property",
     },
     "scriptsRun": {
       "code": "[]",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -3197,7 +3260,7 @@ exports[`Parse JSX > Javascript > Embed 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "state.findAndRunScripts();",
+      "code": "state.findAndRunScripts()",
     },
   },
   "imports": [],
@@ -3249,10 +3312,12 @@ exports[`Parse JSX > Javascript > Embed 1`] = `
     },
     "scriptsInserted": {
       "code": "[]",
+      "propertyType": "normal",
       "type": "property",
     },
     "scriptsRun": {
       "code": "[]",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -3763,10 +3828,12 @@ exports[`Parse JSX > Javascript > Form 1`] = `
   "state": {
     "formErrorMessage": {
       "code": "''",
+      "propertyType": "normal",
       "type": "property",
     },
     "formState": {
       "code": "'unsubmitted'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onSubmit": {
@@ -3976,6 +4043,7 @@ exports[`Parse JSX > Javascript > Form 1`] = `
     },
     "responseData": {
       "code": "null",
+      "propertyType": "normal",
       "type": "property",
     },
     "submissionState": {
@@ -4213,32 +4281,32 @@ exports[`Parse JSX > Javascript > Image 1`] = `
   "hooks": {
     "onMount": {
       "code": "if (state.useLazyLoading()) {
-    // throttled scroll capture listener
-    const listener = () => {
-      if (pictureRef) {
-        const rect = pictureRef.getBoundingClientRect();
-        const buffer = window.innerHeight / 2;
+  // throttled scroll capture listener
+  const listener = () => {
+    if (pictureRef) {
+      const rect = pictureRef.getBoundingClientRect();
+      const buffer = window.innerHeight / 2;
 
-        if (rect.top < window.innerHeight + buffer) {
-          setLoad(true);
-          state.scrollListener = null;
-          window.removeEventListener('scroll', listener);
-        }
+      if (rect.top < window.innerHeight + buffer) {
+        state.load = true;
+        state.scrollListener = null;
+        window.removeEventListener('scroll', listener);
       }
-    };
+    }
+  };
 
-    state.scrollListener = listener;
-    window.addEventListener('scroll', listener, {
-      capture: true,
-      passive: true
-    });
-    listener();
-  }",
+  state.scrollListener = listener;
+  window.addEventListener('scroll', listener, {
+    capture: true,
+    passive: true
+  });
+  listener();
+}",
     },
     "onUnMount": {
       "code": "if (state.scrollListener) {
-    window.removeEventListener('scroll', state.scrollListener);
-  }",
+  window.removeEventListener('scroll', state.scrollListener);
+}",
     },
   },
   "imports": [],
@@ -4253,6 +4321,7 @@ exports[`Parse JSX > Javascript > Image 1`] = `
   "state": {
     "imageLoaded": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
     "isBrowser": {
@@ -4263,10 +4332,12 @@ exports[`Parse JSX > Javascript > Image 1`] = `
     },
     "load": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
     "scrollListener": {
       "code": "null",
+      "propertyType": "normal",
       "type": "property",
     },
     "setLoaded": {
@@ -4278,7 +4349,7 @@ exports[`Parse JSX > Javascript > Image 1`] = `
     "useLazyLoading": {
       "code": "useLazyLoading() {
   // TODO: Add more checks here, like testing for real web browsers
-  return !!props.lazy && isBrowser();
+  return !!props.lazy && state.isBrowser();
 }",
       "type": "method",
     },
@@ -4412,10 +4483,12 @@ exports[`Parse JSX > Javascript > Image State 1`] = `
   "state": {
     "canShow": {
       "code": "true",
+      "propertyType": "normal",
       "type": "property",
     },
     "images": {
       "code": "['http://example.com/qwik.png']",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -4505,6 +4578,13 @@ exports[`Parse JSX > Javascript > Input 1`] = `
           "code": "props.name",
           "type": "single",
         },
+        "onChange": {
+          "arguments": [
+            "event",
+          ],
+          "code": "props.onChange?.(event.target.value)",
+          "type": "single",
+        },
         "placeholder": {
           "code": "props.placeholder",
           "type": "single",
@@ -4554,6 +4634,62 @@ exports[`Parse JSX > Javascript > Input 1`] = `
   "name": "FormInputComponent",
   "refs": {},
   "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Parse JSX > Javascript > InputParent 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "onChange": {
+          "arguments": [
+            "value",
+          ],
+          "code": "state.handleChange(value)",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "FormInputComponent",
+      "properties": {
+        "name": "kingzez",
+        "type": "text",
+      },
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {},
+  "imports": [
+    {
+      "importKind": "value",
+      "imports": {
+        "FormInputComponent": "default",
+      },
+      "path": "./input.raw",
+    },
+  ],
+  "inputs": [],
+  "meta": {},
+  "name": "Stepper",
+  "refs": {},
+  "state": {
+    "handleChange": {
+      "code": "handleChange(value) {
+  console.log(value);
+}",
+      "type": "method",
+    },
+  },
   "subComponents": [],
 }
 `;
@@ -4813,10 +4949,12 @@ exports[`Parse JSX > Javascript > Section 2`] = `
   "state": {
     "items": {
       "code": "[42]",
+      "propertyType": "normal",
       "type": "property",
     },
     "max": {
       "code": "42",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -5934,8 +6072,8 @@ exports[`Parse JSX > Javascript > Stamped.io 1`] = `
   "hooks": {
     "onMount": {
       "code": "fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
-    state.reviews = data.data;
-  });",
+  state.reviews = data.data;
+})",
     },
   },
   "imports": [
@@ -5961,14 +6099,17 @@ exports[`Parse JSX > Javascript > Stamped.io 1`] = `
     },
     "name": {
       "code": "'test'",
+      "propertyType": "normal",
       "type": "property",
     },
     "reviews": {
       "code": "[]",
+      "propertyType": "normal",
       "type": "property",
     },
     "showReviewPrompt": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
     "snakeCaseValue": {
@@ -6110,6 +6251,7 @@ exports[`Parse JSX > Javascript > Text 1`] = `
   "state": {
     "name": {
       "code": "'Decadef20'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -6298,6 +6440,7 @@ exports[`Parse JSX > Javascript > arrowFunctionInUseStore 1`] = `
   "state": {
     "name": {
       "code": "'steve'",
+      "propertyType": "normal",
       "type": "property",
     },
     "setName": {
@@ -6502,6 +6645,7 @@ exports[`Parse JSX > Javascript > basicForNoTagReference 1`] = `
   "state": {
     "TagName": {
       "code": "'div'",
+      "propertyType": "normal",
       "type": "property",
     },
     "TagNameGetter": {
@@ -6512,10 +6656,12 @@ exports[`Parse JSX > Javascript > basicForNoTagReference 1`] = `
     },
     "name": {
       "code": "'VincentW'",
+      "propertyType": "normal",
       "type": "property",
     },
     "tag": {
       "code": "'span'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -6607,6 +6753,7 @@ exports[`Parse JSX > Javascript > basicForwardRef 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -6702,6 +6849,7 @@ exports[`Parse JSX > Javascript > basicForwardRefMetadata 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -6758,17 +6906,17 @@ exports[`Parse JSX > Javascript > basicOnUpdateReturn 1`] = `
     "onUpdate": [
       {
         "code": "const controller = new AbortController();
-  const signal = controller.signal;
-  fetch('https://patrickjs.com/api/resource.json', {
-    signal
-  }).then(response => response.json()).then(data => {
-    state.name = data.name;
-  });
-  return () => {
-    if (!signal.aborted) {
-      controller.abort();
-    }
-  };",
+const signal = controller.signal;
+fetch('https://patrickjs.com/api/resource.json', {
+  signal
+}).then(response => response.json()).then(data => {
+  state.name = data.name;
+});
+return () => {
+  if (!signal.aborted) {
+    controller.abort();
+  }
+}",
         "deps": "[state.name]",
       },
     ],
@@ -6781,6 +6929,7 @@ exports[`Parse JSX > Javascript > basicOnUpdateReturn 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -7085,6 +7234,7 @@ exports[`Parse JSX > Javascript > className 1`] = `
   "state": {
     "bindings": {
       "code": "'a binding'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -7149,12 +7299,14 @@ exports[`Parse JSX > Javascript > classState 1`] = `
   "state": {
     "classState": {
       "code": "'testClassName'",
+      "propertyType": "normal",
       "type": "property",
     },
     "styleState": {
       "code": "{
   color: 'red'
 }",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -7244,6 +7396,7 @@ exports[`Parse JSX > Javascript > componentWithContext 1`] = `
           },
           "foo": {
             "code": "'bar'",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -7253,6 +7406,7 @@ exports[`Parse JSX > Javascript > componentWithContext 1`] = `
         "value": {
           "bar": {
             "code": "'baz'",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -7401,6 +7555,7 @@ exports[`Parse JSX > Javascript > componentWithContextMultiRoot 1`] = `
           },
           "foo": {
             "code": "'bar'",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -7410,6 +7565,7 @@ exports[`Parse JSX > Javascript > componentWithContextMultiRoot 1`] = `
         "value": {
           "bar": {
             "code": "'baz'",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -7477,10 +7633,12 @@ exports[`Parse JSX > Javascript > contentState 1`] = `
         "value": {
           "content": {
             "code": "props.content",
+            "propertyType": "normal",
             "type": "property",
           },
           "registeredComponents": {
             "code": "props.customComponents",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -7768,6 +7926,7 @@ exports[`Parse JSX > Javascript > defaultProps 1`] = `
   "defaultProps": {
     "link": {
       "code": "'https://builder.io/'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onClick": {
@@ -7778,10 +7937,12 @@ exports[`Parse JSX > Javascript > defaultProps 1`] = `
     },
     "openLinkInNewTab": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
     "text": {
       "code": "'default text'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -8058,6 +8219,7 @@ exports[`Parse JSX > Javascript > defaultPropsOutsideComponent 1`] = `
   "defaultProps": {
     "link": {
       "code": "'https://builder.io/'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onClick": {
@@ -8066,10 +8228,12 @@ exports[`Parse JSX > Javascript > defaultPropsOutsideComponent 1`] = `
     },
     "openLinkInNewTab": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
     "text": {
       "code": "'default text'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -8192,6 +8356,7 @@ exports[`Parse JSX > Javascript > expressionState 1`] = `
   "state": {
     "refToUse": {
       "code": "!(props.componentRef instanceof Function) ? props.componentRef : null",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -8275,11 +8440,11 @@ exports[`Parse JSX > Javascript > multipleOnUpdate 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "console.log('Runs on every update/rerender');",
+        "code": "console.log('Runs on every update/rerender')",
         "deps": "",
       },
       {
-        "code": "console.log('Runs on every update/rerender as well');",
+        "code": "console.log('Runs on every update/rerender as well')",
         "deps": "",
       },
     ],
@@ -8318,17 +8483,17 @@ exports[`Parse JSX > Javascript > multipleOnUpdateWithDeps 1`] = `
       {
         "code": "console.log('Runs when a or b changes', state.a, state.b);
 
-  if (state.a === 'a') {
-    state.a = 'b';
-  }",
+if (state.a === 'a') {
+  state.a = 'b';
+}",
         "deps": "[state.a, state.b]",
       },
       {
         "code": "console.log('Runs when c or d changes', state.c, state.d);
 
-  if (state.a === 'a') {
-    state.a = 'b';
-  }",
+if (state.a === 'a') {
+  state.a = 'b';
+}",
         "deps": "[state.c, state.d]",
       },
     ],
@@ -8341,18 +8506,22 @@ exports[`Parse JSX > Javascript > multipleOnUpdateWithDeps 1`] = `
   "state": {
     "a": {
       "code": "'a'",
+      "propertyType": "normal",
       "type": "property",
     },
     "b": {
       "code": "'b'",
+      "propertyType": "normal",
       "type": "property",
     },
     "c": {
       "code": "'c'",
+      "propertyType": "normal",
       "type": "property",
     },
     "d": {
       "code": "'d'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -8401,6 +8570,7 @@ exports[`Parse JSX > Javascript > multipleSpreads 1`] = `
       "code": "{
   hello: 'world'
 }",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -8664,10 +8834,10 @@ exports[`Parse JSX > Javascript > onInit & onMount 1`] = `
   "exports": {},
   "hooks": {
     "onInit": {
-      "code": "console.log('onInit');",
+      "code": "console.log('onInit')",
     },
     "onMount": {
-      "code": "console.log('onMount');",
+      "code": "console.log('onMount')",
     },
   },
   "imports": [],
@@ -8736,7 +8906,7 @@ exports[`Parse JSX > Javascript > onInit 1`] = `
   "hooks": {
     "onInit": {
       "code": "state.name = defaultValues.name || props.name;
-  console.log('set defaults with props');",
+console.log('set defaults with props')",
     },
   },
   "imports": [],
@@ -8747,6 +8917,7 @@ exports[`Parse JSX > Javascript > onInit 1`] = `
   "state": {
     "name": {
       "code": "''",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -8775,10 +8946,10 @@ exports[`Parse JSX > Javascript > onMount 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "console.log('Runs on mount');",
+      "code": "console.log('Runs on mount')",
     },
     "onUnMount": {
-      "code": "console.log('Runs on unMount');",
+      "code": "console.log('Runs on unMount')",
     },
   },
   "imports": [],
@@ -8813,7 +8984,7 @@ exports[`Parse JSX > Javascript > onUpdate 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "console.log('Runs on every update/rerender');",
+        "code": "console.log('Runs on every update/rerender')",
         "deps": "",
       },
     ],
@@ -8850,7 +9021,7 @@ exports[`Parse JSX > Javascript > onUpdateWithDeps 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "console.log('Runs when a, b or size changes', state.a, state.b, props.size);",
+        "code": "console.log('Runs when a, b or size changes', state.a, state.b, props.size)",
         "deps": "[state.a, state.b, props.size]",
       },
     ],
@@ -8863,10 +9034,12 @@ exports[`Parse JSX > Javascript > onUpdateWithDeps 1`] = `
   "state": {
     "a": {
       "code": "'a'",
+      "propertyType": "normal",
       "type": "property",
     },
     "b": {
       "code": "'b'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -9079,6 +9252,7 @@ exports[`Parse JSX > Javascript > propsDestructure 1`] = `
   "state": {
     "name": {
       "code": "'Decadef20'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -9220,9 +9394,9 @@ exports[`Parse JSX > Javascript > referencingFunInsideHook 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "foo({
-    someOption: bar
-  });",
+        "code": "state.foo({
+  someOption: state.bar
+})",
         "deps": "",
       },
     ],
@@ -10111,11 +10285,11 @@ exports[`Parse JSX > Javascript > renderContentExample 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "sendComponentsToVisualEditor(props.customComponents);",
+      "code": "sendComponentsToVisualEditor(props.customComponents)",
     },
     "onUpdate": [
       {
-        "code": "dispatchNewContentToVisualEditor(props.content);",
+        "code": "dispatchNewContentToVisualEditor(props.content)",
         "deps": "[props.content]",
       },
     ],
@@ -11209,6 +11383,70 @@ exports[`Parse JSX > Javascript > styleClassAndCss 1`] = `
 }
 `;
 
+exports[`Parse JSX > Javascript > stylePropClassAndCss 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "css": {
+          "code": "{
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'stretch'
+}",
+          "type": "single",
+        },
+        "style": {
+          "code": "props.attributes.style",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "div",
+      "properties": {
+        "class": "USE_TARGET_BLOCK_1",
+      },
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {},
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "StylePropClassAndCss",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+  "targetBlocks": {
+    "1": {
+      "default": {
+        "code": "props.attributes.class",
+      },
+      "settings": {
+        "requiresDefault": true,
+      },
+      "svelte": {
+        "code": "props.attributes.classfdsa",
+      },
+      "vue2": {
+        "code": "props.attributes.className",
+      },
+      "vue3": {
+        "code": "props.attributes.className",
+      },
+    },
+  },
+}
+`;
+
 exports[`Parse JSX > Javascript > subComponent 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -11662,6 +11900,162 @@ exports[`Parse JSX > Javascript > use-style-outside-component 1`] = `
 }
 `;
 
+exports[`Parse JSX > Javascript > useTarget 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "_text": {
+              "code": "state.name",
+              "type": "single",
+            },
+          },
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onMount": {
+      "code": "\\"USE_TARGET_BLOCK_2\\"",
+    },
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "UseTargetComponent",
+  "refs": {},
+  "state": {
+    "lastName": {
+      "code": "'bar'",
+      "propertyType": "normal",
+      "type": "property",
+    },
+    "name": {
+      "code": "get name() {
+  const prefix = \\"USE_TARGET_BLOCK_1\\";
+  return prefix + 'foo';
+}",
+      "type": "getter",
+    },
+  },
+  "subComponents": [],
+  "targetBlocks": {
+    "1": {
+      "alpine": {
+        "code": "'a'",
+      },
+      "angular": {
+        "code": "true",
+      },
+      "customElement": {
+        "code": "'c'",
+      },
+      "default": {
+        "code": "'Default str'",
+      },
+      "html": {
+        "code": "'h'",
+      },
+      "liquid": {
+        "code": "'l'",
+      },
+      "lit": {
+        "code": "'li'",
+      },
+      "marko": {
+        "code": "'m'",
+      },
+      "mitosis": {
+        "code": "'mi'",
+      },
+      "preact": {
+        "code": "'p'",
+      },
+      "qwik": {
+        "code": "'q'",
+      },
+      "react": {
+        "code": "123",
+      },
+      "reactNative": {
+        "code": "'rn'",
+      },
+      "rsc": {
+        "code": "'rsc'",
+      },
+      "settings": {
+        "requiresDefault": true,
+      },
+      "solid": {
+        "code": "'so'",
+      },
+      "stencil": {
+        "code": "'st'",
+      },
+      "svelte": {
+        "code": "'s'",
+      },
+      "swift": {
+        "code": "'sw'",
+      },
+      "taro": {
+        "code": "'t'",
+      },
+      "template": {
+        "code": "'te'",
+      },
+      "vue": {
+        "code": "'v'",
+      },
+      "vue2": {
+        "code": "'v2'",
+      },
+      "vue3": {
+        "code": "'v3'",
+      },
+      "webcomponent": {
+        "code": "'wc'",
+      },
+    },
+    "2": {
+      "qwik": {
+        "code": "console.log('qwik');
+state.lastName = 'baz';
+",
+      },
+      "react": {
+        "code": "console.log('react');
+state.lastName = 'baz';
+",
+      },
+      "settings": {
+        "requiresDefault": false,
+      },
+    },
+  },
+}
+`;
+
 exports[`Parse JSX > Remove Internal mitosis package 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -11727,6 +12121,7 @@ exports[`Parse JSX > Remove Internal mitosis package 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -12046,7 +12441,7 @@ exports[`Parse JSX > Typescript > AdvancedRef 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "console.log('Received an update');",
+        "code": "console.log('Received an update')",
         "deps": "[inputRef, inputNoArgRef]",
       },
     ],
@@ -12075,6 +12470,7 @@ exports[`Parse JSX > Typescript > AdvancedRef 1`] = `
     },
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onBlur": {
@@ -12187,15 +12583,18 @@ exports[`Parse JSX > Typescript > Basic 1`] = `
   "state": {
     "age": {
       "code": "1",
+      "propertyType": "normal",
       "type": "property",
       "typeParameter": "number",
     },
     "name": {
       "code": "'Steve'",
+      "propertyType": "normal",
       "type": "property",
     },
     "sports": {
       "code": "['']",
+      "propertyType": "normal",
       "type": "property",
       "typeParameter": "Array<string>",
     },
@@ -12209,7 +12608,7 @@ exports[`Parse JSX > Typescript > Basic 1`] = `
   "subComponents": [],
   "types": [
     "export interface MyBasicComponentProps {
-  id: string
+  id: string;
 }",
   ],
 }
@@ -12373,10 +12772,12 @@ exports[`Parse JSX > Typescript > Basic 2`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "names": {
       "code": "['Steve', 'PatrickJS']",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -12482,11 +12883,11 @@ exports[`Parse JSX > Typescript > Basic Context 1`] = `
   "hooks": {
     "onInit": {
       "code": "const hi = myService.method('hi');
-  console.log(hi);",
+console.log(hi)",
     },
     "onMount": {
       "code": "const bye = myService.method('hi');
-  console.log(bye);",
+console.log(bye)",
     },
   },
   "imports": [
@@ -12507,6 +12908,7 @@ exports[`Parse JSX > Typescript > Basic Context 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onChange": {
@@ -12568,10 +12970,10 @@ exports[`Parse JSX > Typescript > Basic OnMount Update 1`] = `
   "exports": {},
   "hooks": {
     "onInit": {
-      "code": "state.name = 'PatrickJS onInit' + props.hi;",
+      "code": "state.name = 'PatrickJS onInit' + props.hi",
     },
     "onMount": {
-      "code": "state.name = 'PatrickJS onMount' + props.bye;",
+      "code": "state.name = 'PatrickJS onMount' + props.bye",
     },
   },
   "imports": [],
@@ -12583,10 +12985,12 @@ exports[`Parse JSX > Typescript > Basic OnMount Update 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "names": {
       "code": "['Steve', 'PatrickJS']",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -12622,7 +13026,7 @@ exports[`Parse JSX > Typescript > Basic Outputs 1`] = `
   "hooks": {
     "onMount": {
       "code": "props.onMessage(state.name);
-  props.onEvent(props.message);",
+props.onEvent(props.message)",
     },
   },
   "imports": [],
@@ -12634,6 +13038,7 @@ exports[`Parse JSX > Typescript > Basic Outputs 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -12663,7 +13068,7 @@ exports[`Parse JSX > Typescript > Basic Outputs Meta 1`] = `
   "hooks": {
     "onMount": {
       "code": "props.onMessage(state.name);
-  props.onEvent(props.message);",
+props.onEvent(props.message)",
     },
   },
   "imports": [],
@@ -12683,6 +13088,7 @@ exports[`Parse JSX > Typescript > Basic Outputs Meta 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -12751,39 +13157,78 @@ exports[`Parse JSX > Typescript > BasicBooleanAttribute 1`] = `
         {
           "@type": "@builder.io/mitosis/node",
           "bindings": {
-            "_text": {
+            "when": {
               "code": "props.children",
               "type": "single",
             },
           },
-          "children": [],
-          "meta": {},
-          "name": "div",
-          "properties": {},
-          "scope": {},
-        },
-        {
-          "@type": "@builder.io/mitosis/node",
-          "bindings": {},
-          "children": [],
-          "meta": {},
-          "name": "div",
-          "properties": {
-            "_text": " ",
-          },
-          "scope": {},
-        },
-        {
-          "@type": "@builder.io/mitosis/node",
-          "bindings": {
-            "_text": {
-              "code": "props.type",
-              "type": "single",
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+        ",
+              },
+              "scope": {},
             },
-          },
-          "children": [],
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {
+                "_text": {
+                  "code": "props.children",
+                  "type": "single",
+                },
+              },
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {},
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": " ",
+              },
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {
+                "_text": {
+                  "code": "props.type",
+                  "type": "single",
+                },
+              },
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {},
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+      ",
+              },
+              "scope": {},
+            },
+          ],
           "meta": {},
-          "name": "div",
+          "name": "Show",
           "properties": {},
           "scope": {},
         },
@@ -12910,7 +13355,7 @@ exports[`Parse JSX > Typescript > BasicBooleanAttribute 1`] = `
     "type Props = {
   children: any;
   type: string;
-};",
+}",
   ],
 }
 `;
@@ -13061,10 +13506,12 @@ exports[`Parse JSX > Typescript > BasicChildComponent 1`] = `
   "state": {
     "dev": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "name": {
       "code": "'Steve'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -13218,7 +13665,7 @@ exports[`Parse JSX > Typescript > BasicFor 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "console.log('onMount code');",
+      "code": "console.log('onMount code')",
     },
   },
   "imports": [],
@@ -13229,10 +13676,12 @@ exports[`Parse JSX > Typescript > BasicFor 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "names": {
       "code": "['Steve', 'PatrickJS']",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -13574,6 +14023,7 @@ exports[`Parse JSX > Typescript > BasicRef 1`] = `
     },
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onBlur": {
@@ -13871,7 +14321,7 @@ exports[`Parse JSX > Typescript > BasicRefPrevious 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "prevCount = state.count;",
+        "code": "prevCount = state.count",
         "deps": "[state.count]",
       },
     ],
@@ -13889,6 +14339,7 @@ exports[`Parse JSX > Typescript > BasicRefPrevious 1`] = `
   "state": {
     "count": {
       "code": "0",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -14378,7 +14829,7 @@ exports[`Parse JSX > Typescript > Columns 1`] = `
   content: any; // TODO: Implement this when support for dynamic CSS lands
 
   width?: number;
-};",
+}",
     "export interface ColumnProps {
   columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
 
@@ -14581,7 +15032,7 @@ exports[`Parse JSX > Typescript > ContentSlotHtml 1`] = `
     "type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
-};",
+}",
   ],
 }
 `;
@@ -14849,14 +15300,17 @@ exports[`Parse JSX > Typescript > ContentSlotJSX 1`] = `
   "defaultProps": {
     "content": {
       "code": "''",
+      "propertyType": "normal",
       "type": "property",
     },
     "slotContent": {
       "code": "undefined",
+      "propertyType": "normal",
       "type": "property",
     },
     "slotReference": {
       "code": "undefined",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -14885,6 +15339,7 @@ exports[`Parse JSX > Typescript > ContentSlotJSX 1`] = `
     },
     "name": {
       "code": "'king'",
+      "propertyType": "normal",
       "type": "property",
     },
     "show": {
@@ -14895,6 +15350,7 @@ exports[`Parse JSX > Typescript > ContentSlotJSX 1`] = `
     },
     "showContent": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -14902,7 +15358,7 @@ exports[`Parse JSX > Typescript > ContentSlotJSX 1`] = `
   "types": [
     "type Props = {
   [key: string]: string | JSX.Element;
-};",
+}",
   ],
 }
 `;
@@ -14941,7 +15397,7 @@ exports[`Parse JSX > Typescript > CustomCode 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "state.findAndRunScripts();",
+      "code": "state.findAndRunScripts()",
     },
   },
   "imports": [],
@@ -14995,10 +15451,12 @@ exports[`Parse JSX > Typescript > CustomCode 1`] = `
     },
     "scriptsInserted": {
       "code": "[]",
+      "propertyType": "normal",
       "type": "property",
     },
     "scriptsRun": {
       "code": "[]",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -15046,7 +15504,7 @@ exports[`Parse JSX > Typescript > Embed 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "state.findAndRunScripts();",
+      "code": "state.findAndRunScripts()",
     },
   },
   "imports": [],
@@ -15100,10 +15558,12 @@ exports[`Parse JSX > Typescript > Embed 1`] = `
     },
     "scriptsInserted": {
       "code": "[]",
+      "propertyType": "normal",
       "type": "property",
     },
     "scriptsRun": {
       "code": "[]",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -15623,10 +16083,12 @@ exports[`Parse JSX > Typescript > Form 1`] = `
   "state": {
     "formErrorMessage": {
       "code": "''",
+      "propertyType": "normal",
       "type": "property",
     },
     "formState": {
       "code": "'unsubmitted'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onSubmit": {
@@ -15841,6 +16303,7 @@ exports[`Parse JSX > Typescript > Form 1`] = `
     },
     "responseData": {
       "code": "null",
+      "propertyType": "normal",
       "type": "property",
     },
     "submissionState": {
@@ -15874,7 +16337,7 @@ exports[`Parse JSX > Typescript > Form 1`] = `
   resetFormOnSubmit?: boolean;
   errorMessagePath?: string;
 }",
-    "export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error';",
+    "export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error'",
   ],
 }
 `;
@@ -16103,32 +16566,32 @@ exports[`Parse JSX > Typescript > Image 1`] = `
   "hooks": {
     "onMount": {
       "code": "if (state.useLazyLoading()) {
-    // throttled scroll capture listener
-    const listener = () => {
-      if (pictureRef) {
-        const rect = pictureRef.getBoundingClientRect();
-        const buffer = window.innerHeight / 2;
+  // throttled scroll capture listener
+  const listener = () => {
+    if (pictureRef) {
+      const rect = pictureRef.getBoundingClientRect();
+      const buffer = window.innerHeight / 2;
 
-        if (rect.top < window.innerHeight + buffer) {
-          setLoad(true);
-          state.scrollListener = null;
-          window.removeEventListener('scroll', listener);
-        }
+      if (rect.top < window.innerHeight + buffer) {
+        state.load = true;
+        state.scrollListener = null;
+        window.removeEventListener('scroll', listener);
       }
-    };
+    }
+  };
 
-    state.scrollListener = listener;
-    window.addEventListener('scroll', listener, {
-      capture: true,
-      passive: true
-    });
-    listener();
-  }",
+  state.scrollListener = listener;
+  window.addEventListener('scroll', listener, {
+    capture: true,
+    passive: true
+  });
+  listener();
+}",
     },
     "onUnMount": {
       "code": "if (state.scrollListener) {
-    window.removeEventListener('scroll', state.scrollListener);
-  }",
+  window.removeEventListener('scroll', state.scrollListener);
+}",
     },
   },
   "imports": [],
@@ -16145,6 +16608,7 @@ exports[`Parse JSX > Typescript > Image 1`] = `
   "state": {
     "imageLoaded": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
     "isBrowser": {
@@ -16155,10 +16619,12 @@ exports[`Parse JSX > Typescript > Image 1`] = `
     },
     "load": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
     "scrollListener": {
       "code": "null",
+      "propertyType": "normal",
       "type": "property",
     },
     "setLoaded": {
@@ -16170,7 +16636,7 @@ exports[`Parse JSX > Typescript > Image 1`] = `
     "useLazyLoading": {
       "code": "useLazyLoading() {
   // TODO: Add more checks here, like testing for real web browsers
-  return !!props.lazy && isBrowser();
+  return !!props.lazy && state.isBrowser();
 }",
       "type": "method",
     },
@@ -16324,10 +16790,12 @@ exports[`Parse JSX > Typescript > Image State 1`] = `
   "state": {
     "canShow": {
       "code": "true",
+      "propertyType": "normal",
       "type": "property",
     },
     "images": {
       "code": "['http://example.com/qwik.png']",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -16427,6 +16895,13 @@ exports[`Parse JSX > Typescript > Input 1`] = `
           "code": "props.name",
           "type": "single",
         },
+        "onChange": {
+          "arguments": [
+            "event",
+          ],
+          "code": "props.onChange?.(event.target.value)",
+          "type": "single",
+        },
         "placeholder": {
           "code": "props.placeholder",
           "type": "single",
@@ -16487,8 +16962,65 @@ exports[`Parse JSX > Typescript > Input 1`] = `
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }",
   ],
+}
+`;
+
+exports[`Parse JSX > Typescript > InputParent 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "onChange": {
+          "arguments": [
+            "value",
+          ],
+          "code": "state.handleChange(value)",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "FormInputComponent",
+      "properties": {
+        "name": "kingzez",
+        "type": "text",
+      },
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {},
+  "imports": [
+    {
+      "importKind": "value",
+      "imports": {
+        "FormInputComponent": "default",
+      },
+      "path": "./input.raw",
+    },
+  ],
+  "inputs": [],
+  "meta": {},
+  "name": "Stepper",
+  "refs": {},
+  "state": {
+    "handleChange": {
+      "code": "handleChange(value: string) {
+  console.log(value);
+}",
+      "type": "method",
+    },
+  },
+  "subComponents": [],
 }
 `;
 
@@ -16764,10 +17296,12 @@ exports[`Parse JSX > Typescript > Section 2`] = `
   "state": {
     "items": {
       "code": "[42]",
+      "propertyType": "normal",
       "type": "property",
     },
     "max": {
       "code": "42",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -17068,7 +17602,7 @@ exports[`Parse JSX > Typescript > SlotDefault 1`] = `
   "types": [
     "type Props = {
   [key: string]: string;
-};",
+}",
   ],
 }
 `;
@@ -17185,7 +17719,7 @@ exports[`Parse JSX > Typescript > SlotHtml 1`] = `
   "types": [
     "type Props = {
   [key: string]: string;
-};",
+}",
   ],
 }
 `;
@@ -17268,7 +17802,7 @@ exports[`Parse JSX > Typescript > SlotJsx 1`] = `
   "types": [
     "type Props = {
   [key: string]: string;
-};",
+}",
   ],
 }
 `;
@@ -17408,7 +17942,7 @@ exports[`Parse JSX > Typescript > SlotNamed 1`] = `
   "types": [
     "type Props = {
   [key: string]: string;
-};",
+}",
   ],
 }
 `;
@@ -17929,8 +18463,8 @@ exports[`Parse JSX > Typescript > Stamped.io 1`] = `
   "hooks": {
     "onMount": {
       "code": "fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
-    state.reviews = data.data;
-  });",
+  state.reviews = data.data;
+})",
     },
   },
   "imports": [
@@ -17957,14 +18491,17 @@ exports[`Parse JSX > Typescript > Stamped.io 1`] = `
     },
     "name": {
       "code": "'test'",
+      "propertyType": "normal",
       "type": "property",
     },
     "reviews": {
       "code": "[]",
+      "propertyType": "normal",
       "type": "property",
     },
     "showReviewPrompt": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
     "snakeCaseValue": {
@@ -17979,7 +18516,7 @@ exports[`Parse JSX > Typescript > Stamped.io 1`] = `
     "type SmileReviewsProps = {
   productId: string;
   apiKey: string;
-};",
+}",
   ],
 }
 `;
@@ -18120,6 +18657,7 @@ exports[`Parse JSX > Typescript > Text 1`] = `
   "state": {
     "name": {
       "code": "'Decadef20'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -18346,6 +18884,7 @@ exports[`Parse JSX > Typescript > arrowFunctionInUseStore 1`] = `
   "state": {
     "name": {
       "code": "'steve'",
+      "propertyType": "normal",
       "type": "property",
     },
     "setName": {
@@ -18550,6 +19089,7 @@ exports[`Parse JSX > Typescript > basicForNoTagReference 1`] = `
   "state": {
     "TagName": {
       "code": "'div'",
+      "propertyType": "normal",
       "type": "property",
     },
     "TagNameGetter": {
@@ -18560,10 +19100,12 @@ exports[`Parse JSX > Typescript > basicForNoTagReference 1`] = `
     },
     "name": {
       "code": "'VincentW'",
+      "propertyType": "normal",
       "type": "property",
     },
     "tag": {
       "code": "'span'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -18656,6 +19198,7 @@ exports[`Parse JSX > Typescript > basicForwardRef 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -18758,6 +19301,7 @@ exports[`Parse JSX > Typescript > basicForwardRefMetadata 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -18820,17 +19364,17 @@ exports[`Parse JSX > Typescript > basicOnUpdateReturn 1`] = `
     "onUpdate": [
       {
         "code": "const controller = new AbortController();
-  const signal = controller.signal;
-  fetch('https://patrickjs.com/api/resource.json', {
-    signal
-  }).then(response => response.json()).then(data => {
-    state.name = data.name;
-  });
-  return () => {
-    if (!signal.aborted) {
-      controller.abort();
-    }
-  };",
+const signal = controller.signal;
+fetch('https://patrickjs.com/api/resource.json', {
+  signal
+}).then(response => response.json()).then(data => {
+  state.name = data.name;
+});
+return () => {
+  if (!signal.aborted) {
+    controller.abort();
+  }
+}",
         "deps": "[state.name]",
       },
     ],
@@ -18843,6 +19387,7 @@ exports[`Parse JSX > Typescript > basicOnUpdateReturn 1`] = `
   "state": {
     "name": {
       "code": "'PatrickJS'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -19156,6 +19701,7 @@ exports[`Parse JSX > Typescript > className 1`] = `
   "state": {
     "bindings": {
       "code": "'a binding'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -19164,7 +19710,7 @@ exports[`Parse JSX > Typescript > className 1`] = `
     "type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
-};",
+}",
   ],
 }
 `;
@@ -19226,12 +19772,14 @@ exports[`Parse JSX > Typescript > classState 1`] = `
   "state": {
     "classState": {
       "code": "'testClassName'",
+      "propertyType": "normal",
       "type": "property",
     },
     "styleState": {
       "code": "{
   color: 'red'
 }",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -19321,6 +19869,7 @@ exports[`Parse JSX > Typescript > componentWithContext 1`] = `
           },
           "foo": {
             "code": "'bar'",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -19330,6 +19879,7 @@ exports[`Parse JSX > Typescript > componentWithContext 1`] = `
         "value": {
           "bar": {
             "code": "'baz'",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -19363,7 +19913,7 @@ exports[`Parse JSX > Typescript > componentWithContext 1`] = `
   "subComponents": [],
   "types": [
     "export interface ComponentWithContextProps {
-  content: string
+  content: string;
 }",
   ],
 }
@@ -19484,6 +20034,7 @@ exports[`Parse JSX > Typescript > componentWithContextMultiRoot 1`] = `
           },
           "foo": {
             "code": "'bar'",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -19493,6 +20044,7 @@ exports[`Parse JSX > Typescript > componentWithContextMultiRoot 1`] = `
         "value": {
           "bar": {
             "code": "'baz'",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -19526,7 +20078,7 @@ exports[`Parse JSX > Typescript > componentWithContextMultiRoot 1`] = `
   "subComponents": [],
   "types": [
     "export interface ComponentWithContextProps {
-  content: string
+  content: string;
 }",
   ],
 }
@@ -19566,10 +20118,12 @@ exports[`Parse JSX > Typescript > contentState 1`] = `
         "value": {
           "content": {
             "code": "props.content",
+            "propertyType": "normal",
             "type": "property",
           },
           "registeredComponents": {
             "code": "props.customComponents",
+            "propertyType": "normal",
             "type": "property",
           },
         },
@@ -19857,6 +20411,7 @@ exports[`Parse JSX > Typescript > defaultProps 1`] = `
   "defaultProps": {
     "link": {
       "code": "'https://builder.io/'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onClick": {
@@ -19867,10 +20422,12 @@ exports[`Parse JSX > Typescript > defaultProps 1`] = `
     },
     "openLinkInNewTab": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
     "text": {
       "code": "'default text'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -20159,6 +20716,7 @@ exports[`Parse JSX > Typescript > defaultPropsOutsideComponent 1`] = `
   "defaultProps": {
     "link": {
       "code": "'https://builder.io/'",
+      "propertyType": "normal",
       "type": "property",
     },
     "onClick": {
@@ -20167,10 +20725,12 @@ exports[`Parse JSX > Typescript > defaultPropsOutsideComponent 1`] = `
     },
     "openLinkInNewTab": {
       "code": "false",
+      "propertyType": "normal",
       "type": "property",
     },
     "text": {
       "code": "'default text'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -20261,7 +20821,7 @@ exports[`Parse JSX > Typescript > defaultValsWithTypes 1`] = `
   "types": [
     "type Props = {
   name: string;
-};",
+}",
   ],
 }
 `;
@@ -20309,6 +20869,7 @@ exports[`Parse JSX > Typescript > expressionState 1`] = `
   "state": {
     "refToUse": {
       "code": "!(props.componentRef instanceof Function) ? props.componentRef : null",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -20382,7 +20943,7 @@ exports[`Parse JSX > Typescript > import types 1`] = `
   options?: GetContentOptions;
   content: BuilderContent;
   renderContentProps: RenderBlockProps;
-};",
+}",
   ],
 }
 `;
@@ -20409,11 +20970,11 @@ exports[`Parse JSX > Typescript > multipleOnUpdate 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "console.log('Runs on every update/rerender');",
+        "code": "console.log('Runs on every update/rerender')",
         "deps": "",
       },
       {
-        "code": "console.log('Runs on every update/rerender as well');",
+        "code": "console.log('Runs on every update/rerender as well')",
         "deps": "",
       },
     ],
@@ -20452,17 +21013,17 @@ exports[`Parse JSX > Typescript > multipleOnUpdateWithDeps 1`] = `
       {
         "code": "console.log('Runs when a or b changes', state.a, state.b);
 
-  if (state.a === 'a') {
-    state.a = 'b';
-  }",
+if (state.a === 'a') {
+  state.a = 'b';
+}",
         "deps": "[state.a, state.b]",
       },
       {
         "code": "console.log('Runs when c or d changes', state.c, state.d);
 
-  if (state.a === 'a') {
-    state.a = 'b';
-  }",
+if (state.a === 'a') {
+  state.a = 'b';
+}",
         "deps": "[state.c, state.d]",
       },
     ],
@@ -20475,18 +21036,22 @@ exports[`Parse JSX > Typescript > multipleOnUpdateWithDeps 1`] = `
   "state": {
     "a": {
       "code": "'a'",
+      "propertyType": "normal",
       "type": "property",
     },
     "b": {
       "code": "'b'",
+      "propertyType": "normal",
       "type": "property",
     },
     "c": {
       "code": "'c'",
+      "propertyType": "normal",
       "type": "property",
     },
     "d": {
       "code": "'d'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -20536,6 +21101,7 @@ exports[`Parse JSX > Typescript > multipleSpreads 1`] = `
       "code": "{
   hello: 'world'
 }",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -20806,10 +21372,10 @@ exports[`Parse JSX > Typescript > onInit & onMount 1`] = `
   "exports": {},
   "hooks": {
     "onInit": {
-      "code": "console.log('onInit');",
+      "code": "console.log('onInit')",
     },
     "onMount": {
-      "code": "console.log('onMount');",
+      "code": "console.log('onMount')",
     },
   },
   "imports": [],
@@ -20878,7 +21444,7 @@ exports[`Parse JSX > Typescript > onInit 1`] = `
   "hooks": {
     "onInit": {
       "code": "state.name = defaultValues.name || props.name;
-  console.log('set defaults with props');",
+console.log('set defaults with props')",
     },
   },
   "imports": [],
@@ -20890,6 +21456,7 @@ exports[`Parse JSX > Typescript > onInit 1`] = `
   "state": {
     "name": {
       "code": "''",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -20897,7 +21464,7 @@ exports[`Parse JSX > Typescript > onInit 1`] = `
   "types": [
     "type Props = {
   name: string;
-};",
+}",
   ],
 }
 `;
@@ -20923,10 +21490,10 @@ exports[`Parse JSX > Typescript > onMount 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "console.log('Runs on mount');",
+      "code": "console.log('Runs on mount')",
     },
     "onUnMount": {
-      "code": "console.log('Runs on unMount');",
+      "code": "console.log('Runs on unMount')",
     },
   },
   "imports": [],
@@ -20961,7 +21528,7 @@ exports[`Parse JSX > Typescript > onUpdate 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "console.log('Runs on every update/rerender');",
+        "code": "console.log('Runs on every update/rerender')",
         "deps": "",
       },
     ],
@@ -20998,7 +21565,7 @@ exports[`Parse JSX > Typescript > onUpdateWithDeps 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "console.log('Runs when a, b or size changes', state.a, state.b, props.size);",
+        "code": "console.log('Runs when a, b or size changes', state.a, state.b, props.size)",
         "deps": "[state.a, state.b, props.size]",
       },
     ],
@@ -21012,10 +21579,12 @@ exports[`Parse JSX > Typescript > onUpdateWithDeps 1`] = `
   "state": {
     "a": {
       "code": "'a'",
+      "propertyType": "normal",
       "type": "property",
     },
     "b": {
       "code": "'b'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -21023,7 +21592,7 @@ exports[`Parse JSX > Typescript > onUpdateWithDeps 1`] = `
   "types": [
     "type Props = {
   size: string;
-};",
+}",
   ],
 }
 `;
@@ -21085,12 +21654,12 @@ exports[`Parse JSX > Typescript > preserveExportOrLocalStatement 1`] = `
   "types": [
     "type Types = {
   s: any[];
-};",
+}",
     "interface IPost {
   len: number;
 }",
     "export interface MyBasicComponentProps {
-  id: string
+  id: string;
 }",
   ],
 }
@@ -21151,17 +21720,17 @@ exports[`Parse JSX > Typescript > preserveTyping 1`] = `
   "state": {},
   "subComponents": [],
   "types": [
-    "export type A = 'test';",
+    "export type A = 'test'",
     "export interface C {
   n: 'test';
 }",
-    "type B = 'test2';",
+    "type B = 'test2'",
     "interface D {
   n: 'test';
 }",
     "export interface MyBasicComponentProps {
-  name: string
-  age?: number
+  name: string;
+  age?: number;
 }",
   ],
 }
@@ -21261,6 +21830,7 @@ exports[`Parse JSX > Typescript > propsDestructure 1`] = `
   "state": {
     "name": {
       "code": "'Decadef20'",
+      "propertyType": "normal",
       "type": "property",
     },
   },
@@ -21269,7 +21839,7 @@ exports[`Parse JSX > Typescript > propsDestructure 1`] = `
     "type Props = {
   children: any;
   type: string;
-};",
+}",
   ],
 }
 `;
@@ -21395,7 +21965,7 @@ exports[`Parse JSX > Typescript > propsType 1`] = `
     "type Person = {
   name: string;
   age?: number;
-};",
+}",
   ],
 }
 `;
@@ -21422,9 +21992,9 @@ exports[`Parse JSX > Typescript > referencingFunInsideHook 1`] = `
   "hooks": {
     "onUpdate": [
       {
-        "code": "foo({
-    someOption: bar
-  });",
+        "code": "state.foo({
+  someOption: state.bar
+})",
         "deps": "",
       },
     ],
@@ -22261,7 +22831,7 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
     "export type RenderBlockProps = {
   block: BuilderBlock;
   context: BuilderContextInterface;
-};",
+}",
   ],
 }
 `;
@@ -22356,11 +22926,11 @@ exports[`Parse JSX > Typescript > renderContentExample 1`] = `
   "exports": {},
   "hooks": {
     "onMount": {
-      "code": "sendComponentsToVisualEditor(props.customComponents);",
+      "code": "sendComponentsToVisualEditor(props.customComponents)",
     },
     "onUpdate": [
       {
-        "code": "dispatchNewContentToVisualEditor(props.content);",
+        "code": "dispatchNewContentToVisualEditor(props.content)",
         "deps": "[props.content]",
       },
     ],
@@ -22404,7 +22974,7 @@ exports[`Parse JSX > Typescript > renderContentExample 1`] = `
     blocks: any[];
     id: string;
   };
-};",
+}",
   ],
 }
 `;
@@ -22784,7 +23354,7 @@ exports[`Parse JSX > Typescript > rootShow 1`] = `
   "subComponents": [],
   "types": [
     "export interface RenderStylesProps {
-  foo: string
+  foo: string;
 }",
   ],
 }
@@ -23494,6 +24064,70 @@ exports[`Parse JSX > Typescript > styleClassAndCss 1`] = `
 }
 `;
 
+exports[`Parse JSX > Typescript > stylePropClassAndCss 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "css": {
+          "code": "{
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'stretch'
+}",
+          "type": "single",
+        },
+        "style": {
+          "code": "props.attributes.style",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "div",
+      "properties": {
+        "class": "USE_TARGET_BLOCK_1",
+      },
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {},
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "StylePropClassAndCss",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+  "targetBlocks": {
+    "1": {
+      "default": {
+        "code": "props.attributes.class",
+      },
+      "settings": {
+        "requiresDefault": true,
+      },
+      "svelte": {
+        "code": "props.attributes.classfdsa",
+      },
+      "vue2": {
+        "code": "props.attributes.className",
+      },
+      "vue3": {
+        "code": "props.attributes.className",
+      },
+    },
+  },
+}
+`;
+
 exports[`Parse JSX > Typescript > subComponent 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -23800,7 +24434,7 @@ exports[`Parse JSX > Typescript > typeDependency 1`] = `
     "export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
-};",
+}",
   ],
 }
 `;
@@ -23969,6 +24603,162 @@ exports[`Parse JSX > Typescript > use-style-outside-component 1`] = `
 }
 `;
 
+exports[`Parse JSX > Typescript > useTarget 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "_text": {
+              "code": "state.name",
+              "type": "single",
+            },
+          },
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onMount": {
+      "code": "\\"USE_TARGET_BLOCK_2\\"",
+    },
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "UseTargetComponent",
+  "refs": {},
+  "state": {
+    "lastName": {
+      "code": "'bar'",
+      "propertyType": "normal",
+      "type": "property",
+    },
+    "name": {
+      "code": "get name() {
+  const prefix = \\"USE_TARGET_BLOCK_1\\";
+  return prefix + 'foo';
+}",
+      "type": "getter",
+    },
+  },
+  "subComponents": [],
+  "targetBlocks": {
+    "1": {
+      "alpine": {
+        "code": "'a'",
+      },
+      "angular": {
+        "code": "true",
+      },
+      "customElement": {
+        "code": "'c'",
+      },
+      "default": {
+        "code": "'Default str'",
+      },
+      "html": {
+        "code": "'h'",
+      },
+      "liquid": {
+        "code": "'l'",
+      },
+      "lit": {
+        "code": "'li'",
+      },
+      "marko": {
+        "code": "'m'",
+      },
+      "mitosis": {
+        "code": "'mi'",
+      },
+      "preact": {
+        "code": "'p'",
+      },
+      "qwik": {
+        "code": "'q'",
+      },
+      "react": {
+        "code": "123",
+      },
+      "reactNative": {
+        "code": "'rn'",
+      },
+      "rsc": {
+        "code": "'rsc'",
+      },
+      "settings": {
+        "requiresDefault": true,
+      },
+      "solid": {
+        "code": "'so'",
+      },
+      "stencil": {
+        "code": "'st'",
+      },
+      "svelte": {
+        "code": "'s'",
+      },
+      "swift": {
+        "code": "'sw'",
+      },
+      "taro": {
+        "code": "'t'",
+      },
+      "template": {
+        "code": "'te'",
+      },
+      "vue": {
+        "code": "'v'",
+      },
+      "vue2": {
+        "code": "'v2'",
+      },
+      "vue3": {
+        "code": "'v3'",
+      },
+      "webcomponent": {
+        "code": "'wc'",
+      },
+    },
+    "2": {
+      "qwik": {
+        "code": "console.log('qwik');
+state.lastName = 'baz';
+",
+      },
+      "react": {
+        "code": "console.log('react');
+state.lastName = 'baz';
+",
+      },
+      "settings": {
+        "requiresDefault": false,
+      },
+    },
+  },
+}
+`;
+
 exports[`Parse JSX > boolean attribute 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -23992,39 +24782,78 @@ exports[`Parse JSX > boolean attribute 1`] = `
         {
           "@type": "@builder.io/mitosis/node",
           "bindings": {
-            "_text": {
+            "when": {
               "code": "props.children",
               "type": "single",
             },
           },
-          "children": [],
-          "meta": {},
-          "name": "div",
-          "properties": {},
-          "scope": {},
-        },
-        {
-          "@type": "@builder.io/mitosis/node",
-          "bindings": {},
-          "children": [],
-          "meta": {},
-          "name": "div",
-          "properties": {
-            "_text": " ",
-          },
-          "scope": {},
-        },
-        {
-          "@type": "@builder.io/mitosis/node",
-          "bindings": {
-            "_text": {
-              "code": "props.type",
-              "type": "single",
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+        ",
+              },
+              "scope": {},
             },
-          },
-          "children": [],
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {
+                "_text": {
+                  "code": "props.children",
+                  "type": "single",
+                },
+              },
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {},
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": " ",
+              },
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {
+                "_text": {
+                  "code": "props.type",
+                  "type": "single",
+                },
+              },
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {},
+              "scope": {},
+            },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+      ",
+              },
+              "scope": {},
+            },
+          ],
           "meta": {},
-          "name": "div",
+          "name": "Show",
           "properties": {},
           "scope": {},
         },
@@ -24499,6 +25328,7 @@ exports[`Parse JSX > parseStateObject 1`] = `
   },
   "forceReRenderCount": {
     "code": "0",
+    "propertyType": "normal",
     "type": "property",
   },
   "handleRequest": {
@@ -24544,10 +25374,12 @@ exports[`Parse JSX > parseStateObject 1`] = `
   },
   "overrideContent": {
     "code": "null",
+    "propertyType": "normal",
     "type": "property",
   },
   "overrideState": {
     "code": "{}",
+    "propertyType": "normal",
     "type": "property",
   },
   "processMessage": {
@@ -24604,6 +25436,7 @@ exports[`Parse JSX > parseStateObject 1`] = `
   },
   "update": {
     "code": "0",
+    "propertyType": "normal",
     "type": "property",
   },
   "useContent": {

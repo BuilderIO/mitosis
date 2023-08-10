@@ -6,6 +6,7 @@ export interface ToReactOptions extends BaseTranspilerOptions {
   format?: 'lite' | 'safe';
   type: 'dom' | 'native' | 'taro';
   preact?: boolean;
+  rsc?: boolean;
   forwardRef?: string;
   experimental?: any;
   /**
@@ -13,4 +14,5 @@ export interface ToReactOptions extends BaseTranspilerOptions {
    * option
    */
   contextType?: 'context' | 'prop-drill';
+  addUseClientDirectiveIfNeeded?: boolean;
 }

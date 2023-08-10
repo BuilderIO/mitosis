@@ -204,9 +204,11 @@ exports[`Alpine.js > jsx > Javascript Test > BasicAttribute 1`] = `
 
 exports[`Alpine.js > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 "<div x-data=\\"myBooleanAttribute()\\">
-  <span x-html=\\"children\\"></span>
+  <template x-if=\\"children\\">
+    <span x-html=\\"children\\"></span>
 
-  <span x-html=\\"type\\"></span>
+    <span x-html=\\"type\\"></span>
+  </template>
 
   <MyBooleanAttributeComponent
     x-bind:toggle=\\"true\\"
@@ -980,7 +982,7 @@ exports[`Alpine.js > jsx > Javascript Test > Image 1`] = `
 
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!props.lazy && isBrowser();
+        return !!props.lazy && this.isBrowser();
       },
 
       isBrowser: function isBrowser() {
@@ -1000,7 +1002,7 @@ exports[`Alpine.js > jsx > Javascript Test > Image 1`] = `
               const buffer = window.innerHeight / 2;
 
               if (rect.top < window.innerHeight + buffer) {
-                setLoad(true);
+                this.load = true;
                 this.scrollListener = null;
                 window.removeEventListener(\\"scroll\\", listener);
               }
@@ -1071,10 +1073,30 @@ exports[`Alpine.js > jsx > Javascript Test > Input 1`] = `
   x-bind:value=\\"value\\"
   x-bind:defaultValue=\\"defaultValue\\"
   x-bind:required=\\"required\\"
+  x-on:change=\\"onChange?.($event.target.value)\\"
 />
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"formInputComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > InputParent 1`] = `
+"<FormInputComponent
+  name=\\"kingzez\\"
+  type=\\"text\\"
+  x-data=\\"stepper()\\"
+  x-on:change=\\"handleChange(value)\\"
+></FormInputComponent>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"stepper\\", () => ({
+      handleChange(value) {
+        console.log(value);
+      },
+    }));
   });
 </script>
 "
@@ -1751,8 +1773,8 @@ exports[`Alpine.js > jsx > Javascript Test > multipleOnUpdate 1`] = `
 > 2 |               Alpine.data('multipleOnUpdate', () => ({,
     |                                                       ^
   3 | onUpdate() {
-  4 |         console.log('Runs on every update/rerender');
-  5 | console.log('Runs on every update/rerender as well');"
+  4 |         console.log('Runs on every update/rerender')
+  5 | console.log('Runs on every update/rerender as well')"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
@@ -1873,7 +1895,7 @@ exports[`Alpine.js > jsx > Javascript Test > onInit & onMount 1`] = `
 > 2 |               Alpine.data('onInit', () => ({, init() {
     |                                             ^
   3 |       
-  4 |       console.log('onMount');
+  4 |       console.log('onMount')
   5 |     }}))"
 `;
 
@@ -1899,7 +1921,7 @@ exports[`Alpine.js > jsx > Javascript Test > onMount 1`] = `
 > 2 |               Alpine.data('comp', () => ({, init() {
     |                                           ^
   3 |       
-  4 |       console.log('Runs on mount');
+  4 |       console.log('Runs on mount')
   5 |     }}))"
 `;
 
@@ -1910,7 +1932,7 @@ exports[`Alpine.js > jsx > Javascript Test > onUpdate 1`] = `
 > 2 |               Alpine.data('onUpdate', () => ({,
     |                                               ^
   3 | onUpdate() {
-  4 |         console.log('Runs on every update/rerender');
+  4 |         console.log('Runs on every update/rerender')
   5 |     }}))"
 `;
 
@@ -2027,8 +2049,8 @@ exports[`Alpine.js > jsx > Javascript Test > referencingFunInsideHook 1`] = `
       },
 
       onUpdate() {
-        foo({
-          someOption: bar,
+        this.foo({
+          someOption: this.bar,
         });
       },
     }));
@@ -2278,7 +2300,7 @@ exports[`Alpine.js > jsx > Javascript Test > renderContentExample 1`] = `
 > 2 |               Alpine.data('renderContent', () => ({, init() {
     |                                                    ^
   3 |       
-  4 |       sendComponentsToVisualEditor(props.customComponents);
+  4 |       sendComponentsToVisualEditor(props.customComponents)
   5 |     }}))"
 `;
 
@@ -2433,6 +2455,27 @@ exports[`Alpine.js > jsx > Javascript Test > styleClassAndCss 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>
+<div
+  x-data=\\"stylePropClassAndCss()\\"
+  x-bind:style=\\"attributes.style\\"
+  x-bind:class=\\"attributes.class + ' div'\\"
+></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"stylePropClassAndCss\\", () => ({}));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > subComponent 1`] = `
 "<Foo x-data=\\"subComponent()\\"></Foo>
 <script>
@@ -2507,14 +2550,14 @@ exports[`Alpine.js > jsx > Javascript Test > use-style 1`] = `
 
 exports[`Alpine.js > jsx > Javascript Test > use-style-and-css 1`] = `
 "<style>
-  .button {
-    background: blue;
-    color: white;
-  }
-
   button {
     font-size: 12px;
     outline: 1px solid black;
+  }
+
+  .button {
+    background: blue;
+    color: white;
   }
 </style>
 <button type=\\"button\\" class=\\"button\\" x-data=\\"myComponent()\\">Button</button>
@@ -2539,6 +2582,25 @@ exports[`Alpine.js > jsx > Javascript Test > use-style-outside-component 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > useTarget 1`] = `
+"<div x-data=\\"useTargetComponent()\\"><span x-html=\\"name\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"useTargetComponent\\", () => ({
+      get name() {
+        const prefix = \\"a\\";
+        return prefix + \\"foo\\";
+      },
+
+      lastName: \\"bar\\",
+
+      init() {},
+    }));
   });
 </script>
 "
@@ -2764,9 +2826,11 @@ exports[`Alpine.js > jsx > Typescript Test > BasicAttribute 1`] = `
 
 exports[`Alpine.js > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 "<div x-data=\\"myBooleanAttribute()\\">
-  <span x-html=\\"children\\"></span>
+  <template x-if=\\"children\\">
+    <span x-html=\\"children\\"></span>
 
-  <span x-html=\\"type\\"></span>
+    <span x-html=\\"type\\"></span>
+  </template>
 
   <MyBooleanAttributeComponent
     x-bind:toggle=\\"true\\"
@@ -3529,7 +3593,7 @@ exports[`Alpine.js > jsx > Typescript Test > Image 1`] = `
 
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!props.lazy && isBrowser();
+        return !!props.lazy && this.isBrowser();
       },
 
       isBrowser: function isBrowser() {
@@ -3549,7 +3613,7 @@ exports[`Alpine.js > jsx > Typescript Test > Image 1`] = `
               const buffer = window.innerHeight / 2;
 
               if (rect.top < window.innerHeight + buffer) {
-                setLoad(true);
+                this.load = true;
                 this.scrollListener = null;
                 window.removeEventListener(\\"scroll\\", listener);
               }
@@ -3620,10 +3684,30 @@ exports[`Alpine.js > jsx > Typescript Test > Input 1`] = `
   x-bind:value=\\"value\\"
   x-bind:defaultValue=\\"defaultValue\\"
   x-bind:required=\\"required\\"
+  x-on:change=\\"onChange?.($event.target.value)\\"
 />
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"formInputComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > InputParent 1`] = `
+"<FormInputComponent
+  name=\\"kingzez\\"
+  type=\\"text\\"
+  x-data=\\"stepper()\\"
+  x-on:change=\\"handleChange(value)\\"
+></FormInputComponent>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"stepper\\", () => ({
+      handleChange(value: string) {
+        console.log(value);
+      },
+    }));
   });
 </script>
 "
@@ -4300,8 +4384,8 @@ exports[`Alpine.js > jsx > Typescript Test > multipleOnUpdate 1`] = `
 > 2 |               Alpine.data('multipleOnUpdate', () => ({,
     |                                                       ^
   3 | onUpdate() {
-  4 |         console.log('Runs on every update/rerender');
-  5 | console.log('Runs on every update/rerender as well');"
+  4 |         console.log('Runs on every update/rerender')
+  5 | console.log('Runs on every update/rerender as well')"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
@@ -4422,7 +4506,7 @@ exports[`Alpine.js > jsx > Typescript Test > onInit & onMount 1`] = `
 > 2 |               Alpine.data('onInit', () => ({, init() {
     |                                             ^
   3 |       
-  4 |       console.log('onMount');
+  4 |       console.log('onMount')
   5 |     }}))"
 `;
 
@@ -4448,7 +4532,7 @@ exports[`Alpine.js > jsx > Typescript Test > onMount 1`] = `
 > 2 |               Alpine.data('comp', () => ({, init() {
     |                                           ^
   3 |       
-  4 |       console.log('Runs on mount');
+  4 |       console.log('Runs on mount')
   5 |     }}))"
 `;
 
@@ -4459,7 +4543,7 @@ exports[`Alpine.js > jsx > Typescript Test > onUpdate 1`] = `
 > 2 |               Alpine.data('onUpdate', () => ({,
     |                                               ^
   3 | onUpdate() {
-  4 |         console.log('Runs on every update/rerender');
+  4 |         console.log('Runs on every update/rerender')
   5 |     }}))"
 `;
 
@@ -4576,8 +4660,8 @@ exports[`Alpine.js > jsx > Typescript Test > referencingFunInsideHook 1`] = `
       },
 
       onUpdate() {
-        foo({
-          someOption: bar,
+        this.foo({
+          someOption: this.bar,
         });
       },
     }));
@@ -4830,7 +4914,7 @@ exports[`Alpine.js > jsx > Typescript Test > renderContentExample 1`] = `
 > 2 |               Alpine.data('renderContent', () => ({, init() {
     |                                                    ^
   3 |       
-  4 |       sendComponentsToVisualEditor(props.customComponents);
+  4 |       sendComponentsToVisualEditor(props.customComponents)
   5 |     }}))"
 `;
 
@@ -4985,6 +5069,27 @@ exports[`Alpine.js > jsx > Typescript Test > styleClassAndCss 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+</style>
+<div
+  x-data=\\"stylePropClassAndCss()\\"
+  x-bind:style=\\"attributes.style\\"
+  x-bind:class=\\"attributes.class + ' div'\\"
+></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"stylePropClassAndCss\\", () => ({}));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Typescript Test > subComponent 1`] = `
 "<Foo x-data=\\"subComponent()\\"></Foo>
 <script>
@@ -5059,14 +5164,14 @@ exports[`Alpine.js > jsx > Typescript Test > use-style 1`] = `
 
 exports[`Alpine.js > jsx > Typescript Test > use-style-and-css 1`] = `
 "<style>
-  .button {
-    background: blue;
-    color: white;
-  }
-
   button {
     font-size: 12px;
     outline: 1px solid black;
+  }
+
+  .button {
+    background: blue;
+    color: white;
   }
 </style>
 <button type=\\"button\\" class=\\"button\\" x-data=\\"myComponent()\\">Button</button>
@@ -5091,6 +5196,25 @@ exports[`Alpine.js > jsx > Typescript Test > use-style-outside-component 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > useTarget 1`] = `
+"<div x-data=\\"useTargetComponent()\\"><span x-html=\\"name\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"useTargetComponent\\", () => ({
+      get name() {
+        const prefix = \\"a\\";
+        return prefix + \\"foo\\";
+      },
+
+      lastName: \\"bar\\",
+
+      init() {},
+    }));
   });
 </script>
 "

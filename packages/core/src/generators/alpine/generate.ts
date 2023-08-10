@@ -1,10 +1,12 @@
 import { camelCase, curry, flow, flowRight as compose } from 'lodash';
 import { format } from 'prettier/standalone';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { babelTransformCode } from '../../helpers/babel-transform';
 import { dashCase } from '../../helpers/dash-case';
 import { fastClone } from '../../helpers/fast-clone';
 import { getRefs } from '../../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
+import { initializeOptions } from '../../helpers/merge-options';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
@@ -16,7 +18,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
@@ -183,7 +184,7 @@ const blockToAlpine = (json: MitosisNode | ForNode, options: ToAlpineOptions = {
       str += ` ${bind}${bindingType === 'spread' ? '' : key}="${useValue}" `.replace(':=', '=');
     }
   }
-  return selfClosingTags.has(json.name)
+  return SELF_CLOSING_HTML_TAGS.has(json.name)
     ? `${str} />`
     : `${str}>${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('\n')}</${
         json.name
@@ -191,16 +192,18 @@ const blockToAlpine = (json: MitosisNode | ForNode, options: ToAlpineOptions = {
 };
 
 export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
-  (options = {}) =>
+  (_options = {}) =>
   ({ component }) => {
+    const options = initializeOptions({ target: 'alpine', component, defaults: _options });
+
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     const css = collectCss(json);
     stripMetaProperties(json);
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
 
     const componentName = camelCase(json.name) || 'MyComponent';
@@ -227,7 +230,7 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
     }
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -246,7 +249,7 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };

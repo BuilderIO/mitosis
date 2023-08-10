@@ -31,11 +31,26 @@ export function parseContext(code: string, options: ParseContextOptions): Mitosi
                     types.isIdentifier(expression.callee) &&
                     expression.callee.name === 'createContext'
                   ) {
-                    const firstArg = expression.arguments[0];
+                    const [firstArg, secondArg] = expression.arguments;
                     if (types.isObjectExpression(firstArg)) {
                       // TODO: support non object values by parsing any node type
                       // like the logic within each property value of parseStateObject
                       context.value = parseStateObjectToMitosisState(firstArg);
+
+                      if (types.isObjectExpression(secondArg)) {
+                        for (const prop of secondArg.properties) {
+                          if (!types.isProperty(prop) || !types.isIdentifier(prop.key)) continue;
+                          const isReactive = prop.key.name === 'reactive';
+
+                          if (
+                            isReactive &&
+                            types.isBooleanLiteral(prop.value) &&
+                            prop.value.value
+                          ) {
+                            context.type = 'reactive';
+                          }
+                        }
+                      }
                       found = true;
                     }
                   }

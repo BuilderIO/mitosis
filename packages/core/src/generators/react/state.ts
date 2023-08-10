@@ -91,13 +91,7 @@ export const updateStateSettersInCode = (value: string, options: ToReactOptions)
   }
   return transformStateSetters({
     value,
-    transformer: ({ path, propertyName }) => {
-      const { node } = path;
-      const newExpression = types.callExpression(
-        types.identifier(getSetStateFnName(propertyName)),
-        [node.right],
-      );
-      return newExpression;
-    },
+    transformer: ({ path, propertyName }) =>
+      types.callExpression(types.identifier(getSetStateFnName(propertyName)), [path.node.right]),
   });
 };

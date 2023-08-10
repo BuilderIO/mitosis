@@ -1,7 +1,9 @@
 import { NodePath, types } from '@babel/core';
+import { pipe } from 'fp-ts/lib/function';
 import { camelCase, kebabCase } from 'lodash';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
+import { SELF_CLOSING_HTML_TAGS } from '../constants/html_tags';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { dashCase } from '../helpers/dash-case';
 import { fastClone } from '../helpers/fast-clone';
@@ -19,6 +21,8 @@ import { isComponent } from '../helpers/is-component';
 import { isHtmlAttribute } from '../helpers/is-html-attribute';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { mapRefs } from '../helpers/map-refs';
+import { initializeOptions } from '../helpers/merge-options';
+import { getForArguments } from '../helpers/nodes/for';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
@@ -36,12 +40,8 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
-
-import { pipe } from 'fp-ts/lib/function';
-import { getForArguments } from '../helpers/nodes/for';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
@@ -526,7 +526,7 @@ const blockToHtml = (
       );
     }
 
-    if (selfClosingTags.has(json.name)) {
+    if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
       return str + ' />';
     }
     str += '>';
@@ -597,20 +597,24 @@ const htmlDecode = (html: string) => html.replace(/&quot;/gi, '"');
 
 // TODO: props support via custom elements
 export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
-  (options = {}) =>
+  (_options = {}) =>
   ({ component }) => {
-    const useOptions: InternalToHtmlOptions = {
-      ...options,
-      onChangeJsById: {},
-      js: '',
-      namesMap: {},
-      format: 'script',
-    };
+    const options: InternalToHtmlOptions = initializeOptions({
+      target: 'html',
+      component,
+      defaults: {
+        ..._options,
+        onChangeJsById: {},
+        js: '',
+        namesMap: {},
+        format: 'script',
+      },
+    });
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
-    addUpdateAfterSet(json, useOptions);
+    addUpdateAfterSet(json, options);
     const componentHasProps = hasProps(json);
 
     const hasLoop = hasComponent('For', json);
@@ -618,20 +622,20 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
     const hasTextBinding = hasBindingsText(json);
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     const css = collectCss(json, {
       prefix: options.prefix,
     });
 
-    let str = json.children.map((item) => blockToHtml(item, useOptions)).join('\n');
+    let str = json.children.map((item) => blockToHtml(item, options)).join('\n');
 
     if (css.trim().length) {
       str += `<style>${css}</style>`;
     }
 
-    const hasChangeListeners = Boolean(Object.keys(useOptions.onChangeJsById).length);
-    const hasGeneratedJs = Boolean(useOptions.js.trim().length);
+    const hasChangeListeners = Boolean(Object.keys(options.onChangeJsById).length);
+    const hasGeneratedJs = Boolean(options.js.trim().length);
 
     if (hasChangeListeners || hasGeneratedJs || json.hooks.onMount?.code || hasLoop) {
       // TODO: collectJs helper for here and liquid
@@ -640,7 +644,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
       (() => {
         const state = ${getStateObjectStringFromComponent(json, {
           valueMapper: (value) =>
-            addUpdateAfterSetInCode(updateReferencesInCode(value, useOptions), useOptions),
+            addUpdateAfterSetInCode(updateReferencesInCode(value, options), options),
         })};
         ${componentHasProps ? `let props = {};` : ''}
         let context = null;
@@ -666,9 +670,9 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
             return;
           }
           pendingUpdate = true;
-          ${Object.keys(useOptions.onChangeJsById)
+          ${Object.keys(options.onChangeJsById)
             .map((key) => {
-              const value = useOptions.onChangeJsById[key];
+              const value = options.onChangeJsById[key];
               if (!value) {
                 return '';
               }
@@ -688,8 +692,8 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
               : `
                 ${json.hooks.onUpdate.reduce((code, hook) => {
                   code += addUpdateAfterSetInCode(
-                    updateReferencesInCode(hook.code, useOptions),
-                    useOptions,
+                    updateReferencesInCode(hook.code, options),
+                    options,
                   );
                   return code + '\n';
                 }, '')} 
@@ -699,7 +703,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
           pendingUpdate = false;
         }
 
-        ${useOptions.js}
+        ${options.js}
 
         // Update with initial state on first load
         update();
@@ -712,8 +716,8 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
             : `
             if (!onInitOnce) {
               ${updateReferencesInCode(
-                addUpdateAfterSetInCode(json.hooks?.onInit?.code, useOptions),
-                useOptions,
+                addUpdateAfterSetInCode(json.hooks?.onInit?.code, options),
+                options,
               )}
               onInitOnce = true;
             }
@@ -727,8 +731,8 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
               `
               // onMount
               ${updateReferencesInCode(
-                addUpdateAfterSetInCode(json.hooks.onMount.code, useOptions),
-                useOptions,
+                addUpdateAfterSetInCode(json.hooks.onMount.code, options),
+                options,
               )} 
               `
         }
@@ -841,7 +845,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
     }
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -860,35 +864,39 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };
 
 // TODO: props support via custom elements
 export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
-  (options = {}) =>
+  (_options = {}) =>
   ({ component }) => {
     const ComponentName = component.name;
     const kebabName = kebabCase(ComponentName);
 
-    const useOptions: InternalToHtmlOptions = {
-      prefix: kebabName,
-      ...options,
-      onChangeJsById: {},
-      js: '',
-      namesMap: {},
-      format: 'class',
-    };
+    const options: InternalToHtmlOptions = initializeOptions({
+      target: 'customElement',
+      component,
+      defaults: {
+        prefix: kebabName,
+        ..._options,
+        onChangeJsById: {},
+        js: '',
+        namesMap: {},
+        format: 'class',
+      },
+    });
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
 
     const [forwardProp, hasPropRef] = getPropsRef(json, true);
 
     const contextVars = Object.keys(json?.context?.get || {});
-    const childComponents = getChildComponents(json, useOptions);
+    const childComponents = getChildComponents(json, options);
     const componentHasProps = hasProps(json);
     const componentHasStatefulDom = hasStatefulDom(json);
     const props = getProps(json);
@@ -914,7 +922,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
       setContext.push({ name, value, ref });
     }
 
-    addUpdateAfterSet(json, useOptions);
+    addUpdateAfterSet(json, options);
 
     const hasContext = context.length;
     const hasLoop = hasComponent('For', json);
@@ -922,11 +930,11 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
     const hasShow = hasComponent('Show', json);
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     let css = '';
-    if (useOptions?.experimental?.css) {
-      css = useOptions?.experimental?.css(json, useOptions, {
+    if (options?.experimental?.css) {
+      css = options?.experimental?.css(json, options, {
         collectCss,
         prefix: options.prefix,
       });
@@ -940,7 +948,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
 
     let html = json.children
       .map((item) =>
-        blockToHtml(item, useOptions, {
+        blockToHtml(item, options, {
           childComponents,
           props,
           outputs,
@@ -949,12 +957,12 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
         }),
       )
       .join('\n');
-    if (useOptions?.experimental?.childrenHtml) {
-      html = useOptions?.experimental?.childrenHtml(html, kebabName, json, useOptions);
+    if (options?.experimental?.childrenHtml) {
+      html = options?.experimental?.childrenHtml(html, kebabName, json, options);
     }
 
-    if (useOptions?.experimental?.cssHtml) {
-      html += useOptions?.experimental?.cssHtml(css);
+    if (options?.experimental?.cssHtml) {
+      html += options?.experimental?.cssHtml(css);
     } else if (css.length) {
       html += `<style>${css}</style>`;
     }
@@ -988,8 +996,8 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
        * 
        */
       class ${ComponentName} extends ${
-      useOptions?.experimental?.classExtends
-        ? useOptions?.experimental?.classExtends(json, useOptions)
+      options?.experimental?.classExtends
+        ? options?.experimental?.classExtends(json, options)
         : 'HTMLElement'
     } {
         ${Array.from(domRefs)
@@ -1021,7 +1029,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
           this.state = ${getStateObjectStringFromComponent(json, {
             valueMapper: (value) =>
               pipe(
-                stripStateAndPropsRefs(addUpdateAfterSetInCode(value, useOptions, 'self.update'), {
+                stripStateAndPropsRefs(addUpdateAfterSetInCode(value, options, 'self.update'), {
                   includeProps: false,
                   includeState: true,
                   // TODO: if it's an arrow function it's this.state.
@@ -1061,7 +1069,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
               ? ''
               : `
             this.updateDeps = [${json.hooks.onUpdate
-              ?.map((hook) => updateReferencesInCode(hook?.deps || '[]', useOptions))
+              ?.map((hook) => updateReferencesInCode(hook?.deps || '[]', options))
               .join(',')}];
             `
           }
@@ -1071,12 +1079,12 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
           // batch updates
           this.pendingUpdate = false;
           ${
-            useOptions?.experimental?.componentConstructor
-              ? useOptions?.experimental?.componentConstructor(json, useOptions)
+            options?.experimental?.componentConstructor
+              ? options?.experimental?.componentConstructor(json, options)
               : ''
           }
 
-          ${useOptions.js}
+          ${options.js}
 
           ${jsRefs
             .map((ref) => {
@@ -1098,13 +1106,13 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
             : `
           disconnectedCallback() {
             ${
-              useOptions?.experimental?.disconnectedCallback
-                ? useOptions?.experimental?.disconnectedCallback(json, useOptions)
+              options?.experimental?.disconnectedCallback
+                ? options?.experimental?.disconnectedCallback(json, options)
                 : `
             // onUnMount
             ${updateReferencesInCode(
-              addUpdateAfterSetInCode(json.hooks.onUnMount.code, useOptions),
-              useOptions,
+              addUpdateAfterSetInCode(json.hooks.onUnMount.code, options),
+              options,
               {
                 contextVars,
               },
@@ -1144,8 +1152,8 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
           `
           }
           ${
-            useOptions?.experimental?.connectedCallbackUpdate
-              ? useOptions?.experimental?.connectedCallbackUpdate(json, html, useOptions)
+            options?.experimental?.connectedCallbackUpdate
+              ? options?.experimental?.connectedCallbackUpdate(json, html, options)
               : `
               this._root.innerHTML = \`
       ${html}\`;
@@ -1169,8 +1177,8 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
                   : `
                   if (!this.onInitOnce) {
                     ${updateReferencesInCode(
-                      addUpdateAfterSetInCode(json.hooks?.onInit?.code, useOptions),
-                      useOptions,
+                      addUpdateAfterSetInCode(json.hooks?.onInit?.code, options),
+                      options,
                       {
                         contextVars,
                       },
@@ -1208,14 +1216,14 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
           }`
         }
         ${
-          !useOptions?.experimental?.attributeChangedCallback
+          !options?.experimental?.attributeChangedCallback
             ? ''
             : `
           attributeChangedCallback(name, oldValue, newValue) {
-            ${useOptions?.experimental?.attributeChangedCallback(
+            ${options?.experimental?.attributeChangedCallback(
               ['name', 'oldValue', 'newValue'],
               json,
-              useOptions,
+              options,
             )}
           }
           `
@@ -1229,8 +1237,8 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
                 `
                 // onMount
                 ${updateReferencesInCode(
-                  addUpdateAfterSetInCode(json.hooks.onMount.code, useOptions),
-                  useOptions,
+                  addUpdateAfterSetInCode(json.hooks.onMount.code, options),
+                  options,
                   {
                     contextVars,
                   },
@@ -1252,24 +1260,20 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
                 ;(function (__prev, __next) {
                   const __hasChange = __prev.find((val, index) => val !== __next[index]);
                   if (__hasChange !== undefined) {
-                    ${updateReferencesInCode(hook.code, useOptions, {
+                    ${updateReferencesInCode(hook.code, options, {
                       contextVars,
                       context: 'self.',
                     })}
                     self.updateDeps[${index}] = __next;
                   }
-                }(self.updateDeps[${index}], ${updateReferencesInCode(
-                  hook?.deps || '[]',
-                  useOptions,
-                  {
-                    contextVars,
-                    context: 'self.',
-                  },
-                )}));
+                }(self.updateDeps[${index}], ${updateReferencesInCode(hook?.deps || '[]', options, {
+                  contextVars,
+                  context: 'self.',
+                })}));
                 `;
               } else {
                 code += `
-                ${updateReferencesInCode(hook.code, useOptions, {
+                ${updateReferencesInCode(hook.code, options, {
                   contextVars,
                   context: 'self.',
                 })}
@@ -1352,26 +1356,26 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
         }
 
         updateBindings() {
-          ${Object.keys(useOptions.onChangeJsById)
+          ${Object.keys(options.onChangeJsById)
             .map((key) => {
-              const value = useOptions.onChangeJsById[key];
+              const value = options.onChangeJsById[key];
               if (!value) {
                 return '';
               }
               let code = '';
-              if (useOptions?.experimental?.updateBindings) {
-                key = useOptions?.experimental?.updateBindings?.key(key, value, useOptions);
-                code = useOptions?.experimental?.updateBindings?.code(key, value, useOptions);
+              if (options?.experimental?.updateBindings) {
+                key = options?.experimental?.updateBindings?.key(key, value, options);
+                code = options?.experimental?.updateBindings?.code(key, value, options);
               } else {
-                code = updateReferencesInCode(value, useOptions, {
+                code = updateReferencesInCode(value, options, {
                   contextVars,
                 });
               }
               return `
               ${
-                useOptions?.experimental?.generateQuerySelectorAll
+                options?.experimental?.generateQuerySelectorAll
                   ? `
-              ${useOptions?.experimental?.generateQuerySelectorAll(key, code)}
+              ${options?.experimental?.generateQuerySelectorAll(key, code)}
               `
                   : `              
               this._root.querySelectorAll("[data-el='${key}']").forEach((el) => {
@@ -1484,14 +1488,14 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
       }
 
       ${
-        useOptions?.experimental?.customElementsDefine
-          ? useOptions?.experimental?.customElementsDefine(kebabName, component, useOptions)
+        options?.experimental?.customElementsDefine
+          ? options?.experimental?.customElementsDefine(kebabName, component, options)
           : `customElements.define('${kebabName}', ${ComponentName});`
       }
     `;
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -1510,7 +1514,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
 
     return str;

@@ -1,4 +1,5 @@
 import { format } from 'prettier/standalone';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { dashCase } from '../../helpers/dash-case';
 import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
@@ -7,6 +8,7 @@ import { getProps } from '../../helpers/get-props';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { indent } from '../../helpers/indent';
 import { mapRefs } from '../../helpers/map-refs';
+import { initializeOptions } from '../../helpers/merge-options';
 import { getForArguments } from '../../helpers/nodes/for';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
@@ -18,7 +20,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { selfClosingTags } from '../../parsers/jsx';
 import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { collectClassString } from './collect-class-string';
@@ -79,7 +80,7 @@ const blockToStencil = (json: MitosisNode, options: ToStencilOptions = {}): stri
       str += ` ${key}={${processBinding(code as string)}} `;
     }
   }
-  if (selfClosingTags.has(json.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
   str += '>';
@@ -97,11 +98,12 @@ function processBinding(code: string) {
 }
 
 export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
-  (options = {}) =>
+  (_options = {}) =>
   ({ component }) => {
+    const options = initializeOptions({ target: 'stencil', component, defaults: _options });
     let json = fastClone(component);
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     const props = getProps(component);
     let css = collectCss(json);
@@ -109,7 +111,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     mapRefs(component, (refName) => `this.${refName}`);
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     stripMetaProperties(json);
 
@@ -206,7 +208,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
   `;
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       str = format(str, {
@@ -215,7 +217,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
       });
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };

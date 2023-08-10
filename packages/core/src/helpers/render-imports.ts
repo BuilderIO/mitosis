@@ -1,5 +1,10 @@
 import { Target } from '../types/config';
 import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
+import {
+  COMPONENT_IMPORT_EXTENSIONS,
+  getComponentFileExtensionForTarget,
+  INPUT_EXTENSION_REGEX,
+} from './component-file-extensions';
 
 const DEFAULT_IMPORT = 'default';
 const STAR_IMPORT = '*';
@@ -23,46 +28,41 @@ const getDefaultImport = ({ theImport }: { theImport: MitosisImport }): string |
   return null;
 };
 
-const getFileExtensionForTarget = (target: Target): string => {
-  switch (target) {
-    case 'svelte':
-      return '.svelte';
-    case 'solid':
-      return '.jsx';
-    case 'vue':
-    case 'vue2':
-    case 'vue3':
-      return '.vue';
-    case 'marko':
-      return '.marko';
-    case 'lit':
-      return '.js';
-    case 'angular':
-      return '';
-    // these `.lite` extensions are handled in the `transpile` step of the CLI.
-    // TO-DO: consolidate file-extension renaming to this file, and remove `.lite` replaces from the CLI `transpile`. (outdated) ?
-    // Bit team wanted to make sure React and Angular behaved the same in regards to imports - ALU 10/05/22
-    case 'qwik':
-    default:
-      return '.lite';
-  }
-};
+const CONTEXT_IMPORTS = ['context.lite', 'context.lite.ts', 'context.lite.js'];
+const checkIsContextImport = (theImport: MitosisImport) =>
+  CONTEXT_IMPORTS.some((contextPath) => theImport.path.endsWith(contextPath));
 
 export const checkIsComponentImport = (theImport: MitosisImport) =>
-  theImport.path.endsWith('.lite') && !theImport.path.endsWith('.context.lite');
+  !checkIsContextImport(theImport) &&
+  COMPONENT_IMPORT_EXTENSIONS.some((contextPath) => theImport.path.endsWith(contextPath));
 
-const transformImportPath = (
-  theImport: MitosisImport,
-  target: Target,
-  preserveFileExtensions: boolean,
-) => {
+export const transformImportPath = ({
+  theImport,
+  target,
+  preserveFileExtensions,
+}: {
+  theImport: MitosisImport;
+  target: Target;
+  preserveFileExtensions: boolean;
+}) => {
   // We need to drop the `.lite` from context files, because the context generator does so as well.
-  if (theImport.path.endsWith('.context.lite')) {
-    return theImport.path.replace('.lite', '.js');
+  if (checkIsContextImport(theImport)) {
+    let path = theImport.path;
+    CONTEXT_IMPORTS.forEach((contextPath) => {
+      if (path.endsWith(contextPath)) {
+        path = path.replace(contextPath, 'context.js');
+      }
+    });
+    return path;
   }
 
-  if (checkIsComponentImport(theImport) && !preserveFileExtensions) {
-    return theImport.path.replace('.lite', getFileExtensionForTarget(target));
+  if (preserveFileExtensions) return theImport.path;
+
+  if (checkIsComponentImport(theImport)) {
+    return theImport.path.replace(
+      INPUT_EXTENSION_REGEX,
+      getComponentFileExtensionForTarget({ target, type: 'import' }),
+    );
   }
 
   return theImport.path;
@@ -123,7 +123,7 @@ export const renderImport = ({
 }): string => {
   const importedValues = getImportedValues({ theImport });
 
-  const path = transformImportPath(theImport, target, preserveFileExtensions);
+  const path = transformImportPath({ theImport, target, preserveFileExtensions });
   const importValue = getImportValue(importedValues);
 
   const isComponentImport = checkIsComponentImport(theImport);

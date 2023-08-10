@@ -13,7 +13,7 @@ import { getRefs } from '../../helpers/get-refs';
 import { stringifyContextValue } from '../../helpers/get-state-object-string';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
-import { mergeOptions } from '../../helpers/merge-options';
+import { initializeOptions } from '../../helpers/merge-options';
 import { checkIsDefined } from '../../helpers/nullable';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { renderPreComponent } from '../../helpers/render-imports';
@@ -70,16 +70,19 @@ const getRefsString = (json: MitosisComponent, options: ToSolidOptions) =>
 
 function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) {
   for (const key in json.context.set) {
-    const { name, value } = json.context.set[key];
+    const { name, value, ref } = json.context.set[key];
+
+    const bindingValue = value
+      ? createSingleBinding({ code: stringifyContextValue(value) })
+      : ref
+      ? createSingleBinding({ code: ref })
+      : undefined;
+
     json.children = [
       createMitosisNode({
         name: `${name}.Provider`,
         children: json.children,
-        ...(value && {
-          bindings: {
-            value: createSingleBinding({ code: stringifyContextValue(value) }),
-          },
-        }),
+        ...(bindingValue && { bindings: { value: bindingValue } }),
       }),
     ];
   }
@@ -96,13 +99,20 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
   ({ component }) => {
     let json = fastClone(component);
 
-    const options = mergeOptions(DEFAULT_OPTIONS, passedOptions);
+    const options = initializeOptions({
+      target: 'solid',
+      component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: passedOptions,
+    });
     options.plugins = [
       ...(options.plugins || []),
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'state':
+          case 'context-set':
           case 'dynamic-jsx-elements':
+          case 'types':
             return (c) => c;
           case 'bindings':
           case 'hooks':
@@ -118,20 +128,23 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     ];
 
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
     addProviderComponents(json, options);
     const componentHasStyles = hasCss(json);
+    const hasCustomStyles = !!json.style?.length;
+    const shouldInjectCustomStyles = hasCustomStyles && options.stylesType === 'styled-components';
     const addWrapper =
       json.children.filter(filterEmptyTextNodes).length !== 1 ||
       options.stylesType === 'style-tag' ||
+      shouldInjectCustomStyles ||
       isRootTextNode(json);
 
     // we need to run this before we run the code processor plugin, so the dynamic component variables are transformed
     const foundDynamicComponents = processDynamicComponents(json, options);
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     stripMetaProperties(json);
     const css = options.stylesType === 'style-tag' && collectCss(json, { prefix: hash(json) });
@@ -207,6 +220,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
               `<style jsx>{\`${css}\`}</style>`
             : ''
         }
+        ${shouldInjectCustomStyles ? `<style>{\`${json.style}\`}</style>` : ''}
         ${addWrapper ? '</>' : ''})
     }
 
@@ -214,7 +228,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
   `;
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       str = format(str, {
@@ -223,7 +237,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
       });
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };

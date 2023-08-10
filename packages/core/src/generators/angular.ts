@@ -1,7 +1,7 @@
 import { flow, pipe } from 'fp-ts/lib/function';
 import { isString, kebabCase, uniq } from 'lodash';
 import { format } from 'prettier/standalone';
-import { VALID_HTML_TAGS } from '../constants/html_tags';
+import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../constants/html_tags';
 import { dedent } from '../helpers/dedent';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponentsUsed } from '../helpers/get-components-used';
@@ -31,12 +31,11 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { selfClosingTags } from '../parsers/jsx';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 import { MitosisComponent } from '..';
-import { mergeOptions } from '../helpers/merge-options';
+import { initializeOptions } from '../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
 
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
@@ -218,7 +217,7 @@ export const blockToAngular = (
         str += `[${key}]="${code}" `;
       }
     }
-    if (selfClosingTags.has(json.name)) {
+    if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
       return str + ' />';
     }
     str += '>';
@@ -261,14 +260,14 @@ const processAngularCode =
       (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
     );
 
+const DEFAULT_OPTIONS: ToAngularOptions = {
+  preserveImports: false,
+  preserveFileExtensions: false,
+};
+
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
   ({ component: _component }) => {
-    const DEFAULT_OPTIONS = {
-      preserveImports: false,
-      preserveFileExtensions: false,
-    };
-
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(_component);
 
@@ -277,7 +276,12 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
     const stateVars = Object.keys(json?.state || {});
 
-    const options = mergeOptions({ ...DEFAULT_OPTIONS, ...userOptions });
+    const options = initializeOptions({
+      target: 'angular',
+      component: _component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: userOptions,
+    });
     options.plugins = [
       ...(options.plugins || []),
       CODE_PROCESSOR_PLUGIN((codeType) => {
@@ -315,15 +319,17 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             };
           case 'hooks-deps':
           case 'state':
+          case 'context-set':
           case 'properties':
           case 'dynamic-jsx-elements':
+          case 'types':
             return (x) => x;
         }
       }),
     ];
 
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
 
     const [forwardProp, hasPropRef] = getPropsRef(json, true);
@@ -389,7 +395,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
 
     if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
     let css = collectCss(json);
     if (options.prettier !== false) {
@@ -573,13 +579,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       str = generateNgModule(str, json.name, componentsUsed, json, options.bootstrapMapper);
     }
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       str = tryFormat(str, 'typescript');
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
 
     return str;

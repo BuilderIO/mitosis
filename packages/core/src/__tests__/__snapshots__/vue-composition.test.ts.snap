@@ -214,7 +214,12 @@ exports[`Vue > jsx > Javascript Test > BasicAttribute 1`] = `
 exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <template v-if=\\"$slots.default\\">
+      <slot />
+
+      {{ type }}
+    </template>
+
     <my-boolean-attribute-component
       :toggle=\\"true\\"
     ></my-boolean-attribute-component>
@@ -1076,7 +1081,7 @@ onMounted(() => {
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
-          setLoad(true);
+          load.value = true;
           scrollListener.value = null;
           window.removeEventListener(\\"scroll\\", listener);
         }
@@ -1186,6 +1191,7 @@ exports[`Vue > jsx > Javascript Test > Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    @input=\\"onChange?.($event.target.value)\\"
     v-bind=\\"attributes\\"
   />
 </template>
@@ -1201,7 +1207,26 @@ const props = defineProps([
   \\"name\\",
   \\"value\\",
   \\"required\\",
+  \\"onChange\\",
 ]);
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > InputParent 1`] = `
+"<template>
+  <form-input-component
+    name=\\"kingzez\\"
+    type=\\"text\\"
+    :onChange=\\"(value) => handleChange(value)\\"
+  ></form-input-component>
+</template>
+
+<script setup>
+import FormInputComponent from \\"./input.raw\\";
+
+function handleChange(value) {
+  console.log(value);
+}
 </script>"
 `;
 
@@ -1857,7 +1882,7 @@ exports[`Vue > jsx > Javascript Test > contentState 1`] = `
 <script setup>
 import { provide } from \\"vue\\";
 
-import BuilderContext from \\"@dummy/context.vue\\";
+import BuilderContext from \\"@dummy/context.js\\";
 
 const props = defineProps([\\"content\\", \\"customComponents\\"]);
 
@@ -1993,8 +2018,12 @@ exports[`Vue > jsx > Javascript Test > multipleOnUpdate 1`] = `
 <script setup>
 import { onUpdated } from \\"vue\\";
 
-onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
-onUpdated(() => console.log(\\"Runs on every update/rerender as well\\"));
+onUpdated(() => {
+  console.log(\\"Runs on every update/rerender\\");
+});
+onUpdated(() => {
+  console.log(\\"Runs on every update/rerender as well\\");
+});
 </script>"
 `;
 
@@ -2168,7 +2197,9 @@ exports[`Vue > jsx > Javascript Test > onUpdate 1`] = `
 <script setup>
 import { onUpdated } from \\"vue\\";
 
-onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
+onUpdated(() => {
+  console.log(\\"Runs on every update/rerender\\");
+});
 </script>"
 `;
 
@@ -2262,11 +2293,11 @@ exports[`Vue > jsx > Javascript Test > referencingFunInsideHook 1`] = `
 <script setup>
 import { onUpdated } from \\"vue\\";
 
-onUpdated(() =>
+onUpdated(() => {
   foo({
     someOption: bar,
-  })
-);
+  });
+});
 
 function foo(params) {}
 function bar() {}
@@ -2345,7 +2376,7 @@ import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import BlockStyles from \\"./block-styles.vue\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context.vue\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
 import RenderComponent from \\"./render-component.vue\\";
 import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
 
@@ -2536,13 +2567,13 @@ exports[`Vue > jsx > Javascript Test > renderContentExample 1`] = `
 <script setup>
 import { onMounted, provide, watch } from \\"vue\\";
 
-import BuilderContext from \\"@dummy/context.vue\\";
+import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.vue\\";
 
 const props = defineProps([\\"content\\", \\"customComponents\\"]);
 
@@ -2726,6 +2757,39 @@ exports[`Vue > jsx > Javascript Test > styleClassAndCss 1`] = `
 </style>"
 `;
 
+exports[`Vue > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"<template>
+  <div
+    :style=\\"attributes.style\\"
+    :class=\\"_classStringToObject(attributes.className + ' div')\\"
+  ></div>
+</template>
+
+<script setup>
+const props = defineProps([\\"attributes\\"]);
+
+function _classStringToObject(str) {
+  const obj = {};
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
+  const classNames = str.trim().split(/\\\\s+/);
+  for (const name of classNames) {
+    obj[name] = true;
+  }
+  return obj;
+}
+</script>
+
+<style scoped>
+.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+</style>"
+`;
+
 exports[`Vue > jsx > Javascript Test > subComponent 1`] = `
 "<template>
   <foo></foo>
@@ -2798,14 +2862,14 @@ exports[`Vue > jsx > Javascript Test > use-style-and-css 1`] = `
 
 
 <style scoped>
-.button {
-  background: blue;
-  color: white;
-}
-
 button {
   font-size: 12px;
   outline: 1px solid black;
+}
+
+.button {
+  background: blue;
+  color: white;
 }
 </style>"
 `;
@@ -2825,6 +2889,23 @@ button {
   outline: 1px solid black;
 }
 </style>"
+`;
+
+exports[`Vue > jsx > Javascript Test > useTarget 1`] = `
+"<template>
+  <div>{{ name }}</div>
+</template>
+
+<script setup>
+import { computed, ref } from \\"vue\\";
+
+const lastName = ref(\\"bar\\");
+
+const name = computed(() => {
+  const prefix = \\"v3\\";
+  return prefix + \\"foo\\";
+});
+</script>"
 `;
 
 exports[`Vue > jsx > Remove Internal mitosis package 1`] = `
@@ -3066,7 +3147,12 @@ exports[`Vue > jsx > Typescript Test > BasicAttribute 1`] = `
 exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <template v-if=\\"$slots.default\\">
+      <slot />
+
+      {{ type }}
+    </template>
+
     <my-boolean-attribute-component
       :toggle=\\"true\\"
     ></my-boolean-attribute-component>
@@ -4013,7 +4099,7 @@ onMounted(() => {
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
-          setLoad(true);
+          load.value = true;
           scrollListener.value = null;
           window.removeEventListener(\\"scroll\\", listener);
         }
@@ -4134,6 +4220,7 @@ exports[`Vue > jsx > Typescript Test > Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    @input=\\"onChange?.($event.target.value)\\"
     v-bind=\\"attributes\\"
   />
 </template>
@@ -4149,9 +4236,28 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 const props = defineProps<FormInputProps>();
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > InputParent 1`] = `
+"<template>
+  <form-input-component
+    name=\\"kingzez\\"
+    type=\\"text\\"
+    :onChange=\\"(value) => handleChange(value)\\"
+  ></form-input-component>
+</template>
+
+<script setup lang=\\"ts\\">
+import FormInputComponent from \\"./input.raw\\";
+
+function handleChange(value: string) {
+  console.log(value);
+}
 </script>"
 `;
 
@@ -4910,7 +5016,7 @@ exports[`Vue > jsx > Typescript Test > contentState 1`] = `
 <script setup lang=\\"ts\\">
 import { provide } from \\"vue\\";
 
-import BuilderContext from \\"@dummy/context.vue\\";
+import BuilderContext from \\"@dummy/context.js\\";
 
 const props = defineProps([\\"content\\", \\"customComponents\\"]);
 
@@ -5075,8 +5181,12 @@ exports[`Vue > jsx > Typescript Test > multipleOnUpdate 1`] = `
 <script setup lang=\\"ts\\">
 import { onUpdated } from \\"vue\\";
 
-onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
-onUpdated(() => console.log(\\"Runs on every update/rerender as well\\"));
+onUpdated(() => {
+  console.log(\\"Runs on every update/rerender\\");
+});
+onUpdated(() => {
+  console.log(\\"Runs on every update/rerender as well\\");
+});
 </script>"
 `;
 
@@ -5259,7 +5369,9 @@ exports[`Vue > jsx > Typescript Test > onUpdate 1`] = `
 <script setup lang=\\"ts\\">
 import { onUpdated } from \\"vue\\";
 
-onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
+onUpdated(() => {
+  console.log(\\"Runs on every update/rerender\\");
+});
 </script>"
 `;
 
@@ -5395,11 +5507,11 @@ exports[`Vue > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 <script setup lang=\\"ts\\">
 import { onUpdated } from \\"vue\\";
 
-onUpdated(() =>
+onUpdated(() => {
   foo({
     someOption: bar,
-  })
-);
+  });
+});
 
 function foo(params) {}
 function bar() {}
@@ -5484,7 +5596,7 @@ import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
 import BlockStyles from \\"./block-styles.vue\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context.vue\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
 import type { RenderComponentProps } from \\"./render-component.vue\\";
 import RenderComponent from \\"./render-component.vue\\";
 import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
@@ -5682,13 +5794,13 @@ exports[`Vue > jsx > Typescript Test > renderContentExample 1`] = `
 <script setup lang=\\"ts\\">
 import { onMounted, provide, watch } from \\"vue\\";
 
-import BuilderContext from \\"@dummy/context.vue\\";
+import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.vue\\";
 
 type Props = {
   customComponents: string[];
@@ -5900,6 +6012,39 @@ exports[`Vue > jsx > Typescript Test > styleClassAndCss 1`] = `
 </style>"
 `;
 
+exports[`Vue > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"<template>
+  <div
+    :style=\\"attributes.style\\"
+    :class=\\"_classStringToObject(attributes.className + ' div')\\"
+  ></div>
+</template>
+
+<script setup lang=\\"ts\\">
+const props = defineProps([\\"attributes\\"]);
+
+function _classStringToObject(str: string) {
+  const obj: Record<string, boolean> = {};
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
+  const classNames = str.trim().split(/\\\\s+/);
+  for (const name of classNames) {
+    obj[name] = true;
+  }
+  return obj;
+}
+</script>
+
+<style scoped>
+.div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+</style>"
+`;
+
 exports[`Vue > jsx > Typescript Test > subComponent 1`] = `
 "<template>
   <foo></foo>
@@ -5980,14 +6125,14 @@ exports[`Vue > jsx > Typescript Test > use-style-and-css 1`] = `
 
 
 <style scoped>
-.button {
-  background: blue;
-  color: white;
-}
-
 button {
   font-size: 12px;
   outline: 1px solid black;
+}
+
+.button {
+  background: blue;
+  color: white;
 }
 </style>"
 `;
@@ -6007,6 +6152,23 @@ button {
   outline: 1px solid black;
 }
 </style>"
+`;
+
+exports[`Vue > jsx > Typescript Test > useTarget 1`] = `
+"<template>
+  <div>{{ name }}</div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { computed, ref } from \\"vue\\";
+
+const lastName = ref(\\"bar\\");
+
+const name = computed(() => {
+  const prefix = \\"v3\\";
+  return prefix + \\"foo\\";
+});
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > basic 1`] = `
@@ -6232,7 +6394,9 @@ onUnmounted(() => {
   console.log(\\"onDestroy\\");
 });
 
-onUpdated(() => console.log(\\"onAfterUpdate\\"));
+onUpdated(() => {
+  console.log(\\"onAfterUpdate\\");
+});
 </script>"
 `;
 
@@ -6552,7 +6716,9 @@ onUnmounted(() => {
   console.log(\\"onDestroy\\");
 });
 
-onUpdated(() => console.log(\\"onAfterUpdate\\"));
+onUpdated(() => {
+  console.log(\\"onAfterUpdate\\");
+});
 </script>"
 `;
 

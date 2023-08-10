@@ -7,7 +7,13 @@ import { getStateObjectStringFromComponent } from '../../helpers/get-state-objec
 import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
 import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
-import { encodeQuotes, getContextKey, getContextValue, getOnUpdateHookName } from './helpers';
+import {
+  encodeQuotes,
+  getContextKey,
+  getContextValue,
+  getOnUpdateHookName,
+  mapMitosisComponentToKebabCase,
+} from './helpers';
 import { ToVueOptions } from './types';
 
 const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) => {
@@ -15,7 +21,7 @@ const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) 
     ${Object.values(json.context.set)
       .map((setVal) => {
         const key = getContextKey(setVal);
-        return `[${key}]: ${getContextValue({ options, json, thisPrefix: '_this' })(setVal)}`;
+        return `[${key}]: ${getContextValue(setVal)}`;
       })
       .join(',')}
   }`;
@@ -42,6 +48,8 @@ const generateComponentImport =
   (componentName: string): string => {
     if (options.vueVersion >= 3 && options.asyncComponentImports) {
       return `'${componentName}': defineAsyncComponent(${componentName})`;
+    } else if (options.vueVersion === 2) {
+      return `'${mapMitosisComponentToKebabCase(componentName)}': ${componentName}`;
     } else {
       return `'${componentName}': ${componentName}`;
     }

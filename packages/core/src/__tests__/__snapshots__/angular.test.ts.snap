@@ -630,9 +630,11 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   selector: \\"my-boolean-attribute, MyBooleanAttribute\\",
   template: \`
     <div>
-      <ng-content></ng-content>
+      <ng-container *ngIf=\\"children\\">
+        <ng-content></ng-content>
 
-      {{type}}
+        {{type}}
+      </ng-container>
 
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
@@ -671,9 +673,11 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   selector: \\"my-boolean-attribute, MyBooleanAttribute\\",
   template: \`
     <div>
-      <ng-content></ng-content>
+      <ng-container *ngIf=\\"children\\">
+        <ng-content></ng-content>
 
-      {{type}}
+        {{type}}
+      </ng-container>
 
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
@@ -2540,7 +2544,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -2647,7 +2651,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -2819,6 +2823,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
+      (input)=\\"onChange?.($event.target.value)\\"
     />
   \`,
 })
@@ -2830,6 +2835,7 @@ export class FormInputComponent {
   @Input() name: any;
   @Input() value: any;
   @Input() required: any;
+  @Input() onChange: any;
 }
 
 @NgModule({
@@ -2858,6 +2864,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
+      (input)=\\"onChange?.($event.target.value)\\"
     />
   \`,
   standalone: true,
@@ -2871,6 +2878,66 @@ export class FormInputComponent {
   @Input() name: any;
   @Input() value: any;
   @Input() required: any;
+  @Input() onChange: any;
+}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > InputParent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+@Component({
+  selector: \\"stepper, Stepper\\",
+  template: \`
+    <form-input-component
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      (change)=\\"handleChange($event)\\"
+    ></form-input-component>
+  \`,
+})
+export class Stepper {
+  handleChange(value) {
+    console.log(value);
+  }
+}
+
+@NgModule({
+  declarations: [Stepper],
+  imports: [CommonModule, FormInputComponentModule],
+  exports: [Stepper],
+})
+export class StepperModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > InputParent 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+@Component({
+  selector: \\"stepper, Stepper\\",
+  template: \`
+    <form-input-component
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      (change)=\\"handleChange($event)\\"
+    ></form-input-component>
+  \`,
+  standalone: true,
+  imports: [CommonModule, FormInputComponent],
+})
+export class Stepper {
+  handleChange(value) {
+    console.log(value);
+  }
 }
 "
 `;
@@ -4598,7 +4665,7 @@ exports[`Angular > jsx > Javascript Test > contentState 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import BuilderContext from \\"@dummy/context\\";
+import BuilderContext from \\"@dummy/context.js\\";
 
 @Component({
   selector: \\"render-content, RenderContent\\",
@@ -6258,11 +6325,11 @@ import { getBlockProperties } from \\"../../functions/get-block-properties.js\\"
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-import BlockStyles from \\"./block-styles\\";
+import BlockStyles from \\"./block-styles.ts\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context\\";
-import RenderComponent from \\"./render-component\\";
-import RenderRepeatedBlock from \\"./render-repeated-block\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
+import RenderComponent from \\"./render-component.ts\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.ts\\";
 
 @Component({
   selector: \\"render-block, RenderBlock\\",
@@ -6546,13 +6613,13 @@ exports[`Angular > jsx > Javascript Test > renderContentExample 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import BuilderContext from \\"@dummy/context\\";
+import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.ts\\";
 
 @Component({
   selector: \\"render-content, RenderContent\\",
@@ -7113,6 +7180,67 @@ export class MyComponent {}
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"style-prop-class-and-css, StylePropClassAndCss\\",
+  template: \`
+    <div [ngStyle]=\\"attributes.style\\" [class]=\\"attributes.class + ' div'\\"></div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    \`,
+  ],
+})
+export class StylePropClassAndCss {
+  @Input() attributes: any;
+}
+
+@NgModule({
+  declarations: [StylePropClassAndCss],
+  imports: [CommonModule],
+  exports: [StylePropClassAndCss],
+})
+export class StylePropClassAndCssModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > stylePropClassAndCss 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"style-prop-class-and-css, StylePropClassAndCss\\",
+  template: \`
+    <div [ngStyle]=\\"attributes.style\\" [class]=\\"attributes.class + ' div'\\"></div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export class StylePropClassAndCss {
+  @Input() attributes: any;
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > subComponent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7140,7 +7268,7 @@ exports[`Angular > jsx > Javascript Test > subComponent 2`] = `
 "import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import Foo from \\"./foo-sub-component\\";
+import Foo from \\"./foo-sub-component.ts\\";
 
 @Component({
   selector: \\"sub-component, SubComponent\\",
@@ -7354,14 +7482,14 @@ import { Component } from \\"@angular/core\\";
   \`,
   styles: [
     \`
-      .button {
-        background: blue;
-        color: white;
-      }
-
       button {
         font-size: 12px;
         outline: 1px solid black;
+      }
+
+      .button {
+        background: blue;
+        color: white;
       }
     \`,
   ],
@@ -7388,14 +7516,14 @@ import { CommonModule } from \\"@angular/common\\";
   \`,
   styles: [
     \`
-      .button {
-        background: blue;
-        color: white;
-      }
-
       button {
         font-size: 12px;
         outline: 1px solid black;
+      }
+
+      .button {
+        background: blue;
+        color: white;
       }
     \`,
   ],
@@ -7462,6 +7590,61 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export class MyComponent {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > useTarget 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"use-target-component, UseTargetComponent\\",
+  template: \`
+    <div>{{name}}</div>
+  \`,
+})
+export class UseTargetComponent {
+  get name() {
+    const prefix = true;
+    return prefix + \\"foo\\";
+  }
+  lastName = \\"bar\\";
+
+  ngOnInit() {}
+}
+
+@NgModule({
+  declarations: [UseTargetComponent],
+  imports: [CommonModule],
+  exports: [UseTargetComponent],
+})
+export class UseTargetComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > useTarget 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"use-target-component, UseTargetComponent\\",
+  template: \`
+    <div>{{name}}</div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class UseTargetComponent {
+  get name() {
+    const prefix = true;
+    return prefix + \\"foo\\";
+  }
+  lastName = \\"bar\\";
+
+  ngOnInit() {}
+}
 "
 `;
 
@@ -8169,9 +8352,11 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   selector: \\"my-boolean-attribute, MyBooleanAttribute\\",
   template: \`
     <div>
-      <ng-content></ng-content>
+      <ng-container *ngIf=\\"children\\">
+        <ng-content></ng-content>
 
-      {{type}}
+        {{type}}
+      </ng-container>
 
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
@@ -8215,9 +8400,11 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   selector: \\"my-boolean-attribute, MyBooleanAttribute\\",
   template: \`
     <div>
-      <ng-content></ng-content>
+      <ng-container *ngIf=\\"children\\">
+        <ng-content></ng-content>
 
-      {{type}}
+        {{type}}
+      </ng-container>
 
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
@@ -10277,7 +10464,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -10403,7 +10590,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -10604,6 +10791,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -10619,6 +10807,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
+      (input)=\\"onChange?.($event.target.value)\\"
     />
   \`,
 })
@@ -10630,6 +10819,7 @@ export class FormInputComponent {
   @Input() name: FormInputProps[\\"name\\"];
   @Input() value: FormInputProps[\\"value\\"];
   @Input() required: FormInputProps[\\"required\\"];
+  @Input() onChange: FormInputProps[\\"onChange\\"];
 }
 
 @NgModule({
@@ -10653,6 +10843,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -10668,6 +10859,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
+      (input)=\\"onChange?.($event.target.value)\\"
     />
   \`,
   standalone: true,
@@ -10681,6 +10873,66 @@ export class FormInputComponent {
   @Input() name: FormInputProps[\\"name\\"];
   @Input() value: FormInputProps[\\"value\\"];
   @Input() required: FormInputProps[\\"required\\"];
+  @Input() onChange: FormInputProps[\\"onChange\\"];
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > InputParent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+@Component({
+  selector: \\"stepper, Stepper\\",
+  template: \`
+    <form-input-component
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      (change)=\\"handleChange($event)\\"
+    ></form-input-component>
+  \`,
+})
+export class Stepper {
+  handleChange(value: string) {
+    console.log(value);
+  }
+}
+
+@NgModule({
+  declarations: [Stepper],
+  imports: [CommonModule, FormInputComponentModule],
+  exports: [Stepper],
+})
+export class StepperModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > InputParent 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import FormInputComponent from \\"./input.raw\\";
+
+@Component({
+  selector: \\"stepper, Stepper\\",
+  template: \`
+    <form-input-component
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      (change)=\\"handleChange($event)\\"
+    ></form-input-component>
+  \`,
+  standalone: true,
+  imports: [CommonModule, FormInputComponent],
+})
+export class Stepper {
+  handleChange(value: string) {
+    console.log(value);
+  }
 }
 "
 `;
@@ -12650,7 +12902,7 @@ exports[`Angular > jsx > Typescript Test > contentState 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import BuilderContext from \\"@dummy/context\\";
+import BuilderContext from \\"@dummy/context.js\\";
 
 @Component({
   selector: \\"render-content, RenderContent\\",
@@ -14493,12 +14745,12 @@ import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
-import BlockStyles from \\"./block-styles\\";
+import BlockStyles from \\"./block-styles.ts\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context\\";
-import type { RenderComponentProps } from \\"./render-component\\";
-import RenderComponent from \\"./render-component\\";
-import RenderRepeatedBlock from \\"./render-repeated-block\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
+import type { RenderComponentProps } from \\"./render-component.ts\\";
+import RenderComponent from \\"./render-component.ts\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.ts\\";
 import type { RepeatData } from \\"./types.js\\";
 
 @Component({
@@ -14799,13 +15051,13 @@ type Props = {
   };
 };
 
-import BuilderContext from \\"@dummy/context\\";
+import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.ts\\";
 
 @Component({
   selector: \\"render-content, RenderContent\\",
@@ -15406,6 +15658,67 @@ export class MyComponent {}
 "
 `;
 
+exports[`Angular > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"style-prop-class-and-css, StylePropClassAndCss\\",
+  template: \`
+    <div [ngStyle]=\\"attributes.style\\" [class]=\\"attributes.class + ' div'\\"></div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    \`,
+  ],
+})
+export class StylePropClassAndCss {
+  @Input() attributes: any;
+}
+
+@NgModule({
+  declarations: [StylePropClassAndCss],
+  imports: [CommonModule],
+  exports: [StylePropClassAndCss],
+})
+export class StylePropClassAndCssModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > stylePropClassAndCss 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"style-prop-class-and-css, StylePropClassAndCss\\",
+  template: \`
+    <div [ngStyle]=\\"attributes.style\\" [class]=\\"attributes.class + ' div'\\"></div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export class StylePropClassAndCss {
+  @Input() attributes: any;
+}
+"
+`;
+
 exports[`Angular > jsx > Typescript Test > subComponent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -15433,7 +15746,7 @@ exports[`Angular > jsx > Typescript Test > subComponent 2`] = `
 "import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import Foo from \\"./foo-sub-component\\";
+import Foo from \\"./foo-sub-component.ts\\";
 
 @Component({
   selector: \\"sub-component, SubComponent\\",
@@ -15574,7 +15887,7 @@ export type TypeDependencyProps = {
 };
 
 import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
+import type { Foo as Foo2 } from \\"./type-export.ts\\";
 
 @Component({
   selector: \\"type-dependency, TypeDependency\\",
@@ -15662,14 +15975,14 @@ import { Component } from \\"@angular/core\\";
   \`,
   styles: [
     \`
-      .button {
-        background: blue;
-        color: white;
-      }
-
       button {
         font-size: 12px;
         outline: 1px solid black;
+      }
+
+      .button {
+        background: blue;
+        color: white;
       }
     \`,
   ],
@@ -15696,14 +16009,14 @@ import { CommonModule } from \\"@angular/common\\";
   \`,
   styles: [
     \`
-      .button {
-        background: blue;
-        color: white;
-      }
-
       button {
         font-size: 12px;
         outline: 1px solid black;
+      }
+
+      .button {
+        background: blue;
+        color: white;
       }
     \`,
   ],
@@ -15770,6 +16083,61 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export class MyComponent {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > useTarget 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"use-target-component, UseTargetComponent\\",
+  template: \`
+    <div>{{name}}</div>
+  \`,
+})
+export class UseTargetComponent {
+  get name() {
+    const prefix = true;
+    return prefix + \\"foo\\";
+  }
+  lastName = \\"bar\\";
+
+  ngOnInit() {}
+}
+
+@NgModule({
+  declarations: [UseTargetComponent],
+  imports: [CommonModule],
+  exports: [UseTargetComponent],
+})
+export class UseTargetComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > useTarget 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"use-target-component, UseTargetComponent\\",
+  template: \`
+    <div>{{name}}</div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class UseTargetComponent {
+  get name() {
+    const prefix = true;
+    return prefix + \\"foo\\";
+  }
+  lastName = \\"bar\\";
+
+  ngOnInit() {}
+}
 "
 `;
 
@@ -16343,7 +16711,7 @@ exports[`Angular > svelte > Javascript Test > imports 2`] = `
 "import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import Button from \\"./Button\\";
+import Button from \\"./Button.ts\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -17287,7 +17655,7 @@ exports[`Angular > svelte > Typescript Test > imports 2`] = `
 "import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import Button from \\"./Button\\";
+import Button from \\"./Button.ts\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",

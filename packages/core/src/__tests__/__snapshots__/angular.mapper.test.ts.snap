@@ -357,9 +357,11 @@ import MyBooleanAttributeComponentModule from \\"./basic-boolean-attribute-compo
   selector: \\"my-boolean-attribute, MyBooleanAttribute\\",
   template: \`
     <div>
-      <ng-content></ng-content>
+      <ng-container *ngIf=\\"children\\">
+        <ng-content></ng-content>
 
-      {{type}}
+        {{type}}
+      </ng-container>
 
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
@@ -1404,7 +1406,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -1529,6 +1531,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
+      (input)=\\"onChange?.($event.target.value)\\"
     />
   \`,
 })
@@ -1540,6 +1543,7 @@ export class FormInputComponent {
   @Input() name: any;
   @Input() value: any;
   @Input() required: any;
+  @Input() onChange: any;
 }
 
 @NgModule({
@@ -1549,6 +1553,40 @@ export class FormInputComponent {
   bootstrap: [SomeOtherComponent],
 })
 export class FormInputComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > InputParent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+import FormInputComponentModule from \\"./input.raw/angular\\";
+
+@Component({
+  selector: \\"stepper, Stepper\\",
+  template: \`
+    <form-input-component
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      (change)=\\"handleChange($event)\\"
+    ></form-input-component>
+  \`,
+})
+export class Stepper {
+  handleChange(value) {
+    console.log(value);
+  }
+}
+
+@NgModule({
+  declarations: [Stepper],
+  imports: [CommonModule, FormInputComponentModule],
+  exports: [Stepper],
+  bootstrap: [SomeOtherComponent],
+})
+export class StepperModule {}
 "
 `;
 
@@ -3952,6 +3990,41 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"style-prop-class-and-css, StylePropClassAndCss\\",
+  template: \`
+    <div [ngStyle]=\\"attributes.style\\" [class]=\\"attributes.class + ' div'\\"></div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    \`,
+  ],
+})
+export class StylePropClassAndCss {
+  @Input() attributes: any;
+}
+
+@NgModule({
+  declarations: [StylePropClassAndCss],
+  imports: [CommonModule],
+  exports: [StylePropClassAndCss],
+  bootstrap: [SomeOtherComponent],
+})
+export class StylePropClassAndCssModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > subComponent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -4098,14 +4171,14 @@ import { Component } from \\"@angular/core\\";
   \`,
   styles: [
     \`
-      .button {
-        background: blue;
-        color: white;
-      }
-
       button {
         font-size: 12px;
         outline: 1px solid black;
+      }
+
+      .button {
+        background: blue;
+        color: white;
       }
     \`,
   ],
@@ -4153,6 +4226,38 @@ export class MyComponent {}
   bootstrap: [SomeOtherComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > useTarget 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"use-target-component, UseTargetComponent\\",
+  template: \`
+    <div>{{name}}</div>
+  \`,
+})
+export class UseTargetComponent {
+  get name() {
+    const prefix = true;
+    return prefix + \\"foo\\";
+  }
+  lastName = \\"bar\\";
+
+  ngOnInit() {}
+}
+
+@NgModule({
+  declarations: [UseTargetComponent],
+  imports: [CommonModule],
+  exports: [UseTargetComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class UseTargetComponentModule {}
 "
 `;
 
@@ -4557,9 +4662,11 @@ import MyBooleanAttributeComponentModule from \\"./basic-boolean-attribute-compo
   selector: \\"my-boolean-attribute, MyBooleanAttribute\\",
   template: \`
     <div>
-      <ng-content></ng-content>
+      <ng-container *ngIf=\\"children\\">
+        <ng-content></ng-content>
 
-      {{type}}
+        {{type}}
+      </ng-container>
 
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
@@ -5710,7 +5817,7 @@ export class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
+            this.load = true;
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -5847,6 +5954,7 @@ export interface FormInputProps {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -5862,6 +5970,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
+      (input)=\\"onChange?.($event.target.value)\\"
     />
   \`,
 })
@@ -5873,6 +5982,7 @@ export class FormInputComponent {
   @Input() name: FormInputProps[\\"name\\"];
   @Input() value: FormInputProps[\\"value\\"];
   @Input() required: FormInputProps[\\"required\\"];
+  @Input() onChange: FormInputProps[\\"onChange\\"];
 }
 
 @NgModule({
@@ -5882,6 +5992,40 @@ export class FormInputComponent {
   bootstrap: [SomeOtherComponent],
 })
 export class FormInputComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > InputParent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+import FormInputComponentModule from \\"./input.raw/angular\\";
+
+@Component({
+  selector: \\"stepper, Stepper\\",
+  template: \`
+    <form-input-component
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      (change)=\\"handleChange($event)\\"
+    ></form-input-component>
+  \`,
+})
+export class Stepper {
+  handleChange(value: string) {
+    console.log(value);
+  }
+}
+
+@NgModule({
+  declarations: [Stepper],
+  imports: [CommonModule, FormInputComponentModule],
+  exports: [Stepper],
+  bootstrap: [SomeOtherComponent],
+})
+export class StepperModule {}
 "
 `;
 
@@ -8529,6 +8673,41 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"style-prop-class-and-css, StylePropClassAndCss\\",
+  template: \`
+    <div [ngStyle]=\\"attributes.style\\" [class]=\\"attributes.class + ' div'\\"></div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    \`,
+  ],
+})
+export class StylePropClassAndCss {
+  @Input() attributes: any;
+}
+
+@NgModule({
+  declarations: [StylePropClassAndCss],
+  imports: [CommonModule],
+  exports: [StylePropClassAndCss],
+  bootstrap: [SomeOtherComponent],
+})
+export class StylePropClassAndCssModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > subComponent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -8683,14 +8862,14 @@ import { Component } from \\"@angular/core\\";
   \`,
   styles: [
     \`
-      .button {
-        background: blue;
-        color: white;
-      }
-
       button {
         font-size: 12px;
         outline: 1px solid black;
+      }
+
+      .button {
+        background: blue;
+        color: white;
       }
     \`,
   ],
@@ -8738,6 +8917,38 @@ export class MyComponent {}
   bootstrap: [SomeOtherComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > useTarget 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"use-target-component, UseTargetComponent\\",
+  template: \`
+    <div>{{name}}</div>
+  \`,
+})
+export class UseTargetComponent {
+  get name() {
+    const prefix = true;
+    return prefix + \\"foo\\";
+  }
+  lastName = \\"bar\\";
+
+  ngOnInit() {}
+}
+
+@NgModule({
+  declarations: [UseTargetComponent],
+  imports: [CommonModule],
+  exports: [UseTargetComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class UseTargetComponentModule {}
 "
 `;
 

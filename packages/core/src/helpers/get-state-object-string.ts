@@ -1,15 +1,18 @@
 import { MitosisComponent, StateValue } from '../types/mitosis-component';
 import { MitosisContext } from '../types/mitosis-context';
 
+type ValueMapper = (
+  code: string,
+  type: 'data' | 'function' | 'getter',
+  typeParameter: string | undefined,
+  key: string | undefined,
+) => string;
+
 interface GetStateObjectStringOptions {
   data?: boolean;
   functions?: boolean;
   getters?: boolean;
-  valueMapper?: (
-    code: string,
-    type: 'data' | 'function' | 'getter',
-    typeParameter?: string,
-  ) => string;
+  valueMapper?: ValueMapper;
   format?: 'object' | 'class' | 'variables';
   keyPrefix?: string;
 }
@@ -44,20 +47,21 @@ const convertStateMemberToString =
           code,
           'function',
           typeParameter,
+          key,
         )}`;
       }
       case 'method': {
         if (functions === false || typeof code !== 'string') {
           return undefined;
         }
-        return `${keyPrefix} ${valueMapper(code, 'function', typeParameter)}`;
+        return `${keyPrefix} ${valueMapper(code, 'function', typeParameter, key)}`;
       }
       case 'getter': {
         if (getters === false || typeof code !== 'string') {
           return undefined;
         }
 
-        return `${keyPrefix} ${valueMapper(code, 'getter', typeParameter)}`;
+        return `${keyPrefix} ${valueMapper(code, 'getter', typeParameter, key)}`;
       }
       case 'property': {
         if (data === false) {
@@ -67,6 +71,7 @@ const convertStateMemberToString =
           code,
           'data',
           typeParameter,
+          key,
         )}`;
       }
       default:

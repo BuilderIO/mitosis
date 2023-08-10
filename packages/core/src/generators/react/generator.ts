@@ -1,3 +1,4 @@
+import { types } from '@babel/core';
 import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
@@ -15,9 +16,11 @@ import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { handleMissingState } from '../../helpers/handle-missing-state';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { mapRefs } from '../../helpers/map-refs';
-import { mergeOptions } from '../../helpers/merge-options';
+import { initializeOptions } from '../../helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { processHttpRequests } from '../../helpers/process-http-requests';
 import { renderPreComponent } from '../../helpers/render-imports';
+import { replaceNodes, replaceStateIdentifier } from '../../helpers/replace-identifiers';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 import { checkHasState } from '../../helpers/state';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
@@ -102,7 +105,7 @@ function provideContext(json: MitosisComponent, options: ToReactOptions): string
       } else if (ref) {
         json.children = [
           createMitosisNode({
-            name: 'Context.Provider',
+            name: `${name}.Provider`,
             children: json.children,
             ...(ref && {
               bindings: {
@@ -141,12 +144,6 @@ type ReactExports =
   | 'useContext'
   | 'forwardRef';
 
-const DEFAULT_OPTIONS: ToReactOptions = {
-  stateType: 'useState',
-  stylesType: 'styled-jsx',
-  type: 'dom',
-};
-
 export const componentToPreact: TranspilerGenerator<Partial<ToReactOptions>> = (
   reactOptions = {},
 ) =>
@@ -159,10 +156,64 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
   (reactOptions = {}) =>
   ({ component, path }) => {
     let json = fastClone(component);
-    const options: ToReactOptions = mergeOptions(DEFAULT_OPTIONS, reactOptions);
+
+    const target = reactOptions.preact
+      ? 'preact'
+      : reactOptions.type === 'native'
+      ? 'reactNative'
+      : reactOptions.type === 'taro'
+      ? 'taro'
+      : reactOptions.rsc
+      ? 'rsc'
+      : 'react';
+
+    const stateType = reactOptions.stateType || 'useState';
+
+    const DEFAULT_OPTIONS: ToReactOptions = {
+      addUseClientDirectiveIfNeeded: true,
+      stateType,
+      stylesType: 'styled-jsx',
+      type: 'dom',
+      plugins:
+        stateType === 'variables'
+          ? [
+              CODE_PROCESSOR_PLUGIN((codeType, json) => (code, hookType) => {
+                if (codeType === 'types') return code;
+
+                code = replaceNodes({
+                  code,
+                  nodeMaps: Object.entries(json.state)
+                    .filter(([key, value]) => value?.type === 'getter')
+                    .map(([key, value]) => {
+                      const expr = types.memberExpression(
+                        types.identifier('state'),
+                        types.identifier(key),
+                      );
+                      return {
+                        from: expr,
+                        // condition: (path) => !types.isObjectMethod(path.parent),
+                        to: types.callExpression(expr, []),
+                      };
+                    }),
+                });
+
+                code = replaceStateIdentifier(null)(code);
+
+                return code;
+              }),
+            ]
+          : [],
+    };
+
+    const options = initializeOptions({
+      target,
+      component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: reactOptions,
+    });
 
     if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
 
     let str = _componentToReact(json, options);
@@ -172,7 +223,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       json.subComponents.map((item) => _componentToReact(item, options, true)).join('\n\n\n');
 
     if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
     }
     if (options.prettier !== false) {
       try {
@@ -191,7 +242,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       }
     }
     if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };
@@ -256,7 +307,8 @@ const _componentToReact = (
   const allRefs = Object.keys(json.refs);
   mapRefs(json, (refName) => `${refName}.current`);
 
-  let hasState = checkHasState(json);
+  // Always use state if we are generate Builder react code
+  const hasState = options.stateType === 'builder' || checkHasState(json);
 
   const [forwardRef, hasPropRef] = getPropsRef(json);
   const isForwardRef = !options.preact && Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
@@ -269,14 +321,9 @@ const _componentToReact = (
       ? `<${json.propsTypeRef}["${forwardRef}"]>`
       : '';
 
-  if (options.stateType === 'builder') {
-    // Always use state if we are generate Builder react code
-    hasState = true;
-  }
-
   const useStateCode = options.stateType === 'useState' ? getUseStateCode(json, options) : '';
   if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
+    json = runPostJsonPlugins({ json, plugins: options.plugins });
   }
 
   const css =
@@ -320,11 +367,17 @@ const _componentToReact = (
     reactLibImports.add('useEffect');
   }
 
+  const hasCustomStyles = !!json.style?.length;
+  const shouldInjectCustomStyles =
+    hasCustomStyles &&
+    (options.stylesType === 'styled-components' || options.stylesType === 'emotion');
+
   const wrap =
     wrapInFragment(json) ||
     isRootTextNode(json) ||
     (componentHasStyles &&
       (options.stylesType === 'styled-jsx' || options.stylesType === 'style-tag')) ||
+    shouldInjectCustomStyles ||
     isRootSpecialNode(json);
 
   const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
@@ -359,7 +412,15 @@ const _componentToReact = (
           : options.stateType === 'builder'
           ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
           : options.stateType === 'variables'
-          ? `const state = ${getStateObjectStringFromComponent(json)};`
+          ? getStateObjectStringFromComponent(json, {
+              format: 'variables',
+              keyPrefix: 'const',
+              valueMapper: (code, type, _, key) => {
+                if (type === 'getter') return `${key} = function ${code.replace('get ', '')}`;
+                if (type === 'function') return `${key} = function ${code}`;
+                return code;
+              },
+            })
           : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
         : ''
     }
@@ -421,15 +482,23 @@ const _componentToReact = (
       ${
         componentHasStyles && options.stylesType === 'styled-jsx'
           ? `<style jsx>{\`${css}\`}</style>`
-          : componentHasStyles && options.stylesType === 'style-tag'
+          : ''
+      }
+      ${
+        componentHasStyles && options.stylesType === 'style-tag'
           ? `<style>{\`${css}\`}</style>`
           : ''
       }
+      ${shouldInjectCustomStyles ? `<style>{\`${json.style}\`}</style>` : ''}
       ${wrap ? closeFrag(options) : ''}
     );
   `;
 
+  const isRsc = options.rsc && json.meta.useMetadata?.rsc?.componentType === 'server';
+  const shouldAddUseClientDirective = options.addUseClientDirectiveIfNeeded && !isRsc;
+
   const str = dedent`
+  ${shouldAddUseClientDirective ? `'use client';` : ''}
   ${getDefaultImport(json, options)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${

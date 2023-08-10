@@ -1,4 +1,5 @@
 import { identity, pipe } from 'fp-ts/lib/function';
+import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
@@ -7,7 +8,6 @@ import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
 import { Dictionary } from '../../helpers/typescript';
-import { selfClosingTags } from '../../parsers/jsx';
 import { Binding, ForNode, MitosisNode, SpreadType } from '../../types/mitosis-node';
 import {
   addBindingsToJson,
@@ -295,6 +295,10 @@ const NODE_MAPPERS: {
       `;
     }
 
+    if (slotName === 'default') {
+      return `<slot>${renderChildren()}</slot>`;
+    }
+
     return `<slot name="${stripSlotPrefix(
       slotName,
       SLOT_PREFIX,
@@ -302,9 +306,13 @@ const NODE_MAPPERS: {
   },
 };
 
+const SPECIAL_HTML_TAGS = ['style', 'script'];
+
 const stringifyBinding =
   (node: MitosisNode) =>
   ([key, value]: [string, Binding]) => {
+    const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name);
+
     if (value.type === 'spread') {
       return ''; // we handle this after
     } else if (key === 'class') {
@@ -315,7 +323,8 @@ const stringifyBinding =
       // TODO: proper babel transform to replace. Util for this
       const useValue = value?.code || '';
 
-      if (key.startsWith('on')) {
+      if (key.startsWith('on') && isValidHtmlTag) {
+        // handle html native on[event] props
         const { arguments: cusArgs = ['event'] } = value!;
         let event = key.replace('on', '').toLowerCase();
         if (event === 'change' && node.name === 'input') {
@@ -337,6 +346,10 @@ const stringifyBinding =
         const eventHandlerKey = `${SPECIAL_PROPERTIES.V_ON_AT}${event}`;
 
         return `${eventHandlerKey}="${eventHandlerValue}"`;
+      } else if (key.startsWith('on')) {
+        // handle on[custom event] props
+        const { arguments: cusArgs = ['event'] } = node.bindings[key]!;
+        return `:${key}="(${cusArgs.join(',')}) => ${encodeQuotes(useValue)}"`;
       } else if (key === 'ref') {
         return `ref="${encodeQuotes(useValue)}"`;
       } else if (BINDING_MAPPERS[key]) {
@@ -400,11 +413,10 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     return `<slot/>`;
   }
 
-  if (node.name === 'style') {
-    // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
-    // <component is="'style'">...</component>
+  if (SPECIAL_HTML_TAGS.includes(node.name)) {
+    // Vue doesn't allow style/script tags in templates, but does support them through dynamic components.
+    node.bindings.is = { code: `'${node.name}'`, type: 'single' };
     node.name = 'component';
-    node.bindings.is = { code: "'style'", type: 'single' };
   }
 
   if (node.properties._text) {
@@ -414,7 +426,11 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
   const textCode = node.bindings._text?.code;
   if (textCode) {
     if (isSlotProperty(textCode, SLOT_PREFIX)) {
-      return `<slot name="${stripSlotPrefix(textCode, SLOT_PREFIX).toLowerCase()}"/>`;
+      const slotName = stripSlotPrefix(textCode, SLOT_PREFIX).toLowerCase();
+
+      if (slotName === 'default') return `<slot/>`;
+
+      return `<slot name="${slotName}"/>`;
     }
     return `{{${textCode}}}`;
   }
@@ -423,7 +439,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   str += getBlockBindings(node);
 
-  if (selfClosingTags.has(node.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(node.name)) {
     return str + ' />';
   }
 

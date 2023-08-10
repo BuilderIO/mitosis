@@ -1,8 +1,9 @@
 import { format } from 'prettier/standalone';
 import { convertTypeScriptToJS } from '../../helpers/babel-transform';
 import { fastClone } from '../../helpers/fast-clone';
-import { mergeOptions } from '../../helpers/merge-options';
+import { initializeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
+import { transformImportPath } from '../../helpers/render-imports';
 import { replaceIdentifiers, replaceStateIdentifier } from '../../helpers/replace-identifiers';
 import { checkHasState } from '../../helpers/state';
 import { collectCss } from '../../helpers/styles/collect-css';
@@ -39,8 +40,11 @@ const PLUGINS: Plugin[] = [
   }),
   CODE_PROCESSOR_PLUGIN((codeType, json) => {
     switch (codeType) {
+      case 'types':
+        return (c) => c;
       case 'bindings':
       case 'state':
+      case 'context-set':
       case 'hooks':
       case 'hooks-deps':
       case 'properties':
@@ -87,10 +91,15 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
     // Make a copy we can safely mutate, similar to babel's toolchain
     let component = fastClone(_component);
 
-    const options = mergeOptions(DEFAULT_OPTIONS, userOptions);
+    const options = initializeOptions({
+      target: 'qwik',
+      component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: userOptions,
+    });
 
-    component = runPreJsonPlugins(component, options.plugins);
-    component = runPostJsonPlugins(component, options.plugins);
+    component = runPreJsonPlugins({ json: component, plugins: options.plugins });
+    component = runPostJsonPlugins({ json: component, plugins: options.plugins });
 
     const isTypeScript = !!options.typescript;
     const file = new File(
@@ -109,7 +118,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       emitImports(file, component);
       emitTypes(file, component);
       emitExports(file, component);
-      const metadata: Record<string, any> = component.meta.useMetadata || ({} as any);
+      const metadata = component.meta.useMetadata;
       const isLightComponent: boolean = metadata?.qwik?.component?.isLight || false;
       const mutable: string[] = metadata?.qwik?.mutable || [];
 
@@ -121,16 +130,19 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
 
       let css: string | null = null;
 
+      const emitStore = () =>
+        hasState && emitUseStore({ file, stateInit: state, isDeep: metadata?.qwik?.hasDeepStore });
+
       const componentFn = arrowFnBlock(
         ['props'],
         [
           function (this: SrcBuilder) {
+            if (metadata?.qwik?.setUseStoreFirst) emitStore();
             css = emitUseStyles(file, component);
+            emitUseComputed(file, component);
             emitUseContext(file, component);
             emitUseRef(file, component);
-            hasState &&
-              emitUseStore({ file, stateInit: state, isDeep: metadata?.qwik?.hasDeepStore });
-            emitUseComputed(file, component);
+            if (!metadata?.qwik?.setUseStoreFirst) emitStore();
             emitUseContextProvider(file, component);
             emitUseClientEffect(file, component);
             emitUseMount(file, component);
@@ -153,8 +165,16 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       emitStyles(file, css);
       DEBUG && file.exportConst('COMPONENT', JSON.stringify(component));
       let sourceFile = file.toString();
-      sourceFile = runPreCodePlugins(sourceFile, options.plugins);
-      sourceFile = runPostCodePlugins(sourceFile, options.plugins);
+      sourceFile = runPreCodePlugins({
+        json: component,
+        code: sourceFile,
+        plugins: options.plugins,
+      });
+      sourceFile = runPostCodePlugins({
+        json: component,
+        code: sourceFile,
+        plugins: options.plugins,
+      });
       return sourceFile;
     } catch (e) {
       console.error(e);
@@ -232,31 +252,36 @@ function emitJSX(file: File, component: MitosisComponent, mutable: string[]) {
 
 function emitUseContextProvider(file: File, component: MitosisComponent) {
   Object.entries(component.context.set).forEach(([_ctxKey, context]) => {
-    file.src.emit(`
-      ${file.import(file.qwikModule, 'useContextProvider').localName}(
-        ${context.name}, ${file.import(file.qwikModule, 'useStore').localName}({
-      `);
+    file.src.emit(
+      `${file.import(file.qwikModule, 'useContextProvider').localName}(${context.name}, `,
+    );
 
-    for (const [prop, propValue] of Object.entries(context.value || {})) {
-      file.src.emit(`${prop}: `);
-      switch (propValue?.type) {
-        case 'getter':
-          file.src.emit(`(()=>{
+    if (context.ref) {
+      file.src.emit(`${context.ref}`);
+    } else {
+      file.src.emit(`${file.import(file.qwikModule, 'useStore').localName}({`);
+      for (const [prop, propValue] of Object.entries(context.value || {})) {
+        file.src.emit(`${prop}: `);
+        switch (propValue?.type) {
+          case 'getter':
+            file.src.emit(`(()=>{
             ${extractGetterBody(propValue.code)}
           })()`);
-          break;
+            break;
 
-        case 'function':
-        case 'method':
-          throw new Error('Qwik: Functions are not supported in context');
+          case 'function':
+          case 'method':
+            throw new Error('Qwik: Functions are not supported in context');
 
-        case 'property':
-          file.src.emit(stableInject(propValue.code));
-          break;
+          case 'property':
+            file.src.emit(stableInject(propValue.code));
+            break;
+        }
+        file.src.emit(',');
       }
-      file.src.emit(',');
+      file.src.emit('})');
     }
-    file.src.emit('}));');
+    file.src.emit(');');
   });
 }
 
@@ -336,9 +361,14 @@ function emitImports(file: File, component: MitosisComponent) {
   // <SELF> is used for self-referencing within the file.
   file.import('<SELF>', component.name);
   component.imports?.forEach((i) => {
+    const importPath = transformImportPath({
+      target: 'qwik',
+      theImport: i,
+      preserveFileExtensions: false,
+    });
     Object.keys(i.imports).forEach((key) => {
       const keyValue = i.imports[key]!;
-      file.import(i.path.replace('.lite', '').replace('.tsx', ''), keyValue, key);
+      file.import(importPath, keyValue, key);
     });
   });
 }

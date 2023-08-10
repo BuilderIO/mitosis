@@ -16,7 +16,7 @@
     "build:core": "nx build @builder.io/mitosis",
     "build:fiddle": "nx build @builder.io/mitosis-fiddle",
     "build:eslint-plugin": "nx build @builder.io/eslint-plugin-mitosis",
-    "ci:build": "nx run-many --target build --parallel 4 --exclude \"*/e2e-alpine,*/e2e-angular,@builder.io/mitosis-fiddle,@builder.io/talk-*,@builder.io/example-apps\"",
+    "ci:build": "nx run-many --skip-nx-cache --target build --parallel 4 --exclude \"*/e2e-alpine,*/e2e-angular,@builder.io/mitosis-fiddle,@builder.io/talk-*,@builder.io/example-apps\"",
     "ci:build:core": "yarn run build:core",
     "ci:build:fiddle": "yarn run build:fiddle",
     "ci:build:eslint-plugin": "yarn run build:eslint-plugin",
@@ -26,10 +26,10 @@
     "ci:e2e": "yarn workspace @builder.io/e2e-app run e2e",
     "ci": "run-s \"ci:*\"",
     "commit": "git-cz",
-    "fix": "run-p -c 'lint:* --fix'",
-    "fmt": "yarn fmt:prettier",
+    "fmt": "run-s 'fmt:*'",
+    "fmt:eslint": "yarn lint:eslint --fix",
     "fmt:prettier": "yarn lint:prettier --write",
-    "lint": "run-p -c lint:*",
+    "lint": "run-p -c 'lint:*'",
     "lint:eslint": "eslint --cache 'packages/**/*.ts{,x}'",
     "lint:prettier": "yarn run prettier --check",
     "prerelease": "yarn build",
@@ -71,6 +71,7 @@
     "@builder.io/e2e-app": "workspace:*"
   },
   "resolutions": {
-    "@sveltejs/package@1.0.0-next.1": "patch:@sveltejs/package@npm:1.0.0-next.1#.yarn/patches/@sveltejs-package-npm-1.0.0-next.1-2fd015530b.patch"
+    "@sveltejs/package@1.0.0-next.1": "patch:@sveltejs/package@npm:1.0.0-next.1#.yarn/patches/@sveltejs-package-npm-1.0.0-next.1-2fd015530b.patch",
+    "prettier": "^2.8.7"
   }
 }

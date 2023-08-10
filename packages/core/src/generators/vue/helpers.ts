@@ -1,5 +1,5 @@
 import { types } from '@babel/core';
-import { pipe } from 'fp-ts/lib/function';
+import { flow, identity, pipe } from 'fp-ts/lib/function';
 import { pickBy } from 'lodash';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { babelTransformExpression } from '../../helpers/babel-transform';
@@ -46,6 +46,9 @@ export function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
 }
 
+export const mapMitosisComponentToKebabCase = (componentName: string) =>
+  componentName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
 // Transform <FooBar> to <foo-bar> as Vue2 needs
 export const renameMitosisComponentsToKebabCase = (str: string) =>
   str.replace(/<\/?\w+/g, (match) => {
@@ -53,7 +56,7 @@ export const renameMitosisComponentsToKebabCase = (str: string) =>
     if (VALID_HTML_TAGS.includes(tagName)) {
       return match;
     } else {
-      return match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+      return mapMitosisComponentToKebabCase(match);
     }
   });
 
@@ -153,16 +156,14 @@ function optionsApiStateAndPropsReplace(
   thisPrefix: string,
   codeType: ProcessBinding['codeType'],
 ) {
-  if (codeType === 'bindings') {
-    return isSlotProperty(name) ? replaceSlotsInString(name, (x) => `$slots.${x}`) : name;
-  }
+  const prefixToUse = codeType === 'bindings' ? '' : thisPrefix + '.';
 
   if (name === 'children' || name.startsWith('children.')) {
-    return `${thisPrefix}.$slots.default`;
+    return `${prefixToUse}$slots.default`;
   }
   return isSlotProperty(name)
-    ? replaceSlotsInString(name, (x) => `${thisPrefix}.$slots.${x}`)
-    : `${thisPrefix}.${name}`;
+    ? replaceSlotsInString(name, (x) => `${prefixToUse}$slots.${x}`)
+    : `${prefixToUse}${name}`;
 }
 
 type ProcessBinding = {
@@ -191,16 +192,17 @@ export const processBinding = ({
         switch (options.api) {
           // keep pointing to `props.${value}`
           case 'composition':
-            if (codeType === 'bindings') {
-              return isSlotProperty(name) ? replaceSlotsInString(name, (x) => `$slots.${x}`) : name;
-            }
+            const slotPrefix = codeType === 'bindings' ? '$slots' : 'useSlots()';
 
             if (name === 'children' || name.startsWith('children.')) {
-              return `useSlots().default`;
+              return `${slotPrefix}.default`;
             }
             return isSlotProperty(name)
-              ? replaceSlotsInString(name, (x) => `useSlots().${x}`)
+              ? replaceSlotsInString(name, (x) => `${slotPrefix}.${x}`)
+              : codeType === 'bindings'
+              ? name
               : `props.${name}`;
+
           case 'options':
             return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
         }
@@ -213,13 +215,13 @@ export const processBinding = ({
             return optionsApiStateAndPropsReplace(name, thisPrefix, codeType);
         }
       }),
-      // bindings does not need process refs and prefix this
-      (x) =>
-        codeType === 'bindings'
-          ? x
-          : processRefs({ input: x, component: json, options, thisPrefix }),
-      (x) => (codeType === 'bindings' ? x : prefixMethodsWithThis(x, json, options)),
-      (x) => (preserveGetter === false ? stripGetter(x) : x),
+      codeType === 'bindings'
+        ? identity
+        : flow(
+            (x) => processRefs({ input: x, component: json, options, thisPrefix }),
+            (x) => prefixMethodsWithThis(x, json, options),
+          ),
+      preserveGetter === false ? stripGetter : identity,
     );
   } catch (e) {
     console.error('could not process bindings in ', { code });
@@ -227,19 +229,11 @@ export const processBinding = ({
   }
 };
 
-export const getContextValue =
-  (args: Pick<ProcessBinding, 'options' | 'json' | 'thisPrefix'>) =>
-  ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
-    const valueStr = value
-      ? stringifyContextValue(value, {
-          valueMapper: (code) => processBinding({ code, ...args, preserveGetter: true }),
-        })
-      : ref
-      ? processBinding({ code: ref, ...args, preserveGetter: true })
-      : null;
+export const getContextValue = ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
+  const valueStr = value ? stringifyContextValue(value) : ref;
 
-    return valueStr;
-  };
+  return valueStr;
+};
 
 export const checkIfContextHasStrName = (context: ContextGetInfo | ContextSetInfo) => {
   // check if the name is wrapped in single or double quotes
