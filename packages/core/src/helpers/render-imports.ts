@@ -2,6 +2,7 @@ import { Target } from '../types/config';
 import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 import {
   COMPONENT_IMPORT_EXTENSIONS,
+  INPUT_EXTENSION_REGEX,
   getComponentFileExtensionForTarget,
 } from './component-file-extensions';
 
@@ -27,10 +28,9 @@ const getDefaultImport = ({ theImport }: { theImport: MitosisImport }): string |
   return null;
 };
 
+const CONTEXT_IMPORTS = ['context.lite', 'context.lite.ts', 'context.lite.js'];
 const checkIsContextImport = (theImport: MitosisImport) =>
-  ['context.lite', 'context.lite.ts', 'context.lite.js'].some((contextPath) =>
-    theImport.path.endsWith(contextPath),
-  );
+  CONTEXT_IMPORTS.some((contextPath) => theImport.path.endsWith(contextPath));
 
 export const checkIsComponentImport = (theImport: MitosisImport) =>
   !checkIsContextImport(theImport) &&
@@ -47,14 +47,20 @@ export const transformImportPath = ({
 }) => {
   // We need to drop the `.lite` from context files, because the context generator does so as well.
   if (checkIsContextImport(theImport)) {
-    return theImport.path.replace('.lite', '.js');
+    let path = theImport.path;
+    CONTEXT_IMPORTS.forEach((contextPath) => {
+      if (path.endsWith(contextPath)) {
+        path = path.replace(contextPath, 'js');
+      }
+    });
+    return path;
   }
 
   if (preserveFileExtensions) return theImport.path;
 
   if (checkIsComponentImport(theImport)) {
     return theImport.path.replace(
-      '.lite',
+      INPUT_EXTENSION_REGEX,
       getComponentFileExtensionForTarget({ target, type: 'import' }),
     );
   }
