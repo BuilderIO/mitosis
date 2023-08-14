@@ -313,6 +313,10 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
           }
 
+          if (json.props?.[name]?.optional) {
+            propDeclaration += `= undefined`;
+          }
+
           if (json.defaultProps && json.defaultProps.hasOwnProperty(name)) {
             propDeclaration += `=${json.defaultProps[name]?.code}`;
           }
