@@ -47,4 +47,23 @@ describe.only(findOptionalProps.name, () => {
     const result = findOptionalProps({ code, ...tsProject });
     expect(result).toMatchSnapshot();
   });
+
+  test('type extending interface', () => {
+    const code = `
+    interface Kaboom {
+      foo?: string
+    }
+    
+    type Props = Kaboom & {
+      styles: string;
+      id?: string;
+    }
+    
+    export default function InlinedStyles(props: Props) {
+      return props;
+    }
+    `;
+    const result = findOptionalProps({ code, ...tsProject });
+    expect(result).toMatchSnapshot();
+  });
 });
