@@ -108,7 +108,10 @@ export type MitosisComponent = {
     signalTypeImportName?: string;
   };
   props?: {
-    [name: string]: { propertyType: ReactivityType };
+    [name: string]: {
+      propertyType: ReactivityType;
+      optional: boolean;
+    };
   };
   refs: {
     [useRef: string]: {
