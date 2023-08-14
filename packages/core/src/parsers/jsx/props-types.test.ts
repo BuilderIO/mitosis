@@ -1,7 +1,7 @@
 import { createTypescriptProject } from '../../helpers/typescript-project';
 import { findOptionalProps } from './props-types';
 
-describe.only(findOptionalProps.name, () => {
+describe(findOptionalProps.name, () => {
   /**
    * We can piggyback on the `core` project's TS config, since we are allowed to reference `@builder.io/mitosis`
    * recursively inside of itself.
