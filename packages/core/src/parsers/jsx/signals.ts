@@ -1,22 +1,13 @@
 import { Node, Project, Symbol, ts, Type } from 'ts-morph';
 import { getContextSymbols, getPropsSymbol } from '../../helpers/typescript-project';
 
-export const findSignals = (args: {
-  project: Project;
-  signalSymbol: Symbol;
-  code?: string;
-  filePath?: string;
-}) => {
+export const findSignals = (args: { project: Project; signalSymbol: Symbol; filePath: string }) => {
   const { project, signalSymbol } = args;
 
-  const ast = args.code
-    ? args.project.createSourceFile('temp.lite.tsx', args.code)
-    : args.filePath
-    ? args.project.getSourceFileOrThrow(args.filePath)
-    : undefined;
+  const ast = args.project.getSourceFileOrThrow(args.filePath);
 
   if (ast === undefined) {
-    throw new Error('Could not find AST. Please provide either `code` or `filePath` configs.');
+    throw new Error('Could not find AST. Please provide a correct `filePath`.');
   }
 
   const reactiveValues = {

@@ -213,7 +213,6 @@ export function parseJsx(
     const optionalProps = findOptionalProps({
       project: options.tsProject.project,
       filePath: options.filePath,
-      code: jsxToUse,
     });
 
     optionalProps.forEach((prop) => {

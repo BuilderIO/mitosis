@@ -25,7 +25,9 @@ describe.only(findOptionalProps.name, () => {
       return props;
     }
     `;
-    const result = findOptionalProps({ code, ...tsProject });
+    tsProject.project.createSourceFile('src/testing.tsx', code, { overwrite: true });
+
+    const result = findOptionalProps({ filePath: 'src/testing.tsx', ...tsProject });
     expect(result).toMatchSnapshot();
   });
 
@@ -44,7 +46,9 @@ describe.only(findOptionalProps.name, () => {
       return props;
     }
     `;
-    const result = findOptionalProps({ code, ...tsProject });
+    tsProject.project.createSourceFile('src/testing.tsx', code, { overwrite: true });
+
+    const result = findOptionalProps({ filePath: 'src/testing.tsx', ...tsProject });
     expect(result).toMatchSnapshot();
   });
 
@@ -63,7 +67,9 @@ describe.only(findOptionalProps.name, () => {
       return props;
     }
     `;
-    const result = findOptionalProps({ code, ...tsProject });
+    tsProject.project.createSourceFile('src/testing.tsx', code, { overwrite: true });
+
+    const result = findOptionalProps({ filePath: 'src/testing.tsx', ...tsProject });
     expect(result).toMatchSnapshot();
   });
 });

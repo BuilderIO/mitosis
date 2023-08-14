@@ -52,8 +52,10 @@ describe('Signals type parsing', () => {
    */
   const tsProject = createTypescriptProject(__dirname + '/../../../tsconfig.json');
 
+  tsProject.project.createSourceFile('src/testing.tsx', code, { overwrite: true });
+
   test(findSignals.name, () => {
-    const result = findSignals({ code, ...tsProject });
+    const result = findSignals({ ...tsProject, filePath: 'src/testing.tsx' });
     expect(result).toMatchSnapshot();
   });
 
