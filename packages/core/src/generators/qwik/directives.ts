@@ -1,7 +1,7 @@
 import { getForArguments } from '../../helpers/nodes/for';
 import { ForNode, MitosisNode } from '../../types/mitosis-node';
 import { minify } from '../minify';
-import { iteratorProperty, SrcBuilder } from './src-generator';
+import { SrcBuilder, iteratorProperty } from './src-generator';
 
 export const DIRECTIVES: Record<
   string,
@@ -30,7 +30,11 @@ export const DIRECTIVES: Record<
         const forArgs = getForArguments(node);
         const forName = forArgs[0];
         this.emit('(', expr, '||[]).map(');
-        this.isBuilder && this.emit('(('), this.emit('function(', forArgs, '){');
+
+        this.isBuilder && this.emit('((');
+
+        this.emit('(', forArgs, ') => {');
+
         if (this.isBuilder) {
           this.emit(
             'const l={...this,',
