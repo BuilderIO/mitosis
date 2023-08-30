@@ -30,7 +30,11 @@ export const DIRECTIVES: Record<
         const forArgs = getForArguments(node);
         const forName = forArgs[0];
         this.emit('(', expr, '||[]).map(');
-        this.isBuilder && this.emit('(('), this.emit('function(', forArgs, '){');
+
+        this.isBuilder && this.emit('((');
+
+        this.emit('(', forArgs, ') => {');
+
         if (this.isBuilder) {
           this.emit(
             'const l={...this,',

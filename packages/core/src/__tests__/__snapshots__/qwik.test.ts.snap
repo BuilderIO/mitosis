@@ -381,7 +381,7 @@ export const MyComponentOnMount = (p) => {
         class=\\"cz5wnof\\"
       >
         {(state.simpleList.results || []).map(
-          function (item, $index) {
+          ((item, $index) => {
             const l = {
               ...this,
               resultsItem: item == null ? {} : item,
@@ -408,7 +408,7 @@ export const MyComponentOnMount = (p) => {
                 ></div>
               </div>
             );
-          }.bind(l)
+          }).bind(l)
         )}
       </section>
     </div>
@@ -1609,7 +1609,7 @@ exports.Component000012OnMount = (p) => {
       class: \\"cv6ku2d builder-block\\",
     },
     (state.hits || []).map(
-      function (item) {
+      ((item) => {
         const l = { ...this, hitsItem: item == null ? {} : item, item: item };
         const state = __proxyMerge__(s, l);
         return h(
@@ -1630,7 +1630,7 @@ exports.Component000012OnMount = (p) => {
             heroImageAltText: state.hitsItem.heroImageAltText,
           })
         );
-      }.bind(l)
+      }).bind(l)
     )
   );
 };
@@ -1828,7 +1828,7 @@ export const MyBasicForShowComponent = component$((props) => {
 
   return (
     <div>
-      {(state.names || []).map(function (person) {
+      {(state.names || []).map((person) => {
         return person === state.name ? (
           <>
             <input
@@ -2046,7 +2046,7 @@ export const MyBasicForComponent = component$((props) => {
 
   return (
     <div>
-      {(state.names || []).map(function (person) {
+      {(state.names || []).map((person) => {
         return (
           <Fragment>
             <input
@@ -2264,7 +2264,7 @@ export const Column = component$((props) => {
 
   return (
     <div class=\\"builder-columns div-Column\\">
-      {(props.columns || []).map(function (column, index) {
+      {(props.columns || []).map((column, index) => {
         return (
           <div class=\\"builder-column div-Column-2\\">
             {column.content}
@@ -2788,7 +2788,7 @@ export const FormComponent = component$((props) => {
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
-        ? (props.builderBlock?.children || []).map(function (block, index) {
+        ? (props.builderBlock?.children || []).map((block, index) => {
             return (
               <BuilderBlockComponent
                 key={block.id}
@@ -2948,7 +2948,7 @@ export const ImgStateComponent = component$((props) => {
 
   return (
     <div>
-      {(state.images || []).map(function (item, itemIndex) {
+      {(state.images || []).map((item, itemIndex) => {
         return (
           <Fragment>
             <img class=\\"custom-class\\" src={item} key={itemIndex} />
@@ -3089,7 +3089,7 @@ export const SectionStateComponent = component$((props) => {
   return (
     <>
       {state.max
-        ? (state.items || []).map(function (item) {
+        ? (state.items || []).map((item) => {
             return (
               <section
                 {...props.attributes}
@@ -3128,7 +3128,7 @@ export const SelectComponent = component$((props) => {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {(props.options || []).map(function (option, index) {
+      {(props.options || []).map((option, index) => {
         return (
           <option value={option.value} data-index={index}>
             {option.name || option.value}
@@ -3290,7 +3290,7 @@ export const SmileReviews = component$((props) => {
           </button>
         </>
       ) : null}
-      {(state.reviews || []).map(function (review, index) {
+      {(state.reviews || []).map((review, index) => {
         return (
           <div class=\\"review-SmileReviews\\" key={review.id}>
             <img class=\\"img-SmileReviews\\" src={review.avatar} />
@@ -3470,7 +3470,7 @@ export const MyBasicForNoTagRefComponent = component$((props) => {
   return (
     <TagNameGetter.value>
       Hello <state.tag>{state.name}</state.tag>
-      {(props.actions || []).map(function (action) {
+      {(props.actions || []).map((action) => {
         return (
           <state.TagName>
             <action.icon></action.icon>
@@ -4377,7 +4377,7 @@ export const RenderBlock = component$((props) => {
             <tag.value {...attributes.value} {...actions.value}></tag.value>
           ) : null}
           {!isEmptyHtmlElement(tag.value) && repeatItemData.value
-            ? (repeatItemData.value || []).map(function (data, index) {
+            ? (repeatItemData.value || []).map((data, index) => {
                 return (
                   <RenderRepeatedBlock
                     key={index}
@@ -4392,9 +4392,7 @@ export const RenderBlock = component$((props) => {
               <renderComponentTag.value
                 {...renderComponentProps.value}
               ></renderComponentTag.value>
-              {(childrenWithoutParentComponent.value || []).map(function (
-                child
-              ) {
+              {(childrenWithoutParentComponent.value || []).map((child) => {
                 return (
                   <RenderBlock
                     key={\\"render-block-\\" + child.id}
@@ -4403,9 +4401,7 @@ export const RenderBlock = component$((props) => {
                   ></RenderBlock>
                 );
               })}
-              {(childrenWithoutParentComponent.value || []).map(function (
-                child
-              ) {
+              {(childrenWithoutParentComponent.value || []).map((child) => {
                 return (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
@@ -4580,7 +4576,7 @@ export const NestedShow = component$((props) => {
   return (
     <>
       {props.conditionA ? (
-        (props.items || []).map(function (item, idx) {
+        (props.items || []).map((item, idx) => {
           return <div key={idx}>{item}</div>;
         })
       ) : (
@@ -4923,7 +4919,7 @@ export const MyBasicForShowComponent = component$((props: any) => {
 
   return (
     <div>
-      {(state.names || []).map(function (person) {
+      {(state.names || []).map((person) => {
         return person === state.name ? (
           <>
             <input
@@ -5155,7 +5151,7 @@ export const MyBasicForComponent = component$((props: any) => {
 
   return (
     <div>
-      {(state.names || []).map(function (person) {
+      {(state.names || []).map((person) => {
         return (
           <Fragment>
             <input
@@ -5402,7 +5398,7 @@ export const Column = component$((props: ColumnProps) => {
 
   return (
     <div class=\\"builder-columns div-Column\\">
-      {(props.columns || []).map(function (column, index) {
+      {(props.columns || []).map((column, index) => {
         return (
           <div class=\\"builder-column div-Column-2\\">
             {column.content}
@@ -5978,7 +5974,7 @@ export const FormComponent = component$((props: FormProps) => {
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
-        ? (props.builderBlock?.children || []).map(function (block, index) {
+        ? (props.builderBlock?.children || []).map((block, index) => {
             return (
               <BuilderBlockComponent
                 key={block.id}
@@ -6156,7 +6152,7 @@ export const ImgStateComponent = component$((props: any) => {
 
   return (
     <div>
-      {(state.images || []).map(function (item, itemIndex) {
+      {(state.images || []).map((item, itemIndex) => {
         return (
           <Fragment>
             <img class=\\"custom-class\\" src={item} key={itemIndex} />
@@ -6337,7 +6333,7 @@ export const SectionStateComponent = component$((props: SectionProps) => {
   return (
     <>
       {state.max
-        ? (state.items || []).map(function (item) {
+        ? (state.items || []).map((item) => {
             return (
               <section
                 {...props.attributes}
@@ -6386,7 +6382,7 @@ export const SelectComponent = component$((props: FormSelectProps) => {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {(props.options || []).map(function (option, index) {
+      {(props.options || []).map((option, index) => {
         return (
           <option value={option.value} data-index={index}>
             {option.name || option.value}
@@ -6564,7 +6560,7 @@ export const SmileReviews = component$((props: SmileReviewsProps) => {
           </button>
         </>
       ) : null}
-      {(state.reviews || []).map(function (review, index) {
+      {(state.reviews || []).map((review, index) => {
         return (
           <div class=\\"review-SmileReviews\\" key={review.id}>
             <img class=\\"img-SmileReviews\\" src={review.avatar} />
@@ -6791,7 +6787,7 @@ export const MyBasicForNoTagRefComponent = component$((props: any) => {
   return (
     <TagNameGetter.value>
       Hello <state.tag>{state.name}</state.tag>
-      {(props.actions || []).map(function (action) {
+      {(props.actions || []).map((action) => {
         return (
           <state.TagName>
             <action.icon></action.icon>
@@ -7802,7 +7798,7 @@ export const RenderBlock = component$((props: RenderBlockProps) => {
             <tag.value {...attributes.value} {...actions.value}></tag.value>
           ) : null}
           {!isEmptyHtmlElement(tag.value) && repeatItemData.value
-            ? (repeatItemData.value || []).map(function (data, index) {
+            ? (repeatItemData.value || []).map((data, index) => {
                 return (
                   <RenderRepeatedBlock
                     key={index}
@@ -7817,9 +7813,7 @@ export const RenderBlock = component$((props: RenderBlockProps) => {
               <renderComponentTag.value
                 {...renderComponentProps.value}
               ></renderComponentTag.value>
-              {(childrenWithoutParentComponent.value || []).map(function (
-                child
-              ) {
+              {(childrenWithoutParentComponent.value || []).map((child) => {
                 return (
                   <RenderBlock
                     key={\\"render-block-\\" + child.id}
@@ -7828,9 +7822,7 @@ export const RenderBlock = component$((props: RenderBlockProps) => {
                   ></RenderBlock>
                 );
               })}
-              {(childrenWithoutParentComponent.value || []).map(function (
-                child
-              ) {
+              {(childrenWithoutParentComponent.value || []).map((child) => {
                 return (
                   <BlockStyles
                     key={\\"block-style-\\" + child.id}
@@ -8025,7 +8017,7 @@ export const NestedShow = component$((props: Props) => {
   return (
     <>
       {props.conditionA ? (
-        (props.items || []).map(function (item, idx) {
+        (props.items || []).map((item, idx) => {
           return <div key={idx}>{item}</div>;
         })
       ) : (
@@ -8962,7 +8954,7 @@ export const MyComponent = component$((props) => {
 
   return (
     <ul>
-      {(state.numbers || []).map(function (num) {
+      {(state.numbers || []).map((num) => {
         return <li>{num}</li>;
       })}
     </ul>
@@ -9365,7 +9357,7 @@ export const MyComponent = component$((props: any) => {
 
   return (
     <ul>
-      {(state.numbers || []).map(function (num) {
+      {(state.numbers || []).map((num) => {
         return <li>{num}</li>;
       })}
     </ul>
@@ -10168,7 +10160,7 @@ export const TodosOnMount = (p) => {
       ) : null}
       <ul class=\\"todo-list\\">
         {(todosState.todos || []).map(
-          function (todo) {
+          ((todo) => {
             const l = {
               ...this,
               todosItem: todo == null ? {} : todo,
@@ -10176,7 +10168,7 @@ export const TodosOnMount = (p) => {
             };
             const state = __proxyMerge__(s, l);
             return <Todo todo={todo}></Todo>;
-          }.bind(l)
+          }).bind(l)
         )}
       </ul>
     </section>
