@@ -12,8 +12,8 @@ export const removeMitosisImport = (code: string): string =>
 
 export const getPropsSymbol = (ast: SourceFile) => {
   let propsSymbol: Symbol | undefined = undefined;
-  ast.forEachChild((node) => {
-    if (propsSymbol !== undefined) return;
+  return ast.forEachChild((node) => {
+    if (propsSymbol !== undefined) return undefined;
 
     if (Node.isArrowFunction(node) || Node.isFunctionDeclaration(node)) {
       if (
@@ -21,11 +21,11 @@ export const getPropsSymbol = (ast: SourceFile) => {
         node.hasModifier(SyntaxKind.DefaultKeyword)
       ) {
         propsSymbol = node.getParameters()[0]?.getSymbol();
+        return propsSymbol;
       }
     }
+    return undefined;
   });
-
-  return propsSymbol as Symbol | undefined;
 };
 
 export const getContextSymbols = (ast: SourceFile) => {
