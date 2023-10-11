@@ -1,10 +1,8 @@
 <p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F928fd46bd9d84a3fbc5b31fd5b93a7df"></p>
 
 <p align="center">
-  Write components once, compile to every framework:
+  Write components once, compile to every framework
 </p>
-
-<p align="center"><img width="500" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Feceb6573940b4af0a2b6d96719be45fc" /></p>
 
 <p align="center">
   <p align="center">
@@ -20,7 +18,7 @@
   <a href="https://www.npmjs.com/package/@builder.io/mitosis" rel="nofollow"><img src="https://img.shields.io/npm/v/@builder.io/mitosis.svg?sanitize=true"></a>
 </p>
 
-_PS: We are actively looking for folks interested in becoming contributors to Mitosis. Given its large surface area, there is a ton of room for any engineer to make a large and sustained impact on the project. We invest a ton of time in helping newcomers get onboarded, and teach them how to make changes to the codebase (see the following examples: [#847](https://github.com/BuilderIO/mitosis/issues/847#issuecomment-1307439504), [#372](https://github.com/BuilderIO/mitosis/issues/372#issuecomment-1133471614), [#734](https://github.com/BuilderIO/mitosis/issues/734#issuecomment-1255453702)). If interested, look at our list of [good first issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or reach out on our [Discord](https://discord.gg/SNusEyNGsx)_
+_PS: We are actively looking for folks interested in becoming contributors to Mitosis. If interested, look at our list of [good first issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or reach out on our [Discord](https://discord.gg/SNusEyNGsx)_
 
 
 ## Table of contents
