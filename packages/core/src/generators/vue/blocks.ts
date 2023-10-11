@@ -327,9 +327,6 @@ const stringifyBinding =
         // handle html native on[event] props
         const { arguments: cusArgs = ['event'] } = value!;
         let event = key.replace('on', '').toLowerCase();
-        if (event === 'change' && node.name === 'input') {
-          event = 'input';
-        }
         const isAssignmentExpression = useValue.includes('=');
 
         const eventHandlerValue = pipe(
