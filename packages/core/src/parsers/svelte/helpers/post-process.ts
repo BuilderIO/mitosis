@@ -9,50 +9,35 @@ import { processBindings } from './bindings';
 
 type SveltosisStateValue = StateValue & { arguments?: string[]; type: string };
 
-export function preventNameCollissions(
-  json: SveltosisComponent,
-  item: SveltosisStateValue,
-  prepend = '',
-  append = '_',
-) {
-  let output = item.code;
-  let argumentsOutput: string[] = [];
-
+const getArgs = (code: string) => {
   try {
-    let parsed = parser.parse(item.code);
+    let parsed = parser.parse(code);
     let body = parsed.program.body[0];
     if (types.isFunctionDeclaration(body)) {
-      argumentsOutput = body.params.map((p) => generate(p).code);
+      return body.params.map((p) => generate(p).code);
     }
   } catch (e) {}
 
-  const keys = [...Object.keys(json.props), ...Object.keys(json.state), ...Object.keys(json.refs)];
+  return [];
+};
 
-  for (const key of keys) {
-    const regex = () => new RegExp(`(?<!=(?:\\s))${key}\\b`, 'g');
-    let isInArguments = false;
+export function preventNameCollissions(json: SveltosisComponent, item: SveltosisStateValue) {
+  let output = item.code;
+  const argumentsOutput = getArgs(output);
 
-    argumentsOutput.forEach((argument: string, index: number) => {
-      if (regex().test(argument)) {
-        isInArguments = true;
-        argumentsOutput.splice(index, 1, argument.replace(regex(), `${prepend}${key}${append}`));
-      }
-    });
-
-    const outputRegex = () => new RegExp(`\\b${key}\\b`, 'g');
-
-    const isInOutput = outputRegex().test(output);
-
-    if (isInArguments && isInOutput) {
-      output = output.replace(outputRegex(), `${prepend}${key}${append}`);
-    }
-  }
+  output = replaceNodes({
+    code: output,
+    nodeMaps: argumentsOutput.map((arg) => ({
+      from: types.identifier(arg),
+      to: types.identifier(`${arg}_`),
+    })),
+  });
 
   return argumentsOutput?.length
     ? {
         ...item,
         code: output,
-        arguments: argumentsOutput,
+        arguments: getArgs(output),
       }
     : { ...item, code: output };
 }
