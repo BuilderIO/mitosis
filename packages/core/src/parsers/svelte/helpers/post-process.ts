@@ -1,7 +1,7 @@
 import generate from '@babel/generator';
 import * as parser from '@babel/parser';
 import * as types from '@babel/types';
-
+import { replaceIdentifiers, replaceNodes } from '../../../helpers/replace-identifiers';
 import type { extendedHook, StateValue } from '../../../types/mitosis-component';
 import type { MitosisNode } from '../../../types/mitosis-node';
 import type { SveltosisComponent } from '../types';
@@ -57,29 +57,26 @@ export function preventNameCollissions(
     : { ...item, code: output };
 }
 
-function prependProperties(json: SveltosisComponent, input: string) {
-  let output = input;
-
-  const propertyKeys = Object.keys(json.props);
-
-  for (const property of propertyKeys) {
-    const regex = new RegExp(`(?<!(\\.|'|"|\`))\\b(props\\.)?${property}\\b`, 'g');
-    if (regex.test(output)) {
-      output = output.replace(regex, `props.${property}`);
-    }
-  }
-  return output;
+function prependProperties(json: SveltosisComponent, code: string) {
+  return replaceNodes({
+    code,
+    nodeMaps: Object.keys(json.props).map((property) => ({
+      from: types.identifier(property),
+      to: types.memberExpression(types.identifier('props'), types.identifier(property)),
+    })),
+  });
 }
 
 function prependState(json: SveltosisComponent, input: string) {
   let output = input;
-  const stateKeys = Object.keys(json.state);
-  for (const state of stateKeys) {
-    const regex = new RegExp(`(?<!(\\.|'|"|\`|function |get ))\\b(state\\.)?${state}\\b`, 'g');
-    if (regex.test(output)) {
-      output = output.replace(regex, `state.${state}`);
-    }
+  for (const stateKey of Object.keys(json.state)) {
+    output = replaceIdentifiers({
+      code: output,
+      from: stateKey,
+      to: `state.${stateKey}`,
+    });
   }
+
   return output;
 }
 
