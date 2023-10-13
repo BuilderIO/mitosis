@@ -4,4 +4,4 @@ export type OmitObj<T, U> = T extends U ? Omit<T, keyof U> : never;
 
 export type Dictionary<T> = { [key: string]: T };
 
-export const objectHasKey = <T>(object: T, key: PropertyKey): key is keyof T => key in object;
+export const objectHasKey = <T>(object: T, key: PropertyKey): key is keyof T => key in (object as any);
