@@ -33,6 +33,16 @@ const nextConfig = {
       use: 'null-loader',
     });
 
+    config.externals = {
+      // This dep relies on a ton of problematic subdeps
+      'svelte-preprocess': 'undefined',
+      // This dep ships ESM ?? operator that webpack can't load
+      'ts-morph': 'undefined',
+    };
+
+    config.optimization.minimizer = [];
+    config.optimization.minimize = false;
+
     return config;
   },
   experimental: {
