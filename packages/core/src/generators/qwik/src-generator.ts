@@ -2,7 +2,6 @@ import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { convertExportDefaultToReturn } from '../../parsers/builder';
 import { stableJSONserialize } from './helpers/stable-serialize';
-
 export interface SrcBuilderOptions {
   isPretty: boolean;
   isTypeScript: boolean;
@@ -83,13 +82,14 @@ export class File {
       try {
         source = format(source, {
           parser: 'typescript',
-          // plugins: [
-          //   prettierParserTypescript,
-          //   prettierParserPostcss,
-          //   prettierParserHtml,
-          //   prettierParserBabel,
-          //   prettierPluginOrganizeImports,
-          // ],
+          plugins: [
+            // To support running in browsers
+            'prettier/parser-typescript',
+            'prettier/parser-postcss',
+            'prettier/parser-html',
+            'prettier/parser-babel',
+            'prettier-plugin-organize-imports',
+          ],
           htmlWhitespaceSensitivity: 'ignore',
         });
       } catch (e) {
