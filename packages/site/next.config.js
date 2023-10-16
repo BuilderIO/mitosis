@@ -24,10 +24,9 @@ const nextConfig = {
       loader: 'ignore-loader',
     });
 
-    config.module.rules.shift({
+    config.module.rules.push({
       // resourceQuery: /raw/,
-      test: [/@builder.io\/mitosis\/jsx-runtime/
-      ,/@builder.io\/mitosis\/types/],
+      test: [/@builder.io\/mitosis\/jsx-runtime/, /@builder.io\/mitosis\/dist\/src/],
       type: 'asset/source',
     })
 
@@ -51,10 +50,10 @@ const nextConfig = {
 
     return config;
   },
-  // experimental: {
-  //   esmExternals: true,
-  //   externalDir: true,
-  // },
+  experimental: {
+    // esmExternals: true,
+    externalDir: true,
+  },
 }
 
 module.exports = nextConfig

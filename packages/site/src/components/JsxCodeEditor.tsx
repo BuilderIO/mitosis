@@ -1,5 +1,5 @@
-import JsxRuntimeTypes from '@builder.io/mitosis/jsx-runtime';
-import MitosisTypes from '@builder.io/mitosis/types';
+// import JsxRuntimeTypes from '@builder.io/mitosis/jsx-runtime';
+// import MitosisTypes from '@builder.io/mitosis/types';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 import { eslint } from './Fiddle/Linter';
@@ -41,11 +41,11 @@ export function JsxCodeEditor(props: Props) {
 
     // add types
     monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      MitosisTypes,
+      'MitosisTypes',
       'file:///node_modules/@builder.io/mitosis/index.d.ts',
     );
     monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      JsxRuntimeTypes,
+      'JsxRuntimeTypes',
       'file:///node_modules/react/jsx-runtime.d.ts',
     );
 
