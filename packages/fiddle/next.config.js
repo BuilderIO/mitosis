@@ -1,3 +1,4 @@
+const withTM = require('next-transpile-modules')(['@builder.io/mitosis']);
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 /**
  * @type {import('next').NextConfig}
@@ -43,4 +44,4 @@ const nextConfig = {
   },
 };
 
-module.exports =  (nextConfig);
+module.exports = withTM(nextConfig);
