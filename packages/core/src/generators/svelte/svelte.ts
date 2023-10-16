@@ -410,7 +410,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     if (options.prettier !== false) {
       try {
         str = format(str, {
-          parser: 'svelte',
+          parser: 'html',
           plugins: [
             // To support running in browsers
             require('prettier/parser-html'),
