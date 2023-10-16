@@ -20,17 +20,13 @@ const nextConfig = {
       'coffeescript': false,
       'postcss-load-config': false,
       'CLIEngine': false,
+      'svelte-preprocess': false,
       sass: false
     }
     config.resolve.alias = {
       ...config.resolve.alias,
       ...falseAliases,
     }
-
-    config.module.rules.push({
-      test: [/svelte-preprocess.+d\.ts/],
-      loader: 'ignore-loader',
-    });
 
     // config.optimization.minimizer = [];
     // config.optimization.minimize = false;
