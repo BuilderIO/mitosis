@@ -1,7 +1,10 @@
 import { configure } from 'mobx';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Script from 'next/script';
 import { theme } from '../src/constants/theme';
+
+const App = dynamic(() => import('../src/components/App'), { ssr: false });
 
 configure({
   enforceActions: 'never',
@@ -38,9 +41,7 @@ export default () => {
         <title>Mitosis Fiddle - compile to common frameworks, import from popular tools</title>
       </Head>
       <noscript>You need to enable JavaScript to run this app.</noscript>
-      <div>
-        yeeha
-      </div>
+      <App />
 
       <Script async src="https://cdn.builder.io/js/editor@1.0.42-0"></Script>
 

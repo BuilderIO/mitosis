@@ -9,35 +9,28 @@ const nextConfig = {
       // @babel/core imported by Mitosis imports `fs`. We don't need it in the browser, so we tell webpack to ignore it.
       // https://webpack.js.org/configuration/resolve/#resolvealias
       fs: false,
+      module: false,
     };
     config.resolve.mainFields = ['browser', 'main', 'module'];
 
     config.resolve.plugins = [...config.resolve.plugins, new TsconfigPathsPlugin()];
 
-    config.resolve.alias['globby'] = false;
+    const falseAliases = {
+      'globby': false,
+      'coffeescript': false,
+      'postcss-load-config': false,
+      'CLIEngine': false,
+      sass: false
+    }
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      ...falseAliases,
+    }
 
     config.module.rules.push({
-      test: /svelte-preprocess.+d\.ts/,
+      test: [/svelte-preprocess.+d\.ts/],
       loader: 'ignore-loader',
     });
-
-    config.module.rules.push({
-      test: /postcss-load-config/,
-      loader: 'ignore-loader',
-    });
-
-    config.module.rules.push({
-      test: [/\/CLIEngine/, /\/globby/],
-      issuer: /\/@typescript-eslint\//,
-      use: 'null-loader',
-    });
-
-    config.externals = {
-      // This dep relies on a ton of problematic subdeps
-      'svelte-preprocess': 'undefined',
-      // This dep ships ESM ?? operator that webpack can't load
-      'ts-morph': 'undefined',
-    };
 
     // config.optimization.minimizer = [];
     // config.optimization.minimize = false;
