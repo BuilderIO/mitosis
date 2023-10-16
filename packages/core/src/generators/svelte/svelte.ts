@@ -1,4 +1,9 @@
 import { flow, pipe } from 'fp-ts/lib/function';
+import prettierPluginSvelte from 'prettier-plugin-svelte';
+import prettierParserBabel from 'prettier/parser-babel';
+import prettierParserHtml from 'prettier/parser-html';
+import prettierParserPostcss from 'prettier/parser-postcss';
+import prettierParserTypescript from 'prettier/parser-typescript';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
 import { babelTransformCode, convertTypeScriptToJS } from '../../helpers/babel-transform';
@@ -413,11 +418,11 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           parser: 'svelte',
           plugins: [
             // To support running in browsers
-            require('prettier/parser-html'),
-            require('prettier/parser-postcss'),
-            require('prettier/parser-babel'),
-            require('prettier/parser-typescript'),
-            require('prettier-plugin-svelte'),
+            prettierParserHtml,
+            prettierParserPostcss,
+            prettierParserBabel,
+            prettierParserTypescript,
+            prettierPluginSvelte,
           ],
         });
       } catch (err) {
