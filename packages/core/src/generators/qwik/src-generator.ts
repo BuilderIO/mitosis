@@ -1,4 +1,4 @@
-import parserTypeScript from "prettier/parser-typescript";
+import parserTypeScript from 'prettier/parser-typescript';
 import { format } from 'prettier/standalone';
 
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';

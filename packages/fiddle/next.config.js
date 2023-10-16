@@ -13,20 +13,20 @@ const nextConfig = {
      * https://webpack.js.org/configuration/resolve/#resolvealias
      */
     const falseAliases = {
-      'globby': false,
-      'coffeescript': false,
+      globby: false,
+      coffeescript: false,
       'postcss-load-config': false,
-      'perf_hooks': false,
+      perf_hooks: false,
       fs: false,
       module: false,
-      'CLIEngine': false,
+      CLIEngine: false,
       'svelte-preprocess': false,
-      sass: false
-    }
+      sass: false,
+    };
     config.resolve.alias = {
       ...config.resolve.alias,
       ...falseAliases,
-    }
+    };
 
     // config.optimization.minimizer = [];
     // config.optimization.minimize = false;
@@ -37,9 +37,7 @@ const nextConfig = {
     esmExternals: true,
     externalDir: true,
   },
-  transpilePackages: [
-    '@builder.io/mitosis'
-  ]
+  transpilePackages: ['@builder.io/mitosis'],
 };
 
-module.exports = (nextConfig);
+module.exports = nextConfig;
