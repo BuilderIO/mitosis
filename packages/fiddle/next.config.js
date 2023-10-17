@@ -35,7 +35,6 @@ const nextConfig = {
   },
   experimental: {
     esmExternals: true,
-    externalDir: true,
   },
   transpilePackages: ['@builder.io/mitosis'],
 };
