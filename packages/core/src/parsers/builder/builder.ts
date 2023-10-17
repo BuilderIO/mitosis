@@ -796,7 +796,9 @@ function extractSymbols(json: BuilderContent) {
 
     if (!elContent) {
       console.warn('Symbol missing content', el.id);
-      delete el.component?.options.symbol.content;
+      if (el.component?.options.symbol.content) {
+        delete el.component.options.symbol.content;
+      }
       continue;
     }
 
@@ -804,7 +806,9 @@ function extractSymbols(json: BuilderContent) {
 
     el.component!.name = componentName;
 
-    delete el.component?.options.symbol.content;
+    if (el.component?.options.symbol.content) {
+      delete el.component.options.symbol.content;
+    }
 
     subComponents.push({
       content: elContent,

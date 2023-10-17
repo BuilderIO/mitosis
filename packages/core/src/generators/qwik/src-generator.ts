@@ -1,4 +1,6 @@
+import parserTypeScript from 'prettier/parser-typescript';
 import { format } from 'prettier/standalone';
+
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { convertExportDefaultToReturn } from '../../parsers/builder';
 import { stableJSONserialize } from './helpers/stable-serialize';
@@ -83,12 +85,9 @@ export class File {
         source = format(source, {
           parser: 'typescript',
           plugins: [
-            // To support running in browsers
-            require('prettier/parser-typescript'),
-            require('prettier/parser-postcss'),
-            require('prettier/parser-html'),
-            require('prettier/parser-babel'),
-            require('prettier-plugin-organize-imports'),
+            'prettier/parser-postcss',
+            parserTypeScript,
+            'prettier-plugin-organize-imports',
           ],
           htmlWhitespaceSensitivity: 'ignore',
         });

@@ -1,5 +1,5 @@
 import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@monaco-editor/react';
-import prettierPluginSvelte from 'prettier-plugin-svelte';
+import * as prettierPluginSvelte from 'prettier-plugin-svelte';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 
