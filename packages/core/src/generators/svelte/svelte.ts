@@ -1,5 +1,5 @@
 import { flow, pipe } from 'fp-ts/lib/function';
-import prettierPluginSvelte from 'prettier-plugin-svelte';
+import * as prettierPluginSvelte from 'prettier-plugin-svelte';
 import prettierParserBabel from 'prettier/parser-babel';
 import prettierParserHtml from 'prettier/parser-html';
 import prettierParserPostcss from 'prettier/parser-postcss';
