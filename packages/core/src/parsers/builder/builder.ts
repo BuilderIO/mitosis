@@ -769,7 +769,7 @@ export function extractStateHook(code: string): {
   return { code: newCode, state };
 }
 
-function convertExportDefaultToReturn(code: string) {
+export function convertExportDefaultToReturn(code: string) {
   try {
     const { types } = babel;
     const body = parseCode(code);
