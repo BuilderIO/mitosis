@@ -30,7 +30,7 @@ const getCssFromBlock = (block: BuilderElement) => {
   const blockSizes: Size[] = Object.keys(block.responsiveStyles || {}).filter((size) =>
     sizeNames.includes(size as Size),
   ) as Size[];
-  let css: { [key: string]: Partial<CSSStyleDeclaration> } = {};
+  let css: { [key: string]: Partial<CSSStyleDeclaration> | string } = {};
   for (const size of blockSizes) {
     if (size === 'large') {
       css = omit(
@@ -44,7 +44,7 @@ const getCssFromBlock = (block: BuilderElement) => {
       const mediaQueryKey = `@media (max-width: ${sizes[size].max}px)`;
       css[mediaQueryKey] = omit(
         {
-          ...css[mediaQueryKey],
+          ...(css[mediaQueryKey] as any),
           ...block.responsiveStyles[size],
         },
         styleOmitList,
@@ -324,7 +324,7 @@ const componentMappers: {
         createMitosisNode({
           name: 'Column',
           bindings: {
-            width: { code: col.width },
+            width: { code: col.width.toString() },
           },
           ...(col.link && {
             properties: {
@@ -379,11 +379,11 @@ const componentMappers: {
         style: { code: styleString },
       }),
       ...(Object.keys(css).length && {
-        css: { code: JSON.stringify(css) },
+        css: { code: JSON.stringify({ ...css, display: undefined, flexDirection: undefined }) },
       }),
     };
     const properties = { ...block.properties };
-    if (block.id) properties['builder-id'] = block.id;
+    if (options.includeBuilderExtras && block.id) properties['builder-id'] = block.id;
     if (block.class) properties['class'] = block.class;
 
     if (block.layerName) {
@@ -397,8 +397,9 @@ const componentMappers: {
         code: wrapBindingIfNeeded(componentOptionsText.code, options),
       });
     }
+    const text = block.component!.options.text;
     const innerProperties = {
-      [options.preserveTextBlocks ? 'innerHTML' : '_text']: block.component!.options.text,
+      [options.preserveTextBlocks ? 'innerHTML' : '_text']: text,
     };
 
     if (options.preserveTextBlocks) {
@@ -418,11 +419,24 @@ const componentMappers: {
       });
     }
 
+    // Disabling for now
+    const assumeLink: boolean = false;
+
+    const finalProperties = {
+      ...(assumeLink
+        ? {
+            href: '...',
+          }
+        : {}),
+      ...properties,
+    };
+    const finalTagname = block.tagName || (assumeLink ? 'a' : 'div');
+
     if ((block.tagName && block.tagName !== 'div') || hasStyles(block)) {
       return createMitosisNode({
-        name: block.tagName || 'div',
+        name: finalTagname,
         bindings,
-        properties,
+        properties: finalProperties,
         children: [
           createMitosisNode({
             bindings: innerBindings,
@@ -433,8 +447,9 @@ const componentMappers: {
     }
 
     return createMitosisNode({
-      name: block.tagName || 'div',
+      name: finalTagname,
       properties: {
+        ...finalProperties,
         ...properties,
         ...innerProperties,
       },
@@ -634,23 +649,35 @@ export const builderElementToMitosisNode = (
   });
 
   // Has single text node child
+  const firstChild = block.children?.[0];
   if (
     block.children?.length === 1 &&
-    block.children[0].component?.name === 'Text' &&
+    firstChild?.component?.name === 'Text' &&
     !options.preserveTextBlocks
   ) {
-    const textProperties = builderElementToMitosisNode(block.children[0], options);
-    const mergedCss = merge(
-      json5.parse(node.bindings.css?.code || '{}'),
-      json5.parse(textProperties.bindings.css?.code || '{}'),
-    );
-    return merge({}, textProperties, node, {
-      bindings: {
-        ...(Object.keys(mergedCss).length && {
-          css: { code: json5.stringify(mergedCss) },
-        }),
-      },
-    });
+    const textProperties = builderElementToMitosisNode(firstChild, options);
+    const parsedNodeCss = json5.parse(node.bindings.css?.code || '{}');
+    const parsedTextCss = json5.parse(textProperties.bindings.css?.code || '{}');
+    const mergedCss = combineStyles(parsedNodeCss, parsedTextCss);
+
+    // Don't merge if text has styling that matters
+    const doNotMerge =
+      // Text has flex alignment
+      ['end', 'right', 'center'].includes(parsedTextCss.alignSelf) ||
+      // Text has specific styling
+      parsedTextCss.backgroundColor ||
+      parsedTextCss.opacity ||
+      parsedTextCss.background;
+
+    if (!doNotMerge) {
+      return merge({}, textProperties, node, {
+        bindings: {
+          ...(Object.keys(mergedCss).length && {
+            css: { code: json5.stringify(mergedCss) },
+          }),
+        },
+      });
+    }
   }
 
   node.children = (block.children || []).map((item) => builderElementToMitosisNode(item, options));
@@ -742,7 +769,7 @@ export function extractStateHook(code: string): {
   return { code: newCode, state };
 }
 
-export function convertExportDefaultToReturn(code: string) {
+function convertExportDefaultToReturn(code: string) {
   try {
     const { types } = babel;
     const body = parseCode(code);
@@ -910,24 +937,18 @@ const builderContentPartToMitosisComponent = (
   return componentJson;
 };
 
-export const builderContentToMitosisComponent = (
-  builderContent: BuilderContent,
+export function builderContentToMitosisComponent(
+  content: BuilderContent,
   options: BuilderToMitosisOptions = {},
-): MitosisComponent => {
-  builderContent = fastClone(builderContent);
+): MitosisComponent {
+  const { data, ...rest } = content;
+  const { blocks } = data!;
+  const children = blocks?.map((block) => builderElementToMitosisNode(block, options)) || [];
+  return createMitosisComponent({
+    children,
+  });
+}
 
-  const separated = extractSymbols(builderContent);
-
-  const componentJson: MitosisComponent = {
-    ...builderContentPartToMitosisComponent(separated.content, options),
-    subComponents: separated.subComponents.map((item) => ({
-      ...builderContentPartToMitosisComponent(item.content, options),
-      name: item.name,
-    })),
-  };
-
-  return componentJson;
-};
 function mapBuilderBindingsToMitosisBindingWithCode(
   bindings: { [key: string]: string } | undefined,
 ): MitosisNode['bindings'] {
@@ -944,4 +965,42 @@ function mapBuilderBindingsToMitosisBindingWithCode(
       }
     });
   return result;
+}
+
+type Styles = Record<string, any>;
+
+function removeFalsey(obj: Styles) {
+  return omitBy(
+    obj,
+    (value) => !value || value === '0' || value === '0px' || value === 'none' || value === '0%',
+  );
+}
+function combineStyles(parent: Styles, child: Styles) {
+  const marginStyles = ['marginTop', 'marginBottom', 'marginLeft', 'marginRight'];
+  const paddingStyles = ['paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight'];
+  const distanceStylesToCombine = [...paddingStyles, ...marginStyles];
+  const merged: Styles = {
+    ...omit(removeFalsey(child), distanceStylesToCombine),
+    ...removeFalsey(parent),
+  };
+  for (const key of distanceStylesToCombine) {
+    // Funky things happen if different alignment
+    if (parent.alignSelf !== child.alignSelf && (key === 'marginLeft' || key === 'marginRight')) {
+      merged[key] = parent[key];
+      continue;
+    }
+    const childNum = parseFloat(child[key]) || 0;
+    const parentKeyToUse = key.replace(/margin/, 'padding');
+    const parentNum = parseFloat(parent[parentKeyToUse]) || 0;
+    if (childNum || parentNum) {
+      merged[parentKeyToUse] = `${childNum + parentNum}px`;
+    }
+  }
+
+  for (const [key, value] of Object.entries(merged)) {
+    if (value && typeof value === 'object') {
+      merged[key] = combineStyles(parent[key] || {}, child[key] || {});
+    }
+  }
+  return merged;
 }
