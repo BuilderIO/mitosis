@@ -324,7 +324,7 @@ const componentMappers: {
         createMitosisNode({
           name: 'Column',
           bindings: {
-            width: { code: col.width.toString() },
+            width: { code: col.width?.toString() },
           },
           ...(col.link && {
             properties: {
