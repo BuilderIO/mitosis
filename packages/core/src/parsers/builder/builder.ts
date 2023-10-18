@@ -937,17 +937,24 @@ const builderContentPartToMitosisComponent = (
   return componentJson;
 };
 
-export function builderContentToMitosisComponent(
-  content: BuilderContent,
+export const builderContentToMitosisComponent = (
+  builderContent: BuilderContent,
   options: BuilderToMitosisOptions = {},
-): MitosisComponent {
-  const { data, ...rest } = content;
-  const { blocks } = data!;
-  const children = blocks?.map((block) => builderElementToMitosisNode(block, options)) || [];
-  return createMitosisComponent({
-    children,
-  });
-}
+): MitosisComponent => {
+  builderContent = fastClone(builderContent);
+
+  const separated = extractSymbols(builderContent);
+
+  const componentJson: MitosisComponent = {
+    ...builderContentPartToMitosisComponent(separated.content, options),
+    subComponents: separated.subComponents.map((item) => ({
+      ...builderContentPartToMitosisComponent(item.content, options),
+      name: item.name,
+    })),
+  };
+
+  return componentJson;
+};
 
 function mapBuilderBindingsToMitosisBindingWithCode(
   bindings: { [key: string]: string } | undefined,
