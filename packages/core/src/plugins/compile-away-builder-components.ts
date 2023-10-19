@@ -349,7 +349,7 @@ export const components: CompileAwayComponentsMap = {
       properties: noUndefined({
         loading: 'lazy',
         sizes: node.properties.sizes,
-        srcSet: srcSet || null,
+        srcset: srcSet || null,
         alt: node.properties.altText,
       }),
       bindings: noUndefined({
