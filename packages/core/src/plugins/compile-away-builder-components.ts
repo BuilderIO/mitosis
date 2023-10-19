@@ -343,14 +343,21 @@ export const components: CompileAwayComponentsMap = {
     const image = node.properties.image!;
     const srcSet = srcset || generateBuilderIoSrcSet(image);
     const css = getCssFromNode(node);
+    const noWebp = node.bindings.noWebp?.code === 'true';
 
     const img = createMitosisNode({
       name: 'img',
       properties: noUndefined({
         loading: 'lazy',
         sizes: node.properties.sizes,
-        srcSet: srcSet || null,
         alt: node.properties.altText,
+        // We set noWebp to true for SVGs. in this case, we 
+        // also don't need srcset, just a src is better
+        ...(noWebp ? {
+          src: image,
+        } : {
+          srcSet: srcSet || null,
+        })
       }),
       bindings: noUndefined({
         src: node.bindings.image?.code && { code: node.bindings.image?.code },
