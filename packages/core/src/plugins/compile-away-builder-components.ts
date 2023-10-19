@@ -351,13 +351,15 @@ export const components: CompileAwayComponentsMap = {
         loading: 'lazy',
         sizes: node.properties.sizes,
         alt: node.properties.altText,
-        // We set noWebp to true for SVGs. in this case, we 
+        // We set noWebp to true for SVGs. in this case, we
         // also don't need srcset, just a src is better
-        ...(noWebp ? {
-          src: image,
-        } : {
-          srcSet: srcSet || null,
-        })
+        ...(noWebp
+          ? {
+              src: image,
+            }
+          : {
+              srcSet: srcSet || null,
+            }),
       }),
       bindings: noUndefined({
         src: node.bindings.image?.code && { code: node.bindings.image?.code },
