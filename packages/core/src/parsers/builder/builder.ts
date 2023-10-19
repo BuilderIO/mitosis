@@ -379,7 +379,7 @@ const componentMappers: {
         style: { code: styleString },
       }),
       ...(Object.keys(css).length && {
-        css: { code: JSON.stringify({ ...css, display: undefined, flexDirection: undefined }) },
+        css: { code: JSON.stringify(css) },
       }),
     };
     const properties = { ...block.properties };
