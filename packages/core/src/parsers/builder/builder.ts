@@ -461,13 +461,10 @@ const componentMappers: {
   },
 };
 
-export type BuilderToMitosisOptions = {
+type BuilderToMitosisOptions = {
   context?: { [key: string]: any };
   includeBuilderExtras?: boolean;
   preserveTextBlocks?: boolean;
-};
-export type InternalBuilderToMitosisOptions = BuilderToMitosisOptions & {
-  context: { [key: string]: any };
 };
 
 export const builderElementToMitosisNode = (
