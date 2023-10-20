@@ -27,12 +27,6 @@ const mappers: {
   style: BlockToSvelte;
 } = {
   style: ({ json, options, parentComponent }) => {
-    const styleBlockStr = blockToSvelte({
-      json,
-      options: { ...options, _skipMappers: true },
-      parentComponent,
-    });
-
     let props = '';
     for (const key in json.properties) {
       const value = json.properties[key];
