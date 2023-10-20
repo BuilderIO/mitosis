@@ -229,6 +229,30 @@ describe('Builder', () => {
     expect(mitosis.trim()).toMatchSnapshot();
   });
 
+  test('No srcset for SVG', async () => {
+    const builderJson: BuilderComponent = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element',
+            component: {
+              name: 'Image',
+              options: {
+                image: 'https://cdn.builder.io/api/v1/image/dummy.svg',
+                noWebp: true,
+              },
+            },
+          },
+        ],
+      },
+    } as BuilderComponent;
+    const component = builderContentToMitosisComponent(builderJson);
+    const html = await componentToHtml({
+      plugins: [compileAwayBuilderComponents()],
+    })({ component });
+    expect(html).toMatchSnapshot();
+  });
+
   test('Regenerate custom Hero', () => {
     const code = dedent`
       import { Hero } from "@components";
