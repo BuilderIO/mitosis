@@ -24,7 +24,36 @@ const mappers: {
   Fragment: BlockToSvelte;
   Show: BlockToSvelte;
   Slot: BlockToSvelte;
+  style: BlockToSvelte;
 } = {
+  style: ({ json, options, parentComponent }) => {
+    const styleBlockStr = blockToSvelte({
+      json,
+      options: { ...options, _skipMappers: true },
+      parentComponent,
+    });
+
+    let props = '';
+    for (const key in json.properties) {
+      const value = json.properties[key];
+      props += ` ${key}="${value}" `;
+    }
+
+    let bindings = '';
+
+    for (const key in json.bindings) {
+      const value = json.bindings[key];
+      if (value && key !== 'innerHTML') {
+        bindings += ` ${key}=\${${value.code}} `;
+      }
+    }
+
+    const innerText = json.bindings.innerHTML?.code || '';
+
+    // We have to obfuscate `"style"` due to a limitation in the svelte-preprocessor plugin.
+    // https://github.com/sveltejs/vite-plugin-svelte/issues/315#issuecomment-1109000027
+    return `{@html \`<\${'style'} ${bindings} ${props}>\${${innerText}}<\${'/style'}>\`}`;
+  },
   Fragment: ({ json, options, parentComponent }) => {
     if (json.bindings.innerHTML?.code) {
       return BINDINGS_MAPPER.innerHTML(json, options);
@@ -131,17 +160,10 @@ const getTagName = ({
   /**
    * These are special HTML tags that svelte requires `<svelte:element this={TAG}>`
    */
-  const SPECIAL_HTML_TAGS = ['style', 'script', 'template'];
+  const SPECIAL_HTML_TAGS = ['script', 'template'];
 
   if (SPECIAL_HTML_TAGS.includes(json.name)) {
-    json.bindings.this = createSingleBinding({
-      code:
-        json.name === 'style'
-          ? // We have to obfuscate `"style"` due to a limitation in the svelte-preprocessor plugin.
-            // https://github.com/sveltejs/vite-plugin-svelte/issues/315#issuecomment-1109000027
-            `"sty" + "le"`
-          : `"${json.name}"`,
-    });
+    json.bindings.this = createSingleBinding({ code: json.name });
 
     return SVELTE_SPECIAL_TAGS.ELEMENT;
   }
