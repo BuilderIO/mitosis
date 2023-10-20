@@ -155,7 +155,9 @@ const getTagName = ({
   const SPECIAL_HTML_TAGS = ['script', 'template'];
 
   if (SPECIAL_HTML_TAGS.includes(json.name)) {
-    json.bindings.this = createSingleBinding({ code: json.name });
+    json.bindings.this = createSingleBinding({
+      code: `"${json.name}"`,
+    });
 
     return SVELTE_SPECIAL_TAGS.ELEMENT;
   }
