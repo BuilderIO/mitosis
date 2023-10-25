@@ -306,7 +306,7 @@ const needsUseClient = (json: MitosisComponent) => {
   });
 
   return foundEventListener;
-}
+};
 
 const _componentToReact = (
   json: MitosisComponent,
@@ -521,7 +521,12 @@ const _componentToReact = (
   const isRsc = options.rsc && json.meta.useMetadata?.rsc?.componentType === 'server';
   const isNative = options.type === 'native';
   const isPreact = options.preact;
-  const shouldAddUseClientDirective = options.addUseClientDirectiveIfNeeded && !isRsc && !isNative && !isPreact && needsUseClient(json);
+  const shouldAddUseClientDirective =
+    options.addUseClientDirectiveIfNeeded &&
+    !isRsc &&
+    !isNative &&
+    !isPreact &&
+    needsUseClient(json);
 
   const str = dedent`
   ${shouldAddUseClientDirective ? `'use client';` : ''}
