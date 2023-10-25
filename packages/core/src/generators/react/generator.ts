@@ -286,6 +286,9 @@ const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
   return `${json.name}.defaultProps = {${defaultPropsString}};`;
 };
 
+// Test if a react component is a client component and needs
+// "use client" by seeing if it has any client-only features
+// like refs, effects, state, or event listeners
 const needsUseClient = (json: MitosisComponent) => {
   if (json.hooks.onMount?.code) return true;
   if (json.hooks.onUnMount?.code) return true;
