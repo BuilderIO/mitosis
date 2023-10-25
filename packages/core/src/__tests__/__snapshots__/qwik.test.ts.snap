@@ -3968,6 +3968,32 @@ export const STYLES = \`
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > onEvent 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useSignal,
+  useVisibleTask$,
+} from \\"@builder.io/qwik\\";
+
+export const Embed = component$((props) => {
+  const elem = useSignal();
+  useVisibleTask$(() => {
+    elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  });
+
+  return (
+    <div class=\\"builder-embed\\" ref={elem}>
+      <div>Test</div>
+    </div>
+  );
+});
+
+export default Embed;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > onInit & onMount 1`] = `
 "import {
   Fragment,
@@ -7329,6 +7355,32 @@ export const STYLES = \`
   display: inline-block;
 }
 \`;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > onEvent 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useSignal,
+  useVisibleTask$,
+} from \\"@builder.io/qwik\\";
+
+export const Embed = component$((props: any) => {
+  const elem = useSignal<Element>();
+  useVisibleTask$(() => {
+    elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  });
+
+  return (
+    <div class=\\"builder-embed\\" ref={elem}>
+      <div>Test</div>
+    </div>
+  );
+});
+
+export default Embed;
 "
 `;
 

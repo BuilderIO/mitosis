@@ -5409,6 +5409,61 @@ export class NestedStyles {}
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > onEvent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"embed, Embed\\",
+  template: \`
+    <div class=\\"builder-embed\\" #elem>
+      <div>Test</div>
+    </div>
+  \`,
+})
+export class Embed {
+  @ViewChild(\\"elem\\") elem: ElementRef;
+
+  ngOnInit() {
+    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  }
+}
+
+@NgModule({
+  declarations: [Embed],
+  imports: [CommonModule],
+  exports: [Embed],
+})
+export class EmbedModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > onEvent 2`] = `
+"import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"embed, Embed\\",
+  template: \`
+    <div class=\\"builder-embed\\" #elem>
+      <div>Test</div>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class Embed {
+  @ViewChild(\\"elem\\") elem: ElementRef;
+
+  ngOnInit() {
+    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > onInit & onMount 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -13711,6 +13766,61 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export class NestedStyles {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > onEvent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"embed, Embed\\",
+  template: \`
+    <div class=\\"builder-embed\\" #elem>
+      <div>Test</div>
+    </div>
+  \`,
+})
+export class Embed {
+  @ViewChild(\\"elem\\") elem: ElementRef;
+
+  ngOnInit() {
+    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  }
+}
+
+@NgModule({
+  declarations: [Embed],
+  imports: [CommonModule],
+  exports: [Embed],
+})
+export class EmbedModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > onEvent 2`] = `
+"import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"embed, Embed\\",
+  template: \`
+    <div class=\\"builder-embed\\" #elem>
+      <div>Test</div>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class Embed {
+  @ViewChild(\\"elem\\") elem: ElementRef;
+
+  ngOnInit() {
+    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  }
+}
 "
 `;
 
