@@ -2,7 +2,6 @@ import { types } from '@babel/core';
 import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { isMitosisNode } from 'src/helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { createSingleBinding } from '../../helpers/bindings';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
@@ -16,6 +15,7 @@ import {
 } from '../../helpers/get-state-object-string';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { handleMissingState } from '../../helpers/handle-missing-state';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { mapRefs } from '../../helpers/map-refs';
 import { initializeOptions } from '../../helpers/merge-options';
