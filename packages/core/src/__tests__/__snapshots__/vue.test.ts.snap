@@ -2584,7 +2584,11 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > onEvent 1`] = `
 "<template>
-  <div class=\\"builder-embed\\" ref=\\"elem\\">
+  <div
+    class=\\"builder-embed\\"
+    ref=\\"elem\\"
+    @initeditingbldr=\\"elem_onInitEditingBldr()\\"
+  >
     <div>Test</div>
   </div>
 </template>
@@ -2597,6 +2601,12 @@ export default defineComponent({
 
   mounted() {
     this.$refs.elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  },
+
+  methods: {
+    elem_onInitEditingBldr() {
+      console.log(\\"test\\");
+    },
   },
 });
 </script>"
@@ -6497,7 +6507,11 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > onEvent 1`] = `
 "<template>
-  <div class=\\"builder-embed\\" ref=\\"elem\\">
+  <div
+    class=\\"builder-embed\\"
+    ref=\\"elem\\"
+    @initeditingbldr=\\"elem_onInitEditingBldr()\\"
+  >
     <div>Test</div>
   </div>
 </template>
@@ -6510,6 +6524,12 @@ export default defineComponent({
 
   mounted() {
     this.$refs.elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  },
+
+  methods: {
+    elem_onInitEditingBldr() {
+      console.log(\\"test\\");
+    },
   },
 });
 </script>"

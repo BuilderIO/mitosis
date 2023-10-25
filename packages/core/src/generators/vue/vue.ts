@@ -10,6 +10,7 @@ import { getProps } from '../../helpers/get-props';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { mapRefs } from '../../helpers/map-refs';
 import { initializeOptions } from '../../helpers/merge-options';
+import { processOnEventHooksPlugin } from '../../helpers/on-event';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { processHttpRequests } from '../../helpers/process-http-requests';
 import { renderPreComponent } from '../../helpers/render-imports';
@@ -96,7 +97,6 @@ const onUpdatePlugin: Plugin = (options) => ({
 });
 
 const BASE_OPTIONS: ToVueOptions = {
-  plugins: [],
   vueVersion: 2,
   api: 'options',
   defineComponent: true,
@@ -115,7 +115,14 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
       userOptions: userOptions,
     });
 
+    if (options.api === 'composition') {
+      options.asyncComponentImports = false;
+    }
+
     options.plugins.unshift(
+      processOnEventHooksPlugin,
+      ...(options.api === 'options' ? [onUpdatePlugin] : []),
+      ...(options.api === 'composition' ? [FUNCTION_HACK_PLUGIN] : []),
       CODE_PROCESSOR_PLUGIN((codeType) => {
         if (options.api === 'composition') {
           switch (codeType) {
@@ -170,12 +177,6 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
       }),
     );
 
-    if (options.api === 'options') {
-      options.plugins.unshift(onUpdatePlugin);
-    } else if (options.api === 'composition') {
-      options.plugins.unshift(FUNCTION_HACK_PLUGIN);
-      options.asyncComponentImports = false;
-    }
     processHttpRequests(component);
     processDynamicComponents(component, options);
     processForKeys(component, options);

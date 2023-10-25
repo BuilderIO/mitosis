@@ -2139,7 +2139,11 @@ exports[`Vue > jsx > Javascript Test > nestedStyles 1`] = `
 
 exports[`Vue > jsx > Javascript Test > onEvent 1`] = `
 "<template>
-  <div class=\\"builder-embed\\" ref=\\"elem\\">
+  <div
+    class=\\"builder-embed\\"
+    ref=\\"elem\\"
+    @initeditingbldr=\\"elem_onInitEditingBldr()\\"
+  >
     <div>Test</div>
   </div>
 </template>
@@ -2152,6 +2156,10 @@ const elem = ref(null);
 onMounted(() => {
   elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
 });
+
+function elem_onInitEditingBldr() {
+  console.log(\\"test\\");
+}
 </script>"
 `;
 
@@ -5325,7 +5333,11 @@ exports[`Vue > jsx > Typescript Test > nestedStyles 1`] = `
 
 exports[`Vue > jsx > Typescript Test > onEvent 1`] = `
 "<template>
-  <div class=\\"builder-embed\\" ref=\\"elem\\">
+  <div
+    class=\\"builder-embed\\"
+    ref=\\"elem\\"
+    @initeditingbldr=\\"elem_onInitEditingBldr()\\"
+  >
     <div>Test</div>
   </div>
 </template>
@@ -5338,6 +5350,10 @@ const elem = ref<HTMLDivElement>();
 onMounted(() => {
   elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
 });
+
+function elem_onInitEditingBldr() {
+  console.log(\\"test\\");
+}
 </script>"
 `;
 
