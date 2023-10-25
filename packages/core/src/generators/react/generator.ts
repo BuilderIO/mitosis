@@ -2,6 +2,8 @@ import { types } from '@babel/core';
 import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
+import { isMitosisNode } from 'src/helpers/is-mitosis-node';
+import traverse from 'traverse';
 import { createSingleBinding } from '../../helpers/bindings';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { dedent } from '../../helpers/dedent';
@@ -284,6 +286,28 @@ const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
   return `${json.name}.defaultProps = {${defaultPropsString}};`;
 };
 
+const needsUseClient = (json: MitosisComponent) => {
+  if (json.hooks.onMount?.code) return true;
+  if (json.hooks.onUnMount?.code) return true;
+  if (json.hooks.onUpdate?.length) return true;
+  if (Object.keys(json.refs).length) return true;
+  if (Object.keys(json.state).length) return true;
+  if (Object.keys(json.context.set).length) return true;
+  if (Object.keys(json.context.get).length) return true;
+
+  let foundEventListener = false;
+  traverse(json).forEach(function (node) {
+    if (isMitosisNode(node)) {
+      if (Object.keys(node.bindings).filter((item) => item.startsWith('on')).length) {
+        foundEventListener = true;
+        this.stop();
+      }
+    }
+  });
+
+  return foundEventListener;
+}
+
 const _componentToReact = (
   json: MitosisComponent,
   options: ToReactOptions,
@@ -495,7 +519,9 @@ const _componentToReact = (
   `;
 
   const isRsc = options.rsc && json.meta.useMetadata?.rsc?.componentType === 'server';
-  const shouldAddUseClientDirective = options.addUseClientDirectiveIfNeeded && !isRsc;
+  const isNative = options.type === 'native';
+  const isPreact = options.preact;
+  const shouldAddUseClientDirective = options.addUseClientDirectiveIfNeeded && !isRsc && !isNative && !isPreact && needsUseClient(json);
 
   const str = dedent`
   ${shouldAddUseClientDirective ? `'use client';` : ''}
