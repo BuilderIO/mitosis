@@ -18,6 +18,7 @@ import {
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { initializeOptions } from '../../helpers/merge-options';
+import { processOnEventHooksPlugin } from '../../helpers/on-event';
 import { stripGetter } from '../../helpers/patterns';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { renderPreComponent } from '../../helpers/render-imports';
@@ -134,7 +135,6 @@ const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
 const DEFAULT_OPTIONS: ToSvelteOptions = {
   stateType: 'variables',
   prettier: true,
-  plugins: [FUNCTION_HACK_PLUGIN],
 };
 
 export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
@@ -149,6 +149,8 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     options.plugins = [
       ...(options.plugins || []),
+      processOnEventHooksPlugin,
+      FUNCTION_HACK_PLUGIN,
       // Strip types from any JS code that ends up in the template, because Svelte does not support TS code in templates.
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {

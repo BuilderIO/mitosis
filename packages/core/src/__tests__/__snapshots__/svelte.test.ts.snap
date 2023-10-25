@@ -1930,6 +1930,10 @@ exports[`Svelte > jsx > Javascript Test > onEvent 1`] = `
 "<script>
   import { onMount } from \\"svelte\\";
 
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
   let elem;
 
   onMount(() => {
@@ -1937,7 +1941,13 @@ exports[`Svelte > jsx > Javascript Test > onEvent 1`] = `
   });
 </script>
 
-<div class=\\"builder-embed\\" bind:this={elem}>
+<div
+  class=\\"builder-embed\\"
+  bind:this={elem}
+  on:initeditingbldr={(event) => {
+    elem_onInitEditingBldr();
+  }}
+>
   <div>Test</div>
 </div>"
 `;
@@ -4990,6 +5000,10 @@ exports[`Svelte > jsx > Typescript Test > onEvent 1`] = `
 "<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
   let elem;
 
   onMount(() => {
@@ -4997,7 +5011,13 @@ exports[`Svelte > jsx > Typescript Test > onEvent 1`] = `
   });
 </script>
 
-<div class=\\"builder-embed\\" bind:this={elem}>
+<div
+  class=\\"builder-embed\\"
+  bind:this={elem}
+  on:initeditingbldr={(event) => {
+    elem_onInitEditingBldr();
+  }}
+>
   <div>Test</div>
 </div>"
 `;
