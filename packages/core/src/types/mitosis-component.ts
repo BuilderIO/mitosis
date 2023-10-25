@@ -127,6 +127,13 @@ export type MitosisComponent = {
     preComponent?: extendedHook;
     postComponent?: extendedHook;
     onUpdate?: extendedHook[];
+    onEvent?: {
+      code: string;
+      refName: string;
+      eventName: string;
+      isRoot: boolean;
+      deps?: never;
+    }[];
   };
   targetBlocks?: Dictionary<TargetBlockDefinition>;
   children: MitosisNode[];
