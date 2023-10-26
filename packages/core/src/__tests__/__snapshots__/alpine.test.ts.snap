@@ -1767,14 +1767,18 @@ exports[`Alpine.js > jsx > Javascript Test > import types 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > multipleOnUpdate 1`] = `
-"unknown: Unexpected token (2:54)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('multipleOnUpdate', () => ({,
-    |                                                       ^
-  3 | onUpdate() {
-  4 |         console.log('Runs on every update/rerender')
-  5 | console.log('Runs on every update/rerender as well')"
+"<div x-data=\\"multipleOnUpdate()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"multipleOnUpdate\\", () => ({
+      onUpdate() {
+        console.log(\\"Runs on every update/rerender\\");
+        console.log(\\"Runs on every update/rerender as well\\");
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
@@ -1889,25 +1893,33 @@ exports[`Alpine.js > jsx > Javascript Test > nestedStyles 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > onEvent 1`] = `
-"unknown: Unexpected token (2:43)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('embed', () => ({, init() {
-    |                                            ^
-  3 |       
-  4 |       elem.dispatchEvent(new CustomEvent('initEditingBldr'))
-  5 |     }}))"
+"<div class=\\"builder-embed\\" x-data=\\"embed()\\" x-ref=\\"elem\\">
+  <div>Test</div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"embed\\", () => ({
+      init() {
+        elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > onInit & onMount 1`] = `
-"unknown: Unexpected token (2:44)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('onInit', () => ({, init() {
-    |                                             ^
-  3 |       
-  4 |       console.log('onMount')
-  5 |     }}))"
+"<div x-data=\\"onInit()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onInit\\", () => ({
+      init() {
+        console.log(\\"onMount\\");
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > onInit 1`] = `
@@ -1926,25 +1938,31 @@ exports[`Alpine.js > jsx > Javascript Test > onInit 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > onMount 1`] = `
-"unknown: Unexpected token (2:42)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('comp', () => ({, init() {
-    |                                           ^
-  3 |       
-  4 |       console.log('Runs on mount')
-  5 |     }}))"
+"<div x-data=\\"comp()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"comp\\", () => ({
+      init() {
+        console.log(\\"Runs on mount\\");
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > onUpdate 1`] = `
-"unknown: Unexpected token (2:46)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('onUpdate', () => ({,
-    |                                               ^
-  3 | onUpdate() {
-  4 |         console.log('Runs on every update/rerender')
-  5 |     }}))"
+"<div x-data=\\"onUpdate()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onUpdate\\", () => ({
+      onUpdate() {
+        console.log(\\"Runs on every update/rerender\\");
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > onUpdateWithDeps 1`] = `
@@ -2305,14 +2323,25 @@ exports[`Alpine.js > jsx > Javascript Test > renderBlock 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > renderContentExample 1`] = `
-"unknown: Unexpected token (2:51)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('renderContent', () => ({, init() {
-    |                                                    ^
-  3 |       
-  4 |       sendComponentsToVisualEditor(props.customComponents)
-  5 |     }}))"
+"<style>
+  .div {
+    display: flex;
+    flex-direction: columns;
+  }
+</style>
+<div class=\\"div\\" x-data=\\"renderContent()\\" x-on:click=\\"trackClick(content.id)\\">
+  <RenderBlocks x-bind:blocks=\\"content.blocks\\"></RenderBlocks>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderContent\\", () => ({
+      init() {
+        sendComponentsToVisualEditor(props.customComponents);
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
@@ -4389,14 +4418,18 @@ exports[`Alpine.js > jsx > Typescript Test > import types 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > multipleOnUpdate 1`] = `
-"unknown: Unexpected token (2:54)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('multipleOnUpdate', () => ({,
-    |                                                       ^
-  3 | onUpdate() {
-  4 |         console.log('Runs on every update/rerender')
-  5 | console.log('Runs on every update/rerender as well')"
+"<div x-data=\\"multipleOnUpdate()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"multipleOnUpdate\\", () => ({
+      onUpdate() {
+        console.log(\\"Runs on every update/rerender\\");
+        console.log(\\"Runs on every update/rerender as well\\");
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
@@ -4511,25 +4544,33 @@ exports[`Alpine.js > jsx > Typescript Test > nestedStyles 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > onEvent 1`] = `
-"unknown: Unexpected token (2:43)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('embed', () => ({, init() {
-    |                                            ^
-  3 |       
-  4 |       elem.dispatchEvent(new CustomEvent('initEditingBldr'))
-  5 |     }}))"
+"<div class=\\"builder-embed\\" x-data=\\"embed()\\" x-ref=\\"elem\\">
+  <div>Test</div>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"embed\\", () => ({
+      init() {
+        elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > onInit & onMount 1`] = `
-"unknown: Unexpected token (2:44)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('onInit', () => ({, init() {
-    |                                             ^
-  3 |       
-  4 |       console.log('onMount')
-  5 |     }}))"
+"<div x-data=\\"onInit()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onInit\\", () => ({
+      init() {
+        console.log(\\"onMount\\");
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > onInit 1`] = `
@@ -4548,25 +4589,31 @@ exports[`Alpine.js > jsx > Typescript Test > onInit 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > onMount 1`] = `
-"unknown: Unexpected token (2:42)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('comp', () => ({, init() {
-    |                                           ^
-  3 |       
-  4 |       console.log('Runs on mount')
-  5 |     }}))"
+"<div x-data=\\"comp()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"comp\\", () => ({
+      init() {
+        console.log(\\"Runs on mount\\");
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > onUpdate 1`] = `
-"unknown: Unexpected token (2:46)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('onUpdate', () => ({,
-    |                                               ^
-  3 | onUpdate() {
-  4 |         console.log('Runs on every update/rerender')
-  5 |     }}))"
+"<div x-data=\\"onUpdate()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onUpdate\\", () => ({
+      onUpdate() {
+        console.log(\\"Runs on every update/rerender\\");
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > onUpdateWithDeps 1`] = `
@@ -4930,14 +4977,25 @@ exports[`Alpine.js > jsx > Typescript Test > renderBlock 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > renderContentExample 1`] = `
-"unknown: Unexpected token (2:51)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('renderContent', () => ({, init() {
-    |                                                    ^
-  3 |       
-  4 |       sendComponentsToVisualEditor(props.customComponents)
-  5 |     }}))"
+"<style>
+  .div {
+    display: flex;
+    flex-direction: columns;
+  }
+</style>
+<div class=\\"div\\" x-data=\\"renderContent()\\" x-on:click=\\"trackClick(content.id)\\">
+  <RenderBlocks x-bind:blocks=\\"content.blocks\\"></RenderBlocks>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderContent\\", () => ({
+      init() {
+        sendComponentsToVisualEditor(props.customComponents);
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
@@ -5441,14 +5499,21 @@ exports[`Alpine.js > svelte > Javascript Test > imports 1`] = `
 `;
 
 exports[`Alpine.js > svelte > Javascript Test > lifecycleHooks 1`] = `
-"unknown: Unexpected token (2:49)
+"<div x-data=\\"myComponent()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      init() {
+        console.log(\\"onMount\\");
+      },
 
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('myComponent', () => ({, init() {
-    |                                                  ^
-  3 |       
-  4 |       console.log('onMount')
-  5 |     },"
+      onUpdate() {
+        console.log(\\"onAfterUpdate\\");
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > svelte > Javascript Test > reactive 1`] = `
@@ -5758,14 +5823,21 @@ exports[`Alpine.js > svelte > Typescript Test > imports 1`] = `
 `;
 
 exports[`Alpine.js > svelte > Typescript Test > lifecycleHooks 1`] = `
-"unknown: Unexpected token (2:49)
+"<div x-data=\\"myComponent()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      init() {
+        console.log(\\"onMount\\");
+      },
 
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('myComponent', () => ({, init() {
-    |                                                  ^
-  3 |       
-  4 |       console.log('onMount')
-  5 |     },"
+      onUpdate() {
+        console.log(\\"onAfterUpdate\\");
+      },
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > svelte > Typescript Test > reactive 1`] = `

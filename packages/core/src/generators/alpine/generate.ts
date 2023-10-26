@@ -81,6 +81,7 @@ const getStateObjectString = (json: MitosisComponent) =>
     renderMountHook(json),
     renderUpdateHooks(json),
     replaceStateWithThis,
+    (x) => (x.startsWith('{,') ? x.replace('{,', '{') : x),
   )(json);
 
 const bindEventHandlerKey = compose(dashCase, removeOnFromEventName);
