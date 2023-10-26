@@ -2693,6 +2693,15 @@ import { useRef, useEffect } from \\"react\\";
 
 function Embed(props) {
   const elem = useRef(null);
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
+  useEffect(() => {
+    elem.addEventListener(initEditingBldr, elem_onInitEditingBldr);
+    return () =>
+      elem.removeEventListener(initEditingBldr, elem_onInitEditingBldr);
+  }, []);
 
   useEffect(() => {
     elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
@@ -6911,6 +6920,15 @@ import { useRef, useEffect } from \\"react\\";
 
 function Embed(props: any) {
   const elem = useRef<HTMLDivElement>(null);
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
+  useEffect(() => {
+    elem.addEventListener(initEditingBldr, elem_onInitEditingBldr);
+    return () =>
+      elem.removeEventListener(initEditingBldr, elem_onInitEditingBldr);
+  }, []);
 
   useEffect(() => {
     elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
@@ -8353,14 +8371,14 @@ export default MyComponent;
 `;
 
 exports[`React Native > svelte > Javascript Test > context 1`] = `
-"'>' expected. (34:13)
-  32 | return (
-  33 |
-> 34 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
-     |             ^
+"'>' expected. (36:13)
+  34 | return (
   35 |
-  36 |
-  37 |"
+> 36 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+     |             ^
+  37 |
+  38 |
+  39 |"
 `;
 
 exports[`React Native > svelte > Javascript Test > each 1`] = `
@@ -8881,14 +8899,14 @@ export default MyComponent;
 `;
 
 exports[`React Native > svelte > Typescript Test > context 1`] = `
-"'>' expected. (34:13)
-  32 | return (
-  33 |
-> 34 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
-     |             ^
+"'>' expected. (36:13)
+  34 | return (
   35 |
-  36 |
-  37 |"
+> 36 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+     |             ^
+  37 |
+  38 |
+  39 |"
 `;
 
 exports[`React Native > svelte > Typescript Test > each 1`] = `

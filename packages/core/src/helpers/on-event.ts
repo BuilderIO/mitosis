@@ -6,6 +6,13 @@ const checkIsEventHandlerNode = (node: MitosisNode, hook: OnEventHook) => {
   return hook.refName === node.bindings.ref?.code;
 };
 
+const getBindingName = (hook: OnEventHook) => {
+  return `on${capitalize(hook.eventName)}`;
+};
+export const getOnEventHandlerName = (hook: OnEventHook) => {
+  return `${hook.refName}_${getBindingName(hook)}`;
+};
+
 export const getOnEventHooksForNode = ({
   node,
   component,
@@ -16,30 +23,34 @@ export const getOnEventHooksForNode = ({
   return component.hooks.onEvent?.filter((hook) => checkIsEventHandlerNode(node, hook));
 };
 
-const processOnEventHooks = (component: MitosisComponent) => {
-  traverseNodes(component, (node) => {
-    getOnEventHooksForNode({ node, component })?.forEach((hook) => {
-      const handlerName = 'on' + capitalize(hook.eventName);
-      const fnName = `${hook.refName}_${handlerName}`;
-      component.state[fnName] = {
-        code: `${fnName}() { ${hook.code} }`,
-        type: 'method',
-      };
-
-      node.bindings[handlerName] = {
-        code: `state.${fnName}()`,
-        type: 'single',
-      };
-    });
-  });
-};
-
 /**
  * Adds event handlers from `onEvent` hooks to the appropriate node's bindings.
  * Only works with frameworks that support custom events in their templates.
  */
-export const processOnEventHooksPlugin: Plugin = () => ({
-  json: {
-    pre: processOnEventHooks,
-  },
-});
+export const processOnEventHooksPlugin =
+  (args: { setBindings?: boolean } = {}): Plugin =>
+  () => ({
+    json: {
+      pre: (component) => {
+        const { setBindings = true } = args;
+
+        traverseNodes(component, (node) => {
+          getOnEventHooksForNode({ node, component })?.forEach((hook) => {
+            const handlerName = getBindingName(hook);
+            const fnName = getOnEventHandlerName(hook);
+            component.state[fnName] = {
+              code: `${fnName}() { ${hook.code} }`,
+              type: 'method',
+            };
+
+            if (setBindings) {
+              node.bindings[handlerName] = {
+                code: `state.${fnName}()`,
+                type: 'single',
+              };
+            }
+          });
+        });
+      },
+    },
+  });

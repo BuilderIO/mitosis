@@ -120,7 +120,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     }
 
     options.plugins.unshift(
-      processOnEventHooksPlugin,
+      processOnEventHooksPlugin(),
       ...(options.api === 'options' ? [onUpdatePlugin] : []),
       ...(options.api === 'composition' ? [FUNCTION_HACK_PLUGIN] : []),
       CODE_PROCESSOR_PLUGIN((codeType) => {

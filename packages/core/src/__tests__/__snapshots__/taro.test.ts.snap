@@ -2322,6 +2322,15 @@ import { View, Text } from \\"@tarojs/components\\";
 
 function Embed(props) {
   const elem = useRef(null);
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
+  useEffect(() => {
+    elem.addEventListener(initEditingBldr, elem_onInitEditingBldr);
+    return () =>
+      elem.removeEventListener(initEditingBldr, elem_onInitEditingBldr);
+  }, []);
 
   useEffect(() => {
     elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
@@ -5968,6 +5977,15 @@ import { View, Text } from \\"@tarojs/components\\";
 
 function Embed(props: any) {
   const elem = useRef<HTMLDivElement>(null);
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
+  useEffect(() => {
+    elem.addEventListener(initEditingBldr, elem_onInitEditingBldr);
+    return () =>
+      elem.removeEventListener(initEditingBldr, elem_onInitEditingBldr);
+  }, []);
 
   useEffect(() => {
     elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
@@ -7175,14 +7193,14 @@ export default MyComponent;
 `;
 
 exports[`Taro > svelte > Javascript Test > context 1`] = `
-"'>' expected. (33:13)
-  31 | return (
-  32 |
-> 33 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
-     |             ^
+"'>' expected. (35:13)
+  33 | return (
   34 |
-  35 |
-  36 |"
+> 35 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
+     |             ^
+  36 |
+  37 |
+  38 |"
 `;
 
 exports[`Taro > svelte > Javascript Test > each 1`] = `
@@ -7594,14 +7612,14 @@ export default MyComponent;
 `;
 
 exports[`Taro > svelte > Typescript Test > context 1`] = `
-"'>' expected. (33:13)
-  31 | return (
-  32 |
-> 33 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
-     |             ^
+"'>' expected. (35:13)
+  33 | return (
   34 |
-  35 |
-  36 |"
+> 35 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
+     |             ^
+  36 |
+  37 |
+  38 |"
 `;
 
 exports[`Taro > svelte > Typescript Test > each 1`] = `

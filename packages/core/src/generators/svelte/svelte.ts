@@ -149,7 +149,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     options.plugins = [
       ...(options.plugins || []),
-      processOnEventHooksPlugin,
+      processOnEventHooksPlugin(),
       FUNCTION_HACK_PLUGIN,
       // Strip types from any JS code that ends up in the template, because Svelte does not support TS code in templates.
       CODE_PROCESSOR_PLUGIN((codeType) => {

@@ -2294,6 +2294,15 @@ import { useRef, useEffect } from \\"react\\";
 
 function Embed(props) {
   const elem = useRef(null);
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
+  useEffect(() => {
+    elem.addEventListener(initEditingBldr, elem_onInitEditingBldr);
+    return () =>
+      elem.removeEventListener(initEditingBldr, elem_onInitEditingBldr);
+  }, []);
 
   useEffect(() => {
     elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
@@ -5865,6 +5874,15 @@ import { useRef, useEffect } from \\"react\\";
 
 function Embed(props: any) {
   const elem = useRef<HTMLDivElement>(null);
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
+  useEffect(() => {
+    elem.addEventListener(initEditingBldr, elem_onInitEditingBldr);
+    return () =>
+      elem.removeEventListener(initEditingBldr, elem_onInitEditingBldr);
+  }, []);
 
   useEffect(() => {
     elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
@@ -7252,14 +7270,14 @@ export default MyComponent;
 `;
 
 exports[`React > svelte > Javascript Test > context 1`] = `
-"'>' expected. (31:13)
-  29 | return (
-  30 |
-> 31 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
-     |             ^
+"'>' expected. (33:13)
+  31 | return (
   32 |
-  33 |
-  34 |"
+> 33 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+     |             ^
+  34 |
+  35 |
+  36 |"
 `;
 
 exports[`React > svelte > Javascript Test > each 1`] = `
@@ -7662,14 +7680,14 @@ export default MyComponent;
 `;
 
 exports[`React > svelte > Typescript Test > context 1`] = `
-"'>' expected. (31:13)
-  29 | return (
-  30 |
-> 31 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
-     |             ^
+"'>' expected. (33:13)
+  31 | return (
   32 |
-  33 |
-  34 |"
+> 33 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+     |             ^
+  34 |
+  35 |
+  36 |"
 `;
 
 exports[`React > svelte > Typescript Test > each 1`] = `

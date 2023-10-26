@@ -107,7 +107,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     });
     options.plugins = [
       ...(options.plugins || []),
-      processOnEventHooksPlugin,
+      processOnEventHooksPlugin(),
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'state':

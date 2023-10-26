@@ -2264,6 +2264,15 @@ import { useRef, useEffect } from \\"react\\";
 
 function Embed(props) {
   const elem = useRef(null);
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
+  useEffect(() => {
+    elem.addEventListener(initEditingBldr, elem_onInitEditingBldr);
+    return () =>
+      elem.removeEventListener(initEditingBldr, elem_onInitEditingBldr);
+  }, []);
 
   useEffect(() => {
     elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
@@ -2507,14 +2516,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Javascript Test > renderBlock 1`] = `
-"Identifier expected. (209:10)
-  207 |    {shouldWrap() ? (
-  208 |    <>{isEmptyHtmlElement(tag()) ? (
-> 209 |    <><tag()  {...(attributes())}  {...(actions())}  /></>
+"Identifier expected. (211:10)
+  209 |    {shouldWrap() ? (
+  210 |    <>{isEmptyHtmlElement(tag()) ? (
+> 211 |    <><tag()  {...(attributes())}  {...(actions())}  /></>
       |          ^
-  210 |  ) : null}
-  211 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-  212 |    <>{repeatItemData()?.map((data, index) => ("
+  212 |  ) : null}
+  213 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  214 |    <>{repeatItemData()?.map((data, index) => ("
 `;
 
 exports[`RSC > jsx > Javascript Test > renderContentExample 1`] = `
@@ -5523,6 +5532,15 @@ import { useRef, useEffect } from \\"react\\";
 
 function Embed(props: any) {
   const elem = useRef<HTMLDivElement>(null);
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
+  useEffect(() => {
+    elem.addEventListener(initEditingBldr, elem_onInitEditingBldr);
+    return () =>
+      elem.removeEventListener(initEditingBldr, elem_onInitEditingBldr);
+  }, []);
 
   useEffect(() => {
     elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
@@ -5812,14 +5830,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Typescript Test > renderBlock 1`] = `
-"Identifier expected. (217:10)
-  215 |    {shouldWrap() ? (
-  216 |    <>{isEmptyHtmlElement(tag()) ? (
-> 217 |    <><tag()  {...(attributes())}  {...(actions())}  /></>
+"Identifier expected. (219:10)
+  217 |    {shouldWrap() ? (
+  218 |    <>{isEmptyHtmlElement(tag()) ? (
+> 219 |    <><tag()  {...(attributes())}  {...(actions())}  /></>
       |          ^
-  218 |  ) : null}
-  219 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-  220 |    <>{repeatItemData()?.map((data, index) => ("
+  220 |  ) : null}
+  221 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  222 |    <>{repeatItemData()?.map((data, index) => ("
 `;
 
 exports[`RSC > jsx > Typescript Test > renderContentExample 1`] = `
@@ -6405,14 +6423,14 @@ export default MyComponent;
 `;
 
 exports[`RSC > svelte > Javascript Test > context 1`] = `
-"'>' expected. (31:13)
-  29 | return (
-  30 |
-> 31 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
-     |             ^
+"'>' expected. (33:13)
+  31 | return (
   32 |
-  33 |
-  34 |"
+> 33 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+     |             ^
+  34 |
+  35 |
+  36 |"
 `;
 
 exports[`RSC > svelte > Javascript Test > each 1`] = `
@@ -6802,14 +6820,14 @@ export default MyComponent;
 `;
 
 exports[`RSC > svelte > Typescript Test > context 1`] = `
-"'>' expected. (31:13)
-  29 | return (
-  30 |
-> 31 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
-     |             ^
+"'>' expected. (33:13)
+  31 | return (
   32 |
-  33 |
-  34 |"
+> 33 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+     |             ^
+  34 |
+  35 |
+  36 |"
 `;
 
 exports[`RSC > svelte > Typescript Test > each 1`] = `
