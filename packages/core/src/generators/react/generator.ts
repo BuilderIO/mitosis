@@ -2,7 +2,6 @@ import { types } from '@babel/core';
 import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import traverse from 'traverse';
 import { createSingleBinding } from '../../helpers/bindings';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { dedent } from '../../helpers/dedent';
@@ -15,7 +14,6 @@ import {
 } from '../../helpers/get-state-object-string';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { handleMissingState } from '../../helpers/handle-missing-state';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { mapRefs } from '../../helpers/map-refs';
 import { initializeOptions } from '../../helpers/merge-options';
@@ -39,6 +37,7 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { TranspilerGenerator } from '../../types/transpiler';
 import { hasContext } from '../helpers/context';
 import { collectReactNativeStyles } from '../react-native';
+import { checkIfIsClientComponent } from '../rsc';
 import { blockToReact } from './blocks';
 import { closeFrag, getCode, openFrag, processTagReferences, wrapInFragment } from './helpers';
 import { getUseStateCode, processHookCode, updateStateSetters } from './state';
@@ -286,30 +285,6 @@ const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
   return `${json.name}.defaultProps = {${defaultPropsString}};`;
 };
 
-// Test if a react component is a client component and needs
-// "use client" by seeing if it has any client-only features
-// like refs, effects, state, or event listeners
-const needsUseClient = (json: MitosisComponent) => {
-  if (json.hooks.onMount?.code) return true;
-  if (json.hooks.onUnMount?.code) return true;
-  if (json.hooks.onUpdate?.length) return true;
-  if (Object.keys(json.refs).length) return true;
-  if (Object.keys(json.state).length) return true;
-  if (Object.keys(json.context.set).length) return true;
-  if (Object.keys(json.context.get).length) return true;
-
-  let foundEventListener = false;
-  traverse(json).forEach(function (node) {
-    if (isMitosisNode(node)) {
-      if (Object.keys(node.bindings).filter((item) => item.startsWith('on')).length) {
-        foundEventListener = true;
-        this.stop();
-      }
-    }
-  });
-
-  return foundEventListener;
-};
 
 const _componentToReact = (
   json: MitosisComponent,
@@ -529,7 +504,7 @@ const _componentToReact = (
     !isRsc &&
     !isNative &&
     !isPreact &&
-    needsUseClient(json);
+    checkIfIsClientComponent(json);
 
   const str = dedent`
   ${shouldAddUseClientDirective ? `'use client';` : ''}
