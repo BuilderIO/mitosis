@@ -1192,7 +1192,8 @@ export default ImgComponent;
 `;
 
 exports[`RSC > jsx > Javascript Test > Input 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
 function FormInputComponent(props) {
@@ -1220,13 +1221,14 @@ export default FormInputComponent;
 `;
 
 exports[`RSC > jsx > Javascript Test > InputParent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import FormInputComponent from \\"./input.raw\\";
 
 function Stepper(props) {
-  const handleChange = function handleChange(value) {
+  function handleChange(value) {
     console.log(value);
-  };
+  }
 
   return (
     <FormInputComponent
@@ -1965,7 +1967,8 @@ export default RenderContent;
 `;
 
 exports[`RSC > jsx > Javascript Test > defaultProps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 
 function Button(props) {
   return (
@@ -2011,7 +2014,8 @@ export default Button;
 `;
 
 exports[`RSC > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 
 function Button(props) {
   return (
@@ -4296,7 +4300,8 @@ export default ImgComponent;
 `;
 
 exports[`RSC > jsx > Typescript Test > Input 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 
 export interface FormInputProps {
   type?: string;
@@ -4336,13 +4341,14 @@ export default FormInputComponent;
 `;
 
 exports[`RSC > jsx > Typescript Test > InputParent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 import FormInputComponent from \\"./input.raw\\";
 
 function Stepper(props: any) {
-  const handleChange = function handleChange(value: string) {
+  function handleChange(value: string) {
     console.log(value);
-  };
+  }
 
   return (
     <FormInputComponent
@@ -5199,7 +5205,8 @@ export default RenderContent;
 `;
 
 exports[`RSC > jsx > Typescript Test > defaultProps 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -5255,7 +5262,8 @@ export default Button;
 `;
 
 exports[`RSC > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -6455,14 +6463,25 @@ export default MyComponent;
 `;
 
 exports[`RSC > svelte > Javascript Test > eventHandlers 1`] = `
-"'(' expected. (13:30)
-  11 |
-  12 |   function MyComponent(props) {
-> 13 |   const log = log = function function log(msg = 'hello') {
-     |                              ^
-  14 | console.log(msg);
-  15 | }
-  16 |"
+"\\"use client\\";
+import * as React from \\"react\\";
+
+function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`RSC > svelte > Javascript Test > html 1`] = `
@@ -6852,14 +6871,25 @@ export default MyComponent;
 `;
 
 exports[`RSC > svelte > Typescript Test > eventHandlers 1`] = `
-"'(' expected. (13:30)
-  11 |
-  12 |   function MyComponent(props:any) {
-> 13 |   const log = log = function function log(msg = 'hello') {
-     |                              ^
-  14 | console.log(msg);
-  15 | }
-  16 |"
+"\\"use client\\";
+import * as React from \\"react\\";
+
+function MyComponent(props: any) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`RSC > svelte > Typescript Test > html 1`] = `
