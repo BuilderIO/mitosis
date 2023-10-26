@@ -37,6 +37,7 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { TranspilerGenerator } from '../../types/transpiler';
 import { hasContext } from '../helpers/context';
 import { collectReactNativeStyles } from '../react-native';
+import { checkIfIsClientComponent } from '../rsc';
 import { blockToReact } from './blocks';
 import { closeFrag, getCode, openFrag, processTagReferences, wrapInFragment } from './helpers';
 import { getUseStateCode, processHookCode, updateStateSetters } from './state';
@@ -495,7 +496,14 @@ const _componentToReact = (
   `;
 
   const isRsc = options.rsc && json.meta.useMetadata?.rsc?.componentType === 'server';
-  const shouldAddUseClientDirective = options.addUseClientDirectiveIfNeeded && !isRsc;
+  const isNative = options.type === 'native';
+  const isPreact = options.preact;
+  const shouldAddUseClientDirective =
+    options.addUseClientDirectiveIfNeeded &&
+    !isRsc &&
+    !isNative &&
+    !isPreact &&
+    checkIfIsClientComponent(json);
 
   const str = dedent`
   ${shouldAddUseClientDirective ? `'use client';` : ''}
