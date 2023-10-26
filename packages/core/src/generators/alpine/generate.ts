@@ -81,6 +81,7 @@ const getStateObjectString = (json: MitosisComponent) =>
     renderMountHook(json),
     renderUpdateHooks(json),
     replaceStateWithThis,
+    // cleanup bad regexes that result in malformed JSON strings that start with `{,`
     (x) => (x.startsWith('{,') ? x.replace('{,', '{') : x),
   )(json);
 
