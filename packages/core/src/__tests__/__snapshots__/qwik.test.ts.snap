@@ -3973,12 +3973,22 @@ exports[`qwik > jsx > Javascript Test > onEvent 1`] = `
   Fragment,
   component$,
   h,
+  useOn,
   useSignal,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
+export const elem_onInitEditingBldr = function elem_onInitEditingBldr(
+  props,
+  state,
+  elem
+) {
+  console.log(\\"test\\");
+};
 export const Embed = component$((props) => {
   const elem = useSignal();
+  const state = {};
+  useOn(initEditingBldr, elem_onInitEditingBldr);
   useVisibleTask$(() => {
     elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
   });
@@ -7363,12 +7373,22 @@ exports[`qwik > jsx > Typescript Test > onEvent 1`] = `
   Fragment,
   component$,
   h,
+  useOn,
   useSignal,
   useVisibleTask$,
 } from \\"@builder.io/qwik\\";
 
+export const elem_onInitEditingBldr = function elem_onInitEditingBldr(
+  props,
+  state,
+  elem
+) {
+  console.log(\\"test\\");
+};
 export const Embed = component$((props: any) => {
   const elem = useSignal<Element>();
+  const state: any = {};
+  useOn(initEditingBldr, elem_onInitEditingBldr);
   useVisibleTask$(() => {
     elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
   });
