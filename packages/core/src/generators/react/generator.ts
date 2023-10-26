@@ -285,7 +285,6 @@ const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
   return `${json.name}.defaultProps = {${defaultPropsString}};`;
 };
 
-
 const _componentToReact = (
   json: MitosisComponent,
   options: ToReactOptions,
