@@ -2,6 +2,7 @@ import { uniq } from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
 import hash from 'hash-sum';
 import { format } from 'prettier/standalone';
+import { processOnEventHooksPlugin } from 'src/helpers/on-event';
 import traverse from 'traverse';
 import { createSingleBinding } from '../../helpers/bindings';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
@@ -91,7 +92,6 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
 const DEFAULT_OPTIONS: ToSolidOptions = {
   state: 'signals',
   stylesType: 'styled-components',
-  plugins: [],
 };
 
 export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
@@ -107,6 +107,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     });
     options.plugins = [
       ...(options.plugins || []),
+      processOnEventHooksPlugin,
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'state':
