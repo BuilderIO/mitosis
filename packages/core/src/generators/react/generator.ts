@@ -448,16 +448,16 @@ const _componentToReact = (
 
     ${
       json.hooks.onEvent
-        ?.map(
-          (hook) => `
+        ?.map((hook) => {
+          const eventName = `"${hook.eventName}"`;
+          const handlerName = getOnEventHandlerName(hook);
+          return `
       useEffect(() => {
-        ${hook.refName}.addEventListener(${hook.eventName}, ${getOnEventHandlerName(hook)});
-        return () => ${hook.refName}.removeEventListener(${hook.eventName}, ${getOnEventHandlerName(
-            hook,
-          )});
+        ${hook.refName}.addEventListener(${eventName}, ${handlerName});
+        return () => ${hook.refName}.removeEventListener(${eventName}, ${handlerName});
       }, []);
-      `,
-        )
+      `;
+        })
         .join('\n') ?? ''
     }
     ${

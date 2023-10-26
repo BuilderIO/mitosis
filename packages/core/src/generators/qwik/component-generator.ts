@@ -306,21 +306,18 @@ function emitUseContext(file: File, component: MitosisComponent) {
 function emitUseOn(file: File, component: MitosisComponent) {
   component.hooks.onEvent?.forEach((hook) => {
     const handlerName = getOnEventHandlerName(hook);
+    const eventName = `"${hook.eventName}"`;
     if (hook.isRoot) {
       file.src.emit(
         file.import(file.qwikModule, 'useOn').localName,
-        '(',
-        hook.eventName,
-        ', ',
-        handlerName,
-        ');',
+        `(${eventName}, ${handlerName});`,
       );
     } else {
       file.src.emit(
         file.import(file.qwikModule, 'useVisibleTask$').localName,
         `(() => {
-          ${hook.refName}.value?.addEventListener(${hook.eventName}, ${handlerName});
-          return () => ${hook.refName}.value?.removeEventListener(${hook.eventName}, ${handlerName});
+          ${hook.refName}.value?.addEventListener(${eventName}, ${handlerName});
+          return () => ${hook.refName}.value?.removeEventListener(${eventName}, ${handlerName});
         })  
         `,
       );
