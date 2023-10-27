@@ -34,7 +34,6 @@ import {
   Target,
   TranspilerGenerator,
 } from '@builder.io/mitosis';
-import { checkIsDefined } from '@builder.io/mitosis/src/helpers/nullable';
 import debug from 'debug';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
@@ -42,6 +41,7 @@ import { kebabCase } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
 import { getFiles } from './helpers/files';
+import { checkIsDefined } from './helpers/nullable';
 import { getOverrideFile } from './helpers/overrides';
 import { transformImports, transpile, transpileIfNecessary } from './helpers/transpile';
 
