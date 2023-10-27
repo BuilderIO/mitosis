@@ -67,6 +67,7 @@ export const componentFunctionToJson = (
           }
           case HOOKS.MOUNT: {
             const firstArg = expression.arguments[0];
+            const secondArg = expression.arguments[1];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = processHookCode(firstArg);
               hooks.onMount = { code };

@@ -48,7 +48,7 @@ export interface ContextSetInfo extends ContextOptions {
   ref?: string;
 }
 
-export type extendedHook = { code: string; deps?: string };
+export type BaseHook = { code: string; deps?: string };
 
 export type MitosisComponentInput = {
   name: string;
@@ -90,8 +90,7 @@ export type TargetBlockDefinition = TargetBlockCode & {
   };
 };
 
-export type OnEventHook = {
-  code: string;
+export type OnEventHook = BaseHook & {
   refName: string;
   eventName: string;
   isRoot: boolean;
@@ -128,13 +127,13 @@ export type MitosisComponent = {
     };
   };
   hooks: {
-    init?: extendedHook;
-    onInit?: extendedHook;
-    onMount?: extendedHook;
-    onUnMount?: extendedHook;
-    preComponent?: extendedHook;
-    postComponent?: extendedHook;
-    onUpdate?: extendedHook[];
+    init?: BaseHook;
+    onInit?: BaseHook;
+    onMount?: BaseHook;
+    onUnMount?: BaseHook;
+    preComponent?: BaseHook;
+    postComponent?: BaseHook;
+    onUpdate?: BaseHook[];
     onEvent?: OnEventHook[];
   };
   targetBlocks?: Dictionary<TargetBlockDefinition>;

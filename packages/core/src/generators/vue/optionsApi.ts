@@ -6,7 +6,7 @@ import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
 import { checkIsComponentImport } from '../../helpers/render-imports';
-import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
+import { BaseHook, MitosisComponent } from '../../types/mitosis-component';
 import {
   encodeQuotes,
   getContextKey,
@@ -77,8 +77,8 @@ export function generateOptionsApiScript(
   path: string | undefined,
   template: string,
   props: string[],
-  onUpdateWithDeps: extendedHook[],
-  onUpdateWithoutDeps: extendedHook[],
+  onUpdateWithDeps: BaseHook[],
+  onUpdateWithoutDeps: BaseHook[],
 ) {
   const { exports: localExports } = component;
   const localVarAsData: string[] = [];
