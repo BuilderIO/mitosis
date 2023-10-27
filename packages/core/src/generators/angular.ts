@@ -383,7 +383,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       return `@Output() ${variableName} = new EventEmitter()`;
     });
 
-    const hasOnMount = Boolean(json.hooks?.onMount);
     const domRefs = getRefs(json);
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
     const componentsUsed = Array.from(getComponentsUsed(json)).filter((item) => {
@@ -540,17 +539,10 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           `
       }
       ${
-        !hasOnMount
+        !json.hooks.onMount.length
           ? ''
           : `ngOnInit() {
-
-              ${
-                !json.hooks?.onMount
-                  ? ''
-                  : `
-                ${stringifySingleScopeOnMount(json)}
-                `
-              }
+              ${stringifySingleScopeOnMount(json)}
             }`
       }
 
