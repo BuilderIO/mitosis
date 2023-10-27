@@ -4396,6 +4396,31 @@ exports[`Html > jsx > Javascript Test > nestedStyles 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > onEvent 1`] = `
+"<div class=\\"builder-embed\\" data-el=\\"div-1\\" data-ref=\\"undefined-elem\\">
+  <div>Test</div>
+</div>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // onMount
+    elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > onInit & onMount 1`] = `
 "<div></div>
 <script>
@@ -10588,6 +10613,31 @@ exports[`Html > jsx > Typescript Test > nestedStyles 1`] = `
     display: inline-block;
   }
 </style>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > onEvent 1`] = `
+"<div class=\\"builder-embed\\" data-el=\\"div-1\\" data-ref=\\"undefined-elem\\">
+  <div>Test</div>
+</div>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // onMount
+    elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  })();
+</script>
 "
 `;
 

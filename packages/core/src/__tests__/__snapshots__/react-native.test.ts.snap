@@ -2618,6 +2618,47 @@ export default NestedStyles;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > onEvent 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useRef, useEffect } from \\"react\\";
+
+function Embed(props) {
+  const elem = useRef(null);
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
+  useEffect(() => {
+    elem.addEventListener(\\"initEditingBldr\\", elem_onInitEditingBldr);
+    return () =>
+      elem.removeEventListener(\\"initEditingBldr\\", elem_onInitEditingBldr);
+  }, []);
+
+  useEffect(() => {
+    elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  }, []);
+
+  return (
+    <View ref={elem}>
+      <View>
+        <Text>Test</Text>
+      </View>
+    </View>
+  );
+}
+
+export default Embed;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > onInit & onMount 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -6711,6 +6752,47 @@ export default NestedStyles;
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > onEvent 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useRef, useEffect } from \\"react\\";
+
+function Embed(props: any) {
+  const elem = useRef<HTMLDivElement>(null);
+  function elem_onInitEditingBldr() {
+    console.log(\\"test\\");
+  }
+
+  useEffect(() => {
+    elem.addEventListener(\\"initEditingBldr\\", elem_onInitEditingBldr);
+    return () =>
+      elem.removeEventListener(\\"initEditingBldr\\", elem_onInitEditingBldr);
+  }, []);
+
+  useEffect(() => {
+    elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  }, []);
+
+  return (
+    <View ref={elem}>
+      <View>
+        <Text>Test</Text>
+      </View>
+    </View>
+  );
+}
+
+export default Embed;
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > onInit & onMount 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -8100,14 +8182,14 @@ export default MyComponent;
 `;
 
 exports[`React Native > svelte > Javascript Test > context 1`] = `
-"'>' expected. (32:13)
-  30 | return (
-  31 |
-> 32 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
-     |             ^
+"'>' expected. (34:13)
+  32 | return (
   33 |
-  34 |
-  35 |"
+> 34 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+     |             ^
+  35 |
+  36 |
+  37 |"
 `;
 
 exports[`React Native > svelte > Javascript Test > each 1`] = `
@@ -8613,14 +8695,14 @@ export default MyComponent;
 `;
 
 exports[`React Native > svelte > Typescript Test > context 1`] = `
-"'>' expected. (32:13)
-  30 | return (
-  31 |
-> 32 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
-     |             ^
+"'>' expected. (34:13)
+  32 | return (
   33 |
-  34 |
-  35 |"
+> 34 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+     |             ^
+  35 |
+  36 |
+  37 |"
 `;
 
 exports[`React Native > svelte > Typescript Test > each 1`] = `

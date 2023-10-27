@@ -15,6 +15,7 @@ import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { initializeOptions } from '../../helpers/merge-options';
 import { checkIsDefined } from '../../helpers/nullable';
+import { processOnEventHooksPlugin } from '../../helpers/on-event';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
@@ -91,7 +92,6 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
 const DEFAULT_OPTIONS: ToSolidOptions = {
   state: 'signals',
   stylesType: 'styled-components',
-  plugins: [],
 };
 
 export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
@@ -107,6 +107,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     });
     options.plugins = [
       ...(options.plugins || []),
+      processOnEventHooksPlugin(),
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'state':

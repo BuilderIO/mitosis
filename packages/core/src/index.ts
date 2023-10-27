@@ -103,5 +103,15 @@ export declare function useMetadata(obj: ComponentMetadata): void;
 export declare function useDefaultProps<T = Dictionary<any>>(value: T): T;
 export declare function useStyle(value: string): void;
 
+/**
+ * Adds an event listener to a given element ref.
+ */
+export declare function onEvent(
+  eventName: string,
+  fn: (event: any) => any,
+  elementRef: Element,
+  isRoot?: boolean,
+): void;
+
 // TO-DO: better type strictness that guarantees `Target` is a subset of `Targets`
 export declare function useTarget<Return>(dict: TargetBlock<Return>): Return;

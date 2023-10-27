@@ -17,6 +17,7 @@ import { handleMissingState } from '../../helpers/handle-missing-state';
 import { isRootTextNode } from '../../helpers/is-root-text-node';
 import { mapRefs } from '../../helpers/map-refs';
 import { initializeOptions } from '../../helpers/merge-options';
+import { getOnEventHandlerName, processOnEventHooksPlugin } from '../../helpers/on-event';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { processHttpRequests } from '../../helpers/process-http-requests';
 import { renderPreComponent } from '../../helpers/render-imports';
@@ -175,8 +176,9 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       stateType,
       stylesType: 'styled-jsx',
       type: 'dom',
-      plugins:
-        stateType === 'variables'
+      plugins: [
+        processOnEventHooksPlugin({ setBindings: false }),
+        ...(stateType === 'variables'
           ? [
               CODE_PROCESSOR_PLUGIN((codeType, json) => (code, hookType) => {
                 if (codeType === 'types') return code;
@@ -203,7 +205,8 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
                 return code;
               }),
             ]
-          : [],
+          : []),
+      ],
     };
 
     const options = initializeOptions({
@@ -441,6 +444,21 @@ const _componentToReact = (
         }, [])
         `
         : ''
+    }
+
+    ${
+      json.hooks.onEvent
+        ?.map((hook) => {
+          const eventName = `"${hook.eventName}"`;
+          const handlerName = getOnEventHandlerName(hook);
+          return `
+      useEffect(() => {
+        ${hook.refName}.addEventListener(${eventName}, ${handlerName});
+        return () => ${hook.refName}.removeEventListener(${eventName}, ${handlerName});
+      }, []);
+      `;
+        })
+        .join('\n') ?? ''
     }
     ${
       json.hooks.onMount?.code

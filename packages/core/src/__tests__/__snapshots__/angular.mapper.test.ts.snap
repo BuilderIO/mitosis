@@ -2991,6 +2991,38 @@ export class NestedStylesModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > onEvent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"embed, Embed\\",
+  template: \`
+    <div class=\\"builder-embed\\" #elem>
+      <div>Test</div>
+    </div>
+  \`,
+})
+export class Embed {
+  @ViewChild(\\"elem\\") elem: ElementRef;
+
+  ngOnInit() {
+    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  }
+}
+
+@NgModule({
+  declarations: [Embed],
+  imports: [CommonModule],
+  exports: [Embed],
+  bootstrap: [SomeOtherComponent],
+})
+export class EmbedModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > onInit & onMount 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7584,6 +7616,38 @@ export class NestedStyles {}
   bootstrap: [SomeOtherComponent],
 })
 export class NestedStylesModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > onEvent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"embed, Embed\\",
+  template: \`
+    <div class=\\"builder-embed\\" #elem>
+      <div>Test</div>
+    </div>
+  \`,
+})
+export class Embed {
+  @ViewChild(\\"elem\\") elem: ElementRef;
+
+  ngOnInit() {
+    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  }
+}
+
+@NgModule({
+  declarations: [Embed],
+  imports: [CommonModule],
+  exports: [Embed],
+  bootstrap: [SomeOtherComponent],
+})
+export class EmbedModule {}
 "
 `;
 

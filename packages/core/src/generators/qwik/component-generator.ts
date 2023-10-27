@@ -2,6 +2,7 @@ import { format } from 'prettier/standalone';
 import { convertTypeScriptToJS } from '../../helpers/babel-transform';
 import { fastClone } from '../../helpers/fast-clone';
 import { initializeOptions } from '../../helpers/merge-options';
+import { getOnEventHandlerName, processOnEventHooksPlugin } from '../../helpers/on-event';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { transformImportPath } from '../../helpers/render-imports';
 import { replaceIdentifiers, replaceStateIdentifier } from '../../helpers/replace-identifiers';
@@ -38,6 +39,7 @@ const PLUGINS: Plugin[] = [
       },
     },
   }),
+  processOnEventHooksPlugin({ setBindings: false }),
   CODE_PROCESSOR_PLUGIN((codeType, json) => {
     switch (codeType) {
       case 'types':
@@ -143,6 +145,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
             emitUseContext(file, component);
             emitUseRef(file, component);
             if (!metadata?.qwik?.setUseStoreFirst) emitStore();
+            emitUseOn(file, component);
             emitUseContextProvider(file, component);
             emitUseClientEffect(file, component);
             emitUseMount(file, component);
@@ -297,6 +300,28 @@ function emitUseContext(file: File, component: MitosisComponent) {
       context.name,
       ');',
     );
+  });
+}
+
+function emitUseOn(file: File, component: MitosisComponent) {
+  component.hooks.onEvent?.forEach((hook) => {
+    const handlerName = getOnEventHandlerName(hook);
+    const eventName = `"${hook.eventName}"`;
+    if (hook.isRoot) {
+      file.src.emit(
+        file.import(file.qwikModule, 'useOn').localName,
+        `(${eventName}, ${handlerName});`,
+      );
+    } else {
+      file.src.emit(
+        file.import(file.qwikModule, 'useVisibleTask$').localName,
+        `(() => {
+          ${hook.refName}.value?.addEventListener(${eventName}, ${handlerName});
+          return () => ${hook.refName}.value?.removeEventListener(${eventName}, ${handlerName});
+        })  
+        `,
+      );
+    }
   });
 }
 

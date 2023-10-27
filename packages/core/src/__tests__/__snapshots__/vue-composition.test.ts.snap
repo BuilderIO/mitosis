@@ -2137,6 +2137,32 @@ exports[`Vue > jsx > Javascript Test > nestedStyles 1`] = `
 </style>"
 `;
 
+exports[`Vue > jsx > Javascript Test > onEvent 1`] = `
+"<template>
+  <div
+    class=\\"builder-embed\\"
+    ref=\\"elem\\"
+    @initeditingbldr=\\"elem_onInitEditingBldr()\\"
+  >
+    <div>Test</div>
+  </div>
+</template>
+
+<script setup>
+import { onMounted } from \\"vue\\";
+
+const elem = ref(null);
+
+onMounted(() => {
+  elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+});
+
+function elem_onInitEditingBldr() {
+  console.log(\\"test\\");
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > onInit & onMount 1`] = `
 "<template>
   <div></div>
@@ -5303,6 +5329,32 @@ exports[`Vue > jsx > Typescript Test > nestedStyles 1`] = `
   display: inline-block;
 }
 </style>"
+`;
+
+exports[`Vue > jsx > Typescript Test > onEvent 1`] = `
+"<template>
+  <div
+    class=\\"builder-embed\\"
+    ref=\\"elem\\"
+    @initeditingbldr=\\"elem_onInitEditingBldr()\\"
+  >
+    <div>Test</div>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { onMounted } from \\"vue\\";
+
+const elem = ref<HTMLDivElement>();
+
+onMounted(() => {
+  elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+});
+
+function elem_onInitEditingBldr() {
+  console.log(\\"test\\");
+}
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > onInit & onMount 1`] = `

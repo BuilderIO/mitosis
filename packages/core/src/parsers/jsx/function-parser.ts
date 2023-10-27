@@ -73,6 +73,50 @@ export const componentFunctionToJson = (
             }
             break;
           }
+          case HOOKS.EVENT: {
+            const firstArg = expression.arguments[0];
+            const secondArg = expression.arguments[1];
+            const thirdArg = expression.arguments[2];
+            const fourthArg = expression.arguments[3];
+
+            if (!types.isStringLiteral(firstArg)) {
+              console.warn(
+                '`onEvent` hook skipped. Event name must be a string literal: ',
+                generate(expression).code,
+              );
+              break;
+            }
+            if (
+              !types.isFunctionExpression(secondArg) &&
+              !types.isArrowFunctionExpression(secondArg)
+            ) {
+              console.warn(
+                '`onEvent` hook skipped. Event handler must be a function: ',
+                generate(expression).code,
+              );
+              break;
+            }
+
+            if (!types.isIdentifier(thirdArg)) {
+              console.warn(
+                '`onEvent` hook skipped. Element ref must be a value: ',
+                generate(expression).code,
+              );
+              break;
+            }
+
+            const isRoot = types.isBooleanLiteral(fourthArg) ? fourthArg.value : false;
+
+            hooks.onEvent = [
+              ...(hooks.onEvent || []),
+              {
+                eventName: firstArg.value,
+                code: processHookCode(secondArg),
+                refName: thirdArg.name,
+                isRoot,
+              },
+            ];
+          }
           case HOOKS.UPDATE: {
             const firstArg = expression.arguments[0];
             const secondArg = expression.arguments[1];

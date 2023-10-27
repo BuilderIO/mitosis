@@ -8,6 +8,7 @@ export const HOOKS = {
   TARGET: 'useTarget',
   METADATA: 'useMetadata',
   MOUNT: 'onMount',
+  EVENT: 'onEvent',
   UNMOUNT: 'onUnMount',
   UPDATE: 'onUpdate',
   INIT: 'onInit',
