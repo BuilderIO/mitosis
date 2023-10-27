@@ -34,6 +34,7 @@ import {
   Target,
   TranspilerGenerator,
 } from '@builder.io/mitosis';
+import { checkIsDefined } from '@builder.io/mitosis/src/helpers/nullable';
 import debug from 'debug';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
@@ -69,14 +70,26 @@ const DEFAULT_CONFIG: Partial<MitosisConfig> = {
   getTargetPath,
 };
 
-const getOptions = (config?: MitosisConfig): MitosisConfig => ({
-  ...DEFAULT_CONFIG,
-  ...config,
-  options: {
-    ...DEFAULT_CONFIG.options,
-    ...config?.options,
-  },
-});
+const getOptions = (config?: MitosisConfig): MitosisConfig => {
+  const newConfig = {
+    ...DEFAULT_CONFIG,
+    ...config,
+    options: {
+      ...DEFAULT_CONFIG.options,
+      ...config?.options,
+    },
+  };
+
+  if (checkIsDefined(newConfig.commonOptions.typescript)) {
+    for (const target of newConfig.targets) {
+      if (!checkIsDefined(newConfig.options[target].typescript)) {
+        newConfig.options[target].typescript = newConfig.commonOptions.typescript;
+      }
+    }
+  }
+
+  return newConfig;
+};
 
 async function clean(options: MitosisConfig, target: Target) {
   const outputPattern = `${options.dest}/${options.getTargetPath({ target })}/${options.files}`;
@@ -118,9 +131,7 @@ const getRequiredParsers = (
 ): { javascript: boolean; typescript: boolean } => {
   const targetsOptions = Object.values(options.options);
 
-  const targetsRequiringTypeScript = targetsOptions.filter(
-    (option) => option.typescript || options.commonOptions?.typescript,
-  ).length;
+  const targetsRequiringTypeScript = targetsOptions.filter((option) => option.typescript).length;
   const needsTypeScript = targetsRequiringTypeScript > 0;
 
   /**

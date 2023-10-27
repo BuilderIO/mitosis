@@ -9,7 +9,5 @@ export const checkShouldOutputTypeScript = ({
   options: MitosisConfig;
 }): boolean => {
   const targetTsConfig = options.options[target]?.typescript;
-  return checkIsDefined(targetTsConfig)
-    ? targetTsConfig
-    : options.commonOptions?.typescript || false;
+  return checkIsDefined(targetTsConfig) ? targetTsConfig : false;
 };
