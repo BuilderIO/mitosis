@@ -363,7 +363,7 @@ const _componentToReact = (
     reactLibImports.add('forwardRef');
   }
   if (
-    json.hooks.onMount?.code ||
+    json.hooks.onMount.length ||
     json.hooks.onUnMount?.code ||
     json.hooks.onUpdate?.length ||
     json.hooks.onInit?.code
@@ -460,16 +460,15 @@ const _componentToReact = (
         })
         .join('\n') ?? ''
     }
-    ${
-      json.hooks.onMount?.code
-        ? `useEffect(() => {
+    ${json.hooks.onMount.map(
+      (hook) =>
+        `useEffect(() => {
           ${processHookCode({
-            str: json.hooks.onMount.code,
+            str: hook.code,
             options,
           })}
-        }, [])`
-        : ''
-    }
+        }, [])`,
+    )}
 
     ${
       json.hooks.onUpdate

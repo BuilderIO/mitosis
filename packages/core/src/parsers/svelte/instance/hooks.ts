@@ -15,9 +15,9 @@ function parseHookBody(node: ExpressionStatement, stripCurlyBraces = true) {
 }
 
 export function parseOnMount(json: SveltosisComponent, node: ExpressionStatement) {
-  json.hooks.onMount = {
+  json.hooks.onMount.push({
     code: parseHookBody(node),
-  };
+  });
 }
 
 export function parseOnDestroy(json: SveltosisComponent, node: ExpressionStatement) {

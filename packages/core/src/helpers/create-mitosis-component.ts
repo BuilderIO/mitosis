@@ -9,7 +9,9 @@ export const createMitosisComponent = (options?: Partial<MitosisComponent>): Mit
   refs: {},
   state: {},
   children: [],
-  hooks: {},
+  hooks: {
+    onMount: [],
+  },
   context: { get: {}, set: {} },
   name: options?.name || 'MyComponent',
   subComponents: [],

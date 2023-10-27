@@ -17,6 +17,7 @@ import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
 import { hashCodeAsString } from '../symbols/symbol-processor';
 import { ForNode, MitosisNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerArgs } from '../types/transpiler';
+import { stringifySingleScopeOnMount } from './helpers/on-mount';
 
 export interface ToBuilderOptions extends BaseTranspilerOptions {
   includeIds?: boolean;
@@ -308,7 +309,7 @@ export const componentToBuilder =
 
         ${!hasState ? '' : `Object.assign(state, ${getStateObjectStringFromComponent(component)});`}
         
-        ${!component.hooks.onMount?.code ? '' : component.hooks.onMount.code}
+        ${stringifySingleScopeOnMount(component)}
       `),
         tsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
@@ -316,10 +317,10 @@ export const componentToBuilder =
         ${!hasState ? '' : `useState(${getStateObjectStringFromComponent(component)});`}
 
         ${
-          !component.hooks.onMount?.code
+          !component.hooks.onMount.length
             ? ''
             : `onMount(() => {
-                ${component.hooks.onMount.code}
+                ${stringifySingleScopeOnMount(component)}
               })`
         }
       `),

@@ -194,12 +194,11 @@ function emitExports(file: File, component: MitosisComponent) {
 }
 
 function emitUseClientEffect(file: File, component: MitosisComponent) {
-  if (component.hooks.onMount) {
-    // This is called useMount, but in practice it is used as
-    // useClientEffect. Not sure if this is correct, but for now.
-    const code = component.hooks.onMount.code;
-    file.src.emit(file.import(file.qwikModule, 'useVisibleTask$').localName, '(()=>{', code, '});');
-  }
+  component.hooks.onMount.forEach((onMount) => {
+    const code = onMount.code;
+    const hookToUse = onMount.onSSR ? 'useTask$' : 'useVisibleTask$';
+    file.src.emit(file.import(file.qwikModule, hookToUse).localName, '(()=>{', code, '});');
+  });
 }
 
 function emitUseMount(file: File, component: MitosisComponent) {
@@ -305,19 +304,21 @@ function emitUseContext(file: File, component: MitosisComponent) {
 
 function emitUseOn(file: File, component: MitosisComponent) {
   component.hooks.onEvent?.forEach((hook) => {
-    const handlerName = getOnEventHandlerName(hook);
+    const wrappedHandlerFn = `${
+      file.import(file.qwikModule, '$').localName
+    }(${getOnEventHandlerName(hook)})`;
     const eventName = `"${hook.eventName}"`;
     if (hook.isRoot) {
       file.src.emit(
         file.import(file.qwikModule, 'useOn').localName,
-        `(${eventName}, ${handlerName});`,
+        `(${eventName}, ${wrappedHandlerFn});`,
       );
     } else {
       file.src.emit(
         file.import(file.qwikModule, 'useVisibleTask$').localName,
         `(() => {
-          ${hook.refName}.value?.addEventListener(${eventName}, ${handlerName});
-          return () => ${hook.refName}.value?.removeEventListener(${eventName}, ${handlerName});
+          ${hook.refName}.value?.addEventListener(${eventName}, ${wrappedHandlerFn});
+          return () => ${hook.refName}.value?.removeEventListener(${eventName}, ${wrappedHandlerFn});
         })  
         `,
       );

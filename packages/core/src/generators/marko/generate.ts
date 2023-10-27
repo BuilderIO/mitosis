@@ -26,6 +26,7 @@ import {
 import { MitosisComponent } from '../../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
+import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
 
@@ -230,9 +231,9 @@ export const componentToMarko: TranspilerGenerator<ToMarkoOptions> =
           .join('\n')}
       
         ${
-          !json.hooks.onMount?.code
+          !json.hooks.onMount.length
             ? ''
-            : `onMount() { ${processBinding(json, json.hooks.onMount.code, 'class')} }`
+            : `onMount() { ${processBinding(json, stringifySingleScopeOnMount(json), 'class')} }`
         }
         ${
           !json.hooks.onUnMount?.code

@@ -25,6 +25,7 @@ import {
 } from '../../modules/plugins';
 import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
+import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { collectClassString } from './collect-class-string';
 
 const getCustomTagName = (name: string, options: ToLitOptions) => {
@@ -257,9 +258,9 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
         ${methodsString}
       
         ${
-          !json.hooks.onMount?.code
+          json.hooks.onMount.length === 0
             ? ''
-            : `connectedCallback() { ${processBinding(json.hooks.onMount.code)} }`
+            : `connectedCallback() { ${processBinding(stringifySingleScopeOnMount(json))} }`
         }
         ${
           !json.hooks.onUnMount?.code

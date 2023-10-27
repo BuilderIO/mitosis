@@ -43,6 +43,7 @@ import {
 import { MitosisComponent } from '../types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
+import { stringifySingleScopeOnMount } from './helpers/on-mount';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
   format?: 'class' | 'script';
@@ -637,7 +638,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
     const hasChangeListeners = Boolean(Object.keys(options.onChangeJsById).length);
     const hasGeneratedJs = Boolean(options.js.trim().length);
 
-    if (hasChangeListeners || hasGeneratedJs || json.hooks.onMount?.code || hasLoop) {
+    if (hasChangeListeners || hasGeneratedJs || json.hooks.onMount.length || hasLoop) {
       // TODO: collectJs helper for here and liquid
       str += `
       <script>
@@ -725,13 +726,13 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
         }
 
         ${
-          !json.hooks.onMount?.code
+          !json.hooks.onMount.length
             ? ''
             : // TODO: make prettier by grabbing only the function body
               `
               // onMount
               ${updateReferencesInCode(
-                addUpdateAfterSetInCode(json.hooks.onMount.code, options),
+                addUpdateAfterSetInCode(stringifySingleScopeOnMount(json), options),
                 options,
               )} 
               `
@@ -1231,13 +1232,13 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
 
         onMount() {
           ${
-            !json.hooks.onMount?.code
+            !json.hooks.onMount.length
               ? ''
               : // TODO: make prettier by grabbing only the function body
                 `
                 // onMount
                 ${updateReferencesInCode(
-                  addUpdateAfterSetInCode(json.hooks.onMount.code, options),
+                  addUpdateAfterSetInCode(stringifySingleScopeOnMount(json), options),
                   options,
                   {
                     contextVars,

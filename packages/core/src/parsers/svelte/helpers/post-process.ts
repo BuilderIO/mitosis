@@ -2,7 +2,7 @@ import generate from '@babel/generator';
 import * as parser from '@babel/parser';
 import * as types from '@babel/types';
 import { replaceIdentifiers, replaceNodes } from '../../../helpers/replace-identifiers';
-import type { extendedHook, StateValue } from '../../../types/mitosis-component';
+import type { BaseHook, StateValue } from '../../../types/mitosis-component';
 import type { MitosisNode } from '../../../types/mitosis-node';
 import type { SveltosisComponent } from '../types';
 import { processBindings } from './bindings';
@@ -123,7 +123,7 @@ function postProcessChildren(json: SveltosisComponent, children: MitosisNode[]) 
   }
 }
 
-function addPropertiesAndStateToHook(json: SveltosisComponent, hook: extendedHook): extendedHook {
+function addPropertiesAndStateToHook(json: SveltosisComponent, hook: BaseHook): BaseHook {
   return {
     code: addPropertiesAndState(json, hook.code),
     deps: addPropertiesAndState(json, hook.deps || ''),
@@ -138,14 +138,14 @@ function postProcessHooks(json: SveltosisComponent) {
       continue;
     }
 
-    if (key === 'onUpdate' && Array.isArray(hook)) {
-      hook.forEach((item, index) => {
+    if (key === 'onUpdate' || key === 'onMount') {
+      json.hooks[key]?.forEach((item, index) => {
         json.hooks[key]?.splice(index, 1, addPropertiesAndStateToHook(json, item));
       });
       continue;
     }
 
-    (json.hooks[key] as extendedHook) = addPropertiesAndStateToHook(json, hook as extendedHook);
+    (json.hooks[key] as BaseHook) = addPropertiesAndStateToHook(json, hook as BaseHook);
   }
 }
 
