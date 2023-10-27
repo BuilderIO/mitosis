@@ -138,8 +138,8 @@ function postProcessHooks(json: SveltosisComponent) {
       continue;
     }
 
-    if (key === 'onUpdate' && Array.isArray(hook)) {
-      hook.forEach((item, index) => {
+    if (key === 'onUpdate' || key === 'onMount') {
+      json.hooks[key]?.forEach((item, index) => {
         json.hooks[key]?.splice(index, 1, addPropertiesAndStateToHook(json, item));
       });
       continue;
