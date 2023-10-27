@@ -80,7 +80,7 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => {
     },
   };
 
-  if (checkIsDefined(newConfig.commonOptions.typescript)) {
+  if (checkIsDefined(newConfig.commonOptions?.typescript)) {
     for (const target of newConfig.targets) {
       if (!checkIsDefined(newConfig.options[target].typescript)) {
         newConfig.options[target].typescript = newConfig.commonOptions.typescript;
