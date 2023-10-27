@@ -258,7 +258,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
         ${methodsString}
       
         ${
-          !json.hooks.onMount.length
+          json.hooks.onMount.length === 0
             ? ''
             : `connectedCallback() { ${processBinding(stringifySingleScopeOnMount(json))} }`
         }
