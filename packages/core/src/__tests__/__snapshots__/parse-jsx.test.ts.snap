@@ -310,6 +310,7 @@ exports[`Parse JSX > Javascript > AdvancedRef 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "console.log('Received an update')",
@@ -436,7 +437,9 @@ exports[`Parse JSX > Javascript > Basic 1`] = `
       "usedInLocal": true,
     },
   },
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -618,7 +621,9 @@ exports[`Parse JSX > Javascript > Basic 2`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -740,10 +745,13 @@ exports[`Parse JSX > Javascript > Basic Context 1`] = `
       "code": "const hi = myService.method('hi');
 console.log(hi)",
     },
-    "onMount": {
-      "code": "const bye = myService.method('hi');
+    "onMount": [
+      {
+        "code": "const bye = myService.method('hi');
 console.log(bye)",
-    },
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [
     {
@@ -827,9 +835,12 @@ exports[`Parse JSX > Javascript > Basic OnMount Update 1`] = `
     "onInit": {
       "code": "state.name = 'PatrickJS onInit' + props.hi",
     },
-    "onMount": {
-      "code": "state.name = 'PatrickJS onMount' + props.bye",
-    },
+    "onMount": [
+      {
+        "code": "state.name = 'PatrickJS onMount' + props.bye",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -872,10 +883,13 @@ exports[`Parse JSX > Javascript > Basic Outputs 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "props.onMessage(state.name);
+    "onMount": [
+      {
+        "code": "props.onMessage(state.name);
 props.onEvent(props.message)",
-    },
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -913,10 +927,13 @@ exports[`Parse JSX > Javascript > Basic Outputs Meta 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "props.onMessage(state.name);
+    "onMount": [
+      {
+        "code": "props.onMessage(state.name);
 props.onEvent(props.message)",
-    },
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -969,7 +986,9 @@ exports[`Parse JSX > Javascript > BasicAttribute 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -1180,7 +1199,9 @@ exports[`Parse JSX > Javascript > BasicBooleanAttribute 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -1321,7 +1342,9 @@ exports[`Parse JSX > Javascript > BasicChildComponent 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -1503,9 +1526,12 @@ exports[`Parse JSX > Javascript > BasicFor 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "console.log('onMount code')",
-    },
+    "onMount": [
+      {
+        "code": "console.log('onMount code')",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -1837,7 +1863,9 @@ exports[`Parse JSX > Javascript > BasicRef 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -1947,7 +1975,9 @@ exports[`Parse JSX > Javascript > BasicRefAssignment 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -2144,6 +2174,7 @@ exports[`Parse JSX > Javascript > BasicRefPrevious 1`] = `
     },
   },
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "prevCount = state.count",
@@ -2423,7 +2454,9 @@ exports[`Parse JSX > Javascript > Button 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -2596,7 +2629,9 @@ exports[`Parse JSX > Javascript > Columns 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -2804,7 +2839,9 @@ exports[`Parse JSX > Javascript > ContentSlotHtml 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -3093,7 +3130,9 @@ exports[`Parse JSX > Javascript > ContentSlotJSX 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -3160,9 +3199,12 @@ exports[`Parse JSX > Javascript > CustomCode 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "state.findAndRunScripts()",
-    },
+    "onMount": [
+      {
+        "code": "state.findAndRunScripts()",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -3259,9 +3301,12 @@ exports[`Parse JSX > Javascript > Embed 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "state.findAndRunScripts()",
-    },
+    "onMount": [
+      {
+        "code": "state.findAndRunScripts()",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -3796,7 +3841,9 @@ exports[`Parse JSX > Javascript > Form 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -4279,8 +4326,9 @@ exports[`Parse JSX > Javascript > Image 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "if (state.useLazyLoading()) {
+    "onMount": [
+      {
+        "code": "if (state.useLazyLoading()) {
   // throttled scroll capture listener
   const listener = () => {
     if (pictureRef) {
@@ -4302,7 +4350,9 @@ exports[`Parse JSX > Javascript > Image 1`] = `
   });
   listener();
 }",
-    },
+        "onSSR": false,
+      },
+    ],
     "onUnMount": {
       "code": "if (state.scrollListener) {
   window.removeEventListener('scroll', state.scrollListener);
@@ -4474,7 +4524,9 @@ exports[`Parse JSX > Javascript > Image State 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -4540,7 +4592,9 @@ exports[`Parse JSX > Javascript > Img 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -4619,7 +4673,9 @@ exports[`Parse JSX > Javascript > Input 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -4668,7 +4724,9 @@ exports[`Parse JSX > Javascript > InputParent 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -4722,7 +4780,9 @@ exports[`Parse JSX > Javascript > RawText 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -4803,7 +4863,9 @@ exports[`Parse JSX > Javascript > Section 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -4940,7 +5002,9 @@ exports[`Parse JSX > Javascript > Section 2`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -5103,7 +5167,9 @@ exports[`Parse JSX > Javascript > Select 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -5223,7 +5289,9 @@ exports[`Parse JSX > Javascript > SlotDefault 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -5326,7 +5394,9 @@ exports[`Parse JSX > Javascript > SlotHtml 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -5403,7 +5473,9 @@ exports[`Parse JSX > Javascript > SlotJsx 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -5545,7 +5617,9 @@ exports[`Parse JSX > Javascript > SlotNamed 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -6070,11 +6144,14 @@ exports[`Parse JSX > Javascript > Stamped.io 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+    "onMount": [
+      {
+        "code": "fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
   state.reviews = data.data;
 })",
-    },
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [
     {
@@ -6189,7 +6266,9 @@ exports[`Parse JSX > Javascript > Submit 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -6234,7 +6313,9 @@ exports[`Parse JSX > Javascript > Text 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -6300,7 +6381,9 @@ exports[`Parse JSX > Javascript > Textarea 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -6375,7 +6458,9 @@ exports[`Parse JSX > Javascript > Video 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -6431,7 +6516,9 @@ exports[`Parse JSX > Javascript > arrowFunctionInUseStore 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -6636,7 +6723,9 @@ exports[`Parse JSX > Javascript > basicForNoTagReference 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -6744,7 +6833,9 @@ exports[`Parse JSX > Javascript > basicForwardRef 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -6836,7 +6927,9 @@ exports[`Parse JSX > Javascript > basicForwardRefMetadata 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {
@@ -6903,6 +6996,7 @@ exports[`Parse JSX > Javascript > basicOnUpdateReturn 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "const controller = new AbortController();
@@ -6979,7 +7073,9 @@ exports[`Parse JSX > Javascript > class + ClassName + css 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -7032,7 +7128,9 @@ exports[`Parse JSX > Javascript > class + css 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -7085,7 +7183,9 @@ exports[`Parse JSX > Javascript > className + css 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -7225,7 +7325,9 @@ exports[`Parse JSX > Javascript > className 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -7290,7 +7392,9 @@ exports[`Parse JSX > Javascript > classState 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -7414,7 +7518,9 @@ exports[`Parse JSX > Javascript > componentWithContext 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -7573,7 +7679,9 @@ exports[`Parse JSX > Javascript > componentWithContextMultiRoot 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -7646,7 +7754,9 @@ exports[`Parse JSX > Javascript > contentState 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -7947,7 +8057,9 @@ exports[`Parse JSX > Javascript > defaultProps 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -8238,7 +8350,9 @@ exports[`Parse JSX > Javascript > defaultPropsOutsideComponent 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -8302,7 +8416,9 @@ exports[`Parse JSX > Javascript > defaultValsWithTypes 1`] = `
       "usedInLocal": true,
     },
   },
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -8347,7 +8463,9 @@ exports[`Parse JSX > Javascript > expressionState 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -8389,7 +8507,9 @@ exports[`Parse JSX > Javascript > import types 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -8438,6 +8558,7 @@ exports[`Parse JSX > Javascript > multipleOnUpdate 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "console.log('Runs on every update/rerender')",
@@ -8479,6 +8600,7 @@ exports[`Parse JSX > Javascript > multipleOnUpdateWithDeps 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "console.log('Runs when a or b changes', state.a, state.b);
@@ -8559,7 +8681,9 @@ exports[`Parse JSX > Javascript > multipleSpreads 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -8731,7 +8855,9 @@ exports[`Parse JSX > Javascript > nestedShow 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -8802,7 +8928,9 @@ exports[`Parse JSX > Javascript > nestedStyles 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -8894,9 +9022,12 @@ exports[`Parse JSX > Javascript > onEvent 1`] = `
         "refName": "elem",
       },
     ],
-    "onMount": {
-      "code": "elem.dispatchEvent(new CustomEvent('initEditingBldr'))",
-    },
+    "onMount": [
+      {
+        "code": "elem.dispatchEvent(new CustomEvent('initEditingBldr'))",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -8935,9 +9066,12 @@ exports[`Parse JSX > Javascript > onInit & onMount 1`] = `
     "onInit": {
       "code": "console.log('onInit')",
     },
-    "onMount": {
-      "code": "console.log('onMount')",
-    },
+    "onMount": [
+      {
+        "code": "console.log('onMount')",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -9007,6 +9141,7 @@ exports[`Parse JSX > Javascript > onInit 1`] = `
       "code": "state.name = defaultValues.name || props.name;
 console.log('set defaults with props')",
     },
+    "onMount": [],
   },
   "imports": [],
   "inputs": [],
@@ -9044,9 +9179,12 @@ exports[`Parse JSX > Javascript > onMount 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "console.log('Runs on mount')",
-    },
+    "onMount": [
+      {
+        "code": "console.log('Runs on mount')",
+        "onSSR": false,
+      },
+    ],
     "onUnMount": {
       "code": "console.log('Runs on unMount')",
     },
@@ -9081,6 +9219,7 @@ exports[`Parse JSX > Javascript > onUpdate 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "console.log('Runs on every update/rerender')",
@@ -9118,6 +9257,7 @@ exports[`Parse JSX > Javascript > onUpdateWithDeps 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "console.log('Runs when a, b or size changes', state.a, state.b, props.size)",
@@ -9191,7 +9331,9 @@ exports[`Parse JSX > Javascript > preserveExportOrLocalStatement 1`] = `
       "usedInLocal": false,
     },
   },
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -9247,7 +9389,9 @@ exports[`Parse JSX > Javascript > preserveTyping 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -9342,7 +9486,9 @@ exports[`Parse JSX > Javascript > propsDestructure 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -9404,7 +9550,9 @@ exports[`Parse JSX > Javascript > propsInterface 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -9460,7 +9608,9 @@ exports[`Parse JSX > Javascript > propsType 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -9491,6 +9641,7 @@ exports[`Parse JSX > Javascript > referencingFunInsideHook 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "state.foo({
@@ -9979,7 +10130,9 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -10383,9 +10536,12 @@ exports[`Parse JSX > Javascript > renderContentExample 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "sendComponentsToVisualEditor(props.customComponents)",
-    },
+    "onMount": [
+      {
+        "code": "sendComponentsToVisualEditor(props.customComponents)",
+        "onSSR": false,
+      },
+    ],
     "onUpdate": [
       {
         "code": "dispatchNewContentToVisualEditor(props.content)",
@@ -10679,7 +10835,9 @@ exports[`Parse JSX > Javascript > rootFragmentMultiNode 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -10782,7 +10940,9 @@ exports[`Parse JSX > Javascript > rootShow 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -10913,7 +11073,9 @@ exports[`Parse JSX > Javascript > self-referencing component 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11116,7 +11278,9 @@ exports[`Parse JSX > Javascript > self-referencing component with children 1`] =
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11245,7 +11409,9 @@ exports[`Parse JSX > Javascript > showWithFor 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11316,7 +11482,9 @@ exports[`Parse JSX > Javascript > showWithRootText 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11352,7 +11520,9 @@ exports[`Parse JSX > Javascript > spreadAttrs 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11388,7 +11558,9 @@ exports[`Parse JSX > Javascript > spreadNestedProps 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11424,7 +11596,9 @@ exports[`Parse JSX > Javascript > spreadProps 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11471,7 +11645,9 @@ exports[`Parse JSX > Javascript > styleClassAndCss 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11516,7 +11692,9 @@ exports[`Parse JSX > Javascript > stylePropClassAndCss 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11565,7 +11743,9 @@ exports[`Parse JSX > Javascript > subComponent 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -11779,7 +11959,9 @@ exports[`Parse JSX > Javascript > svgComponent 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11824,7 +12006,9 @@ exports[`Parse JSX > Javascript > typeDependency 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11868,7 +12052,9 @@ exports[`Parse JSX > Javascript > use-style 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11930,7 +12116,9 @@ exports[`Parse JSX > Javascript > use-style-and-css 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -11980,7 +12168,9 @@ exports[`Parse JSX > Javascript > use-style-outside-component 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -12034,9 +12224,12 @@ exports[`Parse JSX > Javascript > useTarget 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "\\"USE_TARGET_BLOCK_2\\"",
-    },
+    "onMount": [
+      {
+        "code": "\\"USE_TARGET_BLOCK_2\\"",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -12211,7 +12404,9 @@ exports[`Parse JSX > Remove Internal mitosis package 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -12538,6 +12733,7 @@ exports[`Parse JSX > Typescript > AdvancedRef 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "console.log('Received an update')",
@@ -12672,7 +12868,9 @@ exports[`Parse JSX > Typescript > Basic 1`] = `
       "usedInLocal": true,
     },
   },
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -12862,7 +13060,9 @@ exports[`Parse JSX > Typescript > Basic 2`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -12984,10 +13184,13 @@ exports[`Parse JSX > Typescript > Basic Context 1`] = `
       "code": "const hi = myService.method('hi');
 console.log(hi)",
     },
-    "onMount": {
-      "code": "const bye = myService.method('hi');
+    "onMount": [
+      {
+        "code": "const bye = myService.method('hi');
 console.log(bye)",
-    },
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [
     {
@@ -13071,9 +13274,12 @@ exports[`Parse JSX > Typescript > Basic OnMount Update 1`] = `
     "onInit": {
       "code": "state.name = 'PatrickJS onInit' + props.hi",
     },
-    "onMount": {
-      "code": "state.name = 'PatrickJS onMount' + props.bye",
-    },
+    "onMount": [
+      {
+        "code": "state.name = 'PatrickJS onMount' + props.bye",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -13123,10 +13329,13 @@ exports[`Parse JSX > Typescript > Basic Outputs 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "props.onMessage(state.name);
+    "onMount": [
+      {
+        "code": "props.onMessage(state.name);
 props.onEvent(props.message)",
-    },
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -13165,10 +13374,13 @@ exports[`Parse JSX > Typescript > Basic Outputs Meta 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "props.onMessage(state.name);
+    "onMount": [
+      {
+        "code": "props.onMessage(state.name);
 props.onEvent(props.message)",
-    },
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -13222,7 +13434,9 @@ exports[`Parse JSX > Typescript > BasicAttribute 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -13433,7 +13647,9 @@ exports[`Parse JSX > Typescript > BasicBooleanAttribute 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -13581,7 +13797,9 @@ exports[`Parse JSX > Typescript > BasicChildComponent 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -13763,9 +13981,12 @@ exports[`Parse JSX > Typescript > BasicFor 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "console.log('onMount code')",
-    },
+    "onMount": [
+      {
+        "code": "console.log('onMount code')",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -14097,7 +14318,9 @@ exports[`Parse JSX > Typescript > BasicRef 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -14215,7 +14438,9 @@ exports[`Parse JSX > Typescript > BasicRefAssignment 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -14418,6 +14643,7 @@ exports[`Parse JSX > Typescript > BasicRefPrevious 1`] = `
     },
   },
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "prevCount = state.count",
@@ -14703,7 +14929,9 @@ exports[`Parse JSX > Typescript > Button 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -14885,7 +15113,9 @@ exports[`Parse JSX > Typescript > Columns 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -15110,7 +15340,9 @@ exports[`Parse JSX > Typescript > ContentSlotHtml 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "type",
@@ -15414,7 +15646,9 @@ exports[`Parse JSX > Typescript > ContentSlotJSX 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "type",
@@ -15495,9 +15729,12 @@ exports[`Parse JSX > Typescript > CustomCode 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "state.findAndRunScripts()",
-    },
+    "onMount": [
+      {
+        "code": "state.findAndRunScripts()",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -15602,9 +15839,12 @@ exports[`Parse JSX > Typescript > Embed 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "state.findAndRunScripts()",
-    },
+    "onMount": [
+      {
+        "code": "state.findAndRunScripts()",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -16147,7 +16387,9 @@ exports[`Parse JSX > Typescript > Form 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -16663,8 +16905,9 @@ exports[`Parse JSX > Typescript > Image 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "if (state.useLazyLoading()) {
+    "onMount": [
+      {
+        "code": "if (state.useLazyLoading()) {
   // throttled scroll capture listener
   const listener = () => {
     if (pictureRef) {
@@ -16686,7 +16929,9 @@ exports[`Parse JSX > Typescript > Image 1`] = `
   });
   listener();
 }",
-    },
+        "onSSR": false,
+      },
+    ],
     "onUnMount": {
       "code": "if (state.scrollListener) {
   window.removeEventListener('scroll', state.scrollListener);
@@ -16880,7 +17125,9 @@ exports[`Parse JSX > Typescript > Image State 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -16946,7 +17193,9 @@ exports[`Parse JSX > Typescript > Img 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -17035,7 +17284,9 @@ exports[`Parse JSX > Typescript > Input 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -17097,7 +17348,9 @@ exports[`Parse JSX > Typescript > InputParent 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -17151,7 +17404,9 @@ exports[`Parse JSX > Typescript > RawText 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -17240,7 +17495,9 @@ exports[`Parse JSX > Typescript > Section 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -17385,7 +17642,9 @@ exports[`Parse JSX > Typescript > Section 2`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -17556,7 +17815,9 @@ exports[`Parse JSX > Typescript > Select 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -17689,7 +17950,9 @@ exports[`Parse JSX > Typescript > SlotDefault 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -17798,7 +18061,9 @@ exports[`Parse JSX > Typescript > SlotHtml 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -17881,7 +18146,9 @@ exports[`Parse JSX > Typescript > SlotJsx 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -18029,7 +18296,9 @@ exports[`Parse JSX > Typescript > SlotNamed 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -18560,11 +18829,14 @@ exports[`Parse JSX > Typescript > Stamped.io 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+    "onMount": [
+      {
+        "code": "fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
   state.reviews = data.data;
 })",
-    },
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [
     {
@@ -18686,7 +18958,9 @@ exports[`Parse JSX > Typescript > Submit 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -18738,7 +19012,9 @@ exports[`Parse JSX > Typescript > Text 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -18814,7 +19090,9 @@ exports[`Parse JSX > Typescript > Textarea 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -18899,7 +19177,9 @@ exports[`Parse JSX > Typescript > Video 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -18974,7 +19254,9 @@ exports[`Parse JSX > Typescript > arrowFunctionInUseStore 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -19179,7 +19461,9 @@ exports[`Parse JSX > Typescript > basicForNoTagReference 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -19287,7 +19571,9 @@ exports[`Parse JSX > Typescript > basicForwardRef 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -19386,7 +19672,9 @@ exports[`Parse JSX > Typescript > basicForwardRefMetadata 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {
@@ -19460,6 +19748,7 @@ exports[`Parse JSX > Typescript > basicOnUpdateReturn 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "const controller = new AbortController();
@@ -19536,7 +19825,9 @@ exports[`Parse JSX > Typescript > class + ClassName + css 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -19589,7 +19880,9 @@ exports[`Parse JSX > Typescript > class + css 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -19642,7 +19935,9 @@ exports[`Parse JSX > Typescript > className + css 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -19782,7 +20077,9 @@ exports[`Parse JSX > Typescript > className 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "type",
@@ -19862,7 +20159,9 @@ exports[`Parse JSX > Typescript > classState 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -19986,7 +20285,9 @@ exports[`Parse JSX > Typescript > componentWithContext 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -20151,7 +20452,9 @@ exports[`Parse JSX > Typescript > componentWithContextMultiRoot 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -20230,7 +20533,9 @@ exports[`Parse JSX > Typescript > contentState 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -20531,7 +20836,9 @@ exports[`Parse JSX > Typescript > defaultProps 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -20834,7 +21141,9 @@ exports[`Parse JSX > Typescript > defaultPropsOutsideComponent 1`] = `
     },
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -20908,7 +21217,9 @@ exports[`Parse JSX > Typescript > defaultValsWithTypes 1`] = `
       "usedInLocal": true,
     },
   },
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -20959,7 +21270,9 @@ exports[`Parse JSX > Typescript > expressionState 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -21001,7 +21314,9 @@ exports[`Parse JSX > Typescript > import types 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -21067,6 +21382,7 @@ exports[`Parse JSX > Typescript > multipleOnUpdate 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "console.log('Runs on every update/rerender')",
@@ -21108,6 +21424,7 @@ exports[`Parse JSX > Typescript > multipleOnUpdateWithDeps 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "console.log('Runs when a or b changes', state.a, state.b);
@@ -21188,7 +21505,9 @@ exports[`Parse JSX > Typescript > multipleSpreads 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -21361,7 +21680,9 @@ exports[`Parse JSX > Typescript > nestedShow 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -21439,7 +21760,9 @@ exports[`Parse JSX > Typescript > nestedStyles 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -21531,9 +21854,12 @@ exports[`Parse JSX > Typescript > onEvent 1`] = `
         "refName": "elem",
       },
     ],
-    "onMount": {
-      "code": "elem.dispatchEvent(new CustomEvent('initEditingBldr'))",
-    },
+    "onMount": [
+      {
+        "code": "elem.dispatchEvent(new CustomEvent('initEditingBldr'))",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -21573,9 +21899,12 @@ exports[`Parse JSX > Typescript > onInit & onMount 1`] = `
     "onInit": {
       "code": "console.log('onInit')",
     },
-    "onMount": {
-      "code": "console.log('onMount')",
-    },
+    "onMount": [
+      {
+        "code": "console.log('onMount')",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -21645,6 +21974,7 @@ exports[`Parse JSX > Typescript > onInit 1`] = `
       "code": "state.name = defaultValues.name || props.name;
 console.log('set defaults with props')",
     },
+    "onMount": [],
   },
   "imports": [],
   "inputs": [],
@@ -21688,9 +22018,12 @@ exports[`Parse JSX > Typescript > onMount 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "console.log('Runs on mount')",
-    },
+    "onMount": [
+      {
+        "code": "console.log('Runs on mount')",
+        "onSSR": false,
+      },
+    ],
     "onUnMount": {
       "code": "console.log('Runs on unMount')",
     },
@@ -21725,6 +22058,7 @@ exports[`Parse JSX > Typescript > onUpdate 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "console.log('Runs on every update/rerender')",
@@ -21762,6 +22096,7 @@ exports[`Parse JSX > Typescript > onUpdateWithDeps 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "console.log('Runs when a, b or size changes', state.a, state.b, props.size)",
@@ -21841,7 +22176,9 @@ exports[`Parse JSX > Typescript > preserveExportOrLocalStatement 1`] = `
       "usedInLocal": false,
     },
   },
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -21909,7 +22246,9 @@ exports[`Parse JSX > Typescript > preserveTyping 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -22019,7 +22358,9 @@ exports[`Parse JSX > Typescript > propsDestructure 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -22088,7 +22429,9 @@ exports[`Parse JSX > Typescript > propsInterface 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -22151,7 +22494,9 @@ exports[`Parse JSX > Typescript > propsType 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -22189,6 +22534,7 @@ exports[`Parse JSX > Typescript > referencingFunInsideHook 1`] = `
   },
   "exports": {},
   "hooks": {
+    "onMount": [],
     "onUpdate": [
       {
         "code": "state.foo({
@@ -22677,7 +23023,9 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -23124,9 +23472,12 @@ exports[`Parse JSX > Typescript > renderContentExample 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "sendComponentsToVisualEditor(props.customComponents)",
-    },
+    "onMount": [
+      {
+        "code": "sendComponentsToVisualEditor(props.customComponents)",
+        "onSSR": false,
+      },
+    ],
     "onUpdate": [
       {
         "code": "dispatchNewContentToVisualEditor(props.content)",
@@ -23430,7 +23781,9 @@ exports[`Parse JSX > Typescript > rootFragmentMultiNode 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -23542,7 +23895,9 @@ exports[`Parse JSX > Typescript > rootShow 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -23679,7 +24034,9 @@ exports[`Parse JSX > Typescript > self-referencing component 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -23883,7 +24240,9 @@ exports[`Parse JSX > Typescript > self-referencing component with children 1`] =
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24013,7 +24372,9 @@ exports[`Parse JSX > Typescript > showWithFor 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24091,7 +24452,9 @@ exports[`Parse JSX > Typescript > showWithRootText 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24133,7 +24496,9 @@ exports[`Parse JSX > Typescript > spreadAttrs 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24169,7 +24534,9 @@ exports[`Parse JSX > Typescript > spreadNestedProps 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24205,7 +24572,9 @@ exports[`Parse JSX > Typescript > spreadProps 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24252,7 +24621,9 @@ exports[`Parse JSX > Typescript > styleClassAndCss 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24297,7 +24668,9 @@ exports[`Parse JSX > Typescript > stylePropClassAndCss 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24346,7 +24719,9 @@ exports[`Parse JSX > Typescript > subComponent 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -24560,7 +24935,9 @@ exports[`Parse JSX > Typescript > svgComponent 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24605,7 +24982,9 @@ exports[`Parse JSX > Typescript > typeDependency 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "type",
@@ -24671,7 +25050,9 @@ exports[`Parse JSX > Typescript > use-style 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24733,7 +25114,9 @@ exports[`Parse JSX > Typescript > use-style-and-css 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24783,7 +25166,9 @@ exports[`Parse JSX > Typescript > use-style-outside-component 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {},
@@ -24837,9 +25222,12 @@ exports[`Parse JSX > Typescript > useTarget 1`] = `
   },
   "exports": {},
   "hooks": {
-    "onMount": {
-      "code": "\\"USE_TARGET_BLOCK_2\\"",
-    },
+    "onMount": [
+      {
+        "code": "\\"USE_TARGET_BLOCK_2\\"",
+        "onSSR": false,
+      },
+    ],
   },
   "imports": [],
   "inputs": [],
@@ -25158,7 +25546,9 @@ exports[`Parse JSX > boolean attribute 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [
     {
       "importKind": "value",
@@ -25429,7 +25819,9 @@ exports[`Parse JSX > metadata 1`] = `
     "set": {},
   },
   "exports": {},
-  "hooks": {},
+  "hooks": {
+    "onMount": [],
+  },
   "imports": [],
   "inputs": [],
   "meta": {
