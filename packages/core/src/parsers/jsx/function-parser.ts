@@ -24,7 +24,9 @@ export const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
   context: Context,
 ): JSONOrNode => {
-  const hooks: MitosisComponent['hooks'] = {};
+  const hooks: MitosisComponent['hooks'] = {
+    onMount: [],
+  };
   const state: MitosisComponent['state'] = {};
   const accessedContext: MitosisComponent['context']['get'] = {};
   const setContext: MitosisComponent['context']['set'] = {};
@@ -70,20 +72,25 @@ export const componentFunctionToJson = (
             const hookOptions = expression.arguments[1];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = processHookCode(firstArg);
-              hooks.onMount = { code };
+              let onSSR = false;
 
               if (types.isObjectExpression(hookOptions)) {
-                const onSSR = hookOptions.properties.find(
+                const onSSRProp = hookOptions.properties.find(
                   (property) =>
                     types.isProperty(property) &&
                     types.isIdentifier(property.key) &&
                     property.key.name === 'onSSR',
                 );
 
-                if (onSSR && types.isObjectProperty(onSSR) && types.isBooleanLiteral(onSSR.value)) {
-                  hooks.onMount.onSSR = onSSR.value.value;
+                if (types.isObjectProperty(onSSRProp) && types.isBooleanLiteral(onSSRProp.value)) {
+                  onSSR = onSSRProp.value.value;
                 }
               }
+
+              hooks.onMount.push({
+                code,
+                onSSR,
+              });
             }
             break;
           }

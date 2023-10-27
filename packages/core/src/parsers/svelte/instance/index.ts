@@ -70,11 +70,12 @@ const handleExpressionStatement: InstanceHandler<ExpressionStatement> = (json, n
 
     // No default
   } else if (parent?.type === 'Program') {
-    const onMountCode = json.hooks.onMount?.code || '';
-
-    json.hooks.onMount = {
-      code: `${onMountCode}\n${generate(node)};\n`,
-    };
+    json.hooks.onMount = [
+      ...(json.hooks.onMount ?? []),
+      {
+        code: generate(node),
+      },
+    ];
   }
 };
 

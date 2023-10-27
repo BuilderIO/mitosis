@@ -9,6 +9,7 @@ type TargetOptions = {
 
 export type ComponentMetadata = {
   [index: string]: any;
+  httpRequests?: Record<string, string>;
   options?: TargetOptions;
   qwik?: {
     component?: {

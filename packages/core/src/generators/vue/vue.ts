@@ -221,7 +221,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     }
     if (options.api === 'composition') {
       onUpdateWithDeps.length && vueImports.push('watch');
-      component.hooks.onMount?.code && vueImports.push('onMounted');
+      component.hooks.onMount.length && vueImports.push('onMounted');
       component.hooks.onUnMount?.code && vueImports.push('onUnmounted');
       onUpdateWithoutDeps.length && vueImports.push('onUpdated');
       size(getterKeys) && vueImports.push('computed');

@@ -1,5 +1,6 @@
 import { curry } from 'lodash';
 import { MitosisComponent } from '../../types/mitosis-component';
+import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { hasWatchHooks, renderWatchHooks } from './render-update-hooks';
 
 function shouldRenderMountHook(json: MitosisComponent): boolean {
@@ -12,7 +13,7 @@ export const renderMountHook = curry((json: MitosisComponent, objectString: stri
         /(?:,)?(\s*)(}\s*)$/,
         `, init() {
       ${renderWatchHooks(json)}
-      ${json.hooks.onMount?.code ?? ''}
+      ${stringifySingleScopeOnMount(json)}
     }$1$2`,
       )
     : objectString;

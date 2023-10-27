@@ -276,7 +276,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     let svelteImports: string[] = [];
     let svelteStoreImports: string[] = [];
 
-    if (json.hooks.onMount?.code?.length) {
+    if (json.hooks.onMount.length) {
       svelteImports.push('onMount');
     }
     if (json.hooks.onUpdate?.filter((x) => !x.deps)?.length) {
@@ -365,7 +365,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       }
       ${json.hooks.onInit?.code ?? ''}
 
-      ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} });`}
+      ${json.hooks.onMount.map((hook) => `onMount(() => { ${hook.code} });`)}
 
       ${
         json.hooks.onUpdate

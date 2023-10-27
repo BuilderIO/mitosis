@@ -194,12 +194,11 @@ function emitExports(file: File, component: MitosisComponent) {
 }
 
 function emitUseClientEffect(file: File, component: MitosisComponent) {
-  const onMount = component.hooks.onMount;
-  if (onMount) {
+  component.hooks.onMount.forEach((onMount) => {
     const code = onMount.code;
     const hookToUse = onMount.onSSR ? 'useTask$' : 'useVisibleTask$';
     file.src.emit(file.import(file.qwikModule, hookToUse).localName, '(()=>{', code, '});');
-  }
+  });
 }
 
 function emitUseMount(file: File, component: MitosisComponent) {

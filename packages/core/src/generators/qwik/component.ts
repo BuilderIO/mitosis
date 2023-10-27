@@ -4,6 +4,7 @@ import {
 } from '../../plugins/compile-away-builder-components';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
+import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { DIRECTIVES } from './directives';
 import { renderHandlers } from './helpers/handlers';
 import { stableJSONserialize } from './helpers/stable-serialize';
@@ -235,7 +236,7 @@ function addComponentOnMount(
           '(()=>{',
           'const state=Object.assign({},structuredClone(typeof __STATE__==="object"&&__STATE__[p.serverStateId]),p);',
           ...inputInitializer,
-          inlineCode(component.hooks.onMount?.code),
+          inlineCode(stringifySingleScopeOnMount(component)),
           'return state;',
           '},{deep:true});',
           'const l={};',

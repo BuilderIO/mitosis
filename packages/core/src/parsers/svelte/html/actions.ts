@@ -26,12 +26,9 @@ export function parseAction(
 
   const initHandler = `if (${nodeReference}) { ${actionHandler} = ${methodName}(${nodeReference}, ${parameters}); };\n`;
 
-  // Handle Mount
-  const onMountCode = json.hooks.onMount?.code || '';
-
-  json.hooks.onMount = {
-    code: `${onMountCode}\n${initHandler};\n`,
-  };
+  json.hooks.onMount.push({
+    code: initHandler,
+  });
 
   // Handle Destroy / Re-Mount
   const onReferenceUpdate = `

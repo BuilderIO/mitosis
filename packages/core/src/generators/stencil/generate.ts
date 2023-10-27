@@ -22,6 +22,7 @@ import {
 } from '../../modules/plugins';
 import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
+import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { collectClassString } from './collect-class-string';
 
 export interface ToStencilOptions extends BaseTranspilerOptions {}
@@ -180,9 +181,9 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
         ${methodsString}
       
         ${
-          !json.hooks.onMount?.code
+          !json.hooks.onMount.length
             ? ''
-            : `componentDidLoad() { ${processBinding(json.hooks.onMount.code)} }`
+            : `componentDidLoad() { ${processBinding(stringifySingleScopeOnMount(json))} }`
         }
         ${
           !json.hooks.onUnMount?.code

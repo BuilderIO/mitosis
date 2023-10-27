@@ -161,7 +161,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
         hasGetContext(json) ? 'useContext' : undefined,
         hasShowComponent ? 'Show' : undefined,
         hasForComponent ? 'For' : undefined,
-        json.hooks.onMount?.code ? 'onMount' : undefined,
+        json.hooks.onMount.length ? 'onMount' : undefined,
         ...(json.hooks.onUpdate?.length ? ['on', 'createEffect'] : []),
         ...(state?.import.solidjs ?? []),
       ].filter(checkIsDefined),
@@ -190,7 +190,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
       ${getRefsString(json, options)}
       ${getContextString(json, options)}
 
-      ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} })`}
+      ${json.hooks.onMount.map((hook) => `onMount(() => { ${hook.code} })`)}
       ${
         json.hooks.onUpdate
           ? json.hooks.onUpdate

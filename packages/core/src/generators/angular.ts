@@ -37,6 +37,7 @@ import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler'
 import { MitosisComponent } from '..';
 import { initializeOptions } from '../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
+import { stringifySingleScopeOnMount } from './helpers/on-mount';
 
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
 
@@ -547,7 +548,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
                 !json.hooks?.onMount
                   ? ''
                   : `
-                ${json.hooks.onMount?.code}
+                ${stringifySingleScopeOnMount(json)}
                 `
               }
             }`

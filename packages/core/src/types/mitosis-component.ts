@@ -133,7 +133,7 @@ export type MitosisComponent = {
   hooks: {
     init?: BaseHook;
     onInit?: BaseHook;
-    onMount?: OnMountHook;
+    onMount: OnMountHook[];
     onUnMount?: BaseHook;
     preComponent?: BaseHook;
     postComponent?: BaseHook;
