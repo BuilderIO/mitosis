@@ -97,6 +97,10 @@ export type OnEventHook = BaseHook & {
   deps?: never;
 };
 
+export type OnMountHook = BaseHook & {
+  onSSR?: boolean;
+};
+
 export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
   name: string;
@@ -129,7 +133,7 @@ export type MitosisComponent = {
   hooks: {
     init?: BaseHook;
     onInit?: BaseHook;
-    onMount?: BaseHook;
+    onMount?: OnMountHook;
     onUnMount?: BaseHook;
     preComponent?: BaseHook;
     postComponent?: BaseHook;

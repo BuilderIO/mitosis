@@ -67,10 +67,23 @@ export const componentFunctionToJson = (
           }
           case HOOKS.MOUNT: {
             const firstArg = expression.arguments[0];
-            const secondArg = expression.arguments[1];
+            const hookOptions = expression.arguments[1];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = processHookCode(firstArg);
               hooks.onMount = { code };
+
+              if (types.isObjectExpression(hookOptions)) {
+                const onSSR = hookOptions.properties.find(
+                  (property) =>
+                    types.isProperty(property) &&
+                    types.isIdentifier(property.key) &&
+                    property.key.name === 'onSSR',
+                );
+
+                if (onSSR && types.isObjectProperty(onSSR) && types.isBooleanLiteral(onSSR.value)) {
+                  hooks.onMount.onSSR = onSSR.value.value;
+                }
+              }
             }
             break;
           }

@@ -194,11 +194,11 @@ function emitExports(file: File, component: MitosisComponent) {
 }
 
 function emitUseClientEffect(file: File, component: MitosisComponent) {
-  if (component.hooks.onMount) {
-    // This is called useMount, but in practice it is used as
-    // useClientEffect. Not sure if this is correct, but for now.
-    const code = component.hooks.onMount.code;
-    file.src.emit(file.import(file.qwikModule, 'useVisibleTask$').localName, '(()=>{', code, '});');
+  const onMount = component.hooks.onMount;
+  if (onMount) {
+    const code = onMount.code;
+    const hookToUse = onMount.onSSR ? 'useTask$' : 'useVisibleTask$';
+    file.src.emit(file.import(file.qwikModule, hookToUse).localName, '(()=>{', code, '});');
   }
 }
 
