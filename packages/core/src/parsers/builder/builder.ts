@@ -917,7 +917,13 @@ const builderContentPartToMitosisComponent = (
     })),
     state: mitosisState,
     hooks: {
-      onMount: [...(parsed?.hooks.onMount || []), ...(customCode ? [{ code: customCode }] : [])],
+      onMount: [
+        ...(parsed?.hooks.onMount
+          ? parsed?.hooks.onMount
+          : customCode
+          ? [{ code: customCode }]
+          : []),
+      ],
     },
     children: (builderContent.data?.blocks || [])
       .filter((item) => {
