@@ -39,6 +39,7 @@ export const processOnEventHooksPlugin =
             const handlerName = getBindingName(hook);
             const fnName = getOnEventHandlerName(hook);
             component.state[fnName] = {
+              // add event arg
               code: `${fnName}() { ${hook.code} }`,
               type: 'method',
             };

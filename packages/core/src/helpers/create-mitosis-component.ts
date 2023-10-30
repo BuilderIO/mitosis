@@ -1,19 +1,34 @@
 import { MitosisComponent } from '../types/mitosis-component';
+import { Overwrite, Prettify } from './typescript';
 
-export const createMitosisComponent = (options?: Partial<MitosisComponent>): MitosisComponent => ({
-  '@type': '@builder.io/mitosis/component',
-  imports: [],
-  exports: {},
-  inputs: [],
-  meta: {},
-  refs: {},
-  state: {},
-  children: [],
-  hooks: {
-    onMount: [],
-  },
-  context: { get: {}, set: {} },
-  name: options?.name || 'MyComponent',
-  subComponents: [],
-  ...options,
-});
+type PartialMitosisComponent = Prettify<
+  Overwrite<
+    Partial<MitosisComponent>,
+    {
+      hooks: Partial<MitosisComponent['hooks']>;
+    }
+  >
+>;
+
+export const createMitosisComponent = (options?: PartialMitosisComponent): MitosisComponent => {
+  const { name, hooks, ...remainingOpts } = options || {};
+  return {
+    '@type': '@builder.io/mitosis/component',
+    imports: [],
+    exports: {},
+    inputs: [],
+    meta: {},
+    refs: {},
+    state: {},
+    children: [],
+    context: { get: {}, set: {} },
+    subComponents: [],
+    name: name || 'MyComponent',
+    hooks: {
+      onMount: hooks?.onMount || [],
+      onEvent: hooks?.onEvent || [],
+      ...hooks,
+    },
+    ...remainingOpts,
+  };
+};
