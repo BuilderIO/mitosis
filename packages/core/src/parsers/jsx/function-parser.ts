@@ -26,6 +26,7 @@ export const componentFunctionToJson = (
 ): JSONOrNode => {
   const hooks: MitosisComponent['hooks'] = {
     onMount: [],
+    onEvent: [],
   };
   const state: MitosisComponent['state'] = {};
   const accessedContext: MitosisComponent['context']['get'] = {};
@@ -128,15 +129,18 @@ export const componentFunctionToJson = (
 
             const isRoot = types.isBooleanLiteral(fourthArg) ? fourthArg.value : false;
 
-            hooks.onEvent = [
-              ...(hooks.onEvent || []),
-              {
-                eventName: firstArg.value,
-                code: processHookCode(secondArg),
-                refName: thirdArg.name,
-                isRoot,
-              },
-            ];
+            const eventArgName = types.isIdentifier(secondArg.params[0])
+              ? secondArg.params[0].name
+              : 'event';
+
+            hooks.onEvent.push({
+              eventName: firstArg.value,
+              code: processHookCode(secondArg),
+              refName: thirdArg.name,
+              isRoot,
+              eventArgName,
+            });
+            break;
           }
           case HOOKS.UPDATE: {
             const firstArg = expression.arguments[0];
@@ -189,6 +193,7 @@ export const componentFunctionToJson = (
               ...context.builder.component.meta[HOOKS.METADATA],
               ...parseCodeJson(expression.arguments[0]),
             };
+            break;
           }
         }
       }

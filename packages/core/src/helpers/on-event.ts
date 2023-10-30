@@ -20,7 +20,7 @@ export const getOnEventHooksForNode = ({
   node: MitosisNode;
   component: MitosisComponent;
 }) => {
-  return component.hooks.onEvent?.filter((hook) => checkIsEventHandlerNode(node, hook));
+  return component.hooks.onEvent.filter((hook) => checkIsEventHandlerNode(node, hook));
 };
 
 /**
@@ -35,17 +35,18 @@ export const processOnEventHooksPlugin =
         const { setBindings = true } = args;
 
         traverseNodes(component, (node) => {
-          getOnEventHooksForNode({ node, component })?.forEach((hook) => {
+          getOnEventHooksForNode({ node, component }).forEach((hook) => {
             const handlerName = getBindingName(hook);
             const fnName = getOnEventHandlerName(hook);
             component.state[fnName] = {
-              code: `${fnName}() { ${hook.code} }`,
+              code: `${fnName}(${hook.eventArgName}) { ${hook.code} }`,
               type: 'method',
             };
 
             if (setBindings) {
               node.bindings[handlerName] = {
-                code: `state.${fnName}()`,
+                code: `state.${fnName}(${hook.eventArgName})`,
+                arguments: [hook.eventArgName],
                 type: 'single',
               };
             }

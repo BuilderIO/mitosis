@@ -2142,7 +2142,7 @@ exports[`Vue > jsx > Javascript Test > onEvent 1`] = `
   <div
     class=\\"builder-embed\\"
     ref=\\"elem\\"
-    @initeditingbldr=\\"elem_onInitEditingBldr()\\"
+    @initeditingbldr=\\"elem_onInitEditingBldr($event)\\"
   >
     <div>Test</div>
   </div>
@@ -2157,8 +2157,12 @@ onMounted(() => {
   elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
 });
 
-function elem_onInitEditingBldr() {
+function foo(event) {
+  console.log(\\"test2\\");
+}
+function elem_onInitEditingBldr(event) {
   console.log(\\"test\\");
+  foo(event);
 }
 </script>"
 `;
@@ -5338,7 +5342,7 @@ exports[`Vue > jsx > Typescript Test > onEvent 1`] = `
   <div
     class=\\"builder-embed\\"
     ref=\\"elem\\"
-    @initeditingbldr=\\"elem_onInitEditingBldr()\\"
+    @initeditingbldr=\\"elem_onInitEditingBldr($event)\\"
   >
     <div>Test</div>
   </div>
@@ -5353,8 +5357,12 @@ onMounted(() => {
   elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
 });
 
-function elem_onInitEditingBldr() {
+function foo(event) {
+  console.log(\\"test2\\");
+}
+function elem_onInitEditingBldr(event) {
   console.log(\\"test\\");
+  foo(event);
 }
 </script>"
 `;

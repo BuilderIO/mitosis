@@ -133,19 +133,18 @@ function addPropertiesAndStateToHook(json: SveltosisComponent, hook: BaseHook): 
 function postProcessHooks(json: SveltosisComponent) {
   const hookKeys = Object.keys(json.hooks) as Array<keyof typeof json.hooks>;
   for (const key of hookKeys) {
-    const hook = json.hooks[key];
+    let hook = json.hooks[key];
     if (!hook) {
       continue;
     }
 
-    if (key === 'onUpdate' || key === 'onMount') {
-      json.hooks[key]?.forEach((item, index) => {
-        json.hooks[key]?.splice(index, 1, addPropertiesAndStateToHook(json, item));
+    if (Array.isArray(hook)) {
+      hook.forEach((item, index) => {
+        (hook as Array<any>)!.splice(index, 1, addPropertiesAndStateToHook(json, item));
       });
-      continue;
+    } else {
+      hook = addPropertiesAndStateToHook(json, hook as BaseHook);
     }
-
-    (json.hooks[key] as BaseHook) = addPropertiesAndStateToHook(json, hook as BaseHook);
   }
 }
 
