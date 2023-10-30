@@ -20,8 +20,6 @@ export const getOnEventHooksForNode = ({
   node: MitosisNode;
   component: MitosisComponent;
 }) => {
-  console.log('yee', { onEvent: component.hooks.onEvent });
-
   return component.hooks.onEvent.filter((hook) => checkIsEventHandlerNode(node, hook));
 };
 
