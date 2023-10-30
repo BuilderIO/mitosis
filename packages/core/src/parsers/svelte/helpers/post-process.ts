@@ -140,12 +140,11 @@ function postProcessHooks(json: SveltosisComponent) {
 
     if (Array.isArray(hook)) {
       hook.forEach((item, index) => {
-        hook!.splice(index, 1, addPropertiesAndStateToHook(json, item));
+        (hook as Array<any>)!.splice(index, 1, addPropertiesAndStateToHook(json, item));
       });
-      continue;
+    } else {
+      hook = addPropertiesAndStateToHook(json, hook as BaseHook);
     }
-
-    hook = addPropertiesAndStateToHook(json, hook as BaseHook);
   }
 }
 
