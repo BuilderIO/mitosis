@@ -303,7 +303,7 @@ function emitUseContext(file: File, component: MitosisComponent) {
 }
 
 function emitUseOn(file: File, component: MitosisComponent) {
-  component.hooks.onEvent?.forEach((hook) => {
+  component.hooks.onEvent.forEach((hook) => {
     const wrappedHandlerFn = `${
       file.import(file.qwikModule, '$').localName
     }(${getOnEventHandlerName(hook)})`;

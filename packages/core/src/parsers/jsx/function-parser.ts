@@ -140,6 +140,7 @@ export const componentFunctionToJson = (
               isRoot,
               eventArgName,
             });
+            break;
           }
           case HOOKS.UPDATE: {
             const firstArg = expression.arguments[0];
@@ -192,6 +193,7 @@ export const componentFunctionToJson = (
               ...context.builder.component.meta[HOOKS.METADATA],
               ...parseCodeJson(expression.arguments[0]),
             };
+            break;
           }
         }
       }

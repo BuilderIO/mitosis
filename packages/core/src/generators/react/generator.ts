@@ -446,20 +446,19 @@ const _componentToReact = (
         : ''
     }
 
-    ${
-      json.hooks.onEvent
-        ?.map((hook) => {
-          const eventName = `"${hook.eventName}"`;
-          const handlerName = getOnEventHandlerName(hook);
-          return `
+    ${json.hooks.onEvent
+      .map((hook) => {
+        const eventName = `"${hook.eventName}"`;
+        const handlerName = getOnEventHandlerName(hook);
+        return `
       useEffect(() => {
         ${hook.refName}.addEventListener(${eventName}, ${handlerName});
         return () => ${hook.refName}.removeEventListener(${eventName}, ${handlerName});
       }, []);
       `;
-        })
-        .join('\n') ?? ''
-    }
+      })
+      .join('\n')}
+      
     ${json.hooks.onMount.map(
       (hook) =>
         `useEffect(() => {

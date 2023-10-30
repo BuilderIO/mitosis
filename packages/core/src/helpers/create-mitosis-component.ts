@@ -12,6 +12,7 @@ type PartialMitosisComponent = Prettify<
 
 export const createMitosisComponent = (options?: PartialMitosisComponent): MitosisComponent => {
   const { name, hooks, ...remainingOpts } = options || {};
+  const { onEvent = [], onMount = [], ...remainingHooks } = hooks || {};
   return {
     '@type': '@builder.io/mitosis/component',
     imports: [],
@@ -25,9 +26,9 @@ export const createMitosisComponent = (options?: PartialMitosisComponent): Mitos
     subComponents: [],
     name: name || 'MyComponent',
     hooks: {
-      onMount: hooks?.onMount || [],
-      onEvent: hooks?.onEvent || [],
-      ...hooks,
+      onMount,
+      onEvent,
+      ...remainingHooks,
     },
     ...remainingOpts,
   };
