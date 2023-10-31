@@ -1,7 +1,7 @@
-import { MitosisNode } from 'src/types/mitosis-node';
 import traverse from 'traverse';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { MitosisComponent } from '../../types/mitosis-component';
+import type { MitosisComponent } from '../../types/mitosis-component';
+import type { MitosisNode } from '../../types/mitosis-node';
 
 const checkIsNodeAMitosisComponent = (node: MitosisNode) =>
   node.name[0] === node.name[0].toUpperCase();
