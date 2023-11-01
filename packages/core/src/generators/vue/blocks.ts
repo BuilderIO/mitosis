@@ -1,13 +1,13 @@
 import { identity, pipe } from 'fp-ts/lib/function';
+import { filterEmptyTextNodes } from 'src/helpers/filter-empty-text-nodes';
+import isChildren from 'src/helpers/is-children';
+import { isMitosisNode } from 'src/helpers/is-mitosis-node';
+import { checkIsDefined } from 'src/helpers/nullable';
+import { removeSurroundingBlock } from 'src/helpers/remove-surrounding-block';
+import { replaceIdentifiers } from 'src/helpers/replace-identifiers';
+import { isSlotProperty, stripSlotPrefix } from 'src/helpers/slots';
+import { Dictionary } from 'src/helpers/typescript';
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
-import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import isChildren from '../../helpers/is-children';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { checkIsDefined } from '../../helpers/nullable';
-import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
-import { Dictionary } from '../../helpers/typescript';
 import { Binding, ForNode, MitosisNode, SpreadType } from '../../types/mitosis-node';
 import {
   addBindingsToJson,

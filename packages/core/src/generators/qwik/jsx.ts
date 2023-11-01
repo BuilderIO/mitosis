@@ -1,4 +1,4 @@
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { isMitosisNode } from 'src/helpers/is-mitosis-node';
 import { Binding, MitosisNode } from '../../types/mitosis-node';
 import { DIRECTIVES } from './directives';
 import { CssStyles } from './helpers/styles';

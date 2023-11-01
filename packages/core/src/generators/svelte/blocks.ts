@@ -1,10 +1,10 @@
+import { createSingleBinding } from 'src/helpers/bindings';
+import isChildren from 'src/helpers/is-children';
+import { isUpperCase } from 'src/helpers/is-upper-case';
+import { getForArguments } from 'src/helpers/nodes/for';
+import { removeSurroundingBlock } from 'src/helpers/remove-surrounding-block';
+import { isSlotProperty, stripSlotPrefix } from 'src/helpers/slots';
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
-import { createSingleBinding } from '../../helpers/bindings';
-import isChildren from '../../helpers/is-children';
-import { isUpperCase } from '../../helpers/is-upper-case';
-import { getForArguments } from '../../helpers/nodes/for';
-import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseNode, Binding, ForNode, MitosisNode } from '../../types/mitosis-node';
 import { stripStateAndProps } from './helpers';

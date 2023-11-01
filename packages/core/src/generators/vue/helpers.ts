@@ -1,17 +1,17 @@
 import { types } from '@babel/core';
 import { flow, identity, pipe } from 'fp-ts/lib/function';
 import { pickBy } from 'lodash';
-import { VALID_HTML_TAGS } from '../../constants/html_tags';
-import { babelTransformExpression } from '../../helpers/babel-transform';
-import { stringifyContextValue } from '../../helpers/get-state-object-string';
-import { Nullable } from '../../helpers/nullable';
-import { stripGetter } from '../../helpers/patterns';
+import { babelTransformExpression } from 'src/helpers/babel-transform';
+import { stringifyContextValue } from 'src/helpers/get-state-object-string';
+import { Nullable } from 'src/helpers/nullable';
+import { stripGetter } from 'src/helpers/patterns';
 import {
   replaceIdentifiers,
   replacePropsIdentifier,
   replaceStateIdentifier,
-} from '../../helpers/replace-identifiers';
-import { isSlotProperty, replaceSlotsInString } from '../../helpers/slots';
+} from 'src/helpers/replace-identifiers';
+import { isSlotProperty, replaceSlotsInString } from 'src/helpers/slots';
+import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { ContextGetInfo, ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { ToVueOptions } from './types';

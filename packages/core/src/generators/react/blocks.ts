@@ -1,11 +1,11 @@
 import { camelCase, upperFirst } from 'lodash';
+import { filterEmptyTextNodes } from 'src/helpers/filter-empty-text-nodes';
+import isChildren from 'src/helpers/is-children';
+import { isRootTextNode } from 'src/helpers/is-root-text-node';
+import { isValidAttributeName } from 'src/helpers/is-valid-attribute-name';
+import { getForArguments } from 'src/helpers/nodes/for';
+import { isSlotProperty } from 'src/helpers/slots';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
-import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import isChildren from '../../helpers/is-children';
-import { isRootTextNode } from '../../helpers/is-root-text-node';
-import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
-import { getForArguments } from '../../helpers/nodes/for';
-import { isSlotProperty } from '../../helpers/slots';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
 import { closeFrag, getFragment, openFrag, processBinding, wrapInFragment } from './helpers';

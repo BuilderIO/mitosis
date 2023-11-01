@@ -1,4 +1,4 @@
-import { OmitObj } from '../../helpers/typescript';
+import { OmitObj } from 'src/helpers/typescript';
 import { BaseTranspilerOptions } from '../../types/transpiler';
 
 export type VueVersion = 2 | 3;
