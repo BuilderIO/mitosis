@@ -7,8 +7,8 @@ import { removeSurroundingBlock } from 'src/helpers/remove-surrounding-block';
 import { replaceIdentifiers } from 'src/helpers/replace-identifiers';
 import { isSlotProperty, stripSlotPrefix } from 'src/helpers/slots';
 import { Dictionary } from 'src/helpers/typescript';
+import { Binding, ForNode, MitosisNode, SpreadType } from 'src/types/mitosis-node';
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
-import { Binding, ForNode, MitosisNode, SpreadType } from '../../types/mitosis-node';
 import {
   addBindingsToJson,
   addPropertiesToJson,

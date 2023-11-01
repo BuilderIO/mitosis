@@ -5,8 +5,8 @@ import { getCustomImports } from 'src/helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from 'src/helpers/get-state-object-string';
 import { checkIsDefined } from 'src/helpers/nullable';
 import { checkIsComponentImport } from 'src/helpers/render-imports';
+import { BaseHook, MitosisComponent } from 'src/types/mitosis-component';
 import { DefaultProps, PropsDefinition } from 'vue/types/options';
-import { BaseHook, MitosisComponent } from '../../types/mitosis-component';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import {
   encodeQuotes,

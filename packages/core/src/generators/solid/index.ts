@@ -20,6 +20,8 @@ import { renderPreComponent } from 'src/helpers/render-imports';
 import { stripMetaProperties } from 'src/helpers/strip-meta-properties';
 import { collectCss } from 'src/helpers/styles/collect-css';
 import { hasCss } from 'src/helpers/styles/helpers';
+import { MitosisComponent } from 'src/types/mitosis-component';
+import { TranspilerGenerator } from 'src/types/transpiler';
 import traverse from 'traverse';
 import {
   runPostCodePlugins,
@@ -27,8 +29,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { TranspilerGenerator } from '../../types/transpiler';
 import { hasGetContext } from '../helpers/context';
 import { blockToSolid } from './blocks';
 import { getState } from './state';

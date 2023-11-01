@@ -1,5 +1,5 @@
 import { format } from 'prettier/standalone';
-import { MitosisContext } from '../../types/mitosis-context';
+import { MitosisContext } from 'src/types/mitosis-context';
 
 type ContextToQwikOptions = {
   format?: boolean;

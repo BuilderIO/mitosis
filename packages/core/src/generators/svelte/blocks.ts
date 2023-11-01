@@ -4,9 +4,9 @@ import { isUpperCase } from 'src/helpers/is-upper-case';
 import { getForArguments } from 'src/helpers/nodes/for';
 import { removeSurroundingBlock } from 'src/helpers/remove-surrounding-block';
 import { isSlotProperty, stripSlotPrefix } from 'src/helpers/slots';
+import { MitosisComponent } from 'src/types/mitosis-component';
+import { BaseNode, Binding, ForNode, MitosisNode } from 'src/types/mitosis-node';
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { BaseNode, Binding, ForNode, MitosisNode } from '../../types/mitosis-node';
 import { stripStateAndProps } from './helpers';
 import { ToSvelteOptions } from './types';
 

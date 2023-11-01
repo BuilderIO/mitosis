@@ -7,11 +7,11 @@ import { isMitosisNode } from 'src/helpers/is-mitosis-node';
 import { mergeOptions } from 'src/helpers/merge-options';
 import { ClassStyleMap } from 'src/helpers/styles/helpers';
 import { Dictionary } from 'src/helpers/typescript';
+import { MitosisComponent } from 'src/types/mitosis-component';
+import { BaseTranspilerOptions, TranspilerGenerator } from 'src/types/transpiler';
 import traverse from 'traverse';
 import { MitosisNode, Plugin } from '../..';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { componentToReact } from '../react';
 import { sanitizeReactNativeBlockStyles } from './sanitize-react-native-block-styles';
 

@@ -8,6 +8,8 @@ import { transformImportPath } from 'src/helpers/render-imports';
 import { replaceIdentifiers, replaceStateIdentifier } from 'src/helpers/replace-identifiers';
 import { checkHasState } from 'src/helpers/state';
 import { collectCss } from 'src/helpers/styles/collect-css';
+import { MitosisComponent } from 'src/types/mitosis-component';
+import { BaseTranspilerOptions, TranspilerGenerator } from 'src/types/transpiler';
 import {
   Plugin,
   runPostCodePlugins,
@@ -15,8 +17,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { addPreventDefault } from './helpers/add-prevent-default';
 import { stableInject } from './helpers/stable-inject';
 import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';

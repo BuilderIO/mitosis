@@ -25,6 +25,8 @@ import { isSlotProperty } from 'src/helpers/slots';
 import { stripMetaProperties } from 'src/helpers/strip-meta-properties';
 import { collectCss } from 'src/helpers/styles/collect-css';
 import { hasStyle } from 'src/helpers/styles/helpers';
+import { MitosisComponent } from 'src/types/mitosis-component';
+import { TranspilerGenerator } from 'src/types/transpiler';
 import traverse from 'traverse';
 import {
   runPostCodePlugins,
@@ -32,8 +34,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { TranspilerGenerator } from '../../types/transpiler';
 import { getContextType, hasGetContext, hasSetContext } from '../helpers/context';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { blockToSvelte } from './blocks';

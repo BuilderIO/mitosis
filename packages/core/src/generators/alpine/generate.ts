@@ -11,6 +11,9 @@ import { replaceIdentifiers } from 'src/helpers/replace-identifiers';
 import { stripMetaProperties } from 'src/helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from 'src/helpers/strip-state-and-props-refs';
 import { collectCss } from 'src/helpers/styles/collect-css';
+import { MitosisComponent } from 'src/types/mitosis-component';
+import { checkIsForNode, ForNode, MitosisNode } from 'src/types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerGenerator } from 'src/types/transpiler';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import {
   runPostCodePlugins,
@@ -18,9 +21,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { renderMountHook } from './render-mount-hook';
 import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
 

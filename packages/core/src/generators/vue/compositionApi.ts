@@ -3,7 +3,7 @@ import { pickBy } from 'lodash';
 import { dedent } from 'src/helpers/dedent';
 import { getStateObjectStringFromComponent } from 'src/helpers/get-state-object-string';
 import { stripStateAndPropsRefs } from 'src/helpers/strip-state-and-props-refs';
-import { BaseHook, MitosisComponent } from '../../types/mitosis-component';
+import { BaseHook, MitosisComponent } from 'src/types/mitosis-component';
 import { getContextKey, getContextValue, processBinding } from './helpers';
 import { ToVueOptions } from './types';
 

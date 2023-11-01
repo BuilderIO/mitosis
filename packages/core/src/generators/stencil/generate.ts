@@ -13,6 +13,8 @@ import { renderPreComponent } from 'src/helpers/render-imports';
 import { stripMetaProperties } from 'src/helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from 'src/helpers/strip-state-and-props-refs';
 import { collectCss } from 'src/helpers/styles/collect-css';
+import { checkIsForNode, MitosisNode } from 'src/types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerGenerator } from 'src/types/transpiler';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import {
   runPostCodePlugins,
@@ -20,8 +22,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { collectClassString } from './collect-class-string';
 

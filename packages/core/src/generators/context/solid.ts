@@ -1,6 +1,6 @@
 import { format } from 'prettier/standalone';
 import { stringifyContextValue } from 'src/helpers/get-state-object-string';
-import { MitosisContext } from '../../types/mitosis-context';
+import { MitosisContext } from 'src/types/mitosis-context';
 
 type ContextToSolidOptions = {
   format?: boolean;

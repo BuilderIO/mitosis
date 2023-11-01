@@ -1,9 +1,9 @@
 import { upperFirst } from 'lodash';
 import { isMitosisNode } from 'src/helpers/is-mitosis-node';
 import { stripStateAndPropsRefs } from 'src/helpers/strip-state-and-props-refs';
+import { MitosisComponent } from 'src/types/mitosis-component';
+import { MitosisNode } from 'src/types/mitosis-node';
 import traverse from 'traverse';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode } from '../../types/mitosis-node';
 
 import { ToReactOptions } from './types';
 

@@ -3,9 +3,9 @@ import { kebabCase } from 'lodash';
 import { babelTransformExpression } from 'src/helpers/babel-transform';
 import { filterEmptyTextNodes } from 'src/helpers/filter-empty-text-nodes';
 import { objectHasKey } from 'src/helpers/typescript';
+import { MitosisComponent } from 'src/types/mitosis-component';
+import { checkIsForNode, MitosisNode } from 'src/types/mitosis-node';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import { collectClassString } from './helpers/styles';
 import { ToSolidOptions } from './types';
 

@@ -1,5 +1,5 @@
 import { isMitosisNode } from 'src/helpers/is-mitosis-node';
-import { Binding, MitosisNode } from '../../types/mitosis-node';
+import { Binding, MitosisNode } from 'src/types/mitosis-node';
 import { DIRECTIVES } from './directives';
 import { CssStyles } from './helpers/styles';
 import { File, invoke, lastProperty, quote, SrcBuilder } from './src-generator';

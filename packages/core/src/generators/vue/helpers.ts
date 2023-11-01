@@ -11,9 +11,9 @@ import {
   replaceStateIdentifier,
 } from 'src/helpers/replace-identifiers';
 import { isSlotProperty, replaceSlotsInString } from 'src/helpers/slots';
+import { ContextGetInfo, ContextSetInfo, MitosisComponent } from 'src/types/mitosis-component';
+import { MitosisNode } from 'src/types/mitosis-node';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
-import { ContextGetInfo, ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode } from '../../types/mitosis-node';
 import { ToVueOptions } from './types';
 
 export const addPropertiesToJson =

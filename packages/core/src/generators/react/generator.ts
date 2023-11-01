@@ -28,14 +28,14 @@ import { stripMetaProperties } from 'src/helpers/strip-meta-properties';
 import { collectCss } from 'src/helpers/styles/collect-css';
 import { collectStyledComponents } from 'src/helpers/styles/collect-styled-components';
 import { hasCss } from 'src/helpers/styles/helpers';
+import { MitosisComponent } from 'src/types/mitosis-component';
+import { TranspilerGenerator } from 'src/types/transpiler';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { TranspilerGenerator } from '../../types/transpiler';
 import { hasContext } from '../helpers/context';
 import { checkIfIsClientComponent } from '../helpers/rsc';
 import { collectReactNativeStyles } from '../react-native';
