@@ -2,6 +2,7 @@ import { types } from '@babel/core';
 import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
+import { checkIsDefined } from 'src/helpers/nullable';
 import { createSingleBinding } from '../../helpers/bindings';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { dedent } from '../../helpers/dedent';
@@ -288,6 +289,20 @@ const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
   return `${json.name}.defaultProps = {${defaultPropsString}};`;
 };
 
+const checkShouldAddUseClientDirective = (json: MitosisComponent, options: ToReactOptions) => {
+  if (!options.addUseClientDirectiveIfNeeded) return false;
+  if (options.type === 'native') return false;
+  if (options.preact) return false;
+
+  // When using RSC generator, we check `componentType` field in metadata to determine if it's a server component
+  const componentType = json.meta.useMetadata?.rsc?.componentType;
+  if (options.rsc && checkIsDefined(componentType)) {
+    return componentType === 'client';
+  }
+
+  return checkIfIsClientComponent(json);
+};
+
 const _componentToReact = (
   json: MitosisComponent,
   options: ToReactOptions,
@@ -511,15 +526,7 @@ const _componentToReact = (
     );
   `;
 
-  const isRsc = options.rsc && json.meta.useMetadata?.rsc?.componentType === 'server';
-  const isNative = options.type === 'native';
-  const isPreact = options.preact;
-  const shouldAddUseClientDirective =
-    options.addUseClientDirectiveIfNeeded &&
-    !isRsc &&
-    !isNative &&
-    !isPreact &&
-    checkIfIsClientComponent(json);
+  const shouldAddUseClientDirective = checkShouldAddUseClientDirective(json, options);
 
   const str = dedent`
   ${shouldAddUseClientDirective ? `'use client';` : ''}
