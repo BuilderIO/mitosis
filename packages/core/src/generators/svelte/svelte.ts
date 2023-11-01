@@ -1,3 +1,25 @@
+import { babelTransformCode, convertTypeScriptToJS } from '@/helpers/babel-transform';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { getProps } from '@/helpers/get-props';
+import { getRefs } from '@/helpers/get-refs';
+import {
+  getStateObjectStringFromComponent,
+  stringifyContextValue,
+} from '@/helpers/get-state-object-string';
+import { gettersToFunctions } from '@/helpers/getters-to-functions';
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { initializeOptions } from '@/helpers/merge-options';
+import { processOnEventHooksPlugin } from '@/helpers/on-event';
+import { stripGetter } from '@/helpers/patterns';
+import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
+import { renderPreComponent } from '@/helpers/render-imports';
+import { isSlotProperty } from '@/helpers/slots';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
+import { collectCss } from '@/helpers/styles/collect-css';
+import { hasStyle } from '@/helpers/styles/helpers';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { TranspilerGenerator } from '@/types/transpiler';
 import { flow, pipe } from 'fp-ts/lib/function';
 import * as prettierPluginSvelte from 'prettier-plugin-svelte';
 import prettierParserBabel from 'prettier/parser-babel';
@@ -5,28 +27,6 @@ import prettierParserHtml from 'prettier/parser-html';
 import prettierParserPostcss from 'prettier/parser-postcss';
 import prettierParserTypescript from 'prettier/parser-typescript';
 import { format } from 'prettier/standalone';
-import { babelTransformCode, convertTypeScriptToJS } from 'src/helpers/babel-transform';
-import { dedent } from 'src/helpers/dedent';
-import { fastClone } from 'src/helpers/fast-clone';
-import { getProps } from 'src/helpers/get-props';
-import { getRefs } from 'src/helpers/get-refs';
-import {
-  getStateObjectStringFromComponent,
-  stringifyContextValue,
-} from 'src/helpers/get-state-object-string';
-import { gettersToFunctions } from 'src/helpers/getters-to-functions';
-import { isMitosisNode } from 'src/helpers/is-mitosis-node';
-import { initializeOptions } from 'src/helpers/merge-options';
-import { processOnEventHooksPlugin } from 'src/helpers/on-event';
-import { stripGetter } from 'src/helpers/patterns';
-import { CODE_PROCESSOR_PLUGIN } from 'src/helpers/plugins/process-code';
-import { renderPreComponent } from 'src/helpers/render-imports';
-import { isSlotProperty } from 'src/helpers/slots';
-import { stripMetaProperties } from 'src/helpers/strip-meta-properties';
-import { collectCss } from 'src/helpers/styles/collect-css';
-import { hasStyle } from 'src/helpers/styles/helpers';
-import { MitosisComponent } from 'src/types/mitosis-component';
-import { TranspilerGenerator } from 'src/types/transpiler';
 import traverse from 'traverse';
 import {
   runPostCodePlugins,

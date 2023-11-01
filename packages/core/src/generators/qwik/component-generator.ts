@@ -1,15 +1,15 @@
+import { convertTypeScriptToJS } from '@/helpers/babel-transform';
+import { fastClone } from '@/helpers/fast-clone';
+import { initializeOptions } from '@/helpers/merge-options';
+import { getOnEventHandlerName, processOnEventHooksPlugin } from '@/helpers/on-event';
+import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
+import { transformImportPath } from '@/helpers/render-imports';
+import { replaceIdentifiers, replaceStateIdentifier } from '@/helpers/replace-identifiers';
+import { checkHasState } from '@/helpers/state';
+import { collectCss } from '@/helpers/styles/collect-css';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
 import { format } from 'prettier/standalone';
-import { convertTypeScriptToJS } from 'src/helpers/babel-transform';
-import { fastClone } from 'src/helpers/fast-clone';
-import { initializeOptions } from 'src/helpers/merge-options';
-import { getOnEventHandlerName, processOnEventHooksPlugin } from 'src/helpers/on-event';
-import { CODE_PROCESSOR_PLUGIN } from 'src/helpers/plugins/process-code';
-import { transformImportPath } from 'src/helpers/render-imports';
-import { replaceIdentifiers, replaceStateIdentifier } from 'src/helpers/replace-identifiers';
-import { checkHasState } from 'src/helpers/state';
-import { collectCss } from 'src/helpers/styles/collect-css';
-import { MitosisComponent } from 'src/types/mitosis-component';
-import { BaseTranspilerOptions, TranspilerGenerator } from 'src/types/transpiler';
 import {
   Plugin,
   runPostCodePlugins,

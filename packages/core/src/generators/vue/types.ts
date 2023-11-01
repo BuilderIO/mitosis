@@ -1,5 +1,5 @@
-import { OmitObj } from 'src/helpers/typescript';
-import { BaseTranspilerOptions } from 'src/types/transpiler';
+import { OmitObj } from '@/helpers/typescript';
+import { BaseTranspilerOptions } from '@/types/transpiler';
 
 export type VueVersion = 2 | 3;
 export type Api = 'options' | 'composition';

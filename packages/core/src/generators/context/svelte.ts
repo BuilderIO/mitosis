@@ -1,7 +1,7 @@
+import { stringifyContextValue } from '@/helpers/get-state-object-string';
+import { MitosisContext } from '@/types/mitosis-context';
+import { BaseTranspilerOptions } from '@/types/transpiler';
 import { format } from 'prettier/standalone';
-import { stringifyContextValue } from 'src/helpers/get-state-object-string';
-import { MitosisContext } from 'src/types/mitosis-context';
-import { BaseTranspilerOptions } from 'src/types/transpiler';
 
 interface ContextToSvelteOptions extends Pick<BaseTranspilerOptions, 'prettier'> {}
 

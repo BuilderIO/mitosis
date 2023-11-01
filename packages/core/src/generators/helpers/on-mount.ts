@@ -1,4 +1,4 @@
-import { MitosisComponent } from 'src/types/mitosis-component';
+import { MitosisComponent } from '@/types/mitosis-component';
 
 /**
  * Helper for frameworks where all `onMount()`s must share a single scope.

@@ -1,10 +1,10 @@
+import { babelTransformExpression } from '@/helpers/babel-transform';
+import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import { objectHasKey } from '@/helpers/typescript';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { checkIsForNode, MitosisNode } from '@/types/mitosis-node';
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
-import { babelTransformExpression } from 'src/helpers/babel-transform';
-import { filterEmptyTextNodes } from 'src/helpers/filter-empty-text-nodes';
-import { objectHasKey } from 'src/helpers/typescript';
-import { MitosisComponent } from 'src/types/mitosis-component';
-import { checkIsForNode, MitosisNode } from 'src/types/mitosis-node';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { collectClassString } from './helpers/styles';
 import { ToSolidOptions } from './types';

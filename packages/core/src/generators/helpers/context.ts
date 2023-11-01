@@ -3,7 +3,7 @@ import {
   ContextSetInfo,
   MitosisComponent,
   ReactivityType,
-} from 'src/types/mitosis-component';
+} from '@/types/mitosis-component';
 
 export const hasContext = (component: MitosisComponent) =>
   hasSetContext(component) || hasGetContext(component);

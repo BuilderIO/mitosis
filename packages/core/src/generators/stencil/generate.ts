@@ -1,20 +1,20 @@
+import { dashCase } from '@/helpers/dash-case';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import { getProps } from '@/helpers/get-props';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { indent } from '@/helpers/indent';
+import { mapRefs } from '@/helpers/map-refs';
+import { initializeOptions } from '@/helpers/merge-options';
+import { getForArguments } from '@/helpers/nodes/for';
+import { renderPreComponent } from '@/helpers/render-imports';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
+import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
+import { collectCss } from '@/helpers/styles/collect-css';
+import { checkIsForNode, MitosisNode } from '@/types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
 import { format } from 'prettier/standalone';
-import { dashCase } from 'src/helpers/dash-case';
-import { dedent } from 'src/helpers/dedent';
-import { fastClone } from 'src/helpers/fast-clone';
-import { filterEmptyTextNodes } from 'src/helpers/filter-empty-text-nodes';
-import { getProps } from 'src/helpers/get-props';
-import { getStateObjectStringFromComponent } from 'src/helpers/get-state-object-string';
-import { indent } from 'src/helpers/indent';
-import { mapRefs } from 'src/helpers/map-refs';
-import { initializeOptions } from 'src/helpers/merge-options';
-import { getForArguments } from 'src/helpers/nodes/for';
-import { renderPreComponent } from 'src/helpers/render-imports';
-import { stripMetaProperties } from 'src/helpers/strip-meta-properties';
-import { stripStateAndPropsRefs } from 'src/helpers/strip-state-and-props-refs';
-import { collectCss } from 'src/helpers/styles/collect-css';
-import { checkIsForNode, MitosisNode } from 'src/types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from 'src/types/transpiler';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import {
   runPostCodePlugins,

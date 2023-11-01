@@ -1,5 +1,5 @@
+import { MitosisComponent } from '@/types/mitosis-component';
 import { curry } from 'lodash';
-import { MitosisComponent } from 'src/types/mitosis-component';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { hasWatchHooks, renderWatchHooks } from './render-update-hooks';
 

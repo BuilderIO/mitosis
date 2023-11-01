@@ -1,4 +1,4 @@
-import { BaseTranspilerOptions } from 'src/types/transpiler';
+import { BaseTranspilerOptions } from '@/types/transpiler';
 
 export type SolidState = 'mutable' | 'signals' | 'store';
 
