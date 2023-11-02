@@ -64,10 +64,6 @@ const getSignalSymbol = (project: Project) => {
     );
   }
 
-  if (signalSymbol.getName() !== 'Signal') {
-    throw new Error('Could not find the Mitosis Signal symbol in your TS project');
-  }
-
   return signalSymbol;
 };
 
