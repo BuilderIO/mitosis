@@ -13,6 +13,7 @@ import { handleMissingState } from '@/helpers/handle-missing-state';
 import { isRootTextNode } from '@/helpers/is-root-text-node';
 import { mapRefs } from '@/helpers/map-refs';
 import { initializeOptions } from '@/helpers/merge-options';
+import { checkIsDefined } from '@/helpers/nullable';
 import { getOnEventHandlerName, processOnEventHooksPlugin } from '@/helpers/on-event';
 import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { processHttpRequests } from '@/helpers/process-http-requests';
