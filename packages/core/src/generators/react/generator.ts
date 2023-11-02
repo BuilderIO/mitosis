@@ -1,41 +1,41 @@
+import { createSingleBinding } from '@/helpers/bindings';
+import { createMitosisNode } from '@/helpers/create-mitosis-node';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { getPropsRef } from '@/helpers/get-props-ref';
+import { getRefs } from '@/helpers/get-refs';
+import {
+  getStateObjectStringFromComponent,
+  stringifyContextValue,
+} from '@/helpers/get-state-object-string';
+import { gettersToFunctions } from '@/helpers/getters-to-functions';
+import { handleMissingState } from '@/helpers/handle-missing-state';
+import { isRootTextNode } from '@/helpers/is-root-text-node';
+import { mapRefs } from '@/helpers/map-refs';
+import { initializeOptions } from '@/helpers/merge-options';
+import { getOnEventHandlerName, processOnEventHooksPlugin } from '@/helpers/on-event';
+import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
+import { processHttpRequests } from '@/helpers/process-http-requests';
+import { renderPreComponent } from '@/helpers/render-imports';
+import { replaceNodes, replaceStateIdentifier } from '@/helpers/replace-identifiers';
+import { stripNewlinesInStrings } from '@/helpers/replace-new-lines-in-strings';
+import { checkHasState } from '@/helpers/state';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
+import { collectCss } from '@/helpers/styles/collect-css';
+import { collectStyledComponents } from '@/helpers/styles/collect-styled-components';
+import { hasCss } from '@/helpers/styles/helpers';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { TranspilerGenerator } from '@/types/transpiler';
 import { types } from '@babel/core';
 import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { createSingleBinding } from '../../helpers/bindings';
-import { createMitosisNode } from '../../helpers/create-mitosis-node';
-import { dedent } from '../../helpers/dedent';
-import { fastClone } from '../../helpers/fast-clone';
-import { getPropsRef } from '../../helpers/get-props-ref';
-import { getRefs } from '../../helpers/get-refs';
-import {
-  getStateObjectStringFromComponent,
-  stringifyContextValue,
-} from '../../helpers/get-state-object-string';
-import { gettersToFunctions } from '../../helpers/getters-to-functions';
-import { handleMissingState } from '../../helpers/handle-missing-state';
-import { isRootTextNode } from '../../helpers/is-root-text-node';
-import { mapRefs } from '../../helpers/map-refs';
-import { initializeOptions } from '../../helpers/merge-options';
-import { getOnEventHandlerName, processOnEventHooksPlugin } from '../../helpers/on-event';
-import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { processHttpRequests } from '../../helpers/process-http-requests';
-import { renderPreComponent } from '../../helpers/render-imports';
-import { replaceNodes, replaceStateIdentifier } from '../../helpers/replace-identifiers';
-import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
-import { checkHasState } from '../../helpers/state';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { collectCss } from '../../helpers/styles/collect-css';
-import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
-import { hasCss } from '../../helpers/styles/helpers';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { TranspilerGenerator } from '../../types/transpiler';
 import { hasContext } from '../helpers/context';
 import { checkIfIsClientComponent } from '../helpers/rsc';
 import { collectReactNativeStyles } from '../react-native';

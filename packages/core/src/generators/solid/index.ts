@@ -1,34 +1,34 @@
+import { createSingleBinding } from '@/helpers/bindings';
+import { createMitosisNode } from '@/helpers/create-mitosis-node';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import { getComponentsUsed } from '@/helpers/get-components-used';
+import { getRefs } from '@/helpers/get-refs';
+import { stringifyContextValue } from '@/helpers/get-state-object-string';
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { isRootTextNode } from '@/helpers/is-root-text-node';
+import { initializeOptions } from '@/helpers/merge-options';
+import { checkIsDefined } from '@/helpers/nullable';
+import { processOnEventHooksPlugin } from '@/helpers/on-event';
+import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
+import { renderPreComponent } from '@/helpers/render-imports';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
+import { collectCss } from '@/helpers/styles/collect-css';
+import { hasCss } from '@/helpers/styles/helpers';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { TranspilerGenerator } from '@/types/transpiler';
 import { uniq } from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
 import hash from 'hash-sum';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
-import { createSingleBinding } from '../../helpers/bindings';
-import { createMitosisNode } from '../../helpers/create-mitosis-node';
-import { dedent } from '../../helpers/dedent';
-import { fastClone } from '../../helpers/fast-clone';
-import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import { getComponentsUsed } from '../../helpers/get-components-used';
-import { getRefs } from '../../helpers/get-refs';
-import { stringifyContextValue } from '../../helpers/get-state-object-string';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { isRootTextNode } from '../../helpers/is-root-text-node';
-import { initializeOptions } from '../../helpers/merge-options';
-import { checkIsDefined } from '../../helpers/nullable';
-import { processOnEventHooksPlugin } from '../../helpers/on-event';
-import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { renderPreComponent } from '../../helpers/render-imports';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { collectCss } from '../../helpers/styles/collect-css';
-import { hasCss } from '../../helpers/styles/helpers';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { TranspilerGenerator } from '../../types/transpiler';
 import { hasGetContext } from '../helpers/context';
 import { blockToSolid } from './blocks';
 import { getState } from './state';

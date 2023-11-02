@@ -1,23 +1,25 @@
+import { convertTypeScriptToJS } from '@/helpers/babel-transform';
+import { createSingleBinding } from '@/helpers/bindings';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { getProps } from '@/helpers/get-props';
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { mapRefs } from '@/helpers/map-refs';
+import { initializeOptions } from '@/helpers/merge-options';
+import { processOnEventHooksPlugin } from '@/helpers/on-event';
+import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
+import { processHttpRequests } from '@/helpers/process-http-requests';
+import { renderPreComponent } from '@/helpers/render-imports';
+import { replaceStateIdentifier } from '@/helpers/replace-identifiers';
+import { isSlotProperty } from '@/helpers/slots';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
+import { collectCss } from '@/helpers/styles/collect-css';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { TranspilerGenerator } from '@/types/transpiler';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { pickBy, size, uniq } from 'lodash';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
-import { convertTypeScriptToJS } from '../../helpers/babel-transform';
-import { createSingleBinding } from '../../helpers/bindings';
-import { dedent } from '../../helpers/dedent';
-import { fastClone } from '../../helpers/fast-clone';
-import { getProps } from '../../helpers/get-props';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { mapRefs } from '../../helpers/map-refs';
-import { initializeOptions } from '../../helpers/merge-options';
-import { processOnEventHooksPlugin } from '../../helpers/on-event';
-import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { processHttpRequests } from '../../helpers/process-http-requests';
-import { renderPreComponent } from '../../helpers/render-imports';
-import { replaceStateIdentifier } from '../../helpers/replace-identifiers';
-import { isSlotProperty } from '../../helpers/slots';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { collectCss } from '../../helpers/styles/collect-css';
 import {
   Plugin,
   runPostCodePlugins,
@@ -25,8 +27,6 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { TranspilerGenerator } from '../../types/transpiler';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { blockToVue } from './blocks';
 import { generateCompositionApiScript } from './compositionApi';

@@ -1,4 +1,4 @@
-import { prefixWithFunction } from '../../helpers/patterns';
+import { prefixWithFunction } from '@/helpers/patterns';
 import { Plugin } from '../../modules/plugins';
 
 export const FUNCTION_HACK_PLUGIN: Plugin = () => ({

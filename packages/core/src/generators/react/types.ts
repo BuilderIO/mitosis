@@ -1,4 +1,4 @@
-import { BaseTranspilerOptions } from '../../types/transpiler';
+import { BaseTranspilerOptions } from '@/types/transpiler';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
   stylesType: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native' | 'style-tag';

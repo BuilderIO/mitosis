@@ -1,3 +1,4 @@
+import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -6,4 +7,5 @@ export default defineConfig({
     include: ['**/*.test.ts'],
   },
   assetsInclude: ['**/*.raw.tsx'],
+  plugins: [tsconfigPaths({})],
 });

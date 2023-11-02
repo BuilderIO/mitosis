@@ -43,13 +43,14 @@
     "snapupdate": "vitest --update",
     "coverage": "vitest run --coverage",
     "tsc": "tsc --build tsconfig.build.json",
+    "tsc-alias": "tsc-alias -p tsconfig.build.json",
     "rmrf": "rm -rf ./dist",
-    "build": "yarn rmrf && yarn tsc",
+    "build": "yarn rmrf && yarn tsc && yarn tsc-alias",
     "remove-stableVersion": "./scripts/remove-stableVersion.sh",
     "release:dev": "yarn build && yarn run remove-stableVersion && yarn version prerelease && yarn npm publish --tag dev",
     "release:patch": "yarn build && yarn run remove-stableVersion && yarn version patch && yarn npm publish",
     "mitosis-save-artifacts": "node -r esbuild-register ../../scripts/mitosis-save-artifacts.ts",
-    "start": "yarn rmrf && yarn tsc --watch",
+    "start": "yarn rmrf && concurrently --kill-others \"yarn tsc --watch\" \"yarn tsc-alias --watch\"",
     "script": "ts-node -O '{\"module\": \"commonjs\"}'"
   },
   "files": [
@@ -102,6 +103,7 @@
     "@types/prettier": "^2.1.5",
     "@types/rollup__plugin-virtual": "^2.0.1",
     "@types/traverse": "^0.6.32",
+    "concurrently": "^8.2.2",
     "fs-extra-promise": "^1.0.1",
     "less": "^4.1.3",
     "lru-cache": "^6.0.0",
@@ -112,9 +114,11 @@
     "stylus": "^0.59.0",
     "sugarss": "^4.0.1",
     "ts-node": "^9.1.1",
+    "tsc-alias": "^1.8.8",
     "typescript": "^4.8.4",
     "universalify": "^2.0.0",
-    "vite": "^3.2.2",
-    "vitest": "^0.24.5"
+    "vite": "^4.5.0",
+    "vite-tsconfig-paths": "^3.5.0",
+    "vitest": "^0.34.6"
   }
 }

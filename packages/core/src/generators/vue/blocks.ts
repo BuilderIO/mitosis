@@ -1,14 +1,14 @@
+import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import isChildren from '@/helpers/is-children';
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { checkIsDefined } from '@/helpers/nullable';
+import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
+import { replaceIdentifiers } from '@/helpers/replace-identifiers';
+import { isSlotProperty, stripSlotPrefix } from '@/helpers/slots';
+import { Dictionary } from '@/helpers/typescript';
+import { Binding, ForNode, MitosisNode, SpreadType } from '@/types/mitosis-node';
 import { identity, pipe } from 'fp-ts/lib/function';
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
-import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import isChildren from '../../helpers/is-children';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { checkIsDefined } from '../../helpers/nullable';
-import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
-import { Dictionary } from '../../helpers/typescript';
-import { Binding, ForNode, MitosisNode, SpreadType } from '../../types/mitosis-node';
 import {
   addBindingsToJson,
   addPropertiesToJson,

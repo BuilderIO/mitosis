@@ -1,26 +1,26 @@
+import { babelTransformCode } from '@/helpers/babel-transform';
+import { dashCase } from '@/helpers/dash-case';
+import { fastClone } from '@/helpers/fast-clone';
+import { getRefs } from '@/helpers/get-refs';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { initializeOptions } from '@/helpers/merge-options';
+import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
+import { replaceIdentifiers } from '@/helpers/replace-identifiers';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
+import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
+import { collectCss } from '@/helpers/styles/collect-css';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { checkIsForNode, ForNode, MitosisNode } from '@/types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
 import { camelCase, curry, flow, flowRight as compose } from 'lodash';
 import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
-import { babelTransformCode } from '../../helpers/babel-transform';
-import { dashCase } from '../../helpers/dash-case';
-import { fastClone } from '../../helpers/fast-clone';
-import { getRefs } from '../../helpers/get-refs';
-import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { initializeOptions } from '../../helpers/merge-options';
-import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { collectCss } from '../../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { renderMountHook } from './render-mount-hook';
 import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
 
