@@ -1,9 +1,9 @@
+import { MitosisComponent } from '@/types/mitosis-component';
+import { MitosisNode } from '@/types/mitosis-node';
 import {
   compileAwayBuilderComponentsFromTree,
   components as compileAwayComponents,
 } from '../../plugins/compile-away-builder-components';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode } from '../../types/mitosis-node';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { DIRECTIVES } from './directives';
 import { renderHandlers } from './helpers/handlers';

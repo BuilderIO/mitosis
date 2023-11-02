@@ -1,6 +1,6 @@
+import { stringifyContextValue } from '@/helpers/get-state-object-string';
+import { MitosisContext } from '@/types/mitosis-context';
 import { format } from 'prettier/standalone';
-import { stringifyContextValue } from '../../helpers/get-state-object-string';
-import { MitosisContext } from '../../types/mitosis-context';
 
 type ContextToRscOptions = {
   format?: boolean;

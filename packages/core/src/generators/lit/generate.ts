@@ -1,30 +1,30 @@
+import { dashCase } from '@/helpers/dash-case';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import { getProps } from '@/helpers/get-props';
+import { getRefs } from '@/helpers/get-refs';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { has } from '@/helpers/has';
+import { indent } from '@/helpers/indent';
+import { isUpperCase } from '@/helpers/is-upper-case';
+import { mapRefs } from '@/helpers/map-refs';
+import { initializeOptions } from '@/helpers/merge-options';
+import { renderPreComponent } from '@/helpers/render-imports';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
+import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
+import { collectCss } from '@/helpers/styles/collect-css';
+import { checkIsForNode, MitosisNode } from '@/types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
 import { camelCase, some } from 'lodash';
 import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
-import { dashCase } from '../../helpers/dash-case';
-import { dedent } from '../../helpers/dedent';
-import { fastClone } from '../../helpers/fast-clone';
-import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import { getProps } from '../../helpers/get-props';
-import { getRefs } from '../../helpers/get-refs';
-import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { has } from '../../helpers/has';
-import { indent } from '../../helpers/indent';
-import { isUpperCase } from '../../helpers/is-upper-case';
-import { mapRefs } from '../../helpers/map-refs';
-import { initializeOptions } from '../../helpers/merge-options';
-import { renderPreComponent } from '../../helpers/render-imports';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { collectCss } from '../../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { collectClassString } from './collect-class-string';
 

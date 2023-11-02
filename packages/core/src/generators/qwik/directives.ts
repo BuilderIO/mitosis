@@ -1,5 +1,5 @@
-import { getForArguments } from '../../helpers/nodes/for';
-import { ForNode, MitosisNode } from '../../types/mitosis-node';
+import { getForArguments } from '@/helpers/nodes/for';
+import { ForNode, MitosisNode } from '@/types/mitosis-node';
 import { minify } from '../minify';
 import { iteratorProperty, SrcBuilder } from './src-generator';
 

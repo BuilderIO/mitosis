@@ -1,6 +1,6 @@
-import { isSlotProperty, replaceSlotsInString } from '../../helpers/slots';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { isSlotProperty, replaceSlotsInString } from '@/helpers/slots';
+import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
+import { MitosisComponent } from '@/types/mitosis-component';
 import { ToSvelteOptions } from './types';
 
 export const stripStateAndProps =

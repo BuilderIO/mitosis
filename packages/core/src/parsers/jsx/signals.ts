@@ -1,10 +1,16 @@
 import { Node, Project, Symbol, ts, Type } from 'ts-morph';
 import { getContextSymbols, getPropsSymbol } from '../../helpers/typescript-project';
 
-export const findSignals = (args: { project: Project; signalSymbol: Symbol; filePath: string }) => {
-  const { project, signalSymbol } = args;
-
-  const ast = args.project.getSourceFileOrThrow(args.filePath);
+export const findSignals = ({
+  filePath,
+  signalSymbol,
+  project,
+}: {
+  project: Project;
+  signalSymbol: Symbol;
+  filePath: string;
+}) => {
+  const ast = project.getSourceFileOrThrow(filePath);
 
   if (ast === undefined) {
     throw new Error('Could not find AST. Please provide a correct `filePath`.');

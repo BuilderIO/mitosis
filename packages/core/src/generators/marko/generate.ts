@@ -1,31 +1,31 @@
+import { dashCase } from '@/helpers/dash-case';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import { getRefs } from '@/helpers/get-refs';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { hasProps } from '@/helpers/has-props';
+import { indent } from '@/helpers/indent';
+import { mapRefs } from '@/helpers/map-refs';
+import { initializeOptions } from '@/helpers/merge-options';
+import { getForArguments } from '@/helpers/nodes/for';
+import { renderPreComponent } from '@/helpers/render-imports';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
+import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
+import { collectCss } from '@/helpers/styles/collect-css';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { checkIsForNode, MitosisNode } from '@/types/mitosis-node';
+import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
 import hash from 'hash-sum';
 import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
-import { dashCase } from '../../helpers/dash-case';
-import { dedent } from '../../helpers/dedent';
-import { fastClone } from '../../helpers/fast-clone';
-import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import { getRefs } from '../../helpers/get-refs';
-import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { hasProps } from '../../helpers/has-props';
-import { indent } from '../../helpers/indent';
-import { mapRefs } from '../../helpers/map-refs';
-import { initializeOptions } from '../../helpers/merge-options';
-import { getForArguments } from '../../helpers/nodes/for';
-import { renderPreComponent } from '../../helpers/render-imports';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { collectCss } from '../../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}

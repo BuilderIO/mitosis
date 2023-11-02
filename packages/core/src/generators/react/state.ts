@@ -1,11 +1,11 @@
+import { capitalize } from '@/helpers/capitalize';
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { prefixWithFunction, replaceGetterWithFunction } from '@/helpers/patterns';
+import { transformStateSetters } from '@/helpers/transform-state-setters';
+import { MitosisComponent, StateValue } from '@/types/mitosis-component';
 import { types } from '@babel/core';
 import { pipe } from 'fp-ts/lib/function';
 import traverse from 'traverse';
-import { capitalize } from '../../helpers/capitalize';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { prefixWithFunction, replaceGetterWithFunction } from '../../helpers/patterns';
-import { transformStateSetters } from '../../helpers/transform-state-setters';
-import { MitosisComponent, StateValue } from '../../types/mitosis-component';
 import { processBinding } from './helpers';
 import { ToReactOptions } from './types';
 

@@ -1,12 +1,12 @@
+import { getComponentsUsed } from '@/helpers/get-components-used';
+import { getCustomImports } from '@/helpers/get-custom-imports';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { checkIsDefined } from '@/helpers/nullable';
+import { checkIsComponentImport } from '@/helpers/render-imports';
+import { BaseHook, MitosisComponent } from '@/types/mitosis-component';
 import json5 from 'json5';
 import { kebabCase, size, uniq } from 'lodash';
 import { DefaultProps, PropsDefinition } from 'vue/types/options';
-import { getComponentsUsed } from '../../helpers/get-components-used';
-import { getCustomImports } from '../../helpers/get-custom-imports';
-import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { checkIsDefined } from '../../helpers/nullable';
-import { checkIsComponentImport } from '../../helpers/render-imports';
-import { BaseHook, MitosisComponent } from '../../types/mitosis-component';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import {
   encodeQuotes,
