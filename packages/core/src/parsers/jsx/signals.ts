@@ -1,15 +1,7 @@
-import { Node, Project, Symbol, ts, Type } from 'ts-morph';
+import { Node, Project, ts, Type } from 'ts-morph';
 import { getContextSymbols, getPropsSymbol } from '../../helpers/typescript-project';
 
-export const findSignals = ({
-  filePath,
-  signalSymbol,
-  project,
-}: {
-  project: Project;
-  signalSymbol: Symbol;
-  filePath: string;
-}) => {
+export const findSignals = ({ filePath, project }: { project: Project; filePath: string }) => {
   const ast = project.getSourceFileOrThrow(filePath);
 
   if (ast === undefined) {
@@ -26,8 +18,26 @@ export const findSignals = ({
 
   const contextSymbols = getContextSymbols(ast);
 
-  const checkIsSignalSymbol = (type: Type<ts.Type>) =>
-    type.getTargetType()?.getAliasSymbol() === signalSymbol;
+  const checkIsSignalSymbol = (type: Type<ts.Type>) => {
+    const symbol = type.getTargetType()?.getAliasSymbol();
+
+    if (!symbol || symbol.getName() !== 'Signal') return false;
+
+    const compilerSymbol = symbol?.compilerSymbol;
+    const parent: ts.Symbol | undefined = (compilerSymbol as any).parent;
+
+    if (!parent) return false;
+
+    if (
+      parent.getName().includes('mitosis/packages/core/dist/src/index') ||
+      // should only be needed for tests to work.
+      parent.getName().includes('mitosis/packages/core/src/index')
+    ) {
+      return true;
+    }
+
+    return false;
+  };
 
   const checkIsOptionalSignal = (node: Node) => {
     let hasUndefined = false;
