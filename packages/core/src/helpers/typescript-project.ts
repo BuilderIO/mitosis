@@ -50,9 +50,15 @@ export const getContextSymbols = (ast: SourceFile) => {
 };
 
 const getSignalSymbol = (project: Project) => {
-  const mitosisRootExportFile = project
-    .getSourceFiles()
-    .find((file) => file.getFilePath().includes('mitosis/packages/core/dist/src/index'));
+  const mitosisRootExportFile = project.getSourceFiles().find((file) => {
+    const filePath = file.getFilePath();
+
+    return (
+      filePath.includes('mitosis/packages/core/dist/src/index') ||
+      // should only be needed for tests to work.
+      filePath.includes('mitosis/packages/core/src/index')
+    );
+  });
 
   const signalSymbol = mitosisRootExportFile
     ?.getExportSymbols()
