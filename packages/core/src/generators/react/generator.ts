@@ -13,6 +13,7 @@ import { handleMissingState } from '@/helpers/handle-missing-state';
 import { isRootTextNode } from '@/helpers/is-root-text-node';
 import { mapRefs } from '@/helpers/map-refs';
 import { initializeOptions } from '@/helpers/merge-options';
+import { checkIsDefined } from '@/helpers/nullable';
 import { getOnEventHandlerName, processOnEventHooksPlugin } from '@/helpers/on-event';
 import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { processHttpRequests } from '@/helpers/process-http-requests';
@@ -288,6 +289,20 @@ const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
   return `${json.name}.defaultProps = {${defaultPropsString}};`;
 };
 
+const checkShouldAddUseClientDirective = (json: MitosisComponent, options: ToReactOptions) => {
+  if (!options.addUseClientDirectiveIfNeeded) return false;
+  if (options.type === 'native') return false;
+  if (options.preact) return false;
+
+  // When using RSC generator, we check `componentType` field in metadata to determine if it's a server component
+  const componentType = json.meta.useMetadata?.rsc?.componentType;
+  if (options.rsc && checkIsDefined(componentType)) {
+    return componentType === 'client';
+  }
+
+  return checkIfIsClientComponent(json);
+};
+
 const _componentToReact = (
   json: MitosisComponent,
   options: ToReactOptions,
@@ -511,15 +526,7 @@ const _componentToReact = (
     );
   `;
 
-  const isRsc = options.rsc && json.meta.useMetadata?.rsc?.componentType === 'server';
-  const isNative = options.type === 'native';
-  const isPreact = options.preact;
-  const shouldAddUseClientDirective =
-    options.addUseClientDirectiveIfNeeded &&
-    !isRsc &&
-    !isNative &&
-    !isPreact &&
-    checkIfIsClientComponent(json);
+  const shouldAddUseClientDirective = checkShouldAddUseClientDirective(json, options);
 
   const str = dedent`
   ${shouldAddUseClientDirective ? `'use client';` : ''}
