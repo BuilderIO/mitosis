@@ -50,25 +50,25 @@ export const getContextSymbols = (ast: SourceFile) => {
 };
 
 const getSignalSymbol = (project: Project) => {
-  const symbolExport = project.createSourceFile(
-    'homepage3.lite.tsx',
-    `import { Signal } from '@builder.io/mitosis';`,
-  );
+  const mitosisRootExportFile = project
+    .getSourceFiles()
+    .find((file) => file.getFilePath().includes('mitosis/packages/core/dist/src/index'));
 
-  // Find the original Signal symbol
-  let signalSymbol: Symbol | undefined = undefined;
-  symbolExport.forEachDescendant((node) => {
-    if (Node.isImportSpecifier(node)) {
-      signalSymbol = node.getSymbol()?.getAliasedSymbol();
-    }
-  });
+  const signalSymbol = mitosisRootExportFile
+    ?.getExportSymbols()
+    .find((Symbol) => Symbol.getName() === 'Signal');
 
   if (signalSymbol === undefined) {
     throw new Error(
       'Could not find the Mitosis Signal symbol in your TS project. Is `@builder.io/mitosis` installed correctly?',
     );
   }
-  return signalSymbol as Symbol;
+
+  if (signalSymbol.getName() !== 'Signal') {
+    throw new Error('Could not find the Mitosis Signal symbol in your TS project');
+  }
+
+  return signalSymbol;
 };
 
 const getProject = (tsConfigFilePath: string) => {
