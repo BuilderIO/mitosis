@@ -326,13 +326,7 @@ export class SrcBuilder {
         let key = lastProperty(rawKey);
         if (isEvent(key)) {
           key = key + '$';
-          if (this.file.options.isJSX) {
-            binding = `(event)=>${binding}`;
-          } else {
-            binding = `${
-              this.file.import(this.file.qwikModule, '$').localName
-            }((event)=>${binding})`;
-          }
+          binding = `${this.file.import(this.file.qwikModule, '$').localName}((event)=>${binding})`;
         } else if (!binding && rawKey in props) {
           binding = quote(props[rawKey]);
         } else if (binding != null && binding === props[key]) {
