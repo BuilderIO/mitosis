@@ -1,6 +1,13 @@
 import { Node, Project, ts, Type } from 'ts-morph';
 import { getContextSymbols, getPropsSymbol } from '../../helpers/typescript-project';
 
+const MITOSIS_IMPORT_PATHS = [
+  // actual production path
+  '/node_modules/@builder.io/mitosis/',
+  // possible path if symlinking mitosis locally
+  '/mitosis/packages/core/',
+];
+
 export const findSignals = ({ filePath, project }: { project: Project; filePath: string }) => {
   const ast = project.getSourceFileOrThrow(filePath);
 
@@ -28,11 +35,7 @@ export const findSignals = ({ filePath, project }: { project: Project; filePath:
 
     if (!parent) return false;
 
-    if (
-      parent.getName().includes('mitosis/packages/core/dist/src/index') ||
-      // should only be needed for tests to work.
-      parent.getName().includes('mitosis/packages/core/src/index')
-    ) {
+    if (MITOSIS_IMPORT_PATHS.includes(parent.getName())) {
       return true;
     }
 
