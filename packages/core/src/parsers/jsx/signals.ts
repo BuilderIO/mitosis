@@ -35,7 +35,7 @@ export const findSignals = ({ filePath, project }: { project: Project; filePath:
 
     if (!parent) return false;
 
-    if (MITOSIS_IMPORT_PATHS.includes(parent.getName())) {
+    if (MITOSIS_IMPORT_PATHS.some((path) => parent.getName().includes(path))) {
       return true;
     }
 
