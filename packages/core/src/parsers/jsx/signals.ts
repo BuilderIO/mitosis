@@ -1,15 +1,14 @@
-import { Node, Project, Symbol, ts, Type } from 'ts-morph';
+import { Node, Project, ts, Type } from 'ts-morph';
 import { getContextSymbols, getPropsSymbol } from '../../helpers/typescript-project';
 
-export const findSignals = ({
-  filePath,
-  signalSymbol,
-  project,
-}: {
-  project: Project;
-  signalSymbol: Symbol;
-  filePath: string;
-}) => {
+const MITOSIS_IMPORT_PATHS = [
+  // actual production path
+  '/node_modules/@builder.io/mitosis/',
+  // possible path if symlinking mitosis locally
+  '/mitosis/packages/core/',
+];
+
+export const findSignals = ({ filePath, project }: { project: Project; filePath: string }) => {
   const ast = project.getSourceFileOrThrow(filePath);
 
   if (ast === undefined) {
@@ -26,8 +25,22 @@ export const findSignals = ({
 
   const contextSymbols = getContextSymbols(ast);
 
-  const checkIsSignalSymbol = (type: Type<ts.Type>) =>
-    type.getTargetType()?.getAliasSymbol() === signalSymbol;
+  const checkIsSignalSymbol = (type: Type<ts.Type>) => {
+    const symbol = type.getTargetType()?.getAliasSymbol();
+
+    if (!symbol || symbol.getName() !== 'Signal') return false;
+
+    const compilerSymbol = symbol?.compilerSymbol;
+    const parent: ts.Symbol | undefined = (compilerSymbol as any).parent;
+
+    if (!parent) return false;
+
+    if (MITOSIS_IMPORT_PATHS.some((path) => parent.getName().includes(path))) {
+      return true;
+    }
+
+    return false;
+  };
 
   const checkIsOptionalSignal = (node: Node) => {
     let hasUndefined = false;

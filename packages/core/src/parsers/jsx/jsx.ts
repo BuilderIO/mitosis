@@ -228,7 +228,6 @@ export function parseJsx(
     const reactiveValues = findSignals({
       filePath: options.filePath,
       project: options.tsProject.project,
-      signalSymbol: options.tsProject.signalSymbol,
     });
 
     reactiveValues.props.forEach((prop) => {

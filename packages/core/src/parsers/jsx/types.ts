@@ -1,4 +1,4 @@
-import { Project, Symbol } from 'ts-morph';
+import { Project } from 'ts-morph';
 import { MitosisComponent } from '../../types/mitosis-component';
 
 export type ParseMitosisOptions = {
@@ -7,7 +7,6 @@ export type ParseMitosisOptions = {
   typescript: boolean;
   tsProject?: {
     project: Project;
-    signalSymbol: Symbol;
   };
   filePath?: string;
 };

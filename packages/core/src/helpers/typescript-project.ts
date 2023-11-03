@@ -49,30 +49,6 @@ export const getContextSymbols = (ast: SourceFile) => {
   return contextSymbols;
 };
 
-const getSignalSymbol = (project: Project) => {
-  const mitosisRootExportFile = project.getSourceFiles().find((file) => {
-    const filePath = file.getFilePath();
-
-    return (
-      filePath.includes('mitosis/packages/core/dist/src/index') ||
-      // should only be needed for tests to work.
-      filePath.includes('mitosis/packages/core/src/index')
-    );
-  });
-
-  const signalSymbol = mitosisRootExportFile
-    ?.getExportSymbols()
-    .find((Symbol) => Symbol.getName() === 'Signal');
-
-  if (signalSymbol === undefined) {
-    throw new Error(
-      'Could not find the Mitosis Signal symbol in your TS project. Is `@builder.io/mitosis` installed correctly?',
-    );
-  }
-
-  return signalSymbol;
-};
-
 const getProject = (tsConfigFilePath: string) => {
   try {
     return new Project({ tsConfigFilePath });
@@ -85,6 +61,5 @@ const getProject = (tsConfigFilePath: string) => {
 
 export const createTypescriptProject = (tsConfigFilePath: string) => {
   const project = getProject(tsConfigFilePath);
-  const signalSymbol = getSignalSymbol(project);
-  return { project, signalSymbol };
+  return { project };
 };
