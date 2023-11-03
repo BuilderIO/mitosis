@@ -3993,24 +3993,15 @@ exports[`qwik > jsx > Javascript Test > onEvent 1`] = `
 export const foo = function foo(props, state, elem, event) {
   console.log(\\"test2\\");
 };
-export const elem_onInitEditingBldr = function elem_onInitEditingBldr(
-  props,
-  state,
-  elem,
-  event
-) {
-  console.log(\\"test\\");
-  foo(props, state, elem, event);
-};
 export const Embed = component$((props) => {
   const elem = useSignal();
   const state = {};
   useOn(
     \\"initEditingBldr\\",
-    $((event) => {
+    $((event, element) => {
       console.log(\\"test\\");
       foo(props, state, elem, event);
-    })
+    }) as Parameters<typeof useOn>[1]
   );
   useVisibleTask$(() => {
     elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
@@ -7444,24 +7435,15 @@ exports[`qwik > jsx > Typescript Test > onEvent 1`] = `
 export const foo = function foo(props, state, elem, event) {
   console.log(\\"test2\\");
 };
-export const elem_onInitEditingBldr = function elem_onInitEditingBldr(
-  props,
-  state,
-  elem,
-  event
-) {
-  console.log(\\"test\\");
-  foo(props, state, elem, event);
-};
 export const Embed = component$((props: any) => {
   const elem = useSignal<Element>();
   const state: any = {};
   useOn(
     \\"initEditingBldr\\",
-    $((event) => {
+    $((event, element) => {
       console.log(\\"test\\");
       foo(props, state, elem, event);
-    })
+    }) as Parameters<typeof useOn>[1]
   );
   useVisibleTask$(() => {
     elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
