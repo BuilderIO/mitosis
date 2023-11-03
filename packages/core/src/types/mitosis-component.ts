@@ -96,6 +96,7 @@ export type OnEventHook = BaseHook & {
   isRoot: boolean;
   deps?: never;
   eventArgName: string;
+  elementArgName?: string;
 };
 
 export type OnMountHook = BaseHook & {

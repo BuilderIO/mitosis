@@ -28,14 +28,16 @@ export const getOnEventHooksForNode = ({
  * Only works with frameworks that support custom events in their templates.
  */
 export const processOnEventHooksPlugin =
-  (args: { setBindings?: boolean } = {}): Plugin =>
+  (args: { setBindings?: boolean; includeRootEvents?: boolean } = {}): Plugin =>
   () => ({
     json: {
       pre: (component) => {
-        const { setBindings = true } = args;
+        const { setBindings = true, includeRootEvents = true } = args;
 
         traverseNodes(component, (node) => {
           getOnEventHooksForNode({ node, component }).forEach((hook) => {
+            if (!includeRootEvents && hook.isRoot) return;
+
             const handlerName = getBindingName(hook);
             const fnName = getOnEventHandlerName(hook);
             component.state[fnName] = {
