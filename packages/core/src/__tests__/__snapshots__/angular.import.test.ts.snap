@@ -3061,6 +3061,44 @@ export class CompModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > onMountMultiple 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"comp, Comp\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export class Comp {
+  ngOnInit() {
+    function onMountHook_0() {
+      console.log(\\"Runs on mount\\");
+    }
+    onMountHook_0();
+    function onMountHook_1() {
+      console.log(\\"Another one runs on Mount\\");
+    }
+    onMountHook_1();
+    function onMountHook_2() {
+      console.log(\\"SSR runs on Mount\\");
+    }
+    onMountHook_2();
+  }
+}
+
+@NgModule({
+  declarations: [Comp],
+  imports: [CommonModule],
+  exports: [Comp],
+})
+export class CompModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > onUpdate 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7586,6 +7624,44 @@ export class Comp {
 
   ngOnDestroy() {
     console.log(\\"Runs on unMount\\");
+  }
+}
+
+@NgModule({
+  declarations: [Comp],
+  imports: [CommonModule],
+  exports: [Comp],
+})
+export class CompModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > onMountMultiple 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"comp, Comp\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export class Comp {
+  ngOnInit() {
+    function onMountHook_0() {
+      console.log(\\"Runs on mount\\");
+    }
+    onMountHook_0();
+    function onMountHook_1() {
+      console.log(\\"Another one runs on Mount\\");
+    }
+    onMountHook_1();
+    function onMountHook_2() {
+      console.log(\\"SSR runs on Mount\\");
+    }
+    onMountHook_2();
   }
 }
 

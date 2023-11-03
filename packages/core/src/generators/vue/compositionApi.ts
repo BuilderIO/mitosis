@@ -107,7 +107,7 @@ export function generateCompositionApiScript(
       })
       .join('\n')}
     ${component.hooks.onInit?.code ?? ''}
-    ${component.hooks.onMount.map((hook) => `onMounted(() => { ${hook.code} })`)}
+    ${component.hooks.onMount.map((hook) => `onMounted(() => { ${hook.code} })`).join('\n')}
     ${
       !component.hooks.onUnMount?.code
         ? ''

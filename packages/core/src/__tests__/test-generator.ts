@@ -80,6 +80,7 @@ const onInit = getRawFile('./data/blocks/onInit.raw.tsx');
 const onEvent = getRawFile('./data/blocks/onEvent.raw.tsx');
 const onInitonMount = getRawFile('./data/blocks/onInit-onMount.raw.tsx');
 const onMount = getRawFile('./data/blocks/onMount.raw.tsx');
+const onMountMultiple = getRawFile('./data/blocks/onMount-multiple.raw.tsx');
 const onUpdate = getRawFile('./data/blocks/onUpdate.raw.tsx');
 const onUpdateWithDeps = getRawFile('./data/blocks/onUpdateWithDeps.raw.tsx');
 const rawText = getRawFile('./data/blocks/raw-text.raw.tsx');
@@ -167,6 +168,7 @@ const BASIC_TESTS: Tests = {
   onEvent,
   onUpdateWithDeps: onUpdateWithDeps,
   onMount: onMount,
+  onMountMultiple,
   propsType: propsType,
   propsInterface: propsInterface,
   defaultProps: defaultProps,

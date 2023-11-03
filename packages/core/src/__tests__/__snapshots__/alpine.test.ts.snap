@@ -1955,6 +1955,36 @@ exports[`Alpine.js > jsx > Javascript Test > onMount 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > onMountMultiple 1`] = `
+"<div x-data=\\"comp()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"comp\\", () => ({
+      init() {
+        function onMountHook_0() {
+          console.log(\\"Runs on mount\\");
+        }
+
+        onMountHook_0();
+
+        function onMountHook_1() {
+          console.log(\\"Another one runs on Mount\\");
+        }
+
+        onMountHook_1();
+
+        function onMountHook_2() {
+          console.log(\\"SSR runs on Mount\\");
+        }
+
+        onMountHook_2();
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > onUpdate 1`] = `
 "<div x-data=\\"onUpdate()\\" x-effect=\\"onUpdate\\"></div>
 <script>
@@ -4603,6 +4633,36 @@ exports[`Alpine.js > jsx > Typescript Test > onMount 1`] = `
     Alpine.data(\\"comp\\", () => ({
       init() {
         console.log(\\"Runs on mount\\");
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > onMountMultiple 1`] = `
+"<div x-data=\\"comp()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"comp\\", () => ({
+      init() {
+        function onMountHook_0() {
+          console.log(\\"Runs on mount\\");
+        }
+
+        onMountHook_0();
+
+        function onMountHook_1() {
+          console.log(\\"Another one runs on Mount\\");
+        }
+
+        onMountHook_1();
+
+        function onMountHook_2() {
+          console.log(\\"SSR runs on Mount\\");
+        }
+
+        onMountHook_2();
       },
     }));
   });

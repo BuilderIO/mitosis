@@ -4075,6 +4075,33 @@ export default Comp;
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > onMountMultiple 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useTask$,
+  useVisibleTask$,
+} from \\"@builder.io/qwik\\";
+
+export const Comp = component$((props) => {
+  useVisibleTask$(() => {
+    console.log(\\"Runs on mount\\");
+  });
+  useVisibleTask$(() => {
+    console.log(\\"Another one runs on Mount\\");
+  });
+  useTask$(() => {
+    console.log(\\"SSR runs on Mount\\");
+  });
+
+  return <div></div>;
+});
+
+export default Comp;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > onUpdate 1`] = `
 "import { Fragment, component$, h, useTask$ } from \\"@builder.io/qwik\\";
 
@@ -7481,6 +7508,33 @@ exports[`qwik > jsx > Typescript Test > onMount 1`] = `
 export const Comp = component$((props: any) => {
   useVisibleTask$(() => {
     console.log(\\"Runs on mount\\");
+  });
+
+  return <div></div>;
+});
+
+export default Comp;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > onMountMultiple 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useTask$,
+  useVisibleTask$,
+} from \\"@builder.io/qwik\\";
+
+export const Comp = component$((props: any) => {
+  useVisibleTask$(() => {
+    console.log(\\"Runs on mount\\");
+  });
+  useVisibleTask$(() => {
+    console.log(\\"Another one runs on Mount\\");
+  });
+  useTask$(() => {
+    console.log(\\"SSR runs on Mount\\");
   });
 
   return <div></div>;
