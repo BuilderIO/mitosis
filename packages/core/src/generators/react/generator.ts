@@ -474,15 +474,17 @@ const _componentToReact = (
       })
       .join('\n')}
       
-    ${json.hooks.onMount.map(
-      (hook) =>
-        `useEffect(() => {
+    ${json.hooks.onMount
+      .map(
+        (hook) =>
+          `useEffect(() => {
           ${processHookCode({
             str: hook.code,
             options,
           })}
         }, [])`,
-    )}
+      )
+      .join('\n')}
 
     ${
       json.hooks.onUpdate

@@ -2974,6 +2974,47 @@ export default class Comp extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > onMountMultiple 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-comp\\")
+export default class Comp extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  connectedCallback() {
+    function onMountHook_0() {
+      console.log(\\"Runs on mount\\");
+    }
+
+    onMountHook_0();
+
+    function onMountHook_1() {
+      console.log(\\"Another one runs on Mount\\");
+    }
+
+    onMountHook_1();
+
+    function onMountHook_2() {
+      console.log(\\"SSR runs on Mount\\");
+    }
+
+    onMountHook_2();
+  }
+
+  render() {
+    return html\`
+
+          <div></div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > onUpdate 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -7370,6 +7411,47 @@ export default class Comp extends LitElement {
   }
   disconnectedCallback() {
     console.log(\\"Runs on unMount\\");
+  }
+
+  render() {
+    return html\`
+
+          <div></div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > onMountMultiple 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-comp\\")
+export default class Comp extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  connectedCallback() {
+    function onMountHook_0() {
+      console.log(\\"Runs on mount\\");
+    }
+
+    onMountHook_0();
+
+    function onMountHook_1() {
+      console.log(\\"Another one runs on Mount\\");
+    }
+
+    onMountHook_1();
+
+    function onMountHook_2() {
+      console.log(\\"SSR runs on Mount\\");
+    }
+
+    onMountHook_2();
   }
 
   render() {

@@ -365,7 +365,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       }
       ${json.hooks.onInit?.code ?? ''}
 
-      ${json.hooks.onMount.map((hook) => `onMount(() => { ${hook.code} });`)}
+      ${json.hooks.onMount.map((hook) => `onMount(() => { ${hook.code} });`).join('\n')}
 
       ${
         json.hooks.onUpdate

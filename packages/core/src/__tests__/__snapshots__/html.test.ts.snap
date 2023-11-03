@@ -4542,6 +4542,45 @@ exports[`Html > jsx > Javascript Test > onMount 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > onMountMultiple 1`] = `
+"<div></div>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // onMount
+    function onMountHook_0() {
+      console.log(\\"Runs on mount\\");
+    }
+
+    onMountHook_0();
+
+    function onMountHook_1() {
+      console.log(\\"Another one runs on Mount\\");
+    }
+
+    onMountHook_1();
+
+    function onMountHook_2() {
+      console.log(\\"SSR runs on Mount\\");
+    }
+
+    onMountHook_2();
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > onUpdate 1`] = `
 "<div></div>
 "
@@ -10763,6 +10802,45 @@ exports[`Html > jsx > Typescript Test > onMount 1`] = `
 
     // onMount
     console.log(\\"Runs on mount\\");
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > onMountMultiple 1`] = `
+"<div></div>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // onMount
+    function onMountHook_0() {
+      console.log(\\"Runs on mount\\");
+    }
+
+    onMountHook_0();
+
+    function onMountHook_1() {
+      console.log(\\"Another one runs on Mount\\");
+    }
+
+    onMountHook_1();
+
+    function onMountHook_2() {
+      console.log(\\"SSR runs on Mount\\");
+    }
+
+    onMountHook_2();
   })();
 </script>
 "
