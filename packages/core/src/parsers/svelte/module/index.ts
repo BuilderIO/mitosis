@@ -1,5 +1,5 @@
 import { generate } from 'astring';
-import { walk } from 'svelte/compiler';
+import { walk } from 'estree-walker';
 
 import type { BaseNode, ExportNamedDeclaration, Identifier, VariableDeclaration } from 'estree';
 import type { Ast } from 'svelte/types/compiler/interfaces';
