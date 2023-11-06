@@ -6,6 +6,7 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { dashCase } from '../dash-case';
 import { isMitosisNode } from '../is-mitosis-node';
+import { isUpperCase } from '../is-upper-case';
 
 export const nodeHasCss = (node: MitosisNode) => {
   return Boolean(
@@ -88,17 +89,23 @@ export const parseCssObject = (css: string) => {
   }
 };
 
-const parseCSSKey = (key: string) => {
+const getCssPropertyName = (cssObjectKey: string) => {
   // Allow custom CSS properties
-  if (key.startsWith('--')) {
-    return key;
+  if (cssObjectKey.startsWith('--')) {
+    return cssObjectKey;
   }
-  return dashCase(key);
+  let str = dashCase(cssObjectKey);
+
+  // Convert vendor prefixes like 'WebkitFoo' to '-webkit-foo'
+  if (isUpperCase(cssObjectKey[0])) {
+    str = `-${str}`;
+  }
+  return str;
 };
 
 export const styleMapToCss = (map: StyleMap): string => {
   return Object.entries(map)
     .filter(([key, value]) => typeof value === 'string')
-    .map(([key, value]) => `  ${parseCSSKey(key)}: ${value};`)
+    .map(([key, value]) => `  ${getCssPropertyName(key)}: ${value};`)
     .join('\n');
 };
