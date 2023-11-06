@@ -133,12 +133,17 @@ export const componentFunctionToJson = (
               ? secondArg.params[0].name
               : 'event';
 
+            const elementArgName = types.isIdentifier(secondArg.params[1])
+              ? secondArg.params[1].name
+              : 'element';
+
             hooks.onEvent.push({
               eventName: firstArg.value,
               code: processHookCode(secondArg),
               refName: thirdArg.name,
               isRoot,
               eventArgName,
+              elementArgName,
             });
             break;
           }

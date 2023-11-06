@@ -106,10 +106,10 @@ export declare function useStyle(value: string): void;
 /**
  * Adds an event listener to a given element ref.
  */
-export declare function onEvent(
+export declare function onEvent<E extends Event, T extends Element>(
   eventName: string,
-  fn: (event: any) => any,
-  elementRef: Element,
+  fn: (event: E, element: T) => any,
+  elementRef: T,
   isRoot?: boolean,
 ): void;
 

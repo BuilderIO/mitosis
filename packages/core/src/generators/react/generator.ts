@@ -467,8 +467,8 @@ const _componentToReact = (
         const handlerName = getOnEventHandlerName(hook);
         return `
       useEffect(() => {
-        ${hook.refName}.current.addEventListener(${eventName}, ${handlerName});
-        return () => ${hook.refName}.current.removeEventListener(${eventName}, ${handlerName});
+        ${hook.refName}.current?.addEventListener(${eventName}, ${handlerName});
+        return () => ${hook.refName}.current?.removeEventListener(${eventName}, ${handlerName});
       }, []);
       `;
       })

@@ -39,7 +39,7 @@ const PLUGINS: Plugin[] = [
       },
     },
   }),
-  processOnEventHooksPlugin({ setBindings: false }),
+  processOnEventHooksPlugin({ setBindings: false, includeRootEvents: false }),
   CODE_PROCESSOR_PLUGIN((codeType, json) => {
     switch (codeType) {
       case 'types':
@@ -307,11 +307,11 @@ function emitUseOn(file: File, component: MitosisComponent) {
     const eventName = `"${hook.eventName}"`;
 
     if (hook.isRoot) {
-      const wrappedHandlerFn = `${file.import(file.qwikModule, '$').localName}(${
+      const wrappedHandlerFn = `${file.import(file.qwikModule, '$').localName}((${
         hook.eventArgName
-      } => {
+      }, ${hook.elementArgName}) => {
         ${hook.code}
-      })`;
+      }) as Parameters<typeof useOn>[1]`; // this type hack is needed until https://github.com/BuilderIO/qwik/issues/5398 is fixed
       file.src.emit(
         file.import(file.qwikModule, 'useOn').localName,
         `(${eventName}, ${wrappedHandlerFn});`,
