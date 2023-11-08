@@ -1,3 +1,9 @@
+import {
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
+} from '@/modules/plugins';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import { HOOKS } from '../constants/hooks';
@@ -146,7 +152,11 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
       })({ component });
     }
 
-    const json = fastClone(component);
+    let json = fastClone(component);
+
+    if (options.plugins) {
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
+    }
 
     const domRefs = getRefs(component);
     // grab refs not used for bindings
@@ -164,6 +174,10 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
 
     const mitosisComponents = components.filter((item) => mitosisCoreComponents.includes(item));
     const otherComponents = components.filter((item) => !mitosisCoreComponents.includes(item));
+
+    if (options.plugins) {
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
+    }
 
     const hasState = checkHasState(component);
 
@@ -206,6 +220,9 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
 
   `;
 
+    if (options.plugins) {
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
+    }
     if (options.prettier !== false) {
       try {
         str = format(str, {
@@ -218,6 +235,9 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
         console.error('Format error for file:', str, JSON.stringify(json, null, 2));
         throw err;
       }
+    }
+    if (options.plugins) {
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
     return str;
   };
