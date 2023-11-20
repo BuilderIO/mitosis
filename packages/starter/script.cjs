@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { cwd } = require('process');
 const p = require('@clack/prompts');
+const spawn = require('cross-spawn');
 
 const USER_DIR = cwd();
 const SCRIPT_DIR = __dirname;
@@ -17,7 +18,8 @@ const main = async () => {
     message: 'What is your Mitosis project name?',
     defaultValue: 'my-project',
     placeholder: 'my-project',
-    validate: (input = 'my-project') => {
+    validate: (_input) => {
+      const input = _input || 'my-project';
       if (fs.existsSync(path.join(USER_DIR, input))) return 'Folder already exists with this name';
     },
   });
@@ -116,13 +118,17 @@ module.exports = ${JSON.stringify(config, null, 2)}`;
   copy(templateFolder, outputFolder);
 
   // ask about installing dependencies
-  // const install = await p.confirm({
-  //   message: 'Install dependencies?',
-  // });
+  const install = await p.confirm({
+    message: 'Install dependencies?',
+  });
 
-  // if (install) {
-  //   p.note(`Installing dependencies...`);
-  // }
+  if (install) {
+    p.note(`Installing dependencies...`);
+    const installProcess = spawn('npm', ['install'], {
+      cwd: outputFolder,
+      stdio: 'inherit',
+    });
+  }
 
   p.outro(`You're all set!`);
   process.exit(0);
