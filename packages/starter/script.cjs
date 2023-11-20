@@ -102,30 +102,13 @@ module.exports = ${JSON.stringify(config, null, 2)}`;
         return;
       }
 
-      // update all package.json files to have correct package names
-      if (entry === 'package.json') {
-        const packageJson = require(srcPath);
-
-        packageJson.name = packageJson.name.replace('@template', '@' + projectName);
-
-        // loop over dependencies and update any mitosis packages
-        for (const [key, value] of Object.entries(packageJson?.dependencies || {})) {
-          if (key.startsWith('@template')) {
-            const newKey = key.replace('@template', '@' + projectName);
-            packageJson.dependencies[newKey] = packageJson.dependencies[key];
-
-            delete packageJson.dependencies[key];
-          }
-        }
-
-        fs.writeFileSync(destPath, JSON.stringify(packageJson, null, 2));
-        return;
-      }
-
       if (fs.lstatSync(srcPath).isDirectory()) {
         copy(srcPath, destPath);
       } else {
-        fs.copyFileSync(srcPath, destPath);
+        const fileContents = fs.readFileSync(srcPath, 'utf8');
+        // update all files to have correct package names
+        const updatedFileContents = fileContents.replace(/@template/g, '@' + projectName);
+        fs.writeFileSync(destPath, updatedFileContents);
       }
     });
   };
