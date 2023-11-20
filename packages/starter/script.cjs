@@ -124,7 +124,7 @@ module.exports = ${JSON.stringify(config, null, 2)}`;
 
   if (install) {
     p.note(`Installing dependencies...`);
-    const installProcess = spawn('npm', ['install'], {
+    const installProcess = spawn.sync('npm', ['install'], {
       cwd: outputFolder,
       stdio: 'inherit',
     });
