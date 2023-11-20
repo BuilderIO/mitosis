@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { AutoComplete, Todos } from '@builder.io/talk-app-svelte';
+  import { AutoComplete, Todos } from '@template/library-svelte';
   import AutocompleteChild from './AutocompleteChild.svelte';
   import { mockApi } from './mockApi';
 </script>

@@ -1,4 +1,4 @@
-import { AutoComplete, Todos } from '@builder.io/talk-app-react';
+import { AutoComplete, Todos } from '@template/library-react';
 
 function App() {
   const getValues = async () => {

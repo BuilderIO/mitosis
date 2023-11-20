@@ -122,9 +122,11 @@ module.exports = ${JSON.stringify(config, null, 2)}`;
         return;
       }
 
-      fs.lstatSync(srcPath).isDirectory()
-        ? copy(srcPath, destPath)
-        : fs.copyFileSync(srcPath, destPath);
+      if (fs.lstatSync(srcPath).isDirectory()) {
+        copy(srcPath, destPath);
+      } else {
+        fs.copyFileSync(srcPath, destPath);
+      }
     });
   };
 
