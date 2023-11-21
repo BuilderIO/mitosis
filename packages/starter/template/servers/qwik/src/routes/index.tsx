@@ -1,19 +1,11 @@
 import { component$ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
-import { Todos } from '@template/library-qwik';
+import { AutoComplete, Todos } from '@template/library-qwik';
 
 export default component$(() => {
   return (
     <>
-      {/* <AutoComplete
-        renderChild={$((props: { item: string }) => (
-          <span>{props.item}</span>
-        ))}
-        getValues={$(async () => {
-          return ['Hello', 'Modern', 'Frontends', 'Live!'];
-        })}
-        transformData={$((x: any) => x)}
-      /> */}
+      <AutoComplete />
       <Todos />
     </>
   );

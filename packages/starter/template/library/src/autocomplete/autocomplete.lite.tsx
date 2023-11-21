@@ -1,74 +1,124 @@
-import { onUpdate, Show, useStore } from '@builder.io/mitosis';
+import { For, onUpdate, Show, useStore } from '@builder.io/mitosis';
 
 export type Props = {
-  getValues: (input: string) => Promise<any[]>;
+  getValues?: (input: string) => Promise<any[]>;
   renderChild?: any;
-  transformData: (item: any) => string;
+  transformData?: (item) => string;
 };
 
-export default function Example2(props: Props) {
+export default function AutoComplete(props: Props) {
   const state = useStore({
     showSuggestions: false,
     suggestions: [] as any[],
 
-    input: '',
+    inputVal: '',
 
     setInputValue(value: string) {
-      state.input = value;
+      state.inputVal = value;
     },
 
-    handleClick(item: any) {
-      state.setInputValue(props.transformData(item));
+    handleClick(item) {
+      state.setInputValue(state.transform(item));
       state.showSuggestions = false;
+    },
+
+    fetchVals(city: string) {
+      if (props.getValues) {
+        return props.getValues(city);
+      }
+      return fetch(
+        `http://universities.hipolabs.com/search?name=${city}&country=united+states`,
+      ).then((x) => x.json());
+    },
+
+    transform(x) {
+      return props.transformData ? props.transformData(x) : x.name;
     },
   });
 
   onUpdate(() => {
-    props.getValues(state.input).then((x) => {
-      const filteredX = x.filter((data) => {
-        return props.transformData(data).toLowerCase().includes(state.input.toLowerCase());
-      });
+    state.fetchVals(state.inputVal).then((newVals) => {
+      if (!newVals?.filter) {
+        console.error('Invalid response from getValues:', newVals);
 
-      state.suggestions = filteredX;
+        return;
+      }
+      state.suggestions = newVals.filter((data) =>
+        state.transform(data).toLowerCase().includes(state.inputVal.toLowerCase()),
+      );
     });
-  }, [state.input, props.getValues]);
+  }, [state.inputVal, props.getValues]);
 
   return (
-    <div css={{ padding: '10px' }}>
-      <link
-        href="/Users/samijaber/code/work/mitosis/examples/talk/apps/src/tailwind.min.css"
-        rel="stylesheet"
-      />
+    <div css={{ padding: '10px', maxWidth: '700px' }}>
       Autocomplete:
-      <div class="relative">
+      <div css={{ position: 'relative', display: 'flex', gap: '16px', alignItems: 'stretch' }}>
         <input
-          class="shadow-md rounded w-full px-4 py-2 border border-black"
-          value={state.input}
-          onChange={(event) => (state.input = event.target.value)}
+          css={{
+            paddingTop: '0.5rem',
+            paddingBottom: '0.5rem',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
+            borderRadius: '0.25rem',
+            borderWidth: '1px',
+            borderColor: '#000000',
+            width: '100%',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          }}
+          value={state.inputVal}
+          onChange={(event) => (state.inputVal = event.target.value)}
           onFocus={() => (state.showSuggestions = true)}
+          placeholder="Search for a U.S. university"
         />
         <button
-          class="absolute right-4 h-full"
           onClick={() => {
-            state.input = '';
+            state.inputVal = '';
             state.showSuggestions = false;
+          }}
+          css={{
+            cursor: 'pointer',
+            paddingTop: '0.5rem',
+            paddingBottom: '0.5rem',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
+            borderRadius: '0.25rem',
+            color: '#ffffff',
+            backgroundColor: '#EF4444',
           }}
         >
           X
         </button>
       </div>
       <Show when={state.suggestions.length > 0 && state.showSuggestions}>
-        <ul class="shadow-md rounded h-40 overflow-scroll">
-          {state.suggestions.map((item) => (
-            <li
-              class="border-gray-200 border-b flex items-center cursor-pointer hover:bg-gray-100 p-2"
-              onClick={() => state.handleClick(item)}
-            >
-              <Show when={props.renderChild} else={<span>{props.transformData(item)}</span>}>
-                <props.renderChild item={item} />
-              </Show>
-            </li>
-          ))}
+        <ul
+          css={{
+            borderRadius: '0.25rem',
+            height: '10rem',
+            margin: 'unset',
+            padding: 'unset',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          }}
+        >
+          <For each={state.suggestions}>
+            {(item) => (
+              <li
+                css={{
+                  display: 'flex',
+                  padding: '0.5rem',
+                  alignItems: 'center',
+                  borderBottomWidth: '1px',
+                  borderColor: '#E5E7EB',
+                  cursor: 'pointer',
+                  ':hover': { backgroundColor: '#F3F4F6' },
+                }}
+                onClick={() => state.handleClick(item)}
+              >
+                <Show when={props.renderChild} else={<span>{state.transform(item)}</span>}>
+                  <props.renderChild item={item} />
+                </Show>
+              </li>
+            )}
+          </For>
         </ul>
       </Show>
     </div>
