@@ -2,16 +2,8 @@ import { useStore } from '@builder.io/mitosis';
 
 import ItemList from './item-list.lite';
 
-export interface State {
-  list: string[];
-  newItemName: string;
-  setItemName: any;
-  addItem: () => void;
-  deleteItem: (k: number) => void;
-}
-
 export default function TodoApp(props: {}) {
-  const state = useStore<State>({
+  const state = useStore({
     list: ['hello', 'world'],
     newItemName: 'New item',
 
@@ -21,10 +13,6 @@ export default function TodoApp(props: {}) {
 
     addItem() {
       state.list = [...state.list, state.newItemName];
-    },
-
-    deleteItem(index) {
-      state.list = state.list.filter((x, i) => i !== index);
     },
   });
 
@@ -45,7 +33,7 @@ export default function TodoApp(props: {}) {
       >
         Add list item
       </button>
-      <ItemList list={state.list} deleteItem={state.deleteItem}></ItemList>
+      <ItemList list={state.list}></ItemList>
     </div>
   );
 }

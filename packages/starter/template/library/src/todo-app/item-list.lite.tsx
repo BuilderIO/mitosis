@@ -1,6 +1,5 @@
 export interface ItemListProps {
   list: string[];
-  deleteItem: (k: number) => void;
 }
 
 export default function ItemList(props: ItemListProps) {
@@ -11,7 +10,9 @@ export default function ItemList(props: ItemListProps) {
           <span>{item}</span>
           <button
             class="bg-red-500 rounded text-white py-2 px-4 ml-auto"
-            onClick={() => props.deleteItem(props.list.indexOf(item))}
+            onClick={() => {
+              props.list = props.list.filter((x, i) => i !== props.list.indexOf(item));
+            }}
           >
             Delete
           </button>

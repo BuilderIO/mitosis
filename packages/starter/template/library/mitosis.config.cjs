@@ -3,7 +3,7 @@
  */
 module.exports = {
   files: 'src/**',
-  targets: ['react', 'svelte'],
+  targets: ['qwik', 'react', 'svelte'],
   dest: 'packages',
   commonOptions: {
     typescript: true,
@@ -11,5 +11,6 @@ module.exports = {
   options: {
     react: {},
     svelte: {},
+    qwik: {},
   },
 };
