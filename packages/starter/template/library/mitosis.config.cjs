@@ -9,7 +9,9 @@ module.exports = {
     typescript: true,
   },
   options: {
-    react: {},
+    react: {
+      stylesType: 'style-tag',
+    },
     svelte: {},
     qwik: {},
   },

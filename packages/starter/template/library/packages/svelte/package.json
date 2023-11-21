@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build && npm run package",
+    "build": "svelte-kit sync && svelte-package --input=src && publint",
+    "build:watch": "svelte-kit sync && svelte-package --input=src --watch",
     "preview": "vite preview",
-    "package": "svelte-kit sync && svelte-package && publint",
     "prepublishOnly": "npm run package",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"

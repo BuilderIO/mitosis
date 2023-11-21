@@ -12,6 +12,9 @@ export default function TodoApp() {
       }
       state.list = [...state.list, state.newItemName];
     },
+    deleteItem(idx: number) {
+      state.list = state.list.filter((x, i) => i !== idx);
+    },
   });
 
   return (
@@ -61,7 +64,7 @@ export default function TodoApp() {
           marginTop: '1rem',
         }}
       >
-        <ItemList list={state.list}></ItemList>
+        <ItemList list={state.list} deleteItem={(i) => state.deleteItem(i)}></ItemList>
       </div>
     </div>
   );

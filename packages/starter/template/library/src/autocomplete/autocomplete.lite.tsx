@@ -100,8 +100,9 @@ export default function AutoComplete(props: Props) {
           }}
         >
           <For each={state.suggestions}>
-            {(item) => (
+            {(item, idx) => (
               <li
+                key={idx}
                 css={{
                   display: 'flex',
                   padding: '0.5rem',
