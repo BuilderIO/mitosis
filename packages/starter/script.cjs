@@ -34,13 +34,7 @@ const main = async () => {
    */
   const targets = await p.multiselect({
     message: 'Select your desired outputs',
-    options: [
-      { value: 'react' },
-      { value: 'svelte' },
-      // { value: 'qwik' },
-      // { value: 'vue' },
-      // { value: 'solid' },
-    ],
+    options: [{ value: 'react' }, { value: 'svelte' }, { value: 'qwik' }],
     required: true,
   });
 
@@ -49,7 +43,7 @@ const main = async () => {
     process.exit(0);
   }
 
-  p.note('Generating base template');
+  p.note('Generating your template...');
 
   // start by copying over base starter
   const templateFolder = path.join(SCRIPT_DIR, './template/');
@@ -82,7 +76,8 @@ module.exports = ${JSON.stringify(config, null, 2)}`;
       if (entry === 'package-lock.json') return;
 
       // ignore folders meant for excluded targets
-      const isTargetSpecificFolder = src.endsWith('/library/packages') || src.endsWith('/servers');
+      const isTargetSpecificFolder =
+        src.endsWith('/library/packages') || src.endsWith('/test-apps');
       if (isTargetSpecificFolder && !targets.some((target) => entry === target)) {
         return;
       }
@@ -117,20 +112,25 @@ module.exports = ${JSON.stringify(config, null, 2)}`;
 
   copy(templateFolder, outputFolder);
 
+  p.note('Template generated!');
   // ask about installing dependencies
   const install = await p.confirm({
     message: 'Install dependencies?',
   });
 
   if (install) {
-    p.note(`Installing dependencies...`);
+    p.note(`Installing dependencies...this may take a while!`);
     const installProcess = spawn.sync('npm', ['install'], {
       cwd: outputFolder,
       stdio: 'inherit',
     });
   }
 
-  p.outro(`You're all set!`);
+  p.outro(`
+  You're all set!
+  
+  Next, go to your ${projectName}/ folder and read the README.md for instructions on how to run your project.
+  `);
   process.exit(0);
 };
 
