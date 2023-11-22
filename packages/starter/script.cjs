@@ -129,7 +129,9 @@ module.exports = ${JSON.stringify(config, null, 2)}`;
   p.outro(`
   You're all set!
   
-  Next, go to your ${projectName}/ folder and read the README.md for instructions on how to run your project.
+  Next: 
+  - cd \`${projectName}/\`
+  - open the README.md for further instructions on how to run your project
   `);
   process.exit(0);
 };
