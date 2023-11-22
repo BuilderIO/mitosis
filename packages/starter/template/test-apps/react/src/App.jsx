@@ -3,9 +3,9 @@ import { AutoComplete, Todos } from '@template/library-react';
 function App() {
   return (
     <div>
-      <img src="../react-logo.png" width={50} />
-      <Todos />
+      <div>Welcome to React.</div>
       <AutoComplete />
+      <Todos />
     </div>
   );
 }

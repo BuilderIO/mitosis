@@ -5,6 +5,7 @@ import { AutoComplete, Todos } from '@template/library-qwik';
 export default component$(() => {
   return (
     <>
+      <div>Welcome to Qwik</div>
       <AutoComplete />
       <Todos />
     </>
