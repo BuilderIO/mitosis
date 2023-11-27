@@ -202,7 +202,11 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
     }
 
     let str = dedent`
-    ${renderPreComponent({ component: json, target: 'lit' })}
+    ${renderPreComponent({
+      explicitImportFileExtension: options.explicitImportFileExtension,
+      component: json,
+      target: 'lit',
+    })}
     import { LitElement, html, css } from 'lit';
     import { customElement, property, state, query } from 'lit/decorators.js';
 

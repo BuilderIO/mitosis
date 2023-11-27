@@ -989,7 +989,11 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
 
     let str = `
       ${json.types ? json.types.join('\n') : ''}
-      ${renderPreComponent({ component: json, target: 'customElement' })}
+      ${renderPreComponent({
+        explicitImportFileExtension: options.explicitImportFileExtension,
+        component: json,
+        target: 'customElement',
+      })}
       /**
        * Usage:
        * 

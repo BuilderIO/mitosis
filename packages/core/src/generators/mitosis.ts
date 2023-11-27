@@ -197,7 +197,11 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
     ${!otherComponents.length ? '' : `import { ${otherComponents.join(',')} } from '@components';`}
     ${json.types ? json.types.join('\n') : ''}
 
-    ${renderPreComponent({ component: json, target: 'mitosis' })}
+    ${renderPreComponent({
+      explicitImportFileExtension: options.explicitImportFileExtension,
+      component: json,
+      target: 'mitosis',
+    })}
 
     ${
       stringifiedUseMetadata && stringifiedUseMetadata !== '{}'

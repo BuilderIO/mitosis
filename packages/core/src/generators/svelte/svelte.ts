@@ -305,7 +305,11 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           : `import { ${svelteStoreImports.sort().join(', ')} } from 'svelte/store'`
       }
 
-      ${renderPreComponent({ component: json, target: 'svelte' })}
+      ${renderPreComponent({
+        explicitImportFileExtension: options.explicitImportFileExtension,
+        component: json,
+        target: 'svelte',
+      })}
 
       ${!hasData || options.stateType === 'variables' ? '' : `import onChange from 'on-change'`}
       ${props

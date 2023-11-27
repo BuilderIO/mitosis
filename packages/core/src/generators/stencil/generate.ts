@@ -147,7 +147,11 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     }
 
     let str = dedent`
-    ${renderPreComponent({ component: json, target: 'stencil' })}
+    ${renderPreComponent({
+      explicitImportFileExtension: options.explicitImportFileExtension,
+      component: json,
+      target: 'stencil',
+    })}
 
     import { Component, Prop, h, State, Fragment } from '@stencil/core';
 

@@ -396,6 +396,7 @@ function emitImports(file: File, component: MitosisComponent) {
       target: 'qwik',
       theImport: i,
       preserveFileExtensions: false,
+      explicitImportFileExtension: false,
     });
     Object.keys(i.imports).forEach((key) => {
       const keyValue = i.imports[key]!;

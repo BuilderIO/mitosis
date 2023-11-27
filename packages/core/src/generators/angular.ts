@@ -469,6 +469,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     ${json.types ? json.types.join('\n') : ''}
     ${getPropsDefinition({ json })}
     ${renderPreComponent({
+      explicitImportFileExtension: options.explicitImportFileExtension,
       component: json,
       target: 'angular',
       excludeMitosisComponents: !options.standalone && !options.preserveImports,

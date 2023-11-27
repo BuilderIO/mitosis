@@ -41,7 +41,6 @@ import { kebabCase } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
 import { getFiles } from './helpers/files';
-import { checkIsDefined } from './helpers/nullable';
 import { getOverrideFile } from './helpers/overrides';
 import { transformImports, transpile, transpileIfNecessary } from './helpers/transpile';
 
@@ -80,11 +79,19 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => {
     },
   };
 
-  if (checkIsDefined(newConfig.commonOptions?.typescript)) {
+  /**
+   * Apply common options to all targets
+   */
+  if (newConfig.commonOptions) {
     for (const target of newConfig.targets) {
-      if (!checkIsDefined(newConfig.options[target]?.typescript)) {
-        newConfig.options[target].typescript = newConfig.commonOptions.typescript;
-      }
+      newConfig.options[target] = {
+        ...newConfig.commonOptions,
+        ...newConfig.options[target],
+        plugins: [
+          ...(newConfig.commonOptions?.plugins || []),
+          ...(newConfig.options[target]?.plugins || []),
+        ],
+      } as any;
     }
   }
 
