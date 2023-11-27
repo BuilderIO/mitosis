@@ -18,6 +18,7 @@ import { hashCodeAsString } from '../symbols/symbol-processor';
 import { ForNode, MitosisNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerArgs } from '../types/transpiler';
 import { stringifySingleScopeOnMount } from './helpers/on-mount';
+import { MitosisStyles } from '../types/mitosis-styles';
 
 export interface ToBuilderOptions extends BaseTranspilerOptions {
   includeIds?: boolean;
@@ -226,9 +227,9 @@ export const blockToBuilder = (
   const hasCss = !!bindings.css?.code;
 
   let responsiveStyles: {
-    large: Partial<CSSStyleDeclaration>;
-    medium?: Partial<CSSStyleDeclaration>;
-    small?: Partial<CSSStyleDeclaration>;
+    large: MitosisStyles;
+    medium?: MitosisStyles;
+    small?: MitosisStyles;
   } = {
     large: {},
   };
