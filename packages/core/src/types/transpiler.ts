@@ -17,7 +17,20 @@ export type TranspilerGenerator<X extends BaseTranspilerOptions, Y = string> = (
 
 export interface BaseTranspilerOptions {
   experimental?: { [key: string]: any };
+  /**
+   * Runs `prettier` on generated components
+   */
   prettier?: boolean;
+  /**
+   * Mitosis Plugins to run during codegen.
+   */
   plugins?: Plugin[];
+  /**
+   * Enable `typescript` output
+   */
   typescript?: boolean;
+  /**
+   * Preserves explicit filename extensions in import statements.
+   */
+  explicitImportFileExtension?: boolean;
 }

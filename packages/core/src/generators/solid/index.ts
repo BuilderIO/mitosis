@@ -182,7 +182,11 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
         : `import { css } from "solid-styled-components";`
     }
     ${json.types && options.typescript ? json.types.join('\n') : ''}
-    ${renderPreComponent({ component: json, target: 'solid' })}
+    ${renderPreComponent({
+      explicitImportFileExtension: options.explicitImportFileExtension,
+      component: json,
+      target: 'solid',
+    })}
 
     function ${json.name}(${propsArgs}) {
       ${state?.str ?? ''}

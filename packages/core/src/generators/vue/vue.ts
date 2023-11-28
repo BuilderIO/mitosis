@@ -249,6 +249,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
       ${vueImports.length ? `import { ${uniq(vueImports).sort().join(', ')} } from "vue"` : ''}
 
       ${renderPreComponent({
+        explicitImportFileExtension: options.explicitImportFileExtension,
         component,
         target: 'vue',
         asyncComponentImports: options.asyncComponentImports,

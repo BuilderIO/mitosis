@@ -2,7 +2,7 @@ import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { Binding, MitosisNode } from '@/types/mitosis-node';
 import { DIRECTIVES } from './directives';
 import { CssStyles } from './helpers/styles';
-import { File, invoke, lastProperty, quote, SrcBuilder } from './src-generator';
+import { File, SrcBuilder, invoke, lastProperty, quote } from './src-generator';
 
 /**
  * Convert a Mitosis nodes to a JSX nodes.

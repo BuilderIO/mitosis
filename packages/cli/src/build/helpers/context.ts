@@ -29,11 +29,11 @@ export const generateContextFile = async ({
   } else {
     switch (target) {
       case 'svelte':
-        return contextToSvelte(options.options.svelte)({ context });
+        return contextToSvelte(options.options.svelte || {})({ context });
       case 'vue':
       case 'vue2':
       case 'vue3':
-        return contextToVue(options.options[target])({ context });
+        return contextToVue(options.options[target] || {})({ context });
       case 'solid':
         return contextToSolid()({ context });
       case 'preact':

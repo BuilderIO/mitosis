@@ -24,7 +24,11 @@ export const transformImports =
     code = code.replace(/\.context\.lite(.js|.ts)?(['"])/g, `.context.js$2`);
 
     // afterwards, we replace all component imports with the correct file extension
-    return renameImport({ importPath: code, target: target });
+    return renameImport({
+      importPath: code,
+      target: target,
+      explicitImportFileExtension: options.options?.[target]?.explicitImportFileExtension || false,
+    });
   };
 
 /**

@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue2';
+import { defineConfig } from 'vite';
 
 const config = defineConfig({
   plugins: [vue()],

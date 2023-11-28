@@ -1,5 +1,6 @@
 import type { ParseMitosisOptions } from '../parsers/jsx/types';
 import type { MitosisComponent } from './mitosis-component';
+import { BaseTranspilerOptions } from './transpiler';
 
 export type Format = 'esm' | 'cjs';
 export type Language = 'js' | 'ts';
@@ -16,7 +17,7 @@ export type GeneratorOptions = {
 };
 
 export type MitosisConfig = {
-  commonOptions?: { typescript?: boolean };
+  commonOptions?: Omit<BaseTranspilerOptions, 'experimental'>;
   /**
    * List of targets to compile to.
    */
