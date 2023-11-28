@@ -2,8 +2,8 @@ import { Target } from '../types/config';
 import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 import {
   COMPONENT_IMPORT_EXTENSIONS,
-  getComponentFileExtensionForTarget,
   INPUT_EXTENSION_REGEX,
+  getComponentFileExtensionForTarget,
 } from './component-file-extensions';
 
 const DEFAULT_IMPORT = 'default';

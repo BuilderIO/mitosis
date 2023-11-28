@@ -30,8 +30,8 @@ import {
   DO_NOT_USE_ARGS,
   DO_NOT_USE_CONTEXT_VARS_TRANSFORMS,
   DO_NOT_USE_VARS_TRANSFORMS,
-  stripStateAndPropsRefs,
   StripStateAndPropsRefsOptions,
+  stripStateAndPropsRefs,
 } from '../helpers/strip-state-and-props-refs';
 import { collectCss } from '../helpers/styles/collect-css';
 import {
@@ -41,7 +41,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { MitosisComponent } from '../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { stringifySingleScopeOnMount } from './helpers/on-mount';
 

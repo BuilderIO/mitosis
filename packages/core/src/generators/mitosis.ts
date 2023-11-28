@@ -18,7 +18,7 @@ import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { checkHasState } from '../helpers/state';
 import { MitosisComponent } from '../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { blockToReact, componentToReact } from './react';
 
