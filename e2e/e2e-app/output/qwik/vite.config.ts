@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite';
 import { qwikVite } from '@builder.io/qwik/optimizer';
 import { resolve } from 'path';
+import { defineConfig } from 'vite';
 
 export default defineConfig(() => {
   return {

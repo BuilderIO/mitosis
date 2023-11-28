@@ -1,8 +1,8 @@
 // Mitosis E2E orchestration script
 
+import { spawn } from 'child_process';
 import { readFile, writeFile } from 'fs/promises';
 import { resolve } from 'path';
-import { spawn } from 'child_process';
 import syncDirectory from 'sync-directory';
 
 import { emitTable, Entry } from './e2e-output';
