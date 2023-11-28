@@ -404,8 +404,7 @@ export const components: CompileAwayComponentsMap = {
             css: createSingleBinding({
               code: JSON.stringify({
                 position: 'absolute',
-                inset: 0,
-                zIndex: -1,
+                inset: '0',
                 height: '100%',
                 width: '100%',
                 objectFit: backgroundSize || 'cover',
