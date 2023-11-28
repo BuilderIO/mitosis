@@ -57,7 +57,7 @@ Check [our configuration docs](/docs/configuration.md#typescript-configuration) 
 
 ### Setup TypeScript
 
-```json
+```jsonc
 // tsconfig.json
 {
   "compilerOptions": {
