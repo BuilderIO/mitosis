@@ -16,9 +16,9 @@ import { checkHasState } from '../helpers/state';
 import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
 import { hashCodeAsString } from '../symbols/symbol-processor';
 import { ForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisStyles } from '../types/mitosis-styles';
 import { BaseTranspilerOptions, TranspilerArgs } from '../types/transpiler';
 import { stringifySingleScopeOnMount } from './helpers/on-mount';
-import { MitosisStyles } from '../types/mitosis-styles';
 
 export interface ToBuilderOptions extends BaseTranspilerOptions {
   includeIds?: boolean;
