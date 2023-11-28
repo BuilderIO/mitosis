@@ -27,7 +27,7 @@ export const transformImports =
     return renameImport({
       importPath: code,
       target: target,
-      explicitImportFileExtension: options.options[target].explicitImportFileExtension || false,
+      explicitImportFileExtension: options.options?.[target]?.explicitImportFileExtension || false,
     });
   };
 

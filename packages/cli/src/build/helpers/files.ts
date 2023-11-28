@@ -8,8 +8,8 @@ export const getFiles = ({
   files,
   exclude,
 }: {
-  files: string | string[];
+  files: string | string[] | undefined;
   exclude: string[] | undefined;
 }): string[] => {
-  return glob.sync(files, { ignore: exclude, onlyFiles: true, cwd: process.cwd() });
+  return files ? glob.sync(files, { ignore: exclude, onlyFiles: true, cwd: process.cwd() }) : [];
 };

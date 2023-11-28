@@ -28,6 +28,7 @@ import {
   MitosisComponent,
   MitosisConfig,
   parseJsx,
+  ParseMitosisOptions,
   parseSvelte,
   removeMitosisImport,
   renameComponentFile,
@@ -36,7 +37,7 @@ import {
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import { flow, pipe } from 'fp-ts/lib/function';
-import { outputFile, pathExists, readFile, remove } from 'fs-extra';
+import { outputFile, pathExists, pathExistsSync, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
@@ -61,16 +62,17 @@ const getTargetPath = ({ target }: { target: Target }): string => {
   }
 };
 
-const DEFAULT_CONFIG: Partial<MitosisConfig> = {
+const DEFAULT_CONFIG = {
   targets: [],
   dest: 'output',
   files: 'src/*',
   overridesDir: 'overrides',
   getTargetPath,
-};
+  options: {},
+} satisfies Partial<MitosisConfig>;
 
 const getOptions = (config?: MitosisConfig): MitosisConfig => {
-  const newConfig = {
+  const newConfig: MitosisConfig = {
     ...DEFAULT_CONFIG,
     ...config,
     options: {
@@ -83,7 +85,7 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => {
    * Apply common options to all targets
    */
   if (newConfig.commonOptions) {
-    for (const target of newConfig.targets) {
+    for (const target of newConfig.targets || []) {
       newConfig.options[target] = {
         ...newConfig.commonOptions,
         ...newConfig.options[target],
@@ -110,7 +112,7 @@ async function clean(options: MitosisConfig, target: Target) {
         ? getNonComponentOutputFileName({ target, path, options })
         : undefined,
     )
-    .filter(Boolean);
+    .filter((x): x is string => Boolean(x));
 
   await Promise.all(
     oldFiles.map(async (oldFile) => {
@@ -168,16 +170,17 @@ const parseJsxComponent = async ({
   options: MitosisConfig;
   path: string;
   file: string;
-  tsProject: Parameters<typeof parseJsx>[1]['tsProject'];
+  tsProject: ParseMitosisOptions['tsProject'];
 }) => {
   const requiredParses = getRequiredParsers(options);
   let typescriptMitosisJson: ParsedMitosisJson['typescriptMitosisJson'];
   let javascriptMitosisJson: ParsedMitosisJson['javascriptMitosisJson'];
 
-  const jsxArgs: Parameters<typeof parseJsx>[1] = {
+  const jsxArgs: ParseMitosisOptions = {
     ...options.parserOptions?.jsx,
     tsProject,
     filePath: path,
+    typescript: false,
   };
   if (requiredParses.typescript && requiredParses.javascript) {
     typescriptMitosisJson = options.parser
@@ -219,13 +222,13 @@ const parseSvelteComponent = async ({ path, file }: { path: string; file: string
 const findTsConfigFile = (options: MitosisConfig) => {
   const optionPath = options.parserOptions?.jsx?.tsConfigFilePath;
 
-  if (optionPath && pathExists(optionPath)) {
+  if (optionPath && pathExistsSync(optionPath)) {
     return optionPath;
   }
 
   const defaultPath = [cwd, 'tsconfig.json'].join('/');
 
-  if (pathExists(defaultPath)) {
+  if (pathExistsSync(defaultPath)) {
     return defaultPath;
   }
 
@@ -260,7 +263,7 @@ const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedM
 
 interface TargetContext {
   target: Target;
-  generator: TranspilerGenerator<MitosisConfig['options'][Target]>;
+  generator: TranspilerGenerator<Required<MitosisConfig['options']>[Target]>;
   outputPath: string;
 }
 
@@ -272,7 +275,7 @@ const getTargetContexts = (options: MitosisConfig) =>
   options.targets.map(
     (target): TargetContext => ({
       target,
-      generator: getGeneratorForTarget({ target }),
+      generator: getGeneratorForTarget({ target }) as any,
       outputPath: options.getTargetPath({ target }),
     }),
   );
@@ -313,7 +316,7 @@ export async function build(config?: MitosisConfig) {
   console.info('Mitosis: generation completed.');
 }
 
-const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['generator'] => {
+const getGeneratorForTarget = ({ target }: { target: Target }) => {
   switch (target) {
     case 'alpine':
       return componentToAlpine;
@@ -464,7 +467,7 @@ async function buildContextFile({
   options,
   path,
 }: TargetContextWithConfig & { path: string }) {
-  let output = await generateContextFile({ path, options, target });
+  let output = (await generateContextFile({ path, options, target })) || '';
 
   // transpile to JS if necessary
   if (!checkShouldOutputTypeScript({ target, options })) {

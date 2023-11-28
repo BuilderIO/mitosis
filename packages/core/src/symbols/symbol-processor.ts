@@ -91,7 +91,7 @@ export function convertBuilderContentToSymbolHierarchy(
     if (cssCode) {
       collectComponentStyles && collectComponentStyles.push(minify`${cssCode}`);
     }
-    while (path[Path.DEPTH] >= this.path.length) {
+    while ((path[Path.DEPTH] as number) >= this.path.length) {
       path.shift();
       path.shift();
     }
@@ -107,7 +107,7 @@ export function convertBuilderContentToSymbolHierarchy(
             collectComponentState[id] = state;
           }
         }
-        if (path[Path.DEPTH] < this.path.length) {
+        if ((path[Path.DEPTH] as number) < this.path.length) {
           const id = getIdFromSymbol(el);
           hierarchy[id] = [];
           addIfMissing(hierarchy[path[Path.ID]], id);
