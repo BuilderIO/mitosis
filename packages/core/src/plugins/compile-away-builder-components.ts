@@ -1,5 +1,5 @@
 import { type Plugin } from '@builder.io/mitosis';
-import { Builder, BuilderElement } from '@builder.io/react';
+import { Builder, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { omit, pick, round } from 'lodash';
 import traverse, { TraverseContext } from 'traverse';
