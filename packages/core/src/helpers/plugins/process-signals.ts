@@ -113,6 +113,8 @@ const getSignalMapperForTarget = (target: Target): SignalMapper => {
       return {
         getter: (name) => types.identifier('$' + name),
       };
+    case 'preact':
+    case 'reactNative':
     case 'react':
     case 'solid':
       return {
