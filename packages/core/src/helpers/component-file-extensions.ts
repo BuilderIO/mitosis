@@ -46,12 +46,21 @@ export const renameComponentFile = ({
  */
 const INPUT_EXTENSION_IMPORT_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))(?<quote>['"])/g;
 
-export const renameImport = ({ importPath, target }: { importPath: string; target: Target }) => {
+export const renameImport = ({
+  importPath,
+  target,
+  explicitImportFileExtension,
+}: {
+  importPath: string;
+  target: Target;
+  explicitImportFileExtension: boolean;
+}) => {
   return importPath.replace(
     INPUT_EXTENSION_IMPORT_REGEX,
     `${getComponentFileExtensionForTarget({
       type: 'import',
       target,
+      explicitImportFileExtension,
     })}$4`,
   );
 };
@@ -62,6 +71,7 @@ type Args = { target: Target } & (
        * Whether we are rendering an import statement or a filename.
        */
       type: 'import';
+      explicitImportFileExtension: boolean;
     }
   | {
       /**
@@ -114,7 +124,7 @@ export const getComponentFileExtensionForTarget = (args: Args): string => {
       switch (args.type) {
         case 'import':
           // we can't have `.jsx`/`.tsx` extensions in the import paths, so we stick with implicit file extensions.
-          return '';
+          return args.explicitImportFileExtension ? '.js' : '';
         case 'filename':
           return args.isTypescript ? '.tsx' : '.jsx';
       }

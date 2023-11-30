@@ -18,7 +18,7 @@ import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { checkHasState } from '../helpers/state';
 import { MitosisComponent } from '../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { blockToReact, componentToReact } from './react';
 
@@ -197,7 +197,11 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
     ${!otherComponents.length ? '' : `import { ${otherComponents.join(',')} } from '@components';`}
     ${json.types ? json.types.join('\n') : ''}
 
-    ${renderPreComponent({ component: json, target: 'mitosis' })}
+    ${renderPreComponent({
+      explicitImportFileExtension: options.explicitImportFileExtension,
+      component: json,
+      target: 'mitosis',
+    })}
 
     ${
       stringifiedUseMetadata && stringifiedUseMetadata !== '{}'

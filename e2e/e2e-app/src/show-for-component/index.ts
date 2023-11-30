@@ -1,1 +1,1 @@
-export {default} from './components/MyComponent.lite';
+export { default } from './components/MyComponent.lite';

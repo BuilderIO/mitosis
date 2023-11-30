@@ -19,9 +19,9 @@ import {
 } from '../../modules/plugins';
 import { addPreventDefault } from './helpers/add-prevent-default';
 import { stableInject } from './helpers/stable-inject';
-import { emitStateMethodsAndRewriteBindings, emitUseStore, StateInit } from './helpers/state';
+import { StateInit, emitStateMethodsAndRewriteBindings, emitUseStore } from './helpers/state';
 import { renderJSXNodes } from './jsx';
-import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
+import { File, SrcBuilder, arrowFnBlock, invoke } from './src-generator';
 
 Error.stackTraceLimit = 9999;
 
@@ -396,6 +396,7 @@ function emitImports(file: File, component: MitosisComponent) {
       target: 'qwik',
       theImport: i,
       preserveFileExtensions: false,
+      explicitImportFileExtension: false,
     });
     Object.keys(i.imports).forEach((key) => {
       const keyValue = i.imports[key]!;

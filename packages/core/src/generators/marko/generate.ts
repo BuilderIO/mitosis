@@ -209,7 +209,11 @@ export const componentToMarko: TranspilerGenerator<ToMarkoOptions> =
     }
 
     let jsString = dedent`
-    ${renderPreComponent({ component: json, target: 'marko' })}
+    ${renderPreComponent({
+      explicitImportFileExtension: options.explicitImportFileExtension,
+      component: json,
+      target: 'marko',
+    })}
 
     class {
         ${methodsString}

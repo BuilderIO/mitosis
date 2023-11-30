@@ -2,8 +2,8 @@
 // components we are using from Mitosis output. Ideally this would be generated
 // by Mitosis, and/or Angular 14 "standalone components" would be generated.
 
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
 import { components } from './mitosis-component-list';
 

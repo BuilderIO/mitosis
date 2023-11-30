@@ -560,6 +560,7 @@ const _componentToReact = (
     }
     ${json.types && options.typescript ? json.types.join('\n') : ''}
     ${renderPreComponent({
+      explicitImportFileExtension: options.explicitImportFileExtension,
       component: json,
       target: options.type === 'native' ? 'reactNative' : 'react',
     })}

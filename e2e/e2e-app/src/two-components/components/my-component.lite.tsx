@@ -1,4 +1,4 @@
-import { useStore, useMetadata } from '@builder.io/mitosis';
+import { useMetadata, useStore } from '@builder.io/mitosis';
 
 import ItemList from './item-list.lite';
 

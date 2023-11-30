@@ -1,5 +1,5 @@
 import { onInit, onMount, setContext, useContext, useStore } from '@builder.io/mitosis';
-import { createInjector, Injector, MyService } from '@dummy/injection-js';
+import { Injector, MyService, createInjector } from '@dummy/injection-js';
 
 export default function MyBasicComponent() {
   setContext(Injector, createInjector());

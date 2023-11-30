@@ -1,7 +1,7 @@
 import { getForArguments } from '@/helpers/nodes/for';
 import { ForNode, MitosisNode } from '@/types/mitosis-node';
 import { minify } from '../minify';
-import { iteratorProperty, SrcBuilder } from './src-generator';
+import { SrcBuilder, iteratorProperty } from './src-generator';
 
 export const DIRECTIVES: Record<
   string,

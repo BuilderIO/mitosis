@@ -3,8 +3,8 @@ import { componentToAngular as angular } from './generators/angular';
 import { componentToBuilder } from './generators/builder';
 import {
   componentToCustomElement as customElement,
-  componentToCustomElement as webcomponent,
   componentToHtml as html,
+  componentToCustomElement as webcomponent,
 } from './generators/html';
 import { componentToLiquid as liquid } from './generators/liquid';
 import { componentToLit as lit } from './generators/lit';
