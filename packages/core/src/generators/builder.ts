@@ -16,6 +16,7 @@ import { checkHasState } from '../helpers/state';
 import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
 import { hashCodeAsString } from '../symbols/symbol-processor';
 import { ForNode, MitosisNode } from '../types/mitosis-node';
+import { MitosisStyles } from '../types/mitosis-styles';
 import { BaseTranspilerOptions, TranspilerArgs } from '../types/transpiler';
 import { stringifySingleScopeOnMount } from './helpers/on-mount';
 
@@ -226,9 +227,9 @@ export const blockToBuilder = (
   const hasCss = !!bindings.css?.code;
 
   let responsiveStyles: {
-    large: Partial<CSSStyleDeclaration>;
-    medium?: Partial<CSSStyleDeclaration>;
-    small?: Partial<CSSStyleDeclaration>;
+    large: MitosisStyles;
+    medium?: MitosisStyles;
+    small?: MitosisStyles;
   } = {
     large: {},
   };
