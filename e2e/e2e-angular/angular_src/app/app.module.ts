@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { MitosisModule } from './mitosis.module';
+import { HomepageModule } from './src/homepage';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, MitosisModule],
+  imports: [BrowserModule, HomepageModule],
   providers: [],
   bootstrap: [AppComponent],
 })
