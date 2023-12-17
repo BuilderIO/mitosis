@@ -169,7 +169,7 @@ const processStateObjectSlice = (
       };
     }
   } else if (types.isObjectMethod(item)) {
-    const n = parseCode({ ...item, returnType: null }).trim();
+    const n = parseCode({ ...item, returnType: null }, { comments: false }).trim();
 
     const isGetter = item.kind === 'get';
 
