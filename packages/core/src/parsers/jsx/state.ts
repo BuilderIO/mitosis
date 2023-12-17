@@ -226,22 +226,22 @@ export const parseStateObjectToMitosisState = (
   isState: boolean = true, // parse state or defaultProps
 ): MitosisState => {
   const state: MitosisState = {};
-  object.properties.forEach((x) => {
-    if (types.isSpreadElement(x)) {
-      throw new Error('Parse Error: Mitosis cannot consume spread element in state object: ' + x);
+  object.properties.forEach((node) => {
+    if (types.isSpreadElement(node)) {
+      throw new Error('Parse Error: Mitosis cannot consume spread element in state object: ' + node);
     }
 
-    if (types.isPrivateName(x.key)) {
-      throw new Error('Parse Error: Mitosis cannot consume private name in state object: ' + x.key);
+    if (types.isPrivateName(node.key)) {
+      throw new Error('Parse Error: Mitosis cannot consume private name in state object: ' + node.key);
     }
 
-    if (!types.isIdentifier(x.key)) {
+    if (!types.isIdentifier(node.key)) {
       throw new Error(
-        'Parse Error: Mitosis cannot consume non-identifier key in state object: ' + x.key,
+        'Parse Error: Mitosis cannot consume non-identifier key in state object: ' + node.key,
       );
     }
 
-    state[x.key.name] = isState ? processStateObjectSlice(x) : processDefaultPropsSlice(x);
+    state[node.key.name] = isState ? processStateObjectSlice(node) : processDefaultPropsSlice(node);
   });
 
   return state;
