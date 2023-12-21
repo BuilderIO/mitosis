@@ -511,10 +511,10 @@ function Column(props) {
   }
 
   function getColumnCssWidth(index) {
-    const columns = getColumns();
-    const gutterSize = getGutterSize();
+    const columns = state.getColumns();
+    const gutterSize = state.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   return (
@@ -591,7 +591,7 @@ function ContentSlotJsxCode(props) {
   const [showContent, setShowContent] = useState(() => false);
 
   function cls() {
-    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+    return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
   }
 
   function show() {
@@ -1527,7 +1527,7 @@ function Text(props) {
         __html:
           props.text ||
           props.content ||
-          name ||
+          state.name ||
           '<p class=\\"text-lg\\">my name</p>',
       }}
     />
@@ -3295,6 +3295,32 @@ export default UseTargetComponent;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > webComponent 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { register } from \\"swiper/element/bundle\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function MyBasicWebComponent(props) {
+  useEffect(() => {
+    register();
+  }, []);
+
+  return (
+    <View slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+      <View>Slide 1</View>
+
+      <View>Slide 2</View>
+
+      <View>Slide 3</View>
+    </View>
+  );
+}
+
+export default MyBasicWebComponent;
+"
+`;
+
 exports[`Taro > jsx > Remove Internal mitosis package 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -3887,10 +3913,10 @@ function Column(props: ColumnProps) {
   }
 
   function getColumnCssWidth(index: number) {
-    const columns = getColumns();
-    const gutterSize = getGutterSize();
+    const columns = state.getColumns();
+    const gutterSize = state.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   return (
@@ -3978,7 +4004,7 @@ function ContentSlotJsxCode(props: Props) {
   const [showContent, setShowContent] = useState(() => false);
 
   function cls() {
-    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+    return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
   }
 
   function show() {
@@ -5068,7 +5094,7 @@ function Text(props: TextProps) {
         __html:
           props.text ||
           props.content ||
-          name ||
+          state.name ||
           '<p class=\\"text-lg\\">my name</p>',
       }}
     />
@@ -7035,6 +7061,32 @@ function UseTargetComponent(props: any) {
 }
 
 export default UseTargetComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > webComponent 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { register } from \\"swiper/element/bundle\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function MyBasicWebComponent(props: any) {
+  useEffect(() => {
+    register();
+  }, []);
+
+  return (
+    <View slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+      <View>Slide 1</View>
+
+      <View>Slide 2</View>
+
+      <View>Slide 3</View>
+    </View>
+  );
+}
+
+export default MyBasicWebComponent;
 "
 `;
 
