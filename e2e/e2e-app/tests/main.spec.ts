@@ -67,5 +67,14 @@ test.describe('e2e', () => {
       const div = page.locator('.wrap');
       await expect(div).toHaveCSS('background-color', 'rgb(255, 0, 0)');
     });
+    test('simple input disabled', async ({ page }) => {
+      await page.goto('/simple-input/');
+
+      const disabled = page.getByTestId('simple-input-disabled');
+      await expect(disabled).toBeDisabled();
+
+      const enabled = page.getByTestId('simple-input-enabled');
+      await expect(enabled).toBeEditable();
+    });
   });
 });

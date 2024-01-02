@@ -11,6 +11,11 @@ export type ComponentMetadata = {
   [index: string]: any;
   httpRequests?: Record<string, string>;
   options?: TargetOptions;
+  angular?: {
+    /* Mitosis uses `attr.XXX` as default see https://angular.io/guide/attribute-binding. 
+    If you want to skip some you can use the 'nativeAttributes'. */
+    nativeAttributes: string[];
+  };
   qwik?: {
     component?: {
       isLight?: boolean;
