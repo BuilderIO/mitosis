@@ -1289,9 +1289,7 @@ function CustomCode(props) {
   const [scriptsRun, setScriptsRun] = createSignal([]);
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -1362,9 +1360,7 @@ function CustomCode(props) {
   const [scriptsRun, setScriptsRun] = createSignal([]);
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -1435,9 +1431,7 @@ function CustomCode(props) {
   const [scriptsRun, setScriptsRun] = createSignal([]);
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -1508,9 +1502,7 @@ function CustomCode(props) {
   const [scriptsRun, setScriptsRun] = createSignal([]);
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -1611,8 +1603,7 @@ function FormComponent(props) {
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
       let body;
-      const formData = new FormData(el); // TODO: maybe support null
-
+      const formData = new FormData(el);
       const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
@@ -1639,7 +1630,6 @@ function FormComponent(props) {
                 value = num;
               }
             } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
               value = el.files;
             } else {
               value = el.value;
@@ -1667,14 +1657,11 @@ function FormComponent(props) {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
+      });
 
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
-        // Json
         const json = {};
         Array.from(formPairs).forEach(({ value, key }) => {
           set(json, key, value);
@@ -1683,10 +1670,7 @@ function FormComponent(props) {
       }
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
-        ) {
+        if (!(sendWithJs && props.action?.includes(\\"zapier.com\\"))) {
           headers[\\"content-type\\"] = contentType;
         }
       }
@@ -1711,15 +1695,11 @@ function FormComponent(props) {
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
         props.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
-      fetch(
-        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: props.method || \\"post\\",
-        }
-      ).then(
+      fetch(props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action, {
+        body,
+        headers,
+        method: props.method || \\"post\\",
+      }).then(
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
@@ -1731,13 +1711,10 @@ function FormComponent(props) {
           }
 
           if (!res.ok && props.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
             let message = get(body, props.errorMessagePath);
 
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -1762,13 +1739,11 @@ function FormComponent(props) {
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
 
               if (props.resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
             if (props.successUrl) {
               if (formRef) {
@@ -1915,8 +1890,7 @@ function FormComponent(props) {
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
       let body;
-      const formData = new FormData(el); // TODO: maybe support null
-
+      const formData = new FormData(el);
       const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
@@ -1943,7 +1917,6 @@ function FormComponent(props) {
                 value = num;
               }
             } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
               value = el.files;
             } else {
               value = el.value;
@@ -1971,14 +1944,11 @@ function FormComponent(props) {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
+      });
 
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
-        // Json
         const json = {};
         Array.from(formPairs).forEach(({ value, key }) => {
           set(json, key, value);
@@ -1987,10 +1957,7 @@ function FormComponent(props) {
       }
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
-        ) {
+        if (!(sendWithJs && props.action?.includes(\\"zapier.com\\"))) {
           headers[\\"content-type\\"] = contentType;
         }
       }
@@ -2015,15 +1982,11 @@ function FormComponent(props) {
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
         props.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
-      fetch(
-        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: props.method || \\"post\\",
-        }
-      ).then(
+      fetch(props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action, {
+        body,
+        headers,
+        method: props.method || \\"post\\",
+      }).then(
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
@@ -2035,13 +1998,10 @@ function FormComponent(props) {
           }
 
           if (!res.ok && props.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
             let message = get(body, props.errorMessagePath);
 
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -2066,13 +2026,11 @@ function FormComponent(props) {
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
 
               if (props.resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
             if (props.successUrl) {
               if (formRef) {
@@ -2154,7 +2112,7 @@ function FormComponent(props) {
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder-form-error-text pre-459a5505\\">
+          <pre class=\\"builder-form-error-text pre-85d59216\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
@@ -2166,7 +2124,7 @@ function FormComponent(props) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-459a5505 {
+        .pre-85d59216 {
           padding: 10px;
           color: red;
           text-align: center;
@@ -2197,7 +2155,6 @@ function Image(props) {
   }
 
   function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
     return !!props.lazy && isBrowser();
   }
 
@@ -2286,7 +2243,6 @@ function Image(props) {
   }
 
   function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
     return !!props.lazy && isBrowser();
   }
 
@@ -2332,7 +2288,7 @@ function Image(props) {
               class={
                 \\"builder-image\\" +
                 (props._class ? \\" \\" + props._class : \\"\\") +
-                \\" img-dd9f4d04\\"
+                \\" img-372dbb32\\"
               }
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -2347,7 +2303,7 @@ function Image(props) {
         {props.children}
       </div>
       <style jsx>{\`
-        .img-dd9f4d04 {
+        .img-372dbb32 {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -3800,6 +3756,83 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > commentsWithQuotes 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  function handleFn() {}
+
+  function doSomething() {
+    console.log(\\"This is a aa\\");
+  }
+
+  return (
+    <div>
+      <input
+        class={css({
+          color: \\"red\\",
+        })}
+        value={name()}
+        onInput={(event) => {
+          setName(event.target.value);
+        }}
+        onClick={(event) => doSomething()}
+      />
+      Hello
+      {name()}! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > commentsWithQuotes 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  function handleFn() {}
+
+  function doSomething() {
+    console.log(\\"This is a aa\\");
+  }
+
+  return (
+    <>
+      <div>
+        <input
+          class=\\"input-20e9e4ab\\"
+          value={name()}
+          onInput={(event) => {
+            setName(event.target.value);
+          }}
+          onClick={(event) => doSomething()}
+        />
+        Hello
+        {name()}! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .input-20e9e4ab {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > componentWithContext 1`] = `
 "import { useContext } from \\"solid-js\\";
 
@@ -5098,7 +5131,6 @@ function RenderBlock(props) {
     const ref = props.context.registeredComponents[componentName];
 
     if (!ref) {
-      // TODO: Public doc page with more info about this message
       console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -5157,11 +5189,6 @@ function RenderBlock(props) {
       componentRef: component()?.component,
       componentOptions: {
         ...getBlockComponentOptions(useBlock()),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
         ...(shouldWrap()
           ? {}
           : {
@@ -5174,30 +5201,16 @@ function RenderBlock(props) {
   }
 
   function useChildren() {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
     return useBlock().children ?? [];
   }
 
   function childrenWithoutParentComponent() {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
     const shouldRenderChildrenOutsideRef =
       !component()?.component && !repeatItemData();
     return shouldRenderChildrenOutsideRef ? useChildren() : [];
   }
 
   function repeatItemData() {
-    /**
-     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
     const { repeat, ...blockWithoutRepeat } = props.block;
 
     if (!repeat?.collection) {
@@ -5261,7 +5274,6 @@ function RenderBlock(props) {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;
@@ -5372,7 +5384,6 @@ function RenderBlock(props) {
     const ref = props.context.registeredComponents[componentName];
 
     if (!ref) {
-      // TODO: Public doc page with more info about this message
       console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -5431,11 +5442,6 @@ function RenderBlock(props) {
       componentRef: component()?.component,
       componentOptions: {
         ...getBlockComponentOptions(useBlock()),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
         ...(shouldWrap()
           ? {}
           : {
@@ -5448,30 +5454,16 @@ function RenderBlock(props) {
   }
 
   function useChildren() {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
     return useBlock().children ?? [];
   }
 
   function childrenWithoutParentComponent() {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
     const shouldRenderChildrenOutsideRef =
       !component()?.component && !repeatItemData();
     return shouldRenderChildrenOutsideRef ? useChildren() : [];
   }
 
   function repeatItemData() {
-    /**
-     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
     const { repeat, ...blockWithoutRepeat } = props.block;
 
     if (!repeat?.collection) {
@@ -5535,7 +5527,6 @@ function RenderBlock(props) {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;
@@ -7918,9 +7909,7 @@ function CustomCode(props: CustomCodeProps) {
   const [scriptsRun, setScriptsRun] = createSignal([]);
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -7995,9 +7984,7 @@ function CustomCode(props: CustomCodeProps) {
   const [scriptsRun, setScriptsRun] = createSignal([]);
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -8073,9 +8060,7 @@ function CustomCode(props: CustomCodeProps) {
   const [scriptsRun, setScriptsRun] = createSignal([]);
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -8150,9 +8135,7 @@ function CustomCode(props: CustomCodeProps) {
   const [scriptsRun, setScriptsRun] = createSignal([]);
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -8280,8 +8263,7 @@ function FormComponent(props: FormProps) {
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
       let body: any;
-      const formData = new FormData(el); // TODO: maybe support null
-
+      const formData = new FormData(el);
       const formPairs: {
         key: string;
         value: File | boolean | number | string | FileList;
@@ -8311,7 +8293,6 @@ function FormComponent(props: FormProps) {
                 value = num;
               }
             } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
               value = el.files;
             } else {
               value = el.value;
@@ -8339,14 +8320,11 @@ function FormComponent(props: FormProps) {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
+      });
 
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
-        // Json
         const json = {};
         Array.from(formPairs).forEach(({ value, key }) => {
           set(json, key, value);
@@ -8355,10 +8333,7 @@ function FormComponent(props: FormProps) {
       }
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
-        ) {
+        if (!(sendWithJs && props.action?.includes(\\"zapier.com\\"))) {
           headers[\\"content-type\\"] = contentType;
         }
       }
@@ -8383,15 +8358,11 @@ function FormComponent(props: FormProps) {
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
         props.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
-      fetch(
-        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: props.method || \\"post\\",
-        }
-      ).then(
+      fetch(props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!, {
+        body,
+        headers,
+        method: props.method || \\"post\\",
+      }).then(
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
@@ -8403,13 +8374,10 @@ function FormComponent(props: FormProps) {
           }
 
           if (!res.ok && props.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
             let message = get(body, props.errorMessagePath);
 
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -8434,13 +8402,11 @@ function FormComponent(props: FormProps) {
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
 
               if (props.resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
             if (props.successUrl) {
               if (formRef) {
@@ -8614,8 +8580,7 @@ function FormComponent(props: FormProps) {
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
       let body: any;
-      const formData = new FormData(el); // TODO: maybe support null
-
+      const formData = new FormData(el);
       const formPairs: {
         key: string;
         value: File | boolean | number | string | FileList;
@@ -8645,7 +8610,6 @@ function FormComponent(props: FormProps) {
                 value = num;
               }
             } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
               value = el.files;
             } else {
               value = el.value;
@@ -8673,14 +8637,11 @@ function FormComponent(props: FormProps) {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
+      });
 
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
-        // Json
         const json = {};
         Array.from(formPairs).forEach(({ value, key }) => {
           set(json, key, value);
@@ -8689,10 +8650,7 @@ function FormComponent(props: FormProps) {
       }
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
-        ) {
+        if (!(sendWithJs && props.action?.includes(\\"zapier.com\\"))) {
           headers[\\"content-type\\"] = contentType;
         }
       }
@@ -8717,15 +8675,11 @@ function FormComponent(props: FormProps) {
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
         props.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
-      fetch(
-        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: props.method || \\"post\\",
-        }
-      ).then(
+      fetch(props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!, {
+        body,
+        headers,
+        method: props.method || \\"post\\",
+      }).then(
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
@@ -8737,13 +8691,10 @@ function FormComponent(props: FormProps) {
           }
 
           if (!res.ok && props.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
             let message = get(body, props.errorMessagePath);
 
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -8768,13 +8719,11 @@ function FormComponent(props: FormProps) {
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
 
               if (props.resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
             if (props.successUrl) {
               if (formRef) {
@@ -8856,7 +8805,7 @@ function FormComponent(props: FormProps) {
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder-form-error-text pre-5d01dbe3\\">
+          <pre class=\\"builder-form-error-text pre-37f5fd8c\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
@@ -8868,7 +8817,7 @@ function FormComponent(props: FormProps) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-5d01dbe3 {
+        .pre-37f5fd8c {
           padding: 10px;
           color: red;
           text-align: center;
@@ -8917,7 +8866,6 @@ function Image(props: ImageProps) {
   }
 
   function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
     return !!props.lazy && isBrowser();
   }
 
@@ -9024,7 +8972,6 @@ function Image(props: ImageProps) {
   }
 
   function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
     return !!props.lazy && isBrowser();
   }
 
@@ -9070,7 +9017,7 @@ function Image(props: ImageProps) {
               class={
                 \\"builder-image\\" +
                 (props._class ? \\" \\" + props._class : \\"\\") +
-                \\" img-42d59c2a\\"
+                \\" img-062acd28\\"
               }
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -9085,7 +9032,7 @@ function Image(props: ImageProps) {
         {props.children}
       </div>
       <style jsx>{\`
-        .img-42d59c2a {
+        .img-062acd28 {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -10783,6 +10730,83 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid > jsx > Typescript Test > commentsWithQuotes 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props: any) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  function handleFn() {}
+
+  function doSomething() {
+    console.log(\\"This is a aa\\");
+  }
+
+  return (
+    <div>
+      <input
+        class={css({
+          color: \\"red\\",
+        })}
+        value={name()}
+        onInput={(event) => {
+          setName(event.target.value);
+        }}
+        onClick={(event) => doSomething()}
+      />
+      Hello
+      {name()}! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > commentsWithQuotes 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props: any) {
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  function handleFn() {}
+
+  function doSomething() {
+    console.log(\\"This is a aa\\");
+  }
+
+  return (
+    <>
+      <div>
+        <input
+          class=\\"input-20e9e4ab\\"
+          value={name()}
+          onInput={(event) => {
+            setName(event.target.value);
+          }}
+          onClick={(event) => doSomething()}
+        />
+        Hello
+        {name()}! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .input-20e9e4ab {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Solid > jsx > Typescript Test > componentWithContext 1`] = `
 "import { useContext } from \\"solid-js\\";
 
@@ -12256,7 +12280,6 @@ function RenderBlock(props: RenderBlockProps) {
     const ref = props.context.registeredComponents[componentName];
 
     if (!ref) {
-      // TODO: Public doc page with more info about this message
       console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -12315,11 +12338,6 @@ function RenderBlock(props: RenderBlockProps) {
       componentRef: component()?.component,
       componentOptions: {
         ...getBlockComponentOptions(useBlock()),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
         ...(shouldWrap()
           ? {}
           : {
@@ -12332,30 +12350,16 @@ function RenderBlock(props: RenderBlockProps) {
   }
 
   function useChildren() {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
     return useBlock().children ?? [];
   }
 
   function childrenWithoutParentComponent() {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
     const shouldRenderChildrenOutsideRef =
       !component()?.component && !repeatItemData();
     return shouldRenderChildrenOutsideRef ? useChildren() : [];
   }
 
   function repeatItemData() {
-    /**
-     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
     const { repeat, ...blockWithoutRepeat } = props.block;
 
     if (!repeat?.collection) {
@@ -12419,7 +12423,6 @@ function RenderBlock(props: RenderBlockProps) {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;
@@ -12542,7 +12545,6 @@ function RenderBlock(props: RenderBlockProps) {
     const ref = props.context.registeredComponents[componentName];
 
     if (!ref) {
-      // TODO: Public doc page with more info about this message
       console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -12601,11 +12603,6 @@ function RenderBlock(props: RenderBlockProps) {
       componentRef: component()?.component,
       componentOptions: {
         ...getBlockComponentOptions(useBlock()),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
         ...(shouldWrap()
           ? {}
           : {
@@ -12618,30 +12615,16 @@ function RenderBlock(props: RenderBlockProps) {
   }
 
   function useChildren() {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
     return useBlock().children ?? [];
   }
 
   function childrenWithoutParentComponent() {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
     const shouldRenderChildrenOutsideRef =
       !component()?.component && !repeatItemData();
     return shouldRenderChildrenOutsideRef ? useChildren() : [];
   }
 
   function repeatItemData() {
-    /**
-     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
     const { repeat, ...blockWithoutRepeat } = props.block;
 
     if (!repeat?.collection) {
@@ -12705,7 +12688,6 @@ function RenderBlock(props: RenderBlockProps) {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;

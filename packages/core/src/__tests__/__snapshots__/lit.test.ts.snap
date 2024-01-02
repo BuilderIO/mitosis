@@ -803,9 +803,7 @@ export default class CustomCode extends LitElement {
   @state() scriptsRun = [];
 
   findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -878,9 +876,7 @@ export default class CustomCode extends LitElement {
   @state() scriptsRun = [];
 
   findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -1003,8 +999,7 @@ export default class FormComponent extends LitElement {
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
       let body;
-      const formData = new FormData(el); // TODO: maybe support null
-
+      const formData = new FormData(el);
       const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
@@ -1031,7 +1026,6 @@ export default class FormComponent extends LitElement {
                 value = num;
               }
             } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
               value = el.files;
             } else {
               value = el.value;
@@ -1059,14 +1053,11 @@ export default class FormComponent extends LitElement {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
+      });
 
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
-        // Json
         const json = {};
         Array.from(formPairs).forEach(({ value, key }) => {
           set(json, key, value);
@@ -1075,10 +1066,7 @@ export default class FormComponent extends LitElement {
       }
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
-        ) {
+        if (!(sendWithJs && this.action?.includes(\\"zapier.com\\"))) {
           headers[\\"content-type\\"] = contentType;
         }
       }
@@ -1103,15 +1091,11 @@ export default class FormComponent extends LitElement {
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
-      fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: this.method || \\"post\\",
-        }
-      ).then(
+      fetch(this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action, {
+        body,
+        headers,
+        method: this.method || \\"post\\",
+      }).then(
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
@@ -1123,13 +1107,10 @@ export default class FormComponent extends LitElement {
           }
 
           if (!res.ok && this.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
             let message = get(body, this.errorMessagePath);
 
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-            error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -1154,13 +1135,11 @@ export default class FormComponent extends LitElement {
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
 
               if (this.resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
             if (this.successUrl) {
               if (formRef) {
@@ -1292,7 +1271,6 @@ export default class Image extends LitElement {
     this.imageLoaded = true;
   }
   useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
     return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
@@ -2370,6 +2348,44 @@ export default class MyBasicComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > commentsWithQuotes 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"Steve\\";
+
+  handleFn() {}
+  doSomething = function doSomething() {
+    console.log(\\"This is a aa\\");
+  };
+
+  render() {
+    return html\`
+          <style>.input {
+  color: red;
+}
+</style>
+          <div>
+          <input .value=\${this.name} @input=\${(event) => {
+      this.name = event.target.value;
+    }} @click=\${(event) => this.doSomething()} /> Hello \${
+      this.name
+    } ! I can run in
+          React, Vue, Solid, or Liquid!
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > componentWithContext 1`] = `
 "import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
@@ -3282,7 +3298,6 @@ export default class RenderBlock extends LitElement {
     const ref = this.context.registeredComponents[componentName];
 
     if (!ref) {
-      // TODO: Public doc page with more info about this message
       console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -3335,11 +3350,6 @@ export default class RenderBlock extends LitElement {
       componentRef: this.component?.component,
       componentOptions: {
         ...getBlockComponentOptions(this.useBlock),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
         ...(this.shouldWrap
           ? {}
           : {
@@ -3351,28 +3361,14 @@ export default class RenderBlock extends LitElement {
     };
   }
   get useChildren() {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
     return this.useBlock.children ?? [];
   }
   get childrenWithoutParentComponent() {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
     const shouldRenderChildrenOutsideRef =
       !this.component?.component && !this.repeatItemData;
     return shouldRenderChildrenOutsideRef ? this.useChildren : [];
   }
   get repeatItemData() {
-    /**
-     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
     const { repeat, ...blockWithoutRepeat } = this.block;
 
     if (!repeat?.collection) {
@@ -3433,7 +3429,6 @@ export default class RenderBlock extends LitElement {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;
@@ -5009,9 +5004,7 @@ export default class CustomCode extends LitElement {
   @state() scriptsRun = [];
 
   findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -5089,9 +5082,7 @@ export default class CustomCode extends LitElement {
   @state() scriptsRun = [];
 
   findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -5242,8 +5233,7 @@ export default class FormComponent extends LitElement {
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
       let body: any;
-      const formData = new FormData(el); // TODO: maybe support null
-
+      const formData = new FormData(el);
       const formPairs: {
         key: string;
         value: File | boolean | number | string | FileList;
@@ -5273,7 +5263,6 @@ export default class FormComponent extends LitElement {
                 value = num;
               }
             } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
               value = el.files;
             } else {
               value = el.value;
@@ -5301,14 +5290,11 @@ export default class FormComponent extends LitElement {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
+      });
 
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
-        // Json
         const json = {};
         Array.from(formPairs).forEach(({ value, key }) => {
           set(json, key, value);
@@ -5317,10 +5303,7 @@ export default class FormComponent extends LitElement {
       }
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
-        ) {
+        if (!(sendWithJs && this.action?.includes(\\"zapier.com\\"))) {
           headers[\\"content-type\\"] = contentType;
         }
       }
@@ -5345,15 +5328,11 @@ export default class FormComponent extends LitElement {
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
-      fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: this.method || \\"post\\",
-        }
-      ).then(
+      fetch(this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!, {
+        body,
+        headers,
+        method: this.method || \\"post\\",
+      }).then(
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
@@ -5365,13 +5344,10 @@ export default class FormComponent extends LitElement {
           }
 
           if (!res.ok && this.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
             let message = get(body, this.errorMessagePath);
 
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-            error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -5396,13 +5372,11 @@ export default class FormComponent extends LitElement {
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
 
               if (this.resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
             if (this.successUrl) {
               if (formRef) {
@@ -5556,7 +5530,6 @@ export default class Image extends LitElement {
     this.imageLoaded = true;
   }
   useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
     return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
@@ -6775,6 +6748,44 @@ export default class MyBasicComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Typescript Test > commentsWithQuotes 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"Steve\\";
+
+  handleFn() {}
+  doSomething = function doSomething() {
+    console.log(\\"This is a aa\\");
+  };
+
+  render() {
+    return html\`
+          <style>.input {
+  color: red;
+}
+</style>
+          <div>
+          <input .value=\${this.name} @input=\${(event) => {
+      this.name = event.target.value;
+    }} @click=\${(event) => this.doSomething()} /> Hello \${
+      this.name
+    } ! I can run in
+          React, Vue, Solid, or Liquid!
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Typescript Test > componentWithContext 1`] = `
 "import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
@@ -7788,7 +7799,6 @@ export default class RenderBlock extends LitElement {
     const ref = this.context.registeredComponents[componentName];
 
     if (!ref) {
-      // TODO: Public doc page with more info about this message
       console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -7841,11 +7851,6 @@ export default class RenderBlock extends LitElement {
       componentRef: this.component?.component,
       componentOptions: {
         ...getBlockComponentOptions(this.useBlock),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
         ...(this.shouldWrap
           ? {}
           : {
@@ -7857,28 +7862,14 @@ export default class RenderBlock extends LitElement {
     };
   }
   get useChildren() {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
     return this.useBlock.children ?? [];
   }
   get childrenWithoutParentComponent() {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
     const shouldRenderChildrenOutsideRef =
       !this.component?.component && !this.repeatItemData;
     return shouldRenderChildrenOutsideRef ? this.useChildren : [];
   }
   get repeatItemData() {
-    /**
-     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
     const { repeat, ...blockWithoutRepeat } = this.block;
 
     if (!repeat?.collection) {
@@ -7939,7 +7930,6 @@ export default class RenderBlock extends LitElement {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;

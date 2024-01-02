@@ -3237,9 +3237,7 @@ exports[`Parse JSX > Javascript > CustomCode 1`] = `
   "state": {
     "findAndRunScripts": {
       "code": "findAndRunScripts() {
-  // TODO: Move this function to standalone one in '@builder.io/utils'
   if (elem && typeof window !== 'undefined') {
-    /** @type {HTMLScriptElement[]} */
     const scripts = elem.getElementsByTagName('script');
 
     for (let i = 0; i < scripts.length; i++) {
@@ -3340,9 +3338,7 @@ exports[`Parse JSX > Javascript > Embed 1`] = `
   "state": {
     "findAndRunScripts": {
       "code": "findAndRunScripts() {
-  // TODO: Move this function to standalone one in '@builder.io/utils'
   if (elem && typeof window !== 'undefined') {
-    /** @type {HTMLScriptElement[]} */
     const scripts = elem.getElementsByTagName('script');
 
     for (let i = 0; i < scripts.length; i++) {
@@ -3920,8 +3916,7 @@ exports[`Parse JSX > Javascript > Form 1`] = `
     const el = event.currentTarget;
     const headers = props.customHeaders || {};
     let body;
-    const formData = new FormData(el); // TODO: maybe support null
-
+    const formData = new FormData(el);
     const formPairs = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!el.name).map(el => {
       let value;
       const key = el.name;
@@ -3944,7 +3939,6 @@ exports[`Parse JSX > Javascript > Form 1`] = `
             value = num;
           }
         } else if (el.type === 'file') {
-          // TODO: one vs multiple files
           value = el.files;
         } else {
           value = el.value;
@@ -3970,14 +3964,11 @@ exports[`Parse JSX > Javascript > Form 1`] = `
       if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
         contentType = 'multipart/form-data';
       }
-    }); // TODO: send as urlEncoded or multipart by default
-    // because of ease of use and reliability in browser API
-    // for encoding the form?
+    });
 
     if (contentType !== 'application/json') {
       body = formData;
     } else {
-      // Json
       const json = {};
       Array.from(formPairs).forEach(({
         value,
@@ -3989,9 +3980,7 @@ exports[`Parse JSX > Javascript > Form 1`] = `
     }
 
     if (contentType && contentType !== 'multipart/form-data') {
-      if (
-      /* Zapier doesn't allow content-type header to be sent from browsers */
-      !(sendWithJs && props.action?.includes('zapier.com'))) {
+      if (!(sendWithJs && props.action?.includes('zapier.com'))) {
         headers['content-type'] = contentType;
       }
     }
@@ -4012,9 +4001,7 @@ exports[`Parse JSX > Javascript > Form 1`] = `
 
     state.formState = 'sending';
     const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`;
-    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action
-    /* TODO: throw error if no action URL */
-    , {
+    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action, {
       body,
       headers,
       method: props.method || 'post'
@@ -4029,13 +4016,10 @@ exports[`Parse JSX > Javascript > Form 1`] = `
       }
 
       if (!res.ok && props.errorMessagePath) {
-        /* TODO: allow supplying an error formatter function */
         let message = get(body, props.errorMessagePath);
 
         if (message) {
           if (typeof message !== 'string') {
-            /* TODO: ideally convert json to yaml so it woul dbe like
-             error: - email has been taken */
             message = JSON.stringify(message);
           }
 
@@ -4060,15 +4044,11 @@ exports[`Parse JSX > Javascript > Form 1`] = `
           if (submitSuccessEvent.defaultPrevented) {
             return;
           }
-          /* TODO: option to turn this on/off? */
-
 
           if (props.resetFormOnSubmit !== false) {
             formRef.reset();
           }
         }
-        /* TODO: client side route event first that can be preventDefaulted */
-
 
         if (props.successUrl) {
           if (formRef) {
@@ -4420,7 +4400,6 @@ exports[`Parse JSX > Javascript > Image 1`] = `
     },
     "useLazyLoading": {
       "code": "useLazyLoading() {
-  // TODO: Add more checks here, like testing for real web browsers
   return !!props.lazy && state.isBrowser();
 }",
       "type": "method",
@@ -7468,6 +7447,140 @@ exports[`Parse JSX > Javascript > classState 1`] = `
 }
 `;
 
+exports[`Parse JSX > Javascript > commentsWithQuotes 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "css": {
+              "code": "{
+  color: \\"red\\"
+}",
+              "type": "single",
+            },
+            "onChange": {
+              "arguments": [
+                "event",
+              ],
+              "code": "{
+  state.name = event.target.value;
+}",
+              "type": "single",
+            },
+            "onClick": {
+              "code": "state.doSomething()",
+              "type": "single",
+            },
+            "value": {
+              "code": "state.name",
+              "type": "single",
+            },
+          },
+          "children": [],
+          "meta": {},
+          "name": "input",
+          "properties": {},
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      Hello
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "_text": {
+              "code": "state.name",
+              "type": "single",
+            },
+          },
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {},
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "! I can run in React, Vue, Solid, or Liquid!
+    ",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "MyComponent",
+  "refs": {},
+  "state": {
+    "doSomething": {
+      "code": "function doSomething() {
+  console.log(\\"This is a aa\\");
+}",
+      "type": "function",
+    },
+    "handleFn": {
+      "code": "handleFn() {}",
+      "type": "method",
+    },
+    "name": {
+      "code": "\\"Steve\\"",
+      "propertyType": "normal",
+      "type": "property",
+    },
+  },
+  "subComponents": [],
+}
+`;
+
 exports[`Parse JSX > Javascript > componentWithContext 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -10409,12 +10522,6 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
     },
     "childrenWithoutParentComponent": {
       "code": "get childrenWithoutParentComponent() {
-  /**
-   * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-   * we render them outside of \`componentRef\`.
-   * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-   * blocks, and the children will be repeated within those blocks.
-   */
   const shouldRenderChildrenOutsideRef = !state.component?.component && !state.repeatItemData;
   return shouldRenderChildrenOutsideRef ? state.useChildren : [];
 }",
@@ -10436,7 +10543,6 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
   const ref = props.context.registeredComponents[componentName];
 
   if (!ref) {
-    // TODO: Public doc page with more info about this message
     console.warn(\`
           Could not find a registered component named \\"\${componentName}\\". 
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -10468,11 +10574,6 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
     blockChildren: state.useChildren,
     componentRef: state.component?.component,
     componentOptions: { ...getBlockComponentOptions(state.useBlock),
-
-      /**
-       * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-       * they are provided to the component itself directly.
-       */
       ...(state.shouldWrap ? {} : {
         attributes: { ...state.attributes,
           ...state.actions
@@ -10490,7 +10591,6 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
   if (TARGET === 'reactNative') {
     return RenderComponentWithContext;
   } else if (TARGET === 'vue3') {
-    // vue3 expects a string for the component tag
     return 'RenderComponent';
   } else {
     return RenderComponent;
@@ -10500,10 +10600,6 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
     },
     "repeatItemData": {
       "code": "get repeatItemData() {
-  /**
-   * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-   * which will not work if there is a repeat.
-   */
   const {
     repeat,
     ...blockWithoutRepeat
@@ -10565,10 +10661,6 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
     },
     "useChildren": {
       "code": "get useChildren() {
-  // TO-DO: When should \`canHaveChildren\` dictate rendering?
-  // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-  // but still receive and need to render children.
-  // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
   return state.useBlock.children ?? [];
 }",
       "type": "getter",
@@ -15920,9 +16012,7 @@ exports[`Parse JSX > Typescript > CustomCode 1`] = `
   "state": {
     "findAndRunScripts": {
       "code": "findAndRunScripts() {
-  // TODO: Move this function to standalone one in '@builder.io/utils'
   if (elem && typeof window !== 'undefined') {
-    /** @type {HTMLScriptElement[]} */
     const scripts = elem.getElementsByTagName('script');
 
     for (let i = 0; i < scripts.length; i++) {
@@ -16031,9 +16121,7 @@ exports[`Parse JSX > Typescript > Embed 1`] = `
   "state": {
     "findAndRunScripts": {
       "code": "findAndRunScripts() {
-  // TODO: Move this function to standalone one in '@builder.io/utils'
   if (elem && typeof window !== 'undefined') {
-    /** @type {HTMLScriptElement[]} */
     const scripts = elem.getElementsByTagName('script');
 
     for (let i = 0; i < scripts.length; i++) {
@@ -16622,8 +16710,7 @@ exports[`Parse JSX > Typescript > Form 1`] = `
     const el = event.currentTarget;
     const headers = props.customHeaders || {};
     let body: any;
-    const formData = new FormData(el); // TODO: maybe support null
-
+    const formData = new FormData(el);
     const formPairs: {
       key: string;
       value: File | boolean | number | string | FileList;
@@ -16649,7 +16736,6 @@ exports[`Parse JSX > Typescript > Form 1`] = `
             value = num;
           }
         } else if (el.type === 'file') {
-          // TODO: one vs multiple files
           value = el.files;
         } else {
           value = el.value;
@@ -16675,14 +16761,11 @@ exports[`Parse JSX > Typescript > Form 1`] = `
       if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
         contentType = 'multipart/form-data';
       }
-    }); // TODO: send as urlEncoded or multipart by default
-    // because of ease of use and reliability in browser API
-    // for encoding the form?
+    });
 
     if (contentType !== 'application/json') {
       body = formData;
     } else {
-      // Json
       const json = {};
       Array.from(formPairs).forEach(({
         value,
@@ -16694,9 +16777,7 @@ exports[`Parse JSX > Typescript > Form 1`] = `
     }
 
     if (contentType && contentType !== 'multipart/form-data') {
-      if (
-      /* Zapier doesn't allow content-type header to be sent from browsers */
-      !(sendWithJs && props.action?.includes('zapier.com'))) {
+      if (!(sendWithJs && props.action?.includes('zapier.com'))) {
         headers['content-type'] = contentType;
       }
     }
@@ -16717,9 +16798,7 @@ exports[`Parse JSX > Typescript > Form 1`] = `
 
     state.formState = 'sending';
     const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`;
-    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action!
-    /* TODO: throw error if no action URL */
-    , {
+    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action!, {
       body,
       headers,
       method: props.method || 'post'
@@ -16734,13 +16813,10 @@ exports[`Parse JSX > Typescript > Form 1`] = `
       }
 
       if (!res.ok && props.errorMessagePath) {
-        /* TODO: allow supplying an error formatter function */
         let message = get(body, props.errorMessagePath);
 
         if (message) {
           if (typeof message !== 'string') {
-            /* TODO: ideally convert json to yaml so it woul dbe like
-             error: - email has been taken */
             message = JSON.stringify(message);
           }
 
@@ -16765,15 +16841,11 @@ exports[`Parse JSX > Typescript > Form 1`] = `
           if (submitSuccessEvent.defaultPrevented) {
             return;
           }
-          /* TODO: option to turn this on/off? */
-
 
           if (props.resetFormOnSubmit !== false) {
             formRef.reset();
           }
         }
-        /* TODO: client side route event first that can be preventDefaulted */
-
 
         if (props.successUrl) {
           if (formRef) {
@@ -17152,7 +17224,6 @@ exports[`Parse JSX > Typescript > Image 1`] = `
     },
     "useLazyLoading": {
       "code": "useLazyLoading() {
-  // TODO: Add more checks here, like testing for real web browsers
   return !!props.lazy && state.isBrowser();
 }",
       "type": "method",
@@ -20386,6 +20457,140 @@ exports[`Parse JSX > Typescript > classState 1`] = `
 }
 `;
 
+exports[`Parse JSX > Typescript > commentsWithQuotes 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "css": {
+              "code": "{
+  color: \\"red\\"
+}",
+              "type": "single",
+            },
+            "onChange": {
+              "arguments": [
+                "event",
+              ],
+              "code": "{
+  state.name = event.target.value;
+}",
+              "type": "single",
+            },
+            "onClick": {
+              "code": "state.doSomething()",
+              "type": "single",
+            },
+            "value": {
+              "code": "state.name",
+              "type": "single",
+            },
+          },
+          "children": [],
+          "meta": {},
+          "name": "input",
+          "properties": {},
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      Hello
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "_text": {
+              "code": "state.name",
+              "type": "single",
+            },
+          },
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {},
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "! I can run in React, Vue, Solid, or Liquid!
+    ",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "MyComponent",
+  "refs": {},
+  "state": {
+    "doSomething": {
+      "code": "function doSomething() {
+  console.log(\\"This is a aa\\");
+}",
+      "type": "function",
+    },
+    "handleFn": {
+      "code": "handleFn() {}",
+      "type": "method",
+    },
+    "name": {
+      "code": "\\"Steve\\"",
+      "propertyType": "normal",
+      "type": "property",
+    },
+  },
+  "subComponents": [],
+}
+`;
+
 exports[`Parse JSX > Typescript > componentWithContext 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -23490,12 +23695,6 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
     },
     "childrenWithoutParentComponent": {
       "code": "get childrenWithoutParentComponent() {
-  /**
-   * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-   * we render them outside of \`componentRef\`.
-   * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-   * blocks, and the children will be repeated within those blocks.
-   */
   const shouldRenderChildrenOutsideRef = !state.component?.component && !state.repeatItemData;
   return shouldRenderChildrenOutsideRef ? state.useChildren : [];
 }",
@@ -23517,7 +23716,6 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
   const ref = props.context.registeredComponents[componentName];
 
   if (!ref) {
-    // TODO: Public doc page with more info about this message
     console.warn(\`
           Could not find a registered component named \\"\${componentName}\\". 
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -23549,11 +23747,6 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
     blockChildren: state.useChildren,
     componentRef: state.component?.component,
     componentOptions: { ...getBlockComponentOptions(state.useBlock),
-
-      /**
-       * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-       * they are provided to the component itself directly.
-       */
       ...(state.shouldWrap ? {} : {
         attributes: { ...state.attributes,
           ...state.actions
@@ -23571,7 +23764,6 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
   if (TARGET === 'reactNative') {
     return RenderComponentWithContext;
   } else if (TARGET === 'vue3') {
-    // vue3 expects a string for the component tag
     return 'RenderComponent';
   } else {
     return RenderComponent;
@@ -23581,10 +23773,6 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
     },
     "repeatItemData": {
       "code": "get repeatItemData() {
-  /**
-   * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-   * which will not work if there is a repeat.
-   */
   const {
     repeat,
     ...blockWithoutRepeat
@@ -23646,10 +23834,6 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
     },
     "useChildren": {
       "code": "get useChildren() {
-  // TO-DO: When should \`canHaveChildren\` dictate rendering?
-  // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-  // but still receive and need to render children.
-  // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
   return state.useBlock.children ?? [];
 }",
       "type": "getter",
@@ -26146,12 +26330,7 @@ exports[`Parse JSX > parseStateObject 1`] = `
 {
   "allRegisteredComponents": {
     "code": "get allRegisteredComponents() {
-  const allComponentsArray = [...getDefaultRegisteredComponents(), // While this \`components\` object is deprecated, we must maintain support for it.
-  // Since users are able to override our default components, we need to make sure that we do not break such
-  // existing usage.
-  // This is why we spread \`components\` after the default Builder.io components, but before the \`props.customComponents\`,
-  // which is the new standard way of providing custom components, and must therefore take precedence.
-  ...components, ...(props.customComponents || [])];
+  const allComponentsArray = [...getDefaultRegisteredComponents(), ...components, ...(props.customComponents || [])];
   const allComponents = allComponentsArray.reduce((acc, curr) => ({ ...acc,
     [curr.name]: curr
   }), ({} as RegisteredComponents));
@@ -26207,7 +26386,6 @@ exports[`Parse JSX > parseStateObject 1`] = `
   },
   "evaluateJsCode": {
     "code": "evaluateJsCode() {
-  // run any dynamic JS code attached to content
   const jsCode = state.useContent?.data?.jsCode;
 
   if (jsCode) {
@@ -26299,7 +26477,6 @@ exports[`Parse JSX > parseStateObject 1`] = `
 
       case 'builder.patchUpdates':
         {
-          // TODO
           break;
         }
     }
