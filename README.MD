@@ -20,7 +20,6 @@
 
 _PS: We are actively looking for folks interested in becoming contributors to Mitosis. If interested, look at our list of [good first issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or reach out on our [Discord](https://discord.gg/SNusEyNGsx)_
 
-
 ## Table of contents
 
 - [Quick Start Guide](#quick-start-guide)
@@ -117,7 +116,7 @@ Here are some helpful resources on trying out Mitosis:
 - [this talk](https://portal.gitnation.org/contents/its-time-to-de-fragment-the-web) by Sami Jaber at React Day Berlin is a great intro to Mitosis. It gives a good overview of the impetus behind Mitosis, and a high-level understanding of its different pieces.
 
 - The below video is a brief introduction by Steve Sewell.
-[![Mitosis Video](https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffa5c422309ce4fbea9eaa133fa471877)](https://www.youtube.com/watch?v=XQIuv34-K_8 'Mitosis Video')
+  [![Mitosis Video](https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffa5c422309ce4fbea9eaa133fa471877)](https://www.youtube.com/watch?v=XQIuv34-K_8 'Mitosis Video')
 
 ## Docs
 
@@ -170,7 +169,7 @@ _NOTE: this matrix is programmatically generated and should not be manually edit
 
 ## Contribute
 
-Interested in contribute? Head over to the [developer](developer/) docs and see how you can get setup & started!
+Interested in contribute? Head over to the [developer](./CONTRIBUTING.md) docs and see how you can get setup & started!
 
 Once you're ready, checkout our [issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) page and grab your first issue!
 

@@ -1,16 +1,13 @@
-# Local Development
-
-Welcome ⚡️!! If you've found a bug, or have an idea to add a feature we'd love to hear from you. It may save time to first ping the group on [Mitosis' Discord channel](https://discord.com/channels/842438759945601056/935218469799071835) to talk through any ideas or any issues that may be a bug.
-
 ## Project Structure
 
 Mitosis is structured as a mono-repo using Yarn (v3) Workspaces. The packages
-live under `packages/` and `examples/`:
+live under `packages/`:
 
 - `core` (`@builder.io/mitosis`): contains the Mitosis engine
 - `cli` (`@builder.io/mitosis-cli`): contains the Mitosis CLI, and _depends_ on `core`
 - `fiddle`: contains the code for the interactive Mitosis fiddle, which is hosted at mitosis.builder.io
 - `eslint-plugin` (`@builder.io/eslint-plugin-mitosis`): contains the Mitosis eslint rules to enforce valid Mitosis component syntax. Yet to be released.
+- `starter`: contains the code for the Mitosis `create` comand, a.k.a. `npm create @builder.io/mitosis`
 
 ## Installation
 
@@ -55,6 +52,9 @@ PS: don't worry about failing imports in the raw test TSX files. These are not a
 
 From there, you can keep iterating until the snapshots look as expected, and the integration tests pass!
 
-### Pre-submit
+### Prepare your PR
 
-- format: `yarn run fmt:prettier`
+Make sure to run these before submitting your PR:
+
+- format: `yarn fmt:prettier` to lint all files in the repo.
+- update snapshots: `cd packages/core && yarn snapupdate` to update test snapshots in `core`.
