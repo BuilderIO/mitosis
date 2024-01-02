@@ -204,7 +204,7 @@ const BASIC_TESTS: Tests = {
   spreadAttrs,
   spreadNestedProps,
   spreadProps,
-  commentsWithQuotes, 
+  commentsWithQuotes,
   renderContentExample,
   arrowFunctionInUseStore,
   expressionState,

@@ -1,25 +1,26 @@
-import { useStore } from "@builder.io/mitosis";
+import { useStore } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
   const state = useStore({
-    name: "Steve",
+    name: 'Steve',
     // can't be compiled
-    handleFn() {}
+    handleFn() {},
   });
 
-    function doSomething() {
-    console.log("This is a aa");
+  function doSomething() {
+    console.log('This is a aa');
   }
 
-  
   return (
     <div>
       <input
         css={{
-          color: "red",
+          color: 'red',
         }}
         value={state.name}
-        onChange={(event) => { state.name = event.target.value }}
+        onChange={(event) => {
+          state.name = event.target.value;
+        }}
         onClick={() => doSomething()}
       />
       Hello
