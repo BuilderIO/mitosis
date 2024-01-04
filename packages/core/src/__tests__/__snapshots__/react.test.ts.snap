@@ -498,10 +498,10 @@ function Column(props) {
   }
 
   function getColumnCssWidth(index) {
-    const columns = getColumns();
-    const gutterSize = getGutterSize();
+    const columns = state.getColumns();
+    const gutterSize = state.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   return (
@@ -576,7 +576,7 @@ function ContentSlotJsxCode(props) {
   const [showContent, setShowContent] = useState(() => false);
 
   function cls() {
-    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+    return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
   }
 
   function show() {
@@ -1445,7 +1445,9 @@ function SmileReviews(props) {
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
 
-            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+            <div
+              className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
+            >
               <div>
                 N:
                 {index}
@@ -1525,7 +1527,7 @@ function Text(props) {
         __html:
           props.text ||
           props.content ||
-          name ||
+          state.name ||
           '<p class=\\"text-lg\\">my name</p>',
       }}
     />
@@ -3242,6 +3244,31 @@ export default UseTargetComponent;
 "
 `;
 
+exports[`React > jsx > Javascript Test > webComponent 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { register } from \\"swiper/element/bundle\\";
+
+function MyBasicWebComponent(props) {
+  useEffect(() => {
+    register();
+  }, []);
+
+  return (
+    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+      <swiper-slide>Slide 1</swiper-slide>
+
+      <swiper-slide>Slide 2</swiper-slide>
+
+      <swiper-slide>Slide 3</swiper-slide>
+    </swiper-container>
+  );
+}
+
+export default MyBasicWebComponent;
+"
+`;
+
 exports[`React > jsx > Remove Internal mitosis package 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -3812,10 +3839,10 @@ function Column(props: ColumnProps) {
   }
 
   function getColumnCssWidth(index: number) {
-    const columns = getColumns();
-    const gutterSize = getGutterSize();
+    const columns = state.getColumns();
+    const gutterSize = state.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   return (
@@ -3901,7 +3928,7 @@ function ContentSlotJsxCode(props: Props) {
   const [showContent, setShowContent] = useState(() => false);
 
   function cls() {
-    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+    return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
   }
 
   function show() {
@@ -4904,7 +4931,9 @@ function SmileReviews(props: SmileReviewsProps) {
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
 
-            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+            <div
+              className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
+            >
               <div>
                 N:
                 {index}
@@ -4998,7 +5027,7 @@ function Text(props: TextProps) {
         __html:
           props.text ||
           props.content ||
-          name ||
+          state.name ||
           '<p class=\\"text-lg\\">my name</p>',
       }}
     />
@@ -6903,6 +6932,31 @@ export default UseTargetComponent;
 "
 `;
 
+exports[`React > jsx > Typescript Test > webComponent 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { register } from \\"swiper/element/bundle\\";
+
+function MyBasicWebComponent(props: any) {
+  useEffect(() => {
+    register();
+  }, []);
+
+  return (
+    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+      <swiper-slide>Slide 1</swiper-slide>
+
+      <swiper-slide>Slide 2</swiper-slide>
+
+      <swiper-slide>Slide 3</swiper-slide>
+    </swiper-container>
+  );
+}
+
+export default MyBasicWebComponent;
+"
+`;
+
 exports[`React > stamped (mobx) 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -7074,7 +7128,9 @@ function SmileReviews(props) {
           <div className=\\"review-4d59d085\\" key={review.id}>
             <img className=\\"img-4d59d085\\" src={review.avatar} />
 
-            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+            <div
+              className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
+            >
               <div>
                 N:
                 {index}
@@ -7233,7 +7289,7 @@ function MyComponent(props) {
   return (
     <input
       className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
-        focus ? \\"focus\\" : \\"\\"
+        state.focus ? \\"focus\\" : \\"\\"
       }\`}
     />
   );
@@ -7641,7 +7697,7 @@ function MyComponent(props: any) {
   return (
     <input
       className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
-        focus ? \\"focus\\" : \\"\\"
+        state.focus ? \\"focus\\" : \\"\\"
       }\`}
     />
   );

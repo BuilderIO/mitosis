@@ -40,7 +40,7 @@ const preserveExportOrLocalStatement = getRawFile(
 );
 const arrowFunctionInUseStore = getRawFile('./data/arrow-function-in-use-store.raw.tsx');
 const svgComponent = getRawFile('./data/svg.raw.tsx');
-
+const webComponent = getRawFile('./data/basic-web-component.raw.tsx');
 const propsType = getRawFile('./data/types/component-props-type.raw.tsx');
 const propsInterface = getRawFile('./data/types/component-props-interface.raw.tsx');
 const preserveTyping = getRawFile('./data/types/preserve-typing.raw.tsx');
@@ -209,6 +209,7 @@ const BASIC_TESTS: Tests = {
   contentState,
   referencingFunInsideHook,
   svgComponent,
+  webComponent,
   renderBlock,
   useTarget,
 };
