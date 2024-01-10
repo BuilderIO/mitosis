@@ -130,6 +130,18 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
   return styleString;
 };
 
+const hasComponent = (block: BuilderElement) => {
+  return Boolean(block.component?.name);
+};
+
+const hasProperties = (block: BuilderElement) => {
+  return Boolean(block.properties && Object.keys(block.properties).length);
+};
+
+const hasBindings = (block: BuilderElement) => {
+  return Boolean(block.bindings && Object.keys(block.bindings).length);
+};
+
 const hasStyles = (block: BuilderElement) => {
   if (block.responsiveStyles) {
     for (const key in block.responsiveStyles) {
@@ -432,7 +444,13 @@ const componentMappers: {
     };
     const finalTagname = block.tagName || (assumeLink ? 'a' : 'div');
 
-    if ((block.tagName && block.tagName !== 'div') || hasStyles(block)) {
+    if (
+      (block.tagName && block.tagName !== 'div') ||
+      hasStyles(block) ||
+      hasComponent(block) ||
+      hasBindings(block) ||
+      hasProperties(block)
+    ) {
       return createMitosisNode({
         name: finalTagname,
         bindings,
