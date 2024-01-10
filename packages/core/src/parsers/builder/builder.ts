@@ -4,7 +4,7 @@ import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, merge, omit, omitBy, sortBy, upperFirst } from 'lodash';
 import traverse from 'traverse';
-import { MitosisComponent, MitosisState, hashCodeAsString } from '../..';
+import { hashCodeAsString, MitosisComponent, MitosisState } from '../..';
 import { Size, sizeNames, sizes } from '../../constants/media-sizes';
 import { createSingleBinding } from '../../helpers/bindings';
 import { capitalize } from '../../helpers/capitalize';
@@ -128,6 +128,18 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
   }
 
   return styleString;
+};
+
+const hasComponent = (block: BuilderElement) => {
+  return Boolean(block.component?.name);
+};
+
+const hasProperties = (block: BuilderElement) => {
+  return Boolean(block.properties && Object.keys(block.properties).length);
+};
+
+const hasBindings = (block: BuilderElement) => {
+  return Boolean(block.bindings && Object.keys(block.bindings).length);
 };
 
 const hasStyles = (block: BuilderElement) => {
@@ -432,7 +444,13 @@ const componentMappers: {
     };
     const finalTagname = block.tagName || (assumeLink ? 'a' : 'div');
 
-    if ((block.tagName && block.tagName !== 'div') || hasStyles(block)) {
+    if (
+      (block.tagName && block.tagName !== 'div') ||
+      hasStyles(block) ||
+      hasComponent(block) ||
+      hasBindings(block) ||
+      hasProperties(block)
+    ) {
       return createMitosisNode({
         name: finalTagname,
         bindings,
