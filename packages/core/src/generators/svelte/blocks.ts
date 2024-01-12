@@ -23,6 +23,7 @@ const mappers: {
   Show: BlockToSvelte;
   Slot: BlockToSvelte;
   style: BlockToSvelte;
+  script: BlockToSvelte;
 } = {
   style: ({ json, options, parentComponent }) => {
     let props = '';
@@ -45,6 +46,26 @@ const mappers: {
     // We have to obfuscate `"style"` due to a limitation in the svelte-preprocessor plugin.
     // https://github.com/sveltejs/vite-plugin-svelte/issues/315#issuecomment-1109000027
     return `{@html \`<\${'style'} ${bindings} ${props}>\${${innerText}}<\${'/style'}>\`}`;
+  },
+  script: ({ json, options, parentComponent }) => {
+    let props = '';
+    for (const key in json.properties) {
+      const value = json.properties[key];
+      props += ` ${key}="${value}" `;
+    }
+
+    let bindings = '';
+
+    for (const key in json.bindings) {
+      const value = json.bindings[key];
+      if (value && key !== 'innerHTML') {
+        bindings += ` ${key}=\${${value.code}} `;
+      }
+    }
+
+    const innerText = json.bindings.innerHTML?.code || '';
+
+    return `{@html \`<script ${bindings} ${props}>\${${innerText}}</script>\`}`;
   },
   Fragment: ({ json, options, parentComponent }) => {
     if (json.bindings.innerHTML?.code) {
