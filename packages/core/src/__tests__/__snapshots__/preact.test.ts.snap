@@ -502,10 +502,10 @@ function Column(props) {
   }
 
   function getColumnCssWidth(index) {
-    const columns = state.getColumns();
-    const gutterSize = state.getGutterSize();
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   return (
@@ -581,7 +581,7 @@ function ContentSlotJsxCode(props) {
   const [showContent, setShowContent] = useState(() => false);
 
   function cls() {
-    return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
   }
 
   function show() {
@@ -1459,9 +1459,7 @@ function SmileReviews(props) {
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
 
-            <div
-              className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
-            >
+            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
               <div>
                 N:
                 {index}
@@ -1542,7 +1540,7 @@ function Text(props) {
         __html:
           props.text ||
           props.content ||
-          state.name ||
+          name ||
           '<p class=\\"text-lg\\">my name</p>',
       }}
     />
@@ -3890,10 +3888,10 @@ function Column(props: ColumnProps) {
   }
 
   function getColumnCssWidth(index: number) {
-    const columns = state.getColumns();
-    const gutterSize = state.getGutterSize();
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   return (
@@ -3980,7 +3978,7 @@ function ContentSlotJsxCode(props: Props) {
   const [showContent, setShowContent] = useState(() => false);
 
   function cls() {
-    return props.slotContent && props.children ? \`\${state.name}-content\` : \\"\\";
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
   }
 
   function show() {
@@ -4992,9 +4990,7 @@ function SmileReviews(props: SmileReviewsProps) {
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
 
-            <div
-              className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
-            >
+            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
               <div>
                 N:
                 {index}
@@ -5089,7 +5085,7 @@ function Text(props: TextProps) {
         __html:
           props.text ||
           props.content ||
-          state.name ||
+          name ||
           '<p class=\\"text-lg\\">my name</p>',
       }}
     />
@@ -7169,7 +7165,7 @@ function MyComponent(props) {
   return (
     <input
       className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
-        state.focus ? \\"focus\\" : \\"\\"
+        focus ? \\"focus\\" : \\"\\"
       }\`}
     />
   );
@@ -7579,7 +7575,7 @@ function MyComponent(props: any) {
   return (
     <input
       className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
-        state.focus ? \\"focus\\" : \\"\\"
+        focus ? \\"focus\\" : \\"\\"
       }\`}
     />
   );

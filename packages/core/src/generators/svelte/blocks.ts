@@ -220,7 +220,7 @@ const stringifyBinding =
     }
 
     const { code, arguments: cusArgs = ['event'], type } = binding;
-    const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name);
+    const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name) || node.name === 'svelte:element';
 
     if (type === 'spread') {
       const spreadValue = key === 'props' ? '$$props' : code;

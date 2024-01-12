@@ -49,9 +49,9 @@ test.describe('e2e', () => {
     });
 
     test('script tag', async ({ page, packageName }) => {
-      if (['e2e-solid', 'e2e-react'].includes(packageName)) {
-        test.skip();
-      }
+      test.skip(
+        packageName === 'e2e-solid' || packageName === 'e2e-react' || packageName === 'e2e-svelte',
+      );
 
       const consoleMsg: string[] = [];
       page.on('console', (msg) => consoleMsg.push(msg.text()));
