@@ -9,7 +9,7 @@ import { ToReactOptions } from './types';
 
 export const processBinding = (str: string, options: ToReactOptions) => {
   // fix web-component tag transform issue with dashes by not transforming it
-  if (options.stateType !== 'useState' || str.includes('-')) {
+  if (options.stateType !== 'useState') {
     return str;
   }
 
