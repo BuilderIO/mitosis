@@ -41,7 +41,7 @@ import { hasContext } from '../helpers/context';
 import { checkIfIsClientComponent } from '../helpers/rsc';
 import { collectReactNativeStyles } from '../react-native';
 import { blockToReact } from './blocks';
-import { closeFrag, getCode, openFrag, processTagReferences, wrapInFragment } from './helpers';
+import { closeFrag, openFrag, processTagReferences, wrapInFragment } from './helpers';
 import { getUseStateCode, processHookCode, updateStateSetters } from './state';
 import { ToReactOptions } from './types';
 
@@ -445,7 +445,7 @@ const _componentToReact = (
     }
     ${hasStateArgument ? refsString : ''}
     ${getContextString(json, options)}
-    ${getCode(json.hooks.init?.code, options)}
+    ${json.hooks.init?.code ? processHookCode({ str: json.hooks.init?.code, options }) : ''}
     ${contextStr || ''}
 
     ${
