@@ -380,3 +380,27 @@ export default function Layout(props) {
   );
 }
 ```
+
+### Slots with data
+
+In case of components that might need to reference data inside of slots, you can simply pass along props:
+
+```jsx
+import { Slot } from '@builder.io/mitosis';
+
+export default function Carousel(props) {
+  return (
+    <ul className="carousel">
+      <For each={props.items} >
+      {
+        (item) => (
+          <li className="carousel-item">
+            <Slot name="item" item={item}>Top default</Slot>
+          </li>
+        )
+      }
+      </For>
+    </ul>
+  );
+}
+```
