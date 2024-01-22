@@ -9,9 +9,6 @@ export default function SlotCode(props: Props) {
       <Slot name="left" left={props.data}>Left</Slot>
       <p>Default slots</p>
       <Slot name="default" data={props.data}>Default, named Child</Slot>
-      <p>Template slots</p>
-      <Slot data={props.data}>Default Child</Slot>
-      <Slot key="keyed" data={props.data}>Keyed child</Slot>
     </div>
   );
 }

@@ -288,8 +288,8 @@ const NODE_MAPPERS: {
         return `<slot${getSlotBindings(json)}>${renderChildren()}</slot>`;
       }
 
-      return `<template #${json.properties.key || key}${getSlotBindings(json)}>
-        { ${json.bindings[key]?.code} }
+      return `<template #${json.properties.key || key}>
+        ${json.bindings[key]?.code}
       </template>`;
     }
 
@@ -373,7 +373,7 @@ const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType:
   return ` ${key}="${encodeQuotes(stringifiedValue)}" `;
 };
 
-const getSlotBindings = (node: MitosisNode) => getBlockBindings(node, 'name', 'key');
+const getSlotBindings = (node: MitosisNode) => getBlockBindings(node, 'name');
 const getBlockBindings = (node: MitosisNode, ...exclude: string[]) => {
   const stringifiedProperties = Object.entries(node.properties)
     .filter(([key]) => !exclude.includes(key))
