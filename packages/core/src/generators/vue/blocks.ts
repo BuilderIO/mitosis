@@ -86,14 +86,14 @@ const NODE_MAPPERS: {
 
     return firstChild
       ? pipe(
-          firstChild,
-          addBindingsToJson({ key: keyValue }),
-          addPropertiesToJson({
-            [SPECIAL_PROPERTIES.V_FOR]: forValue,
-            ...(jsonIf ? { [SPECIAL_PROPERTIES.V_IF]: jsonIf } : {}),
-          }),
-          (block) => blockToVue(block, options),
-        )
+        firstChild,
+        addBindingsToJson({ key: keyValue }),
+        addPropertiesToJson({
+          [SPECIAL_PROPERTIES.V_FOR]: forValue,
+          ...(jsonIf ? { [SPECIAL_PROPERTIES.V_IF]: jsonIf } : {}),
+        }),
+        (block) => blockToVue(block, options),
+      )
       : '';
   },
   Show(json, options, scope) {
@@ -103,14 +103,13 @@ const NODE_MAPPERS: {
     <template ${SPECIAL_PROPERTIES.V_IF}="${encodeQuotes(ifValue)}">
       ${json.children.map((item) => blockToVue(item, options)).join('\n')}
     </template>
-    ${
-      isMitosisNode(json.meta.else)
+    ${isMitosisNode(json.meta.else)
         ? `
         <template ${SPECIAL_PROPERTIES.V_ELSE}>
           ${blockToVue(json.meta.else, options)}
         </template>`
         : ''
-    }
+      }
     `;
 
     switch (options.vueVersion) {
@@ -237,10 +236,10 @@ const NODE_MAPPERS: {
             | undefined;
           const elseString = firstChildOfFirstChild
             ? pipe(
-                firstChildOfFirstChild,
-                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }),
-                (block) => blockToVue(block, options),
-              )
+              firstChildOfFirstChild,
+              addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }),
+              (block) => blockToVue(block, options),
+            )
             : '';
 
           return `
@@ -255,16 +254,16 @@ const NODE_MAPPERS: {
         } else {
           const ifString = firstChild
             ? pipe(
-                firstChild,
-                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: ifValue }),
-                (block) => blockToVue(block, options),
-              )
+              firstChild,
+              addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: ifValue }),
+              (block) => blockToVue(block, options),
+            )
             : '';
 
           const elseString = isMitosisNode(elseBlock)
             ? pipe(elseBlock, addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }), (block) =>
-                blockToVue(block, options),
-              )
+              blockToVue(block, options),
+            )
             : '';
 
           return `
@@ -278,31 +277,30 @@ const NODE_MAPPERS: {
     const slotName = json.bindings.name?.code || json.properties.name;
 
     const renderChildren = () => json.children?.map((item) => blockToVue(item, options)).join('\n');
+    console.log(Object.keys(json.bindings))
 
     if (!slotName) {
-      const key = Object.keys(json.bindings).find(Boolean);
+      const key = Object.keys(json.bindings).find((key) => key !== 'key');
       if (!key) {
         if (!json.children?.length) {
-          return '<slot/>';
+          return `<slot${getSlotBindings(json)}/>`;
         }
-        return `<slot>${renderChildren()}</slot>`;
+        return `<slot${getSlotBindings(json)}>${renderChildren()}</slot>`;
       }
 
-      return `
-        <template #${key}>
-          ${json.bindings[key]?.code}
-        </template>
-      `;
+      return `<template #${json.properties.key || key}${getSlotBindings(json)}>
+        { ${json.bindings[key]?.code} }
+      </template>`;
     }
 
     if (slotName === 'default') {
-      return `<slot>${renderChildren()}</slot>`;
+      return `<slot${getSlotBindings(json)}>${renderChildren()}</slot>`;
     }
 
     return `<slot name="${stripSlotPrefix(
       slotName,
       SLOT_PREFIX,
-    ).toLowerCase()}">${renderChildren()}</slot>`;
+    ).toLowerCase()}"${getSlotBindings(json)}>${renderChildren()}</slot>`;
   },
 };
 
@@ -310,52 +308,52 @@ const SPECIAL_HTML_TAGS = ['style', 'script'];
 
 const stringifyBinding =
   (node: MitosisNode) =>
-  ([key, value]: [string, Binding]) => {
-    const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name);
+    ([key, value]: [string, Binding]) => {
+      const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name);
 
-    if (value.type === 'spread') {
-      return ''; // we handle this after
-    } else if (key === 'class') {
-      return `:class="_classStringToObject(${value?.code})"`;
-      // TODO: support dynamic classes as objects somehow like Vue requires
-      // https://vuejs.org/v2/guide/class-and-style.html
-    } else {
-      // TODO: proper babel transform to replace. Util for this
-      const useValue = value?.code || '';
-
-      if (key.startsWith('on') && isValidHtmlTag) {
-        // handle html native on[event] props
-        const { arguments: cusArgs = ['event'] } = value!;
-        let event = key.replace('on', '').toLowerCase();
-        const isAssignmentExpression = useValue.includes('=');
-
-        const eventHandlerValue = pipe(
-          replaceIdentifiers({
-            code: useValue,
-            from: cusArgs[0],
-            to: '$event',
-          }),
-          isAssignmentExpression ? identity : removeSurroundingBlock,
-          removeSurroundingBlock,
-          encodeQuotes,
-        );
-
-        const eventHandlerKey = `${SPECIAL_PROPERTIES.V_ON_AT}${event}`;
-
-        return `${eventHandlerKey}="${eventHandlerValue}"`;
-      } else if (key.startsWith('on')) {
-        // handle on[custom event] props
-        const { arguments: cusArgs = ['event'] } = node.bindings[key]!;
-        return `:${key}="(${cusArgs.join(',')}) => ${encodeQuotes(useValue)}"`;
-      } else if (key === 'ref') {
-        return `ref="${encodeQuotes(useValue)}"`;
-      } else if (BINDING_MAPPERS[key]) {
-        return `${BINDING_MAPPERS[key]}="${encodeQuotes(useValue.replace(/"/g, "\\'"))}"`;
+      if (value.type === 'spread') {
+        return ''; // we handle this after
+      } else if (key === 'class') {
+        return `:class="_classStringToObject(${value?.code})"`;
+        // TODO: support dynamic classes as objects somehow like Vue requires
+        // https://vuejs.org/v2/guide/class-and-style.html
       } else {
-        return `:${key}="${encodeQuotes(useValue)}"`;
+        // TODO: proper babel transform to replace. Util for this
+        const useValue = value?.code || '';
+
+        if (key.startsWith('on') && isValidHtmlTag) {
+          // handle html native on[event] props
+          const { arguments: cusArgs = ['event'] } = value!;
+          let event = key.replace('on', '').toLowerCase();
+          const isAssignmentExpression = useValue.includes('=');
+
+          const eventHandlerValue = pipe(
+            replaceIdentifiers({
+              code: useValue,
+              from: cusArgs[0],
+              to: '$event',
+            }),
+            isAssignmentExpression ? identity : removeSurroundingBlock,
+            removeSurroundingBlock,
+            encodeQuotes,
+          );
+
+          const eventHandlerKey = `${SPECIAL_PROPERTIES.V_ON_AT}${event}`;
+
+          return `${eventHandlerKey}="${eventHandlerValue}"`;
+        } else if (key.startsWith('on')) {
+          // handle on[custom event] props
+          const { arguments: cusArgs = ['event'] } = node.bindings[key]!;
+          return `:${key}="(${cusArgs.join(',')}) => ${encodeQuotes(useValue)}"`;
+        } else if (key === 'ref') {
+          return `ref="${encodeQuotes(useValue)}"`;
+        } else if (BINDING_MAPPERS[key]) {
+          return `${BINDING_MAPPERS[key]}="${encodeQuotes(useValue.replace(/"/g, "\\'"))}"`;
+        } else {
+          return `:${key}="${encodeQuotes(useValue)}"`;
+        }
       }
-    }
-  };
+    };
 
 const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType: SpreadType }) => {
   const spreads = Object.values(node.bindings)
@@ -375,8 +373,10 @@ const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType:
   return ` ${key}="${encodeQuotes(stringifiedValue)}" `;
 };
 
-const getBlockBindings = (node: MitosisNode) => {
+const getSlotBindings = (node: MitosisNode) => getBlockBindings(node, 'name', 'key');
+const getBlockBindings = (node: MitosisNode, ...exclude: string[]) => {
   const stringifiedProperties = Object.entries(node.properties)
+    .filter(([key]) => !exclude.includes(key))
     .map(([key, value]) => {
       if (key === 'className') {
         return '';
@@ -392,7 +392,7 @@ const getBlockBindings = (node: MitosisNode) => {
     .map(stringifyBinding(node))
     .join(' ');
 
-  return [
+  return ' ' + [
     stringifiedProperties,
     stringifiedBindings,
     stringifySpreads({ node, spreadType: 'normal' }),
@@ -407,7 +407,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
   }
 
   if (isChildren({ node })) {
-    return `<slot/>`;
+    return `<slot${getSlotBindings(node)}/>`;
   }
 
   if (SPECIAL_HTML_TAGS.includes(node.name)) {
@@ -425,7 +425,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     if (isSlotProperty(textCode, SLOT_PREFIX)) {
       const slotName = stripSlotPrefix(textCode, SLOT_PREFIX).toLowerCase();
 
-      if (slotName === 'default') return `<slot/>`;
+      if (slotName === 'default') return `<slot${getSlotBindings(node)}/>`;
 
       return `<slot name="${slotName}"/>`;
     }
@@ -434,7 +434,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   let str = `<${node.name} `;
 
-  str += getBlockBindings(node);
+  str += getSlotBindings(node);
 
   if (SELF_CLOSING_HTML_TAGS.has(node.name)) {
     return str + ' />';

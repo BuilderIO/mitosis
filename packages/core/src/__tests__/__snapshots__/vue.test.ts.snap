@@ -12,7 +12,7 @@ exports[`Vue > jsx > Javascript Test > AdvancedRef 1`] = `
         @change=\\"name = $event.target.value\\"
       />
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-      <select name=\\"cars\\" id=\\"cars\\">
+      <select id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
       </select>
@@ -286,7 +286,7 @@ exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 "<template>
   <div>
     <template v-if=\\"$slots.default\\">
-      <slot />
+      <slot :_text=\\"$slots.default\\" />
 
       {{ type }}
     </template>
@@ -392,7 +392,7 @@ exports[`Vue > jsx > Javascript Test > BasicRef 1`] = `
         @change=\\"name = $event.target.value\\"
       />
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-      <select name=\\"cars\\" id=\\"cars\\">
+      <select id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
       </select>
@@ -611,7 +611,7 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > ContentSlotHtml 1`] = `
 "<template>
   <div>
-    <slot name=\\"testing\\"></slot>
+    <slot name=\\"testing\\" :name=\\"$slots.testing\\"></slot>
     <div>
       <hr />
     </div>
@@ -647,7 +647,7 @@ exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
     <div>
       <hr />
     </div>
-    <div><slot /></div>
+    <div><slot :_text=\\"$slots.default\\" /></div>
   </div>
 </template>
 
@@ -1216,7 +1216,7 @@ exports[`Vue > jsx > Javascript Test > Image 1`] = `
 
       <source :srcset=\\"srcset\\" />
     </picture>
-    <slot />
+    <slot :_text=\\"$slots.default\\" />
   </div>
 </template>
 
@@ -1395,7 +1395,6 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > InputParent 1`] = `
 "<template>
   <form-input-component
-    name=\\"kingzez\\"
     type=\\"text\\"
     :onChange=\\"(value) => handleChange(value)\\"
   ></form-input-component>
@@ -1464,7 +1463,7 @@ exports[`Vue > jsx > Javascript Test > Section 1`] = `
     \\"
     v-bind=\\"attributes\\"
   >
-    <slot />
+    <slot :_text=\\"$slots.default\\" />
   </section>
 </template>
 
@@ -1490,7 +1489,7 @@ exports[`Vue > jsx > Javascript Test > Section 2`] = `
     :key=\\"index\\"
     v-bind=\\"attributes\\"
   >
-    <slot />
+    <slot :_text=\\"$slots.default\\" />
   </section>
 </template>
 
@@ -1564,8 +1563,10 @@ exports[`Vue > jsx > Javascript Test > SlotHtml 1`] = `
 "<template>
   <div>
     <content-slot-code>
-      <template #testing>
+      <template #testing :testing=\\"<div>Hello</div>\\">
+        {
         <div>Hello</div>
+        }
       </template>
     </content-slot-code>
   </div>
@@ -1606,8 +1607,10 @@ exports[`Vue > jsx > Javascript Test > SlotNamed 1`] = `
 "<template>
   <div>
     <slot name=\\"top\\"></slot>
-    <slot name=\\"left\\">Default left</slot>
+    <slot name=\\"left\\">Left</slot>
+    <p>Default slots</p>
     <slot>Default Child</slot>
+    <slot>Default, named Child</slot>
   </div>
 </template>
 
@@ -1616,6 +1619,30 @@ import { defineComponent } from \\"vue\\";
 
 export default defineComponent({
   name: \\"slot-code\\",
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > SlotNamedData 1`] = `
+"<template>
+  <div>
+    <slot name=\\"top\\" :data=\\"data\\"></slot>
+    <slot name=\\"left\\" :left=\\"data\\">Left</slot>
+    <p>Default slots</p>
+    <slot :data=\\"data\\">Default, named Child</slot>
+    <p>Template slots</p>
+    <template #data :data=\\"data\\"> { data } </template>
+    <template #keyed :data=\\"data\\"> { data } </template>
+  </div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"slot-code\\",
+
+  props: [\\"data\\"],
 });
 </script>"
 `;
@@ -2819,7 +2846,7 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > propsDestructure 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <slot :_text=\\"$slots.default\\" /> {{ type }}
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -3276,7 +3303,7 @@ exports[`Vue > jsx > Javascript Test > self-referencing component 1`] = `
     {{ name }}
 
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce Wayne\\"></my-component>
+      <my-component></my-component>
     </template>
   </div>
 </template>
@@ -3296,10 +3323,10 @@ exports[`Vue > jsx > Javascript Test > self-referencing component with children 
 "<template>
   <div>
     {{ name }}
-    <slot />
+    <slot :_text=\\"$slots.default\\" />
 
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\">
+      <my-component>
         <div>Wayne</div>
       </my-component>
     </template>
@@ -3687,7 +3714,7 @@ exports[`Vue > jsx > Typescript Test > AdvancedRef 1`] = `
         @change=\\"name = $event.target.value\\"
       />
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-      <select name=\\"cars\\" id=\\"cars\\">
+      <select id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
       </select>
@@ -3974,7 +4001,7 @@ exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 "<template>
   <div>
     <template v-if=\\"$slots.default\\">
-      <slot />
+      <slot :_text=\\"$slots.default\\" />
 
       {{ type }}
     </template>
@@ -4085,7 +4112,7 @@ exports[`Vue > jsx > Typescript Test > BasicRef 1`] = `
         @change=\\"name = $event.target.value\\"
       />
       <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
-      <select name=\\"cars\\" id=\\"cars\\">
+      <select id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
       </select>
@@ -4338,7 +4365,7 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > ContentSlotHtml 1`] = `
 "<template>
   <div>
-    <slot name=\\"testing\\"></slot>
+    <slot name=\\"testing\\" :name=\\"$slots.testing\\"></slot>
     <div>
       <hr />
     </div>
@@ -4381,7 +4408,7 @@ exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
     <div>
       <hr />
     </div>
-    <div><slot /></div>
+    <div><slot :_text=\\"$slots.default\\" /></div>
   </div>
 </template>
 
@@ -4997,7 +5024,7 @@ exports[`Vue > jsx > Typescript Test > Image 1`] = `
 
       <source :srcset=\\"srcset\\" />
     </picture>
-    <slot />
+    <slot :_text=\\"$slots.default\\" />
   </div>
 </template>
 
@@ -5223,7 +5250,6 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > InputParent 1`] = `
 "<template>
   <form-input-component
-    name=\\"kingzez\\"
     type=\\"text\\"
     :onChange=\\"(value) => handleChange(value)\\"
   ></form-input-component>
@@ -5297,7 +5323,7 @@ exports[`Vue > jsx > Typescript Test > Section 1`] = `
     \\"
     v-bind=\\"attributes\\"
   >
-    <slot />
+    <slot :_text=\\"$slots.default\\" />
   </section>
 </template>
 
@@ -5329,7 +5355,7 @@ exports[`Vue > jsx > Typescript Test > Section 2`] = `
     :key=\\"index\\"
     v-bind=\\"attributes\\"
   >
-    <slot />
+    <slot :_text=\\"$slots.default\\" />
   </section>
 </template>
 
@@ -5424,8 +5450,10 @@ exports[`Vue > jsx > Typescript Test > SlotHtml 1`] = `
 "<template>
   <div>
     <content-slot-code>
-      <template #testing>
+      <template #testing :testing=\\"<div>Hello</div>\\">
+        {
         <div>Hello</div>
+        }
       </template>
     </content-slot-code>
   </div>
@@ -5474,8 +5502,10 @@ exports[`Vue > jsx > Typescript Test > SlotNamed 1`] = `
 "<template>
   <div>
     <slot name=\\"top\\"></slot>
-    <slot name=\\"left\\">Default left</slot>
+    <slot name=\\"left\\">Left</slot>
+    <p>Default slots</p>
     <slot>Default Child</slot>
+    <slot>Default, named Child</slot>
   </div>
 </template>
 
@@ -5488,6 +5518,34 @@ type Props = {
 
 export default defineComponent({
   name: \\"slot-code\\",
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > SlotNamedData 1`] = `
+"<template>
+  <div>
+    <slot name=\\"top\\" :data=\\"data\\"></slot>
+    <slot name=\\"left\\" :left=\\"data\\">Left</slot>
+    <p>Default slots</p>
+    <slot :data=\\"data\\">Default, named Child</slot>
+    <p>Template slots</p>
+    <template #data :data=\\"data\\"> { data } </template>
+    <template #keyed :data=\\"data\\"> { data } </template>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+export default defineComponent({
+  name: \\"slot-code\\",
+
+  props: [\\"data\\"],
 });
 </script>"
 `;
@@ -6833,7 +6891,7 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > propsDestructure 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <slot :_text=\\"$slots.default\\" /> {{ type }}
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -7337,7 +7395,7 @@ exports[`Vue > jsx > Typescript Test > self-referencing component 1`] = `
     {{ name }}
 
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce Wayne\\"></my-component>
+      <my-component></my-component>
     </template>
   </div>
 </template>
@@ -7357,10 +7415,10 @@ exports[`Vue > jsx > Typescript Test > self-referencing component with children 
 "<template>
   <div>
     {{ name }}
-    <slot />
+    <slot :_text=\\"$slots.default\\" />
 
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\">
+      <my-component>
         <div>Wayne</div>
       </my-component>
     </template>

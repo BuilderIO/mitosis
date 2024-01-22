@@ -95,6 +95,7 @@ const slotDefault = getRawFile('./data/blocks/slot-default.raw.tsx');
 const slotHtml = getRawFile('./data/blocks/slot-html.raw.tsx');
 const slotJsx = getRawFile('./data/blocks/slot-jsx.raw.tsx');
 const slotNamed = getRawFile('./data/blocks/slot-named.raw.tsx');
+const slotNamedData = getRawFile('./data/blocks/slot-named-data.raw.tsx');
 const stamped = getRawFile('./data/blocks/stamped-io.raw.tsx');
 const submitButtonBlock = getRawFile('./data/blocks/submit-button.raw.tsx');
 const text = getRawFile('./data/blocks/text.raw.tsx');
@@ -221,6 +222,7 @@ const SLOTS_TESTS: Tests = {
   SlotJsx: slotJsx,
   SlotHtml: slotHtml,
   SlotNamed: slotNamed,
+  SlotNamedData: slotNamedData,
   classState,
 };
 
