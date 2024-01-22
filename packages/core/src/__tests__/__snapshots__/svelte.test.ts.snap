@@ -383,7 +383,6 @@ exports[`Svelte > jsx > Javascript Test > Button 1`] = `
       {text}
     </a>
   {/if}
-
   {#if !link}
     <button type=\\"button\\" {...attributes}>
       {text}
@@ -1123,8 +1122,8 @@ exports[`Svelte > jsx > Javascript Test > RawText 1`] = `
 </script>
 
 <span class={attributes?.class || attributes?.className}
-  >{@html text || \\"\\"}</span
->"
+  >{@html text || \\"\\"}
+</span>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Section 1`] = `
@@ -1269,15 +1268,30 @@ import  ContentSlotCode from './content-slot-jsx.raw';
 </script>
 
 <div >
-  <ContentSlotCode  slotTesting={<div>Hello</div>} ></ContentSlotCode>
+  <ContentSlotCode  slotTesting={<div>Hello</div>}></ContentSlotCode>
 </div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > SlotNamed 1`] = `
 "<div>
   <slot name=\\"top\\" />
-  <slot name=\\"left\\">Default left</slot>
+  <slot name=\\"left\\">Left</slot>
+  <p>Default slots</p>
   <slot>Default Child</slot>
+  <slot name=\\"default\\">Default, named Child</slot>
+</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > SlotNamedData 1`] = `
+"<script>
+  export let data;
+</script>
+
+<div>
+  <slot name=\\"top\\" {data} />
+  <slot name=\\"left\\" left={data}>Left</slot>
+  <p>Default slots</p>
+  <slot name=\\"default\\" {data}>Default, named Child</slot>
 </div>"
 `;
 
@@ -1321,7 +1335,6 @@ exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
       showReviewPrompt = true;
     }}>Write a review</button
   >
-
   {#if showReviewPrompt || \\"asdf\\"}
     <input placeholder=\\"Email\\" />
 
@@ -1339,7 +1352,6 @@ exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
       Submit
     </button>
   {/if}
-
   {#each reviews as review, index (review.id)}
     <div class=\\"review\\">
       <img class=\\"img\\" src={review.avatar} />
@@ -1498,7 +1510,6 @@ exports[`Svelte > jsx > Javascript Test > basicForNoTagReference 1`] = `
 
 <svelte:component this={TagNameGetter()}>
   Hello <svelte:component this={tag}>{name}</svelte:component>
-
   {#each actions as action}
     <svelte:component this={TagName}>
       <svelte:component this={action.icon} />
@@ -1737,7 +1748,6 @@ exports[`Svelte > jsx > Javascript Test > defaultProps 1`] = `
       {text}
     </a>
   {/if}
-
   {#if !link}
     <button
       type=\\"button\\"
@@ -1771,7 +1781,6 @@ exports[`Svelte > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
       {text}
     </a>
   {/if}
-
   {#if !link}
     <button
       type=\\"button\\"
@@ -2351,7 +2360,6 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
       {#each childrenWithoutParentComponent() as child (\\"render-block-\\" + child.id)}
         <svelte:self block={child} context={childrenContext()} />
       {/each}
-
       {#each childrenWithoutParentComponent() as child (\\"block-style-\\" + child.id)}
         <BlockStyles block={child} context={childrenContext()} />
       {/each}
@@ -2458,7 +2466,6 @@ exports[`Svelte > jsx > Javascript Test > self-referencing component 1`] = `
 
 <div>
   {name}
-
   {#if name === \\"Batman\\"}
     <svelte:self name=\\"Bruce Wayne\\" />
   {/if}
@@ -2473,7 +2480,6 @@ exports[`Svelte > jsx > Javascript Test > self-referencing component with childr
 <div>
   {name}
   <slot />
-
   {#if name === \\"Batman\\"}
     <svelte:self name=\\"Bruce\\">
       <div>Wayne</div>
@@ -3140,7 +3146,6 @@ exports[`Svelte > jsx > Typescript Test > Button 1`] = `
       {text}
     </a>
   {/if}
-
   {#if !link}
     <button type=\\"button\\" {...attributes}>
       {text}
@@ -4025,8 +4030,8 @@ exports[`Svelte > jsx > Typescript Test > RawText 1`] = `
 </script>
 
 <span class={attributes?.class || attributes?.className}
-  >{@html text || \\"\\"}</span
->"
+  >{@html text || \\"\\"}
+</span>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Section 1`] = `
@@ -4224,7 +4229,7 @@ import  ContentSlotCode from './content-slot-jsx.raw';
 </script>
 
 <div >
-  <ContentSlotCode  slotTesting={<div>Hello</div>} ></ContentSlotCode>
+  <ContentSlotCode  slotTesting={<div>Hello</div>}></ContentSlotCode>
 </div>"
 `;
 
@@ -4240,8 +4245,29 @@ exports[`Svelte > jsx > Typescript Test > SlotNamed 1`] = `
 
 <div>
   <slot name=\\"top\\" />
-  <slot name=\\"left\\">Default left</slot>
+  <slot name=\\"left\\">Left</slot>
+  <p>Default slots</p>
   <slot>Default Child</slot>
+  <slot name=\\"default\\">Default, named Child</slot>
+</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > SlotNamedData 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  export let data: Props[\\"data\\"];
+</script>
+
+<div>
+  <slot name=\\"top\\" {data} />
+  <slot name=\\"left\\" left={data}>Left</slot>
+  <p>Default slots</p>
+  <slot name=\\"default\\" {data}>Default, named Child</slot>
 </div>"
 `;
 
@@ -4292,7 +4318,6 @@ exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
       showReviewPrompt = true;
     }}>Write a review</button
   >
-
   {#if showReviewPrompt || \\"asdf\\"}
     <input placeholder=\\"Email\\" />
 
@@ -4310,7 +4335,6 @@ exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
       Submit
     </button>
   {/if}
-
   {#each reviews as review, index (review.id)}
     <div class=\\"review\\">
       <img class=\\"img\\" src={review.avatar} />
@@ -4524,7 +4548,6 @@ exports[`Svelte > jsx > Typescript Test > basicForNoTagReference 1`] = `
 
 <svelte:component this={TagNameGetter()}>
   Hello <svelte:component this={tag}>{name}</svelte:component>
-
   {#each actions as action}
     <svelte:component this={TagName}>
       <svelte:component this={action.icon} />
@@ -4819,7 +4842,6 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
       {text}
     </a>
   {/if}
-
   {#if !link}
     <button
       type=\\"button\\"
@@ -4863,7 +4885,6 @@ exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
       {text}
     </a>
   {/if}
-
   {#if !link}
     <button
       type=\\"button\\"
@@ -5549,7 +5570,6 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
       {#each childrenWithoutParentComponent() as child (\\"render-block-\\" + child.id)}
         <svelte:self block={child} context={childrenContext()} />
       {/each}
-
       {#each childrenWithoutParentComponent() as child (\\"block-style-\\" + child.id)}
         <BlockStyles block={child} context={childrenContext()} />
       {/each}
@@ -5681,7 +5701,6 @@ exports[`Svelte > jsx > Typescript Test > self-referencing component 1`] = `
 
 <div>
   {name}
-
   {#if name === \\"Batman\\"}
     <svelte:self name=\\"Bruce Wayne\\" />
   {/if}
@@ -5696,7 +5715,6 @@ exports[`Svelte > jsx > Typescript Test > self-referencing component with childr
 <div>
   {name}
   <slot />
-
   {#if name === \\"Batman\\"}
     <svelte:self name=\\"Bruce\\">
       <div>Wayne</div>

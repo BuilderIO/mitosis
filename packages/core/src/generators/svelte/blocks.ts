@@ -29,7 +29,7 @@ const mappers: {
     let props = '';
     for (const key in json.properties) {
       const value = json.properties[key];
-      props += ` ${key}="${value}" `;
+      props += ` ${key}="${value}"`;
     }
 
     let bindings = '';
@@ -37,7 +37,7 @@ const mappers: {
     for (const key in json.bindings) {
       const value = json.bindings[key];
       if (value && key !== 'innerHTML') {
-        bindings += ` ${key}=\${${value.code}} `;
+        bindings += ` ${key}=\${${value.code}}`;
       }
     }
 
@@ -45,13 +45,13 @@ const mappers: {
 
     // We have to obfuscate `"style"` due to a limitation in the svelte-preprocessor plugin.
     // https://github.com/sveltejs/vite-plugin-svelte/issues/315#issuecomment-1109000027
-    return `{@html \`<\${'style'} ${bindings} ${props}>\${${innerText}}<\${'/style'}>\`}`;
+    return `{@html \`<\${'style'}${joinAttributes(bindings, props)}>\${${innerText}}<\${'/style'}>\`}`;
   },
   script: ({ json, options, parentComponent }) => {
     let props = '';
     for (const key in json.properties) {
       const value = json.properties[key];
-      props += ` ${key}="${value}" `;
+      props += ` ${key}="${value}"`;
     }
 
     let bindings = '';
@@ -59,13 +59,13 @@ const mappers: {
     for (const key in json.bindings) {
       const value = json.bindings[key];
       if (value && key !== 'innerHTML') {
-        bindings += ` ${key}=\${${value.code}} `;
+        bindings += ` ${key}=\${${value.code}}`;
       }
     }
 
     const innerText = json.bindings.innerHTML?.code || '';
 
-    return `{@html \`<script ${bindings} ${props}>\${${innerText}}</script>\`}`;
+    return `{@html \`<script${joinAttributes(bindings, props)}>\${${innerText}}</script>\`}`;
   },
   Fragment: ({ json, options, parentComponent }) => {
     if (json.bindings.innerHTML?.code) {
@@ -90,30 +90,23 @@ const mappers: {
 
     const args = getForArguments(json, { excludeCollectionName: true }).join(', ');
 
-    return `
-{#each ${json.bindings.each?.code} as ${args} ${keyValue ? `(${keyValue})` : ''}}
+    return `{#each ${json.bindings.each?.code} as ${args} ${keyValue ? `(${keyValue})` : ''}}
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
-{/each}
-`;
+{/each}`;
   },
   Show: ({ json, options, parentComponent }) => {
-    return `
-{#if ${json.bindings.when?.code} }
-${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
+    const elseCondition = !json.meta.else ? '' : `{:else}
+      ${blockToSvelte({
+      json: json.meta.else as MitosisNode,
+      options,
+      parentComponent,
+    })}`
 
-  ${
-    json.meta.else
-      ? `
-  {:else}
-  ${blockToSvelte({
-    json: json.meta.else as MitosisNode,
-    options,
-    parentComponent,
-  })}
-  `
-      : ''
-  }
-{/if}`;
+    return `{#if ${json.bindings.when?.code} }
+      ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
+
+    ${elseCondition}
+    {/if}`;
   },
   Slot({ json, options, parentComponent }) {
     const slotName = json.bindings.name?.code || json.properties.name;
@@ -127,22 +120,20 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
       const key = Object.keys(json.bindings).find(Boolean);
       if (!key) {
         if (!json.children?.length) {
-          return '<slot/>';
+          return `<slot${stringifySlotBindings(json)}/>`;
         }
-        return `<slot>${renderChildren()}</slot>`;
+        return `<slot${stringifySlotBindings(json)}>${renderChildren()}</slot>`;
       }
 
-      return `
-        <span #${key}>
-        ${json.bindings[key]?.code}
-        </span>
-      `;
+      return `<span #${key}>
+          ${json.bindings[key]?.code}
+        </span>`;
     }
 
     return `<slot name="${stripSlotPrefix(
       slotName,
       SLOT_PREFIX,
-    ).toLowerCase()}">${renderChildren()}</slot>`;
+    ).toLowerCase()}"${stringifySlotBindings(json)}>${renderChildren()}</slot>`;
   },
 };
 
@@ -213,45 +204,64 @@ type BlockToSvelte<T extends BaseNode = MitosisNode> = (props: {
 }) => string;
 
 const stringifyBinding =
-  (node: MitosisNode, options: ToSvelteOptions) =>
-  ([key, binding]: [string, Binding | undefined]) => {
-    if (key === 'innerHTML' || !binding) {
-      return '';
-    }
-
-    const { code, arguments: cusArgs = ['event'], type } = binding;
-    const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name) || node.name === 'svelte:element';
-
-    if (type === 'spread') {
-      const spreadValue = key === 'props' ? '$$props' : code;
-      return ` {...${spreadValue}} `;
-    } else if (key.startsWith('on') && isValidHtmlTag) {
-      // handle html native on[event] props
-      const event = key.replace('on', '').toLowerCase();
-      // TODO: handle quotes in event handler values
-
-      const valueWithoutBlock = removeSurroundingBlock(code);
-
-      if (valueWithoutBlock === key) {
-        return ` on:${event}={${valueWithoutBlock}} `;
-      } else {
-        return ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
+  (node: MitosisNode) =>
+    ([key, binding]: [string, Binding | undefined]) => {
+      if (key === 'innerHTML' || !binding) {
+        return '';
       }
-    } else if (key.startsWith('on')) {
-      // handle on[custom event] props
-      const valueWithoutBlock = removeSurroundingBlock(code);
 
-      if (valueWithoutBlock === key) {
-        return ` ${key}={${valueWithoutBlock}} `;
+      const { code, arguments: cusArgs = ['event'], type } = binding;
+      const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name) || node.name === 'svelte:element';
+
+      if (type === 'spread') {
+        const spreadValue = key === 'props' ? '$$props' : code;
+        return `{...${spreadValue}}`;
+      } else if (key.startsWith('on') && isValidHtmlTag) {
+        // handle html native on[event] props
+        const event = key.replace('on', '').toLowerCase();
+        // TODO: handle quotes in event handler values
+
+        const valueWithoutBlock = removeSurroundingBlock(code);
+
+        if (valueWithoutBlock === key) {
+          return `on:${event}={${valueWithoutBlock}}`;
+        } else {
+          return `on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}"`;
+        }
+      } else if (key.startsWith('on')) {
+        // handle on[custom event] props
+        const valueWithoutBlock = removeSurroundingBlock(code);
+
+        if (valueWithoutBlock === key) {
+          return `${key}={${valueWithoutBlock}}`;
+        } else {
+          return `${key}={(${cusArgs.join(',')}) => ${valueWithoutBlock}}`;
+        }
+      } else if (key === 'ref') {
+        return `bind:this={${code}}`;
       } else {
-        return ` ${key}={(${cusArgs.join(',')}) => ${valueWithoutBlock}}`;
+        return `${key}={${code}}`;
       }
-    } else if (key === 'ref') {
-      return ` bind:this={${code}} `;
-    } else {
-      return ` ${key}={${code}} `;
-    }
-  };
+    };
+
+const joinAttributes = (...attributes: string[]) => {
+
+  const value = attributes
+    .join(' ')
+    .trim()
+
+  if (value.length === 0) return ''
+  return ' ' + value
+}
+const stringifySlotBindings = (node: MitosisNode) =>
+  stringifyBindings(node, 'name');
+
+const stringifyBindings = (node: MitosisNode, ...exclude: string[]) => joinAttributes(
+  ...Object
+    .entries(node.bindings)
+    .filter(([key]) => !exclude.includes(key))
+    .map(stringifyBinding(node))
+);
 
 export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent }) => {
   if (mappers[json.name as keyof typeof mappers]) {
@@ -296,21 +306,18 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
 
   for (const key in json.properties) {
     const value = json.properties[key];
-    str += ` ${key}="${value}" `;
+    str += ` ${key}="${value}"`;
   }
 
-  const stringifiedBindings = Object.entries(json.bindings)
-    .map(stringifyBinding(json, options))
-    .join('');
-
-  str += stringifiedBindings;
+  str += stringifyBindings(json);
 
   // if we have innerHTML, it doesn't matter whether we have closing tags or not, or children or not.
   // we use the innerHTML content as children and don't render the self-closing tag.
   if (json.bindings.innerHTML?.code) {
     str += '>';
     str += BINDINGS_MAPPER.innerHTML(json, options);
-    str += `</${tagName}>`;
+    str += `
+</${tagName}>`;
     return str;
   }
 
