@@ -65,6 +65,15 @@ const NODE_MAPPERS: {
     if (!slotProp.startsWith('props.slot')) {
       slotProp = `props.slot${upperFirst(camelCase(slotProp))}`;
     }
+    if (slotProp.length !== 0) {
+      const slotParams = Object.keys(json.properties)
+        .filter(key => !key.startsWith('slot'));
+      const slotParamBinding = slotParams.length === 0
+        ? '()'
+        : `({ ${slotParams.join(', ')} })`
+
+      slotProp += slotParamBinding;
+    }
 
     return `{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
   },
@@ -83,9 +92,9 @@ const NODE_MAPPERS: {
       options,
     )}?.map((${forArguments}) => (
       ${wrap ? openFrag(options) : ''}${json.children
-      .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options, component))
-      .join('\n')}${wrap ? closeFrag(options) : ''}
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToReact(item, options, component))
+        .join('\n')}${wrap ? closeFrag(options) : ''}
     ))}`;
   },
   Show(json, options, component) {
@@ -95,16 +104,15 @@ const NODE_MAPPERS: {
       (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? openFrag(options) : ''}${json.children
-      .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options, component))
-      .join('\n')}${wrap ? closeFrag(options) : ''}
-    ) : ${
-      !json.meta.else
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToReact(item, options, component))
+        .join('\n')}${wrap ? closeFrag(options) : ''}
+    ) : ${!json.meta.else
         ? 'null'
         : (wrapElse ? openFrag(options) : '') +
-          blockToReact(json.meta.else as any, options, component) +
-          (wrapElse ? closeFrag(options) : '')
-    }}`;
+        blockToReact(json.meta.else as any, options, component) +
+        (wrapElse ? closeFrag(options) : '')
+      }}`;
   },
 };
 
@@ -118,8 +126,8 @@ const ATTTRIBUTE_MAPPERS: { [key: string]: string } = {
 // TODO: Maybe in the future allow defining `string | function` as values
 const BINDING_MAPPERS: {
   [key: string]:
-    | string
-    | ((key: string, value: string, options?: ToReactOptions) => [string, string]);
+  | string
+  | ((key: string, value: string, options?: ToReactOptions) => [string, string]);
 } = {
   ref(ref, value, options) {
     if (options?.preact) {
@@ -212,8 +220,9 @@ export const blockToReact = (
         options,
       )} } `;
     } else if (key.startsWith('slot')) {
-      // <Component slotProjected={<AnotherComponent />} />
-      str += ` ${key}={${value}} `;
+      // <Component slotProjected={() => <AnotherComponent />} />
+      // TODO <Component slotProjected={(slotProps) => <AnotherComponent {...slotProps} />} />
+      str += ` ${key}={() => ${value}} `;
     } else if (key === 'class') {
       str += ` className={${useBindingValue}} `;
     } else if (BINDING_MAPPERS[key]) {
