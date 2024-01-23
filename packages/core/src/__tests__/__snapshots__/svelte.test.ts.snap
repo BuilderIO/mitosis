@@ -1212,6 +1212,20 @@ exports[`Svelte > jsx > Javascript Test > Select 1`] = `
 </select>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > SlotCollection 1`] = `
+"<script>
+  import { For } from \\"../../../flow\\";
+
+  export let someCollection;
+</script>
+
+<ul>
+  {#each someCollection as item}
+    <li><slot name=\\"itemdisplay\\" {item} /></li>
+  {/each}
+</ul>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > SlotDefault 1`] = `
 "<div>
   <slot>
@@ -4147,6 +4161,26 @@ exports[`Svelte > jsx > Typescript Test > Select 1`] = `
     </option>
   {/each}
 </select>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > SlotCollection 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import { For } from \\"../../../flow\\";
+
+  export let someCollection: Props[\\"someCollection\\"];
+</script>
+
+<ul>
+  {#each someCollection as item}
+    <li><slot name=\\"itemdisplay\\" {item} /></li>
+  {/each}
+</ul>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotDefault 1`] = `
