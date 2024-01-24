@@ -6,7 +6,6 @@ import { getForArguments } from '@/helpers/nodes/for';
 import { isSlotProperty } from '@/helpers/slots';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { checkIsForNode, ForNode, MitosisNode } from '@/types/mitosis-node';
-import { camelCase, upperFirst } from 'lodash';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { closeFrag, getFragment, openFrag, processBinding, wrapInFragment } from './helpers';
 import { updateStateSettersInCode } from './state';
@@ -51,8 +50,7 @@ const NODE_MAPPERS: {
       // TODO: update MitosisNode for simple code
       const key = Object.keys(json.bindings).find(Boolean);
       if (key && parentSlots) {
-        const propKey = options.noPrefixSlots ? key : `slot${upperFirst(camelCase(key))}`;
-        parentSlots.push({ key: propKey, value: json.bindings[key]?.code });
+        parentSlots.push({ key, value: json.bindings[key]?.code });
         return '';
       }
 
@@ -62,10 +60,8 @@ const NODE_MAPPERS: {
 
     let slotProp = processBinding(slotName as string, options).replace('name=', '');
 
-    if (!slotProp.startsWith('props.slot')) {
-      slotProp = `props.${
-        options.noPrefixSlots ? slotProp : `slot${upperFirst(camelCase(slotProp))}`
-      }`;
+    if (!slotProp.startsWith('props.')) {
+      slotProp = `props.${slotProp}`;
     }
 
     return `{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
