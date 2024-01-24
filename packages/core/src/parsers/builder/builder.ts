@@ -619,10 +619,7 @@ export const builderElementToMitosisNode = (
     for (const key in block.component.options) {
       const value = block.component.options[key];
       const valueIsArrayOfBuilderElements = Array.isArray(value) && value.every(isBuilderElement);
-      console.log('mitosis bindings: ', {
-        valueIsArrayOfBuilderElements,
-        value,
-      });
+
       if (typeof value === 'string') {
         properties[key] = value;
       } else if (valueIsArrayOfBuilderElements) {
