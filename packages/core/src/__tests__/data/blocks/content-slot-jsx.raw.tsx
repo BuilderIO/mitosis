@@ -1,6 +1,7 @@
 import { Show, Slot, useDefaultProps, useStore } from '@builder.io/mitosis';
 import type { JSX } from '../../../../jsx-runtime';
 
+// TODO: Figure out how the slotsProps are generated and fix state-name={state.name} support in type
 type Props = {
   [key: string]: string | JSX.Element;
 };
@@ -35,7 +36,7 @@ export default function ContentSlotJsxCode(props: Props) {
         onClick={() => state.show()}
       >
         <Show when={state.showContent && props.slotContent}>
-          <Slot name="content">{props.content}</Slot>
+          <Slot name="content" state-name={state.name}>{props.content}</Slot>
         </Show>
         <div>
           <hr />

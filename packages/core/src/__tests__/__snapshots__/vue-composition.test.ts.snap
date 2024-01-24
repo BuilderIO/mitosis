@@ -504,7 +504,7 @@ exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
       v-bind=\\"attributes\\"
     >
       <template v-if=\\"showContent && $slots.content\\">
-        <slot name=\\"content\\">{{ content }}</slot>
+        <slot name=\\"content\\" :state-name=\\"name\\">{{ content }}</slot>
       </template>
 
       <div>
@@ -1359,9 +1359,15 @@ exports[`Vue > jsx > Javascript Test > SlotDefault 1`] = `
 exports[`Vue > jsx > Javascript Test > SlotHtml 1`] = `
 "<template>
   <div>
+    <content-slot-code :slotContent=\\"<div>Hello</div>\\"></content-slot-code>
     <content-slot-code>
-      <template #testing>
+      <template #content>
         <div>Hello</div>
+      </template>
+    </content-slot-code>
+    <content-slot-code>
+      <template #content=\\"contentProps\\">
+        <div>Hello {contentProps.stateName}</div>
       </template>
     </content-slot-code>
   </div>
@@ -1375,12 +1381,27 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 exports[`Vue > jsx > Javascript Test > SlotJsx 1`] = `
 "<template>
   <div>
-    <content-slot-code :slotTesting=\\"<div>Hello</div>\\"></content-slot-code>
+    <content-slot-code>
+      <template #content=\\"contentProps\\">
+        <div>Hello {contentProps.stateName}</div>
+      </template>
+    </content-slot-code>
+    <content-slot-code>
+      <template #content=\\"contentProps\\">
+        <example-component name=\\"{contentProps.stateName}\\" />
+      </template>
+    </content-slot-code>
   </div>
 </template>
 
 <script setup>
+import { Slot } from \\"../../../../dist/src\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+export function ExampleComponent(props) {
+  return <div>{props.name}</div>;
+}
+
+const props = defineProps([\\"name\\"]);
 </script>"
 `;
 
@@ -3568,7 +3589,7 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
+  slotTesting: () => JSX.Element;
 };
 </script>"
 `;
@@ -3584,7 +3605,7 @@ exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
       v-bind=\\"attributes\\"
     >
       <template v-if=\\"showContent && $slots.content\\">
-        <slot name=\\"content\\">{{ content }}</slot>
+        <slot name=\\"content\\" :state-name=\\"name\\">{{ content }}</slot>
       </template>
 
       <div>
@@ -3600,6 +3621,7 @@ import { computed, ref, useSlots } from \\"vue\\";
 
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
+// TODO: Figure out how the slotsProps are generated and fix state-name={state.name} support in type
 type Props = {
   [key: string]: string | JSX.Element;
 };
@@ -4523,9 +4545,15 @@ type Props = {
 exports[`Vue > jsx > Typescript Test > SlotHtml 1`] = `
 "<template>
   <div>
+    <content-slot-code :slotContent=\\"<div>Hello</div>\\"></content-slot-code>
     <content-slot-code>
-      <template #testing>
+      <template #content>
         <div>Hello</div>
+      </template>
+    </content-slot-code>
+    <content-slot-code>
+      <template #content=\\"contentProps\\">
+        <div>Hello {contentProps.stateName}</div>
       </template>
     </content-slot-code>
   </div>
@@ -4543,16 +4571,31 @@ type Props = {
 exports[`Vue > jsx > Typescript Test > SlotJsx 1`] = `
 "<template>
   <div>
-    <content-slot-code :slotTesting=\\"<div>Hello</div>\\"></content-slot-code>
+    <content-slot-code>
+      <template #content=\\"contentProps\\">
+        <div>Hello {contentProps.stateName}</div>
+      </template>
+    </content-slot-code>
+    <content-slot-code>
+      <template #content=\\"contentProps\\">
+        <example-component name=\\"{contentProps.stateName}\\" />
+      </template>
+    </content-slot-code>
   </div>
 </template>
 
 <script setup lang=\\"ts\\">
+import { Slot } from \\"../../../../dist/src\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+export function ExampleComponent(props: Props) {
+  return <div>{props.name}</div>;
+}
 
 type Props = {
   [key: string]: string;
 };
+
+const props = defineProps<Props>();
 </script>"
 `;
 

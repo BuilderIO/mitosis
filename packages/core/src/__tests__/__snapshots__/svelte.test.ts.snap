@@ -488,7 +488,7 @@ exports[`Svelte > jsx > Javascript Test > ContentSlotJSX 1`] = `
     class={cls()}
   >
     {#if showContent && $$slots.content}
-      <slot name=\\"content\\">{content}</slot>
+      <slot name=\\"content\\" state-name={name}>{content}</slot>
     {/if}
     <div>
       <hr />
@@ -1235,20 +1235,6 @@ exports[`Svelte > jsx > Javascript Test > SlotDefault 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > SlotHtml 1`] = `
-"<script>
-  import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-</script>
-
-<div>
-  <ContentSlotCode>
-    <span #testing>
-      <div>Hello</div>
-    </span>
-  </ContentSlotCode>
-</div>"
-`;
-
-exports[`Svelte > jsx > Javascript Test > SlotJsx 1`] = `
 "<script >
 
 
@@ -1282,7 +1268,42 @@ import  ContentSlotCode from './content-slot-jsx.raw';
 </script>
 
 <div >
-  <ContentSlotCode  slotTesting={<div>Hello</div>}></ContentSlotCode>
+  <ContentSlotCode  slotContent={<div>Hello</div>}></ContentSlotCode>
+  <ContentSlotCode >
+    <template #content>
+      <div>Hello</div>
+    </template>
+  </ContentSlotCode>
+  <ContentSlotCode >
+    <template #content let:contentProps={content}>
+      <div>Hello {contentProps.stateName}</div>
+    </template>
+  </ContentSlotCode>
+</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > SlotJsx 1`] = `
+"<script>
+  import { Slot } from \\"../../../../dist/src\\";
+  import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+  export function ExampleComponent(props) {
+    return <div>{props.name}</div>;
+  }
+
+  export let name;
+</script>
+
+<div>
+  <ContentSlotCode>
+    <template #content let:contentProps={content}>
+      <div>Hello {contentProps.stateName}</div>
+    </template>
+  </ContentSlotCode>
+  <ContentSlotCode>
+    <template #content let:contentProps={content}>
+      <ExampleComponent name={contentProps.stateName} />
+    </template>
+  </ContentSlotCode>
 </div>"
 `;
 
@@ -3248,7 +3269,7 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotHtml 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   type Props = {
     [key: string]: string | JSX.Element;
-    slotTesting: JSX.Element;
+    slotTesting: () => JSX.Element;
   };
 </script>
 
@@ -3269,6 +3290,7 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotHtml 1`] = `
 
 exports[`Svelte > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
+  // TODO: Figure out how the slotsProps are generated and fix state-name={state.name} support in type
   type Props = {
     [key: string]: string | JSX.Element;
   };
@@ -3302,7 +3324,7 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotJSX 1`] = `
     class={cls()}
   >
     {#if showContent && $$slots.content}
-      <slot name=\\"content\\">{content}</slot>
+      <slot name=\\"content\\" state-name={name}>{content}</slot>
     {/if}
     <div>
       <hr />
@@ -4201,26 +4223,6 @@ exports[`Svelte > jsx > Typescript Test > SlotDefault 1`] = `
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotHtml 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    [key: string]: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
-  import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-</script>
-
-<div>
-  <ContentSlotCode>
-    <span #testing>
-      <div>Hello</div>
-    </span>
-  </ContentSlotCode>
-</div>"
-`;
-
-exports[`Svelte > jsx > Typescript Test > SlotJsx 1`] = `
 "<script context='module' lang='ts'>
       type Props = {
 [key: string]: string;
@@ -4263,7 +4265,48 @@ import  ContentSlotCode from './content-slot-jsx.raw';
 </script>
 
 <div >
-  <ContentSlotCode  slotTesting={<div>Hello</div>}></ContentSlotCode>
+  <ContentSlotCode  slotContent={<div>Hello</div>}></ContentSlotCode>
+  <ContentSlotCode >
+    <template #content>
+      <div>Hello</div>
+    </template>
+  </ContentSlotCode>
+  <ContentSlotCode >
+    <template #content let:contentProps={content}>
+      <div>Hello {contentProps.stateName}</div>
+    </template>
+  </ContentSlotCode>
+</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > SlotJsx 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    [key: string]: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import { Slot } from \\"../../../../dist/src\\";
+  import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+  export function ExampleComponent(props: Props) {
+    return <div>{props.name}</div>;
+  }
+
+  export let name: Props[\\"name\\"];
+</script>
+
+<div>
+  <ContentSlotCode>
+    <template #content let:contentProps={content}>
+      <div>Hello {contentProps.stateName}</div>
+    </template>
+  </ContentSlotCode>
+  <ContentSlotCode>
+    <template #content let:contentProps={content}>
+      <ExampleComponent name={contentProps.stateName} />
+    </template>
+  </ContentSlotCode>
 </div>"
 `;
 

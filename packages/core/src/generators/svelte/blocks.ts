@@ -6,6 +6,7 @@ import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { isSlotProperty, stripSlotPrefix } from '@/helpers/slots';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { BaseNode, Binding, ForNode, MitosisNode } from '@/types/mitosis-node';
+import { camelCase } from 'lodash';
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
 import { stripStateAndProps } from './helpers';
 import { ToSvelteOptions } from './types';
@@ -125,9 +126,16 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
         return `<slot${stringifySlotBindings(json)}>${renderChildren()}</slot>`;
       }
 
-      return `<span #${key}>
+      const propsName = camelCase(key + 'Props')
+      if (json.bindings[key]?.code?.includes(propsName)) {
+        return `<template #${key} let:${propsName}={${key}}>
           ${json.bindings[key]?.code}
-        </span>`;
+        </template>`;
+      } else {
+        return `<template #${key}>
+          ${json.bindings[key]?.code}
+        </template>`;
+      }
     }
 
     return `<slot name="${stripSlotPrefix(

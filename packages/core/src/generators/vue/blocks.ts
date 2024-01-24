@@ -8,6 +8,7 @@ import { isSlotProperty, stripSlotPrefix } from '@/helpers/slots';
 import { Dictionary } from '@/helpers/typescript';
 import { Binding, ForNode, MitosisNode, SpreadType } from '@/types/mitosis-node';
 import { identity, pipe } from 'fp-ts/lib/function';
+import { camelCase } from 'lodash';
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
 import {
   addBindingsToJson,
@@ -277,10 +278,9 @@ const NODE_MAPPERS: {
     const slotName = json.bindings.name?.code || json.properties.name;
 
     const renderChildren = () => json.children?.map((item) => blockToVue(item, options)).join('\n');
-    console.log(Object.keys(json.bindings))
 
     if (!slotName) {
-      const key = Object.keys(json.bindings).find((key) => key !== 'key');
+      const key = Object.keys(json.bindings).find(Boolean);
       if (!key) {
         if (!json.children?.length) {
           return `<slot${getSlotBindings(json)}/>`;
@@ -288,9 +288,16 @@ const NODE_MAPPERS: {
         return `<slot${getSlotBindings(json)}>${renderChildren()}</slot>`;
       }
 
-      return `<template #${json.properties.key || key}>
-        ${json.bindings[key]?.code}
-      </template>`;
+      const propsName = camelCase(key + 'Props')
+      if (json.bindings[key]?.code?.includes(propsName)) {
+        return `<template #${key}="${propsName}">
+          ${json.bindings[key]?.code}
+        </template>`;
+      } else {
+        return `<template #${key}>
+          ${json.bindings[key]?.code}
+        </template>`;
+      }
     }
 
     if (slotName === 'default') {
