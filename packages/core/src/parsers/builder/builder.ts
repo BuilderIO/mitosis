@@ -617,8 +617,23 @@ export const builderElementToMitosisNode = (
   if (block.component?.options) {
     for (const key in block.component.options) {
       const value = block.component.options[key];
+      const valueIsArrayOfBuilderElements = Array.isArray(value) && value.every(isBuilderElement);
+      console.log('mitosis bindings: ', {
+        valueIsArrayOfBuilderElements,
+        value,
+      });
       if (typeof value === 'string') {
         properties[key] = value;
+      } else if (valueIsArrayOfBuilderElements) {
+        const bindingValue = value
+          .filter((item) => {
+            if (item.properties?.src?.includes('/api/v1/pixel')) {
+              return false;
+            }
+            return true;
+          })
+          .map((item) => builderElementToMitosisNode(item, options));
+        bindings[key] = { code: json5.stringify(bindingValue), type: 'slot' };
       } else {
         bindings[key] = { code: json5.stringify(value) };
       }

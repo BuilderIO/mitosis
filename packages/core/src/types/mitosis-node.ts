@@ -9,7 +9,8 @@ type BindingProperties =
     }
   | {
       type: 'single';
-    };
+    }
+  | { type: 'slot' };
 
 export type Binding = {
   code: string;
