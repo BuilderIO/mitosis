@@ -649,7 +649,7 @@ import {
 function ContentSlotCode(props) {
   return (
     <View>
-      {props.slotTesting}
+      {props.slotTesting?.()}
 
       <View>
         <View />
@@ -700,7 +700,11 @@ function ContentSlotJsxCode(props) {
             onClick={(event) => show()}
           >
             {showContent && props.slotContent ? (
-              <>{props.slotContent || <Text>{props.content}</Text>}</>
+              <>
+                {props.slotContent?.({ stateName: state.name }) || (
+                  <Text>{props.content}</Text>
+                )}
+              </>
             ) : null}
 
             <View>
@@ -1462,6 +1466,32 @@ export default SelectComponent;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > SlotCollection 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { For } from \\"../../../flow\\";
+
+function SlotCode(props) {
+  return (
+    <View>
+      {props.someCollection?.map((item) => (
+        <View>{props.slotItemDisplay?.({ item })}</View>
+      ))}
+    </View>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > SlotDefault 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -1504,7 +1534,15 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 function SlotCode(props) {
   return (
     <View>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      <ContentSlotCode slotContent={() => <div>Hello</div>} />
+
+      <ContentSlotCode slotContent={() => <div>Hello</div>}></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
     </View>
   );
 }
@@ -1523,12 +1561,26 @@ import {
   Image,
   Text,
 } from \\"react-native\\";
+import { Slot } from \\"../../../../dist/src\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+export function ExampleComponent(props) {
+  return <div>{props.name}</div>;
+}
 
 function SlotCode(props) {
   return (
     <View>
-      <ContentSlotCode slotTesting={<div>Hello</div>} />
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <ExampleComponent name={contentProps.stateName} />
+        )}
+      ></ContentSlotCode>
     </View>
   );
 }
@@ -1551,11 +1603,48 @@ import {
 function SlotCode(props) {
   return (
     <View>
-      {props.slotTop}
+      {props.slotTop?.()}
 
-      {props.slotLeft || <Text>Default left</Text>}
+      {props.slotLeft?.() || <Text>Left</Text>}
+
+      <View>
+        <Text>Default slots</Text>
+      </View>
 
       {props.children || <Text>Default Child</Text>}
+
+      {props.children || <Text>Default, named Child</Text>}
+    </View>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > SlotNamedData 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+function SlotCode(props) {
+  return (
+    <View>
+      {props.slotTop?.({ data: props.data })}
+
+      {props.slotLeft?.({ left: props.data }) || <Text>Left</Text>}
+
+      <View>
+        <Text>Default slots</Text>
+      </View>
+
+      {props.children || <Text>Default, named Child</Text>}
     </View>
   );
 }
@@ -4609,14 +4698,14 @@ import {
 
 type Props = {
   [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
+  slotTesting: () => JSX.Element;
 };
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotCode(props: Props) {
   return (
     <View>
-      {props.slotTesting}
+      {props.slotTesting?.()}
 
       <View>
         <View />
@@ -4643,6 +4732,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
+// TODO: Figure out how the slotsProps are generated and fix state-name={state.name} support in type
 type Props = {
   [key: string]: string | JSX.Element;
 };
@@ -4672,7 +4762,11 @@ function ContentSlotJsxCode(props: Props) {
             onClick={(event) => show()}
           >
             {showContent && props.slotContent ? (
-              <>{props.slotContent || <Text>{props.content}</Text>}</>
+              <>
+                {props.slotContent?.({ stateName: state.name }) || (
+                  <Text>{props.content}</Text>
+                )}
+              </>
             ) : null}
 
             <View>
@@ -5547,6 +5641,36 @@ export default SelectComponent;
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > SlotCollection 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+type Props = {
+  [key: string]: string;
+};
+import { For } from \\"../../../flow\\";
+
+function SlotCode(props: Props) {
+  return (
+    <View>
+      {props.someCollection?.map((item) => (
+        <View>{props.slotItemDisplay?.({ item })}</View>
+      ))}
+    </View>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > SlotDefault 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -5597,7 +5721,15 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 function SlotCode(props: Props) {
   return (
     <View>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      <ContentSlotCode slotContent={() => <div>Hello</div>} />
+
+      <ContentSlotCode slotContent={() => <div>Hello</div>}></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
     </View>
   );
 }
@@ -5620,12 +5752,26 @@ import {
 type Props = {
   [key: string]: string;
 };
+import { Slot } from \\"../../../../dist/src\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+export function ExampleComponent(props: Props) {
+  return <div>{props.name}</div>;
+}
 
 function SlotCode(props: Props) {
   return (
     <View>
-      <ContentSlotCode slotTesting={<div>Hello</div>} />
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <ExampleComponent name={contentProps.stateName} />
+        )}
+      ></ContentSlotCode>
     </View>
   );
 }
@@ -5652,11 +5798,52 @@ type Props = {
 function SlotCode(props: Props) {
   return (
     <View>
-      {props.slotTop}
+      {props.slotTop?.()}
 
-      {props.slotLeft || <Text>Default left</Text>}
+      {props.slotLeft?.() || <Text>Left</Text>}
+
+      <View>
+        <Text>Default slots</Text>
+      </View>
 
       {props.children || <Text>Default Child</Text>}
+
+      {props.children || <Text>Default, named Child</Text>}
+    </View>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > SlotNamedData 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+function SlotCode(props: Props) {
+  return (
+    <View>
+      {props.slotTop?.({ data: props.data })}
+
+      {props.slotLeft?.({ left: props.data }) || <Text>Left</Text>}
+
+      <View>
+        <Text>Default slots</Text>
+      </View>
+
+      {props.children || <Text>Default, named Child</Text>}
     </View>
   );
 }
@@ -8636,7 +8823,7 @@ function MyComponent(props) {
   return (
     <View>
       {props.children || <Text>default</Text>}
-      {props.slotTest || (
+      {props.slotTest?.() || (
         <View>
           <Text>default</Text>
         </View>
@@ -9149,7 +9336,7 @@ function MyComponent(props: any) {
   return (
     <View>
       {props.children || <Text>default</Text>}
-      {props.slotTest || (
+      {props.slotTest?.() || (
         <View>
           <Text>default</Text>
         </View>

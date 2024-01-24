@@ -6,8 +6,12 @@ type Props = { [key: string]: string };
 export default function SlotCode(props: Props) {
   return (
     <div>
+      <ContentSlotCode slotContent={<div>Hello</div>} />
       <ContentSlotCode>
-        <Slot testing={<div>Hello</div>}></Slot>
+        <Slot content={<div>Hello</div>} />
+      </ContentSlotCode>
+      <ContentSlotCode>
+        <Slot content={<div>Hello {contentProps.stateName}</div>}></Slot>
       </ContentSlotCode>
     </div>
   );

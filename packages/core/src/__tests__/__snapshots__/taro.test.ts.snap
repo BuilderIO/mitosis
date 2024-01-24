@@ -564,7 +564,7 @@ import { View } from \\"@tarojs/components\\";
 function ContentSlotCode(props) {
   return (
     <View>
-      {props.slotTesting}
+      {props.slotTesting?.()}
 
       <View>
         <View />
@@ -609,7 +609,10 @@ function ContentSlotJsxCode(props) {
             onClick={(event) => show()}
           >
             {showContent && props.slotContent ? (
-              <>{props.slotContent || \\"{props.content}\\"}</>
+              <>
+                {props.slotContent?.({ stateName: state.name }) ||
+                  \\"{props.content}\\"}
+              </>
             ) : null}
 
             <View>
@@ -1314,6 +1317,25 @@ export default SelectComponent;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > SlotCollection 1`] = `
+"import * as React from \\"react\\";
+import { For } from \\"../../../flow\\";
+import { View } from \\"@tarojs/components\\";
+
+function SlotCode(props) {
+  return (
+    <View>
+      {props.someCollection?.map((item) => (
+        <View>{props.slotItemDisplay?.({ item })}</View>
+      ))}
+    </View>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
 exports[`Taro > jsx > Javascript Test > SlotDefault 1`] = `
 "import * as React from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
@@ -1334,7 +1356,15 @@ import { View } from \\"@tarojs/components\\";
 function SlotCode(props) {
   return (
     <View>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      <ContentSlotCode slotContent={() => <div>Hello</div>} />
+
+      <ContentSlotCode slotContent={() => <div>Hello</div>}></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
     </View>
   );
 }
@@ -1345,13 +1375,27 @@ export default SlotCode;
 
 exports[`Taro > jsx > Javascript Test > SlotJsx 1`] = `
 "import * as React from \\"react\\";
+import { Slot } from \\"../../../../dist/src\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 import { View } from \\"@tarojs/components\\";
+export function ExampleComponent(props) {
+  return <div>{props.name}</div>;
+}
 
 function SlotCode(props) {
   return (
     <View>
-      <ContentSlotCode slotTesting={<div>Hello</div>} />
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <ExampleComponent name={contentProps.stateName} />
+        )}
+      ></ContentSlotCode>
     </View>
   );
 }
@@ -1367,11 +1411,37 @@ import { View, Text } from \\"@tarojs/components\\";
 function SlotCode(props) {
   return (
     <View>
-      {props.slotTop}
+      {props.slotTop?.()}
 
-      {props.slotLeft || \\"Default left\\"}
+      {props.slotLeft?.() || \\"Left\\"}
+
+      <View>Default slots</View>
 
       {props.children || \\"Default Child\\"}
+
+      {props.children || \\"Default, named Child\\"}
+    </View>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > SlotNamedData 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function SlotCode(props) {
+  return (
+    <View>
+      {props.slotTop?.({ data: props.data })}
+
+      {props.slotLeft?.({ left: props.data }) || \\"Left\\"}
+
+      <View>Default slots</View>
+
+      {props.children || \\"Default, named Child\\"}
     </View>
   );
 }
@@ -3964,7 +4034,7 @@ exports[`Taro > jsx > Typescript Test > ContentSlotHtml 1`] = `
 
 type Props = {
   [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
+  slotTesting: () => JSX.Element;
 };
 import type { JSX } from \\"../../../../jsx-runtime\\";
 import { View } from \\"@tarojs/components\\";
@@ -3972,7 +4042,7 @@ import { View } from \\"@tarojs/components\\";
 function ContentSlotCode(props: Props) {
   return (
     <View>
-      {props.slotTesting}
+      {props.slotTesting?.()}
 
       <View>
         <View />
@@ -3992,6 +4062,7 @@ exports[`Taro > jsx > Typescript Test > ContentSlotJSX 1`] = `
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
+// TODO: Figure out how the slotsProps are generated and fix state-name={state.name} support in type
 type Props = {
   [key: string]: string | JSX.Element;
 };
@@ -4022,7 +4093,10 @@ function ContentSlotJsxCode(props: Props) {
             onClick={(event) => show()}
           >
             {showContent && props.slotContent ? (
-              <>{props.slotContent || \\"{props.content}\\"}</>
+              <>
+                {props.slotContent?.({ stateName: state.name }) ||
+                  \\"{props.content}\\"}
+              </>
             ) : null}
 
             <View>
@@ -4845,6 +4919,29 @@ export default SelectComponent;
 "
 `;
 
+exports[`Taro > jsx > Typescript Test > SlotCollection 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  [key: string]: string;
+};
+import { For } from \\"../../../flow\\";
+import { View } from \\"@tarojs/components\\";
+
+function SlotCode(props: Props) {
+  return (
+    <View>
+      {props.someCollection?.map((item) => (
+        <View>{props.slotItemDisplay?.({ item })}</View>
+      ))}
+    </View>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
 exports[`Taro > jsx > Typescript Test > SlotDefault 1`] = `
 "import * as React from \\"react\\";
 
@@ -4873,7 +4970,15 @@ import { View } from \\"@tarojs/components\\";
 function SlotCode(props: Props) {
   return (
     <View>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      <ContentSlotCode slotContent={() => <div>Hello</div>} />
+
+      <ContentSlotCode slotContent={() => <div>Hello</div>}></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
     </View>
   );
 }
@@ -4888,13 +4993,27 @@ exports[`Taro > jsx > Typescript Test > SlotJsx 1`] = `
 type Props = {
   [key: string]: string;
 };
+import { Slot } from \\"../../../../dist/src\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 import { View } from \\"@tarojs/components\\";
+export function ExampleComponent(props: Props) {
+  return <div>{props.name}</div>;
+}
 
 function SlotCode(props: Props) {
   return (
     <View>
-      <ContentSlotCode slotTesting={<div>Hello</div>} />
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <ExampleComponent name={contentProps.stateName} />
+        )}
+      ></ContentSlotCode>
     </View>
   );
 }
@@ -4914,11 +5033,41 @@ import { View, Text } from \\"@tarojs/components\\";
 function SlotCode(props: Props) {
   return (
     <View>
-      {props.slotTop}
+      {props.slotTop?.()}
 
-      {props.slotLeft || \\"Default left\\"}
+      {props.slotLeft?.() || \\"Left\\"}
+
+      <View>Default slots</View>
 
       {props.children || \\"Default Child\\"}
+
+      {props.children || \\"Default, named Child\\"}
+    </View>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > SlotNamedData 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  [key: string]: string;
+};
+import { View, Text } from \\"@tarojs/components\\";
+
+function SlotCode(props: Props) {
+  return (
+    <View>
+      {props.slotTop?.({ data: props.data })}
+
+      {props.slotLeft?.({ left: props.data }) || \\"Left\\"}
+
+      <View>Default slots</View>
+
+      {props.children || \\"Default, named Child\\"}
     </View>
   );
 }
@@ -7445,7 +7594,7 @@ function MyComponent(props) {
   return (
     <View>
       {props.children || \\"default\\"}
-      {props.slotTest || <View>default</View>}
+      {props.slotTest?.() || <View>default</View>}
     </View>
   );
 }
@@ -7861,7 +8010,7 @@ function MyComponent(props: any) {
   return (
     <View>
       {props.children || \\"default\\"}
-      {props.slotTest || <View>default</View>}
+      {props.slotTest?.() || <View>default</View>}
     </View>
   );
 }

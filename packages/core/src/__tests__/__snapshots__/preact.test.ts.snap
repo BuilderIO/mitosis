@@ -555,7 +555,7 @@ import { h, Fragment } from \\"preact\\";
 function ContentSlotCode(props) {
   return (
     <div>
-      {props.slotTesting}
+      {props.slotTesting?.()}
 
       <div>
         <hr />
@@ -600,7 +600,10 @@ function ContentSlotJsxCode(props) {
             className={cls()}
           >
             {showContent && props.slotContent ? (
-              <Fragment>{props.slotContent || \\"{props.content}\\"}</Fragment>
+              <Fragment>
+                {props.slotContent?.({ stateName: state.name }) ||
+                  \\"{props.content}\\"}
+              </Fragment>
             ) : null}
 
             <div>
@@ -1325,6 +1328,25 @@ export default SelectComponent;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > SlotCollection 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { For } from \\"../../../flow\\";
+
+function SlotCode(props) {
+  return (
+    <ul>
+      {props.someCollection?.map((item) => (
+        <li>{props.slotItemDisplay?.({ item })}</li>
+      ))}
+    </ul>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > SlotDefault 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -1349,7 +1371,15 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 function SlotCode(props) {
   return (
     <div>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      <ContentSlotCode slotContent={() => <div>Hello</div>} />
+
+      <ContentSlotCode slotContent={() => <div>Hello</div>}></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
     </div>
   );
 }
@@ -1361,12 +1391,26 @@ export default SlotCode;
 exports[`Preact > jsx > Javascript Test > SlotJsx 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
+import { Slot } from \\"../../../../dist/src\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+export function ExampleComponent(props) {
+  return <div>{props.name}</div>;
+}
 
 function SlotCode(props) {
   return (
     <div>
-      <ContentSlotCode slotTesting={<div>Hello</div>} />
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <ExampleComponent name={contentProps.stateName} />
+        )}
+      ></ContentSlotCode>
     </div>
   );
 }
@@ -1382,11 +1426,37 @@ import { h, Fragment } from \\"preact\\";
 function SlotCode(props) {
   return (
     <div>
-      {props.slotTop}
+      {props.slotTop?.()}
 
-      {props.slotLeft || \\"Default left\\"}
+      {props.slotLeft?.() || \\"Left\\"}
+
+      <p>Default slots</p>
 
       {props.children || \\"Default Child\\"}
+
+      {props.children || \\"Default, named Child\\"}
+    </div>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > SlotNamedData 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function SlotCode(props) {
+  return (
+    <div>
+      {props.slotTop?.({ data: props.data })}
+
+      {props.slotLeft?.({ left: props.data }) || \\"Left\\"}
+
+      <p>Default slots</p>
+
+      {props.children || \\"Default, named Child\\"}
     </div>
   );
 }
@@ -3940,14 +4010,14 @@ import { h, Fragment } from \\"preact\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
+  slotTesting: () => JSX.Element;
 };
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotCode(props: Props) {
   return (
     <div>
-      {props.slotTesting}
+      {props.slotTesting?.()}
 
       <div>
         <hr />
@@ -3967,6 +4037,7 @@ exports[`Preact > jsx > Typescript Test > ContentSlotJSX 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
+// TODO: Figure out how the slotsProps are generated and fix state-name={state.name} support in type
 type Props = {
   [key: string]: string | JSX.Element;
 };
@@ -3997,7 +4068,10 @@ function ContentSlotJsxCode(props: Props) {
             className={cls()}
           >
             {showContent && props.slotContent ? (
-              <Fragment>{props.slotContent || \\"{props.content}\\"}</Fragment>
+              <Fragment>
+                {props.slotContent?.({ stateName: state.name }) ||
+                  \\"{props.content}\\"}
+              </Fragment>
             ) : null}
 
             <div>
@@ -4835,6 +4909,29 @@ export default SelectComponent;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > SlotCollection 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Props = {
+  [key: string]: string;
+};
+import { For } from \\"../../../flow\\";
+
+function SlotCode(props: Props) {
+  return (
+    <ul>
+      {props.someCollection?.map((item) => (
+        <li>{props.slotItemDisplay?.({ item })}</li>
+      ))}
+    </ul>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
 exports[`Preact > jsx > Typescript Test > SlotDefault 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -4867,7 +4964,15 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 function SlotCode(props: Props) {
   return (
     <div>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      <ContentSlotCode slotContent={() => <div>Hello</div>} />
+
+      <ContentSlotCode slotContent={() => <div>Hello</div>}></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
     </div>
   );
 }
@@ -4883,12 +4988,26 @@ import { h, Fragment } from \\"preact\\";
 type Props = {
   [key: string]: string;
 };
+import { Slot } from \\"../../../../dist/src\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+export function ExampleComponent(props: Props) {
+  return <div>{props.name}</div>;
+}
 
 function SlotCode(props: Props) {
   return (
     <div>
-      <ContentSlotCode slotTesting={<div>Hello</div>} />
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <div>Hello {contentProps.stateName}</div>
+        )}
+      ></ContentSlotCode>
+
+      <ContentSlotCode
+        slotContent={(contentProps) => (
+          <ExampleComponent name={contentProps.stateName} />
+        )}
+      ></ContentSlotCode>
     </div>
   );
 }
@@ -4908,11 +5027,41 @@ type Props = {
 function SlotCode(props: Props) {
   return (
     <div>
-      {props.slotTop}
+      {props.slotTop?.()}
 
-      {props.slotLeft || \\"Default left\\"}
+      {props.slotLeft?.() || \\"Left\\"}
+
+      <p>Default slots</p>
 
       {props.children || \\"Default Child\\"}
+
+      {props.children || \\"Default, named Child\\"}
+    </div>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > SlotNamedData 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+function SlotCode(props: Props) {
+  return (
+    <div>
+      {props.slotTop?.({ data: props.data })}
+
+      {props.slotLeft?.({ left: props.data }) || \\"Left\\"}
+
+      <p>Default slots</p>
+
+      {props.children || \\"Default, named Child\\"}
     </div>
   );
 }
@@ -7397,7 +7546,7 @@ function MyComponent(props) {
   return (
     <div>
       {props.children || \\"default\\"}
-      {props.slotTest || <div>default</div>}
+      {props.slotTest?.() || <div>default</div>}
     </div>
   );
 }
@@ -7807,7 +7956,7 @@ function MyComponent(props: any) {
   return (
     <div>
       {props.children || \\"default\\"}
-      {props.slotTest || <div>default</div>}
+      {props.slotTest?.() || <div>default</div>}
     </div>
   );
 }

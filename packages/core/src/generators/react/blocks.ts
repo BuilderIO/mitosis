@@ -49,7 +49,7 @@ const NODE_MAPPERS: {
 
     if (!slotName) {
       // TODO: update MitosisNode for simple code
-      const key = Object.keys(json.bindings).find(Boolean);
+      const key = Object.keys(json.bindings).find(key => key !== 'default');
       if (key && parentSlots) {
         const propKey = camelCase('Slot' + key[0].toUpperCase() + key.substring(1));
         parentSlots.push({ key: propKey, value: json.bindings[key]?.code });
@@ -60,13 +60,33 @@ const NODE_MAPPERS: {
       return `{${children} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
     }
 
+    if (slotName == 'default') {
+      const children = processBinding('props.children', options);
+      return `{${children} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
+    }
+
     let slotProp = processBinding(slotName as string, options).replace('name=', '');
 
     if (!slotProp.startsWith('props.slot')) {
       slotProp = `props.slot${upperFirst(camelCase(slotProp))}`;
     }
+    const slotParams = Object.entries(json.bindings)
+      .filter(([key]) => key !== 'name')
+      .filter(([, value]) => value !== undefined)
+      .filter(([, value]) => !value!.code.startsWith('<'))
+      .map(([key, value]) => {
+        if (key === value!.code) return camelCase(key)
+        return `${camelCase(key)}: ${value!.code}`
+      });
 
-    return `{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
+    // TODO : UseMemo?
+    const slotParamBinding = slotParams.length === 0
+      ? '?.()'
+      : `?.({ ${slotParams.join(', ')} })`
+
+    slotProp += slotParamBinding;
+
+    return `{(${slotProp}) ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
   },
   Fragment(json, options, component) {
     const wrap = wrapInFragment(json);
@@ -83,9 +103,9 @@ const NODE_MAPPERS: {
       options,
     )}?.map((${forArguments}) => (
       ${wrap ? openFrag(options) : ''}${json.children
-      .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options, component))
-      .join('\n')}${wrap ? closeFrag(options) : ''}
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToReact(item, options, component))
+        .join('\n')}${wrap ? closeFrag(options) : ''}
     ))}`;
   },
   Show(json, options, component) {
@@ -95,16 +115,15 @@ const NODE_MAPPERS: {
       (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? openFrag(options) : ''}${json.children
-      .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options, component))
-      .join('\n')}${wrap ? closeFrag(options) : ''}
-    ) : ${
-      !json.meta.else
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToReact(item, options, component))
+        .join('\n')}${wrap ? closeFrag(options) : ''}
+    ) : ${!json.meta.else
         ? 'null'
         : (wrapElse ? openFrag(options) : '') +
-          blockToReact(json.meta.else as any, options, component) +
-          (wrapElse ? closeFrag(options) : '')
-    }}`;
+        blockToReact(json.meta.else as any, options, component) +
+        (wrapElse ? closeFrag(options) : '')
+      }}`;
   },
 };
 
@@ -118,8 +137,8 @@ const ATTTRIBUTE_MAPPERS: { [key: string]: string } = {
 // TODO: Maybe in the future allow defining `string | function` as values
 const BINDING_MAPPERS: {
   [key: string]:
-    | string
-    | ((key: string, value: string, options?: ToReactOptions) => [string, string]);
+  | string
+  | ((key: string, value: string, options?: ToReactOptions) => [string, string]);
 } = {
   ref(ref, value, options) {
     if (options?.preact) {
@@ -212,8 +231,13 @@ export const blockToReact = (
         options,
       )} } `;
     } else if (key.startsWith('slot')) {
-      // <Component slotProjected={<AnotherComponent />} />
-      str += ` ${key}={${value}} `;
+      // <Component slotProjected={() => <AnotherComponent />} />
+      // <Component slotProjected={(slotProps) => <AnotherComponent {...slotProps} />} />
+      const propsName = camelCase(key.substring(4) + 'Props')
+      const propArgs = value.includes(propsName)
+        ? propsName
+        : ''
+      str += ` ${key}={(${propArgs}) => ${value}} `;
     } else if (key === 'class') {
       str += ` className={${useBindingValue}} `;
     } else if (BINDING_MAPPERS[key]) {
@@ -254,7 +278,11 @@ export const blockToReact = (
   }
   if (needsToRenderSlots.length) {
     needsToRenderSlots.forEach(({ key, value }) => {
-      str += ` ${key}={${value}} `;
+      const propsName = camelCase(key.substring(4) + 'Props')
+      const propArgs = value.includes(propsName)
+        ? propsName
+        : ''
+      str += ` ${key}={(${propArgs}) => ${value}} `;
     });
   }
   str = str.trim() + '>';
