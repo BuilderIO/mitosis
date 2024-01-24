@@ -577,6 +577,7 @@ export const builderElementToMitosisNode = (
   }
 
   const bindings: any = {};
+  const children: MitosisNode[] = [];
 
   if (blockBindings) {
     for (const key in blockBindings) {
@@ -625,7 +626,7 @@ export const builderElementToMitosisNode = (
       if (typeof value === 'string') {
         properties[key] = value;
       } else if (valueIsArrayOfBuilderElements) {
-        const bindingValue = value
+        const childrenElements = value
           .filter((item) => {
             if (item.properties?.src?.includes('/api/v1/pixel')) {
               return false;
@@ -633,7 +634,15 @@ export const builderElementToMitosisNode = (
             return true;
           })
           .map((item) => builderElementToMitosisNode(item, options));
-        bindings[key] = { code: json5.stringify(bindingValue), type: 'slot' };
+        children.push({
+          '@type': '@builder.io/mitosis/node',
+          name: 'Slot',
+          meta: {},
+          scope: {},
+          bindings: {},
+          properties: { name: key },
+          children: childrenElements,
+        });
       } else {
         bindings[key] = { code: json5.stringify(value) };
       }
@@ -710,7 +719,9 @@ export const builderElementToMitosisNode = (
     }
   }
 
-  node.children = (block.children || []).map((item) => builderElementToMitosisNode(item, options));
+  node.children = children.concat(
+    (block.children || []).map((item) => builderElementToMitosisNode(item, options)),
+  );
 
   return node;
 };

@@ -51,7 +51,7 @@ const NODE_MAPPERS: {
       // TODO: update MitosisNode for simple code
       const key = Object.keys(json.bindings).find(Boolean);
       if (key && parentSlots) {
-        const propKey = camelCase('Slot' + key[0].toUpperCase() + key.substring(1));
+        const propKey = options.noPrefixSlots ? key : `slot${upperFirst(camelCase(key))}`;
         parentSlots.push({ key: propKey, value: json.bindings[key]?.code });
         return '';
       }
@@ -63,7 +63,9 @@ const NODE_MAPPERS: {
     let slotProp = processBinding(slotName as string, options).replace('name=', '');
 
     if (!slotProp.startsWith('props.slot')) {
-      slotProp = `props.slot${upperFirst(camelCase(slotProp))}`;
+      slotProp = `props.${
+        options.noPrefixSlots ? slotProp : `slot${upperFirst(camelCase(slotProp))}`
+      }`;
     }
 
     return `{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;

@@ -92,21 +92,6 @@ export const blockToMitosis = (
 
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${json.bindings[key]?.code})} `;
-    } else if (json.bindings[key]?.type === 'slot') {
-      const parsedValue = json5.parse(value || '');
-      if (!parsedValue || !Array.isArray(parsedValue)) {
-        continue;
-      }
-      const codifiedValue =
-        parsedValue
-          .map((item: MitosisNode) => blockToMitosis(item, options, component))
-          .join('\n') || '';
-
-      if (parsedValue.length > 1) {
-        str += ` ${key}={<>${codifiedValue}</>} `;
-      } else {
-        str += ` ${key}={${codifiedValue}} `;
-      }
     } else if (key.startsWith('on')) {
       str += ` ${key}={event => ${value.replace(/\s*;$/, '')}} `;
     } else {
