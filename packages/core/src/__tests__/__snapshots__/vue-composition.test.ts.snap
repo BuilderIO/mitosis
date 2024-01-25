@@ -500,7 +500,7 @@ exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
       :name=\\"$slots.content ? 'name1' : 'name2'\\"
       :title=\\"$slots.content ? 'title1' : 'title2'\\"
       @click=\\"show()\\"
-      :class=\\"_classStringToObject(cls)\\"
+      :class=\\"cls\\"
       v-bind=\\"attributes\\"
     >
       <template v-if=\\"showContent && $slots.content\\">
@@ -535,17 +535,6 @@ const cls = computed(() => {
 function show() {
   useSlots().content ? 1 : \\"\\";
 }
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
@@ -553,11 +542,7 @@ exports[`Vue > jsx > Javascript Test > CustomCode 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -615,17 +600,6 @@ function findAndRunScripts() {
       }
     }
   }
-}
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>"
 `;
@@ -634,11 +608,7 @@ exports[`Vue > jsx > Javascript Test > Embed 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -696,17 +666,6 @@ function findAndRunScripts() {
       }
     }
   }
-}
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>"
 `;
@@ -1036,11 +995,7 @@ exports[`Vue > jsx > Javascript Test > Image 1`] = `
         <img
           :alt=\\"altText\\"
           :aria-role=\\"altText ? 'presentation' : undefined\\"
-          :class=\\"
-            _classStringToObject(
-              'builder-image' + (_class ? ' ' + _class : '') + ' img'
-            )
-          \\"
+          :class=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
           :src=\\"image\\"
           @load=\\"setLoaded()\\"
           :srcset=\\"srcset\\"
@@ -1113,17 +1068,6 @@ function isBrowser() {
   return (
     typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
   );
-}
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>
 
@@ -1233,25 +1177,13 @@ function handleChange(value) {
 exports[`Vue > jsx > Javascript Test > RawText 1`] = `
 "<template>
   <span
-    :class=\\"_classStringToObject(attributes?.class || attributes?.className)\\"
+    :class=\\"attributes?.class || attributes?.className\\"
     v-html=\\"text || ''\\"
   ></span>
 </template>
 
 <script setup>
 const props = defineProps([\\"attributes\\", \\"text\\"]);
-
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
@@ -1408,13 +1340,7 @@ exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
     <template :key=\\"review.id\\" v-for=\\"(review, index) in reviews\\">
       <div class=\\"review\\">
         <img class=\\"img\\" :src=\\"review.avatar\\" />
-        <div
-          :class=\\"
-            _classStringToObject(
-              showReviewPrompt ? 'bg-primary' : 'bg-secondary'
-            )
-          \\"
-        >
+        <div :class=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
           <div>N: {{ index }}</div>
           <div>{{ review.author }}</div>
           <div>{{ review.reviewMessage }}</div>
@@ -1451,17 +1377,6 @@ function kebabCaseValue() {
 }
 function snakeCaseValue() {
   return snakeCase(\\"testThis\\");
-}
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>
 
@@ -1766,7 +1681,7 @@ exports[`Vue > jsx > Javascript Test > className 1`] = `
   <div>
     <div class=\\"no binding\\">Without Binding</div>
 
-    <div :class=\\"_classStringToObject(bindings)\\">With binding</div>
+    <div :class=\\"bindings\\">With binding</div>
   </div>
 </template>
 
@@ -1774,24 +1689,12 @@ exports[`Vue > jsx > Javascript Test > className 1`] = `
 import { ref } from \\"vue\\";
 
 const bindings = ref(\\"a binding\\");
-
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > classState 1`] = `
 "<template>
-  <div :class=\\"_classStringToObject(classState + ' div')\\" :style=\\"styleState\\">
+  <div :class=\\"classState + ' div'\\" :style=\\"styleState\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -1803,18 +1706,6 @@ const classState = ref(\\"testClassName\\");
 const styleState = ref({
   color: \\"red\\",
 });
-
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>
 
 <style scoped>
@@ -2810,26 +2701,11 @@ exports[`Vue > jsx > Javascript Test > styleClassAndCss 1`] = `
 
 exports[`Vue > jsx > Javascript Test > stylePropClassAndCss 1`] = `
 "<template>
-  <div
-    :style=\\"attributes.style\\"
-    :class=\\"_classStringToObject(attributes.className + ' div')\\"
-  ></div>
+  <div :style=\\"attributes.style\\" :class=\\"attributes.className + ' div'\\"></div>
 </template>
 
 <script setup>
 const props = defineProps([\\"attributes\\"]);
-
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>
 
 <style scoped>
@@ -3548,7 +3424,7 @@ exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
       :name=\\"$slots.content ? 'name1' : 'name2'\\"
       :title=\\"$slots.content ? 'title1' : 'title2'\\"
       @click=\\"show()\\"
-      :class=\\"_classStringToObject(cls)\\"
+      :class=\\"cls\\"
       v-bind=\\"attributes\\"
     >
       <template v-if=\\"showContent && $slots.content\\">
@@ -3589,17 +3465,6 @@ const cls = computed(() => {
 function show() {
   useSlots().content ? 1 : \\"\\";
 }
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
@@ -3607,11 +3472,7 @@ exports[`Vue > jsx > Typescript Test > CustomCode 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -3674,17 +3535,6 @@ function findAndRunScripts() {
       }
     }
   }
-}
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>"
 `;
@@ -3693,11 +3543,7 @@ exports[`Vue > jsx > Typescript Test > Embed 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -3760,17 +3606,6 @@ function findAndRunScripts() {
       }
     }
   }
-}
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>"
 `;
@@ -4112,11 +3947,7 @@ exports[`Vue > jsx > Typescript Test > Image 1`] = `
         <img
           :alt=\\"altText\\"
           :aria-role=\\"altText ? 'presentation' : undefined\\"
-          :class=\\"
-            _classStringToObject(
-              'builder-image' + (_class ? ' ' + _class : '') + ' img'
-            )
-          \\"
+          :class=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
           :src=\\"image\\"
           @load=\\"setLoaded()\\"
           :srcset=\\"srcset\\"
@@ -4200,17 +4031,6 @@ function isBrowser() {
   return (
     typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
   );
-}
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>
 
@@ -4333,7 +4153,7 @@ function handleChange(value: string) {
 exports[`Vue > jsx > Typescript Test > RawText 1`] = `
 "<template>
   <span
-    :class=\\"_classStringToObject(attributes?.class || attributes?.className)\\"
+    :class=\\"attributes?.class || attributes?.className\\"
     v-html=\\"text || ''\\"
   ></span>
 </template>
@@ -4345,18 +4165,6 @@ export interface RawTextProps {
 }
 
 const props = defineProps<RawTextProps>();
-
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
@@ -4550,13 +4358,7 @@ exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
     <template :key=\\"review.id\\" v-for=\\"(review, index) in reviews\\">
       <div class=\\"review\\">
         <img class=\\"img\\" :src=\\"review.avatar\\" />
-        <div
-          :class=\\"
-            _classStringToObject(
-              showReviewPrompt ? 'bg-primary' : 'bg-secondary'
-            )
-          \\"
-        >
+        <div :class=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
           <div>N: {{ index }}</div>
           <div>{{ review.author }}</div>
           <div>{{ review.reviewMessage }}</div>
@@ -4598,17 +4400,6 @@ function kebabCaseValue() {
 }
 function snakeCaseValue() {
   return snakeCase(\\"testThis\\");
-}
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>
 
@@ -4954,7 +4745,7 @@ exports[`Vue > jsx > Typescript Test > className 1`] = `
   <div>
     <div class=\\"no binding\\">Without Binding</div>
 
-    <div :class=\\"_classStringToObject(bindings)\\">With binding</div>
+    <div :class=\\"bindings\\">With binding</div>
   </div>
 </template>
 
@@ -4969,24 +4760,12 @@ type Props = {
 };
 
 const bindings = ref(\\"a binding\\");
-
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > classState 1`] = `
 "<template>
-  <div :class=\\"_classStringToObject(classState + ' div')\\" :style=\\"styleState\\">
+  <div :class=\\"classState + ' div'\\" :style=\\"styleState\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -4998,18 +4777,6 @@ const classState = ref(\\"testClassName\\");
 const styleState = ref({
   color: \\"red\\",
 });
-
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>
 
 <style scoped>
@@ -6134,26 +5901,11 @@ exports[`Vue > jsx > Typescript Test > styleClassAndCss 1`] = `
 
 exports[`Vue > jsx > Typescript Test > stylePropClassAndCss 1`] = `
 "<template>
-  <div
-    :style=\\"attributes.style\\"
-    :class=\\"_classStringToObject(attributes.className + ' div')\\"
-  ></div>
+  <div :style=\\"attributes.style\\" :class=\\"attributes.className + ' div'\\"></div>
 </template>
 
 <script setup lang=\\"ts\\">
 const props = defineProps([\\"attributes\\"]);
-
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>
 
 <style scoped>
@@ -6391,11 +6143,7 @@ const value = ref(\\"hello\\");
 exports[`Vue > svelte > Javascript Test > classDirective 1`] = `
 "<template>
   <input
-    :class=\\"
-      _classStringToObject(
-        \`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`
-      )
-    \\"
+    :class=\\"\`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`\\"
   />
 </template>
 
@@ -6404,18 +6152,6 @@ import { ref } from \\"vue\\";
 
 const props = withDefaults(defineProps(), { disabled: undefined });
 const focus = ref(true);
-
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
@@ -6713,11 +6449,7 @@ const value = ref(\\"hello\\");
 exports[`Vue > svelte > Typescript Test > classDirective 1`] = `
 "<template>
   <input
-    :class=\\"
-      _classStringToObject(
-        \`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`
-      )
-    \\"
+    :class=\\"\`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`\\"
   />
 </template>
 
@@ -6726,18 +6458,6 @@ import { ref } from \\"vue\\";
 
 const props = withDefaults(defineProps<undefined>(), { disabled: undefined });
 const focus = ref(true);
-
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
