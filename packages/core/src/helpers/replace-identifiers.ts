@@ -1,5 +1,5 @@
-import { types } from '@babel/core';
 import generate from '@babel/generator';
+import * as types from '@babel/types';
 import { pipe } from 'fp-ts/lib/function';
 import { babelTransformExpression } from './babel-transform';
 
@@ -51,7 +51,7 @@ const getToParam = (
 };
 
 const _replaceIdentifiers = (
-  path: babel.NodePath<types.MemberExpression | types.OptionalMemberExpression | types.Identifier>,
+  path: types.NodePath<types.MemberExpression | types.OptionalMemberExpression | types.Identifier>,
   { from, to }: Pick<ReplaceArgs, 'from' | 'to'>,
 ) => {
   const memberExpressionObject = types.isIdentifier(path.node) ? path.node : path.node.object;
@@ -187,11 +187,11 @@ export const replaceNodes = ({
   code: string;
   nodeMaps: {
     from: types.Node;
-    condition?: (path: babel.NodePath<types.Node>) => boolean;
+    condition?: (path: types.NodePath<types.Node>) => boolean;
     to: types.Node;
   }[];
 }) => {
-  const searchAndReplace = (path: babel.NodePath<types.Node>) => {
+  const searchAndReplace = (path: types.NodePath<types.Node>) => {
     if (isNewlyGenerated(path.node) || isNewlyGenerated(path.parent)) return;
 
     for (const { from, to, condition } of nodeMaps) {
