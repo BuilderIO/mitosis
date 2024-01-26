@@ -9,7 +9,7 @@ on:
   push:
   pull_request:
 
-env: 
+env:
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
 jobs:
@@ -19,23 +19,17 @@ jobs:
       - name: Setup
         uses: actions/checkout@v2
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn --immutable
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/pnpm-install
 
       - name: Lint
-        run: yarn ci:lint
+        run: pnpm ci:lint
 
       - name: Build
-        run: yarn ci:build
+        run: pnpm ci:build
 
       - name: Run tests
-        run: yarn ci:test
+        run: pnpm ci:test
 
   fiddle:
     runs-on: ubuntu-latest
@@ -43,23 +37,17 @@ jobs:
       - name: Setup
         uses: actions/checkout@v2
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn --immutable
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/pnpm-install
 
       - name: Build Core
-        run: yarn ci:build:core
-      
+        run: pnpm ci:build:core
+
       - name: Build eslint-plugin
-        run: yarn ci:build:eslint-plugin
+        run: pnpm ci:build:eslint-plugin
 
       - name: Build Fiddle
-        run: yarn ci:build:fiddle
+        run: pnpm ci:build:fiddle
 
   e2e:
     runs-on: ubuntu-latest
@@ -67,20 +55,14 @@ jobs:
       - name: Setup
         uses: actions/checkout@v2
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn --immutable
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/pnpm-install
 
       - name: Build
-        run: yarn ci:build
+        run: pnpm ci:build
 
       - name: Install browsers for Playwright
-        run: yarn ci:e2e-prep
+        run: pnpm ci:e2e-prep
 
       - name: Run E2E tests
-        run: yarn ci:e2e
+        run: pnpm ci:e2e

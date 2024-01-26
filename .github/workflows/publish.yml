@@ -22,15 +22,8 @@ jobs:
           # need this custom token to run CI checks on the created PR
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          registry-url: "https://registry.npmjs.org"
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn --immutable
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/pnpm-install
 
       - name: Build
         run: yarn ci:build
