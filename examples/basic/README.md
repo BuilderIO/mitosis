@@ -7,13 +7,13 @@
 yarn install
 
 # build
-yarn run build
+pnpm build
 
 # run dev server that watches for changes
-yarn run start
+pnpm start
 
 # test
-yarn run test
+pnpm test
 ```
 
 ### Project structure

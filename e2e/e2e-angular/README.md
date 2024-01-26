@@ -4,6 +4,6 @@ To recompile and run just this set of E2E tests, you can run these commands at
 the project root:
 
 ```bash
-yarn workspace @builder.io/e2e-angular run build
-yarn workspace @builder.io/e2e-angular run e2e
+pnpm --filter @builder.io/e2e-angular build
+pnpm --filter @builder.io/e2e-angular e2e
 ```

@@ -1,6 +1,6 @@
 {
   "name": "@builder.io/mitosis-repo",
-  "workspaces": [
+  "kworkspaces": [
     "packages/*",
     "e2e/*",
     "e2e/e2e-app/output/*",
@@ -11,18 +11,18 @@
     "node": ">=16"
   },
   "scripts": {
-    "g:changeset": "yarn changeset",
+    "g:changeset": "pnpm changeset",
     "build:core": "nx build @builder.io/mitosis",
     "build:fiddle": "nx build @builder.io/mitosis-fiddle",
     "build:eslint-plugin": "nx build @builder.io/eslint-plugin-mitosis",
     "ci:build": "nx run-many --skip-nx-cache --target build --parallel 4 --exclude \"*/e2e-alpine,*/e2e-angular,@builder.io/mitosis-fiddle,@builder.io/talk-*,@builder.io/example-apps\"",
-    "ci:build:core": "yarn run build:core",
-    "ci:build:fiddle": "yarn run build:fiddle",
-    "ci:build:eslint-plugin": "yarn run build:eslint-plugin",
-    "ci:lint": "yarn run lint:prettier && yarn run lint:eslint",
-    "ci:test": "yarn workspaces foreach run test",
-    "ci:e2e-prep": "yarn workspace @builder.io/e2e-app run install:playwright",
-    "ci:e2e": "yarn workspace @builder.io/e2e-app run e2e",
+    "ci:build:core": "pnpm build:core",
+    "ci:build:fiddle": "pnpm build:fiddle",
+    "ci:build:eslint-plugin": "pnpm build:eslint-plugin",
+    "ci:lint": "pnpm lint:prettier && pnpm lint:eslint",
+    "ci:test": "pnpm run test",
+    "ci:e2e-prep": "pnpm --filter @builder.io/e2e-app install:playwright",
+    "ci:e2e": "pnpm --filter @builder.io/e2e-app e2e",
     "ci": "run-s \"ci:*\"",
     "commit": "git-cz",
     "fmt": "run-s 'fmt:*'",
@@ -30,11 +30,11 @@
     "fmt:prettier": "yarn lint:prettier --write",
     "lint": "run-p -c 'lint:*'",
     "lint:eslint": "eslint --cache 'packages/**/*.ts{,x}'",
-    "lint:prettier": "yarn run prettier --check",
+    "lint:prettier": "pnpm prettier --check",
     "prerelease": "yarn build",
     "prettier": "prettier --cache --loglevel warn '{packages,docs,e2e}/**/*.{js,jsx,ts,tsx,json,md,html}'",
-    "release:dev": "cd packages/core && yarn run release:dev && cd ../cli && yarn run release:dev && cd ../eslint-plugin && yarn run release:dev",
-    "release:patch": "cd packages/core && yarn run release:patch && cd ../cli && yarn run release:patch && cd ../eslint-plugin && yarn run release:patch"
+    "release:dev": "cd packages/core && pnpm release:dev && cd ../cli && pnpm release:dev && cd ../eslint-plugin && pnpm release:dev",
+    "release:patch": "cd packages/core && pnpm release:patch && cd ../cli && pnpm release:patch && cd ../eslint-plugin && pnpm release:patch"
   },
   "repository": {
     "type": "git",
@@ -60,7 +60,6 @@
     "rimraf": "5.0.5",
     "typescript": "^5.3.2"
   },
-  "packageManager": "yarn@3.2.0",
   "dependencies": {
     "@babel/core": "^7.18.2",
     "@builder.io/e2e-app": "workspace:*"

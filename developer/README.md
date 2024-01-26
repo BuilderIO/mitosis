@@ -58,4 +58,4 @@ From there, you can keep iterating until the snapshots look as expected, and the
 
 ### Pre-submit
 
-- format: `yarn run fmt:prettier`
+- format: `pnpm fmt:prettier`

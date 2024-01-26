@@ -93,7 +93,7 @@ const testConfig: PlaywrightTestConfig = {
   // outputDir: 'test-results/',
 
   webServer: targets.map(({ packageName, port }) => ({
-    command: `yarn workspace @builder.io/${packageName} run serve --port=${port}`,
+    command: `pnpm --filter @builder.io/${packageName} serve --port=${port}`,
     port: port,
     reuseExistingServer: false,
   })),
