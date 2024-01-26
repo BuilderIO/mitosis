@@ -13,17 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn --immutable
-
-      - name: Build
-        run: yarn ci:build
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/pnpm-install
 
       - name: save artifact
         env:

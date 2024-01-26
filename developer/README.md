@@ -4,7 +4,7 @@ Welcome ⚡️!! If you've found a bug, or have an idea to add a feature we'd lo
 
 ## Project Structure
 
-Mitosis is structured as a mono-repo using Yarn (v3) Workspaces. The packages
+Mitosis is structured as a mono-repo using pnpm workspaces. The packages
 live under `packages/` and `examples/`:
 
 - `core` (`@builder.io/mitosis`): contains the Mitosis engine
@@ -14,16 +14,16 @@ live under `packages/` and `examples/`:
 
 ## Installation
 
-First, you should run `yarn` in the root of the project to install all the dependencies.
+First, you should run `pnpm install` in the root of the project to install all the dependencies.
 
 For all packages, the below steps to develop locally are the same:
 
 ```bash
 # run local development server
-yarn start
+pnpm start
 
 # run unit tests
-yarn test
+pnpm test
 ```
 
 ## Submitting Issues And Writing Tests
@@ -48,9 +48,9 @@ PS: don't worry about failing imports in the raw test TSX files. These are not a
 - add your component to the [e2e-app component map](/e2e/e2e-app/src/component-map.ts)
 - add an integration test in [e2e/e2e-app/tests](/e2e/e2e-app/tests) that makes sure your component works as expected
 - this integration test will run against every server that exists in [e2e/](/e2e/).
-- run `yarn ci:e2e-prep` to install playwright browsers
-- run `yarn ci:build` to build all packages
-- run `yarn ci:e2e` to run the integration tests against all servers
+- run `pnpm ci:e2e-prep` to install playwright browsers
+- run `pnpm ci:build` to build all packages
+- run `pnpm ci:e2e` to run the integration tests against all servers
 
 ### Test your changes
 

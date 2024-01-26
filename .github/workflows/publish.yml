@@ -26,7 +26,7 @@ jobs:
         uses: ./.github/actions/pnpm-install
 
       - name: Build
-        run: yarn ci:build
+        run: pnpm ci:build
 
       - name: Create Release PR & Publish to npm
         id: changesets
@@ -34,7 +34,7 @@ jobs:
         with:
           # can't use `changesets publish` command
           # https://github.com/changesets/changesets/issues/432#issuecomment-1258264936
-          publish: yarn workspaces foreach --no-private -v npm publish
+          publish: pnpm changeset publish
           title: "📦 Publish Packages"
           commit: "📦 Publish Packages"
         env:
