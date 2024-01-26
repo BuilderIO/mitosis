@@ -1,6 +1,6 @@
 # E2E test harness for React
 
-"Yarn workspaces" uses its understanding of the build graph in a limited way, so
+"pnpm workspaces" uses its understanding of the build graph in a limited way, so
 to recompile and run just this set of E2E tests, you can run these commands at
 the project root:
 

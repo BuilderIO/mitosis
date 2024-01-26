@@ -7,7 +7,7 @@ import { babelTransformExpression } from './babel-transform';
  * Type hack.
  *
  * We want to augment the `BaseNode` interface to include a `_builder_meta` property but couldn't get
- * `yarn patch-package` to cooperate with us. So we're doing it this way.
+ * `patch package` to cooperate with us. So we're doing it this way.
  */
 type AllowMeta<T = types.Node> = T & {
   _builder_meta?: {

@@ -7,7 +7,7 @@ A Mitosis plugin containing rules that help you write valid and idiomatic Mitosi
 First, make sure you have [ESLint setup correctly](https://eslint.org/docs/user-guide/getting-started#installation-and-usage). Then, install this plugin by running:
 
 ```bash
-yarn add -D @builder.io/eslint-plugin-mitosis
+npm install -D @builder.io/eslint-plugin-mitosis
 ```
 
 Finally, add the plugin to the `plugins` array, and the rules you want to the `rules` array:
