@@ -309,13 +309,13 @@ const NODE_MAPPERS: {
 const SPECIAL_HTML_TAGS = ['style', 'script'];
 
 const stringifyBinding =
-  (node: MitosisNode) =>
+  (node: MitosisNode, options: ToVueOptions) =>
   ([key, value]: [string, Binding]) => {
     const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name);
 
     if (value.type === 'spread') {
       return ''; // we handle this after
-    } else if (key === 'class') {
+    } else if (key === 'class' && options.convertClassStringToObject) {
       return `:class="_classStringToObject(${value?.code})"`;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
@@ -375,7 +375,7 @@ const stringifySpreads = ({ node, spreadType }: { node: MitosisNode; spreadType:
   return ` ${key}="${encodeQuotes(stringifiedValue)}" `;
 };
 
-const getBlockBindings = (node: MitosisNode) => {
+const getBlockBindings = (node: MitosisNode, options: ToVueOptions) => {
   const stringifiedProperties = Object.entries(node.properties)
     .map(([key, value]) => {
       if (key === 'className') {
@@ -389,7 +389,7 @@ const getBlockBindings = (node: MitosisNode) => {
     .join(' ');
 
   const stringifiedBindings = Object.entries(node.bindings as Dictionary<Binding>)
-    .map(stringifyBinding(node))
+    .map(stringifyBinding(node, options))
     .join(' ');
 
   return [
@@ -434,7 +434,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   let str = `<${node.name} `;
 
-  str += getBlockBindings(node);
+  str += getBlockBindings(node, options);
 
   if (SELF_CLOSING_HTML_TAGS.has(node.name)) {
     return str + ' />';

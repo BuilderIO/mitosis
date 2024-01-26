@@ -14,6 +14,7 @@ export interface ToVueOptions extends BaseTranspilerOptions, VueVersionOpt {
   asyncComponentImports?: boolean;
   defineComponent?: boolean;
   api: Api;
+  convertClassStringToObject?: boolean;
 }
 
 export type VueOptsWithoutVersion = OmitObj<ToVueOptions, VueVersionOpt>;
