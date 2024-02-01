@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.144
+
+### Patch Changes
+
+- e4f0019: [fix] `preventDefault` in Qwik
+
 ## 0.0.142
 
 ### Patch Changes
