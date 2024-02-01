@@ -359,7 +359,7 @@ export class SrcBuilder {
         if (key === 'innerHTML') key = 'dangerouslySetInnerHTML';
         if (key === 'dataSet') return; // ignore
         if (self.isJSX) {
-          if (key.includes(':')) {
+          if (key.includes(':') && value === '') {
             self.emit(' ', key);
             return;
           }
