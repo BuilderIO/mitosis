@@ -16,6 +16,10 @@ export function addPreventDefault(json: MitosisComponent) {
             if (node.bindings[key]?.code.includes('.preventDefault()')) {
               const event = key.slice(2).toLowerCase();
               node.properties['preventdefault:' + event] = '';
+              node.bindings[key]!.code = node.bindings[key]!.code.replace(
+                /.*?\.preventDefault\(\);?/,
+                '',
+              ).trim();
             }
           }
         }
