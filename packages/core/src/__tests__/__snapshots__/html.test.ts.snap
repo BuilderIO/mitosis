@@ -1678,9 +1678,7 @@ exports[`Html > jsx > Javascript Test > CustomCode 1`] = `
       scriptsInserted: [],
       scriptsRun: [],
       findAndRunScripts() {
-        // TODO: Move this function to standalone one in '@builder.io/utils'
         if (elem && typeof window !== \\"undefined\\") {
-          /** @type {HTMLScriptElement[]} */
           const scripts = elem.getElementsByTagName(\\"script\\");
 
           for (let i = 0; i < scripts.length; i++) {
@@ -1769,9 +1767,7 @@ exports[`Html > jsx > Javascript Test > Embed 1`] = `
       scriptsInserted: [],
       scriptsRun: [],
       findAndRunScripts() {
-        // TODO: Move this function to standalone one in '@builder.io/utils'
         if (elem && typeof window !== \\"undefined\\") {
-          /** @type {HTMLScriptElement[]} */
           const scripts = elem.getElementsByTagName(\\"script\\");
 
           for (let i = 0; i < scripts.length; i++) {
@@ -1882,7 +1878,6 @@ exports[`Html > jsx > Javascript Test > Image 1`] = `
         update();
       },
       useLazyLoading() {
-        // TODO: Add more checks here, like testing for real web browsers
         return !!props.lazy && state.isBrowser();
       },
       isBrowser: function isBrowser() {
@@ -3788,6 +3783,99 @@ exports[`Html > jsx > Javascript Test > classState 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > commentsWithQuotes 1`] = `
+"<div>
+  <input class=\\"input\\" data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
+
+  Hello
+
+  <template data-el=\\"div-1\\"><!-- state.name --></template>
+  ! I can run in React, Vue, Solid, or Liquid!
+</div>
+<style>
+  .input {
+    color: red;
+  }
+</style>
+<script>
+  (() => {
+    const state = {
+      name: \\"Steve\\",
+      handleFn() {},
+      doSomething: function doSomething() {
+        console.log(\\"This is a aa\\");
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.value = state.name;
+
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+
+        el.removeEventListener(\\"click\\", onInput1Click);
+        el.addEventListener(\\"click\\", onInput1Click);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.name = event.target.value;
+      update();
+    }
+
+    // Event handler for 'click' event on input-1
+    function onInput1Click(event) {
+      state.doSomething();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > componentWithContext 1`] = `
 "<template data-el=\\"div-1\\"><!-- foo.value --></template>
 
@@ -4881,7 +4969,6 @@ exports[`Html > jsx > Javascript Test > renderBlock 1`] = `
         const ref = props.context.registeredComponents[componentName];
 
         if (!ref) {
-          // TODO: Public doc page with more info about this message
           console.warn(\`
           Could not find a registered component named \\"\${componentName}\\". 
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -4934,11 +5021,6 @@ exports[`Html > jsx > Javascript Test > renderBlock 1`] = `
           componentRef: state.component?.component,
           componentOptions: {
             ...getBlockComponentOptions(state.useBlock),
-
-            /**
-             * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-             * they are provided to the component itself directly.
-             */
             ...(state.shouldWrap
               ? {}
               : {
@@ -4951,28 +5033,14 @@ exports[`Html > jsx > Javascript Test > renderBlock 1`] = `
         };
       },
       get useChildren() {
-        // TO-DO: When should \`canHaveChildren\` dictate rendering?
-        // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-        // but still receive and need to render children.
-        // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
         return state.useBlock.children ?? [];
       },
       get childrenWithoutParentComponent() {
-        /**
-         * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-         * we render them outside of \`componentRef\`.
-         * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-         * blocks, and the children will be repeated within those blocks.
-         */
         const shouldRenderChildrenOutsideRef =
           !state.component?.component && !state.repeatItemData;
         return shouldRenderChildrenOutsideRef ? state.useChildren : [];
       },
       get repeatItemData() {
-        /**
-         * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-         * which will not work if there is a repeat.
-         */
         const { repeat, ...blockWithoutRepeat } = props.block;
 
         if (!repeat?.collection) {
@@ -5034,7 +5102,6 @@ exports[`Html > jsx > Javascript Test > renderBlock 1`] = `
         if (TARGET === \\"reactNative\\") {
           return RenderComponentWithContext;
         } else if (TARGET === \\"vue3\\") {
-          // vue3 expects a string for the component tag
           return \\"RenderComponent\\";
         } else {
           return RenderComponent;
@@ -7955,9 +8022,7 @@ exports[`Html > jsx > Typescript Test > CustomCode 1`] = `
       scriptsInserted: [],
       scriptsRun: [],
       findAndRunScripts() {
-        // TODO: Move this function to standalone one in '@builder.io/utils'
         if (elem && typeof window !== \\"undefined\\") {
-          /** @type {HTMLScriptElement[]} */
           const scripts = elem.getElementsByTagName(\\"script\\");
 
           for (let i = 0; i < scripts.length; i++) {
@@ -8046,9 +8111,7 @@ exports[`Html > jsx > Typescript Test > Embed 1`] = `
       scriptsInserted: [],
       scriptsRun: [],
       findAndRunScripts() {
-        // TODO: Move this function to standalone one in '@builder.io/utils'
         if (elem && typeof window !== \\"undefined\\") {
-          /** @type {HTMLScriptElement[]} */
           const scripts = elem.getElementsByTagName(\\"script\\");
 
           for (let i = 0; i < scripts.length; i++) {
@@ -8159,7 +8222,6 @@ exports[`Html > jsx > Typescript Test > Image 1`] = `
         update();
       },
       useLazyLoading() {
-        // TODO: Add more checks here, like testing for real web browsers
         return !!props.lazy && state.isBrowser();
       },
       isBrowser: function isBrowser() {
@@ -10065,6 +10127,99 @@ exports[`Html > jsx > Typescript Test > classState 1`] = `
 "
 `;
 
+exports[`Html > jsx > Typescript Test > commentsWithQuotes 1`] = `
+"<div>
+  <input class=\\"input\\" data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
+
+  Hello
+
+  <template data-el=\\"div-1\\"><!-- state.name --></template>
+  ! I can run in React, Vue, Solid, or Liquid!
+</div>
+<style>
+  .input {
+    color: red;
+  }
+</style>
+<script>
+  (() => {
+    const state = {
+      name: \\"Steve\\",
+      handleFn() {},
+      doSomething: function doSomething() {
+        console.log(\\"This is a aa\\");
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.value = state.name;
+
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+
+        el.removeEventListener(\\"click\\", onInput1Click);
+        el.addEventListener(\\"click\\", onInput1Click);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.name = event.target.value;
+      update();
+    }
+
+    // Event handler for 'click' event on input-1
+    function onInput1Click(event) {
+      state.doSomething();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Typescript Test > componentWithContext 1`] = `
 "<template data-el=\\"div-1\\"><!-- foo.value --></template>
 
@@ -11158,7 +11313,6 @@ exports[`Html > jsx > Typescript Test > renderBlock 1`] = `
         const ref = props.context.registeredComponents[componentName];
 
         if (!ref) {
-          // TODO: Public doc page with more info about this message
           console.warn(\`
           Could not find a registered component named \\"\${componentName}\\". 
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -11211,11 +11365,6 @@ exports[`Html > jsx > Typescript Test > renderBlock 1`] = `
           componentRef: state.component?.component,
           componentOptions: {
             ...getBlockComponentOptions(state.useBlock),
-
-            /**
-             * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-             * they are provided to the component itself directly.
-             */
             ...(state.shouldWrap
               ? {}
               : {
@@ -11228,28 +11377,14 @@ exports[`Html > jsx > Typescript Test > renderBlock 1`] = `
         };
       },
       get useChildren() {
-        // TO-DO: When should \`canHaveChildren\` dictate rendering?
-        // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-        // but still receive and need to render children.
-        // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
         return state.useBlock.children ?? [];
       },
       get childrenWithoutParentComponent() {
-        /**
-         * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-         * we render them outside of \`componentRef\`.
-         * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-         * blocks, and the children will be repeated within those blocks.
-         */
         const shouldRenderChildrenOutsideRef =
           !state.component?.component && !state.repeatItemData;
         return shouldRenderChildrenOutsideRef ? state.useChildren : [];
       },
       get repeatItemData() {
-        /**
-         * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-         * which will not work if there is a repeat.
-         */
         const { repeat, ...blockWithoutRepeat } = props.block;
 
         if (!repeat?.collection) {
@@ -11314,7 +11449,6 @@ exports[`Html > jsx > Typescript Test > renderBlock 1`] = `
         if (TARGET === \\"reactNative\\") {
           return RenderComponentWithContext;
         } else if (TARGET === \\"vue3\\") {
-          // vue3 expects a string for the component tag
           return \\"RenderComponent\\";
         } else {
           return RenderComponent;

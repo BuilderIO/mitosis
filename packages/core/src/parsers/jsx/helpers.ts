@@ -13,8 +13,8 @@ export const uncapitalize = (str: string) => {
   return str[0].toLowerCase() + str.slice(1);
 };
 
-export const parseCode = (node: babel.types.Node) => {
-  return generate(node).code;
+export const parseCode = (node: babel.types.Node, opts?: babel.GeneratorOptions) => {
+  return generate(node, opts).code;
 };
 
 export const parseCodeJson = (node: babel.types.Node) => {

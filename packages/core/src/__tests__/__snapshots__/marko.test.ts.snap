@@ -523,9 +523,7 @@ exports[`Marko > jsx > Javascript Test > ContentSlotJSX 1`] = `
 exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
 "class {
   findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (this.elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -588,9 +586,7 @@ exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
 exports[`Marko > jsx > Javascript Test > Embed 1`] = `
 "class {
   findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (this.elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -681,8 +677,7 @@ class {
       const el = event.currentTarget;
       const headers = this.input.customHeaders || {};
       let body;
-      const formData = new FormData(el); // TODO: maybe support null
-
+      const formData = new FormData(el);
       const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
@@ -709,7 +704,6 @@ class {
                 value = num;
               }
             } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
               value = el.files;
             } else {
               value = el.value;
@@ -737,14 +731,11 @@ class {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
+      });
 
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
-        // Json
         const json = {};
         Array.from(formPairs).forEach(({ value, key }) => {
           set(json, key, value);
@@ -753,10 +744,7 @@ class {
       }
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && this.input.action?.includes(\\"zapier.com\\"))
-        ) {
+        if (!(sendWithJs && this.input.action?.includes(\\"zapier.com\\"))) {
           headers[\\"content-type\\"] = contentType;
         }
       }
@@ -783,7 +771,6 @@ class {
       )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
         this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
-        /* TODO: throw error if no action URL */
         {
           body,
           headers,
@@ -801,13 +788,10 @@ class {
           }
 
           if (!res.ok && this.input.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
             let message = get(body, this.input.errorMessagePath);
 
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-            error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -832,13 +816,11 @@ class {
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
 
               if (this.input.resetFormOnSubmit !== false) {
                 this.formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
             if (this.input.successUrl) {
               if (this.formRef) {
@@ -894,7 +876,7 @@ class {
 }
 
 style { 
-  .pre-82880ee4 {
+  .pre-fdd5ed4a {
     padding: 10px;
     color: red;
     text-align: center;
@@ -929,7 +911,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-82880ee4\\">
+    <pre class=\\"builder-form-error-text pre-fdd5ed4a\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -950,7 +932,6 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
     this.state.imageLoaded = true;
   }
   useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
     return !!this.input.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
@@ -999,7 +980,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
 }
 
 style { 
-  .img-89debb4e {
+  .img-72fa4045 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -1012,7 +993,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-89debb4e')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-72fa4045')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -1545,6 +1526,37 @@ style {
 </div>"
 `;
 
+exports[`Marko > jsx > Javascript Test > commentsWithQuotes 1`] = `
+"class {
+  handleFn() {}
+  doSomething = function doSomething() {
+    console.log(\\"This is a aa\\");
+  };
+
+  onCreate() {
+    this.state = { name: \\"Steve\\" };
+  }
+}
+
+style { 
+  .input-5e4b86eb {
+    color: red;
+  }
+}
+<div>
+  <input
+    class=\\"input-5e4b86eb\\"
+    value=(state.name)
+    on-input(event => {
+  state.name = event.target.value;
+})
+    on-click(event => component.doSomething())
+  />
+
+  Hello \${state.name} ! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > componentWithContext 1`] = `
 "import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
@@ -1962,7 +1974,6 @@ class {
     const ref = this.input.context.registeredComponents[componentName];
 
     if (!ref) {
-      // TODO: Public doc page with more info about this message
       console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -2015,11 +2026,6 @@ class {
       componentRef: this.component?.component,
       componentOptions: {
         ...getBlockComponentOptions(this.useBlock),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
         ...(this.shouldWrap
           ? {}
           : {
@@ -2031,28 +2037,14 @@ class {
     };
   }
   get useChildren() {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
     return this.useBlock.children ?? [];
   }
   get childrenWithoutParentComponent() {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
     const shouldRenderChildrenOutsideRef =
       !this.component?.component && !this.repeatItemData;
     return shouldRenderChildrenOutsideRef ? this.useChildren : [];
   }
   get repeatItemData() {
-    /**
-     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
     const { repeat, ...blockWithoutRepeat } = this.input.block;
 
     if (!repeat?.collection) {
@@ -2113,7 +2105,6 @@ class {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;
@@ -2909,9 +2900,7 @@ class {
 exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
 "class {
   findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (this.elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -2974,9 +2963,7 @@ exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
 exports[`Marko > jsx > Typescript Test > Embed 1`] = `
 "class {
   findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (this.elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -3071,8 +3058,7 @@ class {
       const el = event.currentTarget;
       const headers = this.input.customHeaders || {};
       let body: any;
-      const formData = new FormData(el); // TODO: maybe support null
-
+      const formData = new FormData(el);
       const formPairs: {
         key: string;
         value: File | boolean | number | string | FileList;
@@ -3102,7 +3088,6 @@ class {
                 value = num;
               }
             } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
               value = el.files;
             } else {
               value = el.value;
@@ -3130,14 +3115,11 @@ class {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
+      });
 
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
-        // Json
         const json = {};
         Array.from(formPairs).forEach(({ value, key }) => {
           set(json, key, value);
@@ -3146,10 +3128,7 @@ class {
       }
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && this.input.action?.includes(\\"zapier.com\\"))
-        ) {
+        if (!(sendWithJs && this.input.action?.includes(\\"zapier.com\\"))) {
           headers[\\"content-type\\"] = contentType;
         }
       }
@@ -3176,7 +3155,6 @@ class {
       )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
         this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action!,
-        /* TODO: throw error if no action URL */
         {
           body,
           headers,
@@ -3194,13 +3172,10 @@ class {
           }
 
           if (!res.ok && this.input.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
             let message = get(body, this.input.errorMessagePath);
 
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-            error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -3225,13 +3200,11 @@ class {
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
 
               if (this.input.resetFormOnSubmit !== false) {
                 this.formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
             if (this.input.successUrl) {
               if (this.formRef) {
@@ -3287,7 +3260,7 @@ class {
 }
 
 style { 
-  .pre-19a35b98 {
+  .pre-7945d906 {
     padding: 10px;
     color: red;
     text-align: center;
@@ -3322,7 +3295,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-19a35b98\\">
+    <pre class=\\"builder-form-error-text pre-7945d906\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -3343,7 +3316,6 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
     this.state.imageLoaded = true;
   }
   useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
     return !!this.input.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
@@ -3392,7 +3364,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 }
 
 style { 
-  .img-3a26582e {
+  .img-cec1ccee {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -3405,7 +3377,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-3a26582e')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-cec1ccee')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -3940,6 +3912,37 @@ style {
 </div>"
 `;
 
+exports[`Marko > jsx > Typescript Test > commentsWithQuotes 1`] = `
+"class {
+  handleFn() {}
+  doSomething = function doSomething() {
+    console.log(\\"This is a aa\\");
+  };
+
+  onCreate() {
+    this.state = { name: \\"Steve\\" };
+  }
+}
+
+style { 
+  .input-5e4b86eb {
+    color: red;
+  }
+}
+<div>
+  <input
+    class=\\"input-5e4b86eb\\"
+    value=(state.name)
+    on-input(event => {
+  state.name = event.target.value;
+})
+    on-click(event => component.doSomething())
+  />
+
+  Hello \${state.name} ! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
+
 exports[`Marko > jsx > Typescript Test > componentWithContext 1`] = `
 "import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
@@ -4366,7 +4369,6 @@ class {
     const ref = this.input.context.registeredComponents[componentName];
 
     if (!ref) {
-      // TODO: Public doc page with more info about this message
       console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -4419,11 +4421,6 @@ class {
       componentRef: this.component?.component,
       componentOptions: {
         ...getBlockComponentOptions(this.useBlock),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
         ...(this.shouldWrap
           ? {}
           : {
@@ -4435,28 +4432,14 @@ class {
     };
   }
   get useChildren() {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
     return this.useBlock.children ?? [];
   }
   get childrenWithoutParentComponent() {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
     const shouldRenderChildrenOutsideRef =
       !this.component?.component && !this.repeatItemData;
     return shouldRenderChildrenOutsideRef ? this.useChildren : [];
   }
   get repeatItemData() {
-    /**
-     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
     const { repeat, ...blockWithoutRepeat } = this.input.block;
 
     if (!repeat?.collection) {
@@ -4517,7 +4500,6 @@ class {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;

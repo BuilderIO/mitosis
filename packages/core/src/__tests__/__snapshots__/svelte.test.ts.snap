@@ -507,9 +507,7 @@ exports[`Svelte > jsx > Javascript Test > CustomCode 1`] = `
   export let code;
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -574,9 +572,7 @@ exports[`Svelte > jsx > Javascript Test > Embed 1`] = `
   export let code;
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -677,8 +673,7 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
       const el = event.currentTarget;
       const headers = customHeaders || {};
       let body;
-      const formData = new FormData(el); // TODO: maybe support null
-
+      const formData = new FormData(el);
       const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
@@ -705,7 +700,6 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
                 value = num;
               }
             } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
               value = el.files;
             } else {
               value = el.value;
@@ -733,14 +727,11 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
+      });
 
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
-        // Json
         const json = {};
         Array.from(formPairs).forEach(({ value, key }) => {
           set(json, key, value);
@@ -749,10 +740,7 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
       }
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && action?.includes(\\"zapier.com\\"))
-        ) {
+        if (!(sendWithJs && action?.includes(\\"zapier.com\\"))) {
           headers[\\"content-type\\"] = contentType;
         }
       }
@@ -777,15 +765,11 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
         sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(name || \\"\\")}\`;
-      fetch(
-        sendSubmissionsTo === \\"email\\" ? formUrl : action,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: method || \\"post\\",
-        }
-      ).then(
+      fetch(sendSubmissionsTo === \\"email\\" ? formUrl : action, {
+        body,
+        headers,
+        method: method || \\"post\\",
+      }).then(
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
@@ -797,13 +781,10 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
           }
 
           if (!res.ok && errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
             let message = get(body, errorMessagePath);
 
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -828,13 +809,11 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
 
               if (resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
             if (successUrl) {
               if (formRef) {
@@ -947,7 +926,6 @@ exports[`Svelte > jsx > Javascript Test > Image 1`] = `
   }
 
   function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
     return !!lazy && isBrowser();
   }
 
@@ -1643,6 +1621,36 @@ exports[`Svelte > jsx > Javascript Test > classState 1`] = `
 </style>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > commentsWithQuotes 1`] = `
+"<script>
+  function handleFn() {}
+
+  function doSomething() {
+    console.log(\\"This is a aa\\");
+  }
+
+  let name = \\"Steve\\";
+</script>
+
+<div>
+  <input
+    class=\\"input\\"
+    on:click={(event) => {
+      doSomething();
+    }}
+    bind:value={name}
+  />
+  Hello
+  {name}! I can run in React, Vue, Solid, or Liquid!
+</div>
+
+<style>
+  .input {
+    color: red;
+  }
+</style>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > componentWithContext 1`] = `
 "<script>
   import { getContext, setContext } from \\"svelte\\";
@@ -2159,7 +2167,6 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
     const ref = context.registeredComponents[componentName];
 
     if (!ref) {
-      // TODO: Public doc page with more info about this message
       console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -2218,11 +2225,6 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
       componentRef: component?.()?.component,
       componentOptions: {
         ...getBlockComponentOptions(useBlock()),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
         ...(shouldWrap()
           ? {}
           : {
@@ -2235,30 +2237,16 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
   };
 
   $: useChildren = () => {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
     return useBlock().children ?? [];
   };
 
   $: childrenWithoutParentComponent = () => {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
     const shouldRenderChildrenOutsideRef =
       !component?.()?.component && !repeatItemData();
     return shouldRenderChildrenOutsideRef ? useChildren() : [];
   };
 
   $: repeatItemData = () => {
-    /**
-     * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
     const { repeat, ...blockWithoutRepeat } = block;
 
     if (!repeat?.collection) {
@@ -2322,7 +2310,6 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;
@@ -3308,9 +3295,7 @@ exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
   export let code: CustomCodeProps[\\"code\\"];
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -3382,9 +3367,7 @@ exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
   export let code: CustomCodeProps[\\"code\\"];
 
   function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -3516,8 +3499,7 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
       const el = event.currentTarget;
       const headers = customHeaders || {};
       let body: any;
-      const formData = new FormData(el); // TODO: maybe support null
-
+      const formData = new FormData(el);
       const formPairs: {
         key: string;
         value: File | boolean | number | string | FileList;
@@ -3547,7 +3529,6 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
                 value = num;
               }
             } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
               value = el.files;
             } else {
               value = el.value;
@@ -3575,14 +3556,11 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
+      });
 
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
-        // Json
         const json = {};
         Array.from(formPairs).forEach(({ value, key }) => {
           set(json, key, value);
@@ -3591,10 +3569,7 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
       }
 
       if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && action?.includes(\\"zapier.com\\"))
-        ) {
+        if (!(sendWithJs && action?.includes(\\"zapier.com\\"))) {
           headers[\\"content-type\\"] = contentType;
         }
       }
@@ -3619,15 +3594,11 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
         sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(name || \\"\\")}\`;
-      fetch(
-        sendSubmissionsTo === \\"email\\" ? formUrl : action!,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: method || \\"post\\",
-        }
-      ).then(
+      fetch(sendSubmissionsTo === \\"email\\" ? formUrl : action!, {
+        body,
+        headers,
+        method: method || \\"post\\",
+      }).then(
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
@@ -3639,13 +3610,10 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
           }
 
           if (!res.ok && errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
             let message = get(body, errorMessagePath);
 
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -3670,13 +3638,11 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-              /* TODO: option to turn this on/off? */
 
               if (resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
             if (successUrl) {
               if (formRef) {
@@ -3810,7 +3776,6 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
   }
 
   function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
     return !!lazy && isBrowser();
   }
 
@@ -4701,6 +4666,36 @@ exports[`Svelte > jsx > Typescript Test > classState 1`] = `
 </style>"
 `;
 
+exports[`Svelte > jsx > Typescript Test > commentsWithQuotes 1`] = `
+"<script lang=\\"ts\\">
+  function handleFn() {}
+
+  function doSomething() {
+    console.log(\\"This is a aa\\");
+  }
+
+  let name = \\"Steve\\";
+</script>
+
+<div>
+  <input
+    class=\\"input\\"
+    on:click={(event) => {
+      doSomething();
+    }}
+    bind:value={name}
+  />
+  Hello
+  {name}! I can run in React, Vue, Solid, or Liquid!
+</div>
+
+<style>
+  .input {
+    color: red;
+  }
+</style>"
+`;
+
 exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   export interface ComponentWithContextProps {
@@ -5357,7 +5352,6 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
     const ref = context.registeredComponents[componentName];
 
     if (!ref) {
-      // TODO: Public doc page with more info about this message
       console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -5416,11 +5410,6 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
       componentRef: component?.()?.component,
       componentOptions: {
         ...getBlockComponentOptions(useBlock()),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
         ...(shouldWrap()
           ? {}
           : {
@@ -5433,30 +5422,16 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
   };
 
   $: useChildren = () => {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
     return useBlock().children ?? [];
   };
 
   $: childrenWithoutParentComponent = () => {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
     const shouldRenderChildrenOutsideRef =
       !component?.()?.component && !repeatItemData();
     return shouldRenderChildrenOutsideRef ? useChildren() : [];
   };
 
   $: repeatItemData = () => {
-    /**
-     * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
     const { repeat, ...blockWithoutRepeat } = block;
 
     if (!repeat?.collection) {
@@ -5520,7 +5495,6 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;

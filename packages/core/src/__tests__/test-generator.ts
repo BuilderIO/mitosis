@@ -34,6 +34,7 @@ const basicForwardRefMetadata = getRawFile('./data/basic-forwardRef-metadata.raw
 const basicRefPrevious = getRawFile('./data/basic-ref-usePrevious.raw.tsx');
 const basicRefAssignment = getRawFile('./data/basic-ref-assignment.raw.tsx');
 const propsDestructure = getRawFile('./data/basic-props-destructure.raw.tsx');
+const commentsWithQuotes = getRawFile('./data/comments-with-quotes.raw.tsx');
 const nestedStyles = getRawFile('./data/nested-styles.raw.tsx');
 const preserveExportOrLocalStatement = getRawFile(
   './data/basic-preserve-export-or-local-statement.raw.tsx',
@@ -203,6 +204,7 @@ const BASIC_TESTS: Tests = {
   spreadAttrs,
   spreadNestedProps,
   spreadProps,
+  commentsWithQuotes,
   renderContentExample,
   arrowFunctionInUseStore,
   expressionState,

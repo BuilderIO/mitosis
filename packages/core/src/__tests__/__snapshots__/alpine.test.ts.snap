@@ -535,9 +535,7 @@ exports[`Alpine.js > jsx > Javascript Test > CustomCode 1`] = `
       scriptsRun: [],
 
       findAndRunScripts() {
-        // TODO: Move this function to standalone one in '@builder.io/utils'
         if (this.$refs.elem && typeof window !== \\"undefined\\") {
-          /** @type {HTMLScriptElement[]} */
           const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
 
           for (let i = 0; i < scripts.length; i++) {
@@ -599,9 +597,7 @@ exports[`Alpine.js > jsx > Javascript Test > Embed 1`] = `
       scriptsRun: [],
 
       findAndRunScripts() {
-        // TODO: Move this function to standalone one in '@builder.io/utils'
         if (this.$refs.elem && typeof window !== \\"undefined\\") {
-          /** @type {HTMLScriptElement[]} */
           const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
 
           for (let i = 0; i < scripts.length; i++) {
@@ -733,8 +729,7 @@ exports[`Alpine.js > jsx > Javascript Test > Form 1`] = `
           const el = event.currentTarget;
           const headers = props.customHeaders || {};
           let body;
-          const formData = new FormData(el); // TODO: maybe support null
-
+          const formData = new FormData(el);
           const formPairs = Array.from(
             event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
           )
@@ -761,7 +756,6 @@ exports[`Alpine.js > jsx > Javascript Test > Form 1`] = `
                     value = num;
                   }
                 } else if (el.type === \\"file\\") {
-                  // TODO: one vs multiple files
                   value = el.files;
                 } else {
                   value = el.value;
@@ -789,14 +783,11 @@ exports[`Alpine.js > jsx > Javascript Test > Form 1`] = `
             ) {
               contentType = \\"multipart/form-data\\";
             }
-          }); // TODO: send as urlEncoded or multipart by default
-          // because of ease of use and reliability in browser API
-          // for encoding the form?
+          });
 
           if (contentType !== \\"application/json\\") {
             body = formData;
           } else {
-            // Json
             const json = {};
             Array.from(formPairs).forEach(({ value, key }) => {
               set(json, key, value);
@@ -805,10 +796,7 @@ exports[`Alpine.js > jsx > Javascript Test > Form 1`] = `
           }
 
           if (contentType && contentType !== \\"multipart/form-data\\") {
-            if (
-              /* Zapier doesn't allow content-type header to be sent from browsers */
-              !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
-            ) {
+            if (!(sendWithJs && props.action?.includes(\\"zapier.com\\"))) {
               headers[\\"content-type\\"] = contentType;
             }
           }
@@ -835,15 +823,11 @@ exports[`Alpine.js > jsx > Javascript Test > Form 1`] = `
           }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
             props.sendSubmissionsToEmail || \\"\\"
           )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
-          fetch(
-            props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
-            /* TODO: throw error if no action URL */
-            {
-              body,
-              headers,
-              method: props.method || \\"post\\",
-            }
-          ).then(
+          fetch(props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action, {
+            body,
+            headers,
+            method: props.method || \\"post\\",
+          }).then(
             async (res) => {
               let body;
               const contentType = res.headers.get(\\"content-type\\");
@@ -858,13 +842,10 @@ exports[`Alpine.js > jsx > Javascript Test > Form 1`] = `
               }
 
               if (!res.ok && props.errorMessagePath) {
-                /* TODO: allow supplying an error formatter function */
                 let message = get(body, props.errorMessagePath);
 
                 if (message) {
                   if (typeof message !== \\"string\\") {
-                    /* TODO: ideally convert json to yaml so it woul dbe like
-                 error: - email has been taken */
                     message = JSON.stringify(message);
                   }
 
@@ -889,13 +870,11 @@ exports[`Alpine.js > jsx > Javascript Test > Form 1`] = `
                   if (submitSuccessEvent.defaultPrevented) {
                     return;
                   }
-                  /* TODO: option to turn this on/off? */
 
                   if (props.resetFormOnSubmit !== false) {
                     this.$refs.formRef.reset();
                   }
                 }
-                /* TODO: client side route event first that can be preventDefaulted */
 
                 if (props.successUrl) {
                   if (this.$refs.formRef) {
@@ -981,7 +960,6 @@ exports[`Alpine.js > jsx > Javascript Test > Image 1`] = `
       },
 
       useLazyLoading() {
-        // TODO: Add more checks here, like testing for real web browsers
         return !!props.lazy && this.isBrowser();
       },
 
@@ -1632,6 +1610,41 @@ exports[`Alpine.js > jsx > Javascript Test > classState 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > commentsWithQuotes 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"myComponent()\\">
+  <input
+    class=\\"input\\"
+    x-bind:value=\\"name\\"
+    x-on:change=\\"name = $event.target.value\\"
+    x-on:click=\\"doSomething()\\"
+  />
+
+  Hello
+
+  <span x-html=\\"name\\"></span>
+  ! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"Steve\\",
+
+      handleFn() {},
+
+      doSomething: function doSomething() {
+        console.log(\\"This is a aa\\");
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > componentWithContext 1`] = `
 "<div x-data=\\"componentWithContext()\\">
   <div><span x-html=\\"foo.value\\"></span></div>
@@ -2181,7 +2194,6 @@ exports[`Alpine.js > jsx > Javascript Test > renderBlock 1`] = `
         const ref = props.context.registeredComponents[componentName];
 
         if (!ref) {
-          // TODO: Public doc page with more info about this message
           console.warn(\`
           Could not find a registered component named \\"\${componentName}\\". 
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -2240,11 +2252,6 @@ exports[`Alpine.js > jsx > Javascript Test > renderBlock 1`] = `
           componentRef: this.component?.component,
           componentOptions: {
             ...getBlockComponentOptions(this.useBlock),
-
-            /**
-             * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-             * they are provided to the component itself directly.
-             */
             ...(this.shouldWrap
               ? {}
               : {
@@ -2257,30 +2264,16 @@ exports[`Alpine.js > jsx > Javascript Test > renderBlock 1`] = `
       },
 
       get useChildren() {
-        // TO-DO: When should \`canHaveChildren\` dictate rendering?
-        // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-        // but still receive and need to render children.
-        // return this.componentInfo?.canHaveChildren ? this.useBlock.children : [];
         return this.useBlock.children ?? [];
       },
 
       get childrenWithoutParentComponent() {
-        /**
-         * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-         * we render them outside of \`componentRef\`.
-         * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-         * blocks, and the children will be repeated within those blocks.
-         */
         const shouldRenderChildrenOutsideRef =
           !this.component?.component && !this.repeatItemData;
         return shouldRenderChildrenOutsideRef ? this.useChildren : [];
       },
 
       get repeatItemData() {
-        /**
-         * we don't use \`this.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-         * which will not work if there is a repeat.
-         */
         const { repeat, ...blockWithoutRepeat } = props.block;
 
         if (!repeat?.collection) {
@@ -2345,7 +2338,6 @@ exports[`Alpine.js > jsx > Javascript Test > renderBlock 1`] = `
         if (TARGET === \\"reactNative\\") {
           return RenderComponentWithContext;
         } else if (TARGET === \\"vue3\\") {
-          // vue3 expects a string for the component tag
           return \\"RenderComponent\\";
         } else {
           return RenderComponent;
@@ -3253,9 +3245,7 @@ exports[`Alpine.js > jsx > Typescript Test > CustomCode 1`] = `
       scriptsRun: [],
 
       findAndRunScripts() {
-        // TODO: Move this function to standalone one in '@builder.io/utils'
         if (this.$refs.elem && typeof window !== \\"undefined\\") {
-          /** @type {HTMLScriptElement[]} */
           const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
 
           for (let i = 0; i < scripts.length; i++) {
@@ -3317,9 +3307,7 @@ exports[`Alpine.js > jsx > Typescript Test > Embed 1`] = `
       scriptsRun: [],
 
       findAndRunScripts() {
-        // TODO: Move this function to standalone one in '@builder.io/utils'
         if (this.$refs.elem && typeof window !== \\"undefined\\") {
-          /** @type {HTMLScriptElement[]} */
           const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
 
           for (let i = 0; i < scripts.length; i++) {
@@ -3452,8 +3440,7 @@ exports[`Alpine.js > jsx > Typescript Test > Form 1`] = `
           const el = event.currentTarget;
           const headers = props.customHeaders || {};
           let body: any;
-          const formData = new FormData(el); // TODO: maybe support null
-
+          const formData = new FormData(el);
           const formPairs: {
             key: string;
             value: File | boolean | number | string | FileList;
@@ -3479,7 +3466,6 @@ exports[`Alpine.js > jsx > Typescript Test > Form 1`] = `
                   value = num;
                 }
               } else if (el.type === 'file') {
-                // TODO: one vs multiple files
                 value = el.files;
               } else {
                 value = el.value;
@@ -3505,14 +3491,11 @@ exports[`Alpine.js > jsx > Typescript Test > Form 1`] = `
             if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
               contentType = 'multipart/form-data';
             }
-          }); // TODO: send as urlEncoded or multipart by default
-          // because of ease of use and reliability in browser API
-          // for encoding the form?
+          });
 
           if (contentType !== 'application/json') {
             body = formData;
           } else {
-            // Json
             const json = {};
             Array.from(formPairs).forEach(({
               value,
@@ -3524,9 +3507,7 @@ exports[`Alpine.js > jsx > Typescript Test > Form 1`] = `
           }
 
           if (contentType && contentType !== 'multipart/form-data') {
-            if (
-            /* Zapier doesn't allow content-type header to be sent from browsers */
-            !(sendWithJs && props.action?.includes('zapier.com'))) {
+            if (!(sendWithJs && props.action?.includes('zapier.com'))) {
               headers['content-type'] = contentType;
             }
           }
@@ -3547,9 +3528,7 @@ exports[`Alpine.js > jsx > Typescript Test > Form 1`] = `
 
           this.formState = 'sending';
           const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`;
-          fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action!
-          /* TODO: throw error if no action URL */
-          , {
+          fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action!, {
             body,
             headers,
             method: props.method || 'post'
@@ -3564,13 +3543,10 @@ exports[`Alpine.js > jsx > Typescript Test > Form 1`] = `
             }
 
             if (!res.ok && props.errorMessagePath) {
-              /* TODO: allow supplying an error formatter function */
               let message = get(body, props.errorMessagePath);
 
               if (message) {
                 if (typeof message !== 'string') {
-                  /* TODO: ideally convert json to yaml so it woul dbe like
-                   error: - email has been taken */
                   message = JSON.stringify(message);
                 }
 
@@ -3595,15 +3571,11 @@ exports[`Alpine.js > jsx > Typescript Test > Form 1`] = `
                 if (submitSuccessEvent.defaultPrevented) {
                   return;
                 }
-                /* TODO: option to turn this on/off? */
-
 
                 if (props.resetFormOnSubmit !== false) {
                   this.$refs.formRef.reset();
                 }
               }
-              /* TODO: client side route event first that can be preventDefaulted */
-
 
               if (props.successUrl) {
                 if (this.$refs.formRef) {
@@ -3688,7 +3660,6 @@ exports[`Alpine.js > jsx > Typescript Test > Image 1`] = `
       },
 
       useLazyLoading() {
-        // TODO: Add more checks here, like testing for real web browsers
         return !!props.lazy && this.isBrowser();
       },
 
@@ -4339,6 +4310,41 @@ exports[`Alpine.js > jsx > Typescript Test > classState 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Typescript Test > commentsWithQuotes 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"myComponent()\\">
+  <input
+    class=\\"input\\"
+    x-bind:value=\\"name\\"
+    x-on:change=\\"name = $event.target.value\\"
+    x-on:click=\\"doSomething()\\"
+  />
+
+  Hello
+
+  <span x-html=\\"name\\"></span>
+  ! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"Steve\\",
+
+      handleFn() {},
+
+      doSomething: function doSomething() {
+        console.log(\\"This is a aa\\");
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Typescript Test > componentWithContext 1`] = `
 "<div x-data=\\"componentWithContext()\\">
   <div><span x-html=\\"foo.value\\"></span></div>
@@ -4888,7 +4894,6 @@ exports[`Alpine.js > jsx > Typescript Test > renderBlock 1`] = `
         const ref = props.context.registeredComponents[componentName];
 
         if (!ref) {
-          // TODO: Public doc page with more info about this message
           console.warn(\`
           Could not find a registered component named \\"\${componentName}\\". 
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
@@ -4947,11 +4952,6 @@ exports[`Alpine.js > jsx > Typescript Test > renderBlock 1`] = `
           componentRef: this.component?.component,
           componentOptions: {
             ...getBlockComponentOptions(this.useBlock),
-
-            /**
-             * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-             * they are provided to the component itself directly.
-             */
             ...(this.shouldWrap
               ? {}
               : {
@@ -4964,30 +4964,16 @@ exports[`Alpine.js > jsx > Typescript Test > renderBlock 1`] = `
       },
 
       get useChildren() {
-        // TO-DO: When should \`canHaveChildren\` dictate rendering?
-        // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-        // but still receive and need to render children.
-        // return this.componentInfo?.canHaveChildren ? this.useBlock.children : [];
         return this.useBlock.children ?? [];
       },
 
       get childrenWithoutParentComponent() {
-        /**
-         * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-         * we render them outside of \`componentRef\`.
-         * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-         * blocks, and the children will be repeated within those blocks.
-         */
         const shouldRenderChildrenOutsideRef =
           !this.component?.component && !this.repeatItemData;
         return shouldRenderChildrenOutsideRef ? this.useChildren : [];
       },
 
       get repeatItemData() {
-        /**
-         * we don't use \`this.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-         * which will not work if there is a repeat.
-         */
         const { repeat, ...blockWithoutRepeat } = props.block;
 
         if (!repeat?.collection) {
@@ -5055,7 +5041,6 @@ exports[`Alpine.js > jsx > Typescript Test > renderBlock 1`] = `
         if (TARGET === \\"reactNative\\") {
           return RenderComponentWithContext;
         } else if (TARGET === \\"vue3\\") {
-          // vue3 expects a string for the component tag
           return \\"RenderComponent\\";
         } else {
           return RenderComponent;
