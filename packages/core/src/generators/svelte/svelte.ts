@@ -379,7 +379,10 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             }
 
             const fnName = `onUpdateFn_${index}`;
-            const depsArray = deps.slice(1, deps.length - 1).split(',');
+            const depsArray = deps
+              .slice(1, deps.length - 1)
+              .split(',')
+              .map((x) => x.trim());
             const getNewDepName = (dep: string) => `${fnName}_${dep}`;
 
             /**
@@ -393,7 +396,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
               function ${fnName}(..._args${options.typescript ? ': any[]' : ''}) {
                 ${code}
               }
-              ${depsArray.map((dep) => `$: ${getNewDepName(dep)} = ${dep};`)}
+              ${depsArray.map((dep) => `$: ${getNewDepName(dep)} = ${dep};`).join('\n')}
               $: ${fnName}(...[${depsArray.map(getNewDepName).join(', ')}]);
             `;
           })
