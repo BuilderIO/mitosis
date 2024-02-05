@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.145
+
+### Patch Changes
+
+- 9720fb6: Fix: Svelte reactivity in onUpdate dependencies
+
 ## 0.0.144
 
 ### Patch Changes
