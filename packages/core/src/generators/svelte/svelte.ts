@@ -384,7 +384,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
               .split(',')
               .map((x) => x.trim());
             const getReactiveDepName = (dep: string) =>
-              `${fnName}_${dep.slice(1).replace(/\./g, '_')}`;
+              `${fnName}_${dep.slice(1).replace(/(\.|\?)/g, '_')}`;
 
             const isStoreAccessDep = (dep: string) => dep.startsWith('$');
 
