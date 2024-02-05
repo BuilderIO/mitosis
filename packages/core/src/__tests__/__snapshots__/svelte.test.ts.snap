@@ -21,6 +21,7 @@ exports[`Svelte > jsx > Javascript Test > AdvancedRef 1`] = `
   function onUpdateFn_0(..._args) {
     console.log(\\"Received an update\\");
   }
+
   $: onUpdateFn_0(...[inputRef, inputNoArgRef]);
 </script>
 
@@ -350,6 +351,7 @@ exports[`Svelte > jsx > Javascript Test > BasicRefPrevious 1`] = `
   function onUpdateFn_0(..._args) {
     prevCount = count;
   }
+
   $: onUpdateFn_0(...[count]);
 </script>
 
@@ -1564,6 +1566,7 @@ exports[`Svelte > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
       }
     };
   }
+
   $: onUpdateFn_0(...[name]);
 </script>
 
@@ -1854,6 +1857,7 @@ exports[`Svelte > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
       a = \\"b\\";
     }
   }
+
   $: onUpdateFn_0(...[a, b]);
   function onUpdateFn_1(..._args) {
     console.log(\\"Runs when c or d changes\\", c, d);
@@ -1862,6 +1866,7 @@ exports[`Svelte > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
       a = \\"b\\";
     }
   }
+
   $: onUpdateFn_1(...[c, d]);
 </script>
 
@@ -2044,6 +2049,7 @@ exports[`Svelte > jsx > Javascript Test > onUpdateWithDeps 1`] = `
   function onUpdateFn_0(..._args) {
     console.log(\\"Runs when a, b or size changes\\", a, b, size);
   }
+
   $: onUpdateFn_0(...[a, b, size]);
 </script>
 
@@ -2384,6 +2390,7 @@ exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
   function onUpdateFn_0(..._args) {
     dispatchNewContentToVisualEditor(content);
   }
+
   $: onUpdateFn_0(...[content]);
 
   setContext(BuilderContext.key, {
@@ -2507,6 +2514,31 @@ exports[`Svelte > jsx > Javascript Test > showWithRootText 1`] = `
 {:else}
   <div>else-condition-A</div>
 {/if}"
+`;
+
+exports[`Svelte > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"<script>
+  export let id;
+  export let foo;
+
+  function onUpdateFn_0(..._args) {
+    console.log(\\"props.id changed\\", id);
+    console.log(\\"props.foo.value.bar.baz changed\\", foo.value.bar.baz);
+  }
+
+  $: onUpdateFn_0(...[id, foo.value.bar.baz]);
+</script>
+
+<div class=\\"test div\\">
+  {id}
+  {foo.value.bar.baz}
+</div>
+
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > spreadAttrs 1`] = `"<input {...attrs} />"`;
@@ -2726,6 +2758,7 @@ exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
   function onUpdateFn_0(..._args: any[]) {
     console.log(\\"Received an update\\");
   }
+
   $: onUpdateFn_0(...[inputRef, inputNoArgRef]);
 </script>
 
@@ -3098,6 +3131,7 @@ exports[`Svelte > jsx > Typescript Test > BasicRefPrevious 1`] = `
   function onUpdateFn_0(..._args: any[]) {
     prevCount = count;
   }
+
   $: onUpdateFn_0(...[count]);
 </script>
 
@@ -3124,10 +3158,10 @@ exports[`Svelte > jsx > Typescript Test > Button 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"];
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
-  export let text: ButtonProps[\\"text\\"];
+  export let link: ButtonProps[\\"link\\"] = undefined;
+  export let attributes: ButtonProps[\\"attributes\\"] = undefined;
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = undefined;
+  export let text: ButtonProps[\\"text\\"] = undefined;
 </script>
 
 <div>
@@ -3169,8 +3203,8 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let columns: ColumnProps[\\"columns\\"];
-  export let space: ColumnProps[\\"space\\"];
+  export let columns: ColumnProps[\\"columns\\"] = undefined;
+  export let space: ColumnProps[\\"space\\"] = undefined;
 
   function getColumns() {
     return columns || [];
@@ -3304,7 +3338,7 @@ exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
 <script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
-  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
+  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"] = undefined;
   export let code: CustomCodeProps[\\"code\\"];
 
   function findAndRunScripts() {
@@ -3378,7 +3412,7 @@ exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
 <script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
-  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
+  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"] = undefined;
   export let code: CustomCodeProps[\\"code\\"];
 
   function findAndRunScripts() {
@@ -3478,24 +3512,25 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
     set,
   } from \\"@fake\\";
 
-  export let previewState: FormProps[\\"previewState\\"];
-  export let sendWithJs: FormProps[\\"sendWithJs\\"];
-  export let sendSubmissionsTo: FormProps[\\"sendSubmissionsTo\\"];
-  export let action: FormProps[\\"action\\"];
-  export let customHeaders: FormProps[\\"customHeaders\\"];
-  export let contentType: FormProps[\\"contentType\\"];
-  export let sendSubmissionsToEmail: FormProps[\\"sendSubmissionsToEmail\\"];
-  export let name: FormProps[\\"name\\"];
-  export let method: FormProps[\\"method\\"];
-  export let errorMessagePath: FormProps[\\"errorMessagePath\\"];
-  export let resetFormOnSubmit: FormProps[\\"resetFormOnSubmit\\"];
-  export let successUrl: FormProps[\\"successUrl\\"];
-  export let validate: FormProps[\\"validate\\"];
-  export let attributes: FormProps[\\"attributes\\"];
-  export let builderBlock: FormProps[\\"builderBlock\\"];
-  export let errorMessage: FormProps[\\"errorMessage\\"];
-  export let sendingMessage: FormProps[\\"sendingMessage\\"];
-  export let successMessage: FormProps[\\"successMessage\\"];
+  export let previewState: FormProps[\\"previewState\\"] = undefined;
+  export let sendWithJs: FormProps[\\"sendWithJs\\"] = undefined;
+  export let sendSubmissionsTo: FormProps[\\"sendSubmissionsTo\\"] = undefined;
+  export let action: FormProps[\\"action\\"] = undefined;
+  export let customHeaders: FormProps[\\"customHeaders\\"] = undefined;
+  export let contentType: FormProps[\\"contentType\\"] = undefined;
+  export let sendSubmissionsToEmail: FormProps[\\"sendSubmissionsToEmail\\"] =
+    undefined;
+  export let name: FormProps[\\"name\\"] = undefined;
+  export let method: FormProps[\\"method\\"] = undefined;
+  export let errorMessagePath: FormProps[\\"errorMessagePath\\"] = undefined;
+  export let resetFormOnSubmit: FormProps[\\"resetFormOnSubmit\\"] = undefined;
+  export let successUrl: FormProps[\\"successUrl\\"] = undefined;
+  export let validate: FormProps[\\"validate\\"] = undefined;
+  export let attributes: FormProps[\\"attributes\\"] = undefined;
+  export let builderBlock: FormProps[\\"builderBlock\\"] = undefined;
+  export let errorMessage: FormProps[\\"errorMessage\\"] = undefined;
+  export let sendingMessage: FormProps[\\"sendingMessage\\"] = undefined;
+  export let successMessage: FormProps[\\"successMessage\\"] = undefined;
 
   function onSubmit(
     event: Event & {
@@ -3798,12 +3833,12 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
 <script lang=\\"ts\\">
   import { onDestroy, onMount } from \\"svelte\\";
 
-  export let lazy: ImageProps[\\"lazy\\"];
-  export let altText: ImageProps[\\"altText\\"];
-  export let _class: ImageProps[\\"_class\\"];
+  export let lazy: ImageProps[\\"lazy\\"] = undefined;
+  export let altText: ImageProps[\\"altText\\"] = undefined;
+  export let _class: ImageProps[\\"_class\\"] = undefined;
   export let image: ImageProps[\\"image\\"];
-  export let srcset: ImageProps[\\"srcset\\"];
-  export let sizes: ImageProps[\\"sizes\\"];
+  export let srcset: ImageProps[\\"srcset\\"] = undefined;
+  export let sizes: ImageProps[\\"sizes\\"] = undefined;
 
   function setLoaded() {
     imageLoaded = true;
@@ -3924,11 +3959,11 @@ exports[`Svelte > jsx > Typescript Test > Img 1`] = `
 <script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let backgroundSize: ImgProps[\\"backgroundSize\\"];
-  export let backgroundPosition: ImgProps[\\"backgroundPosition\\"];
-  export let attributes: ImgProps[\\"attributes\\"];
-  export let imgSrc: ImgProps[\\"imgSrc\\"];
-  export let altText: ImgProps[\\"altText\\"];
+  export let backgroundSize: ImgProps[\\"backgroundSize\\"] = undefined;
+  export let backgroundPosition: ImgProps[\\"backgroundPosition\\"] = undefined;
+  export let attributes: ImgProps[\\"attributes\\"] = undefined;
+  export let imgSrc: ImgProps[\\"imgSrc\\"] = undefined;
+  export let altText: ImgProps[\\"altText\\"] = undefined;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -3970,14 +4005,14 @@ exports[`Svelte > jsx > Typescript Test > Input 1`] = `
 <script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let attributes: FormInputProps[\\"attributes\\"];
-  export let defaultValue: FormInputProps[\\"defaultValue\\"];
-  export let placeholder: FormInputProps[\\"placeholder\\"];
-  export let type: FormInputProps[\\"type\\"];
-  export let name: FormInputProps[\\"name\\"];
-  export let value: FormInputProps[\\"value\\"];
-  export let required: FormInputProps[\\"required\\"];
-  export let onChange: FormInputProps[\\"onChange\\"];
+  export let attributes: FormInputProps[\\"attributes\\"] = undefined;
+  export let defaultValue: FormInputProps[\\"defaultValue\\"] = undefined;
+  export let placeholder: FormInputProps[\\"placeholder\\"] = undefined;
+  export let type: FormInputProps[\\"type\\"] = undefined;
+  export let name: FormInputProps[\\"name\\"] = undefined;
+  export let value: FormInputProps[\\"value\\"] = undefined;
+  export let required: FormInputProps[\\"required\\"] = undefined;
+  export let onChange: FormInputProps[\\"onChange\\"] = undefined;
 </script>
 
 <input
@@ -4020,8 +4055,8 @@ exports[`Svelte > jsx > Typescript Test > RawText 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: RawTextProps[\\"attributes\\"];
-  export let text: RawTextProps[\\"text\\"];
+  export let attributes: RawTextProps[\\"attributes\\"] = undefined;
+  export let text: RawTextProps[\\"text\\"] = undefined;
 </script>
 
 <span class={attributes?.class || attributes?.className}
@@ -4039,8 +4074,8 @@ exports[`Svelte > jsx > Typescript Test > Section 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: SectionProps[\\"attributes\\"];
-  export let maxWidth: SectionProps[\\"maxWidth\\"];
+  export let attributes: SectionProps[\\"attributes\\"] = undefined;
+  export let maxWidth: SectionProps[\\"maxWidth\\"] = undefined;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -4075,7 +4110,7 @@ exports[`Svelte > jsx > Typescript Test > Section 2`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: SectionProps[\\"attributes\\"];
+  export let attributes: SectionProps[\\"attributes\\"] = undefined;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -4122,11 +4157,11 @@ exports[`Svelte > jsx > Typescript Test > Select 1`] = `
 <script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let attributes: FormSelectProps[\\"attributes\\"];
-  export let value: FormSelectProps[\\"value\\"];
-  export let defaultValue: FormSelectProps[\\"defaultValue\\"];
-  export let name: FormSelectProps[\\"name\\"];
-  export let options: FormSelectProps[\\"options\\"];
+  export let attributes: FormSelectProps[\\"attributes\\"] = undefined;
+  export let value: FormSelectProps[\\"value\\"] = undefined;
+  export let defaultValue: FormSelectProps[\\"defaultValue\\"] = undefined;
+  export let name: FormSelectProps[\\"name\\"] = undefined;
+  export let options: FormSelectProps[\\"options\\"] = undefined;
 </script>
 
 <select
@@ -4359,8 +4394,8 @@ exports[`Svelte > jsx > Typescript Test > Submit 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let text: ButtonProps[\\"text\\"];
+  export let attributes: ButtonProps[\\"attributes\\"] = undefined;
+  export let text: ButtonProps[\\"text\\"] = undefined;
 </script>
 
 <button type=\\"submit\\" {...attributes}>
@@ -4382,8 +4417,8 @@ exports[`Svelte > jsx > Typescript Test > Text 1`] = `
 <script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let text: TextProps[\\"text\\"];
-  export let content: TextProps[\\"content\\"];
+  export let text: TextProps[\\"text\\"] = undefined;
+  export let content: TextProps[\\"content\\"] = undefined;
 
   let name = \\"Decadef20\\";
 </script>
@@ -4410,11 +4445,11 @@ exports[`Svelte > jsx > Typescript Test > Textarea 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: TextareaProps[\\"attributes\\"];
-  export let placeholder: TextareaProps[\\"placeholder\\"];
-  export let name: TextareaProps[\\"name\\"];
-  export let value: TextareaProps[\\"value\\"];
-  export let defaultValue: TextareaProps[\\"defaultValue\\"];
+  export let attributes: TextareaProps[\\"attributes\\"] = undefined;
+  export let placeholder: TextareaProps[\\"placeholder\\"] = undefined;
+  export let name: TextareaProps[\\"name\\"] = undefined;
+  export let value: TextareaProps[\\"value\\"] = undefined;
+  export let defaultValue: TextareaProps[\\"defaultValue\\"] = undefined;
 </script>
 
 <textarea {...attributes} {placeholder} {name} {value} {defaultValue} />"
@@ -4450,15 +4485,15 @@ exports[`Svelte > jsx > Typescript Test > Video 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: VideoProps[\\"attributes\\"];
-  export let fit: VideoProps[\\"fit\\"];
-  export let position: VideoProps[\\"position\\"];
-  export let video: VideoProps[\\"video\\"];
-  export let posterImage: VideoProps[\\"posterImage\\"];
-  export let autoPlay: VideoProps[\\"autoPlay\\"];
-  export let muted: VideoProps[\\"muted\\"];
-  export let controls: VideoProps[\\"controls\\"];
-  export let loop: VideoProps[\\"loop\\"];
+  export let attributes: VideoProps[\\"attributes\\"] = undefined;
+  export let fit: VideoProps[\\"fit\\"] = undefined;
+  export let position: VideoProps[\\"position\\"] = undefined;
+  export let video: VideoProps[\\"video\\"] = undefined;
+  export let posterImage: VideoProps[\\"posterImage\\"] = undefined;
+  export let autoPlay: VideoProps[\\"autoPlay\\"] = undefined;
+  export let muted: VideoProps[\\"muted\\"] = undefined;
+  export let controls: VideoProps[\\"controls\\"] = undefined;
+  export let loop: VideoProps[\\"loop\\"] = undefined;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -4604,6 +4639,7 @@ exports[`Svelte > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
       }
     };
   }
+
   $: onUpdateFn_0(...[name]);
 </script>
 
@@ -4799,14 +4835,15 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"] = \\"https://builder.io/\\";
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
-  export let text: ButtonProps[\\"text\\"] = \\"default text\\";
-  export let onClick: ButtonProps[\\"onClick\\"] = () => {
+  export let link: ButtonProps[\\"link\\"] = (undefined = \\"https://builder.io/\\");
+  export let attributes: ButtonProps[\\"attributes\\"] = undefined;
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = (undefined =
+    false);
+  export let text: ButtonProps[\\"text\\"] = (undefined = \\"default text\\");
+  export let onClick: ButtonProps[\\"onClick\\"] = (undefined = () => {
     console.log(\\"hi\\");
-  };
-  export let buttonText: ButtonProps[\\"buttonText\\"];
+  });
+  export let buttonText: ButtonProps[\\"buttonText\\"] = undefined;
 </script>
 
 <div>
@@ -4846,10 +4883,11 @@ exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"] = \\"https://builder.io/\\";
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
-  export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+  export let link: ButtonProps[\\"link\\"] = (undefined = \\"https://builder.io/\\");
+  export let attributes: ButtonProps[\\"attributes\\"] = undefined;
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = (undefined =
+    false);
+  export let text: ButtonProps[\\"text\\"] = (undefined = \\"default text\\");
   export let onClick: ButtonProps[\\"onClick\\"] = () => {};
 </script>
 
@@ -4961,6 +4999,7 @@ exports[`Svelte > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
       a = \\"b\\";
     }
   }
+
   $: onUpdateFn_0(...[a, b]);
   function onUpdateFn_1(..._args: any[]) {
     console.log(\\"Runs when c or d changes\\", c, d);
@@ -4969,6 +5008,7 @@ exports[`Svelte > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
       a = \\"b\\";
     }
   }
+
   $: onUpdateFn_1(...[c, d]);
 </script>
 
@@ -5173,6 +5213,7 @@ exports[`Svelte > jsx > Typescript Test > onUpdateWithDeps 1`] = `
   function onUpdateFn_0(..._args: any[]) {
     console.log(\\"Runs when a, b or size changes\\", a, b, size);
   }
+
   $: onUpdateFn_0(...[a, b, size]);
 </script>
 
@@ -5592,6 +5633,7 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
   function onUpdateFn_0(..._args: any[]) {
     dispatchNewContentToVisualEditor(content);
   }
+
   $: onUpdateFn_0(...[content]);
 
   setContext(BuilderContext.key, {
@@ -5633,10 +5675,10 @@ exports[`Svelte > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"];
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
-  export let text: ButtonProps[\\"text\\"];
+  export let link: ButtonProps[\\"link\\"] = undefined;
+  export let attributes: ButtonProps[\\"attributes\\"] = undefined;
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = undefined;
+  export let text: ButtonProps[\\"text\\"] = undefined;
 </script>
 
 {#if link}
@@ -5743,6 +5785,44 @@ exports[`Svelte > jsx > Typescript Test > showWithRootText 1`] = `
 {:else}
   <div>else-condition-A</div>
 {/if}"
+`;
+
+exports[`Svelte > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    id: Writable<string>;
+    foo: Writable<{
+      bar: {
+        baz: number;
+      };
+    }>;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import type { Writable } from \\"svelte/store\\";
+
+  export let id: Props[\\"id\\"];
+  export let foo: Props[\\"foo\\"];
+
+  function onUpdateFn_0(..._args: any[]) {
+    console.log(\\"props.id changed\\", id);
+    console.log(\\"props.foo.value.bar.baz changed\\", $foo.bar.baz);
+  }
+  $: onUpdateFn_0_foo_bar_baz = $foo.bar.baz;
+  $: onUpdateFn_0(...[id, onUpdateFn_0_foo_bar_baz]);
+</script>
+
+<div class=\\"test div\\">
+  {id}
+  {$foo.bar.baz}
+</div>
+
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > spreadAttrs 1`] = `
@@ -6196,6 +6276,7 @@ exports[`Svelte > svelte > Javascript Test > reactiveWithFn 1`] = `
   function onUpdateFn_0(..._args) {
     calculateResult(a, b);
   }
+
   $: onUpdateFn_0(...[a, b]);
 </script>
 
@@ -6473,6 +6554,7 @@ exports[`Svelte > svelte > Typescript Test > reactiveWithFn 1`] = `
   function onUpdateFn_0(..._args: any[]) {
     calculateResult(a, b);
   }
+
   $: onUpdateFn_0(...[a, b]);
 </script>
 

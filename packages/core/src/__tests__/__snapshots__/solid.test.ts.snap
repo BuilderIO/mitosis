@@ -5816,6 +5816,66 @@ export default ShowRootText;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"import { on, createEffect } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  function onUpdateFn_0() {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }
+  createEffect(on(() => [props.id, props.foo.value.bar.baz], onUpdateFn_0));
+
+  return (
+    <div
+      class={
+        \\"test \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+    >
+      {props.id}
+      {props.foo.value.bar.baz}
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > signalsOnUpdate 2`] = `
+"import { on, createEffect } from \\"solid-js\\";
+
+function MyBasicComponent(props) {
+  function onUpdateFn_0() {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }
+  createEffect(on(() => [props.id, props.foo.value.bar.baz], onUpdateFn_0));
+
+  return (
+    <>
+      <div class=\\"test div-2a5f9c5c\\">
+        {props.id}
+        {props.foo.value.bar.baz}
+      </div>
+      <style jsx>{\`
+        .div-2a5f9c5c {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > spreadAttrs 1`] = `
 "function MyBasicComponent(props) {
   return <input {...attrs} />;
@@ -7535,12 +7595,12 @@ function Column(props: ColumnProps) {
 
   return (
     <>
-      <div class=\\"builder-columns div-56caed8e\\">
+      <div class=\\"builder-columns div-970213e4\\">
         <For each={props.columns}>
           {(column, _index) => {
             const index = _index();
             return (
-              <div class=\\"builder-column div-56caed8e-2\\">
+              <div class=\\"builder-column div-970213e4-2\\">
                 {column.content}
                 {index}
               </div>
@@ -7549,23 +7609,23 @@ function Column(props: ColumnProps) {
         </For>
       </div>
       <style jsx>{\`
-        .div-56caed8e {
+        .div-970213e4 {
           display: flex;
           flex-direction: column;
           align-items: stretch;
           line-height: normal;
         }
         @media (max-width: 999px) {
-          .div-56caed8e {
+          .div-970213e4 {
             flex-direction: row;
           }
         }
         @media (max-width: 639px) {
-          .div-56caed8e {
+          .div-970213e4 {
             flex-direction: row-reverse;
           }
         }
-        .div-56caed8e-2 {
+        .div-970213e4-2 {
           flex-grow: 1;
         }
       \`}</style>
@@ -8676,7 +8736,7 @@ function FormComponent(props: FormProps) {
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder-form-error-text pre-5d01dbe3\\">
+          <pre class=\\"builder-form-error-text pre-195ea91c\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
@@ -8688,7 +8748,7 @@ function FormComponent(props: FormProps) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-5d01dbe3 {
+        .pre-195ea91c {
           padding: 10px;
           color: red;
           text-align: center;
@@ -8889,7 +8949,7 @@ function Image(props: ImageProps) {
               class={
                 \\"builder-image\\" +
                 (props._class ? \\" \\" + props._class : \\"\\") +
-                \\" img-42d59c2a\\"
+                \\" img-c153d65c\\"
               }
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -8904,7 +8964,7 @@ function Image(props: ImageProps) {
         {props.children}
       </div>
       <style jsx>{\`
-        .img-42d59c2a {
+        .img-c153d65c {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -12932,6 +12992,83 @@ function ShowRootText(props: Props) {
 }
 
 export default ShowRootText;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"import { on, createEffect } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+function MyBasicComponent(props: Props) {
+  function onUpdateFn_0() {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+  }
+  createEffect(on(() => [props.id, props.foo.bar.baz], onUpdateFn_0));
+
+  return (
+    <div
+      class={
+        \\"test \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+    >
+      {props.id}
+      {props.foo.bar.baz}
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > signalsOnUpdate 2`] = `
+"import { on, createEffect } from \\"solid-js\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+function MyBasicComponent(props: Props) {
+  function onUpdateFn_0() {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+  }
+  createEffect(on(() => [props.id, props.foo.bar.baz], onUpdateFn_0));
+
+  return (
+    <>
+      <div class=\\"test div-3c98a7da\\">
+        {props.id}
+        {props.foo.bar.baz}
+      </div>
+      <style jsx>{\`
+        .div-3c98a7da {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
 "
 `;
 

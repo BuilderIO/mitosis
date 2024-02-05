@@ -2257,6 +2257,25 @@ exports[`Marko > jsx > Javascript Test > showWithRootText 1`] = `
 <else><div>else-condition-A</div></else>"
 `;
 
+exports[`Marko > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"class {
+  onRender() {
+    console.log(\\"props.id changed\\", this.input.id);
+    console.log(
+      \\"props.foo.value.bar.baz changed\\",
+      this.input.foo.value.bar.baz
+    );
+  }
+}
+
+style { 
+  .div-2a5f9c5c {
+    padding: 10px;
+  }
+}
+<div class=\\"test div-2a5f9c5c\\">\${input.id} \${input.foo.value.bar.baz}</div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > spreadAttrs 1`] = `
 "class {}
 
@@ -2825,29 +2844,29 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
 }
 
 style { 
-  .div-56caed8e {
+  .div-970213e4 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-56caed8e {
+    .div-970213e4 {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-56caed8e {
+    .div-970213e4 {
       flex-direction: row-reverse;
     }
   }
-  .div-56caed8e-2 {
+  .div-970213e4-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-56caed8e\\">
+<div class=\\"builder-columns div-970213e4\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-56caed8e-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-970213e4-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -3287,7 +3306,7 @@ class {
 }
 
 style { 
-  .pre-19a35b98 {
+  .pre-1dad4a1e {
     padding: 10px;
     color: red;
     text-align: center;
@@ -3322,7 +3341,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-19a35b98\\">
+    <pre class=\\"builder-form-error-text pre-1dad4a1e\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -3392,7 +3411,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 }
 
 style { 
-  .img-3a26582e {
+  .img-389f51e2 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -3405,7 +3424,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-3a26582e')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-389f51e2')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -4659,6 +4678,22 @@ exports[`Marko > jsx > Typescript Test > showWithRootText 1`] = `
 
 <if(input.conditionA)> ContentA </if>
 <else><div>else-condition-A</div></else>"
+`;
+
+exports[`Marko > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"class {
+  onRender() {
+    console.log(\\"props.id changed\\", this.input.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.input.foo.bar.baz);
+  }
+}
+
+style { 
+  .div-3c98a7da {
+    padding: 10px;
+  }
+}
+<div class=\\"test div-3c98a7da\\">\${input.id} \${input.foo.bar.baz}</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > spreadAttrs 1`] = `

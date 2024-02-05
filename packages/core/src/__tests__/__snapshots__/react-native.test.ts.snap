@@ -3542,6 +3542,39 @@ export default ShowRootText;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+function MyBasicComponent(props) {
+  useEffect(() => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
+
+  return (
+    <View style={styles.view1}>
+      <Text>{props.id}</Text>
+
+      <Text>{props.foo.value.bar.baz}</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > spreadAttrs 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -7840,6 +7873,48 @@ function ShowRootText(props: Props) {
 }
 
 export default ShowRootText;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+function MyBasicComponent(props: Props) {
+  useEffect(() => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+  }, [props.id, props.foo.bar.baz]);
+
+  return (
+    <View style={styles.view1}>
+      <Text>{props.id}</Text>
+
+      <Text>{props.foo.bar.baz}</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 

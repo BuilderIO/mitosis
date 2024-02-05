@@ -7126,6 +7126,75 @@ export class ShowRootText {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <div class=\\"test div\\">{{id}} {{foo.value.bar.baz}}</div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export class MyBasicComponent {
+  @Input() id: any;
+  @Input() foo: any;
+
+  ngAfterContentChecked() {
+    console.log(\\"props.id changed\\", this.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+})
+export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > signalsOnUpdate 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <div class=\\"test div\\">{{id}} {{foo.value.bar.baz}}</div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyBasicComponent {
+  @Input() id: any;
+  @Input() foo: any;
+
+  ngAfterContentChecked() {
+    console.log(\\"props.id changed\\", this.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > spreadAttrs 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -15797,6 +15866,93 @@ interface Props {
 })
 export class ShowRootText {
   @Input() conditionA: Props[\\"conditionA\\"];
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <div class=\\"test div\\">{{id}} {{foo.bar.baz}}</div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export class MyBasicComponent {
+  @Input() id: Props[\\"id\\"];
+  @Input() foo: Props[\\"foo\\"];
+
+  ngAfterContentChecked() {
+    console.log(\\"props.id changed\\", this.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+})
+export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > signalsOnUpdate 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <div class=\\"test div\\">{{id}} {{foo.bar.baz}}</div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyBasicComponent {
+  @Input() id: Props[\\"id\\"];
+  @Input() foo: Props[\\"foo\\"];
+
+  ngAfterContentChecked() {
+    console.log(\\"props.id changed\\", this.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+  }
 }
 "
 `;

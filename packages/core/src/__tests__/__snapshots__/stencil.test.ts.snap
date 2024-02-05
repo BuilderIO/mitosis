@@ -2755,6 +2755,39 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+  styles: \`
+        .div {
+          padding: 10px;
+        }
+\`,
+})
+export default class MyBasicComponent {
+  @Prop() id: any;
+  @Prop() foo: any;
+
+  componentDidUpdate() {
+    console.log(\\"props.id changed\\", this.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+  }
+
+  render() {
+    return (
+      <div class=\\"test div\\">
+        {this.id}
+
+        {this.foo.value.bar.baz}
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > spreadAttrs 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -5827,6 +5860,39 @@ export default class MyComponent {
             </MyComponent>
           </>
         ) : null}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+  styles: \`
+        .div {
+          padding: 10px;
+        }
+\`,
+})
+export default class MyBasicComponent {
+  @Prop() id: any;
+  @Prop() foo: any;
+
+  componentDidUpdate() {
+    console.log(\\"props.id changed\\", this.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+  }
+
+  render() {
+    return (
+      <div class=\\"test div\\">
+        {this.id}
+
+        {this.foo.bar.baz}
       </div>
     );
   }

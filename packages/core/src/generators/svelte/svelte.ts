@@ -379,11 +379,37 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             }
 
             const fnName = `onUpdateFn_${index}`;
+            const depsArray = deps
+              .slice(1, deps.length - 1)
+              .split(',')
+              .map((x) => x.trim());
+            const getReactiveDepName = (dep: string) =>
+              `${fnName}_${dep.slice(1).replace(/(\.|\?)/g, '_')}`;
+
+            const isStoreAccessDep = (dep: string) => dep.startsWith('$');
+
+            const reactiveDepsWorkaround = depsArray
+              .filter(isStoreAccessDep)
+              .map((dep) => `$: ${getReactiveDepName(dep)} = ${dep};`)
+              .join('\n');
+
+            const depsArrayStr = depsArray
+              .map((x) => (isStoreAccessDep(x) ? getReactiveDepName(x) : x))
+              .join(', ');
+
+            /**
+             * We create a reactive value for each `onUpdate`'s dependency that
+             * accesses a store so that Svelte has accurate dependency tracking.
+             *
+             * Otherwise, if the dependency is a value within a store, Svelte will
+             * rerun the effect every time the parent store is changed in any way.
+             */
             return `
               function ${fnName}(..._args${options.typescript ? ': any[]' : ''}) {
                 ${code}
               }
-              $: ${fnName}(...${deps})
+              ${reactiveDepsWorkaround}
+              $: ${fnName}(...[${depsArrayStr}]);
             `;
           })
           .join(';') || ''
