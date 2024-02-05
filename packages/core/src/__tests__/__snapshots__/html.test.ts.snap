@@ -5858,6 +5858,76 @@ exports[`Html > jsx > Javascript Test > showWithRootText 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"<div class=\\"test div\\">
+  <template data-el=\\"div-1\\"><!-- props.id --></template>
+
+  <template data-el=\\"div-2\\"><!-- props.foo.value.bar.baz --></template>
+</div>
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, props.id);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, props.foo.value.bar.baz);
+      });
+
+      destroyAnyNodes();
+
+      console.log(\\"props.id changed\\", props.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > spreadAttrs 1`] = `
 "<input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 "
@@ -12132,6 +12202,76 @@ exports[`Html > jsx > Typescript Test > showWithRootText 1`] = `
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"<div class=\\"test div\\">
+  <template data-el=\\"div-1\\"><!-- props.id --></template>
+
+  <template data-el=\\"div-2\\"><!-- props.foo.bar.baz --></template>
+</div>
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, props.id);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, props.foo.bar.baz);
+      });
+
+      destroyAnyNodes();
+
+      console.log(\\"props.id changed\\", props.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
     }
   })();
 </script>

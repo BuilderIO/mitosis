@@ -2656,6 +2656,51 @@ const props = defineProps([\\"conditionA\\"]);
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"<template>
+  <div class=\\"test div\\">
+    {{ id }}
+    {{ foo.value.bar.baz }}
+  </div>
+</template>
+
+<script setup>
+    import { watch } from \\"vue\\"
+
+
+
+
+
+
+
+
+
+    const props = defineProps(['id','foo'])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+watch(() => [props.id, props.foo.value.bar.baz], ([id, foo.value.bar.baz]) => { console.log('props.id changed', props.id);
+console.log('props.foo.value.bar.baz changed', props.foo.value.bar.baz) }, {immediate: true})
+</script>
+
+<style scoped>
+.div {
+  padding: 10px;
+}
+</style>"
+`;
+
 exports[`Vue > jsx > Javascript Test > spreadAttrs 1`] = `
 "<template>
   <input v-bind=\\"attrs\\" />
@@ -5854,6 +5899,58 @@ interface Props {
 
 const props = defineProps<Props>();
 </script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"<template>
+  <div class=\\"test div\\">
+    {{ id }}
+    {{ foo.bar.baz }}
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+    import { watch } from \\"vue\\"
+
+
+
+
+
+
+
+    type Props = {
+id: string;
+foo: {
+  bar: {
+    baz: number;
+  };
+};
+}
+
+    const props = defineProps<Props>()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+watch(() => [props.id, props.foo.bar.baz], ([id, foo.bar.baz]) => { console.log('props.id changed', props.id);
+console.log('props.foo.value.bar.baz changed', props.foo.bar.baz) }, {immediate: true})
+</script>
+
+<style scoped>
+.div {
+  padding: 10px;
+}
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > spreadAttrs 1`] = `

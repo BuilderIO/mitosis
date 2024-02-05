@@ -3006,6 +3006,37 @@ export default ShowRootText;
 "
 `;
 
+exports[`React > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+function MyBasicComponent(props) {
+  useEffect(() => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
+
+  return (
+    <>
+      <div className=\\"test div\\">
+        {props.id}
+
+        {props.foo.value.bar.baz}
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`React > jsx > Javascript Test > spreadAttrs 1`] = `
 "import * as React from \\"react\\";
 
@@ -6682,6 +6713,46 @@ function ShowRootText(props: Props) {
 }
 
 export default ShowRootText;
+"
+`;
+
+exports[`React > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+function MyBasicComponent(props: Props) {
+  useEffect(() => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+  }, [props.id, props.foo.bar.baz]);
+
+  return (
+    <>
+      <div className=\\"test div\\">
+        {props.id}
+
+        {props.foo.bar.baz}
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
 "
 `;
 

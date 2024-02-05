@@ -3954,6 +3954,45 @@ export class ShowRootTextModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <div class=\\"test div\\">{{id}} {{foo.value.bar.baz}}</div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export class MyBasicComponent {
+  @Input() id: any;
+  @Input() foo: any;
+
+  ngAfterContentChecked() {
+    console.log(\\"props.id changed\\", this.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > spreadAttrs 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -8746,6 +8785,54 @@ export class ShowRootText {
   bootstrap: [SomeOtherComponent],
 })
 export class ShowRootTextModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <div class=\\"test div\\">{{id}} {{foo.bar.baz}}</div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export class MyBasicComponent {
+  @Input() id: Props[\\"id\\"];
+  @Input() foo: Props[\\"foo\\"];
+
+  ngAfterContentChecked() {
+    console.log(\\"props.id changed\\", this.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicComponentModule {}
 "
 `;
 
