@@ -383,17 +383,18 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
               .slice(1, deps.length - 1)
               .split(',')
               .map((x) => x.trim());
-            const getNewDepName = (dep: string) => `${fnName}_${dep}`;
+            const getReactiveDepName = (dep: string) =>
+              `${fnName}_${dep.slice(1).replace(/\./g, '_')}`;
 
             const isStoreAccessDep = (dep: string) => dep.startsWith('$');
 
             const reactiveDepsWorkaround = depsArray
               .filter(isStoreAccessDep)
-              .map((dep) => `$: ${getNewDepName(dep)} = ${dep};`)
+              .map((dep) => `$: ${getReactiveDepName(dep)} = ${dep};`)
               .join('\n');
 
             const depsArrayStr = depsArray
-              .map((x) => (isStoreAccessDep(x) ? getNewDepName(x) : x))
+              .map((x) => (isStoreAccessDep(x) ? getReactiveDepName(x) : x))
               .join(', ');
 
             /**
