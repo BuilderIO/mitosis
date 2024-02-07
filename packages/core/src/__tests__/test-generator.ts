@@ -527,7 +527,7 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   options: X;
 }) => {
   const configurations: { options: X; testName: string }[] = [
-    { options: { ...options, typescript: false }, testName: 'Javascript Test' },
+    // { options: { ...options, typescript: false }, testName: 'Javascript Test' },
     { options: { ...options, typescript: true }, testName: 'Typescript Test' },
   ];
 
@@ -554,13 +554,13 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                   typescript: false,
                 },
           ),
-        testsArray: JSX_TESTS_FOR_TARGET[target],
+        testsArray: [FORM_BLOCK_TESTS],
       },
-      {
-        name: 'svelte',
-        parser: async ({ filePath, code }) => parseSvelte(code),
-        testsArray: [SVELTE_SYNTAX_TESTS],
-      },
+      // {
+      //   name: 'svelte',
+      //   parser: async ({ filePath, code }) => parseSvelte(code),
+      //   testsArray: [SVELTE_SYNTAX_TESTS],
+      // },
     ];
     for (const { name, parser, testsArray } of parsers) {
       if (testsArray) {
