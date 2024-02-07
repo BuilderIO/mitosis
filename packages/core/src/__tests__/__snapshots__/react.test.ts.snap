@@ -562,21 +562,23 @@ function ContentSlotJsxCode(props) {
   return (
     <>
       {props.slotReference ? (
-        <div
-          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-          {...props.attributes}
-          onClick={(event) => show()}
-          className={cls()}
-        >
-          {showContent && props.slotContent ? (
-            <>{props.content || \\"{props.content}\\"}</>
-          ) : null}
-          <div>
-            <hr />
+        <>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={cls()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.content || \\"{props.content}\\"}</>
+            ) : null}
+            <div>
+              <hr />
+            </div>
+            <div>{props.children}</div>
           </div>
-          <div>{props.children}</div>
-        </div>
+        </>
       ) : null}
     </>
   );
@@ -2797,7 +2799,17 @@ exports[`React > jsx > Javascript Test > rootShow 1`] = `
 "import * as React from \\"react\\";
 
 function RenderStyles(props) {
-  return <>{props.foo === \\"bar\\" ? <div>Bar</div> : <div>Foo</div>}</>;
+  return (
+    <>
+      {props.foo === \\"bar\\" ? (
+        <>
+          <div>Bar</div>
+        </>
+      ) : (
+        <div>Foo</div>
+      )}
+    </>
+  );
 }
 
 export default RenderStyles;
@@ -3804,21 +3816,23 @@ function ContentSlotJsxCode(props: Props) {
   return (
     <>
       {props.slotReference ? (
-        <div
-          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-          {...props.attributes}
-          onClick={(event) => show()}
-          className={cls()}
-        >
-          {showContent && props.slotContent ? (
-            <>{props.content || \\"{props.content}\\"}</>
-          ) : null}
-          <div>
-            <hr />
+        <>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={cls()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.content || \\"{props.content}\\"}</>
+            ) : null}
+            <div>
+              <hr />
+            </div>
+            <div>{props.children}</div>
           </div>
-          <div>{props.children}</div>
-        </div>
+        </>
       ) : null}
     </>
   );
@@ -6359,7 +6373,17 @@ export interface RenderStylesProps {
 }
 
 function RenderStyles(props: RenderStylesProps) {
-  return <>{props.foo === \\"bar\\" ? <div>Bar</div> : <div>Foo</div>}</>;
+  return (
+    <>
+      {props.foo === \\"bar\\" ? (
+        <>
+          <div>Bar</div>
+        </>
+      ) : (
+        <div>Foo</div>
+      )}
+    </>
+  );
 }
 
 export default RenderStyles;
@@ -7153,7 +7177,9 @@ function MyComponent(props) {
   return (
     <>
       {show ? (
-        <button onClick={(event) => toggle(event)}> Hide </button>
+        <>
+          <button onClick={(event) => toggle(event)}> Hide </button>
+        </>
       ) : (
         <button onClick={(event) => toggle(event)}> Show </button>
       )}
@@ -7553,7 +7579,9 @@ function MyComponent(props: any) {
   return (
     <>
       {show ? (
-        <button onClick={(event) => toggle(event)}> Hide </button>
+        <>
+          <button onClick={(event) => toggle(event)}> Hide </button>
+        </>
       ) : (
         <button onClick={(event) => toggle(event)}> Show </button>
       )}

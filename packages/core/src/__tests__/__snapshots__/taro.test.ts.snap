@@ -577,20 +577,22 @@ function ContentSlotJsxCode(props) {
   return (
     <>
       {props.slotReference ? (
-        <View
-          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-          {...props.attributes}
-          onClick={(event) => show()}
-        >
-          {showContent && props.slotContent ? (
-            <>{props.content || \\"{props.content}\\"}</>
-          ) : null}
-          <View>
-            <View />
+        <>
+          <View
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.content || \\"{props.content}\\"}</>
+            ) : null}
+            <View>
+              <View />
+            </View>
+            <View>{props.children}</View>
           </View>
-          <View>{props.children}</View>
-        </View>
+        </>
       ) : null}
     </>
   );
@@ -2838,7 +2840,17 @@ exports[`Taro > jsx > Javascript Test > rootShow 1`] = `
 import { View, Text } from \\"@tarojs/components\\";
 
 function RenderStyles(props) {
-  return <>{props.foo === \\"bar\\" ? <View>Bar</View> : <View>Foo</View>}</>;
+  return (
+    <>
+      {props.foo === \\"bar\\" ? (
+        <>
+          <View>Bar</View>
+        </>
+      ) : (
+        <View>Foo</View>
+      )}
+    </>
+  );
 }
 
 export default RenderStyles;
@@ -3883,20 +3895,22 @@ function ContentSlotJsxCode(props: Props) {
   return (
     <>
       {props.slotReference ? (
-        <View
-          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-          {...props.attributes}
-          onClick={(event) => show()}
-        >
-          {showContent && props.slotContent ? (
-            <>{props.content || \\"{props.content}\\"}</>
-          ) : null}
-          <View>
-            <View />
+        <>
+          <View
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.content || \\"{props.content}\\"}</>
+            ) : null}
+            <View>
+              <View />
+            </View>
+            <View>{props.children}</View>
           </View>
-          <View>{props.children}</View>
-        </View>
+        </>
       ) : null}
     </>
   );
@@ -6482,7 +6496,17 @@ export interface RenderStylesProps {
 import { View, Text } from \\"@tarojs/components\\";
 
 function RenderStyles(props: RenderStylesProps) {
-  return <>{props.foo === \\"bar\\" ? <View>Bar</View> : <View>Foo</View>}</>;
+  return (
+    <>
+      {props.foo === \\"bar\\" ? (
+        <>
+          <View>Bar</View>
+        </>
+      ) : (
+        <View>Foo</View>
+      )}
+    </>
+  );
 }
 
 export default RenderStyles;
@@ -7097,7 +7121,9 @@ function MyComponent(props) {
   return (
     <>
       {show ? (
-        <Button onClick={(event) => toggle(event)}> Hide </Button>
+        <>
+          <Button onClick={(event) => toggle(event)}> Hide </Button>
+        </>
       ) : (
         <Button onClick={(event) => toggle(event)}> Show </Button>
       )}
@@ -7505,7 +7531,9 @@ function MyComponent(props: any) {
   return (
     <>
       {show ? (
-        <Button onClick={(event) => toggle(event)}> Hide </Button>
+        <>
+          <Button onClick={(event) => toggle(event)}> Hide </Button>
+        </>
       ) : (
         <Button onClick={(event) => toggle(event)}> Show </Button>
       )}

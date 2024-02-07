@@ -567,21 +567,23 @@ function ContentSlotJsxCode(props) {
   return (
     <Fragment>
       {props.slotReference ? (
-        <div
-          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-          {...props.attributes}
-          onClick={(event) => show()}
-          className={cls()}
-        >
-          {showContent && props.slotContent ? (
-            <>{props.content || \\"{props.content}\\"}</>
-          ) : null}
-          <div>
-            <hr />
+        <Fragment>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={cls()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.content || \\"{props.content}\\"}</>
+            ) : null}
+            <div>
+              <hr />
+            </div>
+            <div>{props.children}</div>
           </div>
-          <div>{props.children}</div>
-        </div>
+        </Fragment>
       ) : null}
     </Fragment>
   );
@@ -2824,7 +2826,15 @@ import { h, Fragment } from \\"preact\\";
 
 function RenderStyles(props) {
   return (
-    <Fragment>{props.foo === \\"bar\\" ? <div>Bar</div> : <div>Foo</div>}</Fragment>
+    <Fragment>
+      {props.foo === \\"bar\\" ? (
+        <Fragment>
+          <div>Bar</div>
+        </Fragment>
+      ) : (
+        <div>Foo</div>
+      )}
+    </Fragment>
   );
 }
 
@@ -3858,21 +3868,23 @@ function ContentSlotJsxCode(props: Props) {
   return (
     <Fragment>
       {props.slotReference ? (
-        <div
-          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-          {...props.attributes}
-          onClick={(event) => show()}
-          className={cls()}
-        >
-          {showContent && props.slotContent ? (
-            <>{props.content || \\"{props.content}\\"}</>
-          ) : null}
-          <div>
-            <hr />
+        <Fragment>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={cls()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.content || \\"{props.content}\\"}</>
+            ) : null}
+            <div>
+              <hr />
+            </div>
+            <div>{props.children}</div>
           </div>
-          <div>{props.children}</div>
-        </div>
+        </Fragment>
       ) : null}
     </Fragment>
   );
@@ -6435,7 +6447,15 @@ export interface RenderStylesProps {
 
 function RenderStyles(props: RenderStylesProps) {
   return (
-    <Fragment>{props.foo === \\"bar\\" ? <div>Bar</div> : <div>Foo</div>}</Fragment>
+    <Fragment>
+      {props.foo === \\"bar\\" ? (
+        <Fragment>
+          <div>Bar</div>
+        </Fragment>
+      ) : (
+        <div>Foo</div>
+      )}
+    </Fragment>
   );
 }
 
@@ -7055,7 +7075,9 @@ function MyComponent(props) {
   return (
     <Fragment>
       {show ? (
-        <button onClick={(event) => toggle(event)}> Hide </button>
+        <Fragment>
+          <button onClick={(event) => toggle(event)}> Hide </button>
+        </Fragment>
       ) : (
         <button onClick={(event) => toggle(event)}> Show </button>
       )}
@@ -7457,7 +7479,9 @@ function MyComponent(props: any) {
   return (
     <Fragment>
       {show ? (
-        <button onClick={(event) => toggle(event)}> Hide </button>
+        <Fragment>
+          <button onClick={(event) => toggle(event)}> Hide </button>
+        </Fragment>
       ) : (
         <button onClick={(event) => toggle(event)}> Show </button>
       )}
