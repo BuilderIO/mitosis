@@ -287,17 +287,16 @@ exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
   <div>
     <template v-if=\\"$slots.default\\">
       <slot />
-
       {{ type }}
     </template>
 
     <my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :list=\\"null\\"
     ></my-boolean-attribute-component>
   </div>
@@ -437,9 +436,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > BasicRefAssignment 1`] = `
 "<template>
-  <div>
-    <button @click=\\"handlerClick($event)\\">Click</button>
-  </div>
+  <div><button @click=\\"handlerClick($event)\\">Click</button></div>
 </template>
 
 <script>
@@ -518,15 +515,12 @@ exports[`Vue > jsx > Javascript Test > Button 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
-        {{ text }}
-      </button>
+      <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
     </template>
   </div>
 </template>
@@ -550,7 +544,7 @@ exports[`Vue > jsx > Javascript Test > Columns 1`] = `
       v-for=\\"(column, index) in columns\\"
       :key=\\"index\\"
     >
-      {{ column.content }} {{ index }}
+      {{ column.content }}{{ index }}
     </div>
   </div>
 </template>
@@ -612,12 +606,8 @@ exports[`Vue > jsx > Javascript Test > ContentSlotHtml 1`] = `
 "<template>
   <div>
     <slot name=\\"testing\\"></slot>
-    <div>
-      <hr />
-    </div>
-    <div>
-      <slot />
-    </div>
+    <div><hr /></div>
+    <div><slot /></div>
   </div>
 </template>
 
@@ -644,9 +634,7 @@ exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
       <slot name=\\"content\\">{{ content }}</slot>
     </template>
 
-    <div>
-      <hr />
-    </div>
+    <div><hr /></div>
     <div><slot /></div>
   </div>
 </template>
@@ -859,9 +847,9 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
     </template>
 
     <template v-if=\\"submissionState === 'error' && responseData\\">
-      <pre class=\\"builder-form-error-text pre\\">
-        {{ JSON.stringify(responseData, null, 2) }}
-      </pre>
+      <pre class=\\"builder-form-error-text pre\\">{{
+        JSON.stringify(responseData, null, 2)
+      }}</pre>
     </template>
 
     <template v-if=\\"submissionState === 'success'\\">
@@ -1169,9 +1157,8 @@ exports[`Vue > jsx > Javascript Test > Image 1`] = `
         />
       </template>
 
-      <source :srcset=\\"srcset\\" />
-    </picture>
-    <slot />
+      <source :srcset=\\"srcset\\" /></picture
+    ><slot />
   </div>
 </template>
 
@@ -1248,9 +1235,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > Image State 1`] = `
 "<template>
-  <div>
-    <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
-  </div>
+  <div><img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" /></div>
 </template>
 
 <script>
@@ -1475,9 +1460,7 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > SlotDefault 1`] = `
 "<template>
   <div>
-    <slot>
-      <div class=\\"default-slot\\">Default content</div>
-    </slot>
+    <slot><div class=\\"default-slot\\">Default content</div></slot>
   </div>
 </template>
 
@@ -1535,9 +1518,8 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > SlotNamed 1`] = `
 "<template>
   <div>
-    <slot name=\\"top\\"></slot>
-    <slot name=\\"left\\">Default left</slot>
-    <slot>Default Child</slot>
+    <slot name=\\"top\\"></slot><slot name=\\"left\\">Default left</slot
+    ><slot>Default Child</slot>
   </div>
 </template>
 
@@ -1554,17 +1536,13 @@ exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
 "<template>
   <div :data-user=\\"name\\">
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
-
     <template v-if=\\"showReviewPrompt || 'asdf'\\">
       <input placeholder=\\"Email\\" />
-
       <input placeholder=\\"Title\\" class=\\"input\\" />
-
       <textarea
         placeholder=\\"How was your experience?\\"
         class=\\"textarea\\"
       ></textarea>
-
       <button
         class=\\"button\\"
         @click=\\"
@@ -1653,9 +1631,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > Submit 1`] = `
 "<template>
-  <button type=\\"submit\\" v-bind=\\"attributes\\">
-    {{ text }}
-  </button>
+  <button type=\\"submit\\" v-bind=\\"attributes\\">{{ text }}</button>
 </template>
 
 <script>
@@ -1794,12 +1770,12 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "<template>
   <component :is=\\"TagNameGetter\\">
-    Hello <component :is=\\"tag\\">{{ name }}</component>
-    <component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\">
-      <component :is=\\"action.icon\\"></component>
-      <span>{{ action.text }}</span>
-    </component>
-  </component>
+    Hello <component :is=\\"tag\\">{{ name }}</component
+    ><component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\"
+      ><component :is=\\"action.icon\\"></component
+      ><span>{{ action.text }}</span></component
+    ></component
+  >
 </template>
 
 <script>
@@ -2003,7 +1979,6 @@ exports[`Vue > jsx > Javascript Test > className 1`] = `
 "<template>
   <div>
     <div class=\\"no binding\\">Without Binding</div>
-
     <div :class=\\"bindings\\">With binding</div>
   </div>
 </template>
@@ -2161,9 +2136,8 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -2204,9 +2178,8 @@ exports[`Vue > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -2706,7 +2679,7 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > propsDestructure 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <slot />{{ type }}
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -2806,25 +2779,24 @@ exports[`Vue > jsx > Javascript Test > renderBlock 1`] = `
     :block=\\"data.block\\"
     :key=\\"index\\"
   ></render-repeated-block>
-  <component v-else :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\">
-    <component
+  <component v-else :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\"
+    ><component
       :is=\\"renderComponentTag\\"
       v-bind=\\"renderComponentProps\\"
-    ></component>
-
-    <render-block
+    ></component
+    ><render-block
       v-for=\\"(child, index) in childrenWithoutParentComponent\\"
       :block=\\"child\\"
       :context=\\"childrenContext\\"
       :key=\\"'render-block-' + child.id\\"
-    ></render-block>
-    <block-styles
+    ></render-block
+    ><block-styles
       v-for=\\"(child, index) in childrenWithoutParentComponent\\"
       :block=\\"child\\"
       :context=\\"childrenContext\\"
       :key=\\"'block-style-' + child.id\\"
-    ></block-styles>
-  </component>
+    ></block-styles
+  ></component>
 </template>
 
 <script>
@@ -3116,15 +3088,12 @@ exports[`Vue > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
-        {{ text }}
-      </button>
+      <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
     </template>
   </div>
 </template>
@@ -3161,7 +3130,6 @@ exports[`Vue > jsx > Javascript Test > self-referencing component 1`] = `
 "<template>
   <div>
     {{ name }}
-
     <template v-if=\\"name === 'Batman'\\">
       <my-component name=\\"Bruce Wayne\\"></my-component>
     </template>
@@ -3182,13 +3150,9 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > self-referencing component with children 1`] = `
 "<template>
   <div>
-    {{ name }}
-    <slot />
-
+    {{ name }}<slot />
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\">
-        <div>Wayne</div>
-      </my-component>
+      <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
     </template>
   </div>
 </template>
@@ -3243,10 +3207,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > signalsOnUpdate 1`] = `
 "<template>
-  <div class=\\"test div\\">
-    {{ id }}
-    {{ foo.value.bar.baz }}
-  </div>
+  <div class=\\"test div\\">{{ id }}{{ foo.value.bar.baz }}</div>
 </template>
 
 <script>
@@ -3549,11 +3510,10 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > webComponent 1`] = `
 "<template>
-  <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
-    <swiper-slide>Slide 1</swiper-slide>
-    <swiper-slide>Slide 2</swiper-slide>
-    <swiper-slide>Slide 3</swiper-slide>
-  </swiper-container>
+  <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\"
+    ><swiper-slide>Slide 1</swiper-slide><swiper-slide>Slide 2</swiper-slide
+    ><swiper-slide>Slide 3</swiper-slide></swiper-container
+  >
 </template>
 
 <script>
@@ -3889,17 +3849,16 @@ exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
   <div>
     <template v-if=\\"$slots.default\\">
       <slot />
-
       {{ type }}
     </template>
 
     <my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :list=\\"null\\"
     ></my-boolean-attribute-component>
   </div>
@@ -4048,9 +4007,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "<template>
-  <div>
-    <button @click=\\"handlerClick($event)\\">Click</button>
-  </div>
+  <div><button @click=\\"handlerClick($event)\\">Click</button></div>
 </template>
 
 <script lang=\\"ts\\">
@@ -4137,15 +4094,12 @@ exports[`Vue > jsx > Typescript Test > Button 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
-        {{ text }}
-      </button>
+      <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
     </template>
   </div>
 </template>
@@ -4176,7 +4130,7 @@ exports[`Vue > jsx > Typescript Test > Columns 1`] = `
       v-for=\\"(column, index) in columns\\"
       :key=\\"index\\"
     >
-      {{ column.content }} {{ index }}
+      {{ column.content }}{{ index }}
     </div>
   </div>
 </template>
@@ -4253,12 +4207,8 @@ exports[`Vue > jsx > Typescript Test > ContentSlotHtml 1`] = `
 "<template>
   <div>
     <slot name=\\"testing\\"></slot>
-    <div>
-      <hr />
-    </div>
-    <div>
-      <slot />
-    </div>
+    <div><hr /></div>
+    <div><slot /></div>
   </div>
 </template>
 
@@ -4292,9 +4242,7 @@ exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
       <slot name=\\"content\\">{{ content }}</slot>
     </template>
 
-    <div>
-      <hr />
-    </div>
+    <div><hr /></div>
     <div><slot /></div>
   </div>
 </template>
@@ -4523,9 +4471,9 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
     </template>
 
     <template v-if=\\"submissionState === 'error' && responseData\\">
-      <pre class=\\"builder-form-error-text pre\\">
-        {{ JSON.stringify(responseData, null, 2) }}
-      </pre>
+      <pre class=\\"builder-form-error-text pre\\">{{
+        JSON.stringify(responseData, null, 2)
+      }}</pre>
     </template>
 
     <template v-if=\\"submissionState === 'success'\\">
@@ -4864,9 +4812,8 @@ exports[`Vue > jsx > Typescript Test > Image 1`] = `
         />
       </template>
 
-      <source :srcset=\\"srcset\\" />
-    </picture>
-    <slot />
+      <source :srcset=\\"srcset\\" /></picture
+    ><slot />
   </div>
 </template>
 
@@ -4962,9 +4909,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > Image State 1`] = `
 "<template>
-  <div>
-    <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
-  </div>
+  <div><img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" /></div>
 </template>
 
 <script lang=\\"ts\\">
@@ -5245,9 +5190,7 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > SlotDefault 1`] = `
 "<template>
   <div>
-    <slot>
-      <div class=\\"default-slot\\">Default content</div>
-    </slot>
+    <slot><div class=\\"default-slot\\">Default content</div></slot>
   </div>
 </template>
 
@@ -5317,9 +5260,8 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > SlotNamed 1`] = `
 "<template>
   <div>
-    <slot name=\\"top\\"></slot>
-    <slot name=\\"left\\">Default left</slot>
-    <slot>Default Child</slot>
+    <slot name=\\"top\\"></slot><slot name=\\"left\\">Default left</slot
+    ><slot>Default Child</slot>
   </div>
 </template>
 
@@ -5340,17 +5282,13 @@ exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
 "<template>
   <div :data-user=\\"name\\">
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
-
     <template v-if=\\"showReviewPrompt || 'asdf'\\">
       <input placeholder=\\"Email\\" />
-
       <input placeholder=\\"Title\\" class=\\"input\\" />
-
       <textarea
         placeholder=\\"How was your experience?\\"
         class=\\"textarea\\"
       ></textarea>
-
       <button
         class=\\"button\\"
         @click=\\"
@@ -5444,9 +5382,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > Submit 1`] = `
 "<template>
-  <button type=\\"submit\\" v-bind=\\"attributes\\">
-    {{ text }}
-  </button>
+  <button type=\\"submit\\" v-bind=\\"attributes\\">{{ text }}</button>
 </template>
 
 <script lang=\\"ts\\">
@@ -5632,12 +5568,12 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "<template>
   <component :is=\\"TagNameGetter\\">
-    Hello <component :is=\\"tag\\">{{ name }}</component>
-    <component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\">
-      <component :is=\\"action.icon\\"></component>
-      <span>{{ action.text }}</span>
-    </component>
-  </component>
+    Hello <component :is=\\"tag\\">{{ name }}</component
+    ><component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\"
+      ><component :is=\\"action.icon\\"></component
+      ><span>{{ action.text }}</span></component
+    ></component
+  >
 </template>
 
 <script lang=\\"ts\\">
@@ -5851,7 +5787,6 @@ exports[`Vue > jsx > Typescript Test > className 1`] = `
 "<template>
   <div>
     <div class=\\"no binding\\">Without Binding</div>
-
     <div :class=\\"bindings\\">With binding</div>
   </div>
 </template>
@@ -6024,9 +5959,8 @@ exports[`Vue > jsx > Typescript Test > defaultProps 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -6077,9 +6011,8 @@ exports[`Vue > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -6634,7 +6567,7 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > propsDestructure 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <slot />{{ type }}
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -6749,25 +6682,24 @@ exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
     :block=\\"data.block\\"
     :key=\\"index\\"
   ></render-repeated-block>
-  <component v-else :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\">
-    <component
+  <component v-else :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\"
+    ><component
       :is=\\"renderComponentTag\\"
       v-bind=\\"renderComponentProps\\"
-    ></component>
-
-    <render-block
+    ></component
+    ><render-block
       v-for=\\"(child, index) in childrenWithoutParentComponent\\"
       :block=\\"child\\"
       :context=\\"childrenContext\\"
       :key=\\"'render-block-' + child.id\\"
-    ></render-block>
-    <block-styles
+    ></render-block
+    ><block-styles
       v-for=\\"(child, index) in childrenWithoutParentComponent\\"
       :block=\\"child\\"
       :context=\\"childrenContext\\"
       :key=\\"'block-style-' + child.id\\"
-    ></block-styles>
-  </component>
+    ></block-styles
+  ></component>
 </template>
 
 <script lang=\\"ts\\">
@@ -7080,15 +7012,12 @@ exports[`Vue > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
-        {{ text }}
-      </button>
+      <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
     </template>
   </div>
 </template>
@@ -7136,7 +7065,6 @@ exports[`Vue > jsx > Typescript Test > self-referencing component 1`] = `
 "<template>
   <div>
     {{ name }}
-
     <template v-if=\\"name === 'Batman'\\">
       <my-component name=\\"Bruce Wayne\\"></my-component>
     </template>
@@ -7157,13 +7085,9 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > self-referencing component with children 1`] = `
 "<template>
   <div>
-    {{ name }}
-    <slot />
-
+    {{ name }}<slot />
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\">
-        <div>Wayne</div>
-      </my-component>
+      <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
     </template>
   </div>
 </template>
@@ -7227,10 +7151,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > signalsOnUpdate 1`] = `
 "<template>
-  <div class=\\"test div\\">
-    {{ id }}
-    {{ foo.bar.baz }}
-  </div>
+  <div class=\\"test div\\">{{ id }}{{ foo.bar.baz }}</div>
 </template>
 
 <script lang=\\"ts\\">
@@ -7550,11 +7471,10 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > webComponent 1`] = `
 "<template>
-  <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
-    <swiper-slide>Slide 1</swiper-slide>
-    <swiper-slide>Slide 2</swiper-slide>
-    <swiper-slide>Slide 3</swiper-slide>
-  </swiper-container>
+  <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\"
+    ><swiper-slide>Slide 1</swiper-slide><swiper-slide>Slide 2</swiper-slide
+    ><swiper-slide>Slide 3</swiper-slide></swiper-container
+  >
 </template>
 
 <script lang=\\"ts\\">
