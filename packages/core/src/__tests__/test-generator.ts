@@ -554,13 +554,13 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                   typescript: false,
                 },
           ),
-        testsArray: [FORM_BLOCK_TESTS],
+        testsArray: JSX_TESTS_FOR_TARGET[target],
       },
-      // {
-      //   name: 'svelte',
-      //   parser: async ({ filePath, code }) => parseSvelte(code),
-      //   testsArray: [SVELTE_SYNTAX_TESTS],
-      // },
+      {
+        name: 'svelte',
+        parser: async ({ filePath, code }) => parseSvelte(code),
+        testsArray: [SVELTE_SYNTAX_TESTS],
+      },
     ];
     for (const { name, parser, testsArray } of parsers) {
       if (testsArray) {
