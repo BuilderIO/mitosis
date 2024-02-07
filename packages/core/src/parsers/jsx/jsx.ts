@@ -1,5 +1,3 @@
-import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
-import { traverseNodes } from '@/helpers/traverse-nodes';
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import tsPlugin from '@babel/plugin-syntax-typescript';
@@ -252,10 +250,6 @@ export function parseJsx(
       mitosisComponent.context.get[context].type = 'reactive';
     });
   }
-
-  traverseNodes(mitosisComponent, (node) => {
-    node.children = node.children.filter(filterEmptyTextNodes);
-  });
 
   return mitosisComponent;
 }

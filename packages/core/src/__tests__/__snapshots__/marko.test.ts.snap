@@ -85,24 +85,28 @@ exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-8aea05e4 {
+  .input-1ec3ebed {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-8aea05e4\\"
+      class=\\"input-1ec3ebed\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
       on-input(event => state.name = event.target.value)
     />
+
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
+
     <select name=\\"cars\\" id=\\"cars\\">
       <option value=\\"supra\\">GR Supra</option>
+
       <option value=\\"86\\">GR 86</option>
-    </select></if>
+    </select>
+  </if>
 
   Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
   Web Component!
@@ -125,11 +129,11 @@ class {
 }
 
 style { 
-  .div-724f419e {
+  .div-6fb38685 {
     padding: 10px;
   }
 }
-<div class=\\"test div-724f419e\\">
+<div class=\\"test div-6fb38685\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -249,7 +253,9 @@ class {}
   <if(input.children)> \${input.children} \${input.type}</if>
 
   <MyBooleanAttributeComponent toggle=(true)></MyBooleanAttributeComponent>
+
   <MyBooleanAttributeComponent toggle=(true)></MyBooleanAttributeComponent>
+
   <MyBooleanAttributeComponent list=(null)></MyBooleanAttributeComponent>
 </div>"
 `;
@@ -266,6 +272,7 @@ class {
 
 <div>
   <MyBasicComponent id=(state.dev)></MyBasicComponent>
+
   <div>
     <MyBasicOnMountUpdateComponent
       hi=(state.name)
@@ -324,24 +331,28 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-38729636 {
+  .input-29542242 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-38729636\\"
+      class=\\"input-29542242\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
       on-input(event => state.name = event.target.value)
     />
+
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
+
     <select name=\\"cars\\" id=\\"cars\\">
       <option value=\\"supra\\">GR Supra</option>
+
       <option value=\\"86\\">GR 86</option>
-    </select></if>
+    </select>
+  </if>
 
   Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
   Web Component!
@@ -388,6 +399,7 @@ class {
 
 <div>
   <h1>Now: \${state.count} , before: \${this.prevCount}</h1>
+
   <button on-click(event => state.count += 1)>Increment</button>
 </div>"
 `;
@@ -401,7 +413,9 @@ exports[`Marko > jsx > Javascript Test > Button 1`] = `
       ...(props.attributes)
       href=(input.link)
       target=(input.openLinkInNewTab ? '_blank' : undefined)
-      >\${input.text}</a></if>
+    >
+      \${input.text}
+    </a></if>
 
   <if(!input.link)>
     <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
@@ -429,29 +443,29 @@ exports[`Marko > jsx > Javascript Test > Columns 1`] = `
 }
 
 style { 
-  .div-8ebf4416 {
+  .div-4d477baa {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-8ebf4416 {
+    .div-4d477baa {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-8ebf4416 {
+    .div-4d477baa {
       flex-direction: row-reverse;
     }
   }
-  .div-8ebf4416-2 {
+  .div-4d477baa-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-8ebf4416\\">
+<div class=\\"builder-columns div-4d477baa\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-8ebf4416-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-4d477baa-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -461,8 +475,14 @@ exports[`Marko > jsx > Javascript Test > ContentSlotHtml 1`] = `
 
 <div>
   <slot name=(input.slotTesting)></slot>
-  <div><hr /></div>
-  <div><slot></slot></div>
+
+  <div>
+    <hr />
+  </div>
+
+  <div>
+    <slot></slot>
+  </div>
 </div>"
 `;
 
@@ -492,7 +512,10 @@ exports[`Marko > jsx > Javascript Test > ContentSlotJSX 1`] = `
     <if(state.showContent && input.slotContent)>
       <slot name=\\"content\\">\${input.content}</slot></if>
 
-    <div><hr /></div>
+    <div>
+      <hr />
+    </div>
+
     <div>\${input.children}</div>
   </div></if>"
 `;
@@ -871,7 +894,7 @@ class {
 }
 
 style { 
-  .pre-13d8e5f6 {
+  .pre-82880ee4 {
     padding: 10px;
     color: red;
     text-align: center;
@@ -906,8 +929,11 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-13d8e5f6\\">
-\${JSON.stringify(state.responseData, null, 2)}</pre>
+    <pre class=\\"builder-form-error-text pre-82880ee4\\">
+          
+\${JSON.stringify(state.responseData, null, 2)}
+
+        </pre>
   </if>
 
   <if(component.submissionState === 'success')>
@@ -973,7 +999,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
 }
 
 style { 
-  .img-e6dfb5ae {
+  .img-89debb4e {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -981,20 +1007,21 @@ style {
   }
 }
 <div>
-  <picture key=\\"pictureRef\\"
-    ><if(!component.useLazyLoading() || state.load)>
+  <picture key=\\"pictureRef\\">
+    <if(!component.useLazyLoading() || state.load)>
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-e6dfb5ae')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-89debb4e')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
         sizes=(input.sizes)
     /></if>
 
-    <source srcset=(input.srcset)
-  /></picture>
+    <source srcset=(input.srcset) />
+  </picture>
+
   \${input.children}
 </div>"
 `;
@@ -1127,7 +1154,9 @@ exports[`Marko > jsx > Javascript Test > SlotDefault 1`] = `
 "class {}
 
 <div>
-  <slot><div class=\\"default-slot\\">Default content</div></slot>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
 </div>"
 `;
 
@@ -1137,7 +1166,9 @@ exports[`Marko > jsx > Javascript Test > SlotHtml 1`] = `
 class {}
 
 <div>
-  <ContentSlotCode><slot testing=(<div>Hello</div>)></slot></ContentSlotCode>
+  <ContentSlotCode>
+    <slot testing=(<div>Hello</div>)></slot>
+  </ContentSlotCode>
 </div>"
 `;
 
@@ -1146,7 +1177,9 @@ exports[`Marko > jsx > Javascript Test > SlotJsx 1`] = `
 
 class {}
 
-<div><ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode></div>"
+<div>
+  <ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode>
+</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > SlotNamed 1`] = `
@@ -1154,7 +1187,9 @@ exports[`Marko > jsx > Javascript Test > SlotNamed 1`] = `
 
 <div>
   <slot name=\\"top\\"></slot>
+
   <slot name=\\"left\\">Default left</slot>
+
   <slot>Default Child</slot>
 </div>"
 `;
@@ -1188,16 +1223,16 @@ class {
 }
 
 style { 
-  .input-c36324fe {
+  .input-5dad06c5 {
     display: block;
   }
-  .textarea-c36324fe {
+  .textarea-5dad06c5 {
     display: block;
   }
-  .button-c36324fe {
+  .button-5dad06c5 {
     display: block;
   }
-  .review-c36324fe {
+  .review-5dad06c5 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -1206,7 +1241,7 @@ style {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     -webkit-font-smoothing: antialiased;
   }
-  .img-c36324fe {
+  .img-5dad06c5 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -1216,15 +1251,16 @@ style {
   <button on-click(event => state.showReviewPrompt = true)>
     Write a review
   </button>
+
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-c36324fe\\" />
+    <input placeholder=\\"Title\\" class=\\"input-5dad06c5\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-c36324fe\\"
+      class=\\"textarea-5dad06c5\\"
     ></textarea>
     <button
-      class=\\"button-c36324fe\\"
+      class=\\"button-5dad06c5\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -1234,11 +1270,14 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-c36324fe\\" key=(review.id)>
-      <img class=\\"img-c36324fe\\" src=(review.avatar) />
+    <div class=\\"review-5dad06c5\\" key=(review.id)>
+      <img class=\\"img-5dad06c5\\" src=(review.avatar) />
+
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
+
         <div>\${review.author}</div>
+
         <div>\${review.reviewMessage}</div>
       </div>
     </div>
@@ -1341,12 +1380,15 @@ exports[`Marko > jsx > Javascript Test > basicForNoTagReference 1`] = `
 <state.TagNameGetter>
   Hello
   <state.tag>\${state.name}</state.tag>
+
   <for|action| of=(input.actions)>
-    <state.TagName
-      ><action.icon></action.icon> <span>\${action.text}</span></state.TagName
-    >
-  </for></state.TagNameGetter
->"
+    <state.TagName>
+      <action.icon></action.icon>
+
+      <span>\${action.text}</span>
+    </state.TagName>
+  </for>
+</state.TagNameGetter>"
 `;
 
 exports[`Marko > jsx > Javascript Test > basicForwardRef 1`] = `
@@ -1361,13 +1403,13 @@ exports[`Marko > jsx > Javascript Test > basicForwardRef 1`] = `
 }
 
 style { 
-  .input-02928ba3 {
+  .input-2610bee4 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-02928ba3\\"
+    class=\\"input-2610bee4\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -1387,13 +1429,13 @@ exports[`Marko > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 }
 
 style { 
-  .input-0a0d0fee {
+  .input-547eb28e {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-0a0d0fee\\"
+    class=\\"input-547eb28e\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -1476,6 +1518,7 @@ exports[`Marko > jsx > Javascript Test > className 1`] = `
 
 <div>
   <div class=\\"no binding\\">Without Binding</div>
+
   <div class=(state.bindings)>With binding</div>
 </div>"
 `;
@@ -1518,6 +1561,7 @@ import Context2 from \\"@dummy/2\\";
 class {}
 
 \${foo.value}
+
 <div>other</div>"
 `;
 
@@ -1538,7 +1582,9 @@ exports[`Marko > jsx > Javascript Test > defaultProps 1`] = `
       ...(props.attributes)
       href=(input.link)
       target=(input.openLinkInNewTab ? '_blank' : undefined)
-      >\${input.text}</a></if>
+    >
+      \${input.text}
+    </a></if>
 
   <if(!input.link)>
     <button
@@ -1560,7 +1606,9 @@ exports[`Marko > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
       ...(props.attributes)
       href=(input.link)
       target=(input.openLinkInNewTab ? '_blank' : undefined)
-      >\${input.text}</a></if>
+    >
+      \${input.text}
+    </a></if>
 
   <if(!input.link)>
     <button
@@ -1722,7 +1770,9 @@ exports[`Marko > jsx > Javascript Test > onEvent 1`] = `
   }
 }
 
-<div class=\\"builder-embed\\" key=\\"elem\\"><div>Test</div></div>"
+<div class=\\"builder-embed\\" key=\\"elem\\">
+  <div>Test</div>
+</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > onInit & onMount 1`] = `
@@ -2085,10 +2135,11 @@ class {
       ></RenderRepeatedBlock> </for></if>
 
   <if(!isEmptyHtmlElement(component.tag) && !component.repeatItemData)>
-    <state.tag ...(state.attributes) ...(state.actions)
-      ><state.renderComponentTag
+    <state.tag ...(state.attributes) ...(state.actions)>
+      <state.renderComponentTag
         ...(state.renderComponentProps)
       ></state.renderComponentTag>
+
       <for|child| of=(component.childrenWithoutParentComponent)>
         <RenderBlock
           key=('render-block-' + child.id)
@@ -2096,12 +2147,14 @@ class {
           context=(component.childrenContext)
         ></RenderBlock>
       </for>
+
       <for|child| of=(component.childrenWithoutParentComponent)>
         <BlockStyles
           key=('block-style-' + child.id)
           block=(child)
           context=(component.childrenContext)
-        ></BlockStyles> </for></state.tag
+        ></BlockStyles>
+      </for> </state.tag
   ></if>
 </if>
 <else
@@ -2131,12 +2184,12 @@ class {
 }
 
 style { 
-  .div-2f1bf84a {
+  .div-95319f46 {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-2f1bf84a\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-95319f46\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -2149,7 +2202,9 @@ exports[`Marko > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
     ...(props.attributes)
     href=(input.link)
     target=(input.openLinkInNewTab ? '_blank' : undefined)
-    >\${input.text}</a></if>
+  >
+    \${input.text}
+  </a></if>
 
 <if(!input.link)>
   <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>"
@@ -2166,6 +2221,7 @@ exports[`Marko > jsx > Javascript Test > self-referencing component 1`] = `
 
 <div>
   \${input.name}
+
   <if(input.name === 'Batman')>
     <MyComponent name=\\"Bruce Wayne\\"></MyComponent></if>
 </div>"
@@ -2176,8 +2232,11 @@ exports[`Marko > jsx > Javascript Test > self-referencing component with childre
 
 <div>
   \${input.name} \${input.children}
+
   <if(input.name === 'Batman')>
-    <MyComponent name=\\"Bruce\\"><div>Wayne</div></MyComponent></if>
+    <MyComponent name=\\"Bruce\\">
+      <div>Wayne</div>
+    </MyComponent></if>
 </div>"
 `;
 
@@ -2210,11 +2269,11 @@ exports[`Marko > jsx > Javascript Test > signalsOnUpdate 1`] = `
 }
 
 style { 
-  .div-120e4d4e {
+  .div-2a5f9c5c {
     padding: 10px;
   }
 }
-<div class=\\"test div-120e4d4e\\">\${input.id} \${input.foo.value.bar.baz}</div>"
+<div class=\\"test div-2a5f9c5c\\">\${input.id} \${input.foo.value.bar.baz}</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > spreadAttrs 1`] = `
@@ -2290,11 +2349,13 @@ exports[`Marko > jsx > Javascript Test > svgComponent 1`] = `
   <defs>
     <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
       <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
       <feBlend
         in=\\"SourceGraphic\\"
         in2=\\"BackgroundImageFix\\"
         result=\\"shape\\"
       ></feBlend>
+
       <feGaussianBlur
         result=\\"effect1_foregroundBlur\\"
         stdDeviation=(7)
@@ -2377,11 +2438,13 @@ exports[`Marko > jsx > Javascript Test > webComponent 1`] = `
 
 class {}
 
-<swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\"
-  ><swiper-slide>Slide 1</swiper-slide>
+<swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+  <swiper-slide>Slide 1</swiper-slide>
+
   <swiper-slide>Slide 2</swiper-slide>
-  <swiper-slide>Slide 3</swiper-slide></swiper-container
->"
+
+  <swiper-slide>Slide 3</swiper-slide>
+</swiper-container>"
 `;
 
 exports[`Marko > jsx > Remove Internal mitosis package 1`] = `
@@ -2423,24 +2486,28 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-3b7b900d {
+  .input-6e7ec63e {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-3b7b900d\\"
+      class=\\"input-6e7ec63e\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
       on-input(event => state.name = event.target.value)
     />
+
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
+
     <select name=\\"cars\\" id=\\"cars\\">
       <option value=\\"supra\\">GR Supra</option>
+
       <option value=\\"86\\">GR 86</option>
-    </select></if>
+    </select>
+  </if>
 
   Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
   Web Component!
@@ -2463,11 +2530,11 @@ class {
 }
 
 style { 
-  .div-f70acf48 {
+  .div-1666a044 {
     padding: 10px;
   }
 }
-<div class=\\"test div-f70acf48\\">
+<div class=\\"test div-1666a044\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -2587,7 +2654,9 @@ class {}
   <if(input.children)> \${input.children} \${input.type}</if>
 
   <MyBooleanAttributeComponent toggle=(true)></MyBooleanAttributeComponent>
+
   <MyBooleanAttributeComponent toggle=(true)></MyBooleanAttributeComponent>
+
   <MyBooleanAttributeComponent list=(null)></MyBooleanAttributeComponent>
 </div>"
 `;
@@ -2604,6 +2673,7 @@ class {
 
 <div>
   <MyBasicComponent id=(state.dev)></MyBasicComponent>
+
   <div>
     <MyBasicOnMountUpdateComponent
       hi=(state.name)
@@ -2662,24 +2732,28 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-77dfc7d6 {
+  .input-4dc08d04 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-77dfc7d6\\"
+      class=\\"input-4dc08d04\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
       on-input(event => state.name = event.target.value)
     />
+
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
+
     <select name=\\"cars\\" id=\\"cars\\">
       <option value=\\"supra\\">GR Supra</option>
+
       <option value=\\"86\\">GR 86</option>
-    </select></if>
+    </select>
+  </if>
 
   Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
   Web Component!
@@ -2726,6 +2800,7 @@ class {
 
 <div>
   <h1>Now: \${state.count} , before: \${this.prevCount}</h1>
+
   <button on-click(event => state.count += 1)>Increment</button>
 </div>"
 `;
@@ -2739,7 +2814,9 @@ exports[`Marko > jsx > Typescript Test > Button 1`] = `
       ...(props.attributes)
       href=(input.link)
       target=(input.openLinkInNewTab ? '_blank' : undefined)
-      >\${input.text}</a></if>
+    >
+      \${input.text}
+    </a></if>
 
   <if(!input.link)>
     <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>
@@ -2767,29 +2844,29 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
 }
 
 style { 
-  .div-589a139a {
+  .div-970213e4 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-589a139a {
+    .div-970213e4 {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-589a139a {
+    .div-970213e4 {
       flex-direction: row-reverse;
     }
   }
-  .div-589a139a-2 {
+  .div-970213e4-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-589a139a\\">
+<div class=\\"builder-columns div-970213e4\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-589a139a-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-970213e4-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -2801,8 +2878,14 @@ class {}
 
 <div>
   <slot name=(input.slotTesting)></slot>
-  <div><hr /></div>
-  <div><slot></slot></div>
+
+  <div>
+    <hr />
+  </div>
+
+  <div>
+    <slot></slot>
+  </div>
 </div>"
 `;
 
@@ -2834,7 +2917,10 @@ class {
     <if(state.showContent && input.slotContent)>
       <slot name=\\"content\\">\${input.content}</slot></if>
 
-    <div><hr /></div>
+    <div>
+      <hr />
+    </div>
+
     <div>\${input.children}</div>
   </div></if>"
 `;
@@ -3220,7 +3306,7 @@ class {
 }
 
 style { 
-  .pre-6976c39e {
+  .pre-1dad4a1e {
     padding: 10px;
     color: red;
     text-align: center;
@@ -3255,8 +3341,11 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-6976c39e\\">
-\${JSON.stringify(state.responseData, null, 2)}</pre>
+    <pre class=\\"builder-form-error-text pre-1dad4a1e\\">
+          
+\${JSON.stringify(state.responseData, null, 2)}
+
+        </pre>
   </if>
 
   <if(component.submissionState === 'success')>
@@ -3322,7 +3411,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 }
 
 style { 
-  .img-22f3c8d4 {
+  .img-389f51e2 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -3330,20 +3419,21 @@ style {
   }
 }
 <div>
-  <picture key=\\"pictureRef\\"
-    ><if(!component.useLazyLoading() || state.load)>
+  <picture key=\\"pictureRef\\">
+    <if(!component.useLazyLoading() || state.load)>
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-22f3c8d4')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-389f51e2')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
         sizes=(input.sizes)
     /></if>
 
-    <source srcset=(input.srcset)
-  /></picture>
+    <source srcset=(input.srcset) />
+  </picture>
+
   \${input.children}
 </div>"
 `;
@@ -3476,7 +3566,9 @@ exports[`Marko > jsx > Typescript Test > SlotDefault 1`] = `
 "class {}
 
 <div>
-  <slot><div class=\\"default-slot\\">Default content</div></slot>
+  <slot>
+    <div class=\\"default-slot\\">Default content</div>
+  </slot>
 </div>"
 `;
 
@@ -3486,7 +3578,9 @@ exports[`Marko > jsx > Typescript Test > SlotHtml 1`] = `
 class {}
 
 <div>
-  <ContentSlotCode><slot testing=(<div>Hello</div>)></slot></ContentSlotCode>
+  <ContentSlotCode>
+    <slot testing=(<div>Hello</div>)></slot>
+  </ContentSlotCode>
 </div>"
 `;
 
@@ -3495,7 +3589,9 @@ exports[`Marko > jsx > Typescript Test > SlotJsx 1`] = `
 
 class {}
 
-<div><ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode></div>"
+<div>
+  <ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode>
+</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > SlotNamed 1`] = `
@@ -3503,7 +3599,9 @@ exports[`Marko > jsx > Typescript Test > SlotNamed 1`] = `
 
 <div>
   <slot name=\\"top\\"></slot>
+
   <slot name=\\"left\\">Default left</slot>
+
   <slot>Default Child</slot>
 </div>"
 `;
@@ -3537,16 +3635,16 @@ class {
 }
 
 style { 
-  .input-6d576eee {
+  .input-85930568 {
     display: block;
   }
-  .textarea-6d576eee {
+  .textarea-85930568 {
     display: block;
   }
-  .button-6d576eee {
+  .button-85930568 {
     display: block;
   }
-  .review-6d576eee {
+  .review-85930568 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -3555,7 +3653,7 @@ style {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     -webkit-font-smoothing: antialiased;
   }
-  .img-6d576eee {
+  .img-85930568 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -3565,15 +3663,16 @@ style {
   <button on-click(event => state.showReviewPrompt = true)>
     Write a review
   </button>
+
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-6d576eee\\" />
+    <input placeholder=\\"Title\\" class=\\"input-85930568\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-6d576eee\\"
+      class=\\"textarea-85930568\\"
     ></textarea>
     <button
-      class=\\"button-6d576eee\\"
+      class=\\"button-85930568\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -3583,11 +3682,14 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-6d576eee\\" key=(review.id)>
-      <img class=\\"img-6d576eee\\" src=(review.avatar) />
+    <div class=\\"review-85930568\\" key=(review.id)>
+      <img class=\\"img-85930568\\" src=(review.avatar) />
+
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
+
         <div>\${review.author}</div>
+
         <div>\${review.reviewMessage}</div>
       </div>
     </div>
@@ -3690,12 +3792,15 @@ exports[`Marko > jsx > Typescript Test > basicForNoTagReference 1`] = `
 <state.TagNameGetter>
   Hello
   <state.tag>\${state.name}</state.tag>
+
   <for|action| of=(input.actions)>
-    <state.TagName
-      ><action.icon></action.icon> <span>\${action.text}</span></state.TagName
-    >
-  </for></state.TagNameGetter
->"
+    <state.TagName>
+      <action.icon></action.icon>
+
+      <span>\${action.text}</span>
+    </state.TagName>
+  </for>
+</state.TagNameGetter>"
 `;
 
 exports[`Marko > jsx > Typescript Test > basicForwardRef 1`] = `
@@ -3710,13 +3815,13 @@ exports[`Marko > jsx > Typescript Test > basicForwardRef 1`] = `
 }
 
 style { 
-  .input-41e589d4 {
+  .input-59e7513c {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-41e589d4\\"
+    class=\\"input-59e7513c\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -3736,13 +3841,13 @@ exports[`Marko > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 }
 
 style { 
-  .input-2da13ec2 {
+  .input-f702d47c {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-2da13ec2\\"
+    class=\\"input-f702d47c\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -3827,6 +3932,7 @@ class {
 
 <div>
   <div class=\\"no binding\\">Without Binding</div>
+
   <div class=(state.bindings)>With binding</div>
 </div>"
 `;
@@ -3869,6 +3975,7 @@ import Context2 from \\"@dummy/2\\";
 class {}
 
 \${foo.value}
+
 <div>other</div>"
 `;
 
@@ -3889,7 +3996,9 @@ exports[`Marko > jsx > Typescript Test > defaultProps 1`] = `
       ...(props.attributes)
       href=(input.link)
       target=(input.openLinkInNewTab ? '_blank' : undefined)
-      >\${input.text}</a></if>
+    >
+      \${input.text}
+    </a></if>
 
   <if(!input.link)>
     <button
@@ -3911,7 +4020,9 @@ exports[`Marko > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
       ...(props.attributes)
       href=(input.link)
       target=(input.openLinkInNewTab ? '_blank' : undefined)
-      >\${input.text}</a></if>
+    >
+      \${input.text}
+    </a></if>
 
   <if(!input.link)>
     <button
@@ -4074,7 +4185,9 @@ exports[`Marko > jsx > Typescript Test > onEvent 1`] = `
   }
 }
 
-<div class=\\"builder-embed\\" key=\\"elem\\"><div>Test</div></div>"
+<div class=\\"builder-embed\\" key=\\"elem\\">
+  <div>Test</div>
+</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > onInit & onMount 1`] = `
@@ -4445,10 +4558,11 @@ class {
       ></RenderRepeatedBlock> </for></if>
 
   <if(!isEmptyHtmlElement(component.tag) && !component.repeatItemData)>
-    <state.tag ...(state.attributes) ...(state.actions)
-      ><state.renderComponentTag
+    <state.tag ...(state.attributes) ...(state.actions)>
+      <state.renderComponentTag
         ...(state.renderComponentProps)
       ></state.renderComponentTag>
+
       <for|child| of=(component.childrenWithoutParentComponent)>
         <RenderBlock
           key=('render-block-' + child.id)
@@ -4456,12 +4570,14 @@ class {
           context=(component.childrenContext)
         ></RenderBlock>
       </for>
+
       <for|child| of=(component.childrenWithoutParentComponent)>
         <BlockStyles
           key=('block-style-' + child.id)
           block=(child)
           context=(component.childrenContext)
-        ></BlockStyles> </for></state.tag
+        ></BlockStyles>
+      </for> </state.tag
   ></if>
 </if>
 <else
@@ -4491,12 +4607,12 @@ class {
 }
 
 style { 
-  .div-6b87b95c {
+  .div-4094ff8e {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-6b87b95c\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-4094ff8e\\" on-click(event => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -4509,7 +4625,9 @@ exports[`Marko > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
     ...(props.attributes)
     href=(input.link)
     target=(input.openLinkInNewTab ? '_blank' : undefined)
-    >\${input.text}</a></if>
+  >
+    \${input.text}
+  </a></if>
 
 <if(!input.link)>
   <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>"
@@ -4526,6 +4644,7 @@ exports[`Marko > jsx > Typescript Test > self-referencing component 1`] = `
 
 <div>
   \${input.name}
+
   <if(input.name === 'Batman')>
     <MyComponent name=\\"Bruce Wayne\\"></MyComponent></if>
 </div>"
@@ -4536,8 +4655,11 @@ exports[`Marko > jsx > Typescript Test > self-referencing component with childre
 
 <div>
   \${input.name} \${input.children}
+
   <if(input.name === 'Batman')>
-    <MyComponent name=\\"Bruce\\"><div>Wayne</div></MyComponent></if>
+    <MyComponent name=\\"Bruce\\">
+      <div>Wayne</div>
+    </MyComponent></if>
 </div>"
 `;
 
@@ -4567,11 +4689,11 @@ exports[`Marko > jsx > Typescript Test > signalsOnUpdate 1`] = `
 }
 
 style { 
-  .div-52492278 {
+  .div-3c98a7da {
     padding: 10px;
   }
 }
-<div class=\\"test div-52492278\\">\${input.id} \${input.foo.bar.baz}</div>"
+<div class=\\"test div-3c98a7da\\">\${input.id} \${input.foo.bar.baz}</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > spreadAttrs 1`] = `
@@ -4647,11 +4769,13 @@ exports[`Marko > jsx > Typescript Test > svgComponent 1`] = `
   <defs>
     <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
       <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+
       <feBlend
         in=\\"SourceGraphic\\"
         in2=\\"BackgroundImageFix\\"
         result=\\"shape\\"
       ></feBlend>
+
       <feGaussianBlur
         result=\\"effect1_foregroundBlur\\"
         stdDeviation=(7)
@@ -4737,11 +4861,13 @@ exports[`Marko > jsx > Typescript Test > webComponent 1`] = `
 
 class {}
 
-<swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\"
-  ><swiper-slide>Slide 1</swiper-slide>
+<swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+  <swiper-slide>Slide 1</swiper-slide>
+
   <swiper-slide>Slide 2</swiper-slide>
-  <swiper-slide>Slide 3</swiper-slide></swiper-container
->"
+
+  <swiper-slide>Slide 3</swiper-slide>
+</swiper-container>"
 `;
 
 exports[`Marko > svelte > Javascript Test > basic 1`] = `
