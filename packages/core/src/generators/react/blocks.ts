@@ -92,7 +92,7 @@ const NODE_MAPPERS: {
       isRootTextNode(json) ||
       // when `<Show><For>...</For></Show>`, we need to wrap the For generated code in a fragment
       // since it's a `.map()` call
-      (json.children.length === 1 && json.children[0].name === 'For');
+      (json.children.length === 1 && ['For', 'Show'].includes(json.children[0].name));
 
     const wrapElse =
       json.meta.else &&

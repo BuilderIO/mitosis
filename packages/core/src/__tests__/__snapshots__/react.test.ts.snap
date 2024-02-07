@@ -2138,14 +2138,28 @@ export default MyBasicComponent;
 `;
 
 exports[`React > jsx > Javascript Test > nestedShow 1`] = `
-"Property assignment expected. (16:2)
-  14 | <>
-  15 | {props.conditionA ? (
-> 16 | {!props.conditionB ? (
-     |  ^
-  17 | <div>if condition A and condition B</div>
-  18 | ) : <div>else-condition-B</div>}
-  19 | ) : <div>else-condition-A</div>}"
+"import * as React from \\"react\\";
+
+function NestedShow(props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          {!props.conditionB ? (
+            <div>if condition A and condition B</div>
+          ) : (
+            <div>else-condition-B</div>
+          )}
+        </>
+      ) : (
+        <div>else-condition-A</div>
+      )}
+    </>
+  );
+}
+
+export default NestedShow;
+"
 `;
 
 exports[`React > jsx > Javascript Test > nestedStyles 1`] = `
@@ -5647,14 +5661,33 @@ export default MyBasicComponent;
 `;
 
 exports[`React > jsx > Typescript Test > nestedShow 1`] = `
-"Property assignment expected. (19:2)
-  17 | <>
-  18 | {props.conditionA ? (
-> 19 | {!props.conditionB ? (
-     |  ^
-  20 | <div>if condition A and condition B</div>
-  21 | ) : <div>else-condition-B</div>}
-  22 | ) : <div>else-condition-A</div>}"
+"import * as React from \\"react\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+function NestedShow(props: Props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          {!props.conditionB ? (
+            <div>if condition A and condition B</div>
+          ) : (
+            <div>else-condition-B</div>
+          )}
+        </>
+      ) : (
+        <div>else-condition-A</div>
+      )}
+    </>
+  );
+}
+
+export default NestedShow;
+"
 `;
 
 exports[`React > jsx > Typescript Test > nestedStyles 1`] = `
