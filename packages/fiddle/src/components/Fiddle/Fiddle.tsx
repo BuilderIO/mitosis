@@ -1,6 +1,7 @@
-import type { MitosisComponent, ToReactOptions } from '@builder.io/mitosis';
+import type { MitosisComponent } from '@builder.io/mitosis';
 import {
   Button,
+  createTheme,
   Divider,
   FormControlLabel,
   MenuItem,
@@ -12,7 +13,6 @@ import {
   ThemeProvider,
   Tooltip,
   Typography,
-  createTheme,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';
@@ -265,8 +265,7 @@ export default function Fiddle() {
     options: {
       typescript: localStorageGet('options.typescript') || ('false' as 'true' | 'false'),
       reactStyleType:
-        localStorageGet('options.reactStyleType') ||
-        ('styled-jsx' as 'emotion' | 'styled-jsx' as ToReactOptions['stylesType']),
+        localStorageGet('options.reactStyleType') || ('styled-jsx' as 'emotion' | 'styled-jsx'),
       reactStateType:
         localStorageGet('options.reactStateType') || ('useState' as 'useState' | 'mobx' | 'solid'),
       svelteStateType:
@@ -1193,12 +1192,6 @@ export default function Fiddle() {
                     state.updateOutput();
                   }}
                 >
-                  <FormControlLabel
-                    value="style-tag"
-                    control={<Radio color="primary" />}
-                    labelPlacement="start"
-                    label="Inline style tag"
-                  />
                   <FormControlLabel
                     value="emotion"
                     control={<Radio color="primary" />}
