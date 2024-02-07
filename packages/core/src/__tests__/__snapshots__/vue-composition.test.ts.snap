@@ -35,7 +35,7 @@ const inputNoArgRef = ref(null);
 
 watch(
   () => [inputRef.value, inputNoArgRef.value],
-  ([inputRef, inputNoArgRef]) => {
+  () => {
     console.log(\\"Received an update\\");
   },
   { immediate: true }
@@ -385,7 +385,7 @@ const prevCount = ref(null);
 
 watch(
   () => [count.value],
-  ([count]) => {
+  () => {
     prevCount.value = count.value;
   },
   { immediate: true }
@@ -1589,7 +1589,7 @@ const name = ref(\\"PatrickJS\\");
 
 watch(
   () => [name.value],
-  ([name]) => {
+  () => {
     const controller = new AbortController();
     const signal = controller.signal;
     fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -1909,7 +1909,7 @@ const d = ref(\\"d\\");
 
 watch(
   () => [a.value, b.value],
-  ([a, b]) => {
+  () => {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a.value === \\"a\\") {
@@ -1920,7 +1920,7 @@ watch(
 );
 watch(
   () => [c.value, d.value],
-  ([c, d]) => {
+  () => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
@@ -2134,7 +2134,7 @@ const b = ref(\\"b\\");
 
 watch(
   () => [a.value, b.value, props.size],
-  ([a, b, size]) => {
+  () => {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
   },
   { immediate: true }
@@ -2506,7 +2506,7 @@ onMounted(() => {
 
 watch(
   () => [props.content],
-  ([content]) => {
+  () => {
     dispatchNewContentToVisualEditor(props.content);
   },
   { immediate: true }
@@ -2626,33 +2626,18 @@ exports[`Vue > jsx > Javascript Test > signalsOnUpdate 1`] = `
 </template>
 
 <script setup>
-    import { watch } from \\"vue\\"
+import { watch } from \\"vue\\";
 
+const props = defineProps([\\"id\\", \\"foo\\"]);
 
-
-
-
-
-
-
-
-    const props = defineProps(['id','foo'])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-watch(() => [props.id, props.foo.value.bar.baz], ([id, foo.value.bar.baz]) => { console.log('props.id changed', props.id);
-console.log('props.foo.value.bar.baz changed', props.foo.value.bar.baz) }, {immediate: true})
+watch(
+  () => [props.id, props.foo.value.bar.baz],
+  () => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped>
@@ -2909,7 +2894,7 @@ const inputNoArgRef = ref<HTMLLabelElement>();
 
 watch(
   () => [inputRef.value, inputNoArgRef.value],
-  ([inputRef, inputNoArgRef]) => {
+  () => {
     console.log(\\"Received an update\\");
   },
   { immediate: true }
@@ -3285,7 +3270,7 @@ const prevCount = ref<undefined>();
 
 watch(
   () => [count.value],
-  ([count]) => {
+  () => {
     prevCount.value = count.value;
   },
   { immediate: true }
@@ -4658,7 +4643,7 @@ const name = ref(\\"PatrickJS\\");
 
 watch(
   () => [name.value],
-  ([name]) => {
+  () => {
     const controller = new AbortController();
     const signal = controller.signal;
     fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -5022,7 +5007,7 @@ const d = ref(\\"d\\");
 
 watch(
   () => [a.value, b.value],
-  ([a, b]) => {
+  () => {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a.value === \\"a\\") {
@@ -5033,7 +5018,7 @@ watch(
 );
 watch(
   () => [c.value, d.value],
-  ([c, d]) => {
+  () => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
@@ -5260,7 +5245,7 @@ const b = ref(\\"b\\");
 
 watch(
   () => [a.value, b.value, props.size],
-  ([a, b, size]) => {
+  () => {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
   },
   { immediate: true }
@@ -5691,7 +5676,7 @@ onMounted(() => {
 
 watch(
   () => [props.content],
-  ([content]) => {
+  () => {
     dispatchNewContentToVisualEditor(props.content);
   },
   { immediate: true }
@@ -5831,40 +5816,27 @@ exports[`Vue > jsx > Typescript Test > signalsOnUpdate 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-    import { watch } from \\"vue\\"
+import { watch } from \\"vue\\";
 
-
-
-
-
-
-
-    type Props = {
-id: string;
-foo: {
-  bar: {
-    baz: number;
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
   };
 };
-}
 
-    const props = defineProps<Props>()
+const props = defineProps<Props>();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-watch(() => [props.id, props.foo.bar.baz], ([id, foo.bar.baz]) => { console.log('props.id changed', props.id);
-console.log('props.foo.value.bar.baz changed', props.foo.bar.baz) }, {immediate: true})
+watch(
+  () => [props.id, props.foo.bar.baz],
+  () => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped>
@@ -6328,7 +6300,7 @@ const result = ref(null);
 
 watch(
   () => [a.value, b.value],
-  ([a, b]) => {
+  () => {
     calculateResult(a, b);
   },
   { immediate: true }
@@ -6634,7 +6606,7 @@ const result = ref(null);
 
 watch(
   () => [a.value, b.value],
-  ([a, b]) => {
+  () => {
     calculateResult(a, b);
   },
   { immediate: true }
