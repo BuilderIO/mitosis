@@ -87,7 +87,12 @@ const NODE_MAPPERS: {
     ))}`;
   },
   Show(json, options, component) {
-    const wrap = wrapInFragment(json) || isRootTextNode(json);
+    const wrap =
+      wrapInFragment(json) ||
+      isRootTextNode(json) ||
+      // when `<Show><For>...</For></Show>`, we need to wrap the For generated code in a fragment
+      // since it's a `.map()` call
+      (json.children.length === 1 && json.children[0].name === 'For');
     const wrapElse =
       json.meta.else &&
       (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
