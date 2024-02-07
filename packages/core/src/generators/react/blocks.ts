@@ -55,7 +55,7 @@ const NODE_MAPPERS: {
       }
 
       const children = processBinding('props.children', options);
-      return `{${children} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
+      return `<>{${children} ${hasChildren ? `|| (${renderChildren()})` : ''}}</>`;
     }
 
     let slotProp = processBinding(slotName as string, options).replace('name=', '');
@@ -64,7 +64,7 @@ const NODE_MAPPERS: {
       slotProp = `props.${slotProp}`;
     }
 
-    return `{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
+    return `<>{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}</>`;
   },
   Fragment(json, options, component) {
     const wrap = wrapInFragment(json);
@@ -93,9 +93,11 @@ const NODE_MAPPERS: {
       // when `<Show><For>...</For></Show>`, we need to wrap the For generated code in a fragment
       // since it's a `.map()` call
       (json.children.length === 1 && json.children[0].name === 'For');
+
     const wrapElse =
       json.meta.else &&
       (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
+
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)

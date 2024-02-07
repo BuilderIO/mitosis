@@ -2,6 +2,7 @@ import { createSingleBinding } from '@/helpers/bindings';
 import { createMitosisNode } from '@/helpers/create-mitosis-node';
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
+import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import { getPropsRef } from '@/helpers/get-props-ref';
 import { getRefs } from '@/helpers/get-refs';
 import {
@@ -25,6 +26,7 @@ import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import { collectCss } from '@/helpers/styles/collect-css';
 import { collectStyledComponents } from '@/helpers/styles/collect-styled-components';
 import { hasCss } from '@/helpers/styles/helpers';
+import { traverseNodes } from '@/helpers/traverse-nodes';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { types } from '@babel/core';
@@ -178,6 +180,15 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       stylesType: 'styled-jsx',
       type: 'dom',
       plugins: [
+        () => ({
+          json: {
+            pre: (json) => {
+              traverseNodes(json, (node) => {
+                node.children = node.children.filter(filterEmptyTextNodes);
+              });
+            },
+          },
+        }),
         processOnEventHooksPlugin({ setBindings: false }),
         ...(stateType === 'variables'
           ? [
