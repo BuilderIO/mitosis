@@ -255,7 +255,7 @@ export const blockToReact = (
   if (json.children) {
     childrenNodes = json.children
       .map((item) => blockToReact(item, options, component, needsToRenderSlots))
-      .join('\n');
+      .join('');
   }
   if (needsToRenderSlots.length) {
     needsToRenderSlots.forEach(({ key, value }) => {
