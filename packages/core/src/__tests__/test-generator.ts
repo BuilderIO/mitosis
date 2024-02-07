@@ -527,7 +527,7 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   options: X;
 }) => {
   const configurations: { options: X; testName: string }[] = [
-    // { options: { ...options, typescript: false }, testName: 'Javascript Test' },
+    { options: { ...options, typescript: false }, testName: 'Javascript Test' },
     { options: { ...options, typescript: true }, testName: 'Typescript Test' },
   ];
 
