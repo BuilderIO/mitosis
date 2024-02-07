@@ -90,6 +90,7 @@ const NODE_MAPPERS: {
     const wrap =
       wrapInFragment(json) ||
       isRootTextNode(json) ||
+      component.children[0] === json ||
       // when `<Show><For>...</For></Show>`, we need to wrap the For generated code in a fragment
       // since it's a `.map()` call
       (json.children.length === 1 && ['For', 'Show'].includes(json.children[0].name));
