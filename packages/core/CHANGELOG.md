@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.0.146
+
+### Patch Changes
+
+- 35becd6: Fix: remove all empty text nodes in JSX parser
+- f64d9b0: fix: Vue composition API watch deps
+- 35becd6: fix: remove redundant {' '} in React generator
+
 ## 0.0.145
 
 ### Patch Changes
