@@ -4,7 +4,7 @@ import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, merge, omit, omitBy, sortBy, upperFirst } from 'lodash';
 import traverse from 'traverse';
-import { MitosisComponent, MitosisState, hashCodeAsString } from '../..';
+import { MitosisComponent, MitosisState, blockToMitosis, hashCodeAsString } from '../..';
 import { Size, sizeNames, sizes } from '../../constants/media-sizes';
 import { createSingleBinding } from '../../helpers/bindings';
 import { capitalize } from '../../helpers/capitalize';
@@ -576,7 +576,7 @@ export const builderElementToMitosisNode = (
     return mapper(block, options);
   }
 
-  const bindings: any = {};
+  const bindings: MitosisNode['bindings'] = {};
   const children: MitosisNode[] = [];
 
   if (blockBindings) {
@@ -586,9 +586,9 @@ export const builderElementToMitosisNode = (
       }
       const useKey = key.replace(/^(component\.)?options\./, '');
       if (!useKey.includes('.')) {
-        bindings[useKey] = {
+        bindings[useKey] = createSingleBinding({
           code: (blockBindings[key] as any).code || blockBindings[key],
-        };
+        });
       } else if (useKey.includes('style') && useKey.includes('.')) {
         const styleProperty = useKey.split('.')[1];
         // TODO: add me in
@@ -630,18 +630,30 @@ export const builderElementToMitosisNode = (
             }
             return true;
           })
-          .map((item) => builderElementToMitosisNode(item, options));
-        children.push({
-          '@type': '@builder.io/mitosis/node',
-          name: 'Slot',
-          meta: {},
-          scope: {},
-          bindings: {},
-          properties: { name: key },
-          children: childrenElements,
-        });
+          .map((item) => {
+            const node = builderElementToMitosisNode(item, options);
+
+            // For now, stringify to Mitosis nodes even though that only really works in React, due to syntax overlap.
+            // the correct long term solution is to hold on to the Mitosis Node, and have a plugin for each framework
+            // which processes any Mitosis nodes set into the attribute and moves them as slots when relevant (Svelte/Vue)
+            return blockToMitosis(node, {}, null as any);
+          });
+
+        const strVal =
+          childrenElements.length === 1 ? childrenElements[0] : `<>${childrenElements.join('')}</>`;
+
+        bindings[key] = createSingleBinding({ code: strVal });
+        // children.push({
+        //   '@type': '@builder.io/mitosis/node',
+        //   name: 'Slot',
+        //   meta: {},
+        //   scope: {},
+        //   bindings: {},
+        //   properties: { name: key },
+        //   children: childrenElements,
+        // });
       } else {
-        bindings[key] = { code: json5.stringify(value) };
+        bindings[key] = createSingleBinding({ code: json5.stringify(value) });
       }
     }
   }
@@ -657,7 +669,7 @@ export const builderElementToMitosisNode = (
     if (binding.startsWith('component.options') || binding.startsWith('options')) {
       const value = blockBindings[binding];
       const useKey = binding.replace(/^(component\.options\.|options\.)/, '');
-      bindings[useKey] = { code: value };
+      bindings[useKey] = createSingleBinding({ code: value });
     }
   }
 
@@ -667,7 +679,7 @@ export const builderElementToMitosisNode = (
       block.tagName ||
       ((block as any).linkUrl ? 'a' : 'div'),
     properties: {
-      ...(block.component && { $tagName: block.tagName }),
+      // ...(block.component && { $tagName: block.tagName }),
       ...(block.class && { class: block.class }),
       ...properties,
     },
@@ -675,11 +687,11 @@ export const builderElementToMitosisNode = (
       ...bindings,
       ...actionBindings,
       ...(styleString && {
-        style: { code: styleString },
+        style: createSingleBinding({ code: styleString }),
       }),
       ...(css &&
         Object.keys(css).length && {
-          css: { code: JSON.stringify(css) },
+          css: createSingleBinding({ code: JSON.stringify(css) }),
         }),
     },
   });
@@ -721,19 +733,6 @@ export const builderElementToMitosisNode = (
   );
 
   return node;
-};
-
-const getBuilderPropsForSymbol = (
-  block: BuilderElement,
-): undefined | { 'builder-content-id': string } => {
-  if (block.children?.length === 1) {
-    const child = block.children[0];
-    const builderContentId = child.properties?.['builder-content-id'];
-    if (builderContentId) {
-      return { 'builder-content-id': builderContentId };
-    }
-  }
-  return undefined;
 };
 
 const getHooks = (content: BuilderContent) => {
