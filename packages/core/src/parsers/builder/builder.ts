@@ -483,6 +483,7 @@ type BuilderToMitosisOptions = {
   context?: { [key: string]: any };
   includeBuilderExtras?: boolean;
   preserveTextBlocks?: boolean;
+  includeSpecialBindings?: boolean;
 };
 
 export const builderElementToMitosisNode = (
@@ -490,6 +491,8 @@ export const builderElementToMitosisNode = (
   options: BuilderToMitosisOptions,
   _internalOptions: InternalOptions = {},
 ): MitosisNode => {
+  const { includeSpecialBindings = true } = options;
+
   if (block.component?.name === 'Core:Fragment') {
     block.component.name = 'Fragment';
   }
@@ -631,7 +634,10 @@ export const builderElementToMitosisNode = (
             return true;
           })
           .map((item) => {
-            const node = builderElementToMitosisNode(item, options);
+            const node = builderElementToMitosisNode(item, {
+              ...options,
+              includeSpecialBindings: false,
+            });
 
             // For now, stringify to Mitosis nodes even though that only really works in React, due to syntax overlap.
             // the correct long term solution is to hold on to the Mitosis Node, and have a plugin for each framework
@@ -679,7 +685,7 @@ export const builderElementToMitosisNode = (
       block.tagName ||
       ((block as any).linkUrl ? 'a' : 'div'),
     properties: {
-      // ...(block.component && { $tagName: block.tagName }),
+      ...(block.component && includeSpecialBindings && { $tagName: block.tagName }),
       ...(block.class && { class: block.class }),
       ...properties,
     },
@@ -733,6 +739,19 @@ export const builderElementToMitosisNode = (
   );
 
   return node;
+};
+
+const getBuilderPropsForSymbol = (
+  block: BuilderElement,
+): undefined | { 'builder-content-id': string } => {
+  if (block.children?.length === 1) {
+    const child = block.children[0];
+    const builderContentId = child.properties?.['builder-content-id'];
+    if (builderContentId) {
+      return { 'builder-content-id': builderContentId };
+    }
+  }
+  return undefined;
 };
 
 const getHooks = (content: BuilderContent) => {
