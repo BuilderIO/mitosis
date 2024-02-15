@@ -16,7 +16,7 @@ const NODE_MAPPERS: {
     json: MitosisNode,
     options: ToReactOptions,
     component: MitosisComponent,
-    parentSlots?: any[],
+    parentSlots: any[],
   ) => string;
 } = {
   Slot(json, options, component, parentSlots) {
@@ -46,25 +46,8 @@ const NODE_MAPPERS: {
       }
     };
 
-    if (!slotName) {
-      // TODO: update MitosisNode for simple code
-      const key = Object.keys(json.bindings).find(Boolean);
-      if (key && parentSlots) {
-        parentSlots.push({ key, value: json.bindings[key]?.code });
-        return '';
-      }
-
-      const children = processBinding('props.children', options);
-      return `<>{${children} ${hasChildren ? `|| (${renderChildren()})` : ''}}</>`;
-    }
-
-    let slotProp = processBinding(slotName as string, options).replace('name=', '');
-
-    if (!slotProp.startsWith('props.')) {
-      slotProp = `props.${slotProp}`;
-    }
-
-    return `<>{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}</>`;
+    parentSlots.push({ key: slotName, value: renderChildren() });
+    return '';
   },
   Fragment(json, options, component) {
     const wrap = wrapInFragment(json);
@@ -151,7 +134,7 @@ export const blockToReact = (
   json: MitosisNode,
   options: ToReactOptions,
   component: MitosisComponent,
-  parentSlots?: any[],
+  parentSlots: any[] = [],
 ) => {
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options, component, parentSlots);
