@@ -649,15 +649,6 @@ export const builderElementToMitosisNode = (
           childrenElements.length === 1 ? childrenElements[0] : `<>${childrenElements.join('')}</>`;
 
         bindings[key] = createSingleBinding({ code: strVal });
-        // children.push({
-        //   '@type': '@builder.io/mitosis/node',
-        //   name: 'Slot',
-        //   meta: {},
-        //   scope: {},
-        //   bindings: {},
-        //   properties: { name: key },
-        //   children: childrenElements,
-        // });
       } else {
         bindings[key] = createSingleBinding({ code: json5.stringify(value) });
       }
