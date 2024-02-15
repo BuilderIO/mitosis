@@ -4,7 +4,6 @@ import { isRootTextNode } from '@/helpers/is-root-text-node';
 import { isValidAttributeName } from '@/helpers/is-valid-attribute-name';
 import { getForArguments } from '@/helpers/nodes/for';
 import { isSlotProperty } from '@/helpers/slots';
-import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { checkIsForNode, ForNode, MitosisNode } from '@/types/mitosis-node';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
@@ -23,15 +22,13 @@ const NODE_MAPPERS: {
   Slot(json, options, component, parentSlots) {
     const slotName = json.bindings.name?.code || json.properties.name;
 
+    const hasChildren = json.children.length;
+
     const renderChildren = () => {
       const childrenStr = json.children
         ?.map((item) => blockToReact(item, options, component))
         .join('\n')
         .trim();
-
-      if (!childrenStr) {
-        return '';
-      }
       /**
        * Ad-hoc way of figuring out if the children defaultProp is:
        * - a JSX element, e.g. `<div>foo</div>`
@@ -49,21 +46,7 @@ const NODE_MAPPERS: {
       }
     };
 
-    if (!slotName) {
-      return '{props.children}';
-    }
-
-    const newLocal = stripStateAndPropsRefs(slotName, {
-      includeState: true,
-      includeProps: true,
-    });
-    console.log({
-      slotName,
-      processBinding: newLocal,
-      value: renderChildren(),
-    });
-
-    parentSlots.push({ key: newLocal, value: renderChildren() });
+    parentSlots.push({ key: slotName, value: renderChildren() });
     return '';
   },
   Fragment(json, options, component) {
