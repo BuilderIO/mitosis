@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.147
+
+### Patch Changes
+
+- 4e49454: Fix: Builder JSON to Mitosis JSON slot generation
+
 ## 0.0.146
 
 ### Patch Changes
