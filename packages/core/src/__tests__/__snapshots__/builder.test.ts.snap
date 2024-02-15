@@ -1015,9 +1015,11 @@ exports[`Builder > Regenerate custom Hero 3`] = `
       "bindings": {
         "css": {
           "code": "{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"column\\",\\"alignItems\\":\\"stretch\\",\\"position\\":\\"relative\\",\\"flexShrink\\":\\"0\\",\\"boxSizing\\":\\"border-box\\",\\"marginTop\\":\\"200px\\"}",
+          "type": "single",
         },
         "height": {
           "code": "400",
+          "type": "single",
         },
       },
       "children": [],
@@ -1651,4 +1653,83 @@ exports[`Builder > extractStateHook 1`] = `
     },
   },
 }
+`;
+
+exports[`Builder > slots 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "avatar": {
+          "code": "<Avatar  />",
+          "type": "single",
+        },
+        "css": {
+          "code": "{\\"width\\":\\"100%\\",\\"@media (max-width: 991px)\\":{\\"maxWidth\\":\\"100%\\"}}",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "CardHeader",
+      "properties": {
+        "$name": "CardHeader",
+        "$tagName": undefined,
+        "title": "The Burgler",
+      },
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": undefined,
+  "meta": {
+    "useMetadata": {
+      "httpRequests": undefined,
+    },
+  },
+  "name": "MyComponent",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > slots 2`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <CardHeader
+        title=\\"The Burgler\\"
+        className=\\"card-header\\"
+        avatar={<Avatar />}
+      />
+      <style jsx>{\`
+        .card-header {
+          width: 100%;
+        }
+        @media (max-width: 991px) {
+          .card-header {
+            max-width: 100%;
+          }
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
+"
 `;

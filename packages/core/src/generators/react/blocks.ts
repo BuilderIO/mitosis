@@ -16,7 +16,7 @@ const NODE_MAPPERS: {
     json: MitosisNode,
     options: ToReactOptions,
     component: MitosisComponent,
-    parentSlots?: any[],
+    parentSlots: any[],
   ) => string;
 } = {
   Slot(json, options, component, parentSlots) {
@@ -151,7 +151,7 @@ export const blockToReact = (
   json: MitosisNode,
   options: ToReactOptions,
   component: MitosisComponent,
-  parentSlots?: any[],
+  parentSlots: any[] = [],
 ) => {
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options, component, parentSlots);
