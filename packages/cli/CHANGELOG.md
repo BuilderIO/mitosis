@@ -1,5 +1,16 @@
 # @builder.io/mitosis-cli
 
+## 0.1.0
+
+### Minor Changes
+
+- 5dfd7cd: Breaking Change: remove vue2 and vue3 generators, keeping only the default vue generator (which generates vue3).
+
+### Patch Changes
+
+- Updated dependencies [5dfd7cd]
+  - @builder.io/mitosis@0.1.0
+
 ## 0.0.147
 
 ### Patch Changes
