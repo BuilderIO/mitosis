@@ -271,8 +271,7 @@ export default function Fiddle() {
         localStorageGet('options.reactStateType') || ('useState' as 'useState' | 'mobx' | 'solid'),
       svelteStateType:
         localStorageGet('options.svelteStateType') || ('variables' as 'variables' | 'proxies'),
-      vueApi: localStorageGet('options.vueApi') || ('options' as 'options' | 'composition'),
-      vueVersion: localStorageGet('options.vueVersion') || ('2' as '2' | '3'),
+      vueApi: localStorageGet('options.vueApi') || ('composition' as 'options' | 'composition'),
       alpineShorthandSyntax: localStorageGet('options.alpineShorthandSyntax') || 'false',
       alpineInline: localStorageGet('options.alpineInline') || 'false',
       angularStandalone: localStorageGet('options.angularStandalone') || 'false',
@@ -346,7 +345,6 @@ export default function Fiddle() {
           await generator({
             output: state.outputTab,
             options: { ...generateOptions(), ...commonOptions },
-            vueVersion: state.options.vueVersion,
           })
         )({ component: json, path: '' });
 
@@ -1083,47 +1081,6 @@ export default function Fiddle() {
             </div>
             <Divider css={{ opacity: 0.6 }} />
             <Show when={state.outputTab === 'vue'}>
-              <div
-                css={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
-                }}
-              >
-                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
-                  Version:
-                </Typography>
-                <RadioGroup
-                  css={{
-                    flexDirection: 'row',
-                    marginRight: 10,
-                    '& .MuiFormControlLabel-label': {
-                      fontSize: 12,
-                    },
-                  }}
-                  aria-label="Vue Version"
-                  name="vueApi"
-                  value={state.options.vueVersion}
-                  onChange={(e) => {
-                    state.options.vueVersion = e.target.value;
-                    state.updateOutput();
-                  }}
-                >
-                  <FormControlLabel
-                    value="2"
-                    control={<Radio color="primary" />}
-                    labelPlacement="start"
-                    label="Vue 2"
-                  />
-                  <FormControlLabel
-                    value="3"
-                    labelPlacement="start"
-                    control={<Radio color="primary" />}
-                    label="Vue 3"
-                  />
-                </RadioGroup>
-              </div>
-              <Divider css={{ opacity: 0.6 }} />
               <div
                 css={{
                   display: 'flex',

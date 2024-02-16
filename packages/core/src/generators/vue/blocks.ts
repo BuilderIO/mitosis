@@ -9,12 +9,7 @@ import { Dictionary } from '@/helpers/typescript';
 import { Binding, ForNode, MitosisNode, SpreadType } from '@/types/mitosis-node';
 import { identity, pipe } from 'fp-ts/lib/function';
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
-import {
-  addBindingsToJson,
-  addPropertiesToJson,
-  encodeQuotes,
-  invertBooleanExpression,
-} from './helpers';
+import { encodeQuotes } from './helpers';
 import { ToVueOptions } from './types';
 
 const SPECIAL_PROPERTIES = {
@@ -50,51 +45,22 @@ const NODE_MAPPERS: {
 } = {
   Fragment(json, options, scope) {
     const children = json.children.filter(filterEmptyTextNodes);
-    const shouldAddDivFallback =
-      options.vueVersion === 2 && scope?.isRootNode && children.length > 1;
 
     const childrenStr = children.map((item) => blockToVue(item, options)).join('\n');
 
-    if (shouldAddDivFallback) {
-      console.warn(
-        'WARNING: Vue 2 forbids multiple root elements. You provided a root Fragment with multiple elements. Wrapping elements in div as a workaround.',
-      );
-
-      return `<div>${childrenStr}</div>`;
-    } else {
-      return childrenStr;
-    }
+    return childrenStr;
   },
   For(_json, options) {
     const json = _json as ForNode;
     const keyValue = json.bindings.key || { code: 'index', type: 'single' };
     const forValue = `(${json.scope.forName}, index) in ${json.bindings.each?.code}`;
 
-    if (options.vueVersion >= 3) {
-      // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
-      return `<template :key="${encodeQuotes(keyValue?.code || 'index')}" v-for="${encodeQuotes(
-        forValue,
-      )}">
+    // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
+    return `<template :key="${encodeQuotes(keyValue?.code || 'index')}" v-for="${encodeQuotes(
+      forValue,
+    )}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
       </template>`;
-    }
-    // Vue 2 can only handle one root element
-    const firstChild = json.children.filter(filterEmptyTextNodes)[0] as MitosisNode | undefined;
-
-    // Edge-case for when the parent is a `Show`, we need to pass down the `v-if` prop.
-    const jsonIf = json.properties[SPECIAL_PROPERTIES.V_IF];
-
-    return firstChild
-      ? pipe(
-          firstChild,
-          addBindingsToJson({ key: keyValue }),
-          addPropertiesToJson({
-            [SPECIAL_PROPERTIES.V_FOR]: forValue,
-            ...(jsonIf ? { [SPECIAL_PROPERTIES.V_IF]: jsonIf } : {}),
-          }),
-          (block) => blockToVue(block, options),
-        )
-      : '';
   },
   Show(json, options, scope) {
     const ifValue = json.bindings.when?.code || '';
@@ -113,166 +79,7 @@ const NODE_MAPPERS: {
     }
     `;
 
-    switch (options.vueVersion) {
-      case 3:
-        return defaultShowTemplate;
-      case 2:
-        // if it is not the root node, the default show template can be used
-        // as Vue 2 only has this limitation at root level
-        if (!scope?.isRootNode) {
-          return defaultShowTemplate;
-        }
-
-        const children = json.children.filter(filterEmptyTextNodes);
-        // Vue 2 can only handle one root element, so we just take the first one.
-        // TO-DO: warn user of multi-children Show.
-        const firstChild = children[0] as MitosisNode | undefined;
-        const elseBlock = json.meta.else;
-
-        const hasShowChild = firstChild?.name === 'Show';
-        const childElseBlock = firstChild?.meta.else;
-
-        const allShowChildrenWithoutElse = children.every((x) => x.name === 'Show' && !x.meta.else);
-
-        if (allShowChildrenWithoutElse && isMitosisNode(elseBlock)) {
-          /**
-           * This is when we mimic an if-else chain by only providing `Show` elements as children, none of which have an `else` block
-           *
-           * <show when={foo} else={else-1}>
-           *  <show when={bar}> <bar-code> </show>
-           *  <show when={x}> <x-code> </show>
-           *  <show when={y}> <y-code> </show>
-           * </show>
-           *
-           * What we want in this case is:
-           *
-           * <else-1 if={!foo} />
-           * <bar-code v-else-if={bar} />
-           * <x-code v-else-if={x} />
-           * <y-code v-else />
-           */
-          const ifString = pipe(
-            elseBlock,
-            addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: invertBooleanExpression(ifValue) }),
-            (block) => blockToVue(block, options),
-          );
-
-          const childrenStrings = children.map((child, idx) => {
-            const isLast = idx === children.length - 1;
-
-            const innerBlock = child.children.filter(filterEmptyTextNodes)[0];
-
-            if (!isLast) {
-              const childIfValue = child.bindings.when?.code;
-              const elseIfString = pipe(
-                innerBlock,
-                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE_IF]: childIfValue }),
-                (block) => blockToVue(block, options),
-              );
-
-              return elseIfString;
-            } else {
-              const elseString = pipe(
-                innerBlock,
-                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }),
-                (block) => blockToVue(block, options),
-              );
-
-              return elseString;
-            }
-          });
-
-          return `
-            ${ifString}
-            ${childrenStrings.join('\n')}
-          `;
-        } else if (
-          firstChild &&
-          isMitosisNode(elseBlock) &&
-          hasShowChild &&
-          isMitosisNode(childElseBlock)
-        ) {
-          /**
-           * This is special edge logic to handle 2 nested Show elements in Vue 2.
-           * We need to invert the logic to make it work, due to no-template-root-element limitations in Vue 2.
-           *
-           * <show when={foo} else={else-1}>
-           *  <show when={bar}> <bar-code> </show>
-           *
-           *  <show when={x}> <x-code> </show>
-           *
-           *  <show when={y}> <y-code> </show>
-           * </show>
-           *
-           *
-           *
-           *
-           * foo: true && bar: true => if-code
-           * foo: true && bar: false => else-2
-           * foo: false && bar: true?? => else-1
-           *
-           *
-           * map to:
-           *
-           * <else-1 if={!foo} />
-           * <else-2 v-else-if={!bar} />
-           * <if-code v-else />
-           *
-           */
-          const ifString = pipe(
-            elseBlock,
-            addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: invertBooleanExpression(ifValue) }),
-            (block) => blockToVue(block, options),
-          );
-
-          const childIfValue = pipe(firstChild.bindings.when?.code || '', invertBooleanExpression);
-          const elseIfString = pipe(
-            childElseBlock,
-            addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE_IF]: childIfValue }),
-            (block) => blockToVue(block, options),
-          );
-
-          const firstChildOfFirstChild = firstChild.children.filter(filterEmptyTextNodes)[0] as
-            | MitosisNode
-            | undefined;
-          const elseString = firstChildOfFirstChild
-            ? pipe(
-                firstChildOfFirstChild,
-                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }),
-                (block) => blockToVue(block, options),
-              )
-            : '';
-
-          return `
-
-            ${ifString}
-
-            ${elseIfString}
-
-            ${elseString}
-
-          `;
-        } else {
-          const ifString = firstChild
-            ? pipe(
-                firstChild,
-                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: ifValue }),
-                (block) => blockToVue(block, options),
-              )
-            : '';
-
-          const elseString = isMitosisNode(elseBlock)
-            ? pipe(elseBlock, addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }), (block) =>
-                blockToVue(block, options),
-              )
-            : '';
-
-          return `
-                    ${ifString}
-                    ${elseString}
-                  `;
-        }
-    }
+    return defaultShowTemplate;
   },
   Slot(json, options) {
     const slotName = json.bindings.name?.code || json.properties.name;

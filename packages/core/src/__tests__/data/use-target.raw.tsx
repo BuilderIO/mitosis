@@ -25,8 +25,6 @@ export default function UseTargetComponent() {
         swift: 'sw',
         taro: 't',
         template: 'te',
-        vue2: 'v2',
-        vue3: 'v3',
         webcomponent: 'wc',
       });
       return prefix + 'foo';

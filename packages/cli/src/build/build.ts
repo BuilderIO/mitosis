@@ -21,8 +21,7 @@ import {
   componentToSwift,
   componentToTaro,
   componentToTemplate,
-  componentToVue2,
-  componentToVue3,
+  componentToVue,
   createTypescriptProject,
   mapSignalTypeInTSFile,
   MitosisComponent,
@@ -52,11 +51,6 @@ const cwd = process.cwd();
  */
 const getTargetPath = ({ target }: { target: Target }): string => {
   switch (target) {
-    case 'vue2':
-      return 'vue/vue2';
-    case 'vue':
-    case 'vue3':
-      return 'vue/vue3';
     default:
       return kebabCase(target);
   }
@@ -326,13 +320,8 @@ const getGeneratorForTarget = ({ target }: { target: Target }) => {
       return componentToHtml;
     case 'reactNative':
       return componentToReactNative;
-    case 'vue2':
-      return componentToVue2;
     case 'vue':
-      console.log('Targeting Vue: defaulting to vue v3');
-      return componentToVue3;
-    case 'vue3':
-      return componentToVue3;
+      return componentToVue;
     case 'angular':
       return componentToAngular;
     case 'react':
