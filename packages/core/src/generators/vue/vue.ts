@@ -32,7 +32,7 @@ import { blockToVue } from './blocks';
 import { generateCompositionApiScript } from './compositionApi';
 import { getOnUpdateHookName, processBinding, renameMitosisComponentsToKebabCase } from './helpers';
 import { generateOptionsApiScript } from './optionsApi';
-import { ToVueOptions, VueOptsWithoutVersion } from './types';
+import { ToVueOptions } from './types';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
@@ -97,19 +97,18 @@ const onUpdatePlugin: Plugin = (options) => ({
 });
 
 const BASE_OPTIONS: ToVueOptions = {
-  vueVersion: 2,
   api: 'options',
   defineComponent: true,
 };
 
-const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
+export const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
   (userOptions) =>
   ({ component: _component, path }) => {
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
     let component = fastClone(_component);
 
     const options = initializeOptions({
-      target: userOptions?.vueVersion === 2 ? 'vue2' : 'vue3',
+      target: 'vue',
       component,
       defaults: BASE_OPTIONS,
       userOptions: userOptions,
@@ -213,7 +212,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
 
     // import from vue
     let vueImports: string[] = [];
-    if (options.vueVersion >= 3 && options.asyncComponentImports) {
+    if (options.asyncComponentImports) {
       vueImports.push('defineAsyncComponent');
     }
     if (options.api === 'options' && options.defineComponent) {
@@ -318,12 +317,6 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     str = str.replace(/<script(.*)>\n?<\/script>/g, '').trim();
     return str;
   };
-
-export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>
-  componentToVue({ ...vueOptions, vueVersion: 2 });
-
-export const componentToVue3 = (vueOptions?: VueOptsWithoutVersion) =>
-  componentToVue({ ...vueOptions, vueVersion: 3 });
 
 // Remove unused artifacts like empty script or style tags
 const removePatterns = [

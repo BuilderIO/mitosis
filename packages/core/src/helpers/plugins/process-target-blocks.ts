@@ -16,9 +16,6 @@ const getBlockForTarget = ({
   targetBlock: TargetBlockDefinition;
 }) => {
   switch (target) {
-    case 'vue3':
-    case 'vue':
-      return targetBlock['vue3'] || targetBlock['vue'] || targetBlock['default'];
     default:
       return targetBlock[target] || targetBlock['default'];
   }

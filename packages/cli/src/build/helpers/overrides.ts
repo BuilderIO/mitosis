@@ -23,8 +23,6 @@ const getOverrideFilenames = ({
     case 'template':
     case 'webcomponent':
     case 'vue':
-    case 'vue2':
-    case 'vue3':
       return [filename];
 
     // For all JSX targets, we want to be flexible and allow any possible extension
