@@ -5,8 +5,7 @@ export default function StylePropClassAndCss(props) {
     <div
       style={props.attributes.style}
       class={useTarget({
-        vue3: props.attributes.className,
-        vue2: props.attributes.className,
+        vue: props.attributes.className,
         svelte: props.attributes.classfdsa,
         default: props.attributes.class,
       })}
