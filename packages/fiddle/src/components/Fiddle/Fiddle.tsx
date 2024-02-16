@@ -271,7 +271,7 @@ export default function Fiddle() {
         localStorageGet('options.reactStateType') || ('useState' as 'useState' | 'mobx' | 'solid'),
       svelteStateType:
         localStorageGet('options.svelteStateType') || ('variables' as 'variables' | 'proxies'),
-      vueApi: localStorageGet('options.vueApi') || ('options' as 'options' | 'composition'),
+      vueApi: localStorageGet('options.vueApi') || ('composition' as 'options' | 'composition'),
       alpineShorthandSyntax: localStorageGet('options.alpineShorthandSyntax') || 'false',
       alpineInline: localStorageGet('options.alpineInline') || 'false',
       angularStandalone: localStorageGet('options.angularStandalone') || 'false',
@@ -1080,6 +1080,49 @@ export default function Fiddle() {
               </RadioGroup>
             </div>
             <Divider css={{ opacity: 0.6 }} />
+            <Show when={state.outputTab === 'vue'}>
+              <div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
+                }}
+              >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
+                  API:
+                </Typography>
+                <RadioGroup
+                  css={{
+                    flexDirection: 'row',
+                    marginRight: 10,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: 12,
+                    },
+                  }}
+                  aria-label="Vue API"
+                  name="vueApi"
+                  value={state.options.vueApi}
+                  onChange={(e) => {
+                    state.options.vueApi = e.target.value;
+                    state.updateOutput();
+                  }}
+                >
+                  <FormControlLabel
+                    value="options"
+                    control={<Radio color="primary" />}
+                    labelPlacement="start"
+                    label="Options API"
+                  />
+                  <FormControlLabel
+                    value="composition"
+                    labelPlacement="start"
+                    control={<Radio color="primary" />}
+                    label="Composition API"
+                  />
+                </RadioGroup>
+              </div>
+              <Divider css={{ opacity: 0.6 }} />
+            </Show>
             <Show when={state.outputTab === 'react'}>
               <div
                 css={{
