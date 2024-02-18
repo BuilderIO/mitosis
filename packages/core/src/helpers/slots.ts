@@ -8,7 +8,7 @@ export const isSlotProperty = (key: string, slotPrefix: string = SLOT_PREFIX): b
   key.startsWith(slotPrefix);
 
 export const stripSlotPrefix = (key: string, slotPrefix: string = SLOT_PREFIX): string =>
-  isSlotProperty(key, slotPrefix) ? key.substring(slotPrefix.length) : key;
+  isSlotProperty(key, slotPrefix) ? convertToKebabCase(key.substring(slotPrefix.length)) : convertToKebabCase(key);
 
 export function replaceSlotsInString(code: string, mapper: SlotMapper) {
   return babelTransformExpression(code, {
@@ -20,4 +20,9 @@ export function replaceSlotsInString(code: string, mapper: SlotMapper) {
       }
     },
   });
+}
+
+function convertToKebabCase(key: string) {
+  var formattedString = key.replace(/([A-Z])/g, '-$1').trim();
+  return formattedString;
 }
