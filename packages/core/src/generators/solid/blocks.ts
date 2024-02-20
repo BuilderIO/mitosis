@@ -1,6 +1,5 @@
 import { babelTransformExpression } from '@/helpers/babel-transform';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
-import { objectHasKey } from '@/helpers/typescript';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '@/types/mitosis-node';
 import { types } from '@babel/core';
@@ -8,15 +7,6 @@ import { kebabCase } from 'lodash';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { collectClassString } from './helpers/styles';
 import { ToSolidOptions } from './types';
-
-const ATTTRIBUTE_MAPPERS = {
-  for: 'htmlFor',
-};
-
-const transformAttributeName = (name: string) => {
-  if (objectHasKey(ATTTRIBUTE_MAPPERS, name)) return ATTTRIBUTE_MAPPERS[name];
-  return name;
-};
 
 export const blockToSolid = ({
   json,
@@ -42,8 +32,8 @@ export const blockToSolid = ({
     {(${json.scope.forName}, _index) => {
       const ${json.scope.indexName || 'index'} = _index();
       return ${needsWrapper ? '<>' : ''}${json.children
-      .filter(filterEmptyTextNodes)
-      .map((child) => blockToSolid({ component, json: child, options }))}}}
+        .filter(filterEmptyTextNodes)
+        .map((child) => blockToSolid({ component, json: child, options }))}}}
       ${needsWrapper ? '</>' : ''}
     </For>`;
   }
@@ -67,8 +57,7 @@ export const blockToSolid = ({
 
   for (const key in json.properties) {
     const value = json.properties[key];
-    const newKey = transformAttributeName(key);
-    str += ` ${newKey}="${value}" `;
+    str += ` ${key}="${value}" `;
   }
   for (const key in json.bindings) {
     const { code, arguments: cusArg = ['event'], type } = json.bindings[key]!;
@@ -105,8 +94,7 @@ export const blockToSolid = ({
           },
         });
       }
-      const newKey = transformAttributeName(key);
-      str += ` ${newKey}={${useValue}} `;
+      str += ` ${key}={${useValue}} `;
     }
   }
   if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
