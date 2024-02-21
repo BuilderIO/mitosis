@@ -32,8 +32,8 @@ export const blockToSolid = ({
     {(${json.scope.forName}, _index) => {
       const ${json.scope.indexName || 'index'} = _index();
       return ${needsWrapper ? '<>' : ''}${json.children
-        .filter(filterEmptyTextNodes)
-        .map((child) => blockToSolid({ component, json: child, options }))}}}
+      .filter(filterEmptyTextNodes)
+      .map((child) => blockToSolid({ component, json: child, options }))}}}
       ${needsWrapper ? '</>' : ''}
     </For>`;
   }
