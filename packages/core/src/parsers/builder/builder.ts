@@ -623,7 +623,21 @@ export const builderElementToMitosisNode = (
       const value = block.component.options[key];
       const valueIsArrayOfBuilderElements = Array.isArray(value) && value.every(isBuilderElement);
 
-      if (typeof value === 'string') {
+      const transformBldrElementToBinding = (item: BuilderElement) => {
+        const node = builderElementToMitosisNode(item, {
+          ...options,
+          includeSpecialBindings: false,
+        });
+
+        // For now, stringify to Mitosis nodes even though that only really works in React, due to syntax overlap.
+        // the correct long term solution is to hold on to the Mitosis Node, and have a plugin for each framework
+        // which processes any Mitosis nodes set into the attribute and moves them as slots when relevant (Svelte/Vue)
+        return blockToMitosis(node, {}, null as any);
+      };
+
+      if (isBuilderElement(value)) {
+        bindings[key] = createSingleBinding({ code: transformBldrElementToBinding(value) });
+      } else if (typeof value === 'string') {
         properties[key] = value;
       } else if (valueIsArrayOfBuilderElements) {
         const childrenElements = value
@@ -633,17 +647,7 @@ export const builderElementToMitosisNode = (
             }
             return true;
           })
-          .map((item) => {
-            const node = builderElementToMitosisNode(item, {
-              ...options,
-              includeSpecialBindings: false,
-            });
-
-            // For now, stringify to Mitosis nodes even though that only really works in React, due to syntax overlap.
-            // the correct long term solution is to hold on to the Mitosis Node, and have a plugin for each framework
-            // which processes any Mitosis nodes set into the attribute and moves them as slots when relevant (Svelte/Vue)
-            return blockToMitosis(node, {}, null as any);
-          });
+          .map(transformBldrElementToBinding);
 
         const strVal =
           childrenElements.length === 1 ? childrenElements[0] : `<>${childrenElements.join('')}</>`;

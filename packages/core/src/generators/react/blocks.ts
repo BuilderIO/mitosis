@@ -228,7 +228,11 @@ export const blockToReact = (
         const [newKey, newValue] = mapper(key, useBindingValue, options);
         str += ` ${newKey}={${newValue}} `;
       } else {
-        str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
+        if (useBindingValue === 'true') {
+          str += ` ${BINDING_MAPPERS[key]} `;
+        } else {
+          str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
+        }
       }
     } else if (key === 'style' && options.type === 'native' && json.name === 'ScrollView') {
       // React Native's ScrollView has a different prop for styles: `contentContainerStyle`
