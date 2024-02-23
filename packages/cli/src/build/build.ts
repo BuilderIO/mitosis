@@ -251,7 +251,7 @@ const getTargetContexts = (options: MitosisConfig) =>
   options.targets.map(
     (target): TargetContext => ({
       target,
-      generator: options.generators[target] as any,
+      generator: options.generators?.[target] as any,
       outputPath: options.getTargetPath({ target }),
     }),
   );
