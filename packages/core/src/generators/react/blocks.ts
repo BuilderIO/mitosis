@@ -16,7 +16,7 @@ const NODE_MAPPERS: {
     json: MitosisNode,
     options: ToReactOptions,
     component: MitosisComponent,
-    parentSlots?: any[],
+    parentSlots: any[],
   ) => string;
 } = {
   Slot(json, options, component, parentSlots) {
@@ -151,7 +151,7 @@ export const blockToReact = (
   json: MitosisNode,
   options: ToReactOptions,
   component: MitosisComponent,
-  parentSlots?: any[],
+  parentSlots: any[] = [],
 ) => {
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options, component, parentSlots);
@@ -228,7 +228,11 @@ export const blockToReact = (
         const [newKey, newValue] = mapper(key, useBindingValue, options);
         str += ` ${newKey}={${newValue}} `;
       } else {
-        str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
+        if (useBindingValue === 'true') {
+          str += ` ${BINDING_MAPPERS[key]} `;
+        } else {
+          str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
+        }
       }
     } else if (key === 'style' && options.type === 'native' && json.name === 'ScrollView') {
       // React Native's ScrollView has a different prop for styles: `contentContainerStyle`

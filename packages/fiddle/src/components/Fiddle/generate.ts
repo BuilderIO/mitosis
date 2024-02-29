@@ -3,11 +3,9 @@ type Transpiler = import('@builder.io/mitosis').Transpiler<string>;
 export const generateCode = async ({
   output,
   options,
-  vueVersion,
 }: {
   output: string;
   options: any;
-  vueVersion: '2' | '3';
 }): Promise<Transpiler> => {
   const mitosisCore = await import('@builder.io/mitosis');
 
@@ -33,8 +31,7 @@ export const generateCode = async ({
     componentToSvelte,
     componentToMitosis,
     componentToBuilder,
-    componentToVue2,
-    componentToVue3,
+    componentToVue,
   } = mitosisCore;
 
   const plugins = [
@@ -91,7 +88,7 @@ export const generateCode = async ({
     case 'builder':
       return (args) => JSON.stringify(componentToBuilder()(args), null, 2);
     case 'vue':
-      return vueVersion === '2' ? componentToVue2(allOptions) : componentToVue3(allOptions);
+      return componentToVue(allOptions);
     default:
       throw new Error('unexpected Output ' + output);
   }

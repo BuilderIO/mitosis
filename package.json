@@ -12,10 +12,11 @@
   },
   "scripts": {
     "g:changeset": "yarn changeset",
-    "ci:release": "yarn workspace @builder.io/mitosis-cli fix-core-version && yarn changeset publish",
+    "ci:release": "yarn ci:build:release && yarn workspace @builder.io/mitosis-cli fix-core-version && yarn changeset publish",
     "build:core": "nx build @builder.io/mitosis",
     "build:fiddle": "nx build @builder.io/mitosis-fiddle",
     "build:eslint-plugin": "nx build @builder.io/eslint-plugin-mitosis",
+    "ci:build:release": "nx run-many --skip-nx-cache --target build --parallel 4 -p @builder.io/mitosis @builder.io/mitosis-cli @builder.io/eslint-plugin-mitosis @builder.io/create-mitosis",
     "ci:build": "nx run-many --skip-nx-cache --target build --parallel 4 --exclude \"*/e2e-alpine,*/e2e-angular,@builder.io/mitosis-fiddle,@builder.io/talk-*,@builder.io/example-apps\"",
     "ci:build:core": "yarn run build:core",
     "ci:build:fiddle": "yarn run build:fiddle",

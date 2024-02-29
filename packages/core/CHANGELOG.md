@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.1.1
+
+### Patch Changes
+
+- 9d6e019: Fix: simplify React true bindings.
+- 9d6e019: Fix: Builder->Mitosis single node slot
+
+## 0.1.0
+
+### Minor Changes
+
+- 5dfd7cd: Breaking Change: remove vue2 and vue3 generators, keeping only the default vue generator (which generates vue3).
+
+## 0.0.147
+
+### Patch Changes
+
+- 4e49454: Fix: Builder JSON to Mitosis JSON slot generation
+
 ## 0.0.146
 
 ### Patch Changes
