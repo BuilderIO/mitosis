@@ -26,14 +26,12 @@ module.exports = {
       typescript: true,
       preserveImports: true,
       importMapper: (component, theImport, importedValues, componentsUsed) => {
-        console.log('theImport.path', theImport.path);
         if (theImport.path.endsWith('.lite')) {
           const cleanPath = theImport.path.replaceAll('-', '').replace('.lite', '').toLowerCase();
 
           const component = componentsUsed.find((componentUsed) => {
             return cleanPath.includes(componentUsed.toLowerCase());
           });
-          console.log('component', component);
           if (component) {
             return `import {${component}Module} from "${theImport.path.replace('.lite', '')}";`;
           }

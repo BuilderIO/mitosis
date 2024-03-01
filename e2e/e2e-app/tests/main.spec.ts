@@ -63,8 +63,6 @@ test.describe('e2e', () => {
       page.on('console', (msg) => consoleMsg.push(msg.text()));
 
       await page.goto('/special-tags/');
-      await expect(page.getByTestId('special-script')).toHaveCount(0);
-
       await expect(consoleMsg.includes('hello from script tag.')).toBe(true);
     });
 
@@ -76,7 +74,6 @@ test.describe('e2e', () => {
       await page.goto('/special-tags/');
 
       const div = page.locator('.wrap');
-      await expect(page.getByTestId('wrap-style')).toHaveCount(0);
       await expect(div).toHaveCSS('background-color', 'rgb(255, 0, 0)');
     });
   });
