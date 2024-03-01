@@ -1,37 +1,40 @@
 {
   "name": "@e2e-app/vue",
-  "workspaces": [
-    "packages/**/*"
-  ],
-  "main": "./packages/_vue2/dist/index.js",
-  "module": "./packages/_vue2/dist/index.js",
+  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "type": "module",
   "files": [
-    "vue2/dist",
-    "vue3/dist"
+    "dist"
   ],
   "exports": {
     ".": {
-      "import": "./packages/_vue2/dist/index.js",
-      "require": "./packages/_vue2/dist/index.cjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "./vue2": {
-      "import": "./packages/_vue2/dist/index.js",
-      "require": "./packages/_vue2/dist/index.cjs"
-    },
-    "./vue2/css": "./packages/_vue2/dist/style.css",
     "./vue3": {
-      "import": "./packages/_vue3/dist/index.js",
-      "require": "./packages/_vue3/dist/index.cjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "./vue3/css": "./packages/_vue3/dist/style.css"
+    "./vue3/css": "./dist/style.css"
   },
   "scripts": {
     "add-debug": "bash ./scripts/add-debug.sh",
     "remove-debug": "bash ./scripts/remove-debug.sh",
-    "build": "yarn workspaces foreach run build"
+    "build": "vite build",
+    "type-check": "vue-tsc --noEmit"
   },
-  "peerDependencies": {
-    "vue": ">= 2.7"
+  "dependencies": {
+    "vue": "^3.2.37"
+  },
+  "devDependencies": {
+    "@builder.io/e2e-app": "workspace:*",
+    "@types/node": "^16.11.47",
+    "@vitejs/plugin-vue": "^3.0.1",
+    "@vue/tsconfig": "^0.1.3",
+    "typescript": "^5.3.2",
+    "vite": "^3.2.2",
+    "vite-plugin-dts": "^1.5.0",
+    "vue-tsc": "^0.39.5"
   }
 }

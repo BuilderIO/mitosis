@@ -35,14 +35,11 @@ function MyBasicRefComponent(props) {
               onBlur={(event) => onBlur()}
               onChange={(event) => setName(event.target.value)}
             />
-
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
-
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </Fragment>
@@ -165,12 +162,7 @@ function MyBasicOnMountUpdateComponent(props) {
     setName(\\"PatrickJS onMount\\" + props.bye);
   }, []);
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyBasicOnMountUpdateComponent;
@@ -222,7 +214,7 @@ exports[`Preact > jsx > Javascript Test > BasicAttribute 1`] = `
 import { h, Fragment } from \\"preact\\";
 
 function MyComponent(props) {
-  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
+  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck />;
 }
 
 export default MyComponent;
@@ -243,11 +235,8 @@ function MyBooleanAttribute(props) {
           {props.type}
         </Fragment>
       ) : null}
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent list={null} />
     </div>
   );
@@ -272,7 +261,6 @@ function MyBasicChildComponent(props) {
   return (
     <div>
       <MyBasicComponent id={dev} />
-
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </div>
@@ -352,14 +340,11 @@ function MyBasicRefComponent(props) {
               onBlur={(event) => onBlur()}
               onChange={(event) => setName(event.target.value)}
             />
-
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
-
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </Fragment>
@@ -435,11 +420,8 @@ function MyPreviousComponent(props) {
   return (
     <div>
       <h1>
-        Now:
-        {count}, before:
-        {prevCount.current}
+        Now: {count}, before: {prevCount.current}
       </h1>
-
       <button onClick={(event) => setCount(1)}>Increment</button>
     </div>
   );
@@ -457,23 +439,18 @@ function Button(props) {
   return (
     <div>
       {props.link ? (
-        <Fragment>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </Fragment>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
-            {props.text}
-          </button>
-        </Fragment>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
       ) : null}
     </div>
   );
@@ -514,7 +491,6 @@ function Column(props) {
         {props.columns?.map((column, index) => (
           <div className=\\"builder-column div-2\\">
             {column.content}
-
             {index}
           </div>
         ))}
@@ -555,13 +531,13 @@ import { h, Fragment } from \\"preact\\";
 function ContentSlotCode(props) {
   return (
     <div>
-      {props.slotTesting}
-
+      <>{props.slotTesting}</>
       <div>
         <hr />
       </div>
-
-      <div>{props.children}</div>
+      <div>
+        <>{props.children}</>
+      </div>
     </div>
   );
 }
@@ -600,13 +576,11 @@ function ContentSlotJsxCode(props) {
             className={cls()}
           >
             {showContent && props.slotContent ? (
-              <Fragment>{props.slotContent || \\"{props.content}\\"}</Fragment>
+              <>{props.content || \\"{props.content}\\"}</>
             ) : null}
-
             <div>
               <hr />
             </div>
-
             <div>{props.children}</div>
           </div>
         </Fragment>
@@ -988,7 +962,6 @@ function FormComponent(props) {
         onSubmit={(event) => onSubmit(event)}
         {...props.attributes}
       >
-        {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <Fragment>
             {props.builderBlock?.children?.map((block, index) => (
@@ -999,39 +972,27 @@ function FormComponent(props) {
               />
             ))}
           </Fragment>
-        ) : null}{\\" \\"}
+        ) : null}
         {submissionState() === \\"error\\" ? (
-          <Fragment>
-            <BuilderBlocks
-              dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
-            />
-          </Fragment>
-        ) : null}{\\" \\"}
+          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
+        ) : null}
         {submissionState() === \\"sending\\" ? (
-          <Fragment>
-            <BuilderBlocks
-              dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
-            />
-          </Fragment>
-        ) : null}{\\" \\"}
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          />
+        ) : null}
         {submissionState() === \\"error\\" && responseData ? (
-          <Fragment>
-            <pre className=\\"builder-form-error-text pre\\">
-              {\\" \\"}
-              {JSON.stringify(responseData, null, 2)}{\\" \\"}
-            </pre>
-          </Fragment>
-        ) : null}{\\" \\"}
+          <pre className=\\"builder-form-error-text pre\\">
+            {JSON.stringify(responseData, null, 2)}
+          </pre>
+        ) : null}
         {submissionState() === \\"success\\" ? (
-          <Fragment>
-            <BuilderBlocks
-              dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
-            />
-          </Fragment>
-        ) : null}{\\" \\"}
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          />
+        ) : null}
       </form>{\\" \\"}
       <style jsx>{\`
         .pre {
@@ -1113,26 +1074,22 @@ function Image(props) {
       <div>
         <picture ref={pictureRef}>
           {!useLazyLoading() || load ? (
-            <Fragment>
-              <img
-                alt={props.altText}
-                aria-role={props.altText ? \\"presentation\\" : undefined}
-                className={
-                  \\"builder-image\\" +
-                  (props._class ? \\" \\" + props._class : \\"\\") +
-                  \\" img\\"
-                }
-                src={props.image}
-                onLoad={(event) => setLoaded()}
-                srcset={props.srcset}
-                sizes={props.sizes}
-              />
-            </Fragment>
+            <img
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              className={
+                \\"builder-image\\" +
+                (props._class ? \\" \\" + props._class : \\"\\") +
+                \\" img\\"
+              }
+              src={props.image}
+              onLoad={(event) => setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+            />
           ) : null}
-
           <source srcset={props.srcset} />
         </picture>
-
         {props.children}
       </div>
       <style jsx>{\`
@@ -1164,9 +1121,7 @@ function ImgStateComponent(props) {
   return (
     <div>
       {images?.map((item, itemIndex) => (
-        <Fragment>
-          <img className=\\"custom-class\\" src={item} key={itemIndex} />
-        </Fragment>
+        <img className=\\"custom-class\\" src={item} key={itemIndex} />
       ))}
     </div>
   );
@@ -1332,7 +1287,9 @@ import { h, Fragment } from \\"preact\\";
 function SlotCode(props) {
   return (
     <div>
-      {props.children || <div className=\\"default-slot\\">Default content</div>}
+      <>
+        {props.children || <div className=\\"default-slot\\">Default content</div>}
+      </>
     </div>
   );
 }
@@ -1349,7 +1306,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 function SlotCode(props) {
   return (
     <div>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      <ContentSlotCode testing={<div>Hello</div>}></ContentSlotCode>
     </div>
   );
 }
@@ -1382,11 +1339,9 @@ import { h, Fragment } from \\"preact\\";
 function SlotCode(props) {
   return (
     <div>
-      {props.slotTop}
-
-      {props.slotLeft || \\"Default left\\"}
-
-      {props.children || \\"Default Child\\"}
+      <>{props.top}</>
+      <>{props.left || \\"Default left\\"}</>
+      <>{props.children || \\"Default Child\\"}</>
     </div>
   );
 }
@@ -1434,7 +1389,6 @@ function SmileReviews(props) {
         <button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </button>
-
         {showReviewPrompt || \\"asdf\\" ? (
           <Fragment>
             <input placeholder=\\"Email\\" />
@@ -1454,19 +1408,12 @@ function SmileReviews(props) {
             </button>
           </Fragment>
         ) : null}
-
         {reviews?.map((review, index) => (
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
-
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
@@ -1620,12 +1567,7 @@ function MyComponent(props) {
     setName(value);
   }
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyComponent;
@@ -1652,12 +1594,10 @@ function MyBasicForNoTagRefComponent(props) {
 
   return (
     <TagNameGetterRef>
-      Hello
-      <Tag>{name}</Tag>
+      Hello <Tag>{name}</Tag>
       {props.actions?.map((action) => (
         <TagName>
           <action.icon />
-
           <span>{action.text}</span>
         </TagName>
       ))}
@@ -1756,12 +1696,7 @@ function MyBasicOnUpdateReturnComponent(props) {
     };
   }, [name]);
 
-  return (
-    <div>
-      Hello!
-      {name}
-    </div>
-  );
+  return <div>Hello! {name}</div>;
 }
 
 export default MyBasicOnUpdateReturnComponent;
@@ -1848,7 +1783,6 @@ function ClassNameCode(props) {
   return (
     <div>
       <div className=\\"no binding\\">Without Binding</div>
-
       <div className={bindings}>With binding</div>
     </div>
   );
@@ -1913,7 +1847,7 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        <Fragment>{foo.value}</Fragment>
+        {foo.value}
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -1950,7 +1884,6 @@ function ComponentWithContext(props) {
       >
         <Fragment>
           {foo.value}
-
           <div>other</div>
         </Fragment>
       </Context1.Provider>
@@ -1993,27 +1926,22 @@ function Button(props) {
   return (
     <div>
       {props.link ? (
-        <Fragment>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </Fragment>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <Fragment>
-          <button
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            {props.buttonText}
-          </button>
-        </Fragment>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.buttonText}
+        </button>
       ) : null}
     </div>
   );
@@ -2040,27 +1968,22 @@ function Button(props) {
   return (
     <div>
       {props.link ? (
-        <Fragment>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </Fragment>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <Fragment>
-          <button
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            {props.text}
-          </button>
-        </Fragment>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.text}
+        </button>
       ) : null}
     </div>
   );
@@ -2086,13 +2009,7 @@ const DEFAULT_VALUES = {
 };
 
 function ComponentWithTypes(props) {
-  return (
-    <div>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </div>
-  );
+  return <div> Hello {props.name || DEFAULT_VALUES.name}</div>;
 }
 
 export default ComponentWithTypes;
@@ -2223,9 +2140,7 @@ function NestedShow(props) {
       {props.conditionA ? (
         <Fragment>
           {!props.conditionB ? (
-            <Fragment>
-              <div>if condition A and condition B</div>
-            </Fragment>
+            <div>if condition A and condition B</div>
           ) : (
             <div>else-condition-B</div>
           )}
@@ -2362,12 +2277,7 @@ function OnInit(props) {
     console.log(\\"set defaults with props\\");
   }, []);
 
-  return (
-    <div>
-      Default name defined by parent
-      {name}
-    </div>
-  );
+  return <div>Default name defined by parent {name}</div>;
 }
 
 export default OnInit;
@@ -2482,10 +2392,7 @@ import { h, Fragment } from \\"preact\\";
 
 function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -2520,10 +2427,7 @@ import { h, Fragment } from \\"preact\\";
 
 function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -2537,10 +2441,7 @@ import { h, Fragment } from \\"preact\\";
 
 function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -2792,9 +2693,7 @@ function RenderBlock(props) {
       {shouldWrap() ? (
         <Fragment>
           {isEmptyHtmlElement(tag()) ? (
-            <Fragment>
-              <TagRef {...attributes()} {...actions()} />
-            </Fragment>
+            <TagRef {...attributes()} {...actions()} />
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <Fragment>
@@ -2808,27 +2707,23 @@ function RenderBlock(props) {
             </Fragment>
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
-            <Fragment>
-              <TagRef {...attributes()} {...actions()}>
-                <RenderComponentTagRef {...renderComponentProps()} />
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <RenderBlock
-                    key={\\"render-block-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <BlockStyles
-                    key={\\"block-style-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-              </TagRef>
-            </Fragment>
+            <TagRef {...attributes()} {...actions()}>
+              <RenderComponentTagRef {...renderComponentProps()} />
+              {childrenWithoutParentComponent()?.map((child) => (
+                <RenderBlock
+                  key={\\"render-block-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+              {childrenWithoutParentComponent()?.map((child) => (
+                <BlockStyles
+                  key={\\"block-style-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+            </TagRef>
           ) : null}
         </Fragment>
       ) : (
@@ -2904,23 +2799,18 @@ function Button(props) {
   return (
     <Fragment>
       {props.link ? (
-        <Fragment>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </Fragment>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
-            {props.text}
-          </button>
-        </Fragment>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
       ) : null}
     </Fragment>
   );
@@ -2960,12 +2850,7 @@ function MyComponent(props) {
   return (
     <div>
       {props.name}
-
-      {props.name === \\"Batman\\" ? (
-        <Fragment>
-          <MyComponent name=\\"Bruce Wayne\\" />
-        </Fragment>
-      ) : null}
+      {props.name === \\"Batman\\" ? <MyComponent name=\\"Bruce Wayne\\" /> : null}
     </div>
   );
 }
@@ -2982,15 +2867,11 @@ function MyComponent(props) {
   return (
     <div>
       {props.name}
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
-        <Fragment>
-          <MyComponent name=\\"Bruce\\">
-            <div>Wayne</div>
-          </MyComponent>
-        </Fragment>
+        <MyComponent name=\\"Bruce\\">
+          <div>Wayne</div>
+        </MyComponent>
       ) : null}
     </div>
   );
@@ -3041,6 +2922,36 @@ function ShowRootText(props) {
 }
 
 export default ShowRootText;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+
+function MyBasicComponent(props) {
+  useEffect(() => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
+
+  return (
+    <Fragment>
+      <div className=\\"test div\\">
+        {props.id}
+        {props.foo.value.bar.baz}
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicComponent;
 "
 `;
 
@@ -3163,9 +3074,7 @@ function SvgComponent(props) {
       <defs>
         <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </filter>
       </defs>
@@ -3288,6 +3197,30 @@ export default UseTargetComponent;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > webComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+import { register } from \\"swiper/element/bundle\\";
+
+function MyBasicWebComponent(props) {
+  useEffect(() => {
+    register();
+  }, []);
+
+  return (
+    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+      <swiper-slide>Slide 1</swiper-slide>
+      <swiper-slide>Slide 2</swiper-slide>
+      <swiper-slide>Slide 3</swiper-slide>
+    </swiper-container>
+  );
+}
+
+export default MyBasicWebComponent;
+"
+`;
+
 exports[`Preact > jsx > Remove Internal mitosis package 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -3297,10 +3230,7 @@ function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   return (
-    <div>
-      Hello
-      {name}! I can run in React, Qwik, Vue, Solid, or Liquid!
-    </div>
+    <div>Hello {name}! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
   );
 }
 
@@ -3347,14 +3277,11 @@ function MyBasicRefComponent(props: Props) {
               onBlur={(event) => onBlur()}
               onChange={(event) => setName(event.target.value)}
             />
-
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
-
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </Fragment>
@@ -3486,12 +3413,7 @@ function MyBasicOnMountUpdateComponent(props: Props) {
     setName(\\"PatrickJS onMount\\" + props.bye);
   }, []);
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyBasicOnMountUpdateComponent;
@@ -3543,7 +3465,7 @@ exports[`Preact > jsx > Typescript Test > BasicAttribute 1`] = `
 import { h, Fragment } from \\"preact\\";
 
 function MyComponent(props: any) {
-  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
+  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck />;
 }
 
 export default MyComponent;
@@ -3569,11 +3491,8 @@ function MyBooleanAttribute(props: Props) {
           {props.type}
         </Fragment>
       ) : null}
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent list={null} />
     </div>
   );
@@ -3598,7 +3517,6 @@ function MyBasicChildComponent(props: any) {
   return (
     <div>
       <MyBasicComponent id={dev} />
-
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </div>
@@ -3682,14 +3600,11 @@ function MyBasicRefComponent(props: Props) {
               onBlur={(event) => onBlur()}
               onChange={(event) => setName(event.target.value)}
             />
-
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
-
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </Fragment>
@@ -3773,11 +3688,8 @@ function MyPreviousComponent(props: Props) {
   return (
     <div>
       <h1>
-        Now:
-        {count}, before:
-        {prevCount.current}
+        Now: {count}, before: {prevCount.current}
       </h1>
-
       <button onClick={(event) => setCount(1)}>Increment</button>
     </div>
   );
@@ -3802,23 +3714,18 @@ function Button(props: ButtonProps) {
   return (
     <div>
       {props.link ? (
-        <Fragment>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </Fragment>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
-            {props.text}
-          </button>
-        </Fragment>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
       ) : null}
     </div>
   );
@@ -3874,7 +3781,6 @@ function Column(props: ColumnProps) {
         {props.columns?.map((column, index) => (
           <div className=\\"builder-column div-2\\">
             {column.content}
-
             {index}
           </div>
         ))}
@@ -3921,13 +3827,13 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
 function ContentSlotCode(props: Props) {
   return (
     <div>
-      {props.slotTesting}
-
+      <>{props.slotTesting}</>
       <div>
         <hr />
       </div>
-
-      <div>{props.children}</div>
+      <div>
+        <>{props.children}</>
+      </div>
     </div>
   );
 }
@@ -3971,13 +3877,11 @@ function ContentSlotJsxCode(props: Props) {
             className={cls()}
           >
             {showContent && props.slotContent ? (
-              <Fragment>{props.slotContent || \\"{props.content}\\"}</Fragment>
+              <>{props.content || \\"{props.content}\\"}</>
             ) : null}
-
             <div>
               <hr />
             </div>
-
             <div>{props.children}</div>
           </div>
         </Fragment>
@@ -4400,7 +4304,6 @@ function FormComponent(props: FormProps) {
         onSubmit={(event) => onSubmit(event)}
         {...props.attributes}
       >
-        {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <Fragment>
             {props.builderBlock?.children?.map((block, index) => (
@@ -4411,39 +4314,27 @@ function FormComponent(props: FormProps) {
               />
             ))}
           </Fragment>
-        ) : null}{\\" \\"}
+        ) : null}
         {submissionState() === \\"error\\" ? (
-          <Fragment>
-            <BuilderBlocks
-              dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage!}
-            />
-          </Fragment>
-        ) : null}{\\" \\"}
+          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage!} />
+        ) : null}
         {submissionState() === \\"sending\\" ? (
-          <Fragment>
-            <BuilderBlocks
-              dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage!}
-            />
-          </Fragment>
-        ) : null}{\\" \\"}
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage!}
+          />
+        ) : null}
         {submissionState() === \\"error\\" && responseData ? (
-          <Fragment>
-            <pre className=\\"builder-form-error-text pre\\">
-              {\\" \\"}
-              {JSON.stringify(responseData, null, 2)}{\\" \\"}
-            </pre>
-          </Fragment>
-        ) : null}{\\" \\"}
+          <pre className=\\"builder-form-error-text pre\\">
+            {JSON.stringify(responseData, null, 2)}
+          </pre>
+        ) : null}
         {submissionState() === \\"success\\" ? (
-          <Fragment>
-            <BuilderBlocks
-              dataPath=\\"successMessage\\"
-              blocks={props.successMessage!}
-            />
-          </Fragment>
-        ) : null}{\\" \\"}
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage!}
+          />
+        ) : null}
       </form>{\\" \\"}
       <style jsx>{\`
         .pre {
@@ -4544,26 +4435,22 @@ function Image(props: ImageProps) {
       <div>
         <picture ref={pictureRef}>
           {!useLazyLoading() || load ? (
-            <Fragment>
-              <img
-                alt={props.altText}
-                aria-role={props.altText ? \\"presentation\\" : undefined}
-                className={
-                  \\"builder-image\\" +
-                  (props._class ? \\" \\" + props._class : \\"\\") +
-                  \\" img\\"
-                }
-                src={props.image}
-                onLoad={(event) => setLoaded()}
-                srcset={props.srcset}
-                sizes={props.sizes}
-              />
-            </Fragment>
+            <img
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              className={
+                \\"builder-image\\" +
+                (props._class ? \\" \\" + props._class : \\"\\") +
+                \\" img\\"
+              }
+              src={props.image}
+              onLoad={(event) => setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+            />
           ) : null}
-
           <source srcset={props.srcset} />
         </picture>
-
         {props.children}
       </div>
       <style jsx>{\`
@@ -4595,9 +4482,7 @@ function ImgStateComponent(props: any) {
   return (
     <div>
       {images?.map((item, itemIndex) => (
-        <Fragment>
-          <img className=\\"custom-class\\" src={item} key={itemIndex} />
-        </Fragment>
+        <img className=\\"custom-class\\" src={item} key={itemIndex} />
       ))}
     </div>
   );
@@ -4820,7 +4705,9 @@ type Props = {
 function SlotCode(props: Props) {
   return (
     <div>
-      {props.children || <div className=\\"default-slot\\">Default content</div>}
+      <>
+        {props.children || <div className=\\"default-slot\\">Default content</div>}
+      </>
     </div>
   );
 }
@@ -4841,7 +4728,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 function SlotCode(props: Props) {
   return (
     <div>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      <ContentSlotCode testing={<div>Hello</div>}></ContentSlotCode>
     </div>
   );
 }
@@ -4882,11 +4769,9 @@ type Props = {
 function SlotCode(props: Props) {
   return (
     <div>
-      {props.slotTop}
-
-      {props.slotLeft || \\"Default left\\"}
-
-      {props.children || \\"Default Child\\"}
+      <>{props.top}</>
+      <>{props.left || \\"Default left\\"}</>
+      <>{props.children || \\"Default Child\\"}</>
     </div>
   );
 }
@@ -4939,7 +4824,6 @@ function SmileReviews(props: SmileReviewsProps) {
         <button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </button>
-
         {showReviewPrompt || \\"asdf\\" ? (
           <Fragment>
             <input placeholder=\\"Email\\" />
@@ -4959,19 +4843,12 @@ function SmileReviews(props: SmileReviewsProps) {
             </button>
           </Fragment>
         ) : null}
-
         {reviews?.map((review, index) => (
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
-
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
@@ -5173,12 +5050,7 @@ function MyComponent(props: any) {
     setName(value);
   }
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyComponent;
@@ -5205,12 +5077,10 @@ function MyBasicForNoTagRefComponent(props: any) {
 
   return (
     <TagNameGetterRef>
-      Hello
-      <Tag>{name}</Tag>
+      Hello <Tag>{name}</Tag>
       {props.actions?.map((action) => (
         <TagName>
           <action.icon />
-
           <span>{action.text}</span>
         </TagName>
       ))}
@@ -5319,12 +5189,7 @@ function MyBasicOnUpdateReturnComponent(props: any) {
     };
   }, [name]);
 
-  return (
-    <div>
-      Hello!
-      {name}
-    </div>
-  );
+  return <div>Hello! {name}</div>;
 }
 
 export default MyBasicOnUpdateReturnComponent;
@@ -5417,7 +5282,6 @@ function ClassNameCode(props: Props) {
   return (
     <div>
       <div className=\\"no binding\\">Without Binding</div>
-
       <div className={bindings}>With binding</div>
     </div>
   );
@@ -5487,7 +5351,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
           },
         }}
       >
-        <Fragment>{foo.value}</Fragment>
+        {foo.value}
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -5529,7 +5393,6 @@ function ComponentWithContext(props: ComponentWithContextProps) {
       >
         <Fragment>
           {foo.value}
-
           <div>other</div>
         </Fragment>
       </Context1.Provider>
@@ -5582,27 +5445,22 @@ function Button(props: ButtonProps) {
   return (
     <div>
       {props.link ? (
-        <Fragment>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </Fragment>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <Fragment>
-          <button
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            {props.buttonText}
-          </button>
-        </Fragment>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.buttonText}
+        </button>
       ) : null}
     </div>
   );
@@ -5637,27 +5495,22 @@ function Button(props: ButtonProps) {
   return (
     <div>
       {props.link ? (
-        <Fragment>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </Fragment>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <Fragment>
-          <button
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            {props.text}
-          </button>
-        </Fragment>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.text}
+        </button>
       ) : null}
     </div>
   );
@@ -5687,13 +5540,7 @@ const DEFAULT_VALUES: Props = {
 };
 
 function ComponentWithTypes(props: Props) {
-  return (
-    <div>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </div>
-  );
+  return <div> Hello {props.name || DEFAULT_VALUES.name}</div>;
 }
 
 export default ComponentWithTypes;
@@ -5836,9 +5683,7 @@ function NestedShow(props: Props) {
       {props.conditionA ? (
         <Fragment>
           {!props.conditionB ? (
-            <Fragment>
-              <div>if condition A and condition B</div>
-            </Fragment>
+            <div>if condition A and condition B</div>
           ) : (
             <div>else-condition-B</div>
           )}
@@ -5979,12 +5824,7 @@ function OnInit(props: Props) {
     console.log(\\"set defaults with props\\");
   }, []);
 
-  return (
-    <div>
-      Default name defined by parent
-      {name}
-    </div>
-  );
+  return <div>Default name defined by parent {name}</div>;
 }
 
 export default OnInit;
@@ -6126,10 +5966,7 @@ export interface MyBasicComponentProps {
 
 function MyBasicComponent(props: MyBasicComponentProps) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -6174,10 +6011,7 @@ interface Person {
 
 function MyBasicComponent(props: Person | never) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -6196,10 +6030,7 @@ type Person = {
 
 function MyBasicComponent(props: Person) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -6464,9 +6295,7 @@ function RenderBlock(props: RenderBlockProps) {
       {shouldWrap() ? (
         <Fragment>
           {isEmptyHtmlElement(tag()) ? (
-            <Fragment>
-              <TagRef {...attributes()} {...actions()} />
-            </Fragment>
+            <TagRef {...attributes()} {...actions()} />
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <Fragment>
@@ -6480,27 +6309,23 @@ function RenderBlock(props: RenderBlockProps) {
             </Fragment>
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
-            <Fragment>
-              <TagRef {...attributes()} {...actions()}>
-                <RenderComponentTagRef {...renderComponentProps()} />
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <RenderBlock
-                    key={\\"render-block-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <BlockStyles
-                    key={\\"block-style-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-              </TagRef>
-            </Fragment>
+            <TagRef {...attributes()} {...actions()}>
+              <RenderComponentTagRef {...renderComponentProps()} />
+              {childrenWithoutParentComponent()?.map((child) => (
+                <RenderBlock
+                  key={\\"render-block-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+              {childrenWithoutParentComponent()?.map((child) => (
+                <BlockStyles
+                  key={\\"block-style-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+            </TagRef>
           ) : null}
         </Fragment>
       ) : (
@@ -6591,23 +6416,18 @@ function Button(props: ButtonProps) {
   return (
     <Fragment>
       {props.link ? (
-        <Fragment>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </Fragment>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <Fragment>
-          <button type=\\"button\\" {...props.attributes}>
-            {props.text}
-          </button>
-        </Fragment>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
       ) : null}
     </Fragment>
   );
@@ -6651,12 +6471,7 @@ function MyComponent(props: any) {
   return (
     <div>
       {props.name}
-
-      {props.name === \\"Batman\\" ? (
-        <Fragment>
-          <MyComponent name=\\"Bruce Wayne\\" />
-        </Fragment>
-      ) : null}
+      {props.name === \\"Batman\\" ? <MyComponent name=\\"Bruce Wayne\\" /> : null}
     </div>
   );
 }
@@ -6673,15 +6488,11 @@ function MyComponent(props: any) {
   return (
     <div>
       {props.name}
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
-        <Fragment>
-          <MyComponent name=\\"Bruce\\">
-            <div>Wayne</div>
-          </MyComponent>
-        </Fragment>
+        <MyComponent name=\\"Bruce\\">
+          <div>Wayne</div>
+        </MyComponent>
       ) : null}
     </div>
   );
@@ -6741,6 +6552,45 @@ function ShowRootText(props: Props) {
 }
 
 export default ShowRootText;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+function MyBasicComponent(props: Props) {
+  useEffect(() => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+  }, [props.id, props.foo.bar.baz]);
+
+  return (
+    <Fragment>
+      <div className=\\"test div\\">
+        {props.id}
+        {props.foo.bar.baz}
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicComponent;
 "
 `;
 
@@ -6863,9 +6713,7 @@ function SvgComponent(props: any) {
       <defs>
         <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </filter>
       </defs>
@@ -6995,6 +6843,30 @@ export default UseTargetComponent;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > webComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+import { register } from \\"swiper/element/bundle\\";
+
+function MyBasicWebComponent(props: any) {
+  useEffect(() => {
+    register();
+  }, []);
+
+  return (
+    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+      <swiper-slide>Slide 1</swiper-slide>
+      <swiper-slide>Slide 2</swiper-slide>
+      <swiper-slide>Slide 3</swiper-slide>
+    </swiper-container>
+  );
+}
+
+export default MyBasicWebComponent;
+"
+`;
+
 exports[`Preact > svelte > Javascript Test > basic 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -7071,14 +6943,8 @@ function MyComponent(props) {
         checked={fillings === \\"Guac (extra)\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <p>
-        Tortilla:
-        {tortilla}
-      </p>
-      <p>
-        Fillings:
-        {fillings}
-      </p>
+      <p>Tortilla: {tortilla}</p>
+      <p>Fillings: {fillings}</p>
     </div>
   );
 }
@@ -7209,7 +7075,9 @@ function MyComponent(props) {
   return (
     <Fragment>
       {show ? (
-        <button onClick={(event) => toggle(event)}> Hide </button>
+        <Fragment>
+          <button onClick={(event) => toggle(event)}> Hide </button>
+        </Fragment>
       ) : (
         <button onClick={(event) => toggle(event)}> Show </button>
       )}
@@ -7233,7 +7101,7 @@ function MyComponent(props) {
   return (
     <div>
       <Button type=\\"button\\" disabled={disabled}>
-        {props.children}
+        <>{props.children}</>
       </Button>
     </div>
   );
@@ -7285,8 +7153,7 @@ function MyComponent(props) {
   return (
     <div>
       <input value={name} />
-      Lowercase:
-      {lowercaseName()}
+      Lowercase: {lowercaseName()}
     </div>
   );
 }
@@ -7327,8 +7194,7 @@ function MyComponent(props) {
         onChange={(event) => setB(event.target.value)}
         value={b}
       />
-      Result:
-      {result}
+      Result: {result}
     </div>
   );
 }
@@ -7344,8 +7210,8 @@ import { h, Fragment } from \\"preact\\";
 function MyComponent(props) {
   return (
     <div>
-      {props.children || \\"default\\"}
-      {props.slotTest || <div>default</div>}
+      <>{props.children || \\"default\\"}</>
+      <>{props.Test || <div>default</div>}</>
     </div>
   );
 }
@@ -7481,14 +7347,8 @@ function MyComponent(props: any) {
         checked={fillings === \\"Guac (extra)\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <p>
-        Tortilla:
-        {tortilla}
-      </p>
-      <p>
-        Fillings:
-        {fillings}
-      </p>
+      <p>Tortilla: {tortilla}</p>
+      <p>Fillings: {fillings}</p>
     </div>
   );
 }
@@ -7619,7 +7479,9 @@ function MyComponent(props: any) {
   return (
     <Fragment>
       {show ? (
-        <button onClick={(event) => toggle(event)}> Hide </button>
+        <Fragment>
+          <button onClick={(event) => toggle(event)}> Hide </button>
+        </Fragment>
       ) : (
         <button onClick={(event) => toggle(event)}> Show </button>
       )}
@@ -7643,7 +7505,7 @@ function MyComponent(props: any) {
   return (
     <div>
       <Button type=\\"button\\" disabled={disabled}>
-        {props.children}
+        <>{props.children}</>
       </Button>
     </div>
   );
@@ -7695,8 +7557,7 @@ function MyComponent(props: any) {
   return (
     <div>
       <input value={name} />
-      Lowercase:
-      {lowercaseName()}
+      Lowercase: {lowercaseName()}
     </div>
   );
 }
@@ -7737,8 +7598,7 @@ function MyComponent(props: any) {
         onChange={(event) => setB(event.target.value)}
         value={b}
       />
-      Result:
-      {result}
+      Result: {result}
     </div>
   );
 }
@@ -7754,8 +7614,8 @@ import { h, Fragment } from \\"preact\\";
 function MyComponent(props: any) {
   return (
     <div>
-      {props.children || \\"default\\"}
-      {props.slotTest || <div>default</div>}
+      <>{props.children || \\"default\\"}</>
+      <>{props.Test || <div>default</div>}</>
     </div>
   );
 }

@@ -232,14 +232,14 @@ export default function MyComponent(props) {
 
 ### Slot
 
-When you want to register a named slot you do so using the `slot` prop.
+When you want to register a named slot you do so using a prop.
 
 ```jsx
 <div>
   <Layout
-    slotTop={<NavBar/>}
-    slotLeft={<Sidebar/>}
-    slotCenter={<Content/>}
+    top={<NavBar/>}
+    left={<Sidebar/>}
+    center={<Content/>}
   />
     anything else
   </Layout>
@@ -254,9 +254,9 @@ If the `Layout` component was also a Mitosis component then we simply use the re
 export default function Layout(props) {
   return (
     <div className="layout">
-      <div className="top">{props.slotTop}</div>
-      <div className="left">{props.slotLeft}</div>
-      <div className="center">{props.slotCenter}</div>
+      <div className="top">{props.top}</div>
+      <div className="left">{props.left}</div>
+      <div className="center">{props.center}</div>
       {props.children}
     </div>
   );
@@ -286,7 +286,7 @@ export default function Layout(props) {
 }
 ```
 
-For vue component `slot` prop will be compiled into named slot
+For vue component a `slot` prop will be compiled into named slot
 
 ```html
 <div class="layout">
@@ -347,9 +347,9 @@ useMetadata({
 export default function Layout(props) {
   return (
     <div className="layout">
-      <div className="top">{props.slotTop}</div>
-      <div className="left">{props.slotLeft}</div>
-      <div className="center">{props.slotCenter}</div>
+      <div className="top">{props.top}</div>
+      <div className="left">{props.left}</div>
+      <div className="center">{props.center}</div>
       {props.children}
     </div>
   );

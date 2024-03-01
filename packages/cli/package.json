@@ -1,6 +1,6 @@
 {
   "name": "@builder.io/mitosis-cli",
-  "version": "0.0.95",
+  "version": "0.1.1",
   "description": "mitosis CLI",
   "types": "build/types/types.d.ts",
   "bin": {
@@ -13,7 +13,7 @@
     "tsc-alias": "tsc-alias -p tsconfig.build.json --verbose",
     "start": "concurrently --kill-others \"tsc --watch\" \"yarn tsc-alias --watch\"",
     "build": "yarn format && yarn clean-build && yarn compile && yarn tsc-alias",
-    "prepublishOnly": "yarn build",
+    "fix-core-version": "./scripts/fix-core-version.sh",
     "remove-stableVersion": "./scripts/remove-stableVersion.sh",
     "release:dev": "yarn build && yarn run remove-stableVersion && yarn version prerelease && yarn npm publish --tag dev",
     "release:patch": "yarn build && yarn run remove-stableVersion && yarn version patch && yarn npm publish",
@@ -47,6 +47,7 @@
     "micromatch": "^4.0.4",
     "parse5": "^3.0.3",
     "prettier": "^2.6.1",
+    "rimraf": "^5.0.5",
     "ts-morph": "^19.0.0",
     "vue-template-es2015-compiler": "^1.9.1",
     "vue-template-validator": "^1.1.5"

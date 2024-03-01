@@ -7,15 +7,16 @@
     "examples/**/*"
   ],
   "private": true,
-  "version": "0.0.0",
   "engines": {
-    "node": ">=16",
-    "npm": "99999999.9.9"
+    "node": ">=16"
   },
   "scripts": {
+    "g:changeset": "yarn changeset",
+    "ci:release": "yarn ci:build:release && yarn workspace @builder.io/mitosis-cli fix-core-version && yarn changeset publish",
     "build:core": "nx build @builder.io/mitosis",
     "build:fiddle": "nx build @builder.io/mitosis-fiddle",
     "build:eslint-plugin": "nx build @builder.io/eslint-plugin-mitosis",
+    "ci:build:release": "nx run-many --skip-nx-cache --target build --parallel 4 -p @builder.io/mitosis @builder.io/mitosis-cli @builder.io/eslint-plugin-mitosis @builder.io/create-mitosis",
     "ci:build": "nx run-many --skip-nx-cache --target build --parallel 4 --exclude \"*/e2e-alpine,@builder.io/mitosis-fiddle,@builder.io/talk-*,@builder.io/example-apps\"",
     "ci:build:core": "yarn run build:core",
     "ci:build:fiddle": "yarn run build:fiddle",
@@ -43,11 +44,12 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.6.0",
+    "@changesets/cli": "^2.27.1",
     "@nrwl/nx-cloud": "15.0.2",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
     "commitizen": "^3.0.2",
-    "esbuild": "0.14.25",
+    "esbuild": "0.19.10",
     "esbuild-register": "3.3.2",
     "eslint": "^7.11.0",
     "eslint-plugin-unused-imports": "^2.0.0",

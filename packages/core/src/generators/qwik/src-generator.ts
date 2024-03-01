@@ -359,6 +359,10 @@ export class SrcBuilder {
         if (key === 'innerHTML') key = 'dangerouslySetInnerHTML';
         if (key === 'dataSet') return; // ignore
         if (self.isJSX) {
+          if (key.includes(':') && value === '""') {
+            self.emit(' ', key);
+            return;
+          }
           self.emit(' ', key, '=');
           if (typeof value == 'string' && value.startsWith('"') && value.endsWith('"')) {
             self.emit(value);

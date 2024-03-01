@@ -54,7 +54,9 @@ const getProject = (tsConfigFilePath: string) => {
     return new Project({ tsConfigFilePath });
   } catch (err) {
     throw new Error(
-      'Error creating Typescript Project. Make sure `tsConfigFilePath` points to a valid tsconfig.json file',
+      `Error creating Typescript Project. Make sure \`tsConfigFilePath\` points to a valid tsconfig.json file.
+      Path received: "${tsConfigFilePath}"
+      `,
     );
   }
 };

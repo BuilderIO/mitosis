@@ -127,8 +127,12 @@ export const createCodeProcessorPlugin =
         }
       }
 
-      const result = codeProcessor('dynamic-jsx-elements', json)(node.name, '');
-
+      // Fix web component tag issue due to the babel transform
+      // For exmaple: we pass a tag called "swiper-container", and it will be renamed as "swiper - container" after babel transforming,
+      // because babel will automatically identify the "-" as an operator, and add a space before and after it.
+      const result = node.name.includes('-')
+        ? node.name
+        : codeProcessor('dynamic-jsx-elements', json)(node.name, '');
       if (typeof result === 'string') {
         node.name = result;
       } else {

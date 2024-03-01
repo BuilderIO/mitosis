@@ -7,7 +7,7 @@ import {
   componentToReact,
   componentToSolid,
   componentToSvelte,
-  componentToVue3,
+  componentToVue,
   mapStyles,
   MitosisComponent,
   parseJsx,
@@ -490,7 +490,7 @@ export default function Fiddle() {
 
           qwik: componentToQwik({ plugins, ...commonOptions })({ component: json }).trim(),
 
-          vue: componentToVue3({
+          vue: componentToVue({
             plugins,
             api: 'composition',
             ...commonOptions,

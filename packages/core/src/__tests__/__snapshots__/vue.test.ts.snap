@@ -116,15 +116,17 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > Basic 2`] = `
 "<template>
   <div>
-    <template v-if=\\"person === name\\">
-      <input
-        :value=\\"name\\"
-        @change=\\"name = $event.target.value + ' and ' + person\\"
-      />
+    <template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <template v-if=\\"person === name\\">
+        <input
+          :value=\\"name\\"
+          @change=\\"name = $event.target.value + ' and ' + person\\"
+        />
 
-      Hello
-      {{ person }}
-      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+        Hello
+        {{ person }}
+        ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+      </template>
     </template>
   </div>
 </template>
@@ -287,17 +289,16 @@ exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
   <div>
     <template v-if=\\"$slots.default\\">
       <slot />
-
       {{ type }}
     </template>
 
     <my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :list=\\"null\\"
     ></my-boolean-attribute-component>
   </div>
@@ -310,7 +311,7 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 
 export default defineComponent({
   name: \\"my-boolean-attribute\\",
-  components: { \\"my-boolean-attribute-component\\": MyBooleanAttributeComponent },
+  components: { MyBooleanAttributeComponent: MyBooleanAttributeComponent },
   props: [\\"type\\"],
 });
 </script>"
@@ -338,8 +339,8 @@ import MyBasicComponent from \\"./basic.raw\\";
 export default defineComponent({
   name: \\"my-basic-child-component\\",
   components: {
-    \\"my-basic-component\\": MyBasicComponent,
-    \\"my-basic-on-mount-update-component\\": MyBasicOnMountUpdateComponent,
+    MyBasicComponent: MyBasicComponent,
+    MyBasicOnMountUpdateComponent: MyBasicOnMountUpdateComponent,
   },
 
   data() {
@@ -352,14 +353,16 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > BasicFor 1`] = `
 "<template>
   <div>
-    <input
-      :value=\\"name\\"
-      @change=\\"name = $event.target.value + ' and ' + person\\"
-    />
+    <template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <input
+        :value=\\"name\\"
+        @change=\\"name = $event.target.value + ' and ' + person\\"
+      />
 
-    Hello
-    {{ person }}
-    ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+      Hello
+      {{ person }}
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    </template>
   </div>
 </template>
 
@@ -437,9 +440,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > BasicRefAssignment 1`] = `
 "<template>
-  <div>
-    <button @click=\\"handlerClick($event)\\">Click</button>
-  </div>
+  <div><button @click=\\"handlerClick($event)\\">Click</button></div>
 </template>
 
 <script>
@@ -518,15 +519,12 @@ exports[`Vue > jsx > Javascript Test > Button 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
-        {{ text }}
-      </button>
+      <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
     </template>
   </div>
 </template>
@@ -545,13 +543,9 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > Columns 1`] = `
 "<template>
   <div class=\\"builder-columns div\\">
-    <div
-      class=\\"builder-column div-2\\"
-      v-for=\\"(column, index) in columns\\"
-      :key=\\"index\\"
-    >
-      {{ column.content }} {{ index }}
-    </div>
+    <template :key=\\"index\\" v-for=\\"(column, index) in columns\\">
+      <div class=\\"builder-column div-2\\">{{ column.content }}{{ index }}</div>
+    </template>
   </div>
 </template>
 
@@ -612,12 +606,8 @@ exports[`Vue > jsx > Javascript Test > ContentSlotHtml 1`] = `
 "<template>
   <div>
     <slot name=\\"testing\\"></slot>
-    <div>
-      <hr />
-    </div>
-    <div>
-      <slot />
-    </div>
+    <div><hr /></div>
+    <div><slot /></div>
   </div>
 </template>
 
@@ -632,23 +622,22 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "<template>
-  <div
-    v-if=\\"$slots.reference\\"
-    :name=\\"$slots.content ? 'name1' : 'name2'\\"
-    :title=\\"$slots.content ? 'title1' : 'title2'\\"
-    @click=\\"show()\\"
-    :class=\\"_classStringToObject(cls)\\"
-    v-bind=\\"attributes\\"
-  >
-    <template v-if=\\"showContent && $slots.content\\">
-      <slot name=\\"content\\">{{ content }}</slot>
-    </template>
+  <template v-if=\\"$slots.reference\\">
+    <div
+      :name=\\"$slots.content ? 'name1' : 'name2'\\"
+      :title=\\"$slots.content ? 'title1' : 'title2'\\"
+      @click=\\"show()\\"
+      :class=\\"cls\\"
+      v-bind=\\"attributes\\"
+    >
+      <template v-if=\\"showContent && $slots.content\\">
+        <slot name=\\"content\\">{{ content }}</slot>
+      </template>
 
-    <div>
-      <hr />
+      <div><hr /></div>
+      <div><slot /></div>
     </div>
-    <div><slot /></div>
-  </div>
+  </template>
 </template>
 
 <script>
@@ -675,17 +664,6 @@ export default defineComponent({
     show() {
       this.$slots.content ? 1 : \\"\\";
     },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
   },
 });
 </script>"
@@ -695,11 +673,7 @@ exports[`Vue > jsx > Javascript Test > CustomCode 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -761,17 +735,6 @@ export default defineComponent({
           }
         }
       }
-    },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
     },
   },
 });
@@ -782,11 +745,7 @@ exports[`Vue > jsx > Javascript Test > Embed 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -848,17 +807,6 @@ export default defineComponent({
           }
         }
       }
-    },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
     },
   },
 });
@@ -877,12 +825,15 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
     v-bind=\\"attributes\\"
   >
     <template v-if=\\"builderBlock && builderBlock.children\\">
-      <builder-block-component
-        v-for=\\"(block, index) in builderBlock?.children\\"
-        :block=\\"block\\"
-        :index=\\"index\\"
+      <template
         :key=\\"block.id\\"
-      ></builder-block-component>
+        v-for=\\"(block, index) in builderBlock?.children\\"
+      >
+        <builder-block-component
+          :block=\\"block\\"
+          :index=\\"index\\"
+        ></builder-block-component>
+      </template>
     </template>
 
     <template v-if=\\"submissionState === 'error'\\">
@@ -900,9 +851,9 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
     </template>
 
     <template v-if=\\"submissionState === 'error' && responseData\\">
-      <pre class=\\"builder-form-error-text pre\\">
-        {{ JSON.stringify(responseData, null, 2) }}
-      </pre>
+      <pre class=\\"builder-form-error-text pre\\">{{
+        JSON.stringify(responseData, null, 2)
+      }}</pre>
     </template>
 
     <template v-if=\\"submissionState === 'success'\\">
@@ -928,8 +879,8 @@ import {
 export default defineComponent({
   name: \\"form-component\\",
   components: {
-    \\"builder-block-component\\": BuilderBlockComponent,
-    \\"builder-blocks\\": BuilderBlocks,
+    BuilderBlockComponent: BuilderBlockComponent,
+    BuilderBlocks: BuilderBlocks,
   },
   props: [
     \\"previewState\\",
@@ -1202,11 +1153,7 @@ exports[`Vue > jsx > Javascript Test > Image 1`] = `
         <img
           :alt=\\"altText\\"
           :aria-role=\\"altText ? 'presentation' : undefined\\"
-          :class=\\"
-            _classStringToObject(
-              'builder-image' + (_class ? ' ' + _class : '') + ' img'
-            )
-          \\"
+          :class=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
           :src=\\"image\\"
           @load=\\"setLoaded()\\"
           :srcset=\\"srcset\\"
@@ -1214,9 +1161,8 @@ exports[`Vue > jsx > Javascript Test > Image 1`] = `
         />
       </template>
 
-      <source :srcset=\\"srcset\\" />
-    </picture>
-    <slot />
+      <source :srcset=\\"srcset\\" /></picture
+    ><slot />
   </div>
 </template>
 
@@ -1277,17 +1223,6 @@ export default defineComponent({
         window.navigator.product != \\"ReactNative\\"
       );
     },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
   },
 });
 </script>
@@ -1305,7 +1240,9 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > Image State 1`] = `
 "<template>
   <div>
-    <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
+    <template :key=\\"index\\" v-for=\\"(item, index) in images\\">
+      <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
+    </template>
   </div>
 </template>
 
@@ -1408,7 +1345,7 @@ import FormInputComponent from \\"./input.raw\\";
 
 export default defineComponent({
   name: \\"stepper\\",
-  components: { \\"form-input-component\\": FormInputComponent },
+  components: { FormInputComponent: FormInputComponent },
 
   methods: {
     handleChange(value) {
@@ -1422,7 +1359,7 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > RawText 1`] = `
 "<template>
   <span
-    :class=\\"_classStringToObject(attributes?.class || attributes?.className)\\"
+    :class=\\"attributes?.class || attributes?.className\\"
     v-html=\\"text || ''\\"
   ></span>
 </template>
@@ -1434,20 +1371,6 @@ export default defineComponent({
   name: \\"raw-text\\",
 
   props: [\\"attributes\\", \\"text\\"],
-
-  methods: {
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
 });
 </script>"
 `;
@@ -1481,17 +1404,18 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > Section 2`] = `
 "<template>
-  <section
-    v-for=\\"(item, index) in items\\"
-    v-if=\\"max\\"
-    :style=\\"{
-      maxWidth: item + max,
-    }\\"
-    :key=\\"index\\"
-    v-bind=\\"attributes\\"
-  >
-    <slot />
-  </section>
+  <template v-if=\\"max\\">
+    <template :key=\\"index\\" v-for=\\"(item, index) in items\\">
+      <section
+        :style=\\"{
+          maxWidth: item + max,
+        }\\"
+        v-bind=\\"attributes\\"
+      >
+        <slot />
+      </section>
+    </template>
+  </template>
 </template>
 
 <script>
@@ -1518,14 +1442,11 @@ exports[`Vue > jsx > Javascript Test > Select 1`] = `
     :name=\\"name\\"
     v-bind=\\"attributes\\"
   >
-    <option
-      v-for=\\"(option, index) in options\\"
-      :value=\\"option.value\\"
-      :data-index=\\"index\\"
-      :key=\\"index\\"
-    >
-      {{ option.name || option.value }}
-    </option>
+    <template :key=\\"index\\" v-for=\\"(option, index) in options\\">
+      <option :value=\\"option.value\\" :data-index=\\"index\\">
+        {{ option.name || option.value }}
+      </option>
+    </template>
   </select>
 </template>
 
@@ -1545,9 +1466,7 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > SlotDefault 1`] = `
 "<template>
   <div>
-    <slot>
-      <div class=\\"default-slot\\">Default content</div>
-    </slot>
+    <slot><div class=\\"default-slot\\">Default content</div></slot>
   </div>
 </template>
 
@@ -1578,7 +1497,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": ContentSlotCode },
+  components: { ContentSlotCode: ContentSlotCode },
 });
 </script>"
 `;
@@ -1597,7 +1516,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": ContentSlotCode },
+  components: { ContentSlotCode: ContentSlotCode },
 });
 </script>"
 `;
@@ -1605,9 +1524,8 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > SlotNamed 1`] = `
 "<template>
   <div>
-    <slot name=\\"top\\"></slot>
-    <slot name=\\"left\\">Default left</slot>
-    <slot>Default Child</slot>
+    <slot name=\\"top\\"></slot><slot name=\\"left\\">Default left</slot
+    ><slot>Default Child</slot>
   </div>
 </template>
 
@@ -1624,17 +1542,13 @@ exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
 "<template>
   <div :data-user=\\"name\\">
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
-
     <template v-if=\\"showReviewPrompt || 'asdf'\\">
       <input placeholder=\\"Email\\" />
-
       <input placeholder=\\"Title\\" class=\\"input\\" />
-
       <textarea
         placeholder=\\"How was your experience?\\"
         class=\\"textarea\\"
       ></textarea>
-
       <button
         class=\\"button\\"
         @click=\\"
@@ -1646,18 +1560,16 @@ exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
       </button>
     </template>
 
-    <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
-      <img class=\\"img\\" :src=\\"review.avatar\\" />
-      <div
-        :class=\\"
-          _classStringToObject(showReviewPrompt ? 'bg-primary' : 'bg-secondary')
-        \\"
-      >
-        <div>N: {{ index }}</div>
-        <div>{{ review.author }}</div>
-        <div>{{ review.reviewMessage }}</div>
+    <template :key=\\"review.id\\" v-for=\\"(review, index) in reviews\\">
+      <div class=\\"review\\">
+        <img class=\\"img\\" :src=\\"review.avatar\\" />
+        <div :class=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
+          <div>N: {{ index }}</div>
+          <div>{{ review.author }}</div>
+          <div>{{ review.reviewMessage }}</div>
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -1694,17 +1606,6 @@ export default defineComponent({
     snakeCaseValue() {
       return snakeCase(\\"testThis\\");
     },
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
   },
 });
 </script>
@@ -1738,9 +1639,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > Submit 1`] = `
 "<template>
-  <button type=\\"submit\\" v-bind=\\"attributes\\">
-    {{ text }}
-  </button>
+  <button type=\\"submit\\" v-bind=\\"attributes\\">{{ text }}</button>
 </template>
 
 <script>
@@ -1879,12 +1778,14 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "<template>
   <component :is=\\"TagNameGetter\\">
-    Hello <component :is=\\"tag\\">{{ name }}</component>
-    <component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\">
-      <component :is=\\"action.icon\\"></component>
-      <span>{{ action.text }}</span>
-    </component>
-  </component>
+    Hello <component :is=\\"tag\\">{{ name }}</component
+    ><template :key=\\"index\\" v-for=\\"(action, index) in actions\\">
+      <component :is=\\"TagName\\"
+        ><component :is=\\"action.icon\\"></component
+        ><span>{{ action.text }}</span></component
+      >
+    </template></component
+  >
 </template>
 
 <script>
@@ -2088,8 +1989,7 @@ exports[`Vue > jsx > Javascript Test > className 1`] = `
 "<template>
   <div>
     <div class=\\"no binding\\">Without Binding</div>
-
-    <div :class=\\"_classStringToObject(bindings)\\">With binding</div>
+    <div :class=\\"bindings\\">With binding</div>
   </div>
 </template>
 
@@ -2102,27 +2002,13 @@ export default defineComponent({
   data() {
     return { bindings: \\"a binding\\" };
   },
-
-  methods: {
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
 });
 </script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > classState 1`] = `
 "<template>
-  <div :class=\\"_classStringToObject(classState + ' div')\\" :style=\\"styleState\\">
+  <div :class=\\"classState + ' div'\\" :style=\\"styleState\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -2140,20 +2026,6 @@ export default defineComponent({
         color: \\"red\\",
       },
     };
-  },
-
-  methods: {
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
   },
 });
 </script>
@@ -2202,10 +2074,8 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
 "<template>
-  <div>
-    {{ foo.value }}
-    <div>other</div>
-  </div>
+  {{ foo.value }}
+  <div>other</div>
 </template>
 
 <script>
@@ -2274,9 +2144,8 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -2317,9 +2186,8 @@ exports[`Vue > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -2409,7 +2277,7 @@ import RenderBlock from \\"./builder-render-block.raw\\";
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { \\"render-block\\": RenderBlock },
+  components: { RenderBlock: RenderBlock },
   props: [\\"renderContentProps\\"],
 
   methods: {
@@ -2523,11 +2391,19 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > nestedShow 1`] = `
 "<template>
-  <div v-if=\\"!Boolean(conditionA)\\">else-condition-A</div>
+  <template v-if=\\"conditionA\\">
+    <template v-if=\\"!conditionB\\">
+      <div>if condition A and condition B</div>
+    </template>
 
-  <div v-else-if=\\"!Boolean(!conditionB)\\">else-condition-B</div>
+    <template v-else>
+      <div>else-condition-B</div>
+    </template>
+  </template>
 
-  <div v-else>if condition A and condition B</div>
+  <template v-else>
+    <div>else-condition-A</div>
+  </template>
 </template>
 
 <script>
@@ -2819,7 +2695,7 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > propsDestructure 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <slot />{{ type }}
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -2903,41 +2779,52 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > renderBlock 1`] = `
 "<template>
-  <component
-    v-if=\\"!Boolean(shouldWrap)\\"
-    :is=\\"renderComponentTag\\"
-    v-bind=\\"renderComponentProps\\"
-  ></component>
-  <component
-    v-else-if=\\"isEmptyHtmlElement(tag)\\"
-    :is=\\"tag\\"
-    v-bind=\\"{ ...attributes, ...actions }\\"
-  ></component>
-  <render-repeated-block
-    v-for=\\"(data, index) in repeatItemData\\"
-    :repeatContext=\\"data.context\\"
-    :block=\\"data.block\\"
-    :key=\\"index\\"
-  ></render-repeated-block>
-  <component v-else :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\">
+  <template v-if=\\"shouldWrap\\">
+    <template v-if=\\"isEmptyHtmlElement(tag)\\">
+      <component :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\"></component>
+    </template>
+
+    <template v-if=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
+      <template :key=\\"index\\" v-for=\\"(data, index) in repeatItemData\\">
+        <render-repeated-block
+          :repeatContext=\\"data.context\\"
+          :block=\\"data.block\\"
+        ></render-repeated-block>
+      </template>
+    </template>
+
+    <template v-if=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
+      <component :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\"
+        ><component
+          :is=\\"renderComponentTag\\"
+          v-bind=\\"renderComponentProps\\"
+        ></component
+        ><template
+          :key=\\"'render-block-' + child.id\\"
+          v-for=\\"(child, index) in childrenWithoutParentComponent\\"
+        >
+          <render-block
+            :block=\\"child\\"
+            :context=\\"childrenContext\\"
+          ></render-block> </template
+        ><template
+          :key=\\"'block-style-' + child.id\\"
+          v-for=\\"(child, index) in childrenWithoutParentComponent\\"
+        >
+          <block-styles
+            :block=\\"child\\"
+            :context=\\"childrenContext\\"
+          ></block-styles> </template
+      ></component>
+    </template>
+  </template>
+
+  <template v-else>
     <component
       :is=\\"renderComponentTag\\"
       v-bind=\\"renderComponentProps\\"
     ></component>
-
-    <render-block
-      v-for=\\"(child, index) in childrenWithoutParentComponent\\"
-      :block=\\"child\\"
-      :context=\\"childrenContext\\"
-      :key=\\"'render-block-' + child.id\\"
-    ></render-block>
-    <block-styles
-      v-for=\\"(child, index) in childrenWithoutParentComponent\\"
-      :block=\\"child\\"
-      :context=\\"childrenContext\\"
-      :key=\\"'block-style-' + child.id\\"
-    ></block-styles>
-  </component>
+  </template>
 </template>
 
 <script>
@@ -2961,9 +2848,9 @@ import RenderRepeatedBlock from \\"./render-repeated-block.vue\\";
 export default defineComponent({
   name: \\"render-block\\",
   components: {
-    \\"render-repeated-block\\": RenderRepeatedBlock,
-    \\"block-styles\\": BlockStyles,
-    \\"render-component\\": RenderComponent,
+    RenderRepeatedBlock: RenderRepeatedBlock,
+    BlockStyles: BlockStyles,
+    RenderComponent: RenderComponent,
   },
   props: [\\"block\\", \\"context\\"],
 
@@ -3169,7 +3056,7 @@ import RenderBlocks from \\"@dummy/RenderBlocks.vue\\";
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { \\"render-blocks\\": RenderBlocks },
+  components: { RenderBlocks: RenderBlocks },
   props: [\\"content\\", \\"customComponents\\"],
 
   data() {
@@ -3223,23 +3110,18 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
 "<template>
-  <div>
-    <template v-if=\\"link\\">
-      <a
-        :href=\\"link\\"
-        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
-        v-bind=\\"attributes\\"
-      >
-        {{ text }}
-      </a>
-    </template>
+  <template v-if=\\"link\\">
+    <a
+      :href=\\"link\\"
+      :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+      v-bind=\\"attributes\\"
+      >{{ text }}</a
+    >
+  </template>
 
-    <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
-        {{ text }}
-      </button>
-    </template>
-  </div>
+  <template v-if=\\"!link\\">
+    <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
+  </template>
 </template>
 
 <script>
@@ -3255,8 +3137,13 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > rootShow 1`] = `
 "<template>
-  <div v-if=\\"foo === 'bar'\\">Bar</div>
-  <div v-else>Foo</div>
+  <template v-if=\\"foo === 'bar'\\">
+    <div>Bar</div>
+  </template>
+
+  <template v-else>
+    <div>Foo</div>
+  </template>
 </template>
 
 <script>
@@ -3274,7 +3161,6 @@ exports[`Vue > jsx > Javascript Test > self-referencing component 1`] = `
 "<template>
   <div>
     {{ name }}
-
     <template v-if=\\"name === 'Batman'\\">
       <my-component name=\\"Bruce Wayne\\"></my-component>
     </template>
@@ -3295,13 +3181,9 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > self-referencing component with children 1`] = `
 "<template>
   <div>
-    {{ name }}
-    <slot />
-
+    {{ name }}<slot />
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\">
-        <div>Wayne</div>
-      </my-component>
+      <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
     </template>
   </div>
 </template>
@@ -3319,10 +3201,15 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > showWithFor 1`] = `
 "<template>
-  <div v-for=\\"(item, index) in items\\" v-if=\\"conditionA\\" :key=\\"idx\\">
-    {{ item }}
-  </div>
-  <div v-else>else-condition-A</div>
+  <template v-if=\\"conditionA\\">
+    <template :key=\\"idx\\" v-for=\\"(item, index) in items\\">
+      <div>{{ item }}</div>
+    </template>
+  </template>
+
+  <template v-else>
+    <div>else-condition-A</div>
+  </template>
 </template>
 
 <script>
@@ -3338,9 +3225,11 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > showWithRootText 1`] = `
 "<template>
-  ContentA
+  <template v-if=\\"conditionA\\"> ContentA </template>
 
-  <div v-else>else-condition-A</div>
+  <template v-else>
+    <div>else-condition-A</div>
+  </template>
 </template>
 
 <script>
@@ -3352,6 +3241,47 @@ export default defineComponent({
   props: [\\"conditionA\\"],
 });
 </script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"<template>
+  <div class=\\"test div\\">{{ id }}{{ foo.value.bar.baz }}</div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"my-basic-component\\",
+
+  props: [\\"id\\", \\"foo\\"],
+
+  watch: {
+    onUpdateHook0: {
+      handler() {
+        console.log(\\"props.id changed\\", this.id);
+        console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+      },
+      immediate: true,
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.id,
+        1: this.foo.value.bar.baz,
+      };
+    },
+  },
+});
+</script>
+
+<style scoped>
+.div {
+  padding: 10px;
+}
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > spreadAttrs 1`] = `
@@ -3427,10 +3357,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > stylePropClassAndCss 1`] = `
 "<template>
-  <div
-    :style=\\"attributes.style\\"
-    :class=\\"_classStringToObject(attributes.className + ' div')\\"
-  ></div>
+  <div :style=\\"attributes.style\\" :class=\\"attributes.className + ' div'\\"></div>
 </template>
 
 <script>
@@ -3440,20 +3367,6 @@ export default defineComponent({
   name: \\"style-prop-class-and-css\\",
 
   props: [\\"attributes\\"],
-
-  methods: {
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
 });
 </script>
 
@@ -3478,7 +3391,7 @@ import Foo from \\"./foo-sub-component.vue\\";
 
 export default defineComponent({
   name: \\"sub-component\\",
-  components: { foo: Foo },
+  components: { Foo: Foo },
 });
 </script>"
 `;
@@ -3625,9 +3538,32 @@ export default defineComponent({
 
   computed: {
     name() {
-      const prefix = \\"v2\\";
+      const prefix = \\"v\\";
       return prefix + \\"foo\\";
     },
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > webComponent 1`] = `
+"<template>
+  <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\"
+    ><swiper-slide>Slide 1</swiper-slide><swiper-slide>Slide 2</swiper-slide
+    ><swiper-slide>Slide 3</swiper-slide></swiper-container
+  >
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+import { register } from \\"swiper/element/bundle\\";
+
+export default defineComponent({
+  name: \\"my-basic-web-component\\",
+
+  created() {
+    register();
   },
 });
 </script>"
@@ -3775,15 +3711,17 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > Basic 2`] = `
 "<template>
   <div>
-    <template v-if=\\"person === name\\">
-      <input
-        :value=\\"name\\"
-        @change=\\"name = $event.target.value + ' and ' + person\\"
-      />
+    <template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <template v-if=\\"person === name\\">
+        <input
+          :value=\\"name\\"
+          @change=\\"name = $event.target.value + ' and ' + person\\"
+        />
 
-      Hello
-      {{ person }}
-      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+        Hello
+        {{ person }}
+        ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+      </template>
     </template>
   </div>
 </template>
@@ -3951,17 +3889,16 @@ exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
   <div>
     <template v-if=\\"$slots.default\\">
       <slot />
-
       {{ type }}
     </template>
 
     <my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :list=\\"null\\"
     ></my-boolean-attribute-component>
   </div>
@@ -3979,7 +3916,7 @@ type Props = {
 
 export default defineComponent({
   name: \\"my-boolean-attribute\\",
-  components: { \\"my-boolean-attribute-component\\": MyBooleanAttributeComponent },
+  components: { MyBooleanAttributeComponent: MyBooleanAttributeComponent },
   props: [\\"type\\"],
 });
 </script>"
@@ -4007,8 +3944,8 @@ import MyBasicComponent from \\"./basic.raw\\";
 export default defineComponent({
   name: \\"my-basic-child-component\\",
   components: {
-    \\"my-basic-component\\": MyBasicComponent,
-    \\"my-basic-on-mount-update-component\\": MyBasicOnMountUpdateComponent,
+    MyBasicComponent: MyBasicComponent,
+    MyBasicOnMountUpdateComponent: MyBasicOnMountUpdateComponent,
   },
 
   data() {
@@ -4021,14 +3958,16 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > BasicFor 1`] = `
 "<template>
   <div>
-    <input
-      :value=\\"name\\"
-      @change=\\"name = $event.target.value + ' and ' + person\\"
-    />
+    <template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <input
+        :value=\\"name\\"
+        @change=\\"name = $event.target.value + ' and ' + person\\"
+      />
 
-    Hello
-    {{ person }}
-    ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+      Hello
+      {{ person }}
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    </template>
   </div>
 </template>
 
@@ -4110,9 +4049,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "<template>
-  <div>
-    <button @click=\\"handlerClick($event)\\">Click</button>
-  </div>
+  <div><button @click=\\"handlerClick($event)\\">Click</button></div>
 </template>
 
 <script lang=\\"ts\\">
@@ -4199,15 +4136,12 @@ exports[`Vue > jsx > Typescript Test > Button 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
-        {{ text }}
-      </button>
+      <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
     </template>
   </div>
 </template>
@@ -4233,13 +4167,9 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > Columns 1`] = `
 "<template>
   <div class=\\"builder-columns div\\">
-    <div
-      class=\\"builder-column div-2\\"
-      v-for=\\"(column, index) in columns\\"
-      :key=\\"index\\"
-    >
-      {{ column.content }} {{ index }}
-    </div>
+    <template :key=\\"index\\" v-for=\\"(column, index) in columns\\">
+      <div class=\\"builder-column div-2\\">{{ column.content }}{{ index }}</div>
+    </template>
   </div>
 </template>
 
@@ -4315,12 +4245,8 @@ exports[`Vue > jsx > Typescript Test > ContentSlotHtml 1`] = `
 "<template>
   <div>
     <slot name=\\"testing\\"></slot>
-    <div>
-      <hr />
-    </div>
-    <div>
-      <slot />
-    </div>
+    <div><hr /></div>
+    <div><slot /></div>
   </div>
 </template>
 
@@ -4342,23 +4268,22 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "<template>
-  <div
-    v-if=\\"$slots.reference\\"
-    :name=\\"$slots.content ? 'name1' : 'name2'\\"
-    :title=\\"$slots.content ? 'title1' : 'title2'\\"
-    @click=\\"show()\\"
-    :class=\\"_classStringToObject(cls)\\"
-    v-bind=\\"attributes\\"
-  >
-    <template v-if=\\"showContent && $slots.content\\">
-      <slot name=\\"content\\">{{ content }}</slot>
-    </template>
+  <template v-if=\\"$slots.reference\\">
+    <div
+      :name=\\"$slots.content ? 'name1' : 'name2'\\"
+      :title=\\"$slots.content ? 'title1' : 'title2'\\"
+      @click=\\"show()\\"
+      :class=\\"cls\\"
+      v-bind=\\"attributes\\"
+    >
+      <template v-if=\\"showContent && $slots.content\\">
+        <slot name=\\"content\\">{{ content }}</slot>
+      </template>
 
-    <div>
-      <hr />
+      <div><hr /></div>
+      <div><slot /></div>
     </div>
-    <div><slot /></div>
-  </div>
+  </template>
 </template>
 
 <script lang=\\"ts\\">
@@ -4391,17 +4316,6 @@ export default defineComponent({
     show() {
       this.$slots.content ? 1 : \\"\\";
     },
-    _classStringToObject(str: string) {
-      const obj: Record<string, boolean> = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
   },
 });
 </script>"
@@ -4411,11 +4325,7 @@ exports[`Vue > jsx > Typescript Test > CustomCode 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -4482,17 +4392,6 @@ export default defineComponent({
           }
         }
       }
-    },
-    _classStringToObject(str: string) {
-      const obj: Record<string, boolean> = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
     },
   },
 });
@@ -4503,11 +4402,7 @@ exports[`Vue > jsx > Typescript Test > Embed 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -4574,17 +4469,6 @@ export default defineComponent({
           }
         }
       }
-    },
-    _classStringToObject(str: string) {
-      const obj: Record<string, boolean> = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
     },
   },
 });
@@ -4603,12 +4487,15 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
     v-bind=\\"attributes\\"
   >
     <template v-if=\\"builderBlock && builderBlock.children\\">
-      <builder-block-component
-        v-for=\\"(block, index) in builderBlock?.children\\"
-        :block=\\"block\\"
-        :index=\\"index\\"
+      <template
         :key=\\"block.id\\"
-      ></builder-block-component>
+        v-for=\\"(block, index) in builderBlock?.children\\"
+      >
+        <builder-block-component
+          :block=\\"block\\"
+          :index=\\"index\\"
+        ></builder-block-component>
+      </template>
     </template>
 
     <template v-if=\\"submissionState === 'error'\\">
@@ -4626,9 +4513,9 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
     </template>
 
     <template v-if=\\"submissionState === 'error' && responseData\\">
-      <pre class=\\"builder-form-error-text pre\\">
-        {{ JSON.stringify(responseData, null, 2) }}
-      </pre>
+      <pre class=\\"builder-form-error-text pre\\">{{
+        JSON.stringify(responseData, null, 2)
+      }}</pre>
     </template>
 
     <template v-if=\\"submissionState === 'success'\\">
@@ -4678,8 +4565,8 @@ export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"e
 export default defineComponent({
   name: \\"form-component\\",
   components: {
-    \\"builder-block-component\\": BuilderBlockComponent,
-    \\"builder-blocks\\": BuilderBlocks,
+    BuilderBlockComponent: BuilderBlockComponent,
+    BuilderBlocks: BuilderBlocks,
   },
   props: [
     \\"previewState\\",
@@ -4959,11 +4846,7 @@ exports[`Vue > jsx > Typescript Test > Image 1`] = `
         <img
           :alt=\\"altText\\"
           :aria-role=\\"altText ? 'presentation' : undefined\\"
-          :class=\\"
-            _classStringToObject(
-              'builder-image' + (_class ? ' ' + _class : '') + ' img'
-            )
-          \\"
+          :class=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
           :src=\\"image\\"
           @load=\\"setLoaded()\\"
           :srcset=\\"srcset\\"
@@ -4971,9 +4854,8 @@ exports[`Vue > jsx > Typescript Test > Image 1`] = `
         />
       </template>
 
-      <source :srcset=\\"srcset\\" />
-    </picture>
-    <slot />
+      <source :srcset=\\"srcset\\" /></picture
+    ><slot />
   </div>
 </template>
 
@@ -5053,17 +4935,6 @@ export default defineComponent({
         window.navigator.product != \\"ReactNative\\"
       );
     },
-    _classStringToObject(str: string) {
-      const obj: Record<string, boolean> = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
   },
 });
 </script>
@@ -5081,7 +4952,9 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > Image State 1`] = `
 "<template>
   <div>
-    <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
+    <template :key=\\"index\\" v-for=\\"(item, index) in images\\">
+      <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
+    </template>
   </div>
 </template>
 
@@ -5212,7 +5085,7 @@ import FormInputComponent from \\"./input.raw\\";
 
 export default defineComponent({
   name: \\"stepper\\",
-  components: { \\"form-input-component\\": FormInputComponent },
+  components: { FormInputComponent: FormInputComponent },
 
   methods: {
     handleChange(value: string) {
@@ -5226,7 +5099,7 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > RawText 1`] = `
 "<template>
   <span
-    :class=\\"_classStringToObject(attributes?.class || attributes?.className)\\"
+    :class=\\"attributes?.class || attributes?.className\\"
     v-html=\\"text || ''\\"
   ></span>
 </template>
@@ -5243,20 +5116,6 @@ export default defineComponent({
   name: \\"raw-text\\",
 
   props: [\\"attributes\\", \\"text\\"],
-
-  methods: {
-    _classStringToObject(str: string) {
-      const obj: Record<string, boolean> = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
 });
 </script>"
 `;
@@ -5296,17 +5155,18 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > Section 2`] = `
 "<template>
-  <section
-    v-for=\\"(item, index) in items\\"
-    v-if=\\"max\\"
-    :style=\\"{
-      maxWidth: item + max,
-    }\\"
-    :key=\\"index\\"
-    v-bind=\\"attributes\\"
-  >
-    <slot />
-  </section>
+  <template v-if=\\"max\\">
+    <template :key=\\"index\\" v-for=\\"(item, index) in items\\">
+      <section
+        :style=\\"{
+          maxWidth: item + max,
+        }\\"
+        v-bind=\\"attributes\\"
+      >
+        <slot />
+      </section>
+    </template>
+  </template>
 </template>
 
 <script lang=\\"ts\\">
@@ -5339,14 +5199,11 @@ exports[`Vue > jsx > Typescript Test > Select 1`] = `
     :name=\\"name\\"
     v-bind=\\"attributes\\"
   >
-    <option
-      v-for=\\"(option, index) in options\\"
-      :value=\\"option.value\\"
-      :data-index=\\"index\\"
-      :key=\\"index\\"
-    >
-      {{ option.name || option.value }}
-    </option>
+    <template :key=\\"index\\" v-for=\\"(option, index) in options\\">
+      <option :value=\\"option.value\\" :data-index=\\"index\\">
+        {{ option.name || option.value }}
+      </option>
+    </template>
   </select>
 </template>
 
@@ -5377,9 +5234,7 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > SlotDefault 1`] = `
 "<template>
   <div>
-    <slot>
-      <div class=\\"default-slot\\">Default content</div>
-    </slot>
+    <slot><div class=\\"default-slot\\">Default content</div></slot>
   </div>
 </template>
 
@@ -5418,7 +5273,7 @@ type Props = {
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": ContentSlotCode },
+  components: { ContentSlotCode: ContentSlotCode },
 });
 </script>"
 `;
@@ -5441,7 +5296,7 @@ type Props = {
 
 export default defineComponent({
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": ContentSlotCode },
+  components: { ContentSlotCode: ContentSlotCode },
 });
 </script>"
 `;
@@ -5449,9 +5304,8 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > SlotNamed 1`] = `
 "<template>
   <div>
-    <slot name=\\"top\\"></slot>
-    <slot name=\\"left\\">Default left</slot>
-    <slot>Default Child</slot>
+    <slot name=\\"top\\"></slot><slot name=\\"left\\">Default left</slot
+    ><slot>Default Child</slot>
   </div>
 </template>
 
@@ -5472,17 +5326,13 @@ exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
 "<template>
   <div :data-user=\\"name\\">
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
-
     <template v-if=\\"showReviewPrompt || 'asdf'\\">
       <input placeholder=\\"Email\\" />
-
       <input placeholder=\\"Title\\" class=\\"input\\" />
-
       <textarea
         placeholder=\\"How was your experience?\\"
         class=\\"textarea\\"
       ></textarea>
-
       <button
         class=\\"button\\"
         @click=\\"
@@ -5494,18 +5344,16 @@ exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
       </button>
     </template>
 
-    <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
-      <img class=\\"img\\" :src=\\"review.avatar\\" />
-      <div
-        :class=\\"
-          _classStringToObject(showReviewPrompt ? 'bg-primary' : 'bg-secondary')
-        \\"
-      >
-        <div>N: {{ index }}</div>
-        <div>{{ review.author }}</div>
-        <div>{{ review.reviewMessage }}</div>
+    <template :key=\\"review.id\\" v-for=\\"(review, index) in reviews\\">
+      <div class=\\"review\\">
+        <img class=\\"img\\" :src=\\"review.avatar\\" />
+        <div :class=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
+          <div>N: {{ index }}</div>
+          <div>{{ review.author }}</div>
+          <div>{{ review.reviewMessage }}</div>
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -5547,17 +5395,6 @@ export default defineComponent({
     snakeCaseValue() {
       return snakeCase(\\"testThis\\");
     },
-    _classStringToObject(str: string) {
-      const obj: Record<string, boolean> = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
   },
 });
 </script>
@@ -5591,9 +5428,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > Submit 1`] = `
 "<template>
-  <button type=\\"submit\\" v-bind=\\"attributes\\">
-    {{ text }}
-  </button>
+  <button type=\\"submit\\" v-bind=\\"attributes\\">{{ text }}</button>
 </template>
 
 <script lang=\\"ts\\">
@@ -5779,12 +5614,14 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "<template>
   <component :is=\\"TagNameGetter\\">
-    Hello <component :is=\\"tag\\">{{ name }}</component>
-    <component v-for=\\"(action, index) in actions\\" :is=\\"TagName\\" :key=\\"index\\">
-      <component :is=\\"action.icon\\"></component>
-      <span>{{ action.text }}</span>
-    </component>
-  </component>
+    Hello <component :is=\\"tag\\">{{ name }}</component
+    ><template :key=\\"index\\" v-for=\\"(action, index) in actions\\">
+      <component :is=\\"TagName\\"
+        ><component :is=\\"action.icon\\"></component
+        ><span>{{ action.text }}</span></component
+      >
+    </template></component
+  >
 </template>
 
 <script lang=\\"ts\\">
@@ -5998,8 +5835,7 @@ exports[`Vue > jsx > Typescript Test > className 1`] = `
 "<template>
   <div>
     <div class=\\"no binding\\">Without Binding</div>
-
-    <div :class=\\"_classStringToObject(bindings)\\">With binding</div>
+    <div :class=\\"bindings\\">With binding</div>
   </div>
 </template>
 
@@ -6019,27 +5855,13 @@ export default defineComponent({
   data() {
     return { bindings: \\"a binding\\" };
   },
-
-  methods: {
-    _classStringToObject(str: string) {
-      const obj: Record<string, boolean> = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
 });
 </script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > classState 1`] = `
 "<template>
-  <div :class=\\"_classStringToObject(classState + ' div')\\" :style=\\"styleState\\">
+  <div :class=\\"classState + ' div'\\" :style=\\"styleState\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -6057,20 +5879,6 @@ export default defineComponent({
         color: \\"red\\",
       },
     };
-  },
-
-  methods: {
-    _classStringToObject(str: string) {
-      const obj: Record<string, boolean> = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
   },
 });
 </script>
@@ -6123,10 +5931,8 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
 "<template>
-  <div>
-    {{ foo.value }}
-    <div>other</div>
-  </div>
+  {{ foo.value }}
+  <div>other</div>
 </template>
 
 <script lang=\\"ts\\">
@@ -6199,9 +6005,8 @@ exports[`Vue > jsx > Typescript Test > defaultProps 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -6252,9 +6057,8 @@ exports[`Vue > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -6363,7 +6167,7 @@ type RenderContentProps = {
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { \\"render-block\\": RenderBlock },
+  components: { RenderBlock: RenderBlock },
   props: [\\"renderContentProps\\"],
 
   methods: {
@@ -6477,11 +6281,19 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > nestedShow 1`] = `
 "<template>
-  <div v-if=\\"!Boolean(conditionA)\\">else-condition-A</div>
+  <template v-if=\\"conditionA\\">
+    <template v-if=\\"!conditionB\\">
+      <div>if condition A and condition B</div>
+    </template>
 
-  <div v-else-if=\\"!Boolean(!conditionB)\\">else-condition-B</div>
+    <template v-else>
+      <div>else-condition-B</div>
+    </template>
+  </template>
 
-  <div v-else>if condition A and condition B</div>
+  <template v-else>
+    <div>else-condition-A</div>
+  </template>
 </template>
 
 <script lang=\\"ts\\">
@@ -6809,7 +6621,7 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > propsDestructure 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <slot />{{ type }}
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -6908,41 +6720,52 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
 "<template>
-  <component
-    v-if=\\"!Boolean(shouldWrap)\\"
-    :is=\\"renderComponentTag\\"
-    v-bind=\\"renderComponentProps\\"
-  ></component>
-  <component
-    v-else-if=\\"isEmptyHtmlElement(tag)\\"
-    :is=\\"tag\\"
-    v-bind=\\"{ ...attributes, ...actions }\\"
-  ></component>
-  <render-repeated-block
-    v-for=\\"(data, index) in repeatItemData\\"
-    :repeatContext=\\"data.context\\"
-    :block=\\"data.block\\"
-    :key=\\"index\\"
-  ></render-repeated-block>
-  <component v-else :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\">
+  <template v-if=\\"shouldWrap\\">
+    <template v-if=\\"isEmptyHtmlElement(tag)\\">
+      <component :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\"></component>
+    </template>
+
+    <template v-if=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
+      <template :key=\\"index\\" v-for=\\"(data, index) in repeatItemData\\">
+        <render-repeated-block
+          :repeatContext=\\"data.context\\"
+          :block=\\"data.block\\"
+        ></render-repeated-block>
+      </template>
+    </template>
+
+    <template v-if=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
+      <component :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\"
+        ><component
+          :is=\\"renderComponentTag\\"
+          v-bind=\\"renderComponentProps\\"
+        ></component
+        ><template
+          :key=\\"'render-block-' + child.id\\"
+          v-for=\\"(child, index) in childrenWithoutParentComponent\\"
+        >
+          <render-block
+            :block=\\"child\\"
+            :context=\\"childrenContext\\"
+          ></render-block> </template
+        ><template
+          :key=\\"'block-style-' + child.id\\"
+          v-for=\\"(child, index) in childrenWithoutParentComponent\\"
+        >
+          <block-styles
+            :block=\\"child\\"
+            :context=\\"childrenContext\\"
+          ></block-styles> </template
+      ></component>
+    </template>
+  </template>
+
+  <template v-else>
     <component
       :is=\\"renderComponentTag\\"
       v-bind=\\"renderComponentProps\\"
     ></component>
-
-    <render-block
-      v-for=\\"(child, index) in childrenWithoutParentComponent\\"
-      :block=\\"child\\"
-      :context=\\"childrenContext\\"
-      :key=\\"'render-block-' + child.id\\"
-    ></render-block>
-    <block-styles
-      v-for=\\"(child, index) in childrenWithoutParentComponent\\"
-      :block=\\"child\\"
-      :context=\\"childrenContext\\"
-      :key=\\"'block-style-' + child.id\\"
-    ></block-styles>
-  </component>
+  </template>
 </template>
 
 <script lang=\\"ts\\">
@@ -6979,9 +6802,9 @@ export type RenderBlockProps = {
 export default defineComponent({
   name: \\"render-block\\",
   components: {
-    \\"render-repeated-block\\": RenderRepeatedBlock,
-    \\"block-styles\\": BlockStyles,
-    \\"render-component\\": RenderComponent,
+    RenderRepeatedBlock: RenderRepeatedBlock,
+    BlockStyles: BlockStyles,
+    RenderComponent: RenderComponent,
   },
   props: [\\"block\\", \\"context\\"],
 
@@ -7195,7 +7018,7 @@ type Props = {
 
 export default defineComponent({
   name: \\"render-content\\",
-  components: { \\"render-blocks\\": RenderBlocks },
+  components: { RenderBlocks: RenderBlocks },
   props: [\\"content\\", \\"customComponents\\"],
 
   data() {
@@ -7249,23 +7072,18 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
 "<template>
-  <div>
-    <template v-if=\\"link\\">
-      <a
-        :href=\\"link\\"
-        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
-        v-bind=\\"attributes\\"
-      >
-        {{ text }}
-      </a>
-    </template>
+  <template v-if=\\"link\\">
+    <a
+      :href=\\"link\\"
+      :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+      v-bind=\\"attributes\\"
+      >{{ text }}</a
+    >
+  </template>
 
-    <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
-        {{ text }}
-      </button>
-    </template>
-  </div>
+  <template v-if=\\"!link\\">
+    <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
+  </template>
 </template>
 
 <script lang=\\"ts\\">
@@ -7288,8 +7106,13 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > rootShow 1`] = `
 "<template>
-  <div v-if=\\"foo === 'bar'\\">Bar</div>
-  <div v-else>Foo</div>
+  <template v-if=\\"foo === 'bar'\\">
+    <div>Bar</div>
+  </template>
+
+  <template v-else>
+    <div>Foo</div>
+  </template>
 </template>
 
 <script lang=\\"ts\\">
@@ -7311,7 +7134,6 @@ exports[`Vue > jsx > Typescript Test > self-referencing component 1`] = `
 "<template>
   <div>
     {{ name }}
-
     <template v-if=\\"name === 'Batman'\\">
       <my-component name=\\"Bruce Wayne\\"></my-component>
     </template>
@@ -7332,13 +7154,9 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > self-referencing component with children 1`] = `
 "<template>
   <div>
-    {{ name }}
-    <slot />
-
+    {{ name }}<slot />
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\">
-        <div>Wayne</div>
-      </my-component>
+      <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
     </template>
   </div>
 </template>
@@ -7356,10 +7174,15 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > showWithFor 1`] = `
 "<template>
-  <div v-for=\\"(item, index) in items\\" v-if=\\"conditionA\\" :key=\\"idx\\">
-    {{ item }}
-  </div>
-  <div v-else>else-condition-A</div>
+  <template v-if=\\"conditionA\\">
+    <template :key=\\"idx\\" v-for=\\"(item, index) in items\\">
+      <div>{{ item }}</div>
+    </template>
+  </template>
+
+  <template v-else>
+    <div>else-condition-A</div>
+  </template>
 </template>
 
 <script lang=\\"ts\\">
@@ -7380,9 +7203,11 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > showWithRootText 1`] = `
 "<template>
-  ContentA
+  <template v-if=\\"conditionA\\"> ContentA </template>
 
-  <div v-else>else-condition-A</div>
+  <template v-else>
+    <div>else-condition-A</div>
+  </template>
 </template>
 
 <script lang=\\"ts\\">
@@ -7398,6 +7223,56 @@ export default defineComponent({
   props: [\\"conditionA\\"],
 });
 </script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"<template>
+  <div class=\\"test div\\">{{ id }}{{ foo.bar.baz }}</div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+export default defineComponent({
+  name: \\"my-basic-component\\",
+
+  props: [\\"id\\", \\"foo\\"],
+
+  watch: {
+    onUpdateHook0: {
+      handler() {
+        console.log(\\"props.id changed\\", this.id);
+        console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+      },
+      immediate: true,
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.id,
+        1: this.foo.bar.baz,
+      };
+    },
+  },
+});
+</script>
+
+<style scoped>
+.div {
+  padding: 10px;
+}
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > spreadAttrs 1`] = `
@@ -7473,10 +7348,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > stylePropClassAndCss 1`] = `
 "<template>
-  <div
-    :style=\\"attributes.style\\"
-    :class=\\"_classStringToObject(attributes.className + ' div')\\"
-  ></div>
+  <div :style=\\"attributes.style\\" :class=\\"attributes.className + ' div'\\"></div>
 </template>
 
 <script lang=\\"ts\\">
@@ -7486,20 +7358,6 @@ export default defineComponent({
   name: \\"style-prop-class-and-css\\",
 
   props: [\\"attributes\\"],
-
-  methods: {
-    _classStringToObject(str: string) {
-      const obj: Record<string, boolean> = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
 });
 </script>
 
@@ -7524,7 +7382,7 @@ import Foo from \\"./foo-sub-component.vue\\";
 
 export default defineComponent({
   name: \\"sub-component\\",
-  components: { foo: Foo },
+  components: { Foo: Foo },
 });
 </script>"
 `;
@@ -7679,9 +7537,32 @@ export default defineComponent({
 
   computed: {
     name() {
-      const prefix = \\"v2\\";
+      const prefix = \\"v\\";
       return prefix + \\"foo\\";
     },
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > webComponent 1`] = `
+"<template>
+  <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\"
+    ><swiper-slide>Slide 1</swiper-slide><swiper-slide>Slide 2</swiper-slide
+    ><swiper-slide>Slide 3</swiper-slide></swiper-container
+  >
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+import { register } from \\"swiper/element/bundle\\";
+
+export default defineComponent({
+  name: \\"my-basic-web-component\\",
+
+  created() {
+    register();
   },
 });
 </script>"
@@ -7786,11 +7667,7 @@ export default defineComponent({
 exports[`Vue > svelte > Javascript Test > classDirective 1`] = `
 "<template>
   <input
-    :class=\\"
-      _classStringToObject(
-        \`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`
-      )
-    \\"
+    :class=\\"\`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`\\"
   />
 </template>
 
@@ -7804,20 +7681,6 @@ export default defineComponent({
 
   data() {
     return { focus: true };
-  },
-
-  methods: {
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
   },
 });
 </script>"
@@ -7854,7 +7717,9 @@ export default defineComponent({
 exports[`Vue > svelte > Javascript Test > each 1`] = `
 "<template>
   <ul>
-    <li v-for=\\"(num, index) in numbers\\" :key=\\"index\\">{{ num }}</li>
+    <template :key=\\"index\\" v-for=\\"(num, index) in numbers\\">
+      <li>{{ num }}</li>
+    </template>
   </ul>
 </template>
 
@@ -7915,8 +7780,13 @@ export default defineComponent({
 
 exports[`Vue > svelte > Javascript Test > ifElse 1`] = `
 "<template>
-  <button v-if=\\"show\\" @click=\\"toggle($event)\\">Hide</button>
-  <button v-else @click=\\"toggle($event)\\">Show</button>
+  <template v-if=\\"show\\">
+    <button @click=\\"toggle($event)\\">Hide</button>
+  </template>
+
+  <template v-else>
+    <button @click=\\"toggle($event)\\">Show</button>
+  </template>
 </template>
 
 <script>
@@ -7952,7 +7822,7 @@ import Button from \\"./Button.vue\\";
 
 export default defineComponent({
   name: \\"my-component\\",
-  components: { button: Button },
+  components: { Button: Button },
 
   data() {
     return { disabled: false };
@@ -8222,11 +8092,7 @@ export default defineComponent({
 exports[`Vue > svelte > Typescript Test > classDirective 1`] = `
 "<template>
   <input
-    :class=\\"
-      _classStringToObject(
-        \`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`
-      )
-    \\"
+    :class=\\"\`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`\\"
   />
 </template>
 
@@ -8240,20 +8106,6 @@ export default defineComponent({
 
   data() {
     return { focus: true };
-  },
-
-  methods: {
-    _classStringToObject(str: string) {
-      const obj: Record<string, boolean> = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
   },
 });
 </script>"
@@ -8290,7 +8142,9 @@ export default defineComponent({
 exports[`Vue > svelte > Typescript Test > each 1`] = `
 "<template>
   <ul>
-    <li v-for=\\"(num, index) in numbers\\" :key=\\"index\\">{{ num }}</li>
+    <template :key=\\"index\\" v-for=\\"(num, index) in numbers\\">
+      <li>{{ num }}</li>
+    </template>
   </ul>
 </template>
 
@@ -8351,8 +8205,13 @@ export default defineComponent({
 
 exports[`Vue > svelte > Typescript Test > ifElse 1`] = `
 "<template>
-  <button v-if=\\"show\\" @click=\\"toggle($event)\\">Hide</button>
-  <button v-else @click=\\"toggle($event)\\">Show</button>
+  <template v-if=\\"show\\">
+    <button @click=\\"toggle($event)\\">Hide</button>
+  </template>
+
+  <template v-else>
+    <button @click=\\"toggle($event)\\">Show</button>
+  </template>
 </template>
 
 <script lang=\\"ts\\">
@@ -8388,7 +8247,7 @@ import Button from \\"./Button.vue\\";
 
 export default defineComponent({
   name: \\"my-component\\",
-  components: { button: Button },
+  components: { Button: Button },
 
   data() {
     return { disabled: false };

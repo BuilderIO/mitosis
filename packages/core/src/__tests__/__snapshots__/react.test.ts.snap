@@ -35,14 +35,11 @@ function MyBasicRefComponent(props) {
               onBlur={(event) => onBlur()}
               onChange={(event) => setName(event.target.value)}
             />
-
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
-
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </>
@@ -165,12 +162,7 @@ function MyBasicOnMountUpdateComponent(props) {
     setName(\\"PatrickJS onMount\\" + props.bye);
   }, []);
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyBasicOnMountUpdateComponent;
@@ -221,7 +213,7 @@ exports[`React > jsx > Javascript Test > BasicAttribute 1`] = `
 "import * as React from \\"react\\";
 
 function MyComponent(props) {
-  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
+  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck />;
 }
 
 export default MyComponent;
@@ -241,11 +233,8 @@ function MyBooleanAttribute(props) {
           {props.type}
         </>
       ) : null}
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent list={null} />
     </div>
   );
@@ -270,7 +259,6 @@ function MyBasicChildComponent(props) {
   return (
     <div>
       <MyBasicComponent id={dev} />
-
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </div>
@@ -350,14 +338,11 @@ function MyBasicRefComponent(props) {
               onBlur={(event) => onBlur()}
               onChange={(event) => setName(event.target.value)}
             />
-
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
-
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </>
@@ -433,11 +418,8 @@ function MyPreviousComponent(props) {
   return (
     <div>
       <h1>
-        Now:
-        {count}, before:
-        {prevCount.current}
+        Now: {count}, before: {prevCount.current}
       </h1>
-
       <button onClick={(event) => setCount(1)}>Increment</button>
     </div>
   );
@@ -454,23 +436,18 @@ function Button(props) {
   return (
     <div>
       {props.link ? (
-        <>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <>
-          <button type=\\"button\\" {...props.attributes}>
-            {props.text}
-          </button>
-        </>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
       ) : null}
     </div>
   );
@@ -510,7 +487,6 @@ function Column(props) {
         {props.columns?.map((column, index) => (
           <div className=\\"builder-column div-2\\">
             {column.content}
-
             {index}
           </div>
         ))}
@@ -550,13 +526,13 @@ exports[`React > jsx > Javascript Test > ContentSlotHtml 1`] = `
 function ContentSlotCode(props) {
   return (
     <div>
-      {props.slotTesting}
-
+      <>{props.slotTesting}</>
       <div>
         <hr />
       </div>
-
-      <div>{props.children}</div>
+      <div>
+        <>{props.children}</>
+      </div>
     </div>
   );
 }
@@ -595,13 +571,11 @@ function ContentSlotJsxCode(props) {
             className={cls()}
           >
             {showContent && props.slotContent ? (
-              <>{props.slotContent || \\"{props.content}\\"}</>
+              <>{props.content || \\"{props.content}\\"}</>
             ) : null}
-
             <div>
               <hr />
             </div>
-
             <div>{props.children}</div>
           </div>
         </>
@@ -983,7 +957,6 @@ function FormComponent(props) {
         onSubmit={(event) => onSubmit(event)}
         {...props.attributes}
       >
-        {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <>
             {props.builderBlock?.children?.map((block, index) => (
@@ -994,39 +967,27 @@ function FormComponent(props) {
               />
             ))}
           </>
-        ) : null}{\\" \\"}
+        ) : null}
         {submissionState() === \\"error\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
-            />
-          </>
-        ) : null}{\\" \\"}
+          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
+        ) : null}
         {submissionState() === \\"sending\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
-            />
-          </>
-        ) : null}{\\" \\"}
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          />
+        ) : null}
         {submissionState() === \\"error\\" && responseData ? (
-          <>
-            <pre className=\\"builder-form-error-text pre\\">
-              {\\" \\"}
-              {JSON.stringify(responseData, null, 2)}{\\" \\"}
-            </pre>
-          </>
-        ) : null}{\\" \\"}
+          <pre className=\\"builder-form-error-text pre\\">
+            {JSON.stringify(responseData, null, 2)}
+          </pre>
+        ) : null}
         {submissionState() === \\"success\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
-            />
-          </>
-        ) : null}{\\" \\"}
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          />
+        ) : null}
       </form>{\\" \\"}
       <style jsx>{\`
         .pre {
@@ -1108,26 +1069,22 @@ function Image(props) {
       <div>
         <picture ref={pictureRef}>
           {!useLazyLoading() || load ? (
-            <>
-              <img
-                alt={props.altText}
-                aria-role={props.altText ? \\"presentation\\" : undefined}
-                className={
-                  \\"builder-image\\" +
-                  (props._class ? \\" \\" + props._class : \\"\\") +
-                  \\" img\\"
-                }
-                src={props.image}
-                onLoad={(event) => setLoaded()}
-                srcset={props.srcset}
-                sizes={props.sizes}
-              />
-            </>
+            <img
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              className={
+                \\"builder-image\\" +
+                (props._class ? \\" \\" + props._class : \\"\\") +
+                \\" img\\"
+              }
+              src={props.image}
+              onLoad={(event) => setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+            />
           ) : null}
-
           <source srcset={props.srcset} />
         </picture>
-
         {props.children}
       </div>
       <style jsx>{\`
@@ -1159,9 +1116,7 @@ function ImgStateComponent(props) {
   return (
     <div>
       {images?.map((item, itemIndex) => (
-        <>
-          <img className=\\"custom-class\\" src={item} key={itemIndex} />
-        </>
+        <img className=\\"custom-class\\" src={item} key={itemIndex} />
       ))}
     </div>
   );
@@ -1321,7 +1276,9 @@ exports[`React > jsx > Javascript Test > SlotDefault 1`] = `
 function SlotCode(props) {
   return (
     <div>
-      {props.children || <div className=\\"default-slot\\">Default content</div>}
+      <>
+        {props.children || <div className=\\"default-slot\\">Default content</div>}
+      </>
     </div>
   );
 }
@@ -1337,7 +1294,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 function SlotCode(props) {
   return (
     <div>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      <ContentSlotCode testing={<div>Hello</div>}></ContentSlotCode>
     </div>
   );
 }
@@ -1368,11 +1325,9 @@ exports[`React > jsx > Javascript Test > SlotNamed 1`] = `
 function SlotCode(props) {
   return (
     <div>
-      {props.slotTop}
-
-      {props.slotLeft || \\"Default left\\"}
-
-      {props.children || \\"Default Child\\"}
+      <>{props.top}</>
+      <>{props.left || \\"Default left\\"}</>
+      <>{props.children || \\"Default Child\\"}</>
     </div>
   );
 }
@@ -1420,7 +1375,6 @@ function SmileReviews(props) {
         <button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </button>
-
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
@@ -1440,19 +1394,12 @@ function SmileReviews(props) {
             </button>
           </>
         ) : null}
-
         {reviews?.map((review, index) => (
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
-
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
@@ -1603,12 +1550,7 @@ function MyComponent(props) {
     setName(value);
   }
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyComponent;
@@ -1635,12 +1577,10 @@ function MyBasicForNoTagRefComponent(props) {
 
   return (
     <TagNameGetterRef>
-      Hello
-      <Tag>{name}</Tag>
+      Hello <Tag>{name}</Tag>
       {props.actions?.map((action) => (
         <TagName>
           <action.icon />
-
           <span>{action.text}</span>
         </TagName>
       ))}
@@ -1743,12 +1683,7 @@ function MyBasicOnUpdateReturnComponent(props) {
     };
   }, [name]);
 
-  return (
-    <div>
-      Hello!
-      {name}
-    </div>
-  );
+  return <div>Hello! {name}</div>;
 }
 
 export default MyBasicOnUpdateReturnComponent;
@@ -1832,7 +1767,6 @@ function ClassNameCode(props) {
   return (
     <div>
       <div className=\\"no binding\\">Without Binding</div>
-
       <div className={bindings}>With binding</div>
     </div>
   );
@@ -1897,7 +1831,7 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        <>{foo.value}</>
+        {foo.value}
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -1934,7 +1868,6 @@ function ComponentWithContext(props) {
       >
         <>
           {foo.value}
-
           <div>other</div>
         </>
       </Context1.Provider>
@@ -1977,27 +1910,22 @@ function Button(props) {
   return (
     <div>
       {props.link ? (
-        <>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <>
-          <button
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            {props.buttonText}
-          </button>
-        </>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.buttonText}
+        </button>
       ) : null}
     </div>
   );
@@ -2024,27 +1952,22 @@ function Button(props) {
   return (
     <div>
       {props.link ? (
-        <>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <>
-          <button
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            {props.text}
-          </button>
-        </>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.text}
+        </button>
       ) : null}
     </div>
   );
@@ -2069,13 +1992,7 @@ const DEFAULT_VALUES = {
 };
 
 function ComponentWithTypes(props) {
-  return (
-    <div>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </div>
-  );
+  return <div> Hello {props.name || DEFAULT_VALUES.name}</div>;
 }
 
 export default ComponentWithTypes;
@@ -2204,9 +2121,7 @@ function NestedShow(props) {
       {props.conditionA ? (
         <>
           {!props.conditionB ? (
-            <>
-              <div>if condition A and condition B</div>
-            </>
+            <div>if condition A and condition B</div>
           ) : (
             <div>else-condition-B</div>
           )}
@@ -2342,12 +2257,7 @@ function OnInit(props) {
     console.log(\\"set defaults with props\\");
   }, []);
 
-  return (
-    <div>
-      Default name defined by parent
-      {name}
-    </div>
-  );
+  return <div>Default name defined by parent {name}</div>;
 }
 
 export default OnInit;
@@ -2460,10 +2370,7 @@ exports[`React > jsx > Javascript Test > preserveTyping 1`] = `
 
 function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -2497,10 +2404,7 @@ exports[`React > jsx > Javascript Test > propsInterface 1`] = `
 
 function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -2513,10 +2417,7 @@ exports[`React > jsx > Javascript Test > propsType 1`] = `
 
 function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -2768,9 +2669,7 @@ function RenderBlock(props) {
       {shouldWrap() ? (
         <>
           {isEmptyHtmlElement(tag()) ? (
-            <>
-              <TagRef {...attributes()} {...actions()} />
-            </>
+            <TagRef {...attributes()} {...actions()} />
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <>
@@ -2784,27 +2683,23 @@ function RenderBlock(props) {
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
-            <>
-              <TagRef {...attributes()} {...actions()}>
-                <RenderComponentTagRef {...renderComponentProps()} />
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <RenderBlock
-                    key={\\"render-block-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <BlockStyles
-                    key={\\"block-style-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-              </TagRef>
-            </>
+            <TagRef {...attributes()} {...actions()}>
+              <RenderComponentTagRef {...renderComponentProps()} />
+              {childrenWithoutParentComponent()?.map((child) => (
+                <RenderBlock
+                  key={\\"render-block-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+              {childrenWithoutParentComponent()?.map((child) => (
+                <BlockStyles
+                  key={\\"block-style-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+            </TagRef>
           ) : null}
         </>
       ) : (
@@ -2879,23 +2774,18 @@ function Button(props) {
   return (
     <>
       {props.link ? (
-        <>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <>
-          <button type=\\"button\\" {...props.attributes}>
-            {props.text}
-          </button>
-        </>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
       ) : null}
     </>
   );
@@ -2933,12 +2823,7 @@ function MyComponent(props) {
   return (
     <div>
       {props.name}
-
-      {props.name === \\"Batman\\" ? (
-        <>
-          <MyComponent name=\\"Bruce Wayne\\" />
-        </>
-      ) : null}
+      {props.name === \\"Batman\\" ? <MyComponent name=\\"Bruce Wayne\\" /> : null}
     </div>
   );
 }
@@ -2954,15 +2839,11 @@ function MyComponent(props) {
   return (
     <div>
       {props.name}
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
-        <>
-          <MyComponent name=\\"Bruce\\">
-            <div>Wayne</div>
-          </MyComponent>
-        </>
+        <MyComponent name=\\"Bruce\\">
+          <div>Wayne</div>
+        </MyComponent>
       ) : null}
     </div>
   );
@@ -3003,6 +2884,36 @@ function ShowRootText(props) {
 }
 
 export default ShowRootText;
+"
+`;
+
+exports[`React > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+function MyBasicComponent(props) {
+  useEffect(() => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
+
+  return (
+    <>
+      <div className=\\"test div\\">
+        {props.id}
+        {props.foo.value.bar.baz}
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
 "
 `;
 
@@ -3118,9 +3029,7 @@ function SvgComponent(props) {
       <defs>
         <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </filter>
       </defs>
@@ -3242,6 +3151,29 @@ export default UseTargetComponent;
 "
 `;
 
+exports[`React > jsx > Javascript Test > webComponent 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { register } from \\"swiper/element/bundle\\";
+
+function MyBasicWebComponent(props) {
+  useEffect(() => {
+    register();
+  }, []);
+
+  return (
+    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+      <swiper-slide>Slide 1</swiper-slide>
+      <swiper-slide>Slide 2</swiper-slide>
+      <swiper-slide>Slide 3</swiper-slide>
+    </swiper-container>
+  );
+}
+
+export default MyBasicWebComponent;
+"
+`;
+
 exports[`React > jsx > Remove Internal mitosis package 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -3251,10 +3183,7 @@ function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   return (
-    <div>
-      Hello
-      {name}! I can run in React, Qwik, Vue, Solid, or Liquid!
-    </div>
+    <div>Hello {name}! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
   );
 }
 
@@ -3301,14 +3230,11 @@ function MyBasicRefComponent(props: Props) {
               onBlur={(event) => onBlur()}
               onChange={(event) => setName(event.target.value)}
             />
-
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
-
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </>
@@ -3440,12 +3366,7 @@ function MyBasicOnMountUpdateComponent(props: Props) {
     setName(\\"PatrickJS onMount\\" + props.bye);
   }, []);
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyBasicOnMountUpdateComponent;
@@ -3496,7 +3417,7 @@ exports[`React > jsx > Typescript Test > BasicAttribute 1`] = `
 "import * as React from \\"react\\";
 
 function MyComponent(props: any) {
-  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
+  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck />;
 }
 
 export default MyComponent;
@@ -3521,11 +3442,8 @@ function MyBooleanAttribute(props: Props) {
           {props.type}
         </>
       ) : null}
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent toggle={true} />
-
       <MyBooleanAttributeComponent list={null} />
     </div>
   );
@@ -3550,7 +3468,6 @@ function MyBasicChildComponent(props: any) {
   return (
     <div>
       <MyBasicComponent id={dev} />
-
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </div>
@@ -3634,14 +3551,11 @@ function MyBasicRefComponent(props: Props) {
               onBlur={(event) => onBlur()}
               onChange={(event) => setName(event.target.value)}
             />
-
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
             </label>
-
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
-
               <option value=\\"86\\">GR 86</option>
             </select>
           </>
@@ -3725,11 +3639,8 @@ function MyPreviousComponent(props: Props) {
   return (
     <div>
       <h1>
-        Now:
-        {count}, before:
-        {prevCount.current}
+        Now: {count}, before: {prevCount.current}
       </h1>
-
       <button onClick={(event) => setCount(1)}>Increment</button>
     </div>
   );
@@ -3753,23 +3664,18 @@ function Button(props: ButtonProps) {
   return (
     <div>
       {props.link ? (
-        <>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <>
-          <button type=\\"button\\" {...props.attributes}>
-            {props.text}
-          </button>
-        </>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
       ) : null}
     </div>
   );
@@ -3824,7 +3730,6 @@ function Column(props: ColumnProps) {
         {props.columns?.map((column, index) => (
           <div className=\\"builder-column div-2\\">
             {column.content}
-
             {index}
           </div>
         ))}
@@ -3870,13 +3775,13 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
 function ContentSlotCode(props: Props) {
   return (
     <div>
-      {props.slotTesting}
-
+      <>{props.slotTesting}</>
       <div>
         <hr />
       </div>
-
-      <div>{props.children}</div>
+      <div>
+        <>{props.children}</>
+      </div>
     </div>
   );
 }
@@ -3920,13 +3825,11 @@ function ContentSlotJsxCode(props: Props) {
             className={cls()}
           >
             {showContent && props.slotContent ? (
-              <>{props.slotContent || \\"{props.content}\\"}</>
+              <>{props.content || \\"{props.content}\\"}</>
             ) : null}
-
             <div>
               <hr />
             </div>
-
             <div>{props.children}</div>
           </div>
         </>
@@ -4349,7 +4252,6 @@ function FormComponent(props: FormProps) {
         onSubmit={(event) => onSubmit(event)}
         {...props.attributes}
       >
-        {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
           <>
             {props.builderBlock?.children?.map((block, index) => (
@@ -4360,39 +4262,27 @@ function FormComponent(props: FormProps) {
               />
             ))}
           </>
-        ) : null}{\\" \\"}
+        ) : null}
         {submissionState() === \\"error\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage!}
-            />
-          </>
-        ) : null}{\\" \\"}
+          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage!} />
+        ) : null}
         {submissionState() === \\"sending\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage!}
-            />
-          </>
-        ) : null}{\\" \\"}
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage!}
+          />
+        ) : null}
         {submissionState() === \\"error\\" && responseData ? (
-          <>
-            <pre className=\\"builder-form-error-text pre\\">
-              {\\" \\"}
-              {JSON.stringify(responseData, null, 2)}{\\" \\"}
-            </pre>
-          </>
-        ) : null}{\\" \\"}
+          <pre className=\\"builder-form-error-text pre\\">
+            {JSON.stringify(responseData, null, 2)}
+          </pre>
+        ) : null}
         {submissionState() === \\"success\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"successMessage\\"
-              blocks={props.successMessage!}
-            />
-          </>
-        ) : null}{\\" \\"}
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage!}
+          />
+        ) : null}
       </form>{\\" \\"}
       <style jsx>{\`
         .pre {
@@ -4493,26 +4383,22 @@ function Image(props: ImageProps) {
       <div>
         <picture ref={pictureRef}>
           {!useLazyLoading() || load ? (
-            <>
-              <img
-                alt={props.altText}
-                aria-role={props.altText ? \\"presentation\\" : undefined}
-                className={
-                  \\"builder-image\\" +
-                  (props._class ? \\" \\" + props._class : \\"\\") +
-                  \\" img\\"
-                }
-                src={props.image}
-                onLoad={(event) => setLoaded()}
-                srcset={props.srcset}
-                sizes={props.sizes}
-              />
-            </>
+            <img
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              className={
+                \\"builder-image\\" +
+                (props._class ? \\" \\" + props._class : \\"\\") +
+                \\" img\\"
+              }
+              src={props.image}
+              onLoad={(event) => setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+            />
           ) : null}
-
           <source srcset={props.srcset} />
         </picture>
-
         {props.children}
       </div>
       <style jsx>{\`
@@ -4544,9 +4430,7 @@ function ImgStateComponent(props: any) {
   return (
     <div>
       {images?.map((item, itemIndex) => (
-        <>
-          <img className=\\"custom-class\\" src={item} key={itemIndex} />
-        </>
+        <img className=\\"custom-class\\" src={item} key={itemIndex} />
       ))}
     </div>
   );
@@ -4763,7 +4647,9 @@ type Props = {
 function SlotCode(props: Props) {
   return (
     <div>
-      {props.children || <div className=\\"default-slot\\">Default content</div>}
+      <>
+        {props.children || <div className=\\"default-slot\\">Default content</div>}
+      </>
     </div>
   );
 }
@@ -4783,7 +4669,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 function SlotCode(props: Props) {
   return (
     <div>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      <ContentSlotCode testing={<div>Hello</div>}></ContentSlotCode>
     </div>
   );
 }
@@ -4822,11 +4708,9 @@ type Props = {
 function SlotCode(props: Props) {
   return (
     <div>
-      {props.slotTop}
-
-      {props.slotLeft || \\"Default left\\"}
-
-      {props.children || \\"Default Child\\"}
+      <>{props.top}</>
+      <>{props.left || \\"Default left\\"}</>
+      <>{props.children || \\"Default Child\\"}</>
     </div>
   );
 }
@@ -4879,7 +4763,6 @@ function SmileReviews(props: SmileReviewsProps) {
         <button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </button>
-
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
@@ -4899,19 +4782,12 @@ function SmileReviews(props: SmileReviewsProps) {
             </button>
           </>
         ) : null}
-
         {reviews?.map((review, index) => (
           <div className=\\"review\\" key={review.id}>
             <img className=\\"img\\" src={review.avatar} />
-
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
@@ -5110,12 +4986,7 @@ function MyComponent(props: any) {
     setName(value);
   }
 
-  return (
-    <div>
-      Hello
-      {name}
-    </div>
-  );
+  return <div>Hello {name}</div>;
 }
 
 export default MyComponent;
@@ -5142,12 +5013,10 @@ function MyBasicForNoTagRefComponent(props: any) {
 
   return (
     <TagNameGetterRef>
-      Hello
-      <Tag>{name}</Tag>
+      Hello <Tag>{name}</Tag>
       {props.actions?.map((action) => (
         <TagName>
           <action.icon />
-
           <span>{action.text}</span>
         </TagName>
       ))}
@@ -5260,12 +5129,7 @@ function MyBasicOnUpdateReturnComponent(props: any) {
     };
   }, [name]);
 
-  return (
-    <div>
-      Hello!
-      {name}
-    </div>
-  );
+  return <div>Hello! {name}</div>;
 }
 
 export default MyBasicOnUpdateReturnComponent;
@@ -5355,7 +5219,6 @@ function ClassNameCode(props: Props) {
   return (
     <div>
       <div className=\\"no binding\\">Without Binding</div>
-
       <div className={bindings}>With binding</div>
     </div>
   );
@@ -5425,7 +5288,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
           },
         }}
       >
-        <>{foo.value}</>
+        {foo.value}
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -5467,7 +5330,6 @@ function ComponentWithContext(props: ComponentWithContextProps) {
       >
         <>
           {foo.value}
-
           <div>other</div>
         </>
       </Context1.Provider>
@@ -5520,27 +5382,22 @@ function Button(props: ButtonProps) {
   return (
     <div>
       {props.link ? (
-        <>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <>
-          <button
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            {props.buttonText}
-          </button>
-        </>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.buttonText}
+        </button>
       ) : null}
     </div>
   );
@@ -5575,27 +5432,22 @@ function Button(props: ButtonProps) {
   return (
     <div>
       {props.link ? (
-        <>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <>
-          <button
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            {props.text}
-          </button>
-        </>
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.text}
+        </button>
       ) : null}
     </div>
   );
@@ -5624,13 +5476,7 @@ const DEFAULT_VALUES: Props = {
 };
 
 function ComponentWithTypes(props: Props) {
-  return (
-    <div>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </div>
-  );
+  return <div> Hello {props.name || DEFAULT_VALUES.name}</div>;
 }
 
 export default ComponentWithTypes;
@@ -5771,9 +5617,7 @@ function NestedShow(props: Props) {
       {props.conditionA ? (
         <>
           {!props.conditionB ? (
-            <>
-              <div>if condition A and condition B</div>
-            </>
+            <div>if condition A and condition B</div>
           ) : (
             <div>else-condition-B</div>
           )}
@@ -5913,12 +5757,7 @@ function OnInit(props: Props) {
     console.log(\\"set defaults with props\\");
   }, []);
 
-  return (
-    <div>
-      Default name defined by parent
-      {name}
-    </div>
-  );
+  return <div>Default name defined by parent {name}</div>;
 }
 
 export default OnInit;
@@ -6058,10 +5897,7 @@ export interface MyBasicComponentProps {
 
 function MyBasicComponent(props: MyBasicComponentProps) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -6105,10 +5941,7 @@ interface Person {
 
 function MyBasicComponent(props: Person | never) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -6126,10 +5959,7 @@ type Person = {
 
 function MyBasicComponent(props: Person) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
   );
 }
 
@@ -6394,9 +6224,7 @@ function RenderBlock(props: RenderBlockProps) {
       {shouldWrap() ? (
         <>
           {isEmptyHtmlElement(tag()) ? (
-            <>
-              <TagRef {...attributes()} {...actions()} />
-            </>
+            <TagRef {...attributes()} {...actions()} />
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <>
@@ -6410,27 +6238,23 @@ function RenderBlock(props: RenderBlockProps) {
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
-            <>
-              <TagRef {...attributes()} {...actions()}>
-                <RenderComponentTagRef {...renderComponentProps()} />
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <RenderBlock
-                    key={\\"render-block-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <BlockStyles
-                    key={\\"block-style-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-              </TagRef>
-            </>
+            <TagRef {...attributes()} {...actions()}>
+              <RenderComponentTagRef {...renderComponentProps()} />
+              {childrenWithoutParentComponent()?.map((child) => (
+                <RenderBlock
+                  key={\\"render-block-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+              {childrenWithoutParentComponent()?.map((child) => (
+                <BlockStyles
+                  key={\\"block-style-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+            </TagRef>
           ) : null}
         </>
       ) : (
@@ -6520,23 +6344,18 @@ function Button(props: ButtonProps) {
   return (
     <>
       {props.link ? (
-        <>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       ) : null}
-
       {!props.link ? (
-        <>
-          <button type=\\"button\\" {...props.attributes}>
-            {props.text}
-          </button>
-        </>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
       ) : null}
     </>
   );
@@ -6578,12 +6397,7 @@ function MyComponent(props: any) {
   return (
     <div>
       {props.name}
-
-      {props.name === \\"Batman\\" ? (
-        <>
-          <MyComponent name=\\"Bruce Wayne\\" />
-        </>
-      ) : null}
+      {props.name === \\"Batman\\" ? <MyComponent name=\\"Bruce Wayne\\" /> : null}
     </div>
   );
 }
@@ -6599,15 +6413,11 @@ function MyComponent(props: any) {
   return (
     <div>
       {props.name}
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
-        <>
-          <MyComponent name=\\"Bruce\\">
-            <div>Wayne</div>
-          </MyComponent>
-        </>
+        <MyComponent name=\\"Bruce\\">
+          <div>Wayne</div>
+        </MyComponent>
       ) : null}
     </div>
   );
@@ -6657,6 +6467,45 @@ function ShowRootText(props: Props) {
 }
 
 export default ShowRootText;
+"
+`;
+
+exports[`React > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+function MyBasicComponent(props: Props) {
+  useEffect(() => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+  }, [props.id, props.foo.bar.baz]);
+
+  return (
+    <>
+      <div className=\\"test div\\">
+        {props.id}
+        {props.foo.bar.baz}
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
 "
 `;
 
@@ -6772,9 +6621,7 @@ function SvgComponent(props: any) {
       <defs>
         <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </filter>
       </defs>
@@ -6903,6 +6750,29 @@ export default UseTargetComponent;
 "
 `;
 
+exports[`React > jsx > Typescript Test > webComponent 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { register } from \\"swiper/element/bundle\\";
+
+function MyBasicWebComponent(props: any) {
+  useEffect(() => {
+    register();
+  }, []);
+
+  return (
+    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+      <swiper-slide>Slide 1</swiper-slide>
+      <swiper-slide>Slide 2</swiper-slide>
+      <swiper-slide>Slide 3</swiper-slide>
+    </swiper-container>
+  );
+}
+
+export default MyBasicWebComponent;
+"
+`;
+
 exports[`React > stamped (mobx) 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -6941,17 +6811,16 @@ function SmileReviews(props) {
         <button onClick={(event) => (state.showReviewPrompt = true)}>
           Write a review
         </button>
-
         {state.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-5dad06c5\\" />
+            <input placeholder=\\"Title\\" className=\\"input-c36324fe\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-5dad06c5\\"
+              className=\\"textarea-c36324fe\\"
             />
             <button
-              className=\\"button-5dad06c5\\"
+              className=\\"button-c36324fe\\"
               onClick={(event) => {
                 event.preventDefault();
                 state.showReviewPrompt = false;
@@ -6961,34 +6830,27 @@ function SmileReviews(props) {
             </button>
           </>
         ) : null}
-
         {state.reviews?.map((review, index) => (
-          <div className=\\"review-5dad06c5\\" key={review.id}>
-            <img className=\\"img-5dad06c5\\" src={review.avatar} />
-
+          <div className=\\"review-c36324fe\\" key={review.id}>
+            <img className=\\"img-c36324fe\\" src={review.avatar} />
             <div
               className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
             >
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
         ))}
       </div>
 
-      <style>{\`.input-5dad06c5 {
+      <style>{\`.input-c36324fe {
   display: block;
-}.textarea-5dad06c5 {
+}.textarea-c36324fe {
   display: block;
-}.button-5dad06c5 {
+}.button-c36324fe {
   display: block;
-}.review-5dad06c5 {
+}.review-c36324fe {
   margin: 10px;
   padding: 10px;
   background: white;
@@ -6996,7 +6858,7 @@ function SmileReviews(props) {
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   -webkit-font-smoothing: antialiased;
-}.img-5dad06c5 {
+}.img-c36324fe {
   height: 30px;
   width: 30px;
   margin-right: 10px;
@@ -7049,17 +6911,16 @@ function SmileReviews(props) {
         <button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </button>
-
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-4d59d085\\" />
+            <input placeholder=\\"Title\\" className=\\"input-d91d02b4\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-4d59d085\\"
+              className=\\"textarea-d91d02b4\\"
             />
             <button
-              className=\\"button-4d59d085\\"
+              className=\\"button-d91d02b4\\"
               onClick={(event) => {
                 event.preventDefault();
                 setShowReviewPrompt(false);
@@ -7069,32 +6930,25 @@ function SmileReviews(props) {
             </button>
           </>
         ) : null}
-
         {reviews?.map((review, index) => (
-          <div className=\\"review-4d59d085\\" key={review.id}>
-            <img className=\\"img-4d59d085\\" src={review.avatar} />
-
+          <div className=\\"review-d91d02b4\\" key={review.id}>
+            <img className=\\"img-d91d02b4\\" src={review.avatar} />
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>
-                N:
-                {index}
-              </div>
-
+              <div>N: {index}</div>
               <div>{review.author}</div>
-
               <div>{review.reviewMessage}</div>
             </div>
           </div>
         ))}
       </div>
 
-      <style>{\`.input-4d59d085 {
+      <style>{\`.input-d91d02b4 {
   display: block;
-}.textarea-4d59d085 {
+}.textarea-d91d02b4 {
   display: block;
-}.button-4d59d085 {
+}.button-d91d02b4 {
   display: block;
-}.review-4d59d085 {
+}.review-d91d02b4 {
   margin: 10px;
   padding: 10px;
   background: white;
@@ -7102,7 +6956,7 @@ function SmileReviews(props) {
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   -webkit-font-smoothing: antialiased;
-}.img-4d59d085 {
+}.img-d91d02b4 {
   height: 30px;
   width: 30px;
   margin-right: 10px;
@@ -7191,14 +7045,8 @@ function MyComponent(props) {
         checked={fillings === \\"Guac (extra)\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <p>
-        Tortilla:
-        {tortilla}
-      </p>
-      <p>
-        Fillings:
-        {fillings}
-      </p>
+      <p>Tortilla: {tortilla}</p>
+      <p>Fillings: {fillings}</p>
     </div>
   );
 }
@@ -7329,7 +7177,9 @@ function MyComponent(props) {
   return (
     <>
       {show ? (
-        <button onClick={(event) => toggle(event)}> Hide </button>
+        <>
+          <button onClick={(event) => toggle(event)}> Hide </button>
+        </>
       ) : (
         <button onClick={(event) => toggle(event)}> Show </button>
       )}
@@ -7353,7 +7203,7 @@ function MyComponent(props) {
   return (
     <div>
       <Button type=\\"button\\" disabled={disabled}>
-        {props.children}
+        <>{props.children}</>
       </Button>
     </div>
   );
@@ -7405,8 +7255,7 @@ function MyComponent(props) {
   return (
     <div>
       <input value={name} />
-      Lowercase:
-      {lowercaseName()}
+      Lowercase: {lowercaseName()}
     </div>
   );
 }
@@ -7447,8 +7296,7 @@ function MyComponent(props) {
         onChange={(event) => setB(event.target.value)}
         value={b}
       />
-      Result:
-      {result}
+      Result: {result}
     </div>
   );
 }
@@ -7463,8 +7311,8 @@ exports[`React > svelte > Javascript Test > slots 1`] = `
 function MyComponent(props) {
   return (
     <div>
-      {props.children || \\"default\\"}
-      {props.slotTest || <div>default</div>}
+      <>{props.children || \\"default\\"}</>
+      <>{props.Test || <div>default</div>}</>
     </div>
   );
 }
@@ -7599,14 +7447,8 @@ function MyComponent(props: any) {
         checked={fillings === \\"Guac (extra)\\"}
         onChange={(event) => setFillings(event.target.value)}
       />
-      <p>
-        Tortilla:
-        {tortilla}
-      </p>
-      <p>
-        Fillings:
-        {fillings}
-      </p>
+      <p>Tortilla: {tortilla}</p>
+      <p>Fillings: {fillings}</p>
     </div>
   );
 }
@@ -7737,7 +7579,9 @@ function MyComponent(props: any) {
   return (
     <>
       {show ? (
-        <button onClick={(event) => toggle(event)}> Hide </button>
+        <>
+          <button onClick={(event) => toggle(event)}> Hide </button>
+        </>
       ) : (
         <button onClick={(event) => toggle(event)}> Show </button>
       )}
@@ -7761,7 +7605,7 @@ function MyComponent(props: any) {
   return (
     <div>
       <Button type=\\"button\\" disabled={disabled}>
-        {props.children}
+        <>{props.children}</>
       </Button>
     </div>
   );
@@ -7813,8 +7657,7 @@ function MyComponent(props: any) {
   return (
     <div>
       <input value={name} />
-      Lowercase:
-      {lowercaseName()}
+      Lowercase: {lowercaseName()}
     </div>
   );
 }
@@ -7855,8 +7698,7 @@ function MyComponent(props: any) {
         onChange={(event) => setB(event.target.value)}
         value={b}
       />
-      Result:
-      {result}
+      Result: {result}
     </div>
   );
 }
@@ -7871,8 +7713,8 @@ exports[`React > svelte > Typescript Test > slots 1`] = `
 function MyComponent(props: any) {
   return (
     <div>
-      {props.children || \\"default\\"}
-      {props.slotTest || <div>default</div>}
+      <>{props.children || \\"default\\"}</>
+      <>{props.Test || <div>default</div>}</>
     </div>
   );
 }

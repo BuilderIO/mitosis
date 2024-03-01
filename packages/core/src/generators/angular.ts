@@ -34,7 +34,9 @@ import {
 import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
-import { MitosisComponent } from '..';
+import { nodeHasCss } from '@/helpers/styles/helpers';
+import traverse from 'traverse';
+import { MitosisComponent, isMitosisNode } from '..';
 import { initializeOptions } from '../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
 import { stringifySingleScopeOnMount } from './helpers/on-mount';
@@ -80,6 +82,18 @@ const mappers: {
       })
       .join('\n')}${renderChildren()}</ng-content>`;
   },
+};
+
+const preprocessCssAsJson = (json: MitosisComponent) => {
+  traverse(json).forEach((item) => {
+    if (isMitosisNode(item)) {
+      if (nodeHasCss(item)) {
+        if (item.bindings.css?.code?.includes('&quot;')) {
+          item.bindings.css.code = item.bindings.css.code.replace(/&quot;/g, '"');
+        }
+      }
+    }
+  });
 };
 
 const generateNgModule = (
@@ -397,6 +411,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     if (options.plugins) {
       json = runPostJsonPlugins({ json, plugins: options.plugins });
     }
+
+    preprocessCssAsJson(json);
     let css = collectCss(json);
     if (options.prettier !== false) {
       css = tryFormat(css, 'css');

@@ -177,9 +177,9 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
     ${storeImports.length > 0 ? `import { ${storeImports.join(', ')} } from 'solid-js/store';` : ''}
     ${
-      !componentHasStyles && options.stylesType === 'styled-components'
-        ? ''
-        : `import { css } from "solid-styled-components";`
+      componentHasStyles && options.stylesType === 'styled-components'
+        ? 'import { css } from "solid-styled-components";'
+        : ``
     }
     ${json.types && options.typescript ? json.types.join('\n') : ''}
     ${renderPreComponent({
