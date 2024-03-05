@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.3
+
+### Patch Changes
+
+- 9944a68: Fix: improve imports so mitosis can be built in browser easily
+
 ## 0.1.2
 
 ### Patch Changes
