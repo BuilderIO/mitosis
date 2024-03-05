@@ -1,10 +1,12 @@
+import { blockToMitosis } from '@/generators/mitosis';
+import { hashCodeAsString } from '@/symbols/symbol-processor';
+import { MitosisComponent, MitosisState } from '@/types/mitosis-component';
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, merge, omit, omitBy, sortBy, upperFirst } from 'lodash';
 import traverse from 'traverse';
-import { MitosisComponent, MitosisState, blockToMitosis, hashCodeAsString } from '../..';
 import { Size, sizeNames, sizes } from '../../constants/media-sizes';
 import { createSingleBinding } from '../../helpers/bindings';
 import { capitalize } from '../../helpers/capitalize';
