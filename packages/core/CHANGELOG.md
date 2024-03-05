@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.1.2
+
+### Patch Changes
+
+- 83b9bb8: fix: include styles for img elements in `compileAwayBuilderComponents` plugin
+
+## 0.1.1
+
+### Patch Changes
+
+- 9d6e019: Fix: simplify React true bindings.
+- 9d6e019: Fix: Builder->Mitosis single node slot
+
 ## 0.1.0
 
 ### Minor Changes
