@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.2
+
+### Patch Changes
+
+- 83b9bb8: fix: include styles for img elements in `compileAwayBuilderComponents` plugin
+
 ## 0.1.1
 
 ### Patch Changes
