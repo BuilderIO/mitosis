@@ -13,6 +13,7 @@ import customCode from './data/blocks/custom-code.raw.tsx?raw';
 import embed from './data/blocks/embed.raw.tsx?raw';
 import image from './data/blocks/image.raw.tsx?raw';
 import stamped from './data/blocks/stamped-io.raw.tsx?raw';
+import customComponentSlotPropertyContent from './data/builder/custom-component-slot-property.json?raw';
 import lazyLoadSection from './data/builder/lazy-load-section.json?raw';
 import slotsContent from './data/builder/slots.json?raw';
 import slots2Content from './data/builder/slots2.json?raw';
@@ -366,6 +367,19 @@ describe('Builder', () => {
 
   test('slots2', async () => {
     const component = builderContentToMitosisComponent(JSON.parse(slots2Content));
+
+    const out = await componentToReact({
+      plugins: [compileAwayBuilderComponents()],
+    })({ component });
+
+    expect(component).toMatchSnapshot();
+    expect(out).toMatchSnapshot();
+  });
+
+  test('customComponentSlotProperty', async () => {
+    const component = builderContentToMitosisComponent(
+      JSON.parse(customComponentSlotPropertyContent),
+    );
 
     const out = await componentToReact({
       plugins: [compileAwayBuilderComponents()],

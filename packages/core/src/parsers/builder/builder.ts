@@ -1,4 +1,3 @@
-import { blockToMitosis } from '@/generators/mitosis';
 import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { MitosisComponent, MitosisState } from '@/types/mitosis-component';
 import * as babel from '@babel/core';
@@ -583,6 +582,7 @@ export const builderElementToMitosisNode = (
 
   const bindings: MitosisNode['bindings'] = {};
   const children: MitosisNode[] = [];
+  const slots: MitosisNode['slots'] = {};
 
   if (blockBindings) {
     for (const key in blockBindings) {
@@ -625,20 +625,17 @@ export const builderElementToMitosisNode = (
       const value = block.component.options[key];
       const valueIsArrayOfBuilderElements = Array.isArray(value) && value.every(isBuilderElement);
 
-      const transformBldrElementToBinding = (item: BuilderElement) => {
+      const transformBldrElementToMitosisNode = (item: BuilderElement) => {
         const node = builderElementToMitosisNode(item, {
           ...options,
           includeSpecialBindings: false,
         });
 
-        // For now, stringify to Mitosis nodes even though that only really works in React, due to syntax overlap.
-        // the correct long term solution is to hold on to the Mitosis Node, and have a plugin for each framework
-        // which processes any Mitosis nodes set into the attribute and moves them as slots when relevant (Svelte/Vue)
-        return blockToMitosis(node, {}, null as any);
+        return node;
       };
 
       if (isBuilderElement(value)) {
-        bindings[key] = createSingleBinding({ code: transformBldrElementToBinding(value) });
+        slots[key] = [transformBldrElementToMitosisNode(value)];
       } else if (typeof value === 'string') {
         properties[key] = value;
       } else if (valueIsArrayOfBuilderElements) {
@@ -649,12 +646,9 @@ export const builderElementToMitosisNode = (
             }
             return true;
           })
-          .map(transformBldrElementToBinding);
+          .map(transformBldrElementToMitosisNode);
 
-        const strVal =
-          childrenElements.length === 1 ? childrenElements[0] : `<>${childrenElements.join('')}</>`;
-
-        bindings[key] = createSingleBinding({ code: strVal });
+        slots[key] = childrenElements;
       } else {
         bindings[key] = createSingleBinding({ code: json5.stringify(value) });
       }
@@ -696,6 +690,9 @@ export const builderElementToMitosisNode = (
         Object.keys(css).length && {
           css: createSingleBinding({ code: JSON.stringify(css) }),
         }),
+    },
+    slots: {
+      ...slots,
     },
   });
 

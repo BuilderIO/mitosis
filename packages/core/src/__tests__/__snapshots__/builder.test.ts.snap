@@ -1033,6 +1033,7 @@ exports[`Builder > Regenerate custom Hero 3`] = `
         "title": "Your Title Here",
       },
       "scope": {},
+      "slots": {},
     },
   ],
   "context": {
@@ -1642,6 +1643,170 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Builder > customComponentSlotProperty 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "css": {
+          "code": "{\\"position\\":\\"relative\\",\\"width\\":\\"100%\\",\\"@media (max-width: 991px)\\":{\\"maxWidth\\":\\"100%\\"}}",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "Navigation",
+      "properties": {
+        "$tagName": undefined,
+      },
+      "scope": {},
+      "slots": {
+        "logo": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {
+              "css": {
+                "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
+                "type": "single",
+              },
+            },
+            "children": [],
+            "meta": {},
+            "name": "Logo",
+            "properties": {},
+            "scope": {},
+            "slots": {},
+          },
+        ],
+        "logoMultiple": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {
+              "css": {
+                "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
+                "type": "single",
+              },
+            },
+            "children": [],
+            "meta": {},
+            "name": "Logo",
+            "properties": {},
+            "scope": {},
+            "slots": {},
+          },
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {
+              "css": {
+                "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
+                "type": "single",
+              },
+            },
+            "children": [],
+            "meta": {},
+            "name": "LogoTwo",
+            "properties": {},
+            "scope": {},
+            "slots": {},
+          },
+        ],
+        "logoSingle": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {
+              "css": {
+                "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
+                "type": "single",
+              },
+            },
+            "children": [],
+            "meta": {},
+            "name": "Logo",
+            "properties": {},
+            "scope": {},
+            "slots": {},
+          },
+        ],
+      },
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": undefined,
+  "meta": {
+    "useMetadata": {
+      "httpRequests": undefined,
+    },
+  },
+  "name": "MyComponent",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > customComponentSlotProperty 2`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <Navigation
+        className=\\"navigation\\"
+        logo={<Logo className=\\"logo\\" />}
+        logoSingle={<Logo className=\\"logo\\" />}
+        logoMultiple={
+          <>
+            <Logo className=\\"logo\\" />
+            <LogoTwo className=\\"logo-two\\" />
+          </>
+        }
+      />
+      <style jsx>{\`
+        .navigation {
+          position: relative;
+          width: 100%;
+        }
+        @media (max-width: 991px) {
+          .navigation {
+            max-width: 100%;
+          }
+        }
+        .logo {
+          align-items: flex-start;
+          align-self: stretch;
+          display: flex;
+          flex-basis: 0%;
+          flex-direction: column;
+          justify-content: center;
+        }
+        .logo-two {
+          align-items: flex-start;
+          align-self: stretch;
+          display: flex;
+          flex-basis: 0%;
+          flex-direction: column;
+          justify-content: center;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Builder > extractStateHook 1`] = `
 {
   "code": "alert('hi');",
@@ -1662,10 +1827,6 @@ exports[`Builder > slots 1`] = `
     {
       "@type": "@builder.io/mitosis/node",
       "bindings": {
-        "avatar": {
-          "code": "<Avatar  />",
-          "type": "single",
-        },
         "css": {
           "code": "{\\"width\\":\\"100%\\",\\"@media (max-width: 991px)\\":{\\"maxWidth\\":\\"100%\\"}}",
           "type": "single",
@@ -1680,6 +1841,20 @@ exports[`Builder > slots 1`] = `
         "title": "The Burgler",
       },
       "scope": {},
+      "slots": {
+        "avatar": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "Avatar",
+            "properties": {},
+            "scope": {},
+            "slots": {},
+          },
+        ],
+      },
     },
   ],
   "context": {
@@ -1741,10 +1916,6 @@ exports[`Builder > slots2 1`] = `
     {
       "@type": "@builder.io/mitosis/node",
       "bindings": {
-        "control": {
-          "code": "<Radio  />",
-          "type": "single",
-        },
         "css": {
           "code": "{\\"fontStyle\\":\\"italic\\"}",
           "type": "single",
@@ -1763,6 +1934,20 @@ exports[`Builder > slots2 1`] = `
         "labelPlacement": "end",
       },
       "scope": {},
+      "slots": {
+        "control": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "Radio",
+            "properties": {},
+            "scope": {},
+            "slots": {},
+          },
+        ],
+      },
     },
   ],
   "context": {
@@ -1798,8 +1983,8 @@ function MyComponent(props) {
         label=\\"Label\\"
         labelPlacement=\\"end\\"
         className=\\"form-control-label\\"
-        control={<Radio />}
         disabled={false}
+        control={<Radio />}
       />
       <style jsx>{\`
         .form-control-label {

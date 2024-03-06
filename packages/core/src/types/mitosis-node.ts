@@ -47,6 +47,11 @@ export type BaseNode = {
     [key: string]: Binding | undefined;
   };
   children: MitosisNode[];
+  /**
+   * Key-value store of slots. The key is the slot name and the value is an array of nodes.
+   * It is used when components have props that are also nodes
+   */
+  slots: { [key: string]: MitosisNode[] };
 };
 
 export type SpecialNodesNames = 'For' | 'Fragment' | 'Show' | 'Slot';
