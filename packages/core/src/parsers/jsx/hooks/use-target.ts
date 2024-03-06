@@ -1,7 +1,31 @@
+import type { Target } from '@/types/config';
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { targets } from '../../../targets';
 import { MitosisComponent, TargetBlockDefinition } from '../../../types/mitosis-component';
+
+const TARGETS: Record<Target, null> = {
+  alpine: null,
+  angular: null,
+  customElement: null,
+  html: null,
+  mitosis: null,
+  liquid: null,
+  react: null,
+  reactNative: null,
+  solid: null,
+  svelte: null,
+  swift: null,
+  template: null,
+  webcomponent: null,
+  vue: null,
+  stencil: null,
+  qwik: null,
+  marko: null,
+  preact: null,
+  lit: null,
+  rsc: null,
+  taro: null,
+};
 
 const { types } = babel;
 
@@ -62,7 +86,7 @@ export const getUseTargetStatements = (path: babel.NodePath<babel.types.CallExpr
       );
     }
 
-    if (!Object.keys(targets).concat('default').includes(prop.key.name)) {
+    if (!Object.keys(TARGETS).concat('default').includes(prop.key.name)) {
       throw new Error('ERROR Parsing `useTarget()`: Invalid target: ' + prop.key.name);
     }
     const keyName = prop.key.name as unknown as 'default';

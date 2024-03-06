@@ -1,5 +1,5 @@
 import * as babel from '@babel/core';
-import generate from '@babel/generator';
+// import generate from '@babel/generator';
 import { MitosisNode } from '@builder.io/mitosis';
 import { pipe } from 'fp-ts/lib/function';
 import traverse from 'traverse';
@@ -52,12 +52,14 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
             try {
               path.replaceWith(newExpression);
             } catch (err) {
-              console.log('err: ', {
-                from: generate(path.parent).code,
-                fromChild: generate(path.node).code,
-                to: newExpression,
-                // err,
-              });
+              console.error(err);
+
+              // console.log('err: ', {
+              //   from: generate(path.parent).code,
+              //   fromChild: generate(path.node).code,
+              //   to: newExpression,
+              //   // err,
+              // });
             }
           }
         }
