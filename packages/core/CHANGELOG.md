@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.4
+
+### Patch Changes
+
+- 20efa15: feat: add slots property for nodes. add support for it in react generator.
+
 ## 0.1.3
 
 ### Patch Changes
