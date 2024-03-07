@@ -244,6 +244,19 @@ export const blockToReact = (
     }
   }
 
+  if (json.slots) {
+    for (const key in json.slots) {
+      const value = json.slots[key];
+      if (!value?.length) {
+        continue;
+      }
+      const reactComponents = value.map((node) => blockToReact(node, options, component));
+      const slotStringValue =
+        reactComponents.length === 1 ? reactComponents[0] : `<>${reactComponents.join('\n')}</>`;
+      str += ` ${key}={${slotStringValue}} `;
+    }
+  }
+
   if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }

@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.1.4
+
+### Patch Changes
+
+- 20efa15: feat: add slots property for nodes. add support for it in react generator.
+
+## 0.1.3
+
+### Patch Changes
+
+- 9944a68: Fix: improve imports so mitosis can be built in browser easily
+
+## 0.1.2
+
+### Patch Changes
+
+- 83b9bb8: fix: include styles for img elements in `compileAwayBuilderComponents` plugin
+
 ## 0.1.1
 
 ### Patch Changes

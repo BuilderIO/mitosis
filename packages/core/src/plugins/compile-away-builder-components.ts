@@ -364,6 +364,7 @@ export const components: CompileAwayComponentsMap = {
       bindings: noUndefined({
         src: node.bindings.image?.code && { code: node.bindings.image?.code },
         sizes: node.bindings.sizes?.code && { code: node.bindings.sizes?.code },
+        style: node.bindings.style?.code && { code: node.bindings.style?.code },
         css: createSingleBinding({
           code: JSON.stringify({
             aspectRatio: aspectRatio ? String(round(1 / aspectRatio, 2)) : undefined,
