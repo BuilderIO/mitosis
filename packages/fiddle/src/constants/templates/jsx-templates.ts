@@ -91,7 +91,7 @@ export const templates: { [key: string]: string } = {
     import { useStore, useRef } from "@builder.io/mitosis";
     
     export default function MyComponent(props) {
-      const inputRef = useRef();
+      const inputRef: HTMLInputElement = useRef();
 
       const state = useStore({
         name: "Steve",
