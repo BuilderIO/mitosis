@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.6
+
+### Patch Changes
+
+- 5738855: fix: solidjs `createMemo` for onUpdate deps, and for getters in state
+
 ## 0.1.5
 
 ### Patch Changes
