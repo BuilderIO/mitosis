@@ -412,7 +412,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
               $: ${fnName}(...[${depsArrayStr}]);
             `;
           })
-          .join(';') || ''
+          .join('\n') || ''
       }
 
       ${

@@ -162,7 +162,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
         hasShowComponent ? 'Show' : undefined,
         hasForComponent ? 'For' : undefined,
         json.hooks.onMount.length ? 'onMount' : undefined,
-        ...(json.hooks.onUpdate?.length ? ['on', 'createEffect'] : []),
+        ...(json.hooks.onUpdate?.length ? ['on', 'createEffect', 'createMemo'] : []),
         ...(state?.import.solidjs ?? []),
       ].filter(checkIsDefined),
     );
@@ -199,16 +199,32 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
         json.hooks.onUpdate
           ? json.hooks.onUpdate
               .map((hook, index) => {
-                if (hook.deps) {
-                  const hookName = `onUpdateFn_${index}`;
-                  return `
+                // TO-DO: support `onUpdate` without `deps`
+                if (!hook.deps) return '';
+
+                const hookName = `onUpdateFn_${index}`;
+
+                const depsArray = hook.deps
+                  .slice(1, hook.deps.length - 1)
+                  .split(',')
+                  .map((x) => x.trim());
+
+                const getReactiveDepName = (dep: string) => {
+                  const newLocal = dep.replace(/(\.|\?|\(|\)|\[|\])/g, '_');
+                  return `${hookName}_${newLocal}`;
+                };
+
+                const reactiveDepsWorkaround = depsArray
+                  .map((dep) => `const ${getReactiveDepName(dep)} = createMemo(() => ${dep});`)
+                  .join('\n');
+
+                const depsArrayStr = depsArray.map(getReactiveDepName).join(', ');
+
+                return `
+                    ${reactiveDepsWorkaround}
                     function ${hookName}() { ${hook.code} };
-                    createEffect(on(() => ${hook.deps}, ${hookName}));
+                    createEffect(on(() => ${depsArrayStr}, ${hookName}));
                   `;
-                } else {
-                  // TO-DO: support `onUpdate` without `deps`
-                  return '';
-                }
               })
               .join('\n')
           : ''
