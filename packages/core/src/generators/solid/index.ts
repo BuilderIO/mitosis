@@ -223,7 +223,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
                 return `
                     ${reactiveDepsWorkaround}
                     function ${hookName}() { ${hook.code} };
-                    createEffect(on(() => ${depsArrayStr}, ${hookName}));
+                    createEffect(on(() => [${depsArrayStr}], ${hookName}));
                   `;
               })
               .join('\n')
