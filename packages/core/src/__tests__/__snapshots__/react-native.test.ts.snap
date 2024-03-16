@@ -41,16 +41,13 @@ function MyBasicRefComponent(props) {
             onChange={(event) => setName(event.target.value)}
             style={styles.view1}
           />
-
           <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
             <Text>Choose a car:</Text>
           </View>
-
           <View name=\\"cars\\" id=\\"cars\\">
             <View value=\\"supra\\">
               <Text>GR Supra</Text>
             </View>
-
             <View value=\\"86\\">
               <Text>GR 86</Text>
             </View>
@@ -265,7 +262,7 @@ import {
 } from \\"react-native\\";
 
 function MyComponent(props) {
-  return <View autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
+  return <View autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck />;
 }
 
 export default MyComponent;
@@ -293,11 +290,8 @@ function MyBooleanAttribute(props) {
           <Text>{props.type}</Text>
         </>
       ) : null}
-
-      <MyBooleanAttributeComponent toggle={true} />
-
-      <MyBooleanAttributeComponent toggle={true} />
-
+      <MyBooleanAttributeComponent toggle />
+      <MyBooleanAttributeComponent toggle />
       <MyBooleanAttributeComponent list={null} />
     </View>
   );
@@ -329,7 +323,6 @@ function MyBasicChildComponent(props) {
   return (
     <View>
       <MyBasicComponent id={dev} />
-
       <View>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </View>
@@ -424,16 +417,13 @@ function MyBasicRefComponent(props) {
             onChange={(event) => setName(event.target.value)}
             style={styles.view1}
           />
-
           <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
             <Text>Choose a car:</Text>
           </View>
-
           <View name=\\"cars\\" id=\\"cars\\">
             <View value=\\"supra\\">
               <Text>GR Supra</Text>
             </View>
-
             <View value=\\"86\\">
               <Text>GR 86</Text>
             </View>
@@ -528,7 +518,6 @@ function MyPreviousComponent(props) {
         <Text>, before: </Text>
         <Text>{prevCount.current}</Text>
       </View>
-
       <View onClick={(event) => setCount(1)}>
         <Text>Increment</Text>
       </View>
@@ -555,23 +544,18 @@ function Button(props) {
   return (
     <View>
       {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
-
       {!props.link ? (
-        <>
-          <View type=\\"button\\" {...props.attributes}>
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View type=\\"button\\" {...props.attributes}>
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
     </View>
   );
@@ -618,7 +602,6 @@ function Column(props) {
       {props.columns?.map((column, index) => (
         <View style={styles.view2}>
           <Text>{column.content}</Text>
-
           <Text>{index}</Text>
         </View>
       ))}
@@ -649,13 +632,13 @@ import {
 function ContentSlotCode(props) {
   return (
     <View>
-      {props.slotTesting}
-
+      <>{props.slotTesting}</>
       <View>
         <View />
       </View>
-
-      <View>{props.children}</View>
+      <View>
+        <>{props.children}</>
+      </View>
     </View>
   );
 }
@@ -702,11 +685,9 @@ function ContentSlotJsxCode(props) {
             {showContent && props.slotContent ? (
               <>{props.content || <Text>{props.content}</Text>}</>
             ) : null}
-
             <View>
               <View />
             </View>
-
             <View>{props.children}</View>
           </View>
         </>
@@ -1091,43 +1072,33 @@ function FormComponent(props) {
       onSubmit={(event) => onSubmit(event)}
       {...props.attributes}
     >
-      {\\" \\"}
       {props.builderBlock && props.builderBlock.children ? (
         <>
           {props.builderBlock?.children?.map((block, index) => (
             <BuilderBlockComponent key={block.id} block={block} index={index} />
           ))}
         </>
-      ) : null}{\\" \\"}
+      ) : null}
       {submissionState() === \\"error\\" ? (
-        <>
-          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
-        </>
-      ) : null}{\\" \\"}
+        <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
+      ) : null}
       {submissionState() === \\"sending\\" ? (
-        <>
-          <BuilderBlocks
-            dataPath=\\"sendingMessage\\"
-            blocks={props.sendingMessage}
-          />
-        </>
-      ) : null}{\\" \\"}
+        <BuilderBlocks
+          dataPath=\\"sendingMessage\\"
+          blocks={props.sendingMessage}
+        />
+      ) : null}
       {submissionState() === \\"error\\" && responseData ? (
-        <>
-          <View style={styles.view1}>
-            {\\" \\"}
-            <Text>{JSON.stringify(responseData, null, 2)}</Text>{\\" \\"}
-          </View>
-        </>
-      ) : null}{\\" \\"}
+        <View style={styles.view1}>
+          <Text>{JSON.stringify(responseData, null, 2)}</Text>
+        </View>
+      ) : null}
       {submissionState() === \\"success\\" ? (
-        <>
-          <BuilderBlocks
-            dataPath=\\"successMessage\\"
-            blocks={props.successMessage}
-          />
-        </>
-      ) : null}{\\" \\"}
+        <BuilderBlocks
+          dataPath=\\"successMessage\\"
+          blocks={props.successMessage}
+        />
+      ) : null}
     </View>
   );
 }
@@ -1210,22 +1181,18 @@ function Image(props) {
     <View>
       <View ref={pictureRef}>
         {!useLazyLoading() || load ? (
-          <>
-            <View
-              alt={props.altText}
-              aria-role={props.altText ? \\"presentation\\" : undefined}
-              src={props.image}
-              onLoad={(event) => setLoaded()}
-              srcset={props.srcset}
-              sizes={props.sizes}
-              style={styles.view1}
-            />
-          </>
+          <View
+            alt={props.altText}
+            aria-role={props.altText ? \\"presentation\\" : undefined}
+            src={props.image}
+            onLoad={(event) => setLoaded()}
+            srcset={props.srcset}
+            sizes={props.sizes}
+            style={styles.view1}
+          />
         ) : null}
-
         <View srcset={props.srcset} />
       </View>
-
       {props.children}
     </View>
   );
@@ -1264,9 +1231,7 @@ function ImgStateComponent(props) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <>
-          <View src={item} key={itemIndex} />
-        </>
+        <View src={item} key={itemIndex} />
       ))}
     </View>
   );
@@ -1476,11 +1441,13 @@ import {
 function SlotCode(props) {
   return (
     <View>
-      {props.children || (
-        <View>
-          <Text>Default content</Text>
-        </View>
-      )}
+      <>
+        {props.children || (
+          <View>
+            <Text>Default content</Text>
+          </View>
+        )}
+      </>
     </View>
   );
 }
@@ -1551,11 +1518,9 @@ import {
 function SlotCode(props) {
   return (
     <View>
-      {props.top}
-
-      {props.left || <Text>Default left</Text>}
-
-      {props.children || <Text>Default Child</Text>}
+      <>{props.top}</>
+      <>{props.left || <Text>Default left</Text>}</>
+      <>{props.children || <Text>Default Child</Text>}</>
     </View>
   );
 }
@@ -1609,7 +1574,6 @@ function SmileReviews(props) {
       <View onClick={(event) => setShowReviewPrompt(true)}>
         <Text>Write a review</Text>
       </View>
-
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <View placeholder=\\"Email\\" />
@@ -1625,21 +1589,17 @@ function SmileReviews(props) {
           </View>
         </>
       ) : null}
-
       {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
           <View src={review.avatar} style={styles.view2} />
-
           <View>
             <View>
               <Text>N: </Text>
               <Text>{index}</Text>
             </View>
-
             <View>
               <Text>{review.author}</Text>
             </View>
-
             <View>
               <Text>{review.reviewMessage}</Text>
             </View>
@@ -1860,11 +1820,9 @@ function MyBasicForNoTagRefComponent(props) {
       <Tag>
         <Text>{name}</Text>
       </Tag>
-
       {props.actions?.map((action) => (
         <TagName>
           <action.icon />
-
           <View>
             <Text>{action.text}</Text>
           </View>
@@ -2087,7 +2045,6 @@ function ClassNameCode(props) {
       <View>
         <Text>Without Binding</Text>
       </View>
-
       <View>
         <Text>With binding</Text>
       </View>
@@ -2163,9 +2120,7 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        <>
-          <Text>{foo.value}</Text>
-        </>
+        <Text>{foo.value}</Text>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -2209,7 +2164,6 @@ function ComponentWithContext(props) {
       >
         <>
           <Text>{foo.value}</Text>
-
           <View>
             <Text>other</Text>
           </View>
@@ -2270,27 +2224,22 @@ function Button(props) {
   return (
     <View>
       {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
-
       {!props.link ? (
-        <>
-          <View
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            <Text>{props.buttonText}</Text>
-          </View>
-        </>
+        <View
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          <Text>{props.buttonText}</Text>
+        </View>
       ) : null}
     </View>
   );
@@ -2324,27 +2273,22 @@ function Button(props) {
   return (
     <View>
       {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
-
       {!props.link ? (
-        <>
-          <View
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
     </View>
   );
@@ -2559,11 +2503,9 @@ function NestedShow(props) {
       {props.conditionA ? (
         <>
           {!props.conditionB ? (
-            <>
-              <View>
-                <Text>if condition A and condition B</Text>
-              </View>
-            </>
+            <View>
+              <Text>if condition A and condition B</Text>
+            </View>
           ) : (
             <View>
               <Text>else-condition-B</Text>
@@ -2911,7 +2853,6 @@ function MyBasicComponent(props) {
   return (
     <View>
       {props.children}
-
       <Text>{props.type}</Text>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
@@ -3228,9 +3169,7 @@ function RenderBlock(props) {
       {shouldWrap() ? (
         <>
           {isEmptyHtmlElement(tag()) ? (
-            <>
-              <TagRef {...attributes()} {...actions()} />
-            </>
+            <TagRef {...attributes()} {...actions()} />
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <>
@@ -3244,27 +3183,23 @@ function RenderBlock(props) {
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
-            <>
-              <TagRef {...attributes()} {...actions()}>
-                <RenderComponentTagRef {...renderComponentProps()} />
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <RenderBlock
-                    key={\\"render-block-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <BlockStyles
-                    key={\\"block-style-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-              </TagRef>
-            </>
+            <TagRef {...attributes()} {...actions()}>
+              <RenderComponentTagRef {...renderComponentProps()} />
+              {childrenWithoutParentComponent()?.map((child) => (
+                <RenderBlock
+                  key={\\"render-block-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+              {childrenWithoutParentComponent()?.map((child) => (
+                <BlockStyles
+                  key={\\"block-style-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+            </TagRef>
           ) : null}
         </>
       ) : (
@@ -3353,23 +3288,18 @@ function Button(props) {
   return (
     <>
       {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
-
       {!props.link ? (
-        <>
-          <View type=\\"button\\" {...props.attributes}>
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View type=\\"button\\" {...props.attributes}>
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
     </>
   );
@@ -3427,12 +3357,7 @@ function MyComponent(props) {
   return (
     <View>
       <Text>{props.name}</Text>
-
-      {props.name === \\"Batman\\" ? (
-        <>
-          <MyComponent name=\\"Bruce Wayne\\" />
-        </>
-      ) : null}
+      {props.name === \\"Batman\\" ? <MyComponent name=\\"Bruce Wayne\\" /> : null}
     </View>
   );
 }
@@ -3456,17 +3381,13 @@ function MyComponent(props) {
   return (
     <View>
       <Text>{props.name}</Text>
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
-        <>
-          <MyComponent name=\\"Bruce\\">
-            <View>
-              <Text>Wayne</Text>
-            </View>
-          </MyComponent>
-        </>
+        <MyComponent name=\\"Bruce\\">
+          <View>
+            <Text>Wayne</Text>
+          </View>
+        </MyComponent>
       ) : null}
     </View>
   );
@@ -3539,6 +3460,38 @@ function ShowRootText(props) {
 }
 
 export default ShowRootText;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+function MyBasicComponent(props) {
+  useEffect(() => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
+
+  return (
+    <View style={styles.view1}>
+      <Text>{props.id}</Text>
+      <Text>{props.foo.value.bar.baz}</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
@@ -3695,9 +3648,7 @@ function SvgComponent(props) {
       <View>
         <View id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </View>
       </View>
@@ -3865,11 +3816,9 @@ function MyBasicWebComponent(props) {
       <swiper-slide>
         <Text>Slide 1</Text>
       </swiper-slide>
-
       <swiper-slide>
         <Text>Slide 2</Text>
       </swiper-slide>
-
       <swiper-slide>
         <Text>Slide 3</Text>
       </swiper-slide>
@@ -3954,16 +3903,13 @@ function MyBasicRefComponent(props: Props) {
             onChange={(event) => setName(event.target.value)}
             style={styles.view1}
           />
-
           <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
             <Text>Choose a car:</Text>
           </View>
-
           <View name=\\"cars\\" id=\\"cars\\">
             <View value=\\"supra\\">
               <Text>GR Supra</Text>
             </View>
-
             <View value=\\"86\\">
               <Text>GR 86</Text>
             </View>
@@ -4187,7 +4133,7 @@ import {
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
-  return <View autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
+  return <View autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck />;
 }
 
 export default MyComponent;
@@ -4220,11 +4166,8 @@ function MyBooleanAttribute(props: Props) {
           <Text>{props.type}</Text>
         </>
       ) : null}
-
-      <MyBooleanAttributeComponent toggle={true} />
-
-      <MyBooleanAttributeComponent toggle={true} />
-
+      <MyBooleanAttributeComponent toggle />
+      <MyBooleanAttributeComponent toggle />
       <MyBooleanAttributeComponent list={null} />
     </View>
   );
@@ -4256,7 +4199,6 @@ function MyBasicChildComponent(props: any) {
   return (
     <View>
       <MyBasicComponent id={dev} />
-
       <View>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </View>
@@ -4355,16 +4297,13 @@ function MyBasicRefComponent(props: Props) {
             onChange={(event) => setName(event.target.value)}
             style={styles.view1}
           />
-
           <View htmlFor=\\"cars\\" ref={inputNoArgRef}>
             <Text>Choose a car:</Text>
           </View>
-
           <View name=\\"cars\\" id=\\"cars\\">
             <View value=\\"supra\\">
               <Text>GR Supra</Text>
             </View>
-
             <View value=\\"86\\">
               <Text>GR 86</Text>
             </View>
@@ -4467,7 +4406,6 @@ function MyPreviousComponent(props: Props) {
         <Text>, before: </Text>
         <Text>{prevCount.current}</Text>
       </View>
-
       <View onClick={(event) => setCount(1)}>
         <Text>Increment</Text>
       </View>
@@ -4501,23 +4439,18 @@ function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
-
       {!props.link ? (
-        <>
-          <View type=\\"button\\" {...props.attributes}>
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View type=\\"button\\" {...props.attributes}>
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
     </View>
   );
@@ -4579,7 +4512,6 @@ function Column(props: ColumnProps) {
       {props.columns?.map((column, index) => (
         <View style={styles.view2}>
           <Text>{column.content}</Text>
-
           <Text>{index}</Text>
         </View>
       ))}
@@ -4616,13 +4548,13 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
 function ContentSlotCode(props: Props) {
   return (
     <View>
-      {props.slotTesting}
-
+      <>{props.slotTesting}</>
       <View>
         <View />
       </View>
-
-      <View>{props.children}</View>
+      <View>
+        <>{props.children}</>
+      </View>
     </View>
   );
 }
@@ -4674,11 +4606,9 @@ function ContentSlotJsxCode(props: Props) {
             {showContent && props.slotContent ? (
               <>{props.content || <Text>{props.content}</Text>}</>
             ) : null}
-
             <View>
               <View />
             </View>
-
             <View>{props.children}</View>
           </View>
         </>
@@ -5104,43 +5034,33 @@ function FormComponent(props: FormProps) {
       onSubmit={(event) => onSubmit(event)}
       {...props.attributes}
     >
-      {\\" \\"}
       {props.builderBlock && props.builderBlock.children ? (
         <>
           {props.builderBlock?.children?.map((block, index) => (
             <BuilderBlockComponent key={block.id} block={block} index={index} />
           ))}
         </>
-      ) : null}{\\" \\"}
+      ) : null}
       {submissionState() === \\"error\\" ? (
-        <>
-          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage!} />
-        </>
-      ) : null}{\\" \\"}
+        <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage!} />
+      ) : null}
       {submissionState() === \\"sending\\" ? (
-        <>
-          <BuilderBlocks
-            dataPath=\\"sendingMessage\\"
-            blocks={props.sendingMessage!}
-          />
-        </>
-      ) : null}{\\" \\"}
+        <BuilderBlocks
+          dataPath=\\"sendingMessage\\"
+          blocks={props.sendingMessage!}
+        />
+      ) : null}
       {submissionState() === \\"error\\" && responseData ? (
-        <>
-          <View style={styles.view1}>
-            {\\" \\"}
-            <Text>{JSON.stringify(responseData, null, 2)}</Text>{\\" \\"}
-          </View>
-        </>
-      ) : null}{\\" \\"}
+        <View style={styles.view1}>
+          <Text>{JSON.stringify(responseData, null, 2)}</Text>
+        </View>
+      ) : null}
       {submissionState() === \\"success\\" ? (
-        <>
-          <BuilderBlocks
-            dataPath=\\"successMessage\\"
-            blocks={props.successMessage!}
-          />
-        </>
-      ) : null}{\\" \\"}
+        <BuilderBlocks
+          dataPath=\\"successMessage\\"
+          blocks={props.successMessage!}
+        />
+      ) : null}
     </View>
   );
 }
@@ -5242,22 +5162,18 @@ function Image(props: ImageProps) {
     <View>
       <View ref={pictureRef}>
         {!useLazyLoading() || load ? (
-          <>
-            <View
-              alt={props.altText}
-              aria-role={props.altText ? \\"presentation\\" : undefined}
-              src={props.image}
-              onLoad={(event) => setLoaded()}
-              srcset={props.srcset}
-              sizes={props.sizes}
-              style={styles.view1}
-            />
-          </>
+          <View
+            alt={props.altText}
+            aria-role={props.altText ? \\"presentation\\" : undefined}
+            src={props.image}
+            onLoad={(event) => setLoaded()}
+            srcset={props.srcset}
+            sizes={props.sizes}
+            style={styles.view1}
+          />
         ) : null}
-
         <View srcset={props.srcset} />
       </View>
-
       {props.children}
     </View>
   );
@@ -5296,9 +5212,7 @@ function ImgStateComponent(props: any) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <>
-          <View src={item} key={itemIndex} />
-        </>
+        <View src={item} key={itemIndex} />
       ))}
     </View>
   );
@@ -5565,11 +5479,13 @@ type Props = {
 function SlotCode(props: Props) {
   return (
     <View>
-      {props.children || (
-        <View>
-          <Text>Default content</Text>
-        </View>
-      )}
+      <>
+        {props.children || (
+          <View>
+            <Text>Default content</Text>
+          </View>
+        )}
+      </>
     </View>
   );
 }
@@ -5652,11 +5568,9 @@ type Props = {
 function SlotCode(props: Props) {
   return (
     <View>
-      {props.top}
-
-      {props.left || <Text>Default left</Text>}
-
-      {props.children || <Text>Default Child</Text>}
+      <>{props.top}</>
+      <>{props.left || <Text>Default left</Text>}</>
+      <>{props.children || <Text>Default Child</Text>}</>
     </View>
   );
 }
@@ -5715,7 +5629,6 @@ function SmileReviews(props: SmileReviewsProps) {
       <View onClick={(event) => setShowReviewPrompt(true)}>
         <Text>Write a review</Text>
       </View>
-
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <View placeholder=\\"Email\\" />
@@ -5731,21 +5644,17 @@ function SmileReviews(props: SmileReviewsProps) {
           </View>
         </>
       ) : null}
-
       {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
           <View src={review.avatar} style={styles.view2} />
-
           <View>
             <View>
               <Text>N: </Text>
               <Text>{index}</Text>
             </View>
-
             <View>
               <Text>{review.author}</Text>
             </View>
-
             <View>
               <Text>{review.reviewMessage}</Text>
             </View>
@@ -6014,11 +5923,9 @@ function MyBasicForNoTagRefComponent(props: any) {
       <Tag>
         <Text>{name}</Text>
       </Tag>
-
       {props.actions?.map((action) => (
         <TagName>
           <action.icon />
-
           <View>
             <Text>{action.text}</Text>
           </View>
@@ -6257,7 +6164,6 @@ function ClassNameCode(props: Props) {
       <View>
         <Text>Without Binding</Text>
       </View>
-
       <View>
         <Text>With binding</Text>
       </View>
@@ -6338,9 +6244,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
           },
         }}
       >
-        <>
-          <Text>{foo.value}</Text>
-        </>
+        <Text>{foo.value}</Text>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -6389,7 +6293,6 @@ function ComponentWithContext(props: ComponentWithContextProps) {
       >
         <>
           <Text>{foo.value}</Text>
-
           <View>
             <Text>other</Text>
           </View>
@@ -6460,27 +6363,22 @@ function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
-
       {!props.link ? (
-        <>
-          <View
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            <Text>{props.buttonText}</Text>
-          </View>
-        </>
+        <View
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          <Text>{props.buttonText}</Text>
+        </View>
       ) : null}
     </View>
   );
@@ -6522,27 +6420,22 @@ function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
-
       {!props.link ? (
-        <>
-          <View
-            type=\\"button\\"
-            {...props.attributes}
-            onClick={(event) => props.onClick(event)}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
     </View>
   );
@@ -6773,11 +6666,9 @@ function NestedShow(props: Props) {
       {props.conditionA ? (
         <>
           {!props.conditionB ? (
-            <>
-              <View>
-                <Text>if condition A and condition B</Text>
-              </View>
-            </>
+            <View>
+              <Text>if condition A and condition B</Text>
+            </View>
           ) : (
             <View>
               <Text>else-condition-B</Text>
@@ -7161,7 +7052,6 @@ function MyBasicComponent(props: Props) {
   return (
     <View>
       {props.children}
-
       <Text>{props.type}</Text>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
@@ -7501,9 +7391,7 @@ function RenderBlock(props: RenderBlockProps) {
       {shouldWrap() ? (
         <>
           {isEmptyHtmlElement(tag()) ? (
-            <>
-              <TagRef {...attributes()} {...actions()} />
-            </>
+            <TagRef {...attributes()} {...actions()} />
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <>
@@ -7517,27 +7405,23 @@ function RenderBlock(props: RenderBlockProps) {
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
-            <>
-              <TagRef {...attributes()} {...actions()}>
-                <RenderComponentTagRef {...renderComponentProps()} />
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <RenderBlock
-                    key={\\"render-block-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-
-                {childrenWithoutParentComponent()?.map((child) => (
-                  <BlockStyles
-                    key={\\"block-style-\\" + child.id}
-                    block={child}
-                    context={childrenContext()}
-                  />
-                ))}
-              </TagRef>
-            </>
+            <TagRef {...attributes()} {...actions()}>
+              <RenderComponentTagRef {...renderComponentProps()} />
+              {childrenWithoutParentComponent()?.map((child) => (
+                <RenderBlock
+                  key={\\"render-block-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+              {childrenWithoutParentComponent()?.map((child) => (
+                <BlockStyles
+                  key={\\"block-style-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+            </TagRef>
           ) : null}
         </>
       ) : (
@@ -7641,23 +7525,18 @@ function Button(props: ButtonProps) {
   return (
     <>
       {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
-
       {!props.link ? (
-        <>
-          <View type=\\"button\\" {...props.attributes}>
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <View type=\\"button\\" {...props.attributes}>
+          <Text>{props.text}</Text>
+        </View>
       ) : null}
     </>
   );
@@ -7719,12 +7598,7 @@ function MyComponent(props: any) {
   return (
     <View>
       <Text>{props.name}</Text>
-
-      {props.name === \\"Batman\\" ? (
-        <>
-          <MyComponent name=\\"Bruce Wayne\\" />
-        </>
-      ) : null}
+      {props.name === \\"Batman\\" ? <MyComponent name=\\"Bruce Wayne\\" /> : null}
     </View>
   );
 }
@@ -7748,17 +7622,13 @@ function MyComponent(props: any) {
   return (
     <View>
       <Text>{props.name}</Text>
-
       {props.children}
-
       {props.name === \\"Batman\\" ? (
-        <>
-          <MyComponent name=\\"Bruce\\">
-            <View>
-              <Text>Wayne</Text>
-            </View>
-          </MyComponent>
-        </>
+        <MyComponent name=\\"Bruce\\">
+          <View>
+            <Text>Wayne</Text>
+          </View>
+        </MyComponent>
       ) : null}
     </View>
   );
@@ -7840,6 +7710,47 @@ function ShowRootText(props: Props) {
 }
 
 export default ShowRootText;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+function MyBasicComponent(props: Props) {
+  useEffect(() => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+  }, [props.id, props.foo.bar.baz]);
+
+  return (
+    <View style={styles.view1}>
+      <Text>{props.id}</Text>
+      <Text>{props.foo.bar.baz}</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { padding: 10 } });
+
+export default MyBasicComponent;
 "
 `;
 
@@ -7996,9 +7907,7 @@ function SvgComponent(props: any) {
       <View>
         <View id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
           <feFlood result=\\"BackgroundImageFix\\" />
-
           <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </View>
       </View>
@@ -8173,11 +8082,9 @@ function MyBasicWebComponent(props: any) {
       <swiper-slide>
         <Text>Slide 1</Text>
       </swiper-slide>
-
       <swiper-slide>
         <Text>Slide 2</Text>
       </swiper-slide>
-
       <swiper-slide>
         <Text>Slide 3</Text>
       </swiper-slide>
@@ -8461,9 +8368,11 @@ function MyComponent(props) {
   return (
     <>
       {show ? (
-        <View onClick={(event) => toggle(event)}>
-          <Text> Hide </Text>
-        </View>
+        <>
+          <View onClick={(event) => toggle(event)}>
+            <Text> Hide </Text>
+          </View>
+        </>
       ) : (
         <View onClick={(event) => toggle(event)}>
           <Text> Show </Text>
@@ -8496,7 +8405,7 @@ function MyComponent(props) {
   return (
     <View>
       <Button type=\\"button\\" disabled={disabled}>
-        {props.children}
+        <>{props.children}</>
       </Button>
     </View>
   );
@@ -8635,12 +8544,14 @@ import {
 function MyComponent(props) {
   return (
     <View>
-      {props.children || <Text>default</Text>}
-      {props.Test || (
-        <View>
-          <Text>default</Text>
-        </View>
-      )}
+      <>{props.children || <Text>default</Text>}</>
+      <>
+        {props.Test || (
+          <View>
+            <Text>default</Text>
+          </View>
+        )}
+      </>
     </View>
   );
 }
@@ -8974,9 +8885,11 @@ function MyComponent(props: any) {
   return (
     <>
       {show ? (
-        <View onClick={(event) => toggle(event)}>
-          <Text> Hide </Text>
-        </View>
+        <>
+          <View onClick={(event) => toggle(event)}>
+            <Text> Hide </Text>
+          </View>
+        </>
       ) : (
         <View onClick={(event) => toggle(event)}>
           <Text> Show </Text>
@@ -9009,7 +8922,7 @@ function MyComponent(props: any) {
   return (
     <View>
       <Button type=\\"button\\" disabled={disabled}>
-        {props.children}
+        <>{props.children}</>
       </Button>
     </View>
   );
@@ -9148,12 +9061,14 @@ import {
 function MyComponent(props: any) {
   return (
     <View>
-      {props.children || <Text>default</Text>}
-      {props.Test || (
-        <View>
-          <Text>default</Text>
-        </View>
-      )}
+      <>{props.children || <Text>default</Text>}</>
+      <>
+        {props.Test || (
+          <View>
+            <Text>default</Text>
+          </View>
+        )}
+      </>
     </View>
   );
 }

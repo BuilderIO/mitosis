@@ -1,7 +1,6 @@
-import type { MitosisComponent } from '@builder.io/mitosis';
+import type { MitosisComponent, ToReactOptions } from '@builder.io/mitosis';
 import {
   Button,
-  createTheme,
   Divider,
   FormControlLabel,
   MenuItem,
@@ -13,6 +12,7 @@ import {
   ThemeProvider,
   Tooltip,
   Typography,
+  createTheme,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';
@@ -265,13 +265,13 @@ export default function Fiddle() {
     options: {
       typescript: localStorageGet('options.typescript') || ('false' as 'true' | 'false'),
       reactStyleType:
-        localStorageGet('options.reactStyleType') || ('styled-jsx' as 'emotion' | 'styled-jsx'),
+        localStorageGet('options.reactStyleType') ||
+        ('styled-jsx' as 'emotion' | 'styled-jsx' as ToReactOptions['stylesType']),
       reactStateType:
         localStorageGet('options.reactStateType') || ('useState' as 'useState' | 'mobx' | 'solid'),
       svelteStateType:
         localStorageGet('options.svelteStateType') || ('variables' as 'variables' | 'proxies'),
-      vueApi: localStorageGet('options.vueApi') || ('options' as 'options' | 'composition'),
-      vueVersion: localStorageGet('options.vueVersion') || ('2' as '2' | '3'),
+      vueApi: localStorageGet('options.vueApi') || ('composition' as 'options' | 'composition'),
       alpineShorthandSyntax: localStorageGet('options.alpineShorthandSyntax') || 'false',
       alpineInline: localStorageGet('options.alpineInline') || 'false',
       angularStandalone: localStorageGet('options.angularStandalone') || 'false',
@@ -345,7 +345,6 @@ export default function Fiddle() {
           await generator({
             output: state.outputTab,
             options: { ...generateOptions(), ...commonOptions },
-            vueVersion: state.options.vueVersion,
           })
         )({ component: json, path: '' });
 
@@ -1090,47 +1089,6 @@ export default function Fiddle() {
                 }}
               >
                 <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
-                  Version:
-                </Typography>
-                <RadioGroup
-                  css={{
-                    flexDirection: 'row',
-                    marginRight: 10,
-                    '& .MuiFormControlLabel-label': {
-                      fontSize: 12,
-                    },
-                  }}
-                  aria-label="Vue Version"
-                  name="vueApi"
-                  value={state.options.vueVersion}
-                  onChange={(e) => {
-                    state.options.vueVersion = e.target.value;
-                    state.updateOutput();
-                  }}
-                >
-                  <FormControlLabel
-                    value="2"
-                    control={<Radio color="primary" />}
-                    labelPlacement="start"
-                    label="Vue 2"
-                  />
-                  <FormControlLabel
-                    value="3"
-                    labelPlacement="start"
-                    control={<Radio color="primary" />}
-                    label="Vue 3"
-                  />
-                </RadioGroup>
-              </div>
-              <Divider css={{ opacity: 0.6 }} />
-              <div
-                css={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
-                }}
-              >
-                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
                   API:
                 </Typography>
                 <RadioGroup
@@ -1192,6 +1150,12 @@ export default function Fiddle() {
                     state.updateOutput();
                   }}
                 >
+                  <FormControlLabel
+                    value="style-tag"
+                    control={<Radio color="primary" />}
+                    labelPlacement="start"
+                    label="Inline style tag"
+                  />
                   <FormControlLabel
                     value="emotion"
                     control={<Radio color="primary" />}
