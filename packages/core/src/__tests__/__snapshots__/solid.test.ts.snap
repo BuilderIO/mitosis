@@ -26,7 +26,10 @@ function MyBasicRefComponent(props) {
     console.log(\\"Received an update\\");
   }
   createEffect(
-    on(() => [onUpdateFn_0_inputRef, onUpdateFn_0_inputNoArgRef], onUpdateFn_0)
+    on(
+      () => [onUpdateFn_0_inputRef(), onUpdateFn_0_inputNoArgRef()],
+      onUpdateFn_0
+    )
   );
 
   return (
@@ -85,7 +88,10 @@ function MyBasicRefComponent(props) {
     console.log(\\"Received an update\\");
   }
   createEffect(
-    on(() => [onUpdateFn_0_inputRef, onUpdateFn_0_inputNoArgRef], onUpdateFn_0)
+    on(
+      () => [onUpdateFn_0_inputRef(), onUpdateFn_0_inputNoArgRef()],
+      onUpdateFn_0
+    )
   );
 
   return (
@@ -873,7 +879,7 @@ function MyPreviousComponent(props) {
   function onUpdateFn_0() {
     prevCount = count();
   }
-  createEffect(on(() => [onUpdateFn_0_count__], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_count__()], onUpdateFn_0));
 
   return (
     <div>
@@ -914,7 +920,7 @@ function MyPreviousComponent(props) {
   function onUpdateFn_0() {
     prevCount = count();
   }
-  createEffect(on(() => [onUpdateFn_0_count__], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_count__()], onUpdateFn_0));
 
   return (
     <>
@@ -3441,7 +3447,7 @@ function MyBasicOnUpdateReturnComponent(props) {
       }
     };
   }
-  createEffect(on(() => [onUpdateFn_0_name__], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_name__()], onUpdateFn_0));
 
   return (
     <div>
@@ -3478,7 +3484,7 @@ function MyBasicOnUpdateReturnComponent(props) {
       }
     };
   }
-  createEffect(on(() => [onUpdateFn_0_name__], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_name__()], onUpdateFn_0));
 
   return (
     <>
@@ -4213,7 +4219,9 @@ function MultipleOnUpdateWithDeps(props) {
       setA(\\"b\\");
     }
   }
-  createEffect(on(() => [onUpdateFn_0_a__, onUpdateFn_0_b__], onUpdateFn_0));
+  createEffect(
+    on(() => [onUpdateFn_0_a__(), onUpdateFn_0_b__()], onUpdateFn_0)
+  );
 
   const onUpdateFn_1_c__ = createMemo(() => c());
   const onUpdateFn_1_d__ = createMemo(() => d());
@@ -4224,7 +4232,9 @@ function MultipleOnUpdateWithDeps(props) {
       setA(\\"b\\");
     }
   }
-  createEffect(on(() => [onUpdateFn_1_c__, onUpdateFn_1_d__], onUpdateFn_1));
+  createEffect(
+    on(() => [onUpdateFn_1_c__(), onUpdateFn_1_d__()], onUpdateFn_1)
+  );
 
   return <div></div>;
 }
@@ -4254,7 +4264,9 @@ function MultipleOnUpdateWithDeps(props) {
       setA(\\"b\\");
     }
   }
-  createEffect(on(() => [onUpdateFn_0_a__, onUpdateFn_0_b__], onUpdateFn_0));
+  createEffect(
+    on(() => [onUpdateFn_0_a__(), onUpdateFn_0_b__()], onUpdateFn_0)
+  );
 
   const onUpdateFn_1_c__ = createMemo(() => c());
   const onUpdateFn_1_d__ = createMemo(() => d());
@@ -4265,7 +4277,9 @@ function MultipleOnUpdateWithDeps(props) {
       setA(\\"b\\");
     }
   }
-  createEffect(on(() => [onUpdateFn_1_c__, onUpdateFn_1_d__], onUpdateFn_1));
+  createEffect(
+    on(() => [onUpdateFn_1_c__(), onUpdateFn_1_d__()], onUpdateFn_1)
+  );
 
   return (
     <>
@@ -4699,7 +4713,7 @@ function OnUpdateWithDeps(props) {
   }
   createEffect(
     on(
-      () => [onUpdateFn_0_a__, onUpdateFn_0_b__, onUpdateFn_0_props_size],
+      () => [onUpdateFn_0_a__(), onUpdateFn_0_b__(), onUpdateFn_0_props_size()],
       onUpdateFn_0
     )
   );
@@ -4727,7 +4741,7 @@ function OnUpdateWithDeps(props) {
   }
   createEffect(
     on(
-      () => [onUpdateFn_0_a__, onUpdateFn_0_b__, onUpdateFn_0_props_size],
+      () => [onUpdateFn_0_a__(), onUpdateFn_0_b__(), onUpdateFn_0_props_size()],
       onUpdateFn_0
     )
   );
@@ -5521,7 +5535,7 @@ function RenderContent(props) {
   function onUpdateFn_0() {
     dispatchNewContentToVisualEditor(props.content);
   }
-  createEffect(on(() => [onUpdateFn_0_props_content], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_props_content()], onUpdateFn_0));
 
   return (
     <BuilderContext.Provider
@@ -5572,7 +5586,7 @@ function RenderContent(props) {
   function onUpdateFn_0() {
     dispatchNewContentToVisualEditor(props.content);
   }
-  createEffect(on(() => [onUpdateFn_0_props_content], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_props_content()], onUpdateFn_0));
 
   return (
     <>
@@ -5870,7 +5884,7 @@ function MyBasicComponent(props) {
   }
   createEffect(
     on(
-      () => [onUpdateFn_0_props_id, onUpdateFn_0_props_foo_value_bar_baz],
+      () => [onUpdateFn_0_props_id(), onUpdateFn_0_props_foo_value_bar_baz()],
       onUpdateFn_0
     )
   );
@@ -5908,7 +5922,7 @@ function MyBasicComponent(props) {
   }
   createEffect(
     on(
-      () => [onUpdateFn_0_props_id, onUpdateFn_0_props_foo_value_bar_baz],
+      () => [onUpdateFn_0_props_id(), onUpdateFn_0_props_foo_value_bar_baz()],
       onUpdateFn_0
     )
   );
@@ -6502,7 +6516,10 @@ function MyBasicRefComponent(props: Props) {
     console.log(\\"Received an update\\");
   }
   createEffect(
-    on(() => [onUpdateFn_0_inputRef, onUpdateFn_0_inputNoArgRef], onUpdateFn_0)
+    on(
+      () => [onUpdateFn_0_inputRef(), onUpdateFn_0_inputNoArgRef()],
+      onUpdateFn_0
+    )
   );
 
   return (
@@ -6565,7 +6582,10 @@ function MyBasicRefComponent(props: Props) {
     console.log(\\"Received an update\\");
   }
   createEffect(
-    on(() => [onUpdateFn_0_inputRef, onUpdateFn_0_inputNoArgRef], onUpdateFn_0)
+    on(
+      () => [onUpdateFn_0_inputRef(), onUpdateFn_0_inputNoArgRef()],
+      onUpdateFn_0
+    )
   );
 
   return (
@@ -7399,7 +7419,7 @@ function MyPreviousComponent(props: Props) {
   function onUpdateFn_0() {
     prevCount = count();
   }
-  createEffect(on(() => [onUpdateFn_0_count__], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_count__()], onUpdateFn_0));
 
   return (
     <div>
@@ -7444,7 +7464,7 @@ function MyPreviousComponent(props: Props) {
   function onUpdateFn_0() {
     prevCount = count();
   }
-  createEffect(on(() => [onUpdateFn_0_count__], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_count__()], onUpdateFn_0));
 
   return (
     <>
@@ -10405,7 +10425,7 @@ function MyBasicOnUpdateReturnComponent(props: any) {
       }
     };
   }
-  createEffect(on(() => [onUpdateFn_0_name__], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_name__()], onUpdateFn_0));
 
   return (
     <div>
@@ -10442,7 +10462,7 @@ function MyBasicOnUpdateReturnComponent(props: any) {
       }
     };
   }
-  createEffect(on(() => [onUpdateFn_0_name__], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_name__()], onUpdateFn_0));
 
   return (
     <>
@@ -11265,7 +11285,9 @@ function MultipleOnUpdateWithDeps(props: any) {
       setA(\\"b\\");
     }
   }
-  createEffect(on(() => [onUpdateFn_0_a__, onUpdateFn_0_b__], onUpdateFn_0));
+  createEffect(
+    on(() => [onUpdateFn_0_a__(), onUpdateFn_0_b__()], onUpdateFn_0)
+  );
 
   const onUpdateFn_1_c__ = createMemo(() => c());
   const onUpdateFn_1_d__ = createMemo(() => d());
@@ -11276,7 +11298,9 @@ function MultipleOnUpdateWithDeps(props: any) {
       setA(\\"b\\");
     }
   }
-  createEffect(on(() => [onUpdateFn_1_c__, onUpdateFn_1_d__], onUpdateFn_1));
+  createEffect(
+    on(() => [onUpdateFn_1_c__(), onUpdateFn_1_d__()], onUpdateFn_1)
+  );
 
   return <div></div>;
 }
@@ -11306,7 +11330,9 @@ function MultipleOnUpdateWithDeps(props: any) {
       setA(\\"b\\");
     }
   }
-  createEffect(on(() => [onUpdateFn_0_a__, onUpdateFn_0_b__], onUpdateFn_0));
+  createEffect(
+    on(() => [onUpdateFn_0_a__(), onUpdateFn_0_b__()], onUpdateFn_0)
+  );
 
   const onUpdateFn_1_c__ = createMemo(() => c());
   const onUpdateFn_1_d__ = createMemo(() => d());
@@ -11317,7 +11343,9 @@ function MultipleOnUpdateWithDeps(props: any) {
       setA(\\"b\\");
     }
   }
-  createEffect(on(() => [onUpdateFn_1_c__, onUpdateFn_1_d__], onUpdateFn_1));
+  createEffect(
+    on(() => [onUpdateFn_1_c__(), onUpdateFn_1_d__()], onUpdateFn_1)
+  );
 
   return (
     <>
@@ -11773,7 +11801,7 @@ function OnUpdateWithDeps(props: Props) {
   }
   createEffect(
     on(
-      () => [onUpdateFn_0_a__, onUpdateFn_0_b__, onUpdateFn_0_props_size],
+      () => [onUpdateFn_0_a__(), onUpdateFn_0_b__(), onUpdateFn_0_props_size()],
       onUpdateFn_0
     )
   );
@@ -11805,7 +11833,7 @@ function OnUpdateWithDeps(props: Props) {
   }
   createEffect(
     on(
-      () => [onUpdateFn_0_a__, onUpdateFn_0_b__, onUpdateFn_0_props_size],
+      () => [onUpdateFn_0_a__(), onUpdateFn_0_b__(), onUpdateFn_0_props_size()],
       onUpdateFn_0
     )
   );
@@ -12708,7 +12736,7 @@ function RenderContent(props: Props) {
   function onUpdateFn_0() {
     dispatchNewContentToVisualEditor(props.content);
   }
-  createEffect(on(() => [onUpdateFn_0_props_content], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_props_content()], onUpdateFn_0));
 
   return (
     <BuilderContext.Provider
@@ -12767,7 +12795,7 @@ function RenderContent(props: Props) {
   function onUpdateFn_0() {
     dispatchNewContentToVisualEditor(props.content);
   }
-  createEffect(on(() => [onUpdateFn_0_props_content], onUpdateFn_0));
+  createEffect(on(() => [onUpdateFn_0_props_content()], onUpdateFn_0));
 
   return (
     <>
@@ -13111,7 +13139,7 @@ function MyBasicComponent(props: Props) {
   }
   createEffect(
     on(
-      () => [onUpdateFn_0_props_id, onUpdateFn_0_props_foo_bar_baz],
+      () => [onUpdateFn_0_props_id(), onUpdateFn_0_props_foo_bar_baz()],
       onUpdateFn_0
     )
   );
@@ -13156,7 +13184,7 @@ function MyBasicComponent(props: Props) {
   }
   createEffect(
     on(
-      () => [onUpdateFn_0_props_id, onUpdateFn_0_props_foo_bar_baz],
+      () => [onUpdateFn_0_props_id(), onUpdateFn_0_props_foo_bar_baz()],
       onUpdateFn_0
     )
   );
@@ -14289,7 +14317,9 @@ function MyComponent(props) {
   function onUpdateFn_0() {
     calculateResult(a(), b());
   }
-  createEffect(on(() => [onUpdateFn_0_a__, onUpdateFn_0_b__], onUpdateFn_0));
+  createEffect(
+    on(() => [onUpdateFn_0_a__(), onUpdateFn_0_b__()], onUpdateFn_0)
+  );
 
   return (
     <div>
@@ -14332,7 +14362,9 @@ function MyComponent(props) {
   function onUpdateFn_0() {
     calculateResult(a(), b());
   }
-  createEffect(on(() => [onUpdateFn_0_a__, onUpdateFn_0_b__], onUpdateFn_0));
+  createEffect(
+    on(() => [onUpdateFn_0_a__(), onUpdateFn_0_b__()], onUpdateFn_0)
+  );
 
   return (
     <>
@@ -15079,7 +15111,9 @@ function MyComponent(props: any) {
   function onUpdateFn_0() {
     calculateResult(a(), b());
   }
-  createEffect(on(() => [onUpdateFn_0_a__, onUpdateFn_0_b__], onUpdateFn_0));
+  createEffect(
+    on(() => [onUpdateFn_0_a__(), onUpdateFn_0_b__()], onUpdateFn_0)
+  );
 
   return (
     <div>
@@ -15122,7 +15156,9 @@ function MyComponent(props: any) {
   function onUpdateFn_0() {
     calculateResult(a(), b());
   }
-  createEffect(on(() => [onUpdateFn_0_a__, onUpdateFn_0_b__], onUpdateFn_0));
+  createEffect(
+    on(() => [onUpdateFn_0_a__(), onUpdateFn_0_b__()], onUpdateFn_0)
+  );
 
   return (
     <>

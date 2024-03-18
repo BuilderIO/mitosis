@@ -214,11 +214,16 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
                   return `${hookName}_${newLocal}`;
                 };
 
+                const needsMemo = (dep: string) => true;
+
                 const reactiveDepsWorkaround = depsArray
+                  .filter(needsMemo)
                   .map((dep) => `const ${getReactiveDepName(dep)} = createMemo(() => ${dep});`)
                   .join('\n');
 
-                const depsArrayStr = depsArray.map(getReactiveDepName).join(', ');
+                const depsArrayStr = depsArray
+                  .map((x) => (needsMemo(x) ? `${getReactiveDepName(x)}()` : x))
+                  .join(', ');
 
                 return `
                     ${reactiveDepsWorkaround}
