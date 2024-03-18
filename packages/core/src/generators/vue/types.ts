@@ -10,3 +10,24 @@ export interface ToVueOptions extends BaseTranspilerOptions {
   api: Api;
   convertClassStringToObject?: boolean;
 }
+
+export type Prop<T> =
+  | { (): T }
+  | { new (...args: never[]): T & object }
+  | { new (...args: string[]): Function };
+export type PropType<T> = Prop<T> | Prop<T>[];
+export type PropValidator<T> = PropOptions<T> | PropType<T>;
+
+export interface PropOptions<T = any> {
+  type?: PropType<T>;
+  required?: boolean;
+  default?: T | null | undefined | (() => T | null | undefined);
+  validator?(value: T): boolean;
+}
+
+export type DefaultProps = Record<string, any>;
+export type RecordPropsDefinition<T> = {
+  [K in keyof T]: PropValidator<T[K]>;
+};
+export type ArrayPropsDefinition<T> = (keyof T)[];
+export type PropsDefinition<T> = ArrayPropsDefinition<T> | RecordPropsDefinition<T>;
