@@ -214,11 +214,16 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
                   return `${hookName}_${newLocal}`;
                 };
 
+                const isPropAccessDep = (dep: string) => dep.startsWith('props.');
+
                 const reactiveDepsWorkaround = depsArray
+                  .filter((x) => !isPropAccessDep(x))
                   .map((dep) => `const ${getReactiveDepName(dep)} = createMemo(() => ${dep});`)
                   .join('\n');
 
-                const depsArrayStr = depsArray.map(getReactiveDepName).join(', ');
+                const depsArrayStr = depsArray
+                  .map((x) => (isPropAccessDep(x) ? x : getReactiveDepName(x)))
+                  .join(', ');
 
                 return `
                     ${reactiveDepsWorkaround}
