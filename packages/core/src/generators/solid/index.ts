@@ -4,7 +4,6 @@ import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import { getComponentsUsed } from '@/helpers/get-components-used';
-import { getRefs } from '@/helpers/get-refs';
 import { stringifyContextValue } from '@/helpers/get-state-object-string';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { isRootTextNode } from '@/helpers/is-root-text-node';
@@ -60,14 +59,6 @@ function getContextString(component: MitosisComponent, options: ToSolidOptions) 
 
   return str;
 }
-
-const getRefsString = (json: MitosisComponent, options: ToSolidOptions) =>
-  Array.from(getRefs(json))
-    .map((ref) => {
-      const typeParameter = (options.typescript && json['refs'][ref]?.typeParameter) || '';
-      return `let ${ref}${typeParameter ? ': ' + typeParameter : ''};`;
-    })
-    .join('\n');
 
 function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) {
   for (const key in json.context.set) {
@@ -191,7 +182,6 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     function ${json.name}(${propsArgs}) {
       ${state?.str ?? ''}
 
-      ${getRefsString(json, options)}
       ${getContextString(json, options)}
 
       ${json.hooks.onMount.map((hook) => `onMount(() => { ${hook.code} })`).join('\n')}
