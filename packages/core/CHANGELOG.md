@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.7
+
+### Patch Changes
+
+- ba5e3b4: fix: solidjs `onUpdate` memoization
+
 ## 0.1.6
 
 ### Patch Changes
