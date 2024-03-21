@@ -1,5 +1,5 @@
 import { generate } from 'astring';
-import { walk } from 'svelte/compiler';
+import { walk } from 'estree-walker';
 
 import { parseGetContext, parseHasContext, parseSetContext } from './context';
 import { parseMemberExpression } from './expressions';

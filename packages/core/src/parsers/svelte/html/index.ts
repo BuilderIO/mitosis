@@ -1,4 +1,4 @@
-import { walk } from 'svelte/compiler';
+import { walk } from 'estree-walker';
 import type { MitosisNode } from '../../../types/mitosis-node';
 
 import { parseEach } from './each';
