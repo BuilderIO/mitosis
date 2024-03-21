@@ -1,6 +1,6 @@
 import { For, Show, useStore } from '@builder.io/mitosis';
 
-export default function MyComponent() {
+export default function ShowForComponent() {
   const state = useStore({
     numbers: [1, 2, 3],
     vowels: ['a', 'e', 'i', 'o', 'u'],

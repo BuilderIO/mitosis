@@ -12,9 +12,9 @@ export default function SpecialTags() {
       <template>
         <div>Template Tag Div</div>
       </template>
-      <style innerHTML={state.styleStr} />
+      <style data-testid="wrap-style" innerHTML={state.styleStr} />
       <div className="wrap">red content</div>
-      <script innerHTML={state.scriptStr} />
+      <script data-testid="special-script" innerHTML={state.scriptStr} />
     </div>
   );
 }
