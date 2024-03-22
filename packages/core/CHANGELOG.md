@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.1.7
+
+### Patch Changes
+
+- ba5e3b4: fix: solidjs `onUpdate` memoization
+
+## 0.1.6
+
+### Patch Changes
+
+- 5738855: fix: solidjs `createMemo` for onUpdate deps, and for getters in state
+
+## 0.1.5
+
+### Patch Changes
+
+- 6688702: Fix: React shorthand for boolean properties set to `true`
+
 ## 0.1.4
 
 ### Patch Changes

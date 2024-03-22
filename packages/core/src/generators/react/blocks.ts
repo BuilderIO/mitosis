@@ -239,7 +239,11 @@ export const blockToReact = (
       str += ` contentContainerStyle={${useBindingValue}} `;
     } else {
       if (isValidAttributeName(key)) {
-        str += ` ${key}={${useBindingValue}} `;
+        if (useBindingValue === 'true') {
+          str += ` ${key} `;
+        } else {
+          str += ` ${key}={${useBindingValue}} `;
+        }
       }
     }
   }

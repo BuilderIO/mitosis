@@ -71,7 +71,7 @@ export const getState = ({
       ...(hasStoreState ? ['createStore', 'reconcile'] : []),
     ],
     solidjs: [
-      ...(hasSignalState ? ['createSignal'] : []),
+      ...(hasSignalState ? ['createSignal', 'createMemo'] : []),
       ...(hasStoreState ? ['createEffect', 'on'] : []),
     ],
   };
