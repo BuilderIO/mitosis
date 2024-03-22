@@ -1,22 +1,30 @@
 import type { ParseMitosisOptions } from '../parsers/jsx/types';
+import { targets } from '../targets';
 import type { MitosisComponent } from './mitosis-component';
 import { BaseTranspilerOptions } from './transpiler';
-
 export type Format = 'esm' | 'cjs';
 export type Language = 'js' | 'ts';
 interface TranspilerOptions {
   format?: Format;
 }
 
-type Targets = typeof import('../targets').targets;
+type Targets = typeof targets;
 export type Target = keyof Targets;
 export type GeneratorOptions = {
   [K in Target]: NonNullable<Parameters<Targets[K]>[0]> & {
     transpiler?: TranspilerOptions;
   };
 };
+export type generatorsOption = {
+  [K in Target]: NonNullable<Targets[K]>;
+};
 
 export type MitosisConfig = {
+  generators?: generatorsOption;
+  /**
+   * link https://github.com/BuilderIO/mitosis/issues/1322
+   * to achieve some specific business requirements that are not compatible with current coding standards.
+   */
   commonOptions?: Omit<BaseTranspilerOptions, 'experimental'>;
   /**
    * List of targets to compile to.

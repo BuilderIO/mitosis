@@ -1,38 +1,19 @@
 import {
+  MitosisComponent,
+  MitosisConfig,
+  ParseMitosisOptions,
+  Target,
+  TranspilerGenerator,
   checkIsMitosisComponentFilePath,
   checkIsSvelteComponentFilePath,
   checkShouldOutputTypeScript,
-  componentToAlpine,
-  componentToAngular,
-  componentToCustomElement,
-  componentToHtml,
-  componentToLiquid,
-  componentToLit,
-  componentToMarko,
-  componentToMitosis,
-  componentToPreact,
-  componentToQwik,
-  componentToReact,
-  componentToReactNative,
-  componentToRsc,
-  componentToSolid,
-  componentToStencil,
-  componentToSvelte,
-  componentToSwift,
-  componentToTaro,
-  componentToTemplate,
-  componentToVue,
   createTypescriptProject,
   mapSignalTypeInTSFile,
-  MitosisComponent,
-  MitosisConfig,
   parseJsx,
-  ParseMitosisOptions,
   parseSvelte,
   removeMitosisImport,
   renameComponentFile,
-  Target,
-  TranspilerGenerator,
+  targets,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import { flow, pipe } from 'fp-ts/lib/function';
@@ -73,6 +54,7 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => {
       ...DEFAULT_CONFIG.options,
       ...config?.options,
     },
+    generators: Object.assign(targets, config?.generators),
   };
 
   /**
@@ -269,7 +251,7 @@ const getTargetContexts = (options: MitosisConfig) =>
   options.targets.map(
     (target): TargetContext => ({
       target,
-      generator: getGeneratorForTarget({ target }) as any,
+      generator: options.generators?.[target] as any,
       outputPath: options.getTargetPath({ target }),
     }),
   );
@@ -309,55 +291,6 @@ export async function build(config?: MitosisConfig) {
 
   console.info('Mitosis: generation completed.');
 }
-
-const getGeneratorForTarget = ({ target }: { target: Target }) => {
-  switch (target) {
-    case 'alpine':
-      return componentToAlpine;
-    case 'customElement':
-      return componentToCustomElement;
-    case 'html':
-      return componentToHtml;
-    case 'reactNative':
-      return componentToReactNative;
-    case 'vue':
-      return componentToVue;
-    case 'angular':
-      return componentToAngular;
-    case 'react':
-      return componentToReact;
-    case 'swift':
-      return componentToSwift;
-    case 'solid':
-      return componentToSolid;
-    case 'webcomponent':
-      return componentToCustomElement;
-    case 'svelte':
-      return componentToSvelte;
-    case 'qwik':
-      return componentToQwik;
-    case 'marko':
-      return componentToMarko;
-    case 'preact':
-      return componentToPreact;
-    case 'rsc':
-      return componentToRsc;
-    case 'lit':
-      return componentToLit;
-    case 'mitosis':
-      return componentToMitosis;
-    case 'stencil':
-      return componentToStencil;
-    case 'template':
-      return componentToTemplate;
-    case 'liquid':
-      return componentToLiquid;
-    case 'taro':
-      return componentToTaro;
-    default:
-      throw new Error('CLI does not yet support target: ' + target);
-  }
-};
 
 /**
  * Transpiles and outputs Mitosis component files.
