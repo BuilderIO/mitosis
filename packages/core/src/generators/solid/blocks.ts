@@ -49,12 +49,7 @@ export const blockToSolid = ({
   }
 
   let str = '';
-
-  if (json.name === 'Fragment') {
-    str += '<';
-  } else {
-    str += `<${json.name} `;
-  }
+  str += `<${json.name} `;
 
   if (json.name === 'Show' && json.meta.else) {
     str += `fallback={${blockToSolid({ component, json: json.meta.else as any, options })}}`;
@@ -115,16 +110,16 @@ export const blockToSolid = ({
   str += '>';
   if (json.children) {
     str += json.children
+      .flatMap((item) => {
+        const Fragment = item.children.find((item) => item.name === 'Fragment');
+        return Fragment ? Fragment.children : item;
+      })
       .filter(filterEmptyTextNodes)
       .map((item) => blockToSolid({ component, json: item, options }))
       .join('\n');
   }
-
-  if (json.name === 'Fragment') {
-    str += '</>';
-  } else {
-    str += `</${json.name}>`;
-  }
+  //  A -> F
+  str += `</${json.name}>`;
 
   return str;
 };
