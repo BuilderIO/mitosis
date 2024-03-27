@@ -146,6 +146,12 @@ export const blockToAngular = (
       return `<ng-content select="[${selector}]"></ng-content>`;
     }
 
+    if (textCode.includes('JSON.stringify')) {
+      let obj = textCode.replace('JSON.stringify', '');
+      obj = obj.replace(/\(.*?\)/, '');
+      return `{{useJsonStringify${obj}}}`;
+    }
+
     return `{{${textCode}}}`;
   }
 
@@ -168,6 +174,96 @@ export const blockToAngular = (
     }
     str += `<ng-container *ngIf="${condition}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
+    str += `</ng-container>`;
+  } else if (json.name.includes('.')) {
+    const elSelector = childComponents.find((impName) => impName === json.name)
+      ? kebabCase(json.name)
+      : json.name;
+    let allProps = '';
+    let events = '';
+
+    for (const key in json.bindings) {
+      if (key.startsWith('"')) {
+        continue;
+      }
+      if (key.startsWith('$')) {
+        continue;
+      }
+      const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
+
+      if (code.includes('?')) {
+        // TODO handle ternary
+        continue;
+      } else if (key.includes('props.')) {
+        allProps += `${key.replace('props.', '')}: ${code}, `;
+      } else if (key.startsWith('on')) {
+        let event = key.replace('on', '');
+        event = event.charAt(0).toLowerCase() + event.slice(1);
+
+        if (event === 'change' && json.name === 'input' /* todo: other tags */) {
+          event = 'input';
+        }
+        // TODO: proper babel transform to replace. Util for this
+        const eventName = cusArgs[0];
+        const regexp = new RegExp(
+          '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
+          'g',
+        );
+        const replacer = '$1$event$2';
+        const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
+        events += ` (${event})="${finalValue}" `;
+      } else if (code.includes('{')) {
+        let objectCode = code.replace(/^{/, '').replace(/}$/, '');
+        objectCode = objectCode.replace(/\/\/.*\n/g, '');
+
+        const spreadOutObjects = objectCode
+          .split(',')
+          .filter((item) => item.includes('...'))
+          .map((item) => item.replace('...', '').trim());
+
+        const objectKeys = objectCode
+          .split(',')
+          .filter((item) => !item.includes('...'))
+          .map((item) => item.trim());
+
+        const otherObjs = objectKeys.map((item) => {
+          return `{ ${item} }`;
+        });
+
+        let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
+
+        if (temp.endsWith(', ')) {
+          temp = temp.slice(0, -2);
+        }
+
+        if (temp.startsWith(', ')) {
+          temp = temp.slice(2);
+        }
+
+        allProps += `${key}: useObjectWrapper(${temp}) `;
+      } else if (code.startsWith('Object.values')) {
+        let stripped = code.replace('Object.values', '');
+        allProps += `${key}: useObjectDotValues${stripped} `;
+      } else if (key.includes('-')) {
+        allProps += `'${key}': ${code}, `;
+      } else {
+        allProps += `${key}: ${code}, `;
+      }
+    }
+
+    if (allProps.endsWith(', ')) {
+      allProps = allProps.slice(0, -2);
+    }
+
+    if (allProps.startsWith(', ')) {
+      allProps = allProps.slice(2);
+    }
+
+    str += `<ng-container ${events} *ngComponentOutlet="
+      ${elSelector.replace('state.', '').replace('props.', '')};
+      inputs: { ${allProps} };
+      ">  `;
+
     str += `</ng-container>`;
   } else {
     const elSelector = childComponents.find((impName) => impName === json.name)
@@ -304,23 +400,29 @@ export const blockToAngular = (
           }
 
           // handle template strings
-          // if (temp.includes('`')) {
-          //   // template str
-          //   let str = temp.match(/`[^`]*`/g);
+          if (temp.includes('`')) {
+            // template str
+            let str = temp.match(/`[^`]*`/g);
 
-          //   console.log('str', str);
-          //   let values = str && str[0].match(/\${[^}]*}/g);
-          //   let forValues = values?.map((val) => val.slice(2, -1)).join(' + ');
+            console.log('str', str);
+            let values = str && str[0].match(/\${[^}]*}/g);
+            let forValues = values?.map((val) => val.slice(2, -1)).join(' + ');
 
-          //   if (str && forValues) {
-          //     temp = temp.replace(str[0], forValues);
-          //   }
-          // }
-
+            if (str && forValues) {
+              temp = temp.replace(str[0], forValues);
+            }
+          }
           str += `[${key}]="useObjectWrapper(${temp})" `;
         } else if (code.startsWith('Object.values')) {
           let stripped = code.replace('Object.values', '');
           str += `[${key}]="useObjectDotValues${stripped}" `;
+        } else if (code.includes('JSON.stringify')) {
+          let obj = code.match(/JSON.stringify\([^)]*\)/g);
+          str += `[${key}]="useJsonStringify(${obj})" `;
+        } else if (code.includes('as')) {
+          const asIndex = code.indexOf('as');
+          const asCode = code.slice(0, asIndex - 1);
+          str += `[${key}]="$any${asCode})"`;
         } else {
           str += `[${key}]="${code}" `;
         }
@@ -634,6 +736,10 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
       useTypeOf(obj: any): string {
         return typeof obj;
+      }
+
+      useJsonStringify(obj: any): string {
+        return JSON.stringify(obj);
       }
 
       ${jsRefs
