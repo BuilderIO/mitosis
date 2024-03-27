@@ -151,6 +151,12 @@ export const blockToAngular = (
       return `<ng-content select="[${selector}]"></ng-content>`;
     }
 
+    if (textCode.includes('JSON.stringify')) {
+      let obj = textCode.replace('JSON.stringify', '');
+      obj = obj.replace(/\(.*?\)/, '');
+      return `{{useJsonStringify${obj}}}`;
+    }
+
     return `{{${textCode}}}`;
   }
 
@@ -166,8 +172,103 @@ export const blockToAngular = (
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
-    str += `<ng-container *ngIf="${json.bindings.when?.code}">`;
+    let condition = json.bindings.when?.code;
+    if (condition?.includes('typeof')) {
+      let wordAfterTypeof = condition.split('typeof')[1].trim();
+      condition = condition.replace(`typeof ${wordAfterTypeof}`, `useTypeOf(${wordAfterTypeof})`);
+    }
+    str += `<ng-container *ngIf="${condition}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
+    str += `</ng-container>`;
+  } else if (json.name.includes('.')) {
+    const elSelector = childComponents.find((impName) => impName === json.name)
+      ? kebabCase(json.name)
+      : json.name;
+    let allProps = '';
+    let events = '';
+
+    for (const key in json.bindings) {
+      if (key.startsWith('"')) {
+        continue;
+      }
+      if (key.startsWith('$')) {
+        continue;
+      }
+      const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
+
+      if (code.includes('?')) {
+        // TODO handle ternary
+        continue;
+      } else if (key.includes('props.')) {
+        allProps += `${key.replace('props.', '')}: ${code}, `;
+      } else if (key.startsWith('on')) {
+        let event = key.replace('on', '');
+        event = event.charAt(0).toLowerCase() + event.slice(1);
+
+        if (event === 'change' && json.name === 'input' /* todo: other tags */) {
+          event = 'input';
+        }
+        // TODO: proper babel transform to replace. Util for this
+        const eventName = cusArgs[0];
+        const regexp = new RegExp(
+          '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
+          'g',
+        );
+        const replacer = '$1$event$2';
+        const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
+        events += ` (${event})="${finalValue}" `;
+      } else if (code.includes('{')) {
+        let objectCode = code.replace(/^{/, '').replace(/}$/, '');
+        objectCode = objectCode.replace(/\/\/.*\n/g, '');
+
+        const spreadOutObjects = objectCode
+          .split(',')
+          .filter((item) => item.includes('...'))
+          .map((item) => item.replace('...', '').trim());
+
+        const objectKeys = objectCode
+          .split(',')
+          .filter((item) => !item.includes('...'))
+          .map((item) => item.trim());
+
+        const otherObjs = objectKeys.map((item) => {
+          return `{ ${item} }`;
+        });
+
+        let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
+
+        if (temp.endsWith(', ')) {
+          temp = temp.slice(0, -2);
+        }
+
+        if (temp.startsWith(', ')) {
+          temp = temp.slice(2);
+        }
+
+        allProps += `${key}: useObjectWrapper(${temp}) `;
+      } else if (code.startsWith('Object.values')) {
+        let stripped = code.replace('Object.values', '');
+        allProps += `${key}: useObjectDotValues${stripped} `;
+      } else if (key.includes('-')) {
+        allProps += `'${key}': ${code}, `;
+      } else {
+        allProps += `${key}: ${code}, `;
+      }
+    }
+
+    if (allProps.endsWith(', ')) {
+      allProps = allProps.slice(0, -2);
+    }
+
+    if (allProps.startsWith(', ')) {
+      allProps = allProps.slice(2);
+    }
+
+    str += `<ng-container ${events} *ngComponentOutlet="
+      ${elSelector.replace('state.', '').replace('props.', '')};
+      inputs: { ${allProps} };
+      ">  `;
+
     str += `</ng-container>`;
   } else {
     const elSelector = childComponents.find((impName) => impName === json.name)
@@ -194,6 +295,13 @@ export const blockToAngular = (
         continue;
       }
       if (key.startsWith('$')) {
+        continue;
+      }
+      if (key === 'key') {
+        continue;
+      }
+      if (key === 'attributes') {
+        // TODO
         continue;
       }
 
@@ -224,12 +332,102 @@ export const blockToAngular = (
         const lowercaseKey = pipe(key, stripSlotPrefix, (x) => x.toLowerCase());
         needsToRenderSlots.push(`${code.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
-        str += ` [${BINDINGS_MAPPER[key]}]="${code}"  `;
+        if (code.startsWith('{')) {
+          let objectCode = code.replace(/^{/, '').replace(/}$/, '');
+          objectCode = objectCode.replace(/\/\/.*\n/g, '');
+
+          const spreadOutObjects = objectCode
+            .split(',')
+            .filter((item) => item.includes('...'))
+            .map((item) => item.replace('...', '').trim());
+
+          const objectKeys = objectCode
+            .split(',')
+            .filter((item) => !item.includes('...'))
+            .map((item) => item.trim());
+
+          const otherObjs = objectKeys.map((item) => {
+            return `{ ${item} }`;
+          });
+
+          let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
+
+          if (temp.endsWith(', ')) {
+            temp = temp.slice(0, -2);
+          }
+
+          if (temp.startsWith(', ')) {
+            temp = temp.slice(2);
+          }
+
+          // handle template strings
+
+          str += `[${BINDINGS_MAPPER[key]}]="useObjectWrapper(${temp})" `;
+        } else if (code.startsWith('Object.values')) {
+          let stripped = code.replace('Object.values', '');
+          str += `[${BINDINGS_MAPPER[key]}]="useObjectDotValues${stripped}" `;
+        } else {
+          str += `[${BINDINGS_MAPPER[key]}]="${code}" `;
+        }
       } else if (isValidHtmlTag || key.includes('-')) {
         // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
         str += ` [attr.${key}]="${code}" `;
       } else {
-        str += `[${key}]="${code}" `;
+        if (code.startsWith('{')) {
+          let objectCode = code.replace(/^{/, '').replace(/}$/, '');
+          objectCode = objectCode.replace(/\/\/.*\n/g, '');
+
+          const spreadOutObjects = objectCode
+            .split(',')
+            .filter((item) => item.includes('...'))
+            .map((item) => item.replace('...', '').trim());
+
+          const objectKeys = objectCode
+            .split(',')
+            .filter((item) => !item.includes('...'))
+            .map((item) => item.trim());
+
+          const otherObjs = objectKeys.map((item) => {
+            return `{ ${item} }`;
+          });
+
+          let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
+
+          if (temp.endsWith(', ')) {
+            temp = temp.slice(0, -2);
+          }
+
+          if (temp.startsWith(', ')) {
+            temp = temp.slice(2);
+          }
+
+          // handle template strings
+          if (temp.includes('`')) {
+            // template str
+            let str = temp.match(/`[^`]*`/g);
+
+            console.log('str', str);
+            let values = str && str[0].match(/\${[^}]*}/g);
+            let forValues = values?.map((val) => val.slice(2, -1)).join(' + ');
+
+            if (str && forValues) {
+              temp = temp.replace(str[0], forValues);
+            }
+          }
+          str += `[${key}]="useObjectWrapper(${temp})" `;
+        } else if (code.startsWith('Object.values')) {
+          let stripped = code.replace('Object.values', '');
+          str += `[${key}]="useObjectDotValues${stripped}" `;
+        } else if (code.includes('JSON.stringify')) {
+          let obj = code.match(/JSON.stringify\([^)]*\)/g);
+          str += `[${key}]="useJsonStringify(${obj})" `;
+        } else if (code.includes('as')) {
+          const asIndex = code.indexOf('as');
+          const asCode = code.slice(0, asIndex - 1);
+          str += `[${key}]="$any${asCode})"`;
+        } else {
+          str += `[${key}]="${code}" `;
+        }
       }
     }
     if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
@@ -499,7 +697,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .map(([k, v]) => `${k}: ${v}`)
         .join(',')}
     })
-    export class ${json.name} {
+    export default class ${json.name} {
       ${localExportVars.join('\n')}
       ${customImports.map((name) => `${name} = ${name}`).join('\n')}
 
@@ -507,7 +705,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .filter((item) => !isSlotProperty(item) && item !== 'children')
         .map((item) => {
           const propType = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
-          let propDeclaration = `@Input() ${item}: ${propType}`;
+          let propDeclaration = `@Input() ${item}!: ${propType}`;
           if (json.defaultProps && json.defaultProps.hasOwnProperty(item)) {
             propDeclaration += ` = defaultProps["${item}"]`;
           }
@@ -518,10 +716,29 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${outputs.join('\n')}
 
       ${Array.from(domRefs)
-        .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
+        .map((refName) => `@ViewChild('${refName}') ${refName}!: ElementRef`)
         .join('\n')}
 
-      ${dataString}
+        ${dataString}
+      useObjectWrapper(...args: any[]) {
+        let obj = {}
+        args.forEach((arg) => {
+          obj = { ...obj, ...arg };
+        });
+        return obj;
+      }
+
+      useObjectDotValues(obj: any): any[] {
+        return Object.values(obj);
+      }
+
+      useTypeOf(obj: any): string {
+        return typeof obj;
+      }
+
+      useJsonStringify(obj: any): string {
+        return JSON.stringify(obj);
+      }
 
       ${jsRefs
         .map((ref) => {
