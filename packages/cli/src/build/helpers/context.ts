@@ -51,10 +51,48 @@ export const generateContextFile = async ({
         return contextToQwik()({ context });
       default:
         console.warn('Context files are not supported for this target. Outputting no-op');
-        return `
-        // Noop file
-        export default {};
-      `;
+        if (context.name === 'Builder') {
+          return `
+          import { Injectable } from '@angular/core';
+
+          @Injectable({
+            providedIn: 'root'
+          })
+          export default class BuilderContext {
+            content: any = null;
+            context: any = {};
+            localState: any = undefined;
+            rootState: any = {};
+            rootSetState: any = undefined;
+            apiKey: any = null;
+            apiVersion: any = undefined;
+            componentInfos: any = {};
+            inheritedStyles: any = {};
+            BlocksWrapper: string = 'div';
+            BlocksWrapperProps: any = {};
+
+            constructor() { }
+          }
+          `;
+        } else if (context.name === 'Components') {
+          return `
+          import { Injectable } from '@angular/core';
+
+          @Injectable({
+            providedIn: 'root'
+          })
+          export default class ComponentsContext {
+            registeredComponents: any = {};
+
+            constructor() { }
+          }
+
+          `;
+        } else {
+          return `// No op
+          export default {};
+          `;
+        }
     }
   }
 };
