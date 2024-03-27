@@ -90,8 +90,14 @@ type Args = { target: Target } & (
  */
 export const getComponentFileExtensionForTarget = (args: Args): string => {
   switch (args.target) {
-    case 'angular':
-      return '.ts';
+    case 'angular': {
+      switch (args.type) {
+        case 'import':
+          return '.js';
+        case 'filename':
+          return args.isTypescript ? '.ts' : '.js';
+      }
+    }
     case 'alpine':
     case 'html':
       return '.html';

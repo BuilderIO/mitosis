@@ -38,7 +38,7 @@ export const getProps = (json: MitosisComponent) => {
           if (prop.match(prohibitedKeywordRE)) {
             throw new Error(`avoid using JavaScript keyword as property name: "${prop}"`);
           }
-          props.add(prop);
+          prop !== 'js' && props.add(prop);
         }
       }
     }

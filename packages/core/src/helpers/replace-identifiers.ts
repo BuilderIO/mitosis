@@ -151,9 +151,11 @@ export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
             !types.isMemberExpression(path.parent) &&
             !types.isOptionalMemberExpression(path.parent) &&
             // function declaration identifiers shouldn't be transformed
-            !types.isFunctionDeclaration(path.parent)
+            !types.isFunctionDeclaration(path.parent) &&
             // variable declaration identifiers shouldn't be transformed
             // !(types.isVariableDeclarator(path.parent) && path.parent.id === path.node)
+            // object -> { detail: { state: 'something' } } shouldn't be transformed to { detail: { this: 'something' } }
+            !types.isObjectProperty(path.parent)
           ) {
             _replaceIdentifiers(path, { from, to });
           }
