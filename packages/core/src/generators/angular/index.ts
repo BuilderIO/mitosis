@@ -161,7 +161,12 @@ export const blockToAngular = (
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
-    str += `<ng-container *ngIf="${json.bindings.when?.code}">`;
+    let condition = json.bindings.when?.code;
+    if (condition?.includes('typeof')) {
+      let wordAfterTypeof = condition.split('typeof')[1].trim();
+      condition = condition.replace(`typeof ${wordAfterTypeof}`, `useTypeOf(${wordAfterTypeof})`);
+    }
+    str += `<ng-container *ngIf="${condition}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else {
@@ -189,6 +194,13 @@ export const blockToAngular = (
         continue;
       }
       if (key.startsWith('$')) {
+        continue;
+      }
+      if (key === 'key') {
+        continue;
+      }
+      if (key === 'attributes') {
+        // TODO
         continue;
       }
 
@@ -219,7 +231,43 @@ export const blockToAngular = (
         const lowercaseKey = pipe(key, stripSlotPrefix, (x) => x.toLowerCase());
         needsToRenderSlots.push(`${code.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
-        str += ` [${BINDINGS_MAPPER[key]}]="${code}"  `;
+        if (code.startsWith('{')) {
+          let objectCode = code.replace(/^{/, '').replace(/}$/, '');
+          objectCode = objectCode.replace(/\/\/.*\n/g, '');
+
+          const spreadOutObjects = objectCode
+            .split(',')
+            .filter((item) => item.includes('...'))
+            .map((item) => item.replace('...', '').trim());
+
+          const objectKeys = objectCode
+            .split(',')
+            .filter((item) => !item.includes('...'))
+            .map((item) => item.trim());
+
+          const otherObjs = objectKeys.map((item) => {
+            return `{ ${item} }`;
+          });
+
+          let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
+
+          if (temp.endsWith(', ')) {
+            temp = temp.slice(0, -2);
+          }
+
+          if (temp.startsWith(', ')) {
+            temp = temp.slice(2);
+          }
+
+          // handle template strings
+
+          str += `[${BINDINGS_MAPPER[key]}]="useObjectWrapper(${temp})" `;
+        } else if (code.startsWith('Object.values')) {
+          let stripped = code.replace('Object.values', '');
+          str += `[${BINDINGS_MAPPER[key]}]="useObjectDotValues${stripped}" `;
+        } else {
+          str += `[${BINDINGS_MAPPER[key]}]="${code}" `;
+        }
       } else if (
         (isValidHtmlTag || key.includes('-')) &&
         !blockOptions.nativeAttributes.includes(key)
@@ -227,7 +275,55 @@ export const blockToAngular = (
         // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
         str += ` [attr.${key}]="${code}" `;
       } else {
-        str += `[${key}]="${code}" `;
+        if (code.startsWith('{')) {
+          let objectCode = code.replace(/^{/, '').replace(/}$/, '');
+          objectCode = objectCode.replace(/\/\/.*\n/g, '');
+
+          const spreadOutObjects = objectCode
+            .split(',')
+            .filter((item) => item.includes('...'))
+            .map((item) => item.replace('...', '').trim());
+
+          const objectKeys = objectCode
+            .split(',')
+            .filter((item) => !item.includes('...'))
+            .map((item) => item.trim());
+
+          const otherObjs = objectKeys.map((item) => {
+            return `{ ${item} }`;
+          });
+
+          let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
+
+          if (temp.endsWith(', ')) {
+            temp = temp.slice(0, -2);
+          }
+
+          if (temp.startsWith(', ')) {
+            temp = temp.slice(2);
+          }
+
+          // handle template strings
+          // if (temp.includes('`')) {
+          //   // template str
+          //   let str = temp.match(/`[^`]*`/g);
+
+          //   console.log('str', str);
+          //   let values = str && str[0].match(/\${[^}]*}/g);
+          //   let forValues = values?.map((val) => val.slice(2, -1)).join(' + ');
+
+          //   if (str && forValues) {
+          //     temp = temp.replace(str[0], forValues);
+          //   }
+          // }
+
+          str += `[${key}]="useObjectWrapper(${temp})" `;
+        } else if (code.startsWith('Object.values')) {
+          let stripped = code.replace('Object.values', '');
+          str += `[${key}]="useObjectDotValues${stripped}" `;
+        } else {
+          str += `[${key}]="${code}" `;
+        }
       }
     }
     if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
@@ -501,7 +597,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .map(([k, v]) => `${k}: ${v}`)
         .join(',')}
     })
-    export class ${json.name} {
+    export default class ${json.name} {
       ${localExportVars.join('\n')}
       ${customImports.map((name) => `${name} = ${name}`).join('\n')}
 
@@ -509,7 +605,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .filter((item) => !isSlotProperty(item) && item !== 'children')
         .map((item) => {
           const propType = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
-          let propDeclaration = `@Input() ${item}: ${propType}`;
+          let propDeclaration = `@Input() ${item}!: ${propType}`;
           if (json.defaultProps && json.defaultProps.hasOwnProperty(item)) {
             propDeclaration += ` = defaultProps["${item}"]`;
           }
@@ -520,10 +616,25 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${outputs.join('\n')}
 
       ${Array.from(domRefs)
-        .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
+        .map((refName) => `@ViewChild('${refName}') ${refName}!: ElementRef`)
         .join('\n')}
 
-      ${dataString}
+        ${dataString}
+      useObjectWrapper(...args: any[]) {
+        let obj = {}
+        args.forEach((arg) => {
+          obj = { ...obj, ...arg };
+        });
+        return obj;
+      }
+
+      useObjectDotValues(obj: any): any[] {
+        return Object.values(obj);
+      }
+
+      useTypeOf(obj: any): string {
+        return typeof obj;
+      }
 
       ${jsRefs
         .map((ref) => {
