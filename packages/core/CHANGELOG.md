@@ -1,5 +1,48 @@
 # Change Log
 
+## 0.1.7
+
+### Patch Changes
+
+- ba5e3b4: fix: solidjs `onUpdate` memoization
+
+## 0.1.6
+
+### Patch Changes
+
+- 5738855: fix: solidjs `createMemo` for onUpdate deps, and for getters in state
+
+## 0.1.5
+
+### Patch Changes
+
+- 6688702: Fix: React shorthand for boolean properties set to `true`
+
+## 0.1.4
+
+### Patch Changes
+
+- 20efa15: feat: add slots property for nodes. add support for it in react generator.
+
+## 0.1.3
+
+### Patch Changes
+
+- 9944a68: Fix: improve imports so mitosis can be built in browser easily
+
+## 0.1.2
+
+### Patch Changes
+
+- 83b9bb8: fix: include styles for img elements in `compileAwayBuilderComponents` plugin
+
+## 0.1.1
+
+### Patch Changes
+
+- 9d6e019: Fix: simplify React true bindings.
+- 9d6e019: Fix: Builder->Mitosis single node slot
+
 ## 0.1.0
 
 ### Minor Changes
