@@ -239,8 +239,25 @@ export const blockToReact = (
       str += ` contentContainerStyle={${useBindingValue}} `;
     } else {
       if (isValidAttributeName(key)) {
-        str += ` ${key}={${useBindingValue}} `;
+        if (useBindingValue === 'true') {
+          str += ` ${key} `;
+        } else {
+          str += ` ${key}={${useBindingValue}} `;
+        }
       }
+    }
+  }
+
+  if (json.slots) {
+    for (const key in json.slots) {
+      const value = json.slots[key];
+      if (!value?.length) {
+        continue;
+      }
+      const reactComponents = value.map((node) => blockToReact(node, options, component));
+      const slotStringValue =
+        reactComponents.length === 1 ? reactComponents[0] : `<>${reactComponents.join('\n')}</>`;
+      str += ` ${key}={${slotStringValue}} `;
     }
   }
 

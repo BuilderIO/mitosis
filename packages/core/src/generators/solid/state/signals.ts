@@ -1,5 +1,5 @@
 import { pipe } from 'fp-ts/lib/function';
-import { prefixWithFunction, replaceGetterWithFunction } from '../../../helpers/patterns';
+import { extractGetterCodeBlock, prefixWithFunction } from '../../../helpers/patterns';
 import { MitosisComponent, MitosisState, StateValue } from '../../../types/mitosis-component';
 import { ToSolidOptions } from '../types';
 import { getStateSetterName, updateStateCode } from './helpers';
@@ -30,7 +30,12 @@ const processSignalStateValue = ({
     if (typeof value === 'string') {
       switch (type) {
         case 'getter':
-          return pipe(value, replaceGetterWithFunction, mapValue);
+          return pipe(
+            value,
+            mapValue,
+            extractGetterCodeBlock,
+            (x) => `const ${key} = createMemo(() => {${x}})`,
+          );
         case 'function':
           return mapValue(value);
         case 'method':
