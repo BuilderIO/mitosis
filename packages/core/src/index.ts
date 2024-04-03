@@ -35,6 +35,7 @@ export {
   checkIsSvelteComponentFilePath,
   getComponentFileExtensionForTarget,
   renameComponentFile,
+  renameComponentImport,
   renameImport,
 } from './helpers/component-file-extensions';
 export { createMitosisNode } from './helpers/create-mitosis-node';

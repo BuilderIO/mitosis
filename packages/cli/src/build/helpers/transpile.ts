@@ -2,6 +2,7 @@ import {
   checkIsLiteComponentFilePath,
   checkShouldOutputTypeScript,
   MitosisConfig,
+  renameComponentImport,
   renameImport,
   Target,
 } from '@builder.io/mitosis';
@@ -24,11 +25,18 @@ export const transformImports =
     code = code.replace(/\.context\.lite(.js|.ts)?(['"])/g, `.context.js$2`);
 
     // afterwards, we replace all component imports with the correct file extension
-    return renameImport({
+    code = renameComponentImport({
       importPath: code,
       target: target,
       explicitImportFileExtension: options.options?.[target]?.explicitImportFileExtension || false,
     });
+
+    // if we really need to update the file extensions as well from .js to something else we do it here
+    code = renameImport({
+      importPath: code,
+      target: target,
+    });
+    return code;
   };
 
 /**
