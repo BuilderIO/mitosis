@@ -6,6 +6,7 @@ export * from './flow';
 export * from './generators/alpine';
 export * from './generators/angular';
 export * from './generators/builder';
+export * from './generators/context/angular';
 export * from './generators/context/qwik';
 export * from './generators/context/react';
 export * from './generators/context/rsc';
