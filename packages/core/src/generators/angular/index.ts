@@ -9,8 +9,11 @@ import { getPropsRef } from '@/helpers/get-props-ref';
 import { getRefs } from '@/helpers/get-refs';
 import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
 import { indent } from '@/helpers/indent';
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { isUpperCase } from '@/helpers/is-upper-case';
 import { mapRefs } from '@/helpers/map-refs';
+import { initializeOptions } from '@/helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { renderPreComponent } from '@/helpers/render-imports';
 import { replaceIdentifiers } from '@/helpers/replace-identifiers';
@@ -21,25 +24,21 @@ import {
   stripStateAndPropsRefs,
 } from '@/helpers/strip-state-and-props-refs';
 import { collectCss } from '@/helpers/styles/collect-css';
+import { nodeHasCss } from '@/helpers/styles/helpers';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '@/modules/plugins';
-import { MitosisNode, checkIsForNode } from '@/types/mitosis-node';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { Binding, MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { isString, kebabCase, uniq } from 'lodash';
 import { format } from 'prettier/standalone';
-import isChildren from '../../helpers/is-children';
-
-import { isMitosisNode } from '@/helpers/is-mitosis-node';
-import { initializeOptions } from '@/helpers/merge-options';
-import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
-import { nodeHasCss } from '@/helpers/styles/helpers';
-import { MitosisComponent } from '@/types/mitosis-component';
 import traverse from 'traverse';
+import isChildren from '../../helpers/is-children';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import {
   AngularBlockOptions,
@@ -158,6 +157,135 @@ const handleObjectBindings = (code: string) => {
       temp = temp.replace(str[0], forValues);
     }
   }
+
+  return temp;
+};
+
+const stringifyBinding =
+  (node: MitosisNode, options: ToAngularOptions) =>
+  ([key, binding]: [string, Binding | undefined]) => {
+    if (binding?.type === 'spread') {
+      return;
+    }
+    if (key.startsWith('$')) {
+      return;
+    }
+    if (key === 'key') {
+      return;
+    }
+    if (key === 'attributes') {
+      // TODO: contains ternary operator which needs to be handled
+      return;
+    }
+
+    const { code, arguments: cusArgs = ['event'], type } = binding!;
+    // TODO: proper babel transform to replace. Util for this
+
+    if (key.startsWith('on')) {
+      let event = key.replace('on', '');
+      event = event.charAt(0).toLowerCase() + event.slice(1);
+
+      if (event === 'change' && node.name === 'input' /* todo: other tags */) {
+        event = 'input';
+      }
+      // TODO: proper babel transform to replace. Util for this
+      const eventName = cusArgs[0];
+      const regexp = new RegExp(
+        '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
+        'g',
+      );
+      const replacer = '$1$event$2';
+      const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
+      return ` (${event})="${finalValue}" `;
+    } else if (key === 'class') {
+      return ` [class]="${code}" `;
+    } else if (key === 'ref') {
+      return ` #${code} `;
+    } else if (BINDINGS_MAPPER[key]) {
+      if (code.startsWith('{')) {
+        return `[${BINDINGS_MAPPER[key]}]="useObjectWrapper(${handleObjectBindings(code)})" `;
+      } else if (code.startsWith('Object.values')) {
+        let stripped = code.replace('Object.values', '');
+        return `[${BINDINGS_MAPPER[key]}]="useObjectDotValues${stripped}" `;
+      } else {
+        return `[${BINDINGS_MAPPER[key]}]="${code}" `;
+      }
+    } else if (VALID_HTML_TAGS.includes(node.name.trim()) || key.includes('-')) {
+      // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
+      return ` [attr.${key}]="${code}" `;
+    } else {
+      if (code.startsWith('{')) {
+        return `[${key}]="useObjectWrapper(${handleObjectBindings(code)})" `;
+      } else if (code.startsWith('Object.values')) {
+        let stripped = code.replace('Object.values', '');
+        return `[${key}]="useObjectDotValues${stripped}" `;
+      } else if (code.includes('JSON.stringify')) {
+        let obj = code.match(/JSON.stringify\([^)]*\)/g);
+        return `[${key}]="useJsonStringify(${obj})" `;
+      } else if (code.includes('as')) {
+        const asIndex = code.indexOf('as');
+        const asCode = code.slice(0, asIndex - 1);
+        return `[${key}]="$any${asCode})"`;
+      } else {
+        return `[${key}]="${code}" `;
+      }
+    }
+  };
+
+const handleNgOutletBindings = (node: MitosisNode) => {
+  let allProps = '';
+  let events = '';
+  for (const key in node.bindings) {
+    if (key.startsWith('"')) {
+      continue;
+    }
+    if (key.startsWith('$')) {
+      continue;
+    }
+    const { code, arguments: cusArgs = ['event'] } = node.bindings[key]!;
+
+    if (code.includes('?')) {
+      // TODO handle ternary
+      continue;
+    } else if (key.includes('props.')) {
+      allProps += `${key.replace('props.', '')}: ${code}, `;
+    } else if (key.startsWith('on')) {
+      let event = key.replace('on', '');
+      event = event.charAt(0).toLowerCase() + event.slice(1);
+
+      if (event === 'change' && node.name === 'input' /* todo: other tags */) {
+        event = 'input';
+      }
+      // TODO: proper babel transform to replace. Util for this
+      const eventName = cusArgs[0];
+      const regexp = new RegExp(
+        '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
+        'g',
+      );
+      const replacer = '$1$event$2';
+      const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
+      events += ` (${event})="${finalValue}" `;
+    } else if (code.includes('{')) {
+      allProps += `${key}: useObjectWrapper(${handleObjectBindings(code)}) `;
+    } else if (code.startsWith('Object.values')) {
+      let stripped = code.replace('Object.values', '');
+      allProps += `${key}: useObjectDotValues${stripped} `;
+    } else if (key.includes('-')) {
+      allProps += `'${key}': ${code}, `;
+    } else {
+      allProps += `${key}: ${code}, `;
+    }
+  }
+
+  if (allProps.endsWith(', ')) {
+    allProps = allProps.slice(0, -2);
+  }
+
+  if (allProps.startsWith(', ')) {
+    allProps = allProps.slice(2);
+  }
+
+  return [allProps, events];
 };
 
 export const blockToAngular = (
@@ -168,7 +296,6 @@ export const blockToAngular = (
   },
 ): string => {
   const childComponents = blockOptions?.childComponents || [];
-  const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name.trim());
 
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
@@ -199,8 +326,6 @@ export const blockToAngular = (
 
   let str = '';
 
-  const needsToRenderSlots = [];
-
   if (checkIsForNode(json)) {
     const indexName = json.scope.indexName;
     str += `<ng-container *ngFor="let ${json.scope.forName} of ${json.bindings.each?.code}${
@@ -221,58 +346,8 @@ export const blockToAngular = (
     const elSelector = childComponents.find((impName) => impName === json.name)
       ? kebabCase(json.name)
       : json.name;
-    let allProps = '';
-    let events = '';
 
-    for (const key in json.bindings) {
-      if (key.startsWith('"')) {
-        continue;
-      }
-      if (key.startsWith('$')) {
-        continue;
-      }
-      const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
-
-      if (code.includes('?')) {
-        // TODO handle ternary
-        continue;
-      } else if (key.includes('props.')) {
-        allProps += `${key.replace('props.', '')}: ${code}, `;
-      } else if (key.startsWith('on')) {
-        let event = key.replace('on', '');
-        event = event.charAt(0).toLowerCase() + event.slice(1);
-
-        if (event === 'change' && json.name === 'input' /* todo: other tags */) {
-          event = 'input';
-        }
-        // TODO: proper babel transform to replace. Util for this
-        const eventName = cusArgs[0];
-        const regexp = new RegExp(
-          '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
-          'g',
-        );
-        const replacer = '$1$event$2';
-        const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
-        events += ` (${event})="${finalValue}" `;
-      } else if (code.includes('{')) {
-        allProps += `${key}: useObjectWrapper(${handleObjectBindings(code)}) `;
-      } else if (code.startsWith('Object.values')) {
-        let stripped = code.replace('Object.values', '');
-        allProps += `${key}: useObjectDotValues${stripped} `;
-      } else if (key.includes('-')) {
-        allProps += `'${key}': ${code}, `;
-      } else {
-        allProps += `${key}: ${code}, `;
-      }
-    }
-
-    if (allProps.endsWith(', ')) {
-      allProps = allProps.slice(0, -2);
-    }
-
-    if (allProps.startsWith(', ')) {
-      allProps = allProps.slice(2);
-    }
+    const [allProps, events] = handleNgOutletBindings(json);
 
     str += `<ng-container ${events} *ngComponentOutlet="
       ${elSelector.replace('state.', '').replace('props.', '')};
@@ -300,88 +375,16 @@ export const blockToAngular = (
       const value = json.properties[key];
       str += ` ${key}="${value}" `;
     }
-    for (const key in json.bindings) {
-      if (json.bindings[key]?.type === 'spread') {
-        continue;
-      }
-      if (key.startsWith('$')) {
-        continue;
-      }
-      if (key === 'key') {
-        continue;
-      }
-      if (key === 'attributes') {
-        // TODO: contains ternary operator which needs to be handled
-        continue;
-      }
 
-      const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
-      // TODO: proper babel transform to replace. Util for this
+    const stringifiedBindings = Object.entries(json.bindings)
+      .map(stringifyBinding(json, options))
+      .join('');
 
-      if (key.startsWith('on')) {
-        let event = key.replace('on', '');
-        event = event.charAt(0).toLowerCase() + event.slice(1);
-
-        if (event === 'change' && json.name === 'input' /* todo: other tags */) {
-          event = 'input';
-        }
-        // TODO: proper babel transform to replace. Util for this
-        const eventName = cusArgs[0];
-        const regexp = new RegExp(
-          '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
-          'g',
-        );
-        const replacer = '$1$event$2';
-        const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
-        str += ` (${event})="${finalValue}" `;
-      } else if (key === 'class') {
-        str += ` [class]="${code}" `;
-      } else if (key === 'ref') {
-        str += ` #${code} `;
-      } else if (isSlotProperty(key)) {
-        const lowercaseKey = pipe(key, stripSlotPrefix, (x) => x.toLowerCase());
-        needsToRenderSlots.push(`${code.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
-      } else if (BINDINGS_MAPPER[key]) {
-        if (code.startsWith('{')) {
-          str += `[${BINDINGS_MAPPER[key]}]="useObjectWrapper(${handleObjectBindings(code)})" `;
-        } else if (code.startsWith('Object.values')) {
-          let stripped = code.replace('Object.values', '');
-          str += `[${BINDINGS_MAPPER[key]}]="useObjectDotValues${stripped}" `;
-        } else {
-          str += `[${BINDINGS_MAPPER[key]}]="${code}" `;
-        }
-      } else if (
-        (isValidHtmlTag || key.includes('-')) &&
-        !blockOptions.nativeAttributes.includes(key)
-      ) {
-        // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
-        str += ` [attr.${key}]="${code}" `;
-      } else {
-        if (code.startsWith('{')) {
-          str += `[${key}]="useObjectWrapper(${handleObjectBindings(code)})" `;
-        } else if (code.startsWith('Object.values')) {
-          let stripped = code.replace('Object.values', '');
-          str += `[${key}]="useObjectDotValues${stripped}" `;
-        } else if (code.includes('JSON.stringify')) {
-          let obj = code.match(/JSON.stringify\([^)]*\)/g);
-          str += `[${key}]="useJsonStringify(${obj})" `;
-        } else if (code.includes('as')) {
-          const asIndex = code.indexOf('as');
-          const asCode = code.slice(0, asIndex - 1);
-          str += `[${key}]="$any${asCode})"`;
-        } else {
-          str += `[${key}]="${code}" `;
-        }
-      }
-    }
+    str += stringifiedBindings;
     if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
       return str + ' />';
     }
     str += '>';
-
-    if (needsToRenderSlots.length > 0) {
-      str += needsToRenderSlots.map((el) => el).join('');
-    }
 
     if (json.children) {
       str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
