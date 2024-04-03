@@ -118,6 +118,48 @@ const BINDINGS_MAPPER: { [key: string]: string | undefined } = {
   style: 'ngStyle',
 };
 
+const handleObjectBindings = (code: string) => {
+  let objectCode = code.replace(/^{/, '').replace(/}$/, '');
+  objectCode = objectCode.replace(/\/\/.*\n/g, '');
+
+  const spreadOutObjects = objectCode
+    .split(',')
+    .filter((item) => item.includes('...'))
+    .map((item) => item.replace('...', '').trim());
+
+  const objectKeys = objectCode
+    .split(',')
+    .filter((item) => !item.includes('...'))
+    .map((item) => item.trim());
+
+  const otherObjs = objectKeys.map((item) => {
+    return `{ ${item} }`;
+  });
+
+  let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
+
+  if (temp.endsWith(', ')) {
+    temp = temp.slice(0, -2);
+  }
+
+  if (temp.startsWith(', ')) {
+    temp = temp.slice(2);
+  }
+
+  // handle template strings
+  if (temp.includes('`')) {
+    // template str
+    let str = temp.match(/`[^`]*`/g);
+
+    let values = str && str[0].match(/\${[^}]*}/g);
+    let forValues = values?.map((val) => val.slice(2, -1)).join(' + ');
+
+    if (str && forValues) {
+      temp = temp.replace(str[0], forValues);
+    }
+  }
+};
+
 export const blockToAngular = (
   json: MitosisNode,
   options: ToAngularOptions = {},
@@ -213,34 +255,7 @@ export const blockToAngular = (
         const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
         events += ` (${event})="${finalValue}" `;
       } else if (code.includes('{')) {
-        let objectCode = code.replace(/^{/, '').replace(/}$/, '');
-        objectCode = objectCode.replace(/\/\/.*\n/g, '');
-
-        const spreadOutObjects = objectCode
-          .split(',')
-          .filter((item) => item.includes('...'))
-          .map((item) => item.replace('...', '').trim());
-
-        const objectKeys = objectCode
-          .split(',')
-          .filter((item) => !item.includes('...'))
-          .map((item) => item.trim());
-
-        const otherObjs = objectKeys.map((item) => {
-          return `{ ${item} }`;
-        });
-
-        let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
-
-        if (temp.endsWith(', ')) {
-          temp = temp.slice(0, -2);
-        }
-
-        if (temp.startsWith(', ')) {
-          temp = temp.slice(2);
-        }
-
-        allProps += `${key}: useObjectWrapper(${temp}) `;
+        allProps += `${key}: useObjectWrapper(${handleObjectBindings(code)}) `;
       } else if (code.startsWith('Object.values')) {
         let stripped = code.replace('Object.values', '');
         allProps += `${key}: useObjectDotValues${stripped} `;
@@ -296,7 +311,7 @@ export const blockToAngular = (
         continue;
       }
       if (key === 'attributes') {
-        // TODO
+        // TODO: contains ternary operator which needs to be handled
         continue;
       }
 
@@ -328,36 +343,7 @@ export const blockToAngular = (
         needsToRenderSlots.push(`${code.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
         if (code.startsWith('{')) {
-          let objectCode = code.replace(/^{/, '').replace(/}$/, '');
-          objectCode = objectCode.replace(/\/\/.*\n/g, '');
-
-          const spreadOutObjects = objectCode
-            .split(',')
-            .filter((item) => item.includes('...'))
-            .map((item) => item.replace('...', '').trim());
-
-          const objectKeys = objectCode
-            .split(',')
-            .filter((item) => !item.includes('...'))
-            .map((item) => item.trim());
-
-          const otherObjs = objectKeys.map((item) => {
-            return `{ ${item} }`;
-          });
-
-          let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
-
-          if (temp.endsWith(', ')) {
-            temp = temp.slice(0, -2);
-          }
-
-          if (temp.startsWith(', ')) {
-            temp = temp.slice(2);
-          }
-
-          // handle template strings
-
-          str += `[${BINDINGS_MAPPER[key]}]="useObjectWrapper(${temp})" `;
+          str += `[${BINDINGS_MAPPER[key]}]="useObjectWrapper(${handleObjectBindings(code)})" `;
         } else if (code.startsWith('Object.values')) {
           let stripped = code.replace('Object.values', '');
           str += `[${BINDINGS_MAPPER[key]}]="useObjectDotValues${stripped}" `;
@@ -372,47 +358,7 @@ export const blockToAngular = (
         str += ` [attr.${key}]="${code}" `;
       } else {
         if (code.startsWith('{')) {
-          let objectCode = code.replace(/^{/, '').replace(/}$/, '');
-          objectCode = objectCode.replace(/\/\/.*\n/g, '');
-
-          const spreadOutObjects = objectCode
-            .split(',')
-            .filter((item) => item.includes('...'))
-            .map((item) => item.replace('...', '').trim());
-
-          const objectKeys = objectCode
-            .split(',')
-            .filter((item) => !item.includes('...'))
-            .map((item) => item.trim());
-
-          const otherObjs = objectKeys.map((item) => {
-            return `{ ${item} }`;
-          });
-
-          let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
-
-          if (temp.endsWith(', ')) {
-            temp = temp.slice(0, -2);
-          }
-
-          if (temp.startsWith(', ')) {
-            temp = temp.slice(2);
-          }
-
-          // handle template strings
-          if (temp.includes('`')) {
-            // template str
-            let str = temp.match(/`[^`]*`/g);
-
-            console.log('str', str);
-            let values = str && str[0].match(/\${[^}]*}/g);
-            let forValues = values?.map((val) => val.slice(2, -1)).join(' + ');
-
-            if (str && forValues) {
-              temp = temp.replace(str[0], forValues);
-            }
-          }
-          str += `[${key}]="useObjectWrapper(${temp})" `;
+          str += `[${key}]="useObjectWrapper(${handleObjectBindings(code)})" `;
         } else if (code.startsWith('Object.values')) {
           let stripped = code.replace('Object.values', '');
           str += `[${key}]="useObjectDotValues${stripped}" `;
