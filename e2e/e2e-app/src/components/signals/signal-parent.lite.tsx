@@ -1,5 +1,5 @@
 import { onMount, useState, useStore } from '@builder.io/mitosis';
-import SignalItemList from './child.lite';
+import SignalItemList from './signal-item-list.lite';
 
 export default function SignalParent() {
   const [n] = useState(['123'], { reactive: true });
