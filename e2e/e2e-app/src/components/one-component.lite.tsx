@@ -1,12 +1,4 @@
-import { useMetadata, useStore } from '@builder.io/mitosis';
-
-import ItemList from './item-list.lite';
-
-useMetadata({
-  qwik: {
-    mutable: ['state.list'],
-  },
-});
+import { useStore } from '@builder.io/mitosis';
 
 export interface State {
   list: string[];
@@ -15,7 +7,7 @@ export interface State {
   addItem: any;
 }
 
-export default function MyComponent(props: any) {
+export default function OneComponent(props: any) {
   const state = useStore<State>({
     list: ['hello', 'world'],
     newItemName: 'New item',
@@ -53,7 +45,18 @@ export default function MyComponent(props: any) {
         Add list item
       </button>
 
-      <ItemList list={state.list}></ItemList>
+      <ul class="shadow-md rounded">
+        {state.list.map((item) => (
+          <li
+            class="border-gray-200 border-b"
+            css={{
+              padding: '10px',
+            }}
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
