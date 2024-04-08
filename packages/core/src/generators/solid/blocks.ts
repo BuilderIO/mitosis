@@ -1,5 +1,6 @@
 import { babelTransformExpression } from '@/helpers/babel-transform';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import { objectHasKey } from '@/helpers/typescript';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { checkIsForNode, MitosisNode } from '@/types/mitosis-node';
 import { types } from '@babel/core';
@@ -7,6 +8,15 @@ import { kebabCase } from 'lodash';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { collectClassString } from './helpers/styles';
 import { ToSolidOptions } from './types';
+
+const ATTTRIBUTE_MAPPERS = {
+  // for: 'htmlFor',
+};
+
+const transformAttributeName = (name: string) => {
+  if (objectHasKey(ATTTRIBUTE_MAPPERS, name)) return ATTTRIBUTE_MAPPERS[name];
+  return name;
+};
 
 export const blockToSolid = ({
   json,
@@ -57,7 +67,8 @@ export const blockToSolid = ({
 
   for (const key in json.properties) {
     const value = json.properties[key];
-    str += ` ${key}="${value}" `;
+    const newKey = transformAttributeName(key);
+    str += ` ${newKey}="${value}" `;
   }
   for (const key in json.bindings) {
     const { code, arguments: cusArg = ['event'], type } = json.bindings[key]!;
@@ -94,7 +105,8 @@ export const blockToSolid = ({
           },
         });
       }
-      str += ` ${key}={${useValue}} `;
+      const newKey = transformAttributeName(key);
+      str += ` ${newKey}={${useValue}} `;
     }
   }
   if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
