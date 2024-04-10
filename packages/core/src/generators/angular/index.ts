@@ -178,7 +178,7 @@ const stringifyBinding =
       return;
     }
 
-    const { code, arguments: cusArgs = ['event'], type } = binding!;
+    const { code, arguments: cusArgs = ['event'] } = binding!;
     // TODO: proper babel transform to replace. Util for this
 
     if (key.startsWith('on')) {
@@ -348,10 +348,16 @@ export const blockToAngular = (
       : json.name;
 
     const [allProps, events] = handleNgOutletBindings(json);
+    const children = json.children
+      .map((item) => blockToAngular(item, options, blockOptions))
+      .join('\n');
 
-    str += `<ng-container ${events} *ngComponentOutlet="
+    str += `<ng-template #${
+      json.name.split('.')[1].toLowerCase() + 'Template'
+    }>${children}</ng-template><ng-container ${events} *ngComponentOutlet="
       ${elSelector.replace('state.', '').replace('props.', '')};
       inputs: { ${allProps} };
+      content: myContent;
       ">  `;
 
     str += `</ng-container>`;
@@ -393,6 +399,16 @@ export const blockToAngular = (
     str += `</${elSelector}>`;
   }
   return str;
+};
+
+const traverseToGetAllDynamicComponents = (json: MitosisComponent) => {
+  const components: Set<string> = new Set();
+  traverse(json).forEach((item) => {
+    if (isMitosisNode(item) && item.name.includes('.')) {
+      components.add(item.name);
+    }
+  });
+  return components;
 };
 
 const processAngularCode =
@@ -610,6 +626,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       componentMetadata[key] = value;
     });
 
+    const dynamicComponents = traverseToGetAllDynamicComponents(json);
+
     const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
       if (!json.defaultProps) return '';
       const defalutPropsString = Object.keys(json.defaultProps)
@@ -626,8 +644,10 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     let str = dedent`
     import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
       options?.experimental?.inject ? 'Inject, forwardRef,' : ''
-    } Component ${domRefs.size ? ', ViewChild, ElementRef' : ''}${
+    } Component ${domRefs.size || dynamicComponents.size ? ', ViewChild, ElementRef' : ''}${
       props.size ? ', Input' : ''
+    } ${
+      dynamicComponents.size ? ', ViewContainerRef, TemplateRef, ChangeDetectorRef' : ''
     } } from '@angular/core';
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
@@ -669,6 +689,19 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${Array.from(domRefs)
         .map((refName) => `@ViewChild('${refName}') ${refName}!: ElementRef`)
         .join('\n')}
+      
+      ${Array.from(dynamicComponents)
+        .map(
+          (component) =>
+            `@ViewChild('${component
+              .split('.')[1]
+              .toLowerCase()}Template', { static: true }) ${component
+              .split('.')[1]
+              .toLowerCase()}TemplateRef!: TemplateRef<any>`,
+        )
+        .join('\n')}
+
+        ${dynamicComponents.size ? 'myContent?: any[][];' : ''}
 
         ${dataString}
       useObjectWrapper(...args: any[]) {
@@ -710,9 +743,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .join('\n')}
 
       ${
-        !hasConstructor
+        !hasConstructor && !dynamicComponents.size
           ? ''
-          : `constructor(\n${injectables.join(',\n')}) {
+          : `constructor(\n${injectables.join(',\n')}${
+              dynamicComponents.size
+                ? '\nprivate vcRef: ViewContainerRef,\nprivate cdRef: ChangeDetectorRef,\n'
+                : ''
+            }) {
             ${
               !json.hooks?.onInit
                 ? ''
@@ -731,6 +768,27 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             }`
       }
 
+      ${
+        dynamicComponents.size
+          ? `
+        ngAfterViewInit() {
+          ${
+            dynamicComponents.size &&
+            `
+          this.myContent = [${Array.from(dynamicComponents)
+            .map(
+              (component) =>
+                `this.vcRef.createEmbeddedView(this.${component
+                  .split('.')[1]
+                  .toLowerCase()}TemplateRef).rootNodes`,
+            )
+            .join(', ')}];
+          `
+          }
+          this.cdRef.detectChanges();
+          }`
+          : ''
+      }
       ${
         !json.hooks.onUpdate?.length
           ? ''
