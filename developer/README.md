@@ -44,11 +44,14 @@ PS: don't worry about failing imports in the raw test TSX files. These are not a
 
 ### Integration test
 
-- copy your fiddle component into a `.lite.tsx` Mitosis component in the [e2e app](/e2e/e2e-app/src)
-- add your component to the [e2e-app component map](/e2e/e2e-app/src/component-map.ts)
+- copy your fiddle component into a `.lite.tsx` Mitosis component in the [e2e app](/e2e/e2e-app/src/components)
+- name your file the same as your component to resolve it for Angular
+- add your component to the [e2e-app component paths](/e2e/e2e-app/src/component-paths.ts)
+- add your component to the [homepage](/e2e/e2e-app/src/homepage.lite.tsx) with a ``<Show when={state.pathToUse.startsWith('/your-component-path')}>``
 - add an integration test in [e2e/e2e-app/tests](/e2e/e2e-app/tests) that makes sure your component works as expected
 - this integration test will run against every server that exists in [e2e/](/e2e/).
 - run `yarn ci:e2e-prep` to install playwright browsers
+- run `yarn ci:build` to build all packages
 - run `yarn ci:e2e` to run the integration tests against all servers
 
 ### Test your changes

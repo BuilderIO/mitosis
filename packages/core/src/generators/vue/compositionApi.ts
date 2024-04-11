@@ -1,6 +1,5 @@
 import { dedent } from '@/helpers/dedent';
 import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
-import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
 import { BaseHook, MitosisComponent } from '@/types/mitosis-component';
 import json5 from 'json5';
 import { pickBy } from 'lodash';
@@ -141,7 +140,7 @@ export function generateCompositionApiScript(
             code: hook.deps || '',
             options,
             json: component,
-          })}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} }, {immediate: true})`;
+          })}, () => { ${hook.code} }, {immediate: true})`;
         })
         .join('\n') || ''
     }

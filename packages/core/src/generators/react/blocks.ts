@@ -6,7 +6,6 @@ import { getForArguments } from '@/helpers/nodes/for';
 import { isSlotProperty } from '@/helpers/slots';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { checkIsForNode, ForNode, MitosisNode } from '@/types/mitosis-node';
-import { camelCase, upperFirst } from 'lodash';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { closeFrag, getFragment, openFrag, processBinding, wrapInFragment } from './helpers';
 import { updateStateSettersInCode } from './state';
@@ -17,7 +16,7 @@ const NODE_MAPPERS: {
     json: MitosisNode,
     options: ToReactOptions,
     component: MitosisComponent,
-    parentSlots?: any[],
+    parentSlots: any[],
   ) => string;
 } = {
   Slot(json, options, component, parentSlots) {
@@ -51,22 +50,21 @@ const NODE_MAPPERS: {
       // TODO: update MitosisNode for simple code
       const key = Object.keys(json.bindings).find(Boolean);
       if (key && parentSlots) {
-        const propKey = camelCase('Slot' + key[0].toUpperCase() + key.substring(1));
-        parentSlots.push({ key: propKey, value: json.bindings[key]?.code });
+        parentSlots.push({ key, value: json.bindings[key]?.code });
         return '';
       }
 
       const children = processBinding('props.children', options);
-      return `{${children} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
+      return `<>{${children} ${hasChildren ? `|| (${renderChildren()})` : ''}}</>`;
     }
 
     let slotProp = processBinding(slotName as string, options).replace('name=', '');
 
-    if (!slotProp.startsWith('props.slot')) {
-      slotProp = `props.slot${upperFirst(camelCase(slotProp))}`;
+    if (!slotProp.startsWith('props.')) {
+      slotProp = `props.${slotProp}`;
     }
 
-    return `{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}`;
+    return `<>{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}</>`;
   },
   Fragment(json, options, component) {
     const wrap = wrapInFragment(json);
@@ -89,10 +87,18 @@ const NODE_MAPPERS: {
     ))}`;
   },
   Show(json, options, component) {
-    const wrap = wrapInFragment(json) || isRootTextNode(json);
+    const wrap =
+      wrapInFragment(json) ||
+      isRootTextNode(json) ||
+      component.children[0] === json ||
+      // when `<Show><For>...</For></Show>`, we need to wrap the For generated code in a fragment
+      // since it's a `.map()` call
+      (json.children.length === 1 && ['For', 'Show'].includes(json.children[0].name));
+
     const wrapElse =
       json.meta.else &&
       (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
+
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
@@ -145,7 +151,7 @@ export const blockToReact = (
   json: MitosisNode,
   options: ToReactOptions,
   component: MitosisComponent,
-  parentSlots?: any[],
+  parentSlots: any[] = [],
 ) => {
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options, component, parentSlots);
@@ -222,15 +228,36 @@ export const blockToReact = (
         const [newKey, newValue] = mapper(key, useBindingValue, options);
         str += ` ${newKey}={${newValue}} `;
       } else {
-        str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
+        if (useBindingValue === 'true') {
+          str += ` ${BINDING_MAPPERS[key]} `;
+        } else {
+          str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
+        }
       }
     } else if (key === 'style' && options.type === 'native' && json.name === 'ScrollView') {
       // React Native's ScrollView has a different prop for styles: `contentContainerStyle`
       str += ` contentContainerStyle={${useBindingValue}} `;
     } else {
       if (isValidAttributeName(key)) {
-        str += ` ${key}={${useBindingValue}} `;
+        if (useBindingValue === 'true') {
+          str += ` ${key} `;
+        } else {
+          str += ` ${key}={${useBindingValue}} `;
+        }
       }
+    }
+  }
+
+  if (json.slots) {
+    for (const key in json.slots) {
+      const value = json.slots[key];
+      if (!value?.length) {
+        continue;
+      }
+      const reactComponents = value.map((node) => blockToReact(node, options, component));
+      const slotStringValue =
+        reactComponents.length === 1 ? reactComponents[0] : `<>${reactComponents.join('\n')}</>`;
+      str += ` ${key}={${slotStringValue}} `;
     }
   }
 
@@ -250,7 +277,7 @@ export const blockToReact = (
   if (json.children) {
     childrenNodes = json.children
       .map((item) => blockToReact(item, options, component, needsToRenderSlots))
-      .join('\n');
+      .join('');
   }
   if (needsToRenderSlots.length) {
     needsToRenderSlots.forEach(({ key, value }) => {

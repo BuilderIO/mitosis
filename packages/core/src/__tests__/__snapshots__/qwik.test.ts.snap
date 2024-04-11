@@ -3285,10 +3285,9 @@ export const SmileReviews = component$((props) => {
             class=\\"textarea-SmileReviews\\"
           ></textarea>
           <button
-            preventdefault:click=\\"\\"
+            preventdefault:click
             class=\\"button-SmileReviews\\"
             onClick$={$((event) => {
-              event.preventDefault();
               state.showReviewPrompt = false;
             })}
           >
@@ -4677,6 +4676,43 @@ export default ShowRootText;
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useStylesScoped$,
+  useTask$,
+} from \\"@builder.io/qwik\\";
+
+export const MyBasicComponent = component$((props) => {
+  useStylesScoped$(STYLES);
+
+  useTask$(({ track }) => {
+    track(() => props.id);
+    track(() => props.foo.value.bar.baz);
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  });
+
+  return (
+    <div class=\\"test div-MyBasicComponent\\">
+      {props.id}
+      {props.foo.value.bar.baz}
+    </div>
+  );
+});
+
+export default MyBasicComponent;
+
+export const STYLES = \`
+.div-MyBasicComponent {
+  padding: 10px;
+}
+\`;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > spreadAttrs 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
@@ -4920,6 +4956,29 @@ export const UseTargetComponent = component$((props) => {
 });
 
 export default UseTargetComponent;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > webComponent 1`] = `
+"import { Fragment, component$, h, useTask$ } from \\"@builder.io/qwik\\";
+
+import { register } from \\"swiper/element/bundle\\";
+
+export const MyBasicWebComponent = component$((props) => {
+  useTask$(() => {
+    register();
+  });
+
+  return (
+    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+      <swiper-slide>Slide 1</swiper-slide>
+      <swiper-slide>Slide 2</swiper-slide>
+      <swiper-slide>Slide 3</swiper-slide>
+    </swiper-container>
+  );
+});
+
+export default MyBasicWebComponent;
 "
 `;
 
@@ -6634,10 +6693,9 @@ export const SmileReviews = component$((props: SmileReviewsProps) => {
             class=\\"textarea-SmileReviews\\"
           ></textarea>
           <button
-            preventdefault:click=\\"\\"
+            preventdefault:click
             class=\\"button-SmileReviews\\"
             onClick$={$((event) => {
-              event.preventDefault();
               state.showReviewPrompt = false;
             })}
           >
@@ -8200,6 +8258,51 @@ export default ShowRootText;
 "
 `;
 
+exports[`qwik > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useStylesScoped$,
+  useTask$,
+} from \\"@builder.io/qwik\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+export const MyBasicComponent = component$((props: Props) => {
+  useStylesScoped$(STYLES);
+
+  useTask$(({ track }) => {
+    track(() => props.id);
+    track(() => props.foo.bar.baz);
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+  });
+
+  return (
+    <div class=\\"test div-MyBasicComponent\\">
+      {props.id}
+      {props.foo.bar.baz}
+    </div>
+  );
+});
+
+export default MyBasicComponent;
+
+export const STYLES = \`
+.div-MyBasicComponent {
+  padding: 10px;
+}
+\`;
+"
+`;
+
 exports[`qwik > jsx > Typescript Test > spreadAttrs 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
@@ -8451,6 +8554,29 @@ export const UseTargetComponent = component$((props: any) => {
 });
 
 export default UseTargetComponent;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > webComponent 1`] = `
+"import { Fragment, component$, h, useTask$ } from \\"@builder.io/qwik\\";
+
+import { register } from \\"swiper/element/bundle\\";
+
+export const MyBasicWebComponent = component$((props: any) => {
+  useTask$(() => {
+    register();
+  });
+
+  return (
+    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+      <swiper-slide>Slide 1</swiper-slide>
+      <swiper-slide>Slide 2</swiper-slide>
+      <swiper-slide>Slide 3</swiper-slide>
+    </swiper-container>
+  );
+});
+
+export default MyBasicWebComponent;
 "
 `;
 

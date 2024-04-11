@@ -4,14 +4,13 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { PackageName } from './src/testConfig';
 
-export const targets: { packageName: PackageName }[] = [
+export const targets: { packageName: PackageName; port: string }[] = [
   // { packageName: 'e2e-alpine' },
-  // { packageName: 'e2e-angular' },
+  { packageName: 'e2e-angular' },
   { packageName: 'e2e-qwik' },
   { packageName: 'e2e-react' },
   { packageName: 'e2e-solid' },
   { packageName: 'e2e-svelte' },
-  { packageName: 'e2e-vue2' },
   { packageName: 'e2e-vue3' },
 ].map(({ packageName }, i) => {
   const port = 1234 + i;

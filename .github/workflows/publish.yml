@@ -1,0 +1,48 @@
+---
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+  # We allow manually dispatching workflow when needed. Most often, this will not be needed.
+  workflow_dispatch:
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  publish-sdks:
+    name: Publish package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup
+        uses: actions/checkout@v3
+        with:
+          # need this custom token to run CI checks on the created PR
+          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn --immutable
+
+      - name: Create Release PR & Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: yarn ci:release
+          title: "📦 Publish Packages"
+          commit: "📦 Publish Packages"
+        env:
+          # need this custom token to run CI checks on the created PR
+          GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+
+          # probably don't need both of those, but it works!
+          NPM_TOKEN: ${{ secrets.NPM_RELEASE_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_RELEASE_TOKEN }}

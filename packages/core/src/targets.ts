@@ -20,7 +20,7 @@ import { componentToSvelte as svelte } from './generators/svelte';
 import { componentToSwift as swift } from './generators/swift-ui';
 import { componentToTaro as taro } from './generators/taro';
 import { componentToTemplate as template } from './generators/template';
-import { componentToVue2, componentToVue3 } from './generators/vue';
+import { componentToVue as vue } from './generators/vue';
 
 export const builder = componentToBuilder;
 
@@ -38,9 +38,7 @@ export const targets = {
   swift,
   template,
   webcomponent,
-  vue: componentToVue3,
-  vue2: componentToVue2,
-  vue3: componentToVue3,
+  vue,
   stencil,
   qwik,
   marko,

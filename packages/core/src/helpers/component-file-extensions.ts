@@ -1,4 +1,5 @@
-import { checkShouldOutputTypeScript, MitosisConfig, Target } from '@builder.io/mitosis';
+import { MitosisConfig, Target } from '@/types/config';
+import { checkShouldOutputTypeScript } from './output';
 
 const COMPONENT_EXTENSIONS = {
   jsx: ['.lite.tsx', '.lite.jsx'],
@@ -99,8 +100,6 @@ export const getComponentFileExtensionForTarget = (args: Args): string => {
     case 'swift':
       return '.swift';
     case 'vue':
-    case 'vue2':
-    case 'vue3':
       return '.vue';
     case 'webcomponent':
       return '.ts';

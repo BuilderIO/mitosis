@@ -1,9 +1,12 @@
-import { MitosisComponent, parseSvelte } from '..';
+import { MitosisComponent, createTypescriptProject, parseSvelte } from '..';
 import { parseJsx } from '../parsers/jsx';
 import { Target } from '../types/config';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
-const getRawFile = (path: string) => import(`${path}?raw`).then((x) => x.default as string);
+const getRawFile = async (filePath: string) => {
+  const code = await import(`${filePath}?raw`).then((x) => x.default as string);
+  return { code, filePath: ['src', '__tests__', filePath].join('/') };
+};
 
 type RawFile = ReturnType<typeof getRawFile>;
 
@@ -27,7 +30,7 @@ const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
 const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw.tsx');
 const basicChildComponent = getRawFile('./data/basic-child-component.raw.tsx');
 const basicFor = getRawFile('./data/basic-for.raw.tsx');
-const basicForNoTagReference = getRawFile('./data/basic-for-no-tag-reference.raw');
+const basicForNoTagReference = getRawFile('./data/basic-for-no-tag-reference.raw.tsx');
 const basicRef = getRawFile('./data/basic-ref.raw.tsx');
 const basicForwardRef = getRawFile('./data/basic-forwardRef.raw.tsx');
 const basicForwardRefMetadata = getRawFile('./data/basic-forwardRef-metadata.raw.tsx');
@@ -40,7 +43,7 @@ const preserveExportOrLocalStatement = getRawFile(
 );
 const arrowFunctionInUseStore = getRawFile('./data/arrow-function-in-use-store.raw.tsx');
 const svgComponent = getRawFile('./data/svg.raw.tsx');
-
+const webComponent = getRawFile('./data/basic-web-component.raw.tsx');
 const propsType = getRawFile('./data/types/component-props-type.raw.tsx');
 const propsInterface = getRawFile('./data/types/component-props-interface.raw.tsx');
 const preserveTyping = getRawFile('./data/types/preserve-typing.raw.tsx');
@@ -50,6 +53,8 @@ const defaultProps = getRawFile('./data/default-props/default-props.raw.tsx');
 const defaultPropsOutsideComponent = getRawFile(
   './data/default-props/default-props-outside-component.raw.tsx',
 );
+
+const signalsOnUpdate = getRawFile('./data/signals-onUpdate.raw.tsx');
 
 const classRaw = getRawFile('./data/styles/class.raw.tsx');
 const className = getRawFile('./data/styles/className.raw.tsx');
@@ -113,8 +118,6 @@ const builderRenderContent = getRawFile('./data/blocks/builder-render-content.ra
 
 const rootFragmentMultiNode = getRawFile('./data/blocks/root-fragment-multi-node.raw.tsx');
 const renderContentExample = getRawFile('./data/render-content.raw.tsx');
-
-const path = 'test-path';
 
 type Tests = { [index: string]: RawFile };
 
@@ -209,8 +212,10 @@ const BASIC_TESTS: Tests = {
   contentState,
   referencingFunInsideHook,
   svgComponent,
+  webComponent,
   renderBlock,
   useTarget,
+  signalsOnUpdate,
 };
 
 const SLOTS_TESTS: Tests = {
@@ -478,7 +483,7 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
 
 export const runTestsForJsx = () => {
   test('Remove Internal mitosis package', async () => {
-    const component = parseJsx(await basicMitosis, {
+    const component = parseJsx((await basicMitosis).code, {
       compileAwayPackages: ['@dummy/custom-mitosis'],
     });
     expect(component).toMatchSnapshot();
@@ -494,7 +499,7 @@ export const runTestsForJsx = () => {
       JSX_TESTS.forEach((tests) => {
         Object.keys(tests).forEach((key) => {
           test(key, async () => {
-            const component = parseJsx(await tests[key], config);
+            const component = parseJsx((await tests[key]).code, config);
             expect(component).toMatchSnapshot();
           });
         });
@@ -505,11 +510,13 @@ export const runTestsForJsx = () => {
 export const runTestsForSvelteSyntax = () => {
   Object.keys(SVELTE_SYNTAX_TESTS).forEach((key) => {
     test(key, async () => {
-      const component = await parseSvelte(await SVELTE_SYNTAX_TESTS[key]);
+      const component = await parseSvelte((await SVELTE_SYNTAX_TESTS[key]).code);
       expect(component).toMatchSnapshot();
     });
   });
 };
+
+const tsProject = createTypescriptProject(__dirname + '/tsconfig.json');
 
 export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   target,
@@ -527,7 +534,7 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
 
   type ParserConfig = {
     name: 'jsx' | 'svelte';
-    parser: (code: string) => Promise<MitosisComponent>;
+    parser: (args: { code: string; filePath: string }) => Promise<MitosisComponent>;
     testsArray?: Tests[];
   };
 
@@ -535,12 +542,24 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
     const parsers: ParserConfig[] = [
       {
         name: 'jsx',
-        parser: async (x) => parseJsx(x, { typescript: options.typescript }),
+        parser: async ({ code, filePath }) =>
+          parseJsx(
+            code,
+            options.typescript
+              ? {
+                  typescript: true,
+                  filePath,
+                  tsProject,
+                }
+              : {
+                  typescript: false,
+                },
+          ),
         testsArray: JSX_TESTS_FOR_TARGET[target],
       },
       {
         name: 'svelte',
-        parser: async (x) => parseSvelte(x),
+        parser: async ({ filePath, code }) => parseSvelte(code),
         testsArray: [SVELTE_SYNTAX_TESTS],
       },
     ];
@@ -549,10 +568,11 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
         describe(name, () => {
           if (name === 'jsx' && options.typescript === false) {
             test('Remove Internal mitosis package', async () => {
-              const component = parseJsx(await basicMitosis, {
+              const t = await basicMitosis;
+              const component = parseJsx(t.code, {
                 compileAwayPackages: ['@dummy/custom-mitosis'],
               });
-              const output = generator(options)({ component, path });
+              const output = generator(options)({ component, path: t.filePath });
               expect(output).toMatchSnapshot();
             });
           }
@@ -560,8 +580,9 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
             testsArray.forEach((tests) => {
               Object.keys(tests).forEach((key) => {
                 test(key, async () => {
-                  const component = await parser(await tests[key]);
-                  const getOutput = () => generator(options)({ component, path });
+                  const t = await tests[key];
+                  const component = await parser(t);
+                  const getOutput = () => generator(options)({ component, path: t.filePath });
                   try {
                     expect(getOutput()).toMatchSnapshot();
                   } catch (error) {

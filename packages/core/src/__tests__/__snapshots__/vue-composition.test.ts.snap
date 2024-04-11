@@ -35,7 +35,7 @@ const inputNoArgRef = ref(null);
 
 watch(
   () => [inputRef.value, inputNoArgRef.value],
-  ([inputRef, inputNoArgRef]) => {
+  () => {
     console.log(\\"Received an update\\");
   },
   { immediate: true }
@@ -216,17 +216,16 @@ exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
   <div>
     <template v-if=\\"$slots.default\\">
       <slot />
-
       {{ type }}
     </template>
 
     <my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :list=\\"null\\"
     ></my-boolean-attribute-component>
   </div>
@@ -342,9 +341,7 @@ function lowerCaseName() {
 
 exports[`Vue > jsx > Javascript Test > BasicRefAssignment 1`] = `
 "<template>
-  <div>
-    <button @click=\\"handlerClick($event)\\">Click</button>
-  </div>
+  <div><button @click=\\"handlerClick($event)\\">Click</button></div>
 </template>
 
 <script setup>
@@ -388,7 +385,7 @@ const prevCount = ref(null);
 
 watch(
   () => [count.value],
-  ([count]) => {
+  () => {
     prevCount.value = count.value;
   },
   { immediate: true }
@@ -404,15 +401,12 @@ exports[`Vue > jsx > Javascript Test > Button 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
-        {{ text }}
-      </button>
+      <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
     </template>
   </div>
 </template>
@@ -426,7 +420,7 @@ exports[`Vue > jsx > Javascript Test > Columns 1`] = `
 "<template>
   <div class=\\"builder-columns div\\">
     <template :key=\\"index\\" v-for=\\"(column, index) in columns\\">
-      <div class=\\"builder-column div-2\\">{{ column.content }} {{ index }}</div>
+      <div class=\\"builder-column div-2\\">{{ column.content }}{{ index }}</div>
     </template>
   </div>
 </template>
@@ -479,12 +473,8 @@ exports[`Vue > jsx > Javascript Test > ContentSlotHtml 1`] = `
 "<template>
   <div>
     <slot name=\\"testing\\"></slot>
-    <div>
-      <hr />
-    </div>
-    <div>
-      <slot />
-    </div>
+    <div><hr /></div>
+    <div><slot /></div>
   </div>
 </template>
 
@@ -500,16 +490,14 @@ exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
       :name=\\"$slots.content ? 'name1' : 'name2'\\"
       :title=\\"$slots.content ? 'title1' : 'title2'\\"
       @click=\\"show()\\"
-      :class=\\"_classStringToObject(cls)\\"
+      :class=\\"cls\\"
       v-bind=\\"attributes\\"
     >
       <template v-if=\\"showContent && $slots.content\\">
         <slot name=\\"content\\">{{ content }}</slot>
       </template>
 
-      <div>
-        <hr />
-      </div>
+      <div><hr /></div>
       <div><slot /></div>
     </div>
   </template>
@@ -535,17 +523,6 @@ const cls = computed(() => {
 function show() {
   useSlots().content ? 1 : \\"\\";
 }
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
@@ -553,11 +530,7 @@ exports[`Vue > jsx > Javascript Test > CustomCode 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -615,17 +588,6 @@ function findAndRunScripts() {
       }
     }
   }
-}
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>"
 `;
@@ -634,11 +596,7 @@ exports[`Vue > jsx > Javascript Test > Embed 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -696,17 +654,6 @@ function findAndRunScripts() {
       }
     }
   }
-}
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>"
 `;
@@ -749,9 +696,9 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
     </template>
 
     <template v-if=\\"submissionState === 'error' && responseData\\">
-      <pre class=\\"builder-form-error-text pre\\">
-        {{ JSON.stringify(responseData, null, 2) }}
-      </pre>
+      <pre class=\\"builder-form-error-text pre\\">{{
+        JSON.stringify(responseData, null, 2)
+      }}</pre>
     </template>
 
     <template v-if=\\"submissionState === 'success'\\">
@@ -1036,11 +983,7 @@ exports[`Vue > jsx > Javascript Test > Image 1`] = `
         <img
           :alt=\\"altText\\"
           :aria-role=\\"altText ? 'presentation' : undefined\\"
-          :class=\\"
-            _classStringToObject(
-              'builder-image' + (_class ? ' ' + _class : '') + ' img'
-            )
-          \\"
+          :class=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
           :src=\\"image\\"
           @load=\\"setLoaded()\\"
           :srcset=\\"srcset\\"
@@ -1048,9 +991,8 @@ exports[`Vue > jsx > Javascript Test > Image 1`] = `
         />
       </template>
 
-      <source :srcset=\\"srcset\\" />
-    </picture>
-    <slot />
+      <source :srcset=\\"srcset\\" /></picture
+    ><slot />
   </div>
 </template>
 
@@ -1113,17 +1055,6 @@ function isBrowser() {
   return (
     typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
   );
-}
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>
 
@@ -1233,25 +1164,13 @@ function handleChange(value) {
 exports[`Vue > jsx > Javascript Test > RawText 1`] = `
 "<template>
   <span
-    :class=\\"_classStringToObject(attributes?.class || attributes?.className)\\"
+    :class=\\"attributes?.class || attributes?.className\\"
     v-html=\\"text || ''\\"
   ></span>
 </template>
 
 <script setup>
 const props = defineProps([\\"attributes\\", \\"text\\"]);
-
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
@@ -1334,9 +1253,7 @@ const props = defineProps([
 exports[`Vue > jsx > Javascript Test > SlotDefault 1`] = `
 "<template>
   <div>
-    <slot>
-      <div class=\\"default-slot\\">Default content</div>
-    </slot>
+    <slot><div class=\\"default-slot\\">Default content</div></slot>
   </div>
 </template>"
 `;
@@ -1372,9 +1289,8 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 exports[`Vue > jsx > Javascript Test > SlotNamed 1`] = `
 "<template>
   <div>
-    <slot name=\\"top\\"></slot>
-    <slot name=\\"left\\">Default left</slot>
-    <slot>Default Child</slot>
+    <slot name=\\"top\\"></slot><slot name=\\"left\\">Default left</slot
+    ><slot>Default Child</slot>
   </div>
 </template>"
 `;
@@ -1383,17 +1299,13 @@ exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
 "<template>
   <div :data-user=\\"name\\">
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
-
     <template v-if=\\"showReviewPrompt || 'asdf'\\">
       <input placeholder=\\"Email\\" />
-
       <input placeholder=\\"Title\\" class=\\"input\\" />
-
       <textarea
         placeholder=\\"How was your experience?\\"
         class=\\"textarea\\"
       ></textarea>
-
       <button
         class=\\"button\\"
         @click=\\"
@@ -1408,13 +1320,7 @@ exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
     <template :key=\\"review.id\\" v-for=\\"(review, index) in reviews\\">
       <div class=\\"review\\">
         <img class=\\"img\\" :src=\\"review.avatar\\" />
-        <div
-          :class=\\"
-            _classStringToObject(
-              showReviewPrompt ? 'bg-primary' : 'bg-secondary'
-            )
-          \\"
-        >
+        <div :class=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
           <div>N: {{ index }}</div>
           <div>{{ review.author }}</div>
           <div>{{ review.reviewMessage }}</div>
@@ -1452,17 +1358,6 @@ function kebabCaseValue() {
 function snakeCaseValue() {
   return snakeCase(\\"testThis\\");
 }
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>
 
 <style scoped>
@@ -1494,9 +1389,7 @@ function _classStringToObject(str) {
 
 exports[`Vue > jsx > Javascript Test > Submit 1`] = `
 "<template>
-  <button type=\\"submit\\" v-bind=\\"attributes\\">
-    {{ text }}
-  </button>
+  <button type=\\"submit\\" v-bind=\\"attributes\\">{{ text }}</button>
 </template>
 
 <script setup>
@@ -1608,14 +1501,14 @@ function updateNameWithArrowFn(value) {
 exports[`Vue > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "<template>
   <component :is=\\"TagNameGetter\\">
-    Hello <component :is=\\"tag\\">{{ name }}</component>
-    <template :key=\\"index\\" v-for=\\"(action, index) in actions\\">
-      <component :is=\\"TagName\\">
-        <component :is=\\"action.icon\\"></component>
-        <span>{{ action.text }}</span>
-      </component>
-    </template>
-  </component>
+    Hello <component :is=\\"tag\\">{{ name }}</component
+    ><template :key=\\"index\\" v-for=\\"(action, index) in actions\\">
+      <component :is=\\"TagName\\"
+        ><component :is=\\"action.icon\\"></component
+        ><span>{{ action.text }}</span></component
+      >
+    </template></component
+  >
 </template>
 
 <script setup>
@@ -1696,7 +1589,7 @@ const name = ref(\\"PatrickJS\\");
 
 watch(
   () => [name.value],
-  ([name]) => {
+  () => {
     const controller = new AbortController();
     const signal = controller.signal;
     fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -1765,8 +1658,7 @@ exports[`Vue > jsx > Javascript Test > className 1`] = `
 "<template>
   <div>
     <div class=\\"no binding\\">Without Binding</div>
-
-    <div :class=\\"_classStringToObject(bindings)\\">With binding</div>
+    <div :class=\\"bindings\\">With binding</div>
   </div>
 </template>
 
@@ -1774,24 +1666,12 @@ exports[`Vue > jsx > Javascript Test > className 1`] = `
 import { ref } from \\"vue\\";
 
 const bindings = ref(\\"a binding\\");
-
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > classState 1`] = `
 "<template>
-  <div :class=\\"_classStringToObject(classState + ' div')\\" :style=\\"styleState\\">
+  <div :class=\\"classState + ' div'\\" :style=\\"styleState\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -1803,18 +1683,6 @@ const classState = ref(\\"testClassName\\");
 const styleState = ref({
   color: \\"red\\",
 });
-
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>
 
 <style scoped>
@@ -1902,9 +1770,8 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -1937,9 +1804,8 @@ exports[`Vue > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -2043,7 +1909,7 @@ const d = ref(\\"d\\");
 
 watch(
   () => [a.value, b.value],
-  ([a, b]) => {
+  () => {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a.value === \\"a\\") {
@@ -2054,7 +1920,7 @@ watch(
 );
 watch(
   () => [c.value, d.value],
-  ([c, d]) => {
+  () => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
@@ -2268,7 +2134,7 @@ const b = ref(\\"b\\");
 
 watch(
   () => [a.value, b.value, props.size],
-  ([a, b, size]) => {
+  () => {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
   },
   { immediate: true }
@@ -2303,7 +2169,7 @@ const props = defineProps([\\"name\\"]);
 exports[`Vue > jsx > Javascript Test > propsDestructure 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <slot />{{ type }}
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -2377,31 +2243,28 @@ exports[`Vue > jsx > Javascript Test > renderBlock 1`] = `
     </template>
 
     <template v-if=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
-      <component :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\">
-        <component
+      <component :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\"
+        ><component
           :is=\\"renderComponentTag\\"
           v-bind=\\"renderComponentProps\\"
-        ></component>
-
-        <template
+        ></component
+        ><template
           :key=\\"'render-block-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
           <render-block
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></render-block>
-        </template>
-        <template
+          ></render-block> </template
+        ><template
           :key=\\"'block-style-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
           <block-styles
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></block-styles>
-        </template>
-      </component>
+          ></block-styles> </template
+      ></component>
     </template>
   </template>
 
@@ -2643,7 +2506,7 @@ onMounted(() => {
 
 watch(
   () => [props.content],
-  ([content]) => {
+  () => {
     dispatchNewContentToVisualEditor(props.content);
   },
   { immediate: true }
@@ -2665,15 +2528,12 @@ exports[`Vue > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
       :href=\\"link\\"
       :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
       v-bind=\\"attributes\\"
+      >{{ text }}</a
     >
-      {{ text }}
-    </a>
   </template>
 
   <template v-if=\\"!link\\">
-    <button type=\\"button\\" v-bind=\\"attributes\\">
-      {{ text }}
-    </button>
+    <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
   </template>
 </template>
 
@@ -2702,7 +2562,6 @@ exports[`Vue > jsx > Javascript Test > self-referencing component 1`] = `
 "<template>
   <div>
     {{ name }}
-
     <template v-if=\\"name === 'Batman'\\">
       <my-component name=\\"Bruce Wayne\\"></my-component>
     </template>
@@ -2717,13 +2576,9 @@ const props = defineProps([\\"name\\"]);
 exports[`Vue > jsx > Javascript Test > self-referencing component with children 1`] = `
 "<template>
   <div>
-    {{ name }}
-    <slot />
-
+    {{ name }}<slot />
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\">
-        <div>Wayne</div>
-      </my-component>
+      <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
     </template>
   </div>
 </template>
@@ -2763,6 +2618,33 @@ exports[`Vue > jsx > Javascript Test > showWithRootText 1`] = `
 <script setup>
 const props = defineProps([\\"conditionA\\"]);
 </script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"<template>
+  <div class=\\"test div\\">{{ id }}{{ foo.value.bar.baz }}</div>
+</template>
+
+<script setup>
+import { watch } from \\"vue\\";
+
+const props = defineProps([\\"id\\", \\"foo\\"]);
+
+watch(
+  () => [props.id, props.foo.value.bar.baz],
+  () => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  },
+  { immediate: true }
+);
+</script>
+
+<style scoped>
+.div {
+  padding: 10px;
+}
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > spreadAttrs 1`] = `
@@ -2810,26 +2692,11 @@ exports[`Vue > jsx > Javascript Test > styleClassAndCss 1`] = `
 
 exports[`Vue > jsx > Javascript Test > stylePropClassAndCss 1`] = `
 "<template>
-  <div
-    :style=\\"attributes.style\\"
-    :class=\\"_classStringToObject(attributes.className + ' div')\\"
-  ></div>
+  <div :style=\\"attributes.style\\" :class=\\"attributes.className + ' div'\\"></div>
 </template>
 
 <script setup>
 const props = defineProps([\\"attributes\\"]);
-
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>
 
 <style scoped>
@@ -2955,9 +2822,24 @@ const lastName = ref(\\"bar\\");
 onMounted(() => {});
 
 const name = computed(() => {
-  const prefix = \\"v3\\";
+  const prefix = \\"v\\";
   return prefix + \\"foo\\";
 });
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > webComponent 1`] = `
+"<template>
+  <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\"
+    ><swiper-slide>Slide 1</swiper-slide><swiper-slide>Slide 2</swiper-slide
+    ><swiper-slide>Slide 3</swiper-slide></swiper-container
+  >
+</template>
+
+<script setup>
+import { register } from \\"swiper/element/bundle\\";
+
+register();
 </script>"
 `;
 
@@ -3012,7 +2894,7 @@ const inputNoArgRef = ref<HTMLLabelElement>();
 
 watch(
   () => [inputRef.value, inputNoArgRef.value],
-  ([inputRef, inputNoArgRef]) => {
+  () => {
     console.log(\\"Received an update\\");
   },
   { immediate: true }
@@ -3202,17 +3084,16 @@ exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
   <div>
     <template v-if=\\"$slots.default\\">
       <slot />
-
       {{ type }}
     </template>
 
     <my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :toggle=\\"true\\"
-    ></my-boolean-attribute-component>
-    <my-boolean-attribute-component
+    ></my-boolean-attribute-component
+    ><my-boolean-attribute-component
       :list=\\"null\\"
     ></my-boolean-attribute-component>
   </div>
@@ -3337,9 +3218,7 @@ function lowerCaseName() {
 
 exports[`Vue > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "<template>
-  <div>
-    <button @click=\\"handlerClick($event)\\">Click</button>
-  </div>
+  <div><button @click=\\"handlerClick($event)\\">Click</button></div>
 </template>
 
 <script setup lang=\\"ts\\">
@@ -3391,7 +3270,7 @@ const prevCount = ref<undefined>();
 
 watch(
   () => [count.value],
-  ([count]) => {
+  () => {
     prevCount.value = count.value;
   },
   { immediate: true }
@@ -3407,15 +3286,12 @@ exports[`Vue > jsx > Typescript Test > Button 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" v-bind=\\"attributes\\">
-        {{ text }}
-      </button>
+      <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
     </template>
   </div>
 </template>
@@ -3436,7 +3312,7 @@ exports[`Vue > jsx > Typescript Test > Columns 1`] = `
 "<template>
   <div class=\\"builder-columns div\\">
     <template :key=\\"index\\" v-for=\\"(column, index) in columns\\">
-      <div class=\\"builder-column div-2\\">{{ column.content }} {{ index }}</div>
+      <div class=\\"builder-column div-2\\">{{ column.content }}{{ index }}</div>
     </template>
   </div>
 </template>
@@ -3504,12 +3380,8 @@ exports[`Vue > jsx > Typescript Test > ContentSlotHtml 1`] = `
 "<template>
   <div>
     <slot name=\\"testing\\"></slot>
-    <div>
-      <hr />
-    </div>
-    <div>
-      <slot />
-    </div>
+    <div><hr /></div>
+    <div><slot /></div>
   </div>
 </template>
 
@@ -3532,16 +3404,14 @@ exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
       :name=\\"$slots.content ? 'name1' : 'name2'\\"
       :title=\\"$slots.content ? 'title1' : 'title2'\\"
       @click=\\"show()\\"
-      :class=\\"_classStringToObject(cls)\\"
+      :class=\\"cls\\"
       v-bind=\\"attributes\\"
     >
       <template v-if=\\"showContent && $slots.content\\">
         <slot name=\\"content\\">{{ content }}</slot>
       </template>
 
-      <div>
-        <hr />
-      </div>
+      <div><hr /></div>
       <div><slot /></div>
     </div>
   </template>
@@ -3573,17 +3443,6 @@ const cls = computed(() => {
 function show() {
   useSlots().content ? 1 : \\"\\";
 }
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
@@ -3591,11 +3450,7 @@ exports[`Vue > jsx > Typescript Test > CustomCode 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -3658,17 +3513,6 @@ function findAndRunScripts() {
       }
     }
   }
-}
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>"
 `;
@@ -3677,11 +3521,7 @@ exports[`Vue > jsx > Typescript Test > Embed 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :class=\\"
-      _classStringToObject(
-        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
-      )
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     v-html=\\"code\\"
   ></div>
 </template>
@@ -3744,17 +3584,6 @@ function findAndRunScripts() {
       }
     }
   }
-}
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>"
 `;
@@ -3797,9 +3626,9 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
     </template>
 
     <template v-if=\\"submissionState === 'error' && responseData\\">
-      <pre class=\\"builder-form-error-text pre\\">
-        {{ JSON.stringify(responseData, null, 2) }}
-      </pre>
+      <pre class=\\"builder-form-error-text pre\\">{{
+        JSON.stringify(responseData, null, 2)
+      }}</pre>
     </template>
 
     <template v-if=\\"submissionState === 'success'\\">
@@ -4096,11 +3925,7 @@ exports[`Vue > jsx > Typescript Test > Image 1`] = `
         <img
           :alt=\\"altText\\"
           :aria-role=\\"altText ? 'presentation' : undefined\\"
-          :class=\\"
-            _classStringToObject(
-              'builder-image' + (_class ? ' ' + _class : '') + ' img'
-            )
-          \\"
+          :class=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
           :src=\\"image\\"
           @load=\\"setLoaded()\\"
           :srcset=\\"srcset\\"
@@ -4108,9 +3933,8 @@ exports[`Vue > jsx > Typescript Test > Image 1`] = `
         />
       </template>
 
-      <source :srcset=\\"srcset\\" />
-    </picture>
-    <slot />
+      <source :srcset=\\"srcset\\" /></picture
+    ><slot />
   </div>
 </template>
 
@@ -4184,17 +4008,6 @@ function isBrowser() {
   return (
     typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
   );
-}
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
 }
 </script>
 
@@ -4317,7 +4130,7 @@ function handleChange(value: string) {
 exports[`Vue > jsx > Typescript Test > RawText 1`] = `
 "<template>
   <span
-    :class=\\"_classStringToObject(attributes?.class || attributes?.className)\\"
+    :class=\\"attributes?.class || attributes?.className\\"
     v-html=\\"text || ''\\"
   ></span>
 </template>
@@ -4329,18 +4142,6 @@ export interface RawTextProps {
 }
 
 const props = defineProps<RawTextProps>();
-
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
@@ -4440,9 +4241,7 @@ const props = defineProps<FormSelectProps>();
 exports[`Vue > jsx > Typescript Test > SlotDefault 1`] = `
 "<template>
   <div>
-    <slot>
-      <div class=\\"default-slot\\">Default content</div>
-    </slot>
+    <slot><div class=\\"default-slot\\">Default content</div></slot>
   </div>
 </template>
 
@@ -4492,9 +4291,8 @@ type Props = {
 exports[`Vue > jsx > Typescript Test > SlotNamed 1`] = `
 "<template>
   <div>
-    <slot name=\\"top\\"></slot>
-    <slot name=\\"left\\">Default left</slot>
-    <slot>Default Child</slot>
+    <slot name=\\"top\\"></slot><slot name=\\"left\\">Default left</slot
+    ><slot>Default Child</slot>
   </div>
 </template>
 
@@ -4509,17 +4307,13 @@ exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
 "<template>
   <div :data-user=\\"name\\">
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
-
     <template v-if=\\"showReviewPrompt || 'asdf'\\">
       <input placeholder=\\"Email\\" />
-
       <input placeholder=\\"Title\\" class=\\"input\\" />
-
       <textarea
         placeholder=\\"How was your experience?\\"
         class=\\"textarea\\"
       ></textarea>
-
       <button
         class=\\"button\\"
         @click=\\"
@@ -4534,13 +4328,7 @@ exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
     <template :key=\\"review.id\\" v-for=\\"(review, index) in reviews\\">
       <div class=\\"review\\">
         <img class=\\"img\\" :src=\\"review.avatar\\" />
-        <div
-          :class=\\"
-            _classStringToObject(
-              showReviewPrompt ? 'bg-primary' : 'bg-secondary'
-            )
-          \\"
-        >
+        <div :class=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
           <div>N: {{ index }}</div>
           <div>{{ review.author }}</div>
           <div>{{ review.reviewMessage }}</div>
@@ -4583,17 +4371,6 @@ function kebabCaseValue() {
 function snakeCaseValue() {
   return snakeCase(\\"testThis\\");
 }
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>
 
 <style scoped>
@@ -4625,9 +4402,7 @@ function _classStringToObject(str: string) {
 
 exports[`Vue > jsx > Typescript Test > Submit 1`] = `
 "<template>
-  <button type=\\"submit\\" v-bind=\\"attributes\\">
-    {{ text }}
-  </button>
+  <button type=\\"submit\\" v-bind=\\"attributes\\">{{ text }}</button>
 </template>
 
 <script setup lang=\\"ts\\">
@@ -4770,14 +4545,14 @@ function updateNameWithArrowFn(value) {
 exports[`Vue > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "<template>
   <component :is=\\"TagNameGetter\\">
-    Hello <component :is=\\"tag\\">{{ name }}</component>
-    <template :key=\\"index\\" v-for=\\"(action, index) in actions\\">
-      <component :is=\\"TagName\\">
-        <component :is=\\"action.icon\\"></component>
-        <span>{{ action.text }}</span>
-      </component>
-    </template>
-  </component>
+    Hello <component :is=\\"tag\\">{{ name }}</component
+    ><template :key=\\"index\\" v-for=\\"(action, index) in actions\\">
+      <component :is=\\"TagName\\"
+        ><component :is=\\"action.icon\\"></component
+        ><span>{{ action.text }}</span></component
+      >
+    </template></component
+  >
 </template>
 
 <script setup lang=\\"ts\\">
@@ -4868,7 +4643,7 @@ const name = ref(\\"PatrickJS\\");
 
 watch(
   () => [name.value],
-  ([name]) => {
+  () => {
     const controller = new AbortController();
     const signal = controller.signal;
     fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -4937,8 +4712,7 @@ exports[`Vue > jsx > Typescript Test > className 1`] = `
 "<template>
   <div>
     <div class=\\"no binding\\">Without Binding</div>
-
-    <div :class=\\"_classStringToObject(bindings)\\">With binding</div>
+    <div :class=\\"bindings\\">With binding</div>
   </div>
 </template>
 
@@ -4953,24 +4727,12 @@ type Props = {
 };
 
 const bindings = ref(\\"a binding\\");
-
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > classState 1`] = `
 "<template>
-  <div :class=\\"_classStringToObject(classState + ' div')\\" :style=\\"styleState\\">
+  <div :class=\\"classState + ' div'\\" :style=\\"styleState\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -4982,18 +4744,6 @@ const classState = ref(\\"testClassName\\");
 const styleState = ref({
   color: \\"red\\",
 });
-
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>
 
 <style scoped>
@@ -5089,9 +4839,8 @@ exports[`Vue > jsx > Typescript Test > defaultProps 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -5134,9 +4883,8 @@ exports[`Vue > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
         v-bind=\\"attributes\\"
+        >{{ text }}</a
       >
-        {{ text }}
-      </a>
     </template>
 
     <template v-if=\\"!link\\">
@@ -5259,7 +5007,7 @@ const d = ref(\\"d\\");
 
 watch(
   () => [a.value, b.value],
-  ([a, b]) => {
+  () => {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a.value === \\"a\\") {
@@ -5270,7 +5018,7 @@ watch(
 );
 watch(
   () => [c.value, d.value],
-  ([c, d]) => {
+  () => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
@@ -5497,7 +5245,7 @@ const b = ref(\\"b\\");
 
 watch(
   () => [a.value, b.value, props.size],
-  ([a, b, size]) => {
+  () => {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
   },
   { immediate: true }
@@ -5555,7 +5303,7 @@ const props = defineProps<MyBasicComponentProps>();
 exports[`Vue > jsx > Typescript Test > propsDestructure 1`] = `
 "<template>
   <div>
-    <slot /> {{ type }}
+    <slot />{{ type }}
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -5644,31 +5392,28 @@ exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
     </template>
 
     <template v-if=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
-      <component :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\">
-        <component
+      <component :is=\\"tag\\" v-bind=\\"{ ...attributes, ...actions }\\"
+        ><component
           :is=\\"renderComponentTag\\"
           v-bind=\\"renderComponentProps\\"
-        ></component>
-
-        <template
+        ></component
+        ><template
           :key=\\"'render-block-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
           <render-block
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></render-block>
-        </template>
-        <template
+          ></render-block> </template
+        ><template
           :key=\\"'block-style-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
           <block-styles
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></block-styles>
-        </template>
-      </component>
+          ></block-styles> </template
+      ></component>
     </template>
   </template>
 
@@ -5931,7 +5676,7 @@ onMounted(() => {
 
 watch(
   () => [props.content],
-  ([content]) => {
+  () => {
     dispatchNewContentToVisualEditor(props.content);
   },
   { immediate: true }
@@ -5953,15 +5698,12 @@ exports[`Vue > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
       :href=\\"link\\"
       :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
       v-bind=\\"attributes\\"
+      >{{ text }}</a
     >
-      {{ text }}
-    </a>
   </template>
 
   <template v-if=\\"!link\\">
-    <button type=\\"button\\" v-bind=\\"attributes\\">
-      {{ text }}
-    </button>
+    <button type=\\"button\\" v-bind=\\"attributes\\">{{ text }}</button>
   </template>
 </template>
 
@@ -6001,7 +5743,6 @@ exports[`Vue > jsx > Typescript Test > self-referencing component 1`] = `
 "<template>
   <div>
     {{ name }}
-
     <template v-if=\\"name === 'Batman'\\">
       <my-component name=\\"Bruce Wayne\\"></my-component>
     </template>
@@ -6016,13 +5757,9 @@ const props = defineProps([\\"name\\"]);
 exports[`Vue > jsx > Typescript Test > self-referencing component with children 1`] = `
 "<template>
   <div>
-    {{ name }}
-    <slot />
-
+    {{ name }}<slot />
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\">
-        <div>Wayne</div>
-      </my-component>
+      <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
     </template>
   </div>
 </template>
@@ -6073,6 +5810,42 @@ const props = defineProps<Props>();
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"<template>
+  <div class=\\"test div\\">{{ id }}{{ foo.bar.baz }}</div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { watch } from \\"vue\\";
+
+type Props = {
+  id: string;
+  foo: {
+    bar: {
+      baz: number;
+    };
+  };
+};
+
+const props = defineProps<Props>();
+
+watch(
+  () => [props.id, props.foo.bar.baz],
+  () => {
+    console.log(\\"props.id changed\\", props.id);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+  },
+  { immediate: true }
+);
+</script>
+
+<style scoped>
+.div {
+  padding: 10px;
+}
+</style>"
+`;
+
 exports[`Vue > jsx > Typescript Test > spreadAttrs 1`] = `
 "<template>
   <input v-bind=\\"attrs\\" />
@@ -6118,26 +5891,11 @@ exports[`Vue > jsx > Typescript Test > styleClassAndCss 1`] = `
 
 exports[`Vue > jsx > Typescript Test > stylePropClassAndCss 1`] = `
 "<template>
-  <div
-    :style=\\"attributes.style\\"
-    :class=\\"_classStringToObject(attributes.className + ' div')\\"
-  ></div>
+  <div :style=\\"attributes.style\\" :class=\\"attributes.className + ' div'\\"></div>
 </template>
 
 <script setup lang=\\"ts\\">
 const props = defineProps([\\"attributes\\"]);
-
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>
 
 <style scoped>
@@ -6271,9 +6029,24 @@ const lastName = ref(\\"bar\\");
 onMounted(() => {});
 
 const name = computed(() => {
-  const prefix = \\"v3\\";
+  const prefix = \\"v\\";
   return prefix + \\"foo\\";
 });
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > webComponent 1`] = `
+"<template>
+  <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\"
+    ><swiper-slide>Slide 1</swiper-slide><swiper-slide>Slide 2</swiper-slide
+    ><swiper-slide>Slide 3</swiper-slide></swiper-container
+  >
+</template>
+
+<script setup lang=\\"ts\\">
+import { register } from \\"swiper/element/bundle\\";
+
+register();
 </script>"
 `;
 
@@ -6359,11 +6132,7 @@ const value = ref(\\"hello\\");
 exports[`Vue > svelte > Javascript Test > classDirective 1`] = `
 "<template>
   <input
-    :class=\\"
-      _classStringToObject(
-        \`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`
-      )
-    \\"
+    :class=\\"\`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`\\"
   />
 </template>
 
@@ -6372,18 +6141,6 @@ import { ref } from \\"vue\\";
 
 const props = withDefaults(defineProps(), { disabled: undefined });
 const focus = ref(true);
-
-function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
@@ -6543,7 +6300,7 @@ const result = ref(null);
 
 watch(
   () => [a.value, b.value],
-  ([a, b]) => {
+  () => {
     calculateResult(a, b);
   },
   { immediate: true }
@@ -6681,11 +6438,7 @@ const value = ref(\\"hello\\");
 exports[`Vue > svelte > Typescript Test > classDirective 1`] = `
 "<template>
   <input
-    :class=\\"
-      _classStringToObject(
-        \`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`
-      )
-    \\"
+    :class=\\"\`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`\\"
   />
 </template>
 
@@ -6694,18 +6447,6 @@ import { ref } from \\"vue\\";
 
 const props = withDefaults(defineProps<undefined>(), { disabled: undefined });
 const focus = ref(true);
-
-function _classStringToObject(str: string) {
-  const obj: Record<string, boolean> = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}
 </script>"
 `;
 
@@ -6865,7 +6606,7 @@ const result = ref(null);
 
 watch(
   () => [a.value, b.value],
-  ([a, b]) => {
+  () => {
     calculateResult(a, b);
   },
   { immediate: true }

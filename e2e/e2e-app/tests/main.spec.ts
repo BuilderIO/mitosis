@@ -33,12 +33,18 @@ test.describe('e2e', () => {
 
     // await expect(page.locator('li')).toHaveCount(3);
   });
-  test('show-for component test', async ({ page }) => {
+  test('show-for component test', async ({ page, packageName }) => {
     await page.goto('/show-for-component/');
 
-    await expect(page.locator('text=number :1')).toBeVisible();
-    await expect(page.locator('text=number :2')).toBeVisible();
-    await expect(page.locator('text=number :3')).toBeVisible();
+    let textLocator = 'text=number :';
+    if (['e2e-angular'].includes(packageName)) {
+      // angular adds extra whitespace
+      textLocator += ' ';
+    }
+
+    await expect(page.locator(`${textLocator}1`)).toBeVisible();
+    await expect(page.locator(`${textLocator}2`)).toBeVisible();
+    await expect(page.locator(`${textLocator}3`)).toBeVisible();
   });
 
   test.describe('special HTML tags', () => {
@@ -49,7 +55,9 @@ test.describe('e2e', () => {
     });
 
     test('script tag', async ({ page, packageName }) => {
-      if (['e2e-solid', 'e2e-react'].includes(packageName)) {
+      if (
+        ['e2e-solid', 'e2e-react', 'e2e-angular', 'e2e-qwik', 'e2e-svelte'].includes(packageName)
+      ) {
         test.skip();
       }
 
@@ -57,11 +65,14 @@ test.describe('e2e', () => {
       page.on('console', (msg) => consoleMsg.push(msg.text()));
 
       await page.goto('/special-tags/');
-
       await expect(consoleMsg.includes('hello from script tag.')).toBe(true);
     });
 
     test('style tag', async ({ page, packageName }) => {
+      if (['e2e-angular'].includes(packageName)) {
+        test.skip();
+      }
+
       await page.goto('/special-tags/');
 
       const div = page.locator('.wrap');

@@ -21,6 +21,7 @@ exports[`Svelte > jsx > Javascript Test > AdvancedRef 1`] = `
   function onUpdateFn_0(..._args) {
     console.log(\\"Received an update\\");
   }
+
   $: onUpdateFn_0(...[inputRef, inputNoArgRef]);
 </script>
 
@@ -34,13 +35,11 @@ exports[`Svelte > jsx > Javascript Test > AdvancedRef 1`] = `
       }}
       bind:value={name}
     />
-
     <label for=\\"cars\\" bind:this={inputNoArgRef}> Choose a car: </label>
-
-    <select name=\\"cars\\" id=\\"cars\\">
-      <option value=\\"supra\\">GR Supra</option>
-      <option value=\\"86\\">GR 86</option>
-    </select>
+    <select name=\\"cars\\" id=\\"cars\\"
+      ><option value=\\"supra\\">GR Supra</option><option value=\\"86\\">GR 86</option
+      ></select
+    >
   {/if}
   Hello
   {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
@@ -210,12 +209,10 @@ exports[`Svelte > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 <div>
   {#if $$slots.default}
     <slot />
-
     {type}
-  {/if}
-  <MyBooleanAttributeComponent toggle={true} />
-  <MyBooleanAttributeComponent toggle={true} />
-  <MyBooleanAttributeComponent list={null} />
+  {/if}<MyBooleanAttributeComponent toggle={true} /><MyBooleanAttributeComponent
+    toggle={true}
+  /><MyBooleanAttributeComponent list={null} />
 </div>"
 `;
 
@@ -230,9 +227,7 @@ exports[`Svelte > jsx > Javascript Test > BasicChildComponent 1`] = `
 
 <div>
   <MyBasicComponent id={dev} />
-  <div>
-    <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
-  </div>
+  <div><MyBasicOnMountUpdateComponent hi={name} bye={dev} /></div>
 </div>"
 `;
 
@@ -293,13 +288,11 @@ exports[`Svelte > jsx > Javascript Test > BasicRef 1`] = `
       }}
       bind:value={name}
     />
-
     <label for=\\"cars\\" bind:this={inputNoArgRef}> Choose a car: </label>
-
-    <select name=\\"cars\\" id=\\"cars\\">
-      <option value=\\"supra\\">GR Supra</option>
-      <option value=\\"86\\">GR 86</option>
-    </select>
+    <select name=\\"cars\\" id=\\"cars\\"
+      ><option value=\\"supra\\">GR Supra</option><option value=\\"86\\">GR 86</option
+      ></select
+    >
   {/if}
   Hello
   {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
@@ -350,6 +343,7 @@ exports[`Svelte > jsx > Javascript Test > BasicRefPrevious 1`] = `
   function onUpdateFn_0(..._args) {
     prevCount = count;
   }
+
   $: onUpdateFn_0(...[count]);
 </script>
 
@@ -378,16 +372,11 @@ exports[`Svelte > jsx > Javascript Test > Button 1`] = `
     <a
       {...attributes}
       href={link}
-      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}>{text}</a
     >
-      {text}
-    </a>
   {/if}
-
   {#if !link}
-    <button type=\\"button\\" {...attributes}>
-      {text}
-    </button>
+    <button type=\\"button\\" {...attributes}>{text}</button>
   {/if}
 </div>"
 `;
@@ -420,10 +409,7 @@ exports[`Svelte > jsx > Javascript Test > Columns 1`] = `
 
 <div class=\\"builder-columns div\\">
   {#each columns as column, index}
-    <div class=\\"builder-column div-2\\">
-      {column.content}
-      {index}
-    </div>
+    <div class=\\"builder-column div-2\\">{column.content}{index}</div>
   {/each}
 </div>
 
@@ -453,12 +439,8 @@ exports[`Svelte > jsx > Javascript Test > Columns 1`] = `
 exports[`Svelte > jsx > Javascript Test > ContentSlotHtml 1`] = `
 "<div>
   <slot name=\\"testing\\" />
-  <div>
-    <hr />
-  </div>
-  <div>
-    <slot />
-  </div>
+  <div><hr /></div>
+  <div><slot /></div>
 </div>"
 `;
 
@@ -491,9 +473,7 @@ exports[`Svelte > jsx > Javascript Test > ContentSlotJSX 1`] = `
     {#if showContent && $$slots.content}
       <slot name=\\"content\\">{content}</slot>
     {/if}
-    <div>
-      <hr />
-    </div>
+    <div><hr /></div>
     <div><slot /></div>
   </div>
 {/if}"
@@ -902,21 +882,19 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
       <BuilderBlockComponent {block} {index} />
     {/each}
   {/if}
-
   {#if submissionState() === \\"error\\"}
     <BuilderBlocks dataPath=\\"errorMessage\\" blocks={errorMessage} />
   {/if}
-
   {#if submissionState() === \\"sending\\"}
     <BuilderBlocks dataPath=\\"sendingMessage\\" blocks={sendingMessage} />
   {/if}
-
   {#if submissionState() === \\"error\\" && responseData}
-    <pre class=\\"builder-form-error-text pre\\">
-        {JSON.stringify(responseData, null, 2)}
-      </pre>
+    <pre class=\\"builder-form-error-text pre\\">{JSON.stringify(
+        responseData,
+        null,
+        2
+      )}</pre>
   {/if}
-
   {#if submissionState() === \\"success\\"}
     <BuilderBlocks dataPath=\\"successMessage\\" blocks={successMessage} />
   {/if}
@@ -1009,10 +987,8 @@ exports[`Svelte > jsx > Javascript Test > Image 1`] = `
         {srcset}
         {sizes}
       />
-    {/if}
-    <source {srcset} />
-  </picture>
-  <slot />
+    {/if}<source {srcset} /></picture
+  ><slot />
 </div>
 
 <style>
@@ -1206,20 +1182,14 @@ exports[`Svelte > jsx > Javascript Test > Select 1`] = `
   {name}
 >
   {#each options as option, index}
-    <option value={option.value} data-index={index}>
-      {option.name || option.value}
-    </option>
+    <option value={option.value} data-index={index}
+      >{option.name || option.value}</option
+    >
   {/each}
 </select>"
 `;
 
-exports[`Svelte > jsx > Javascript Test > SlotDefault 1`] = `
-"<div>
-  <slot>
-    <div class=\\"default-slot\\">Default content</div>
-  </slot>
-</div>"
-`;
+exports[`Svelte > jsx > Javascript Test > SlotDefault 1`] = `"<div><slot><div class=\\"default-slot\\">Default content</div></slot></div>"`;
 
 exports[`Svelte > jsx > Javascript Test > SlotHtml 1`] = `
 "<script>
@@ -1268,16 +1238,14 @@ import  ContentSlotCode from './content-slot-jsx.raw';
 
 </script>
 
-<div >
-  <ContentSlotCode  slotTesting={<div>Hello</div>} ></ContentSlotCode>
-</div>"
+<div ><ContentSlotCode  slotTesting={<div>Hello</div>} ></ContentSlotCode></div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > SlotNamed 1`] = `
 "<div>
-  <slot name=\\"top\\" />
-  <slot name=\\"left\\">Default left</slot>
-  <slot>Default Child</slot>
+  <slot name=\\"top\\" /><slot name=\\"left\\">Default left</slot><slot
+    >Default Child</slot
+  >
 </div>"
 `;
 
@@ -1321,14 +1289,10 @@ exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
       showReviewPrompt = true;
     }}>Write a review</button
   >
-
   {#if showReviewPrompt || \\"asdf\\"}
     <input placeholder=\\"Email\\" />
-
     <input placeholder=\\"Title\\" class=\\"input\\" />
-
     <textarea placeholder=\\"How was your experience?\\" class=\\"textarea\\" />
-
     <button
       class=\\"button\\"
       on:click={(event) => {
@@ -1339,7 +1303,6 @@ exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
       Submit
     </button>
   {/if}
-
   {#each reviews as review, index (review.id)}
     <div class=\\"review\\">
       <img class=\\"img\\" src={review.avatar} />
@@ -1385,9 +1348,7 @@ exports[`Svelte > jsx > Javascript Test > Submit 1`] = `
   export let text;
 </script>
 
-<button type=\\"submit\\" {...attributes}>
-  {text}
-</button>"
+<button type=\\"submit\\" {...attributes}>{text}</button>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Text 1`] = `
@@ -1498,12 +1459,11 @@ exports[`Svelte > jsx > Javascript Test > basicForNoTagReference 1`] = `
 
 <svelte:component this={TagNameGetter()}>
   Hello <svelte:component this={tag}>{name}</svelte:component>
-
   {#each actions as action}
-    <svelte:component this={TagName}>
-      <svelte:component this={action.icon} />
-      <span>{action.text}</span>
-    </svelte:component>
+    <svelte:component this={TagName}
+      ><svelte:component this={action.icon} /><span>{action.text}</span
+      ></svelte:component
+    >
   {/each}
 </svelte:component>"
 `;
@@ -1515,9 +1475,7 @@ exports[`Svelte > jsx > Javascript Test > basicForwardRef 1`] = `
   let name = \\"PatrickJS\\";
 </script>
 
-<div>
-  <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
-</div>
+<div><input class=\\"input\\" bind:this={inputRef} bind:value={name} /></div>
 
 <style>
   .input {
@@ -1533,9 +1491,7 @@ exports[`Svelte > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
   let name = \\"PatrickJS\\";
 </script>
 
-<div>
-  <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
-</div>
+<div><input class=\\"input\\" bind:this={inputRef} bind:value={name} /></div>
 
 <style>
   .input {
@@ -1564,6 +1520,7 @@ exports[`Svelte > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
       }
     };
   }
+
   $: onUpdateFn_0(...[name]);
 </script>
 
@@ -1609,7 +1566,6 @@ exports[`Svelte > jsx > Javascript Test > className 1`] = `
 
 <div>
   <div class=\\"no binding\\">Without Binding</div>
-
   <div class={bindings}>With binding</div>
 </div>"
 `;
@@ -1693,7 +1649,6 @@ exports[`Svelte > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
 </script>
 
 {foo.value}
-
 <div>other</div>"
 `;
 
@@ -1732,22 +1687,17 @@ exports[`Svelte > jsx > Javascript Test > defaultProps 1`] = `
     <a
       {...attributes}
       href={link}
-      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}>{text}</a
     >
-      {text}
-    </a>
   {/if}
-
   {#if !link}
     <button
       type=\\"button\\"
       {...attributes}
       on:click={(event) => {
         onClick(event);
-      }}
+      }}>{buttonText}</button
     >
-      {buttonText}
-    </button>
   {/if}
 </div>"
 `;
@@ -1766,22 +1716,17 @@ exports[`Svelte > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
     <a
       {...attributes}
       href={link}
-      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}>{text}</a
     >
-      {text}
-    </a>
   {/if}
-
   {#if !link}
     <button
       type=\\"button\\"
       {...attributes}
       on:click={(event) => {
         onClick(event);
-      }}
+      }}>{text}</button
     >
-      {text}
-    </button>
   {/if}
 </div>"
 `;
@@ -1854,7 +1799,9 @@ exports[`Svelte > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
       a = \\"b\\";
     }
   }
+
   $: onUpdateFn_0(...[a, b]);
+
   function onUpdateFn_1(..._args) {
     console.log(\\"Runs when c or d changes\\", c, d);
 
@@ -1862,6 +1809,7 @@ exports[`Svelte > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
       a = \\"b\\";
     }
   }
+
   $: onUpdateFn_1(...[c, d]);
 </script>
 
@@ -2044,6 +1992,7 @@ exports[`Svelte > jsx > Javascript Test > onUpdateWithDeps 1`] = `
   function onUpdateFn_0(..._args) {
     console.log(\\"Runs when a, b or size changes\\", a, b, size);
   }
+
   $: onUpdateFn_0(...[a, b, size]);
 </script>
 
@@ -2078,8 +2027,7 @@ exports[`Svelte > jsx > Javascript Test > propsDestructure 1`] = `
 </script>
 
 <div>
-  <slot />
-  {type}
+  <slot />{type}
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
@@ -2342,12 +2290,11 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
   {/if}
 
   {#if !isEmptyHtmlElement(tag()) && !repeatItemData()}
-    <svelte:component this={tag()} {...attributes()} {...actions()}>
-      <svelte:component
+    <svelte:component this={tag()} {...attributes()} {...actions()}
+      ><svelte:component
         this={renderComponentTag()}
         {...renderComponentProps()}
       />
-
       {#each childrenWithoutParentComponent() as child (\\"render-block-\\" + child.id)}
         <svelte:self block={child} context={childrenContext()} />
       {/each}
@@ -2384,6 +2331,7 @@ exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
   function onUpdateFn_0(..._args) {
     dispatchNewContentToVisualEditor(content);
   }
+
   $: onUpdateFn_0(...[content]);
 
   setContext(BuilderContext.key, {
@@ -2426,16 +2374,12 @@ exports[`Svelte > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
   <a
     {...attributes}
     href={link}
-    target={openLinkInNewTab ? \\"_blank\\" : undefined}
+    target={openLinkInNewTab ? \\"_blank\\" : undefined}>{text}</a
   >
-    {text}
-  </a>
 {/if}
 
 {#if !link}
-  <button type=\\"button\\" {...attributes}>
-    {text}
-  </button>
+  <button type=\\"button\\" {...attributes}>{text}</button>
 {/if}"
 `;
 
@@ -2458,7 +2402,6 @@ exports[`Svelte > jsx > Javascript Test > self-referencing component 1`] = `
 
 <div>
   {name}
-
   {#if name === \\"Batman\\"}
     <svelte:self name=\\"Bruce Wayne\\" />
   {/if}
@@ -2471,13 +2414,9 @@ exports[`Svelte > jsx > Javascript Test > self-referencing component with childr
 </script>
 
 <div>
-  {name}
-  <slot />
-
+  {name}<slot />
   {#if name === \\"Batman\\"}
-    <svelte:self name=\\"Bruce\\">
-      <div>Wayne</div>
-    </svelte:self>
+    <svelte:self name=\\"Bruce\\"><div>Wayne</div></svelte:self>
   {/if}
 </div>"
 `;
@@ -2507,6 +2446,28 @@ exports[`Svelte > jsx > Javascript Test > showWithRootText 1`] = `
 {:else}
   <div>else-condition-A</div>
 {/if}"
+`;
+
+exports[`Svelte > jsx > Javascript Test > signalsOnUpdate 1`] = `
+"<script>
+  export let id;
+  export let foo;
+
+  function onUpdateFn_0(..._args) {
+    console.log(\\"props.id changed\\", id);
+    console.log(\\"props.foo.value.bar.baz changed\\", foo.value.bar.baz);
+  }
+
+  $: onUpdateFn_0(...[id, foo.value.bar.baz]);
+</script>
+
+<div class=\\"test div\\">{id}{foo.value.bar.baz}</div>
+
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > spreadAttrs 1`] = `"<input {...attrs} />"`;
@@ -2594,15 +2555,19 @@ exports[`Svelte > jsx > Javascript Test > svgComponent 1`] = `
   viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
   width={42}
   height={42}
->
-  <defs>
-    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
-      <feFlood result=\\"BackgroundImageFix\\" />
-      <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-      <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
-    </filter>
-  </defs>
-</svg>"
+  ><defs
+    ><filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\"
+      ><feFlood result=\\"BackgroundImageFix\\" /><feBlend
+        in=\\"SourceGraphic\\"
+        in2=\\"BackgroundImageFix\\"
+        result=\\"shape\\"
+      /><feGaussianBlur
+        result=\\"effect1_foregroundBlur\\"
+        stdDeviation={7}
+      /></filter
+    ></defs
+  ></svg
+>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > typeDependency 1`] = `
@@ -2672,6 +2637,25 @@ exports[`Svelte > jsx > Javascript Test > useTarget 1`] = `
 <div>{name()}</div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > webComponent 1`] = `
+"<script>
+  import { register } from \\"swiper/element/bundle\\";
+
+  register();
+</script>
+
+<svelte:component
+  this={swiper - container}
+  slides-per-view=\\"3\\"
+  navigation=\\"true\\"
+  pagination=\\"true\\"
+  ><svelte:component this={swiper - slide}>Slide 1</svelte:component
+  ><svelte:component this={swiper - slide}>Slide 2</svelte:component
+  ><svelte:component this={swiper - slide}>Slide 3</svelte:component
+  ></svelte:component
+>"
+`;
+
 exports[`Svelte > jsx > Remove Internal mitosis package 1`] = `
 "<script>
   let name = \\"PatrickJS\\";
@@ -2707,6 +2691,7 @@ exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
   function onUpdateFn_0(..._args: any[]) {
     console.log(\\"Received an update\\");
   }
+
   $: onUpdateFn_0(...[inputRef, inputNoArgRef]);
 </script>
 
@@ -2720,13 +2705,11 @@ exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
       }}
       bind:value={name}
     />
-
     <label for=\\"cars\\" bind:this={inputNoArgRef}> Choose a car: </label>
-
-    <select name=\\"cars\\" id=\\"cars\\">
-      <option value=\\"supra\\">GR Supra</option>
-      <option value=\\"86\\">GR 86</option>
-    </select>
+    <select name=\\"cars\\" id=\\"cars\\"
+      ><option value=\\"supra\\">GR Supra</option><option value=\\"86\\">GR 86</option
+      ></select
+    >
   {/if}
   Hello
   {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
@@ -2921,12 +2904,10 @@ exports[`Svelte > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 <div>
   {#if $$slots.default}
     <slot />
-
     {type}
-  {/if}
-  <MyBooleanAttributeComponent toggle={true} />
-  <MyBooleanAttributeComponent toggle={true} />
-  <MyBooleanAttributeComponent list={null} />
+  {/if}<MyBooleanAttributeComponent toggle={true} /><MyBooleanAttributeComponent
+    toggle={true}
+  /><MyBooleanAttributeComponent list={null} />
 </div>"
 `;
 
@@ -2941,9 +2922,7 @@ exports[`Svelte > jsx > Typescript Test > BasicChildComponent 1`] = `
 
 <div>
   <MyBasicComponent id={dev} />
-  <div>
-    <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
-  </div>
+  <div><MyBasicOnMountUpdateComponent hi={name} bye={dev} /></div>
 </div>"
 `;
 
@@ -3010,13 +2989,11 @@ exports[`Svelte > jsx > Typescript Test > BasicRef 1`] = `
       }}
       bind:value={name}
     />
-
     <label for=\\"cars\\" bind:this={inputNoArgRef}> Choose a car: </label>
-
-    <select name=\\"cars\\" id=\\"cars\\">
-      <option value=\\"supra\\">GR Supra</option>
-      <option value=\\"86\\">GR 86</option>
-    </select>
+    <select name=\\"cars\\" id=\\"cars\\"
+      ><option value=\\"supra\\">GR Supra</option><option value=\\"86\\">GR 86</option
+      ></select
+    >
   {/if}
   Hello
   {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
@@ -3079,6 +3056,7 @@ exports[`Svelte > jsx > Typescript Test > BasicRefPrevious 1`] = `
   function onUpdateFn_0(..._args: any[]) {
     prevCount = count;
   }
+
   $: onUpdateFn_0(...[count]);
 </script>
 
@@ -3105,10 +3083,10 @@ exports[`Svelte > jsx > Typescript Test > Button 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"];
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
-  export let text: ButtonProps[\\"text\\"];
+  export let link: ButtonProps[\\"link\\"] = undefined;
+  export let attributes: ButtonProps[\\"attributes\\"] = undefined;
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = undefined;
+  export let text: ButtonProps[\\"text\\"] = undefined;
 </script>
 
 <div>
@@ -3116,16 +3094,11 @@ exports[`Svelte > jsx > Typescript Test > Button 1`] = `
     <a
       {...attributes}
       href={link}
-      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}>{text}</a
     >
-      {text}
-    </a>
   {/if}
-
   {#if !link}
-    <button type=\\"button\\" {...attributes}>
-      {text}
-    </button>
+    <button type=\\"button\\" {...attributes}>{text}</button>
   {/if}
 </div>"
 `;
@@ -3150,8 +3123,8 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let columns: ColumnProps[\\"columns\\"];
-  export let space: ColumnProps[\\"space\\"];
+  export let columns: ColumnProps[\\"columns\\"] = undefined;
+  export let space: ColumnProps[\\"space\\"] = undefined;
 
   function getColumns() {
     return columns || [];
@@ -3176,10 +3149,7 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
 
 <div class=\\"builder-columns div\\">
   {#each columns as column, index}
-    <div class=\\"builder-column div-2\\">
-      {column.content}
-      {index}
-    </div>
+    <div class=\\"builder-column div-2\\">{column.content}{index}</div>
   {/each}
 </div>
 
@@ -3220,12 +3190,8 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotHtml 1`] = `
 
 <div>
   <slot name=\\"testing\\" />
-  <div>
-    <hr />
-  </div>
-  <div>
-    <slot />
-  </div>
+  <div><hr /></div>
+  <div><slot /></div>
 </div>"
 `;
 
@@ -3266,9 +3232,7 @@ exports[`Svelte > jsx > Typescript Test > ContentSlotJSX 1`] = `
     {#if showContent && $$slots.content}
       <slot name=\\"content\\">{content}</slot>
     {/if}
-    <div>
-      <hr />
-    </div>
+    <div><hr /></div>
     <div><slot /></div>
   </div>
 {/if}"
@@ -3285,7 +3249,7 @@ exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
 <script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
-  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
+  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"] = undefined;
   export let code: CustomCodeProps[\\"code\\"];
 
   function findAndRunScripts() {
@@ -3359,7 +3323,7 @@ exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
 <script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
-  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
+  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"] = undefined;
   export let code: CustomCodeProps[\\"code\\"];
 
   function findAndRunScripts() {
@@ -3459,24 +3423,25 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
     set,
   } from \\"@fake\\";
 
-  export let previewState: FormProps[\\"previewState\\"];
-  export let sendWithJs: FormProps[\\"sendWithJs\\"];
-  export let sendSubmissionsTo: FormProps[\\"sendSubmissionsTo\\"];
-  export let action: FormProps[\\"action\\"];
-  export let customHeaders: FormProps[\\"customHeaders\\"];
-  export let contentType: FormProps[\\"contentType\\"];
-  export let sendSubmissionsToEmail: FormProps[\\"sendSubmissionsToEmail\\"];
-  export let name: FormProps[\\"name\\"];
-  export let method: FormProps[\\"method\\"];
-  export let errorMessagePath: FormProps[\\"errorMessagePath\\"];
-  export let resetFormOnSubmit: FormProps[\\"resetFormOnSubmit\\"];
-  export let successUrl: FormProps[\\"successUrl\\"];
-  export let validate: FormProps[\\"validate\\"];
-  export let attributes: FormProps[\\"attributes\\"];
-  export let builderBlock: FormProps[\\"builderBlock\\"];
-  export let errorMessage: FormProps[\\"errorMessage\\"];
-  export let sendingMessage: FormProps[\\"sendingMessage\\"];
-  export let successMessage: FormProps[\\"successMessage\\"];
+  export let previewState: FormProps[\\"previewState\\"] = undefined;
+  export let sendWithJs: FormProps[\\"sendWithJs\\"] = undefined;
+  export let sendSubmissionsTo: FormProps[\\"sendSubmissionsTo\\"] = undefined;
+  export let action: FormProps[\\"action\\"] = undefined;
+  export let customHeaders: FormProps[\\"customHeaders\\"] = undefined;
+  export let contentType: FormProps[\\"contentType\\"] = undefined;
+  export let sendSubmissionsToEmail: FormProps[\\"sendSubmissionsToEmail\\"] =
+    undefined;
+  export let name: FormProps[\\"name\\"] = undefined;
+  export let method: FormProps[\\"method\\"] = undefined;
+  export let errorMessagePath: FormProps[\\"errorMessagePath\\"] = undefined;
+  export let resetFormOnSubmit: FormProps[\\"resetFormOnSubmit\\"] = undefined;
+  export let successUrl: FormProps[\\"successUrl\\"] = undefined;
+  export let validate: FormProps[\\"validate\\"] = undefined;
+  export let attributes: FormProps[\\"attributes\\"] = undefined;
+  export let builderBlock: FormProps[\\"builderBlock\\"] = undefined;
+  export let errorMessage: FormProps[\\"errorMessage\\"] = undefined;
+  export let sendingMessage: FormProps[\\"sendingMessage\\"] = undefined;
+  export let successMessage: FormProps[\\"successMessage\\"] = undefined;
 
   function onSubmit(
     event: Event & {
@@ -3725,21 +3690,19 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
       <BuilderBlockComponent {block} {index} />
     {/each}
   {/if}
-
   {#if submissionState() === \\"error\\"}
     <BuilderBlocks dataPath=\\"errorMessage\\" blocks={errorMessage} />
   {/if}
-
   {#if submissionState() === \\"sending\\"}
     <BuilderBlocks dataPath=\\"sendingMessage\\" blocks={sendingMessage} />
   {/if}
-
   {#if submissionState() === \\"error\\" && responseData}
-    <pre class=\\"builder-form-error-text pre\\">
-        {JSON.stringify(responseData, null, 2)}
-      </pre>
+    <pre class=\\"builder-form-error-text pre\\">{JSON.stringify(
+        responseData,
+        null,
+        2
+      )}</pre>
   {/if}
-
   {#if submissionState() === \\"success\\"}
     <BuilderBlocks dataPath=\\"successMessage\\" blocks={successMessage} />
   {/if}
@@ -3779,12 +3742,12 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
 <script lang=\\"ts\\">
   import { onDestroy, onMount } from \\"svelte\\";
 
-  export let lazy: ImageProps[\\"lazy\\"];
-  export let altText: ImageProps[\\"altText\\"];
-  export let _class: ImageProps[\\"_class\\"];
+  export let lazy: ImageProps[\\"lazy\\"] = undefined;
+  export let altText: ImageProps[\\"altText\\"] = undefined;
+  export let _class: ImageProps[\\"_class\\"] = undefined;
   export let image: ImageProps[\\"image\\"];
-  export let srcset: ImageProps[\\"srcset\\"];
-  export let sizes: ImageProps[\\"sizes\\"];
+  export let srcset: ImageProps[\\"srcset\\"] = undefined;
+  export let sizes: ImageProps[\\"sizes\\"] = undefined;
 
   function setLoaded() {
     imageLoaded = true;
@@ -3853,10 +3816,8 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
         {srcset}
         {sizes}
       />
-    {/if}
-    <source {srcset} />
-  </picture>
-  <slot />
+    {/if}<source {srcset} /></picture
+  ><slot />
 </div>
 
 <style>
@@ -3905,11 +3866,11 @@ exports[`Svelte > jsx > Typescript Test > Img 1`] = `
 <script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let backgroundSize: ImgProps[\\"backgroundSize\\"];
-  export let backgroundPosition: ImgProps[\\"backgroundPosition\\"];
-  export let attributes: ImgProps[\\"attributes\\"];
-  export let imgSrc: ImgProps[\\"imgSrc\\"];
-  export let altText: ImgProps[\\"altText\\"];
+  export let backgroundSize: ImgProps[\\"backgroundSize\\"] = undefined;
+  export let backgroundPosition: ImgProps[\\"backgroundPosition\\"] = undefined;
+  export let attributes: ImgProps[\\"attributes\\"] = undefined;
+  export let imgSrc: ImgProps[\\"imgSrc\\"] = undefined;
+  export let altText: ImgProps[\\"altText\\"] = undefined;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -3951,14 +3912,14 @@ exports[`Svelte > jsx > Typescript Test > Input 1`] = `
 <script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let attributes: FormInputProps[\\"attributes\\"];
-  export let defaultValue: FormInputProps[\\"defaultValue\\"];
-  export let placeholder: FormInputProps[\\"placeholder\\"];
-  export let type: FormInputProps[\\"type\\"];
-  export let name: FormInputProps[\\"name\\"];
-  export let value: FormInputProps[\\"value\\"];
-  export let required: FormInputProps[\\"required\\"];
-  export let onChange: FormInputProps[\\"onChange\\"];
+  export let attributes: FormInputProps[\\"attributes\\"] = undefined;
+  export let defaultValue: FormInputProps[\\"defaultValue\\"] = undefined;
+  export let placeholder: FormInputProps[\\"placeholder\\"] = undefined;
+  export let type: FormInputProps[\\"type\\"] = undefined;
+  export let name: FormInputProps[\\"name\\"] = undefined;
+  export let value: FormInputProps[\\"value\\"] = undefined;
+  export let required: FormInputProps[\\"required\\"] = undefined;
+  export let onChange: FormInputProps[\\"onChange\\"] = undefined;
 </script>
 
 <input
@@ -4001,8 +3962,8 @@ exports[`Svelte > jsx > Typescript Test > RawText 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: RawTextProps[\\"attributes\\"];
-  export let text: RawTextProps[\\"text\\"];
+  export let attributes: RawTextProps[\\"attributes\\"] = undefined;
+  export let text: RawTextProps[\\"text\\"] = undefined;
 </script>
 
 <span class={attributes?.class || attributes?.className}
@@ -4020,8 +3981,8 @@ exports[`Svelte > jsx > Typescript Test > Section 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: SectionProps[\\"attributes\\"];
-  export let maxWidth: SectionProps[\\"maxWidth\\"];
+  export let attributes: SectionProps[\\"attributes\\"] = undefined;
+  export let maxWidth: SectionProps[\\"maxWidth\\"] = undefined;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -4056,7 +4017,7 @@ exports[`Svelte > jsx > Typescript Test > Section 2`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: SectionProps[\\"attributes\\"];
+  export let attributes: SectionProps[\\"attributes\\"] = undefined;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -4103,11 +4064,11 @@ exports[`Svelte > jsx > Typescript Test > Select 1`] = `
 <script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let attributes: FormSelectProps[\\"attributes\\"];
-  export let value: FormSelectProps[\\"value\\"];
-  export let defaultValue: FormSelectProps[\\"defaultValue\\"];
-  export let name: FormSelectProps[\\"name\\"];
-  export let options: FormSelectProps[\\"options\\"];
+  export let attributes: FormSelectProps[\\"attributes\\"] = undefined;
+  export let value: FormSelectProps[\\"value\\"] = undefined;
+  export let defaultValue: FormSelectProps[\\"defaultValue\\"] = undefined;
+  export let name: FormSelectProps[\\"name\\"] = undefined;
+  export let options: FormSelectProps[\\"options\\"] = undefined;
 </script>
 
 <select
@@ -4118,9 +4079,9 @@ exports[`Svelte > jsx > Typescript Test > Select 1`] = `
   {name}
 >
   {#each options as option, index}
-    <option value={option.value} data-index={index}>
-      {option.name || option.value}
-    </option>
+    <option value={option.value} data-index={index}
+      >{option.name || option.value}</option
+    >
   {/each}
 </select>"
 `;
@@ -4135,11 +4096,7 @@ exports[`Svelte > jsx > Typescript Test > SlotDefault 1`] = `
 <script lang=\\"ts\\">
 </script>
 
-<div>
-  <slot>
-    <div class=\\"default-slot\\">Default content</div>
-  </slot>
-</div>"
+<div><slot><div class=\\"default-slot\\">Default content</div></slot></div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotHtml 1`] = `
@@ -4204,9 +4161,7 @@ import  ContentSlotCode from './content-slot-jsx.raw';
 
 </script>
 
-<div >
-  <ContentSlotCode  slotTesting={<div>Hello</div>} ></ContentSlotCode>
-</div>"
+<div ><ContentSlotCode  slotTesting={<div>Hello</div>} ></ContentSlotCode></div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > SlotNamed 1`] = `
@@ -4220,9 +4175,9 @@ exports[`Svelte > jsx > Typescript Test > SlotNamed 1`] = `
 </script>
 
 <div>
-  <slot name=\\"top\\" />
-  <slot name=\\"left\\">Default left</slot>
-  <slot>Default Child</slot>
+  <slot name=\\"top\\" /><slot name=\\"left\\">Default left</slot><slot
+    >Default Child</slot
+  >
 </div>"
 `;
 
@@ -4273,14 +4228,10 @@ exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
       showReviewPrompt = true;
     }}>Write a review</button
   >
-
   {#if showReviewPrompt || \\"asdf\\"}
     <input placeholder=\\"Email\\" />
-
     <input placeholder=\\"Title\\" class=\\"input\\" />
-
     <textarea placeholder=\\"How was your experience?\\" class=\\"textarea\\" />
-
     <button
       class=\\"button\\"
       on:click={(event) => {
@@ -4291,7 +4242,6 @@ exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
       Submit
     </button>
   {/if}
-
   {#each reviews as review, index (review.id)}
     <div class=\\"review\\">
       <img class=\\"img\\" src={review.avatar} />
@@ -4340,13 +4290,11 @@ exports[`Svelte > jsx > Typescript Test > Submit 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let text: ButtonProps[\\"text\\"];
+  export let attributes: ButtonProps[\\"attributes\\"] = undefined;
+  export let text: ButtonProps[\\"text\\"] = undefined;
 </script>
 
-<button type=\\"submit\\" {...attributes}>
-  {text}
-</button>"
+<button type=\\"submit\\" {...attributes}>{text}</button>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Text 1`] = `
@@ -4363,8 +4311,8 @@ exports[`Svelte > jsx > Typescript Test > Text 1`] = `
 <script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let text: TextProps[\\"text\\"];
-  export let content: TextProps[\\"content\\"];
+  export let text: TextProps[\\"text\\"] = undefined;
+  export let content: TextProps[\\"content\\"] = undefined;
 
   let name = \\"Decadef20\\";
 </script>
@@ -4391,11 +4339,11 @@ exports[`Svelte > jsx > Typescript Test > Textarea 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: TextareaProps[\\"attributes\\"];
-  export let placeholder: TextareaProps[\\"placeholder\\"];
-  export let name: TextareaProps[\\"name\\"];
-  export let value: TextareaProps[\\"value\\"];
-  export let defaultValue: TextareaProps[\\"defaultValue\\"];
+  export let attributes: TextareaProps[\\"attributes\\"] = undefined;
+  export let placeholder: TextareaProps[\\"placeholder\\"] = undefined;
+  export let name: TextareaProps[\\"name\\"] = undefined;
+  export let value: TextareaProps[\\"value\\"] = undefined;
+  export let defaultValue: TextareaProps[\\"defaultValue\\"] = undefined;
 </script>
 
 <textarea {...attributes} {placeholder} {name} {value} {defaultValue} />"
@@ -4431,15 +4379,15 @@ exports[`Svelte > jsx > Typescript Test > Video 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let attributes: VideoProps[\\"attributes\\"];
-  export let fit: VideoProps[\\"fit\\"];
-  export let position: VideoProps[\\"position\\"];
-  export let video: VideoProps[\\"video\\"];
-  export let posterImage: VideoProps[\\"posterImage\\"];
-  export let autoPlay: VideoProps[\\"autoPlay\\"];
-  export let muted: VideoProps[\\"muted\\"];
-  export let controls: VideoProps[\\"controls\\"];
-  export let loop: VideoProps[\\"loop\\"];
+  export let attributes: VideoProps[\\"attributes\\"] = undefined;
+  export let fit: VideoProps[\\"fit\\"] = undefined;
+  export let position: VideoProps[\\"position\\"] = undefined;
+  export let video: VideoProps[\\"video\\"] = undefined;
+  export let posterImage: VideoProps[\\"posterImage\\"] = undefined;
+  export let autoPlay: VideoProps[\\"autoPlay\\"] = undefined;
+  export let muted: VideoProps[\\"muted\\"] = undefined;
+  export let controls: VideoProps[\\"controls\\"] = undefined;
+  export let loop: VideoProps[\\"loop\\"] = undefined;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
@@ -4505,12 +4453,11 @@ exports[`Svelte > jsx > Typescript Test > basicForNoTagReference 1`] = `
 
 <svelte:component this={TagNameGetter()}>
   Hello <svelte:component this={tag}>{name}</svelte:component>
-
   {#each actions as action}
-    <svelte:component this={TagName}>
-      <svelte:component this={action.icon} />
-      <span>{action.text}</span>
-    </svelte:component>
+    <svelte:component this={TagName}
+      ><svelte:component this={action.icon} /><span>{action.text}</span
+      ></svelte:component
+    >
   {/each}
 </svelte:component>"
 `;
@@ -4529,9 +4476,7 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
   let name = \\"PatrickJS\\";
 </script>
 
-<div>
-  <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
-</div>
+<div><input class=\\"input\\" bind:this={inputRef} bind:value={name} /></div>
 
 <style>
   .input {
@@ -4554,9 +4499,7 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
   let name = \\"PatrickJS\\";
 </script>
 
-<div>
-  <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
-</div>
+<div><input class=\\"input\\" bind:this={inputRef} bind:value={name} /></div>
 
 <style>
   .input {
@@ -4585,6 +4528,7 @@ exports[`Svelte > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
       }
     };
   }
+
   $: onUpdateFn_0(...[name]);
 </script>
 
@@ -4648,7 +4592,6 @@ exports[`Svelte > jsx > Typescript Test > className 1`] = `
 
 <div>
   <div class=\\"no binding\\">Without Binding</div>
-
   <div class={bindings}>With binding</div>
 </div>"
 `;
@@ -4744,7 +4687,6 @@ exports[`Svelte > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
 </script>
 
 {foo.value}
-
 <div>other</div>"
 `;
 
@@ -4780,14 +4722,15 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"] = \\"https://builder.io/\\";
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
-  export let text: ButtonProps[\\"text\\"] = \\"default text\\";
-  export let onClick: ButtonProps[\\"onClick\\"] = () => {
+  export let link: ButtonProps[\\"link\\"] = (undefined = \\"https://builder.io/\\");
+  export let attributes: ButtonProps[\\"attributes\\"] = undefined;
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = (undefined =
+    false);
+  export let text: ButtonProps[\\"text\\"] = (undefined = \\"default text\\");
+  export let onClick: ButtonProps[\\"onClick\\"] = (undefined = () => {
     console.log(\\"hi\\");
-  };
-  export let buttonText: ButtonProps[\\"buttonText\\"];
+  });
+  export let buttonText: ButtonProps[\\"buttonText\\"] = undefined;
 </script>
 
 <div>
@@ -4795,22 +4738,17 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
     <a
       {...attributes}
       href={link}
-      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}>{text}</a
     >
-      {text}
-    </a>
   {/if}
-
   {#if !link}
     <button
       type=\\"button\\"
       {...attributes}
       on:click={(event) => {
         onClick(event);
-      }}
+      }}>{buttonText}</button
     >
-      {buttonText}
-    </button>
   {/if}
 </div>"
 `;
@@ -4827,10 +4765,11 @@ exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"] = \\"https://builder.io/\\";
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
-  export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+  export let link: ButtonProps[\\"link\\"] = (undefined = \\"https://builder.io/\\");
+  export let attributes: ButtonProps[\\"attributes\\"] = undefined;
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = (undefined =
+    false);
+  export let text: ButtonProps[\\"text\\"] = (undefined = \\"default text\\");
   export let onClick: ButtonProps[\\"onClick\\"] = () => {};
 </script>
 
@@ -4839,22 +4778,17 @@ exports[`Svelte > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
     <a
       {...attributes}
       href={link}
-      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}>{text}</a
     >
-      {text}
-    </a>
   {/if}
-
   {#if !link}
     <button
       type=\\"button\\"
       {...attributes}
       on:click={(event) => {
         onClick(event);
-      }}
+      }}>{text}</button
     >
-      {text}
-    </button>
   {/if}
 </div>"
 `;
@@ -4942,7 +4876,9 @@ exports[`Svelte > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
       a = \\"b\\";
     }
   }
+
   $: onUpdateFn_0(...[a, b]);
+
   function onUpdateFn_1(..._args: any[]) {
     console.log(\\"Runs when c or d changes\\", c, d);
 
@@ -4950,6 +4886,7 @@ exports[`Svelte > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
       a = \\"b\\";
     }
   }
+
   $: onUpdateFn_1(...[c, d]);
 </script>
 
@@ -5154,6 +5091,7 @@ exports[`Svelte > jsx > Typescript Test > onUpdateWithDeps 1`] = `
   function onUpdateFn_0(..._args: any[]) {
     console.log(\\"Runs when a, b or size changes\\", a, b, size);
   }
+
   $: onUpdateFn_0(...[a, b, size]);
 </script>
 
@@ -5228,8 +5166,7 @@ exports[`Svelte > jsx > Typescript Test > propsDestructure 1`] = `
 </script>
 
 <div>
-  <slot />
-  {type}
+  <slot />{type}
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
@@ -5521,12 +5458,11 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
   {/if}
 
   {#if !isEmptyHtmlElement(tag()) && !repeatItemData()}
-    <svelte:component this={tag()} {...attributes()} {...actions()}>
-      <svelte:component
+    <svelte:component this={tag()} {...attributes()} {...actions()}
+      ><svelte:component
         this={renderComponentTag()}
         {...renderComponentProps()}
       />
-
       {#each childrenWithoutParentComponent() as child (\\"render-block-\\" + child.id)}
         <svelte:self block={child} context={childrenContext()} />
       {/each}
@@ -5573,6 +5509,7 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
   function onUpdateFn_0(..._args: any[]) {
     dispatchNewContentToVisualEditor(content);
   }
+
   $: onUpdateFn_0(...[content]);
 
   setContext(BuilderContext.key, {
@@ -5614,26 +5551,22 @@ exports[`Svelte > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"];
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
-  export let text: ButtonProps[\\"text\\"];
+  export let link: ButtonProps[\\"link\\"] = undefined;
+  export let attributes: ButtonProps[\\"attributes\\"] = undefined;
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = undefined;
+  export let text: ButtonProps[\\"text\\"] = undefined;
 </script>
 
 {#if link}
   <a
     {...attributes}
     href={link}
-    target={openLinkInNewTab ? \\"_blank\\" : undefined}
+    target={openLinkInNewTab ? \\"_blank\\" : undefined}>{text}</a
   >
-    {text}
-  </a>
 {/if}
 
 {#if !link}
-  <button type=\\"button\\" {...attributes}>
-    {text}
-  </button>
+  <button type=\\"button\\" {...attributes}>{text}</button>
 {/if}"
 `;
 
@@ -5662,7 +5595,6 @@ exports[`Svelte > jsx > Typescript Test > self-referencing component 1`] = `
 
 <div>
   {name}
-
   {#if name === \\"Batman\\"}
     <svelte:self name=\\"Bruce Wayne\\" />
   {/if}
@@ -5675,13 +5607,9 @@ exports[`Svelte > jsx > Typescript Test > self-referencing component with childr
 </script>
 
 <div>
-  {name}
-  <slot />
-
+  {name}<slot />
   {#if name === \\"Batman\\"}
-    <svelte:self name=\\"Bruce\\">
-      <div>Wayne</div>
-    </svelte:self>
+    <svelte:self name=\\"Bruce\\"><div>Wayne</div></svelte:self>
   {/if}
 </div>"
 `;
@@ -5724,6 +5652,41 @@ exports[`Svelte > jsx > Typescript Test > showWithRootText 1`] = `
 {:else}
   <div>else-condition-A</div>
 {/if}"
+`;
+
+exports[`Svelte > jsx > Typescript Test > signalsOnUpdate 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    id: Writable<string>;
+    foo: Writable<{
+      bar: {
+        baz: number;
+      };
+    }>;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import type { Writable } from \\"svelte/store\\";
+
+  export let id: Props[\\"id\\"];
+  export let foo: Props[\\"foo\\"];
+
+  function onUpdateFn_0(..._args: any[]) {
+    console.log(\\"props.id changed\\", id);
+    console.log(\\"props.foo.value.bar.baz changed\\", $foo.bar.baz);
+  }
+  $: onUpdateFn_0_foo_bar_baz = $foo.bar.baz;
+  $: onUpdateFn_0(...[id, onUpdateFn_0_foo_bar_baz]);
+</script>
+
+<div class=\\"test div\\">{id}{$foo.bar.baz}</div>
+
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > spreadAttrs 1`] = `
@@ -5824,15 +5787,19 @@ exports[`Svelte > jsx > Typescript Test > svgComponent 1`] = `
   viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
   width={42}
   height={42}
->
-  <defs>
-    <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
-      <feFlood result=\\"BackgroundImageFix\\" />
-      <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
-      <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
-    </filter>
-  </defs>
-</svg>"
+  ><defs
+    ><filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\"
+      ><feFlood result=\\"BackgroundImageFix\\" /><feBlend
+        in=\\"SourceGraphic\\"
+        in2=\\"BackgroundImageFix\\"
+        result=\\"shape\\"
+      /><feGaussianBlur
+        result=\\"effect1_foregroundBlur\\"
+        stdDeviation={7}
+      /></filter
+    ></defs
+  ></svg
+>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > typeDependency 1`] = `
@@ -5919,6 +5886,25 @@ exports[`Svelte > jsx > Typescript Test > useTarget 1`] = `
 </script>
 
 <div>{name()}</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > webComponent 1`] = `
+"<script lang=\\"ts\\">
+  import { register } from \\"swiper/element/bundle\\";
+
+  register();
+</script>
+
+<svelte:component
+  this={swiper - container}
+  slides-per-view=\\"3\\"
+  navigation=\\"true\\"
+  pagination=\\"true\\"
+  ><svelte:component this={swiper - slide}>Slide 1</svelte:component
+  ><svelte:component this={swiper - slide}>Slide 2</svelte:component
+  ><svelte:component this={swiper - slide}>Slide 3</svelte:component
+  ></svelte:component
+>"
 `;
 
 exports[`Svelte > svelte > Javascript Test > basic 1`] = `
@@ -6158,6 +6144,7 @@ exports[`Svelte > svelte > Javascript Test > reactiveWithFn 1`] = `
   function onUpdateFn_0(..._args) {
     calculateResult(a, b);
   }
+
   $: onUpdateFn_0(...[a, b]);
 </script>
 
@@ -6435,6 +6422,7 @@ exports[`Svelte > svelte > Typescript Test > reactiveWithFn 1`] = `
   function onUpdateFn_0(..._args: any[]) {
     calculateResult(a, b);
   }
+
   $: onUpdateFn_0(...[a, b]);
 </script>
 

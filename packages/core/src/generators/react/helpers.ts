@@ -8,6 +8,7 @@ import traverse from 'traverse';
 import { ToReactOptions } from './types';
 
 export const processBinding = (str: string, options: ToReactOptions) => {
+  // fix web-component tag transform issue with dashes by not transforming it
   if (options.stateType !== 'useState') {
     return str;
   }
@@ -30,10 +31,6 @@ function getRefName(path: string) {
   return upperFirst(path) + 'Ref';
 }
 
-export function getCode(str: string = '', options: ToReactOptions): string {
-  return processBinding(str, options);
-}
-
 export function processTagReferences(json: MitosisComponent, options: ToReactOptions) {
   const namesFound = new Set<string>();
 
@@ -42,7 +39,7 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
       return;
     }
 
-    const processedRefName = processBinding(el.name, options);
+    const processedRefName = el.name.includes('-') ? el.name : processBinding(el.name, options);
 
     if (el.name.includes('state.')) {
       switch (json.state[processedRefName]?.type) {
