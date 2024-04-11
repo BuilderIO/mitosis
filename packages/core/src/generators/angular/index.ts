@@ -348,13 +348,16 @@ export const blockToAngular = (
       : json.name;
 
     const [allProps, events] = handleNgOutletBindings(json);
-    const children = json.children
-      .map((item) => blockToAngular(item, options, blockOptions))
-      .join('\n');
+    // const children = json.children
+    //   .map((item) => blockToAngular(item, options, blockOptions))
+    //   .join('\n');
 
-    str += `<ng-template #${
-      json.name.split('.')[1].toLowerCase() + 'Template'
-    }>${children}</ng-template><ng-container ${events} *ngComponentOutlet="
+    // const ngTemplate = `<ng-template #${
+    //   json.name.split('.')[1].toLowerCase() + 'Template'
+    // }>${children}</ng-template>`;
+    // console.log('ngTemplate', ngTemplate);
+
+    str += `<ng-container ${events} *ngComponentOutlet="
       ${elSelector.replace('state.', '').replace('props.', '')};
       inputs: { ${allProps} };
       content: myContent;
@@ -403,12 +406,20 @@ export const blockToAngular = (
 
 const traverseToGetAllDynamicComponents = (json: MitosisComponent) => {
   const components: Set<string> = new Set();
+  let dynamicTemplate = '';
   traverse(json).forEach((item) => {
-    if (isMitosisNode(item) && item.name.includes('.')) {
+    if (isMitosisNode(item) && item.name.includes('.') && item.name.split('.').length === 2) {
+      const children = item.children.map((child) => blockToAngular(child, {})).join('\n');
+      dynamicTemplate = `<ng-template #${
+        item.name.split('.')[1].toLowerCase() + 'Template'
+      }>${children}</ng-template>`;
       components.add(item.name);
     }
   });
-  return components;
+  return {
+    components,
+    dynamicTemplate,
+  };
 };
 
 const processAngularCode =
@@ -602,10 +613,15 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         stateVars,
       }),
     });
+
+    const { components: dynamicComponents, dynamicTemplate } =
+      traverseToGetAllDynamicComponents(json);
+
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
       selector: `'${kebabCase(json.name || 'my-component')}, ${json.name}'`,
       template: `\`
+        ${indent(dynamicTemplate, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
         ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
         \``,
       ...(css.length
@@ -625,8 +641,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     Object.entries(json.meta.angularConfig || {}).forEach(([key, value]) => {
       componentMetadata[key] = value;
     });
-
-    const dynamicComponents = traverseToGetAllDynamicComponents(json);
 
     const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
       if (!json.defaultProps) return '';
