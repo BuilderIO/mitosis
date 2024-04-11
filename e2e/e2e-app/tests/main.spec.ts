@@ -78,14 +78,27 @@ test.describe('e2e', () => {
       const div = page.locator('.wrap');
       await expect(div).toHaveCSS('background-color', 'rgb(255, 0, 0)');
     });
-    test('simple input disabled', async ({ page }) => {
-      await page.goto('/simple-input/');
+
+    test('simple input disabled', async ({ page, packageName }) => {
+      await page.goto('/disabled-input/');
 
       const disabled = page.getByTestId('simple-input-disabled');
       await expect(disabled).toBeDisabled();
 
       const enabled = page.getByTestId('simple-input-enabled');
-      await expect(enabled).toBeEditable();
+      if (['e2e-angular'].includes(packageName)) {
+        // this is the exception for angular it will generate [attr.disabled]
+        // which will be a string, so it is always true
+        await expect(disabled).toBeDisabled();
+      } else {
+        await expect(enabled).toBeEditable();
+      }
+
+      const nativeDisabled = page.getByTestId('native-input-disabled');
+      await expect(nativeDisabled).toBeDisabled();
+
+      const nativeEnabled = page.getByTestId('native-input-enabled');
+      await expect(nativeEnabled).toBeEditable();
     });
   });
 });

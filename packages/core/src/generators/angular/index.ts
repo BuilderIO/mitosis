@@ -1,4 +1,52 @@
+import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { getComponentsUsed } from '@/helpers/get-components-used';
+import { getCustomImports } from '@/helpers/get-custom-imports';
+import { getPropFunctions } from '@/helpers/get-prop-functions';
+import { getProps } from '@/helpers/get-props';
+import { getPropsRef } from '@/helpers/get-props-ref';
+import { getRefs } from '@/helpers/get-refs';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { indent } from '@/helpers/indent';
+import { isUpperCase } from '@/helpers/is-upper-case';
+import { mapRefs } from '@/helpers/map-refs';
+import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
+import { renderPreComponent } from '@/helpers/render-imports';
+import { replaceIdentifiers } from '@/helpers/replace-identifiers';
+import { isSlotProperty, stripSlotPrefix } from '@/helpers/slots';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
+import {
+  DO_NOT_USE_VARS_TRANSFORMS,
+  stripStateAndPropsRefs,
+} from '@/helpers/strip-state-and-props-refs';
+import { collectCss } from '@/helpers/styles/collect-css';
+import {
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
+} from '@/modules/plugins';
+import { MitosisNode, checkIsForNode } from '@/types/mitosis-node';
+import { TranspilerGenerator } from '@/types/transpiler';
+import { flow, pipe } from 'fp-ts/lib/function';
+import { isString, kebabCase, uniq } from 'lodash';
+import { format } from 'prettier/standalone';
+import isChildren from '../../helpers/is-children';
 
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { initializeOptions } from '@/helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
+import { nodeHasCss } from '@/helpers/styles/helpers';
+import { MitosisComponent } from '@/types/mitosis-component';
+import traverse from 'traverse';
+import { stringifySingleScopeOnMount } from '../helpers/on-mount';
+import {
+  AngularBlockOptions,
+  BUILT_IN_COMPONENTS,
+  DEFAULT_ANGULAR_OPTIONS,
+  ToAngularOptions,
+} from './types';
 
 const mappers: {
   [key: string]: (json: MitosisNode, options: ToAngularOptions) => string;

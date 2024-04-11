@@ -23,7 +23,8 @@ export type ComponentMetadata = {
     ...
   angular?: {
     /* Mitosis uses `attr.XXX` as default see https://angular.io/guide/attribute-binding.
-    If you want to skip some you can use the 'nativeAttributes'. */
+    If you want to skip adding `attr` as prefix you can use the 'nativeAttributes' array. 
+    An example would be `<input disabled>` which can be boolean. With `attr` it becomes a string, which is always true.  */
     nativeAttributes: string[];
   };
     ...
