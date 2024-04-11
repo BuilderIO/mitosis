@@ -348,14 +348,6 @@ export const blockToAngular = (
       : json.name;
 
     const [allProps, events] = handleNgOutletBindings(json);
-    // const children = json.children
-    //   .map((item) => blockToAngular(item, options, blockOptions))
-    //   .join('\n');
-
-    // const ngTemplate = `<ng-template #${
-    //   json.name.split('.')[1].toLowerCase() + 'Template'
-    // }>${children}</ng-template>`;
-    // console.log('ngTemplate', ngTemplate);
 
     str += `<ng-container ${events} *ngComponentOutlet="
       ${elSelector.replace('state.', '').replace('props.', '')};
