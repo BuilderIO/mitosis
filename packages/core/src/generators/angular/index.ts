@@ -646,9 +646,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       options?.experimental?.inject ? 'Inject, forwardRef,' : ''
     } Component ${domRefs.size || dynamicComponents.size ? ', ViewChild, ElementRef' : ''}${
       props.size ? ', Input' : ''
-    } ${
-      dynamicComponents.size ? ', ViewContainerRef, TemplateRef, ChangeDetectorRef' : ''
-    } } from '@angular/core';
+    } ${dynamicComponents.size ? ', ViewContainerRef, TemplateRef' : ''} } from '@angular/core';
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
@@ -746,9 +744,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         !hasConstructor && !dynamicComponents.size
           ? ''
           : `constructor(\n${injectables.join(',\n')}${
-              dynamicComponents.size
-                ? '\nprivate vcRef: ViewContainerRef,\nprivate cdRef: ChangeDetectorRef,\n'
-                : ''
+              dynamicComponents.size ? '\nprivate vcRef: ViewContainerRef,\n' : ''
             }) {
             ${
               !json.hooks?.onInit
@@ -761,34 +757,27 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           `
       }
       ${
-        !json.hooks.onMount.length
+        !json.hooks.onMount.length && !dynamicComponents.size
           ? ''
           : `ngOnInit() {
               ${stringifySingleScopeOnMount(json)}
+              ${
+                dynamicComponents.size
+                  ? `
+              this.myContent = [${Array.from(dynamicComponents)
+                .map(
+                  (component) =>
+                    `this.vcRef.createEmbeddedView(this.${component
+                      .split('.')[1]
+                      .toLowerCase()}TemplateRef).rootNodes`,
+                )
+                .join(', ')}];
+              `
+                  : ''
+              }
             }`
       }
 
-      ${
-        dynamicComponents.size
-          ? `
-        ngAfterViewInit() {
-          ${
-            dynamicComponents.size &&
-            `
-          this.myContent = [${Array.from(dynamicComponents)
-            .map(
-              (component) =>
-                `this.vcRef.createEmbeddedView(this.${component
-                  .split('.')[1]
-                  .toLowerCase()}TemplateRef).rootNodes`,
-            )
-            .join(', ')}];
-          `
-          }
-          this.cdRef.detectChanges();
-          }`
-          : ''
-      }
       ${
         !json.hooks.onUpdate?.length
           ? ''
