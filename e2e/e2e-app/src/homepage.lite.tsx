@@ -1,6 +1,7 @@
 import { For, onMount, Show, useStore } from '@builder.io/mitosis';
 import { COMPONENT_PATHS } from './component-paths';
 import ComponentWithTypes from './components/component-with-types.lite';
+import DisabledInput from './components/disabled-input/disabled-input.lite';
 import NestedParent from './components/nested/nested-parent.lite';
 import OneComponent from './components/one-component.lite';
 import ShowForComponent from './components/show-for-component.lite';
@@ -55,6 +56,10 @@ export default function Homepage(props: { pathname?: string }) {
 
       <Show when={state.pathToUse.startsWith('/signals')}>
         <SignalParent />
+      </Show>
+
+      <Show when={state.pathToUse.startsWith('/disabled-input')}>
+        <DisabledInput />
       </Show>
     </div>
   );

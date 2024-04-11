@@ -5,4 +5,5 @@ export const COMPONENT_PATHS = [
   '/show-for-component/',
   '/special-tags/',
   '/signals/',
+  '/disabled-input/',
 ];

@@ -1,59 +1,52 @@
-import { flow, pipe } from 'fp-ts/lib/function';
-import { isString, kebabCase, uniq } from 'lodash';
-import { format } from 'prettier/standalone';
-import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../constants/html_tags';
-import { dedent } from '../helpers/dedent';
-import { fastClone } from '../helpers/fast-clone';
-import { getComponentsUsed } from '../helpers/get-components-used';
-import { getCustomImports } from '../helpers/get-custom-imports';
-import { getPropFunctions } from '../helpers/get-prop-functions';
-import { getProps } from '../helpers/get-props';
-import { getPropsRef } from '../helpers/get-props-ref';
-import { getRefs } from '../helpers/get-refs';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { indent } from '../helpers/indent';
-import isChildren from '../helpers/is-children';
-import { isUpperCase } from '../helpers/is-upper-case';
-import { mapRefs } from '../helpers/map-refs';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { renderPreComponent } from '../helpers/render-imports';
-import { replaceIdentifiers } from '../helpers/replace-identifiers';
-import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
+import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { getComponentsUsed } from '@/helpers/get-components-used';
+import { getCustomImports } from '@/helpers/get-custom-imports';
+import { getPropFunctions } from '@/helpers/get-prop-functions';
+import { getProps } from '@/helpers/get-props';
+import { getPropsRef } from '@/helpers/get-props-ref';
+import { getRefs } from '@/helpers/get-refs';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { indent } from '@/helpers/indent';
+import { isUpperCase } from '@/helpers/is-upper-case';
+import { mapRefs } from '@/helpers/map-refs';
+import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
+import { renderPreComponent } from '@/helpers/render-imports';
+import { replaceIdentifiers } from '@/helpers/replace-identifiers';
+import { isSlotProperty, stripSlotPrefix } from '@/helpers/slots';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import {
   DO_NOT_USE_VARS_TRANSFORMS,
   stripStateAndPropsRefs,
-} from '../helpers/strip-state-and-props-refs';
-import { collectCss } from '../helpers/styles/collect-css';
+} from '@/helpers/strip-state-and-props-refs';
+import { collectCss } from '@/helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../modules/plugins';
-import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
+} from '@/modules/plugins';
+import { MitosisNode, checkIsForNode } from '@/types/mitosis-node';
+import { TranspilerGenerator } from '@/types/transpiler';
+import { flow, pipe } from 'fp-ts/lib/function';
+import { isString, kebabCase, uniq } from 'lodash';
+import { format } from 'prettier/standalone';
+import isChildren from '../../helpers/is-children';
 
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { initializeOptions } from '@/helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { nodeHasCss } from '@/helpers/styles/helpers';
+import { MitosisComponent } from '@/types/mitosis-component';
 import traverse from 'traverse';
-import { MitosisComponent, isMitosisNode } from '..';
-import { initializeOptions } from '../helpers/merge-options';
-import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
-import { stringifySingleScopeOnMount } from './helpers/on-mount';
-
-const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
-
-export interface ToAngularOptions extends BaseTranspilerOptions {
-  standalone?: boolean;
-  preserveImports?: boolean;
-  preserveFileExtensions?: boolean;
-  importMapper?: Function;
-  bootstrapMapper?: Function;
-}
-
-interface AngularBlockOptions {
-  childComponents?: string[];
-}
+import { stringifySingleScopeOnMount } from '../helpers/on-mount';
+import {
+  AngularBlockOptions,
+  BUILT_IN_COMPONENTS,
+  DEFAULT_ANGULAR_OPTIONS,
+  ToAngularOptions,
+} from './types';
 
 const mappers: {
   [key: string]: (json: MitosisNode, options: ToAngularOptions) => string;
@@ -128,7 +121,9 @@ const BINDINGS_MAPPER: { [key: string]: string | undefined } = {
 export const blockToAngular = (
   json: MitosisNode,
   options: ToAngularOptions = {},
-  blockOptions: AngularBlockOptions = {},
+  blockOptions: AngularBlockOptions = {
+    nativeAttributes: [],
+  },
 ): string => {
   const childComponents = blockOptions?.childComponents || [];
   const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name.trim());
@@ -225,7 +220,10 @@ export const blockToAngular = (
         needsToRenderSlots.push(`${code.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
         str += ` [${BINDINGS_MAPPER[key]}]="${code}"  `;
-      } else if (isValidHtmlTag || key.includes('-')) {
+      } else if (
+        (isValidHtmlTag || key.includes('-')) &&
+        !blockOptions.nativeAttributes.includes(key)
+      ) {
         // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
         str += ` [attr.${key}]="${code}" `;
       } else {
@@ -275,26 +273,25 @@ const processAngularCode =
       (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
     );
 
-const DEFAULT_OPTIONS: ToAngularOptions = {
-  preserveImports: false,
-  preserveFileExtensions: false,
-};
-
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
   ({ component: _component }) => {
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(_component);
 
+    const useMetadata = json.meta?.useMetadata;
+
     const contextVars = Object.keys(json?.context?.get || {});
-    const metaOutputVars: string[] = (json.meta?.useMetadata?.outputs as string[]) || [];
+    // TODO: Why is 'outputs' used here and shouldn't it be typed in packages/core/src/types/metadata.ts
+    const metaOutputVars: string[] = (useMetadata?.outputs as string[]) || [];
+
     const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
     const stateVars = Object.keys(json?.state || {});
 
     const options = initializeOptions({
       target: 'angular',
       component: _component,
-      defaults: DEFAULT_OPTIONS,
+      defaults: DEFAULT_ANGULAR_OPTIONS,
       userOptions: userOptions,
     });
     options.plugins = [
@@ -419,7 +416,12 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
 
     let template = json.children
-      .map((item) => blockToAngular(item, options, { childComponents }))
+      .map((item) =>
+        blockToAngular(item, options, {
+          childComponents,
+          nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
+        }),
+      )
       .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');

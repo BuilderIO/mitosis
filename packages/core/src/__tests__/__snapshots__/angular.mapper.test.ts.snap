@@ -2856,6 +2856,37 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > nativeAttributes 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input [disabled]=\\"disabled\\" />
+
+      Hello! If someone passes \\\\\`[disabled]=\\"false\\"\\\\\` to me, disabled shouldn't
+      be visible in the DOM.
+    </div>
+  \`,
+})
+export class MyComponent {
+  @Input() disabled: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > nestedShow 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7524,6 +7555,37 @@ export class MyBasicComponent {
   bootstrap: [SomeOtherComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > nativeAttributes 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input [disabled]=\\"disabled\\" />
+
+      Hello! If someone passes \\\\\`[disabled]=\\"false\\"\\\\\` to me, disabled shouldn't
+      be visible in the DOM.
+    </div>
+  \`,
+})
+export class MyComponent {
+  @Input() disabled: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
