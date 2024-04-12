@@ -35,6 +35,7 @@ export const transformImports =
     code = renameImport({
       importPath: code,
       target: target,
+      explicitImportFileExtension: options.options?.[target]?.explicitImportFileExtension || false,
     });
     return code;
   };

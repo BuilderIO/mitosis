@@ -66,11 +66,20 @@ export const renameComponentImport = ({
   );
 };
 
-export const renameImport = ({ importPath, target }: { importPath: string; target: Target }) => {
+export const renameImport = ({
+  importPath,
+  target,
+  explicitImportFileExtension,
+}: {
+  importPath: string;
+  target: Target;
+  explicitImportFileExtension: boolean;
+}) => {
   return importPath.replace(
     /\.js(['"])/g,
     `${getFileExtensionForTarget({
       target,
+      explicitImportFileExtension,
     })}$1`,
   );
 };
@@ -149,10 +158,15 @@ export const getComponentFileExtensionForTarget = (args: Args): string => {
   }
 };
 
-export const getFileExtensionForTarget = ({ target }: { target: Target }) => {
+export const getFileExtensionForTarget = ({
+  target,
+  explicitImportFileExtension,
+}: {
+  target: Target;
+  explicitImportFileExtension: boolean;
+}): string => {
   switch (target) {
     case 'angular':
-      return '';
     case 'alpine':
     case 'html':
     case 'svelte':
@@ -169,6 +183,6 @@ export const getFileExtensionForTarget = ({ target }: { target: Target }) => {
     case 'marko':
     case 'preact':
     default:
-      return '.js';
+      return explicitImportFileExtension ? '.js' : '';
   }
 };
