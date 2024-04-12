@@ -3,4 +3,4 @@
 '@builder.io/mitosis-cli': patch
 ---
 
-Feat: explicitImportFileExtension now adds/removes .js extensions to all import files
+Feat: remove all explicit `.js` import extensions when `explicitImportFileExtension` config is `false`

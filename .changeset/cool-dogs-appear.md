@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-Fix: reduce false positive props found in getProps
+Fix: reduce false positive props found in `getProps`
