@@ -52,7 +52,7 @@ export function renderJSXNodes(
         }
       } else if (isSlotProjection(child)) {
         this.file.import(this.file.qwikModule, 'Slot');
-        this.jsxBegin('Slot', {}, {});
+        this.jsxBegin('Slot', child.properties, {});
         this.jsxEnd('Slot');
       } else {
         let childName = child.name;
@@ -185,7 +185,7 @@ function isTextNode(child: MitosisNode) {
 }
 
 function isSlotProjection(child: MitosisNode) {
-  return child.bindings._text?.code === 'props.children';
+  return child.bindings._text?.code === 'props.children' || child.name === 'Slot';
 }
 
 /**
