@@ -161,6 +161,26 @@ const handleObjectBindings = (code: string) => {
   return temp;
 };
 
+const processCodeBlockInTemplate = (key: string, code: string) => {
+  // contains helper calls as Angular doesn't support JS expressions in templates
+  if (code.startsWith('{')) {
+    // Objects cannot be spread out directly in Angular so we need to use `useObjectWrapper`
+    return `[${key}]="useObjectWrapper(${handleObjectBindings(code)})" `;
+  } else if (code.startsWith('Object.values')) {
+    let stripped = code.replace('Object.values', '');
+    return `[${key}]="useObjectDotValues${stripped}" `;
+  } else if (code.includes('JSON.stringify')) {
+    let obj = code.match(/JSON.stringify\([^)]*\)/g);
+    return `[${key}]="useJsonStringify(${obj})" `;
+  } else if (code.includes('as')) {
+    const asIndex = code.indexOf('as');
+    const asCode = code.slice(0, asIndex - 1);
+    return `[${key}]="$any${asCode})"`;
+  } else {
+    return `[${key}]="${code}" `;
+  }
+};
+
 const stringifyBinding =
   (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
@@ -178,11 +198,12 @@ const stringifyBinding =
       return;
     }
 
+    const keyToUse = BINDINGS_MAPPER[key] || key;
     const { code, arguments: cusArgs = ['event'] } = binding!;
     // TODO: proper babel transform to replace. Util for this
 
-    if (key.startsWith('on')) {
-      let event = key.replace('on', '');
+    if (keyToUse.startsWith('on')) {
+      let event = keyToUse.replace('on', '');
       event = event.charAt(0).toLowerCase() + event.slice(1);
 
       if (event === 'change' && node.name === 'input' /* todo: other tags */) {
@@ -197,41 +218,19 @@ const stringifyBinding =
       const replacer = '$1$event$2';
       const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
       return ` (${event})="${finalValue}" `;
-    } else if (key === 'class') {
+    } else if (keyToUse === 'class') {
       return ` [class]="${code}" `;
-    } else if (key === 'ref') {
+    } else if (keyToUse === 'ref') {
       return ` #${code} `;
-    } else if (BINDINGS_MAPPER[key]) {
-      if (code.startsWith('{')) {
-        return `[${BINDINGS_MAPPER[key]}]="useObjectWrapper(${handleObjectBindings(code)})" `;
-      } else if (code.startsWith('Object.values')) {
-        let stripped = code.replace('Object.values', '');
-        return `[${BINDINGS_MAPPER[key]}]="useObjectDotValues${stripped}" `;
-      } else {
-        return `[${BINDINGS_MAPPER[key]}]="${code}" `;
-      }
     } else if (
-      (VALID_HTML_TAGS.includes(node.name.trim()) || key.includes('-')) &&
-      !blockOptions.nativeAttributes.includes(key)
+      (VALID_HTML_TAGS.includes(node.name.trim()) || keyToUse.includes('-')) &&
+      !blockOptions.nativeAttributes.includes(keyToUse) &&
+      !Object.values(BINDINGS_MAPPER).includes(keyToUse)
     ) {
       // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
-      return ` [attr.${key}]="${code}" `;
+      return ` [attr.${keyToUse}]="${code}" `;
     } else {
-      if (code.startsWith('{')) {
-        return `[${key}]="useObjectWrapper(${handleObjectBindings(code)})" `;
-      } else if (code.startsWith('Object.values')) {
-        let stripped = code.replace('Object.values', '');
-        return `[${key}]="useObjectDotValues${stripped}" `;
-      } else if (code.includes('JSON.stringify')) {
-        let obj = code.match(/JSON.stringify\([^)]*\)/g);
-        return `[${key}]="useJsonStringify(${obj})" `;
-      } else if (code.includes('as')) {
-        const asIndex = code.indexOf('as');
-        const asCode = code.slice(0, asIndex - 1);
-        return `[${key}]="$any${asCode})"`;
-      } else {
-        return `[${key}]="${code}" `;
-      }
+      return processCodeBlockInTemplate(keyToUse, code);
     }
   };
 
