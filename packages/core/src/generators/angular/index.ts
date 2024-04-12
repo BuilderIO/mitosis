@@ -162,7 +162,7 @@ const handleObjectBindings = (code: string) => {
 };
 
 const stringifyBinding =
-  (node: MitosisNode, options: ToAngularOptions) =>
+  (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
     if (binding?.type === 'spread') {
       return;
@@ -210,7 +210,10 @@ const stringifyBinding =
       } else {
         return `[${BINDINGS_MAPPER[key]}]="${code}" `;
       }
-    } else if (VALID_HTML_TAGS.includes(node.name.trim()) || key.includes('-')) {
+    } else if (
+      (VALID_HTML_TAGS.includes(node.name.trim()) || key.includes('-')) &&
+      !blockOptions.nativeAttributes.includes(key)
+    ) {
       // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
       return ` [attr.${key}]="${code}" `;
     } else {
@@ -378,7 +381,7 @@ export const blockToAngular = (
     }
 
     const stringifiedBindings = Object.entries(json.bindings)
-      .map(stringifyBinding(json, options))
+      .map(stringifyBinding(json, options, blockOptions))
       .join('');
 
     str += stringifiedBindings;
@@ -396,12 +399,18 @@ export const blockToAngular = (
   return str;
 };
 
-const traverseToGetAllDynamicComponents = (json: MitosisComponent) => {
+const traverseToGetAllDynamicComponents = (
+  json: MitosisComponent,
+  options: ToAngularOptions,
+  blockOptions: AngularBlockOptions,
+) => {
   const components: Set<string> = new Set();
   let dynamicTemplate = '';
   traverse(json).forEach((item) => {
     if (isMitosisNode(item) && item.name.includes('.') && item.name.split('.').length === 2) {
-      const children = item.children.map((child) => blockToAngular(child, {})).join('\n');
+      const children = item.children
+        .map((child) => blockToAngular(child, options, blockOptions))
+        .join('\n');
       dynamicTemplate = `<ng-template #${
         item.name.split('.')[1].toLowerCase() + 'Template'
       }>${children}</ng-template>`;
@@ -606,8 +615,14 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }),
     });
 
-    const { components: dynamicComponents, dynamicTemplate } =
-      traverseToGetAllDynamicComponents(json);
+    const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
+      json,
+      options,
+      {
+        childComponents,
+        nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
+      },
+    );
 
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
