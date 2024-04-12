@@ -172,7 +172,7 @@ const processCodeBlockInTemplate = (key: string, code: string) => {
   } else if (code.includes('JSON.stringify')) {
     let obj = code.match(/JSON.stringify\([^)]*\)/g);
     return `[${key}]="useJsonStringify(${obj})" `;
-  } else if (code.includes('as')) {
+  } else if (code.includes(' as ')) {
     const asIndex = code.indexOf('as');
     const asCode = code.slice(0, asIndex - 1);
     return `[${key}]="$any${asCode})"`;
