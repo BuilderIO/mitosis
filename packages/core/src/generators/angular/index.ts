@@ -40,6 +40,7 @@ import { format } from 'prettier/standalone';
 import traverse from 'traverse';
 import isChildren from '../../helpers/is-children';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
+import { HELPER_FUNCTIONS, getAppropriateTemplateFunctionKeys } from './helpers';
 import {
   AngularBlockOptions,
   BUILT_IN_COMPONENTS,
@@ -589,13 +590,18 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       css = tryFormat(css, 'css');
     }
 
+    const helperFunctions = new Set<string>();
     let template = json.children
-      .map((item) =>
-        blockToAngular(item, options, {
+      .map((item) => {
+        const tmpl = blockToAngular(item, options, {
           childComponents,
           nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
-        }),
-      )
+        });
+        getAppropriateTemplateFunctionKeys(tmpl).forEach((key) =>
+          helperFunctions.add(HELPER_FUNCTIONS[key]),
+        );
+        return tmpl;
+      })
       .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
@@ -719,28 +725,11 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         )
         .join('\n')}
 
-        ${dynamicComponents.size ? 'myContent?: any[][];' : ''}
+      ${dynamicComponents.size ? 'myContent?: any[][];' : ''}
 
-        ${dataString}
-      useObjectWrapper(...args: any[]) {
-        let obj = {}
-        args.forEach((arg) => {
-          obj = { ...obj, ...arg };
-        });
-        return obj;
-      }
+      ${dataString}
 
-      useObjectDotValues(obj: any): any[] {
-        return Object.values(obj);
-      }
-
-      useTypeOf(obj: any): string {
-        return typeof obj;
-      }
-
-      useJsonStringify(obj: any): string {
-        return JSON.stringify(obj);
-      }
+      ${helperFunctions.size ? Array.from(helperFunctions).join('\n') : ''}
 
       ${jsRefs
         .map((ref) => {
