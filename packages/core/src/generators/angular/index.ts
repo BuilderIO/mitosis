@@ -9,8 +9,11 @@ import { getPropsRef } from '@/helpers/get-props-ref';
 import { getRefs } from '@/helpers/get-refs';
 import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
 import { indent } from '@/helpers/indent';
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { isUpperCase } from '@/helpers/is-upper-case';
 import { mapRefs } from '@/helpers/map-refs';
+import { initializeOptions } from '@/helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { renderPreComponent } from '@/helpers/render-imports';
 import { replaceIdentifiers } from '@/helpers/replace-identifiers';
@@ -21,26 +24,23 @@ import {
   stripStateAndPropsRefs,
 } from '@/helpers/strip-state-and-props-refs';
 import { collectCss } from '@/helpers/styles/collect-css';
+import { nodeHasCss } from '@/helpers/styles/helpers';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '@/modules/plugins';
-import { MitosisNode, checkIsForNode } from '@/types/mitosis-node';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { Binding, MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { isString, kebabCase, uniq } from 'lodash';
 import { format } from 'prettier/standalone';
-import isChildren from '../../helpers/is-children';
-
-import { isMitosisNode } from '@/helpers/is-mitosis-node';
-import { initializeOptions } from '@/helpers/merge-options';
-import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
-import { nodeHasCss } from '@/helpers/styles/helpers';
-import { MitosisComponent } from '@/types/mitosis-component';
 import traverse from 'traverse';
+import isChildren from '../../helpers/is-children';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
+import { HELPER_FUNCTIONS, getAppropriateTemplateFunctionKeys } from './helpers';
 import {
   AngularBlockOptions,
   BUILT_IN_COMPONENTS,
@@ -118,6 +118,167 @@ const BINDINGS_MAPPER: { [key: string]: string | undefined } = {
   style: 'ngStyle',
 };
 
+const handleObjectBindings = (code: string) => {
+  let objectCode = code.replace(/^{/, '').replace(/}$/, '');
+  objectCode = objectCode.replace(/\/\/.*\n/g, '');
+
+  const spreadOutObjects = objectCode
+    .split(',')
+    .filter((item) => item.includes('...'))
+    .map((item) => item.replace('...', '').trim());
+
+  const objectKeys = objectCode
+    .split(',')
+    .filter((item) => !item.includes('...'))
+    .map((item) => item.trim());
+
+  const otherObjs = objectKeys.map((item) => {
+    return `{ ${item} }`;
+  });
+
+  let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
+
+  if (temp.endsWith(', ')) {
+    temp = temp.slice(0, -2);
+  }
+
+  if (temp.startsWith(', ')) {
+    temp = temp.slice(2);
+  }
+
+  // handle template strings
+  if (temp.includes('`')) {
+    // template str
+    let str = temp.match(/`[^`]*`/g);
+
+    let values = str && str[0].match(/\${[^}]*}/g);
+    let forValues = values?.map((val) => val.slice(2, -1)).join(' + ');
+
+    if (str && forValues) {
+      temp = temp.replace(str[0], forValues);
+    }
+  }
+
+  return temp;
+};
+
+const processCodeBlockInTemplate = (code: string) => {
+  // contains helper calls as Angular doesn't support JS expressions in templates
+  if (code.startsWith('{')) {
+    // Objects cannot be spread out directly in Angular so we need to use `useObjectWrapper`
+    return `"useObjectWrapper(${handleObjectBindings(code)})" `;
+  } else if (code.startsWith('Object.values')) {
+    let stripped = code.replace('Object.values', '');
+    return `"useObjectDotValues${stripped}" `;
+  } else if (code.includes('JSON.stringify')) {
+    let obj = code.match(/JSON.stringify\([^)]*\)/g);
+    return `"useJsonStringify(${obj})" `;
+  } else if (code.includes(' as ')) {
+    const asIndex = code.indexOf('as');
+    const asCode = code.slice(0, asIndex - 1);
+    return `"$any${asCode})"`;
+  } else {
+    return `"${code}" `;
+  }
+};
+
+const processEventBinding = (key: string, code: string, nodeName: string, customArg: string) => {
+  let event = key.replace('on', '');
+  event = event.charAt(0).toLowerCase() + event.slice(1);
+
+  if (event === 'change' && nodeName === 'input' /* todo: other tags */) {
+    event = 'input';
+  }
+  // TODO: proper babel transform to replace. Util for this
+  const eventName = customArg;
+  const regexp = new RegExp(
+    '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
+    'g',
+  );
+  const replacer = '$1$event$2';
+  const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
+  return ` (${event})="${finalValue}" `;
+};
+
+const stringifyBinding =
+  (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
+  ([key, binding]: [string, Binding | undefined]) => {
+    if (binding?.type === 'spread') {
+      return;
+    }
+    if (key.startsWith('$')) {
+      return;
+    }
+    if (key === 'key') {
+      return;
+    }
+    if (key === 'attributes') {
+      // TODO: contains ternary operator which needs to be handled
+      return;
+    }
+
+    const keyToUse = BINDINGS_MAPPER[key] || key;
+    const { code, arguments: cusArgs = ['event'] } = binding!;
+    // TODO: proper babel transform to replace. Util for this
+
+    if (keyToUse.startsWith('on')) {
+      return processEventBinding(keyToUse, code, node.name, cusArgs[0]);
+    } else if (keyToUse === 'class') {
+      return ` [class]="${code}" `;
+    } else if (keyToUse === 'ref') {
+      return ` #${code} `;
+    } else if (
+      (VALID_HTML_TAGS.includes(node.name.trim()) || keyToUse.includes('-')) &&
+      !blockOptions.nativeAttributes.includes(keyToUse) &&
+      !Object.values(BINDINGS_MAPPER).includes(keyToUse)
+    ) {
+      // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
+      return ` [attr.${keyToUse}]="${code}" `;
+    } else {
+      return `[${keyToUse}]=${processCodeBlockInTemplate(code)}`;
+    }
+  };
+
+const handleNgOutletBindings = (node: MitosisNode) => {
+  let allProps = '';
+  let events = '';
+  for (const key in node.bindings) {
+    if (key.startsWith('"')) {
+      continue;
+    }
+    if (key.startsWith('$')) {
+      continue;
+    }
+    const { code, arguments: cusArgs = ['event'] } = node.bindings[key]!;
+
+    if (code.includes('?')) {
+      // TODO handle ternary
+      continue;
+    } else if (key.includes('props.')) {
+      allProps += `${key.replace('props.', '')}: ${code}, `;
+    } else if (key.includes('.')) {
+      // TODO: handle arbitrary spread props
+      allProps += `${key.split('.')[1]}: ${code},`;
+    } else if (key.startsWith('on')) {
+      events += processEventBinding(key, code, node.name, cusArgs[0]);
+    } else {
+      const codeToUse = processCodeBlockInTemplate(code);
+      const keyToUse = key.includes('-') ? `'${key}'` : key;
+      allProps += `${keyToUse}: ${codeToUse}, `;
+    }
+  }
+
+  if (allProps.endsWith(', ')) {
+    allProps = allProps.slice(0, -2);
+  }
+
+  if (allProps.startsWith(', ')) {
+    allProps = allProps.slice(2);
+  }
+
+  return [allProps, events];
+};
+
 export const blockToAngular = (
   json: MitosisNode,
   options: ToAngularOptions = {},
@@ -126,7 +287,6 @@ export const blockToAngular = (
   },
 ): string => {
   const childComponents = blockOptions?.childComponents || [];
-  const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name.trim());
 
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
@@ -146,12 +306,16 @@ export const blockToAngular = (
       return `<ng-content select="[${selector}]"></ng-content>`;
     }
 
+    if (textCode.includes('JSON.stringify')) {
+      let obj = textCode.replace('JSON.stringify', '');
+      obj = obj.replace(/\(.*?\)/, '');
+      return `{{useJsonStringify${obj}}}`;
+    }
+
     return `{{${textCode}}}`;
   }
 
   let str = '';
-
-  const needsToRenderSlots = [];
 
   if (checkIsForNode(json)) {
     const indexName = json.scope.indexName;
@@ -161,8 +325,27 @@ export const blockToAngular = (
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
-    str += `<ng-container *ngIf="${json.bindings.when?.code}">`;
+    let condition = json.bindings.when?.code;
+    if (condition?.includes('typeof')) {
+      let wordAfterTypeof = condition.split('typeof')[1].trim();
+      condition = condition.replace(`typeof ${wordAfterTypeof}`, `useTypeOf(${wordAfterTypeof})`);
+    }
+    str += `<ng-container *ngIf="${condition}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
+    str += `</ng-container>`;
+  } else if (json.name.includes('.')) {
+    const elSelector = childComponents.find((impName) => impName === json.name)
+      ? kebabCase(json.name)
+      : json.name;
+
+    const [allProps, events] = handleNgOutletBindings(json);
+
+    str += `<ng-container ${events} *ngComponentOutlet="
+      ${elSelector.replace('state.', '').replace('props.', '')};
+      inputs: { ${allProps} };
+      content: myContent;
+      ">  `;
+
     str += `</ng-container>`;
   } else {
     const elSelector = childComponents.find((impName) => impName === json.name)
@@ -184,60 +367,16 @@ export const blockToAngular = (
       const value = json.properties[key];
       str += ` ${key}="${value}" `;
     }
-    for (const key in json.bindings) {
-      if (json.bindings[key]?.type === 'spread') {
-        continue;
-      }
-      if (key.startsWith('$')) {
-        continue;
-      }
 
-      const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
-      // TODO: proper babel transform to replace. Util for this
+    const stringifiedBindings = Object.entries(json.bindings)
+      .map(stringifyBinding(json, options, blockOptions))
+      .join('');
 
-      if (key.startsWith('on')) {
-        let event = key.replace('on', '');
-        event = event.charAt(0).toLowerCase() + event.slice(1);
-
-        if (event === 'change' && json.name === 'input' /* todo: other tags */) {
-          event = 'input';
-        }
-        // TODO: proper babel transform to replace. Util for this
-        const eventName = cusArgs[0];
-        const regexp = new RegExp(
-          '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
-          'g',
-        );
-        const replacer = '$1$event$2';
-        const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
-        str += ` (${event})="${finalValue}" `;
-      } else if (key === 'class') {
-        str += ` [class]="${code}" `;
-      } else if (key === 'ref') {
-        str += ` #${code} `;
-      } else if (isSlotProperty(key)) {
-        const lowercaseKey = pipe(key, stripSlotPrefix, (x) => x.toLowerCase());
-        needsToRenderSlots.push(`${code.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
-      } else if (BINDINGS_MAPPER[key]) {
-        str += ` [${BINDINGS_MAPPER[key]}]="${code}"  `;
-      } else if (
-        (isValidHtmlTag || key.includes('-')) &&
-        !blockOptions.nativeAttributes.includes(key)
-      ) {
-        // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
-        str += ` [attr.${key}]="${code}" `;
-      } else {
-        str += `[${key}]="${code}" `;
-      }
-    }
+    str += stringifiedBindings;
     if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
       return str + ' />';
     }
     str += '>';
-
-    if (needsToRenderSlots.length > 0) {
-      str += needsToRenderSlots.map((el) => el).join('');
-    }
 
     if (json.children) {
       str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
@@ -246,6 +385,30 @@ export const blockToAngular = (
     str += `</${elSelector}>`;
   }
   return str;
+};
+
+const traverseToGetAllDynamicComponents = (
+  json: MitosisComponent,
+  options: ToAngularOptions,
+  blockOptions: AngularBlockOptions,
+) => {
+  const components: Set<string> = new Set();
+  let dynamicTemplate = '';
+  traverse(json).forEach((item) => {
+    if (isMitosisNode(item) && item.name.includes('.') && item.name.split('.').length === 2) {
+      const children = item.children
+        .map((child) => blockToAngular(child, options, blockOptions))
+        .join('\n');
+      dynamicTemplate = `<ng-template #${
+        item.name.split('.')[1].toLowerCase() + 'Template'
+      }>${children}</ng-template>`;
+      components.add(item.name);
+    }
+  });
+  return {
+    components,
+    dynamicTemplate,
+  };
 };
 
 const processAngularCode =
@@ -415,13 +578,18 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       css = tryFormat(css, 'css');
     }
 
+    const helperFunctions = new Set<string>();
     let template = json.children
-      .map((item) =>
-        blockToAngular(item, options, {
+      .map((item) => {
+        const tmpl = blockToAngular(item, options, {
           childComponents,
           nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
-        }),
-      )
+        });
+        getAppropriateTemplateFunctionKeys(tmpl).forEach((key) =>
+          helperFunctions.add(HELPER_FUNCTIONS[key]),
+        );
+        return tmpl;
+      })
       .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
@@ -439,10 +607,21 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         stateVars,
       }),
     });
+
+    const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
+      json,
+      options,
+      {
+        childComponents,
+        nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
+      },
+    );
+
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
       selector: `'${kebabCase(json.name || 'my-component')}, ${json.name}'`,
       template: `\`
+        ${indent(dynamicTemplate, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
         ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
         \``,
       ...(css.length
@@ -479,9 +658,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     let str = dedent`
     import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
       options?.experimental?.inject ? 'Inject, forwardRef,' : ''
-    } Component ${domRefs.size ? ', ViewChild, ElementRef' : ''}${
+    } Component ${domRefs.size || dynamicComponents.size ? ', ViewChild, ElementRef' : ''}${
       props.size ? ', Input' : ''
-    } } from '@angular/core';
+    } ${dynamicComponents.size ? ', ViewContainerRef, TemplateRef' : ''} } from '@angular/core';
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
@@ -501,7 +680,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .map(([k, v]) => `${k}: ${v}`)
         .join(',')}
     })
-    export class ${json.name} {
+    export default class ${json.name} {
       ${localExportVars.join('\n')}
       ${customImports.map((name) => `${name} = ${name}`).join('\n')}
 
@@ -509,7 +688,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .filter((item) => !isSlotProperty(item) && item !== 'children')
         .map((item) => {
           const propType = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
-          let propDeclaration = `@Input() ${item}: ${propType}`;
+          let propDeclaration = `@Input() ${item}!: ${propType}`;
           if (json.defaultProps && json.defaultProps.hasOwnProperty(item)) {
             propDeclaration += ` = defaultProps["${item}"]`;
           }
@@ -520,10 +699,25 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${outputs.join('\n')}
 
       ${Array.from(domRefs)
-        .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
+        .map((refName) => `@ViewChild('${refName}') ${refName}!: ElementRef`)
+        .join('\n')}
+      
+      ${Array.from(dynamicComponents)
+        .map(
+          (component) =>
+            `@ViewChild('${component
+              .split('.')[1]
+              .toLowerCase()}Template', { static: true }) ${component
+              .split('.')[1]
+              .toLowerCase()}TemplateRef!: TemplateRef<any>`,
+        )
         .join('\n')}
 
+      ${dynamicComponents.size ? 'myContent?: any[][];' : ''}
+
       ${dataString}
+
+      ${helperFunctions.size ? Array.from(helperFunctions).join('\n') : ''}
 
       ${jsRefs
         .map((ref) => {
@@ -544,9 +738,11 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .join('\n')}
 
       ${
-        !hasConstructor
+        !hasConstructor && !dynamicComponents.size
           ? ''
-          : `constructor(\n${injectables.join(',\n')}) {
+          : `constructor(\n${injectables.join(',\n')}${
+              dynamicComponents.size ? '\nprivate vcRef: ViewContainerRef,\n' : ''
+            }) {
             ${
               !json.hooks?.onInit
                 ? ''
@@ -558,10 +754,24 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           `
       }
       ${
-        !json.hooks.onMount.length
+        !json.hooks.onMount.length && !dynamicComponents.size
           ? ''
           : `ngOnInit() {
               ${stringifySingleScopeOnMount(json)}
+              ${
+                dynamicComponents.size
+                  ? `
+              this.myContent = [${Array.from(dynamicComponents)
+                .map(
+                  (component) =>
+                    `this.vcRef.createEmbeddedView(this.${component
+                      .split('.')[1]
+                      .toLowerCase()}TemplateRef).rootNodes`,
+                )
+                .join(', ')}];
+              `
+                  : ''
+              }
             }`
       }
 
