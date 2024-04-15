@@ -1023,23 +1023,23 @@ exports[`Svelte > jsx > Javascript Test > Img 1`] = `
   export let attributes;
   export let imgSrc;
   export let altText;
-
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 </script>
 
 <img
-  use:mitosis_styling={{
+  style={stringifyStyles({
     objectFit: backgroundSize || \\"cover\\",
     objectPosition: backgroundPosition || \\"center\\",
-  }}
+  })}
   {...attributes}
   key={(Builder.isEditing && imgSrc) || \\"default-key\\"}
   alt={altText}
@@ -1108,23 +1108,26 @@ exports[`Svelte > jsx > Javascript Test > Section 1`] = `
   export let attributes;
   export let maxWidth;
 
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 </script>
 
 <section
-  use:mitosis_styling={maxWidth && typeof maxWidth === \\"number\\"
-    ? {
-        maxWidth: maxWidth,
-      }
-    : undefined}
+  style={stringifyStyles(
+    maxWidth && typeof maxWidth === \\"number\\"
+      ? {
+          maxWidth: maxWidth,
+        }
+      : undefined
+  )}
   {...attributes}
 >
   <slot />
@@ -1135,14 +1138,15 @@ exports[`Svelte > jsx > Javascript Test > Section 2`] = `
 "<script>
   export let attributes;
 
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 
   let max = 42;
@@ -1152,9 +1156,9 @@ exports[`Svelte > jsx > Javascript Test > Section 2`] = `
 {#if max}
   {#each items as item}
     <section
-      use:mitosis_styling={{
+      style={stringifyStyles({
         maxWidth: item + max,
-      }}
+      })}
       {...attributes}
     >
       <slot />
@@ -1394,20 +1398,20 @@ exports[`Svelte > jsx > Javascript Test > Video 1`] = `
   export let muted;
   export let controls;
   export let loop;
-
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 </script>
 
 <video
-  use:mitosis_styling={{
+  style={stringifyStyles({
     width: \\"100%\\",
     height: \\"100%\\",
     ...attributes?.style,
@@ -1416,7 +1420,7 @@ exports[`Svelte > jsx > Javascript Test > Video 1`] = `
     // Hack to get object fit to work as expected and
     // not have the video overflow
     borderRadius: 1,
-  }}
+  })}
   preload=\\"none\\"
   {...attributes}
   key={video || \\"no-src\\"}
@@ -1572,14 +1576,15 @@ exports[`Svelte > jsx > Javascript Test > className 1`] = `
 
 exports[`Svelte > jsx > Javascript Test > classState 1`] = `
 "<script>
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 
   let classState = \\"testClassName\\";
@@ -1588,7 +1593,7 @@ exports[`Svelte > jsx > Javascript Test > classState 1`] = `
   };
 </script>
 
-<div use:mitosis_styling={styleState} class={classState + \\" div\\"}>
+<div style={stringifyStyles(styleState)} class={classState + \\" div\\"}>
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>
 
@@ -2484,21 +2489,22 @@ exports[`Svelte > jsx > Javascript Test > spreadProps 1`] = `"<input {...$$props
 
 exports[`Svelte > jsx > Javascript Test > styleClassAndCss 1`] = `
 "<script>
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 </script>
 
 <div
-  use:mitosis_styling={{
+  style={stringifyStyles({
     width: \\"100%\\",
-  }}
+  })}
   class=\\"builder-column div\\"
 />
 
@@ -2514,20 +2520,20 @@ exports[`Svelte > jsx > Javascript Test > styleClassAndCss 1`] = `
 exports[`Svelte > jsx > Javascript Test > stylePropClassAndCss 1`] = `
 "<script>
   export let attributes;
-
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 </script>
 
 <div
-  use:mitosis_styling={attributes.style}
+  style={stringifyStyles(attributes.style)}
   class={attributes.classfdsa + \\" div\\"}
 />
 
@@ -3871,23 +3877,23 @@ exports[`Svelte > jsx > Typescript Test > Img 1`] = `
   export let attributes: ImgProps[\\"attributes\\"] = undefined;
   export let imgSrc: ImgProps[\\"imgSrc\\"] = undefined;
   export let altText: ImgProps[\\"altText\\"] = undefined;
-
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 </script>
 
 <img
-  use:mitosis_styling={{
+  style={stringifyStyles({
     objectFit: backgroundSize || \\"cover\\",
     objectPosition: backgroundPosition || \\"center\\",
-  }}
+  })}
   {...attributes}
   key={(Builder.isEditing && imgSrc) || \\"default-key\\"}
   alt={altText}
@@ -3984,23 +3990,26 @@ exports[`Svelte > jsx > Typescript Test > Section 1`] = `
   export let attributes: SectionProps[\\"attributes\\"] = undefined;
   export let maxWidth: SectionProps[\\"maxWidth\\"] = undefined;
 
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 </script>
 
 <section
-  use:mitosis_styling={maxWidth && typeof maxWidth === \\"number\\"
-    ? {
-        maxWidth: maxWidth,
-      }
-    : undefined}
+  style={stringifyStyles(
+    maxWidth && typeof maxWidth === \\"number\\"
+      ? {
+          maxWidth: maxWidth,
+        }
+      : undefined
+  )}
   {...attributes}
 >
   <slot />
@@ -4019,14 +4028,15 @@ exports[`Svelte > jsx > Typescript Test > Section 2`] = `
 <script lang=\\"ts\\">
   export let attributes: SectionProps[\\"attributes\\"] = undefined;
 
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 
   let max = 42;
@@ -4036,9 +4046,9 @@ exports[`Svelte > jsx > Typescript Test > Section 2`] = `
 {#if max}
   {#each items as item}
     <section
-      use:mitosis_styling={{
+      style={stringifyStyles({
         maxWidth: item + max,
-      }}
+      })}
       {...attributes}
     >
       <slot />
@@ -4388,20 +4398,20 @@ exports[`Svelte > jsx > Typescript Test > Video 1`] = `
   export let muted: VideoProps[\\"muted\\"] = undefined;
   export let controls: VideoProps[\\"controls\\"] = undefined;
   export let loop: VideoProps[\\"loop\\"] = undefined;
-
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 </script>
 
 <video
-  use:mitosis_styling={{
+  style={stringifyStyles({
     width: \\"100%\\",
     height: \\"100%\\",
     ...attributes?.style,
@@ -4410,7 +4420,7 @@ exports[`Svelte > jsx > Typescript Test > Video 1`] = `
     // Hack to get object fit to work as expected and
     // not have the video overflow
     borderRadius: 1,
-  }}
+  })}
   preload=\\"none\\"
   {...attributes}
   key={video || \\"no-src\\"}
@@ -4598,14 +4608,15 @@ exports[`Svelte > jsx > Typescript Test > className 1`] = `
 
 exports[`Svelte > jsx > Typescript Test > classState 1`] = `
 "<script lang=\\"ts\\">
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 
   let classState = \\"testClassName\\";
@@ -4614,7 +4625,7 @@ exports[`Svelte > jsx > Typescript Test > classState 1`] = `
   };
 </script>
 
-<div use:mitosis_styling={styleState} class={classState + \\" div\\"}>
+<div style={stringifyStyles(styleState)} class={classState + \\" div\\"}>
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>
 
@@ -5713,21 +5724,22 @@ exports[`Svelte > jsx > Typescript Test > spreadProps 1`] = `
 
 exports[`Svelte > jsx > Typescript Test > styleClassAndCss 1`] = `
 "<script lang=\\"ts\\">
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 </script>
 
 <div
-  use:mitosis_styling={{
+  style={stringifyStyles({
     width: \\"100%\\",
-  }}
+  })}
   class=\\"builder-column div\\"
 />
 
@@ -5743,20 +5755,20 @@ exports[`Svelte > jsx > Typescript Test > styleClassAndCss 1`] = `
 exports[`Svelte > jsx > Typescript Test > stylePropClassAndCss 1`] = `
 "<script lang=\\"ts\\">
   export let attributes;
-
-  function mitosis_styling(node, vars) {
-    Object.entries(vars || {}).forEach(([p, v]) => {
-      if (p.startsWith(\\"--\\")) {
-        node.style.setProperty(p, v);
-      } else {
-        node.style[p] = v;
-      }
-    });
+  function stringifyStyles(stylesObj) {
+    let styles = \\"\\";
+    for (let key in stylesObj) {
+      const dashedKey = key.replace(/[A-Z]/g, function (match) {
+        return \\"-\\" + match.toLowerCase();
+      });
+      styles += dashedKey + \\":\\" + stylesObj[key] + \\";\\";
+    }
+    return styles;
   }
 </script>
 
 <div
-  use:mitosis_styling={attributes.style}
+  style={stringifyStyles(attributes.style)}
   class={attributes.classfdsa + \\" div\\"}
 />
 
