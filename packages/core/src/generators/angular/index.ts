@@ -162,23 +162,23 @@ const handleObjectBindings = (code: string) => {
   return temp;
 };
 
-const processCodeBlockInTemplate = (key: string, code: string) => {
+const processCodeBlockInTemplate = (code: string) => {
   // contains helper calls as Angular doesn't support JS expressions in templates
   if (code.startsWith('{')) {
     // Objects cannot be spread out directly in Angular so we need to use `useObjectWrapper`
-    return `[${key}]="useObjectWrapper(${handleObjectBindings(code)})" `;
+    return `"useObjectWrapper(${handleObjectBindings(code)})" `;
   } else if (code.startsWith('Object.values')) {
     let stripped = code.replace('Object.values', '');
-    return `[${key}]="useObjectDotValues${stripped}" `;
+    return `"useObjectDotValues${stripped}" `;
   } else if (code.includes('JSON.stringify')) {
     let obj = code.match(/JSON.stringify\([^)]*\)/g);
-    return `[${key}]="useJsonStringify(${obj})" `;
+    return `"useJsonStringify(${obj})" `;
   } else if (code.includes(' as ')) {
     const asIndex = code.indexOf('as');
     const asCode = code.slice(0, asIndex - 1);
-    return `[${key}]="$any${asCode})"`;
+    return `"$any${asCode})"`;
   } else {
-    return `[${key}]="${code}" `;
+    return `"${code}" `;
   }
 };
 
@@ -231,7 +231,7 @@ const stringifyBinding =
       // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
       return ` [attr.${keyToUse}]="${code}" `;
     } else {
-      return processCodeBlockInTemplate(keyToUse, code);
+      return `[${keyToUse}]=${processCodeBlockInTemplate(code)}`;
     }
   };
 
@@ -252,6 +252,9 @@ const handleNgOutletBindings = (node: MitosisNode) => {
       continue;
     } else if (key.includes('props.')) {
       allProps += `${key.replace('props.', '')}: ${code}, `;
+    } else if (key.includes('.')) {
+      // TODO: handle arbitrary spread props
+      allProps += `${key.split('.')[1]}: ${code},`;
     } else if (key.startsWith('on')) {
       let event = key.replace('on', '');
       event = event.charAt(0).toLowerCase() + event.slice(1);
@@ -268,15 +271,10 @@ const handleNgOutletBindings = (node: MitosisNode) => {
       const replacer = '$1$event$2';
       const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
       events += ` (${event})="${finalValue}" `;
-    } else if (code.includes('{')) {
-      allProps += `${key}: useObjectWrapper(${handleObjectBindings(code)}) `;
-    } else if (code.startsWith('Object.values')) {
-      let stripped = code.replace('Object.values', '');
-      allProps += `${key}: useObjectDotValues${stripped} `;
-    } else if (key.includes('-')) {
-      allProps += `'${key}': ${code}, `;
     } else {
-      allProps += `${key}: ${code}, `;
+      const codeToUse = processCodeBlockInTemplate(code);
+      const keyToUse = key.includes('-') ? `'${key}'` : key;
+      allProps += `${keyToUse}: ${codeToUse}, `;
     }
   }
 
