@@ -182,6 +182,24 @@ const processCodeBlockInTemplate = (code: string) => {
   }
 };
 
+const processEventBinding = (key: string, code: string, nodeName: string, customArg: string) => {
+  let event = key.replace('on', '');
+  event = event.charAt(0).toLowerCase() + event.slice(1);
+
+  if (event === 'change' && nodeName === 'input' /* todo: other tags */) {
+    event = 'input';
+  }
+  // TODO: proper babel transform to replace. Util for this
+  const eventName = customArg;
+  const regexp = new RegExp(
+    '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
+    'g',
+  );
+  const replacer = '$1$event$2';
+  const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
+  return ` (${event})="${finalValue}" `;
+};
+
 const stringifyBinding =
   (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
@@ -204,21 +222,7 @@ const stringifyBinding =
     // TODO: proper babel transform to replace. Util for this
 
     if (keyToUse.startsWith('on')) {
-      let event = keyToUse.replace('on', '');
-      event = event.charAt(0).toLowerCase() + event.slice(1);
-
-      if (event === 'change' && node.name === 'input' /* todo: other tags */) {
-        event = 'input';
-      }
-      // TODO: proper babel transform to replace. Util for this
-      const eventName = cusArgs[0];
-      const regexp = new RegExp(
-        '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
-        'g',
-      );
-      const replacer = '$1$event$2';
-      const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
-      return ` (${event})="${finalValue}" `;
+      return processEventBinding(keyToUse, code, node.name, cusArgs[0]);
     } else if (keyToUse === 'class') {
       return ` [class]="${code}" `;
     } else if (keyToUse === 'ref') {
@@ -256,21 +260,7 @@ const handleNgOutletBindings = (node: MitosisNode) => {
       // TODO: handle arbitrary spread props
       allProps += `${key.split('.')[1]}: ${code},`;
     } else if (key.startsWith('on')) {
-      let event = key.replace('on', '');
-      event = event.charAt(0).toLowerCase() + event.slice(1);
-
-      if (event === 'change' && node.name === 'input' /* todo: other tags */) {
-        event = 'input';
-      }
-      // TODO: proper babel transform to replace. Util for this
-      const eventName = cusArgs[0];
-      const regexp = new RegExp(
-        '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
-        'g',
-      );
-      const replacer = '$1$event$2';
-      const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
-      events += ` (${event})="${finalValue}" `;
+      events += processEventBinding(key, code, node.name, cusArgs[0]);
     } else {
       const codeToUse = processCodeBlockInTemplate(code);
       const keyToUse = key.includes('-') ? `'${key}'` : key;
