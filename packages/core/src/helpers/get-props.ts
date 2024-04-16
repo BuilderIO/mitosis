@@ -1,5 +1,5 @@
-import traverse from 'traverse';
 import { MitosisComponent } from '../types/mitosis-component';
+import { createCodeProcessorPlugin } from './plugins/process-code';
 
 const propsRegex = /props\s*\.\s*([a-zA-Z0-9_\$]+)/;
 const allPropsMatchesRegex = new RegExp(propsRegex, 'g');
@@ -28,21 +28,20 @@ const prohibitedKeywordRE = new RegExp(
  */
 export const getProps = (json: MitosisComponent) => {
   const props = new Set<string>();
-  traverse(json).forEach(function (item) {
-    if (typeof item === 'string') {
-      // TODO: proper babel ref matching
-      const matches = item.match(allPropsMatchesRegex);
-      if (matches) {
-        for (const match of matches) {
-          const prop = match.match(propsRegex)![1];
-          if (prop.match(prohibitedKeywordRE)) {
-            throw new Error(`avoid using JavaScript keyword as property name: "${prop}"`);
-          }
-          props.add(prop);
+
+  createCodeProcessorPlugin(() => (code) => {
+    const matches = code.match(allPropsMatchesRegex);
+    if (matches) {
+      for (const match of matches) {
+        const prop = match.match(propsRegex)![1];
+        if (prop.match(prohibitedKeywordRE)) {
+          throw new Error(`avoid using JavaScript keyword as property name: "${prop}"`);
         }
+        props.add(prop);
       }
     }
-  });
+    return code;
+  })(json);
 
   return props;
 };

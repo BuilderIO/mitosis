@@ -4,9 +4,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { PackageName } from './src/testConfig';
 
-export const targets: { packageName: PackageName }[] = [
+export const targets: { packageName: PackageName; port: string }[] = [
   // { packageName: 'e2e-alpine' },
-  // { packageName: 'e2e-angular' },
+  { packageName: 'e2e-angular' },
   { packageName: 'e2e-qwik' },
   { packageName: 'e2e-react' },
   { packageName: 'e2e-solid' },

@@ -47,7 +47,7 @@ export const renameComponentFile = ({
  */
 const INPUT_EXTENSION_IMPORT_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))(?<quote>['"])/g;
 
-export const renameImport = ({
+export const renameComponentImport = ({
   importPath,
   target,
   explicitImportFileExtension,
@@ -63,6 +63,24 @@ export const renameImport = ({
       target,
       explicitImportFileExtension,
     })}$4`,
+  );
+};
+
+export const renameImport = ({
+  importPath,
+  target,
+  explicitImportFileExtension,
+}: {
+  importPath: string;
+  target: Target;
+  explicitImportFileExtension: boolean;
+}) => {
+  return importPath.replace(
+    /\.js(['"])/g,
+    `${getFileExtensionForTarget({
+      target,
+      explicitImportFileExtension,
+    })}$1`,
   );
 };
 
@@ -90,8 +108,14 @@ type Args = { target: Target } & (
  */
 export const getComponentFileExtensionForTarget = (args: Args): string => {
   switch (args.target) {
-    case 'angular':
-      return '.ts';
+    case 'angular': {
+      switch (args.type) {
+        case 'import':
+          return '.js';
+        case 'filename':
+          return args.isTypescript ? '.ts' : '.js';
+      }
+    }
     case 'alpine':
     case 'html':
       return '.html';
@@ -131,5 +155,34 @@ export const getComponentFileExtensionForTarget = (args: Args): string => {
       return '.marko';
     default:
       return '.js';
+  }
+};
+
+export const getFileExtensionForTarget = ({
+  target,
+  explicitImportFileExtension,
+}: {
+  target: Target;
+  explicitImportFileExtension: boolean;
+}): string => {
+  switch (target) {
+    case 'angular':
+    case 'alpine':
+    case 'html':
+    case 'svelte':
+    case 'swift':
+    case 'vue':
+    case 'webcomponent':
+    case 'lit':
+    case 'qwik':
+    case 'react':
+    case 'reactNative':
+    case 'rsc':
+    case 'solid':
+    case 'stencil':
+    case 'marko':
+    case 'preact':
+    default:
+      return explicitImportFileExtension ? '.js' : '';
   }
 };
