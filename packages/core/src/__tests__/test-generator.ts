@@ -266,8 +266,9 @@ const IMPORT_TEST: Tests = {
   importRaw: getRawFile('./data/import.raw.tsx'),
 };
 
-const OUTPUT_EVENT_BINDINGS_TEST: Tests = {
-  outputEventBinding: getRawFile('./data/output-event-bindings.raw.tsx'),
+const ANGULAR_TESTS: Tests = {
+  nativeAttributes: getRawFile('./data/angular/native-attributes.raw.tsx'),
+  outputEventBinding: getRawFile('./data/angular/output-event-bindings.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {
@@ -337,7 +338,7 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     ADVANCED_REF,
     ON_UPDATE_RETURN,
     IMPORT_TEST,
-    OUTPUT_EVENT_BINDINGS_TEST,
+    ANGULAR_TESTS,
   ],
   lit: [
     CONTEXT_TEST,
