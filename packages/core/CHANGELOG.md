@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.2
+
+### Patch Changes
+
+- 18e890c: fix: `processCodeBlockInTemplate` for compatibility with ngComponentOutlet and bindings
+
 ## 0.2.1
 
 ### Patch Changes
