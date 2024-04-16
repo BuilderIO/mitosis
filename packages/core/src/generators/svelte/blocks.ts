@@ -286,7 +286,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   if ((json.bindings.style?.code || json.properties.style) && !isComponent) {
     const useValue = json.bindings.style?.code || json.properties.style;
 
-    str += `use:mitosis_styling={${useValue}}`;
+    str += `style={stringifyStyles(${useValue})}`;
     delete json.bindings.style;
     delete json.properties.style;
   }

@@ -10985,13 +10985,563 @@ customElements.define(\\"on-update\\", OnUpdate);
 `;
 
 exports[`webcomponent > jsx > Javascript Test > renderBlock 1`] = `
-"unknown: Unexpected token, expected \\"(\\" (1:17)
+"import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
+import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
+import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
+import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import BlockStyles from \\"./block-styles.js\\";
+import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
+import RenderComponent from \\"./render-component.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.js\\";
 
-> 1 | let _ = function function component() {
-    |                  ^
-  2 |   const componentName = getProcessedBlock({
-  3 |     block: props.block,
-  4 |     self.state: props.context.state,"
+/**
+ * Usage:
+ *
+ *  <render-block></render-block>
+ *
+ */
+class RenderBlock extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      get component() {
+        const componentName = getProcessedBlock({
+          block: self.props.block,
+          state: self.props.context.state,
+          context: self.props.context.context,
+          shouldEvaluateBindings: false,
+        }).component?.name;
+
+        if (!componentName) {
+          return null;
+        }
+
+        const ref = self.props.context.registeredComponents[componentName];
+
+        if (!ref) {
+          // TODO: Public doc page with more info about this message
+          console.warn(\`
+          Could not find a registered component named \\"\${componentName}\\". 
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          return undefined;
+        } else {
+          return ref;
+        }
+      },
+      get tag() {
+        return getBlockTag(self.state.useBlock);
+      },
+      get useBlock() {
+        return self.state.repeatItemData
+          ? self.props.block
+          : getProcessedBlock({
+              block: self.props.block,
+              state: self.props.context.state,
+              context: self.props.context.context,
+              shouldEvaluateBindings: true,
+            });
+      },
+      get actions() {
+        return getBlockActions({
+          block: self.state.useBlock,
+          state: self.props.context.state,
+          context: self.props.context.context,
+        });
+      },
+      get attributes() {
+        const blockProperties = getBlockProperties(self.state.useBlock);
+        return {
+          ...blockProperties,
+          ...(TARGET === \\"reactNative\\"
+            ? {
+                style: getReactNativeBlockStyles({
+                  block: self.state.useBlock,
+                  context: self.props.context,
+                  blockStyles: blockProperties.style,
+                }),
+              }
+            : {}),
+        };
+      },
+      get shouldWrap() {
+        return !self.state.component?.noWrap;
+      },
+      get renderComponentProps() {
+        return {
+          blockChildren: self.state.useChildren,
+          componentRef: self.state.component?.component,
+          componentOptions: {
+            ...getBlockComponentOptions(self.state.useBlock),
+
+            /**
+             * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+             * they are provided to the component itself directly.
+             */
+            ...(self.state.shouldWrap
+              ? {}
+              : {
+                  attributes: {
+                    ...self.state.attributes,
+                    ...self.state.actions,
+                  },
+                }),
+            customBreakpoints:
+              self.state.childrenContext?.content?.meta?.breakpoints,
+          },
+          context: self.state.childrenContext,
+        };
+      },
+      get useChildren() {
+        // TO-DO: When should \`canHaveChildren\` dictate rendering?
+        // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+        // but still receive and need to render children.
+        // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
+        return self.state.useBlock.children ?? [];
+      },
+      get childrenWithoutParentComponent() {
+        /**
+         * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+         * we render them outside of \`componentRef\`.
+         * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+         * blocks, and the children will be repeated within those blocks.
+         */
+        const shouldRenderChildrenOutsideRef =
+          !self.state.component?.component && !self.state.repeatItemData;
+        return shouldRenderChildrenOutsideRef ? self.state.useChildren : [];
+      },
+      get repeatItemData() {
+        /**
+         * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
+         * which will not work if there is a repeat.
+         */
+        const { repeat, ...blockWithoutRepeat } = self.props.block;
+
+        if (!repeat?.collection) {
+          return undefined;
+        }
+
+        const itemsArray = evaluate({
+          code: repeat.collection,
+          state: self.props.context.state,
+          context: self.props.context.context,
+        });
+
+        if (!Array.isArray(itemsArray)) {
+          return undefined;
+        }
+
+        const collectionName = repeat.collection.split(\\".\\").pop();
+        const itemNameToUse =
+          repeat.itemName ||
+          (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+        const repeatArray = itemsArray.map((item, index) => ({
+          context: {
+            ...self.props.context,
+            state: {
+              ...self.props.context.state,
+              $index: index,
+              $item: item,
+              [itemNameToUse]: item,
+              [\`$\${itemNameToUse}Index\`]: index,
+            },
+          },
+          block: blockWithoutRepeat,
+        }));
+        return repeatArray;
+      },
+      get inheritedTextStyles() {
+        if (TARGET !== \\"reactNative\\") {
+          return {};
+        }
+
+        const styles = getReactNativeBlockStyles({
+          block: self.state.useBlock,
+          context: self.props.context,
+          blockStyles: self.state.attributes.style,
+        });
+        return extractTextStyles(styles);
+      },
+      get childrenContext() {
+        return {
+          apiKey: self.props.context.apiKey,
+          state: self.props.context.state,
+          content: self.props.context.content,
+          context: self.props.context.context,
+          registeredComponents: self.props.context.registeredComponents,
+          inheritedStyles: self.state.inheritedTextStyles,
+        };
+      },
+      get renderComponentTag() {
+        if (TARGET === \\"reactNative\\") {
+          return RenderComponentWithContext;
+        } else if (TARGET === \\"vue3\\") {
+          // vue3 expects a string for the component tag
+          return \\"RenderComponent\\";
+        } else {
+          return RenderComponent;
+        }
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    this.componentProps = [\\"block\\", \\"context\\"];
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
+    this._root.innerHTML = \`
+      <template data-el=\\"show-render-block\\">
+        <template data-el=\\"show-render-block-2\\">
+          <state.tag data-el=\\"state-tag-render-block\\"></state.tag>
+        </template>
+        <template data-el=\\"show-render-block-3\\">
+          <template data-el=\\"for-render-block\\">
+            <render-repeated-block
+              data-el=\\"render-repeated-block-render-block\\"
+            ></render-repeated-block>
+          </template>
+        </template>
+        <template data-el=\\"show-render-block-4\\">
+          <state.tag data-el=\\"state-tag-render-block-2\\">
+            <state.renderComponentTag
+              data-el=\\"state-render-component-tag-render-block\\"
+            ></state.renderComponentTag>
+      
+            <template data-el=\\"for-render-block-2\\">
+              <RenderBlock data-el=\\"render-block-render-block\\"></RenderBlock>
+            </template>
+      
+            <template data-el=\\"for-render-block-3\\">
+              <block-styles data-el=\\"block-styles-render-block\\"></block-styles>
+            </template>
+          </state.tag>
+        </template>
+      </template>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  showContent(el) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+    // grabs the content of a node that is between <template> tags
+    // iterates through child nodes to register all content including text elements
+    // attaches the content after the template
+
+    const elementFragment = el.content.cloneNode(true);
+    const children = Array.from(elementFragment.childNodes);
+    children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      this.nodesToDestroy.push(child);
+    });
+    el.after(elementFragment);
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='show-render-block']\\")
+      .forEach((el) => {
+        const whenCondition = this.state.shouldWrap;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='show-render-block-2']\\")
+      .forEach((el) => {
+        const whenCondition = isEmptyHtmlElement(this.state.tag);
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='show-render-block-3']\\")
+      .forEach((el) => {
+        const whenCondition =
+          !isEmptyHtmlElement(this.state.tag) && this.state.repeatItemData;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='for-render-block']\\")
+      .forEach((el) => {
+        let array = this.state.repeatItemData;
+        this.renderLoop(el, array, \\"data\\", \\"index\\");
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='render-repeated-block-render-block']\\")
+      .forEach((el) => {
+        const index = this.getScope(el, \\"index\\");
+        const data = this.getScope(el, \\"data\\");
+        el.key = index;
+
+        if (el.props) {
+          el.props.key = index;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.key = index;
+        }
+
+        el.setAttribute(\\"repeatContext\\", data.context);
+        el.repeatContext = data.context;
+
+        if (el.props) {
+          el.props.repeatContext = data.context;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.repeatContext = data.context;
+        }
+
+        el.setAttribute(\\"block\\", data.block);
+        el.block = data.block;
+
+        if (el.props) {
+          el.props.block = data.block;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.block = data.block;
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='show-render-block-4']\\")
+      .forEach((el) => {
+        const whenCondition =
+          !isEmptyHtmlElement(this.state.tag) && !this.state.repeatItemData;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='for-render-block-2']\\")
+      .forEach((el) => {
+        let array = this.state.childrenWithoutParentComponent;
+        this.renderLoop(el, array, \\"child\\");
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='render-block-render-block']\\")
+      .forEach((el) => {
+        const child = this.getScope(el, \\"child\\");
+        el.key = \\"render-block-\\" + child.id;
+        el.setAttribute(\\"block\\", child);
+        el.setAttribute(\\"context\\", this.state.childrenContext);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='for-render-block-3']\\")
+      .forEach((el) => {
+        let array = this.state.childrenWithoutParentComponent;
+        this.renderLoop(el, array, \\"child\\");
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='block-styles-render-block']\\")
+      .forEach((el) => {
+        const child = this.getScope(el, \\"child\\");
+        el.key = \\"block-style-\\" + child.id;
+
+        if (el.props) {
+          el.props.key = \\"block-style-\\" + child.id;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.key = \\"block-style-\\" + child.id;
+        }
+
+        el.setAttribute(\\"block\\", child);
+        el.block = child;
+
+        if (el.props) {
+          el.props.block = child;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.block = child;
+        }
+
+        el.setAttribute(\\"context\\", this.state.childrenContext);
+        el.context = this.state.childrenContext;
+
+        if (el.props) {
+          el.props.context = this.state.childrenContext;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.context = this.state.childrenContext;
+        }
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+
+  // scope helper
+  getScope(el, name) {
+    do {
+      let value = el?.scope?.[name];
+      if (value !== undefined) {
+        return value;
+      }
+    } while ((el = el.parentNode));
+  }
+
+  // Helper to render loops
+  renderLoop(template, array, itemName, itemIndex, collectionName) {
+    const collection = [];
+    for (let [index, value] of array.entries()) {
+      const elementFragment = template.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      const localScope = {};
+      let scope = localScope;
+      if (template?.scope) {
+        const getParent = {
+          get(target, prop, receiver) {
+            if (prop in target) {
+              return target[prop];
+            }
+            if (prop in template.scope) {
+              return template.scope[prop];
+            }
+            return target[prop];
+          },
+        };
+        scope = new Proxy(localScope, getParent);
+      }
+      children.forEach((child) => {
+        if (itemName !== undefined) {
+          scope[itemName] = value;
+        }
+        if (itemIndex !== undefined) {
+          scope[itemIndex] = index;
+        }
+        if (collectionName !== undefined) {
+          scope[collectionName] = array;
+        }
+        child.scope = scope;
+        if (template.context) {
+          child.context = context;
+        }
+        this.nodesToDestroy.push(child);
+        collection.unshift(child);
+      });
+    }
+    collection.forEach((child) => template.after(child));
+  }
+}
+
+customElements.define(\\"render-block\\", RenderBlock);
+"
 `;
 
 exports[`webcomponent > jsx > Javascript Test > renderContentExample 1`] = `
@@ -11023,7 +11573,7 @@ class RenderContent extends HTMLElement {
       this.props = {};
     }
 
-    this.componentProps = [\\"content\\", \\"customComponents\\"];
+    this.componentProps = [\\"customComponents\\", \\"content\\"];
 
     this.updateDeps = [[this.props.content]];
 
@@ -24687,13 +25237,576 @@ customElements.define(\\"on-update\\", OnUpdate);
 `;
 
 exports[`webcomponent > jsx > Typescript Test > renderBlock 1`] = `
-"unknown: Unexpected token, expected \\"(\\" (1:17)
+"export type RenderBlockProps = {
+  block: BuilderBlock;
+  context: BuilderContextInterface;
+};
 
-> 1 | let _ = function function component() {
-    |                  ^
-  2 |   const componentName = getProcessedBlock({
-  3 |     block: props.block,
-  4 |     self.state: props.context.state,"
+import { TARGET } from \\"../../constants/target.js\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
+import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
+import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
+import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
+import BlockStyles from \\"./block-styles.js\\";
+import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
+import type { RenderComponentProps } from \\"./render-component.js\\";
+import RenderComponent from \\"./render-component.js\\";
+import RenderRepeatedBlock from \\"./render-repeated-block.js\\";
+import type { RepeatData } from \\"./types.js\\";
+
+/**
+ * Usage:
+ *
+ *  <render-block></render-block>
+ *
+ */
+class RenderBlock extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {
+      get component() {
+        const componentName = getProcessedBlock({
+          block: self.props.block,
+          state: self.props.context.state,
+          context: self.props.context.context,
+          shouldEvaluateBindings: false,
+        }).component?.name;
+
+        if (!componentName) {
+          return null;
+        }
+
+        const ref = self.props.context.registeredComponents[componentName];
+
+        if (!ref) {
+          // TODO: Public doc page with more info about this message
+          console.warn(\`
+          Could not find a registered component named \\"\${componentName}\\". 
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+          return undefined;
+        } else {
+          return ref;
+        }
+      },
+      get tag() {
+        return getBlockTag(self.state.useBlock);
+      },
+      get useBlock() {
+        return self.state.repeatItemData
+          ? self.props.block
+          : getProcessedBlock({
+              block: self.props.block,
+              state: self.props.context.state,
+              context: self.props.context.context,
+              shouldEvaluateBindings: true,
+            });
+      },
+      get actions() {
+        return getBlockActions({
+          block: self.state.useBlock,
+          state: self.props.context.state,
+          context: self.props.context.context,
+        });
+      },
+      get attributes() {
+        const blockProperties = getBlockProperties(self.state.useBlock);
+        return {
+          ...blockProperties,
+          ...(TARGET === \\"reactNative\\"
+            ? {
+                style: getReactNativeBlockStyles({
+                  block: self.state.useBlock,
+                  context: self.props.context,
+                  blockStyles: blockProperties.style,
+                }),
+              }
+            : {}),
+        };
+      },
+      get shouldWrap() {
+        return !self.state.component?.noWrap;
+      },
+      get renderComponentProps() {
+        return {
+          blockChildren: self.state.useChildren,
+          componentRef: self.state.component?.component,
+          componentOptions: {
+            ...getBlockComponentOptions(self.state.useBlock),
+
+            /**
+             * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+             * they are provided to the component itself directly.
+             */
+            ...(self.state.shouldWrap
+              ? {}
+              : {
+                  attributes: {
+                    ...self.state.attributes,
+                    ...self.state.actions,
+                  },
+                }),
+            customBreakpoints:
+              self.state.childrenContext?.content?.meta?.breakpoints,
+          },
+          context: self.state.childrenContext,
+        };
+      },
+      get useChildren() {
+        // TO-DO: When should \`canHaveChildren\` dictate rendering?
+        // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+        // but still receive and need to render children.
+        // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
+        return self.state.useBlock.children ?? [];
+      },
+      get childrenWithoutParentComponent() {
+        /**
+         * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+         * we render them outside of \`componentRef\`.
+         * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+         * blocks, and the children will be repeated within those blocks.
+         */
+        const shouldRenderChildrenOutsideRef =
+          !self.state.component?.component && !self.state.repeatItemData;
+        return shouldRenderChildrenOutsideRef ? self.state.useChildren : [];
+      },
+      get repeatItemData() {
+        /**
+         * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
+         * which will not work if there is a repeat.
+         */
+        const { repeat, ...blockWithoutRepeat } = self.props.block;
+
+        if (!repeat?.collection) {
+          return undefined;
+        }
+
+        const itemsArray = evaluate({
+          code: repeat.collection,
+          state: self.props.context.state,
+          context: self.props.context.context,
+        });
+
+        if (!Array.isArray(itemsArray)) {
+          return undefined;
+        }
+
+        const collectionName = repeat.collection.split(\\".\\").pop();
+        const itemNameToUse =
+          repeat.itemName ||
+          (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+        const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+          context: {
+            ...self.props.context,
+            state: {
+              ...self.props.context.state,
+              $index: index,
+              $item: item,
+              [itemNameToUse]: item,
+              [\`$\${itemNameToUse}Index\`]: index,
+            },
+          },
+          block: blockWithoutRepeat,
+        }));
+        return repeatArray;
+      },
+      get inheritedTextStyles() {
+        if (TARGET !== \\"reactNative\\") {
+          return {};
+        }
+
+        const styles = getReactNativeBlockStyles({
+          block: self.state.useBlock,
+          context: self.props.context,
+          blockStyles: self.state.attributes.style,
+        });
+        return extractTextStyles(styles);
+      },
+      get childrenContext() {
+        return {
+          apiKey: self.props.context.apiKey,
+          state: self.props.context.state,
+          content: self.props.context.content,
+          context: self.props.context.context,
+          registeredComponents: self.props.context.registeredComponents,
+          inheritedStyles: self.state.inheritedTextStyles,
+        };
+      },
+      get renderComponentTag() {
+        if (TARGET === \\"reactNative\\") {
+          return RenderComponentWithContext;
+        } else if (TARGET === \\"vue3\\") {
+          // vue3 expects a string for the component tag
+          return \\"RenderComponent\\";
+        } else {
+          return RenderComponent;
+        }
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    this.componentProps = [\\"block\\", \\"context\\"];
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
+    this._root.innerHTML = \`
+      <template data-el=\\"show-render-block\\">
+        <template data-el=\\"show-render-block-2\\">
+          <state.tag data-el=\\"state-tag-render-block\\"></state.tag>
+        </template>
+        <template data-el=\\"show-render-block-3\\">
+          <template data-el=\\"for-render-block\\">
+            <render-repeated-block
+              data-el=\\"render-repeated-block-render-block\\"
+            ></render-repeated-block>
+          </template>
+        </template>
+        <template data-el=\\"show-render-block-4\\">
+          <state.tag data-el=\\"state-tag-render-block-2\\">
+            <state.renderComponentTag
+              data-el=\\"state-render-component-tag-render-block\\"
+            ></state.renderComponentTag>
+      
+            <template data-el=\\"for-render-block-2\\">
+              <RenderBlock data-el=\\"render-block-render-block\\"></RenderBlock>
+            </template>
+      
+            <template data-el=\\"for-render-block-3\\">
+              <block-styles data-el=\\"block-styles-render-block\\"></block-styles>
+            </template>
+          </state.tag>
+        </template>
+      </template>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  showContent(el) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+    // grabs the content of a node that is between <template> tags
+    // iterates through child nodes to register all content including text elements
+    // attaches the content after the template
+
+    const elementFragment = el.content.cloneNode(true);
+    const children = Array.from(elementFragment.childNodes);
+    children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      this.nodesToDestroy.push(child);
+    });
+    el.after(elementFragment);
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='show-render-block']\\")
+      .forEach((el) => {
+        const whenCondition = this.state.shouldWrap;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='show-render-block-2']\\")
+      .forEach((el) => {
+        const whenCondition = isEmptyHtmlElement(this.state.tag);
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='show-render-block-3']\\")
+      .forEach((el) => {
+        const whenCondition =
+          !isEmptyHtmlElement(this.state.tag) && this.state.repeatItemData;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='for-render-block']\\")
+      .forEach((el) => {
+        let array = this.state.repeatItemData;
+        this.renderLoop(el, array, \\"data\\", \\"index\\");
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='render-repeated-block-render-block']\\")
+      .forEach((el) => {
+        const index = this.getScope(el, \\"index\\");
+        const data = this.getScope(el, \\"data\\");
+        el.key = index;
+
+        if (el.props) {
+          el.props.key = index;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.key = index;
+        }
+
+        el.setAttribute(\\"repeatContext\\", data.context);
+        el.repeatContext = data.context;
+
+        if (el.props) {
+          el.props.repeatContext = data.context;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.repeatContext = data.context;
+        }
+
+        el.setAttribute(\\"block\\", data.block);
+        el.block = data.block;
+
+        if (el.props) {
+          el.props.block = data.block;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.block = data.block;
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='show-render-block-4']\\")
+      .forEach((el) => {
+        const whenCondition =
+          !isEmptyHtmlElement(this.state.tag) && !this.state.repeatItemData;
+
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='for-render-block-2']\\")
+      .forEach((el) => {
+        let array = this.state.childrenWithoutParentComponent;
+        this.renderLoop(el, array, \\"child\\");
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='render-block-render-block']\\")
+      .forEach((el) => {
+        const child = this.getScope(el, \\"child\\");
+        el.key = \\"render-block-\\" + child.id;
+        el.setAttribute(\\"block\\", child);
+        el.setAttribute(\\"context\\", this.state.childrenContext);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='for-render-block-3']\\")
+      .forEach((el) => {
+        let array = this.state.childrenWithoutParentComponent;
+        this.renderLoop(el, array, \\"child\\");
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='block-styles-render-block']\\")
+      .forEach((el) => {
+        const child = this.getScope(el, \\"child\\");
+        el.key = \\"block-style-\\" + child.id;
+
+        if (el.props) {
+          el.props.key = \\"block-style-\\" + child.id;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.key = \\"block-style-\\" + child.id;
+        }
+
+        el.setAttribute(\\"block\\", child);
+        el.block = child;
+
+        if (el.props) {
+          el.props.block = child;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.block = child;
+        }
+
+        el.setAttribute(\\"context\\", this.state.childrenContext);
+        el.context = this.state.childrenContext;
+
+        if (el.props) {
+          el.props.context = this.state.childrenContext;
+
+          if (el.update) {
+            el.update();
+          }
+        } else {
+          el.props = {};
+          el.props.context = this.state.childrenContext;
+        }
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+
+  // scope helper
+  getScope(el, name) {
+    do {
+      let value = el?.scope?.[name];
+      if (value !== undefined) {
+        return value;
+      }
+    } while ((el = el.parentNode));
+  }
+
+  // Helper to render loops
+  renderLoop(template, array, itemName, itemIndex, collectionName) {
+    const collection = [];
+    for (let [index, value] of array.entries()) {
+      const elementFragment = template.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      const localScope = {};
+      let scope = localScope;
+      if (template?.scope) {
+        const getParent = {
+          get(target, prop, receiver) {
+            if (prop in target) {
+              return target[prop];
+            }
+            if (prop in template.scope) {
+              return template.scope[prop];
+            }
+            return target[prop];
+          },
+        };
+        scope = new Proxy(localScope, getParent);
+      }
+      children.forEach((child) => {
+        if (itemName !== undefined) {
+          scope[itemName] = value;
+        }
+        if (itemIndex !== undefined) {
+          scope[itemIndex] = index;
+        }
+        if (collectionName !== undefined) {
+          scope[collectionName] = array;
+        }
+        child.scope = scope;
+        if (template.context) {
+          child.context = context;
+        }
+        this.nodesToDestroy.push(child);
+        collection.unshift(child);
+      });
+    }
+    collection.forEach((child) => template.after(child));
+  }
+}
+
+customElements.define(\\"render-block\\", RenderBlock);
+"
 `;
 
 exports[`webcomponent > jsx > Typescript Test > renderContentExample 1`] = `
@@ -24733,7 +25846,7 @@ class RenderContent extends HTMLElement {
       this.props = {};
     }
 
-    this.componentProps = [\\"content\\", \\"customComponents\\"];
+    this.componentProps = [\\"customComponents\\", \\"content\\"];
 
     this.updateDeps = [[this.props.content]];
 

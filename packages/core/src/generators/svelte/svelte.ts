@@ -338,18 +338,19 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         })
         .join('\n')}
       ${
-        // https://svelte.dev/repl/bd9b56891f04414982517bbd10c52c82?version=3.31.0
+        // https://github.com/sveltejs/svelte/issues/7311
         hasStyle(json)
-          ? `
-        function mitosis_styling (node, vars) {
-          Object.entries(vars || {}).forEach(([ p, v ]) => {
-            if (p.startsWith('--')) {
-              node.style.setProperty(p, v);
-            } else {
-              node.style[p] = v;
+          ? dedent`
+        	function stringifyStyles(stylesObj) {
+            let styles = '';
+            for (let key in stylesObj) {
+              const dashedKey = key.replace(/[A-Z]/g, function(match) {
+                return '-' + match.toLowerCase();
+              });
+              styles += dashedKey + ":" + stylesObj[key] + ";";
             }
-          })
-        }
+            return styles;
+          }
       `
           : ''
       }
