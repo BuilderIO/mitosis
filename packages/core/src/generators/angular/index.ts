@@ -166,13 +166,13 @@ const processCodeBlockInTemplate = (code: string) => {
   // contains helper calls as Angular doesn't support JS expressions in templates
   if (code.startsWith('{')) {
     // Objects cannot be spread out directly in Angular so we need to use `useObjectWrapper`
-    return `useObjectWrapper(${handleObjectBindings(code)}) `;
+    return `useObjectWrapper(${handleObjectBindings(code)})`;
   } else if (code.startsWith('Object.values')) {
     let stripped = code.replace('Object.values', '');
-    return `useObjectDotValues${stripped} `;
+    return `useObjectDotValues${stripped}`;
   } else if (code.includes('JSON.stringify')) {
     let obj = code.match(/JSON.stringify\([^)]*\)/g);
-    return `useJsonStringify(${obj}) `;
+    return `useJsonStringify(${obj})`;
   } else if (code.includes(' as ')) {
     const asIndex = code.indexOf('as');
     const asCode = code.slice(0, asIndex - 1);
