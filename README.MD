@@ -49,6 +49,8 @@ It will prompt you for a project name, and create a new directory with a basic m
 - multiple generated outputs, along with build steps for each
 - multiple test servers that import the outputs for convenient debugging/testing
 
+Once completed, make sure to read the `README.md` generated in your new project. It will explain the structure of your project, and provide a walkthrough on how to build/test your components.
+
 ## Manual Setup
 
 If you would like to install Mitosis manually, you can do so with the following steps below. These generally follow the same steps as the `create` command.
@@ -118,6 +120,8 @@ export default function MyBasicComponent(props: Props) {
   );
 }
 ```
+
+For a deeper look at the Mitosis JSX syntax, check out [our Component docs](/docs/components.md) and overall [Mitosis Documentation](/docs/README.md).
 
 ### Build
 
