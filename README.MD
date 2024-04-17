@@ -23,7 +23,7 @@ _PS: We are actively looking for folks interested in becoming contributors to Mi
 ## Table of contents
 
 - [Quick Start](#quick-start)
-- [Manual Installation](#manual-installation)
+- [Manual Setup](#manual-setup)
 - [Examples](#examples)
 - [What is Mitosis](#what-is-mitosis)
 - [In-depth Docs](#docs)
