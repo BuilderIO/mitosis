@@ -31,3 +31,8 @@ npm run build:watch
 cd test-apps/qwik
 npm run dev
 ```
+
+## Next up
+
+If you want to add more outputs, or configure Mitosis in any way, you will need to update the `mitosis.config.js` file in the root of your project.
+Check [our configuration docs](/docs/configuration.md) for how to setup the Mitosis config file.
