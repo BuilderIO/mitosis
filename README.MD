@@ -79,7 +79,7 @@ module.exports = {
 };
 ```
 
-Check [our configuration docs](/docs/configuration.md#typescript-configuration) for how to setup the Mitosis config file.
+Check [our configuration docs](/docs/configuration.md) for how to setup the Mitosis config file.
 
 ### Setup TypeScript
 
