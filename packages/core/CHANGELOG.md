@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.3
+
+### Patch Changes
+
+- 2867f44: fix: React generator: include `Fragment`s that only contain text content.
+
 ## 0.2.2
 
 ### Patch Changes
