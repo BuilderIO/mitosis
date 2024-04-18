@@ -3128,7 +3128,7 @@ export default class RenderBlock extends LitElement {
   get component() {
     const componentName = getProcessedBlock({
       block: this.block,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
@@ -3157,7 +3157,7 @@ export default class RenderBlock extends LitElement {
       ? this.block
       : getProcessedBlock({
           block: this.block,
-          this: this.context.state,
+          state: this.context.state,
           context: this.context.context,
           shouldEvaluateBindings: true,
         });
@@ -3165,7 +3165,7 @@ export default class RenderBlock extends LitElement {
   get actions() {
     return getBlockActions({
       block: this.useBlock,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
   }
@@ -3239,7 +3239,7 @@ export default class RenderBlock extends LitElement {
 
     const itemsArray = evaluate({
       code: repeat.collection,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
 
@@ -3253,7 +3253,7 @@ export default class RenderBlock extends LitElement {
     const repeatArray = itemsArray.map((item, index) => ({
       context: {
         ...this.context,
-        this: {
+        state: {
           ...this.context.state,
           $index: index,
           $item: item,
@@ -3280,7 +3280,7 @@ export default class RenderBlock extends LitElement {
   get childrenContext() {
     return {
       apiKey: this.context.apiKey,
-      this: this.context.state,
+      state: this.context.state,
       content: this.context.content,
       context: this.context.context,
       registeredComponents: this.context.registeredComponents,
@@ -3371,8 +3371,8 @@ export default class RenderContent extends LitElement {
     return this;
   }
 
-  @property() content: any;
   @property() customComponents: any;
+  @property() content: any;
 
   connectedCallback() {
     sendComponentsToVisualEditor(this.customComponents);
@@ -7513,7 +7513,7 @@ export default class RenderBlock extends LitElement {
   get component() {
     const componentName = getProcessedBlock({
       block: this.block,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
@@ -7542,7 +7542,7 @@ export default class RenderBlock extends LitElement {
       ? this.block
       : getProcessedBlock({
           block: this.block,
-          this: this.context.state,
+          state: this.context.state,
           context: this.context.context,
           shouldEvaluateBindings: true,
         });
@@ -7550,7 +7550,7 @@ export default class RenderBlock extends LitElement {
   get actions() {
     return getBlockActions({
       block: this.useBlock,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
   }
@@ -7624,7 +7624,7 @@ export default class RenderBlock extends LitElement {
 
     const itemsArray = evaluate({
       code: repeat.collection,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
 
@@ -7638,7 +7638,7 @@ export default class RenderBlock extends LitElement {
     const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.context,
-        this: {
+        state: {
           ...this.context.state,
           $index: index,
           $item: item,
@@ -7665,7 +7665,7 @@ export default class RenderBlock extends LitElement {
   get childrenContext() {
     return {
       apiKey: this.context.apiKey,
-      this: this.context.state,
+      state: this.context.state,
       content: this.context.content,
       context: this.context.context,
       registeredComponents: this.context.registeredComponents,
@@ -7764,8 +7764,8 @@ export default class RenderContent extends LitElement {
     return this;
   }
 
-  @property() content: any;
   @property() customComponents: any;
+  @property() content: any;
 
   connectedCallback() {
     sendComponentsToVisualEditor(this.customComponents);

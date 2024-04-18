@@ -1,5 +1,29 @@
 # Change Log
 
+## 0.2.2
+
+### Patch Changes
+
+- 18e890c: fix: `processCodeBlockInTemplate` for compatibility with ngComponentOutlet and bindings
+
+## 0.2.1
+
+### Patch Changes
+
+- 5ef7920: fix: apply svelte styling during ssr
+
+## 0.2.0
+
+### Minor Changes
+
+- 0a39722: 💣 Breaking Change: Angular generator: all components are now exported as a `default` export instead of a named export.
+
+### Patch Changes
+
+- 0a39722: Fix: reduce false positive props found in `getProps`
+- 0a39722: Feat: remove all explicit `.js` import extensions when `explicitImportFileExtension` config is `false`
+- 0a39722: Feat: update angular generator to support dynamic components, context and more
+
 ## 0.1.7
 
 ### Patch Changes

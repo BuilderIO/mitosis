@@ -1,5 +1,35 @@
 # @builder.io/mitosis-cli
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [18e890c]
+  - @builder.io/mitosis@0.2.2
+
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [5ef7920]
+  - @builder.io/mitosis@0.2.1
+
+## 0.2.0
+
+### Minor Changes
+
+- 0a39722: 💣 Breaking Change: Angular generator: all components are now exported as a `default` export instead of a named export.
+
+### Patch Changes
+
+- 0a39722: Feat: remove all explicit `.js` import extensions when `explicitImportFileExtension` config is `false`
+- 0a39722: Feat: update angular generator to support dynamic components, context and more
+- Updated dependencies [0a39722]
+- Updated dependencies [0a39722]
+- Updated dependencies [0a39722]
+- Updated dependencies [0a39722]
+  - @builder.io/mitosis@0.2.0
+
 ## 0.1.7
 
 ### Patch Changes
