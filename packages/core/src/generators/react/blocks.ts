@@ -67,7 +67,7 @@ const NODE_MAPPERS: {
     return `<>{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}</>`;
   },
   Fragment(json, options, component) {
-    const wrap = wrapInFragment(json);
+    const wrap = wrapInFragment(json) || isRootTextNode(json);
     return `${wrap ? getFragment('open', options) : ''}${json.children
       .map((item) => blockToReact(item, options, component))
       .join('\n')}${wrap ? getFragment('close', options) : ''}`;
