@@ -6,5 +6,4 @@ export const COMPONENT_PATHS = [
   '/special-tags/',
   '/signals/',
   '/disabled-input/',
-  '/named-slot/',
 ];

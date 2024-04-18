@@ -2310,7 +2310,7 @@ exports[`qwik > jsx > Javascript Test > ContentSlotHtml 1`] = `
 export const ContentSlotCode = component$((props) => {
   return (
     <div>
-      <Slot></Slot>
+      <Slot name={props.slotTesting}></Slot>
       <div>
         <hr />
       </div>
@@ -2356,7 +2356,7 @@ export const ContentSlotJsxCode = component$((props) => {
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
-            <Slot name=\\"content\\"></Slot>
+            <Slot name=\\"content\\">{props.content}</Slot>
           ) : null}
           <div>
             <hr />
@@ -3150,7 +3150,9 @@ exports[`qwik > jsx > Javascript Test > SlotDefault 1`] = `
 export const SlotCode = component$((props) => {
   return (
     <div>
-      <Slot></Slot>
+      <Slot>
+        <div class=\\"default-slot\\">Default content</div>
+      </Slot>
     </div>
   );
 });
@@ -3168,7 +3170,11 @@ export const SlotCode = component$((props) => {
   return (
     <div>
       <ContentSlotCode>
-        <Slot></Slot>
+        <Slot
+          testing={(() => {
+            <div>Hello</div>;
+          })()}
+        ></Slot>
       </ContentSlotCode>
     </div>
   );
@@ -3205,9 +3211,10 @@ exports[`qwik > jsx > Javascript Test > SlotNamed 1`] = `
 export const SlotCode = component$((props) => {
   return (
     <div>
+      <Slot name=\\"myAwesomeSlot\\"></Slot>
       <Slot name=\\"top\\"></Slot>
-      <Slot name=\\"left\\"></Slot>
-      <Slot></Slot>
+      <Slot name=\\"left\\">Default left</Slot>
+      <Slot>Default Child</Slot>
     </div>
   );
 });
@@ -5572,7 +5579,7 @@ type Props = {
 export const ContentSlotCode = component$((props: Props) => {
   return (
     <div>
-      <Slot></Slot>
+      <Slot name={props.slotTesting}></Slot>
       <div>
         <hr />
       </div>
@@ -5623,7 +5630,7 @@ export const ContentSlotJsxCode = component$((props: Props) => {
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
-            <Slot name=\\"content\\"></Slot>
+            <Slot name=\\"content\\">{props.content}</Slot>
           ) : null}
           <div>
             <hr />
@@ -6529,7 +6536,9 @@ type Props = {
 export const SlotCode = component$((props: Props) => {
   return (
     <div>
-      <Slot></Slot>
+      <Slot>
+        <div class=\\"default-slot\\">Default content</div>
+      </Slot>
     </div>
   );
 });
@@ -6550,7 +6559,11 @@ export const SlotCode = component$((props: Props) => {
   return (
     <div>
       <ContentSlotCode>
-        <Slot></Slot>
+        <Slot
+          testing={(() => {
+            <div>Hello</div>;
+          })()}
+        ></Slot>
       </ContentSlotCode>
     </div>
   );
@@ -6593,9 +6606,10 @@ type Props = {
 export const SlotCode = component$((props: Props) => {
   return (
     <div>
+      <Slot name=\\"myAwesomeSlot\\"></Slot>
       <Slot name=\\"top\\"></Slot>
-      <Slot name=\\"left\\"></Slot>
-      <Slot></Slot>
+      <Slot name=\\"left\\">Default left</Slot>
+      <Slot>Default Child</Slot>
     </div>
   );
 });
@@ -9386,8 +9400,10 @@ exports[`qwik > svelte > Javascript Test > slots 1`] = `
 export const MyComponent = component$((props) => {
   return (
     <div>
-      <Slot></Slot>
-      <Slot name=\\"Test\\"></Slot>
+      <Slot>default</Slot>
+      <Slot name=\\"Test\\">
+        <div>default</div>
+      </Slot>
     </div>
   );
 });
@@ -9790,8 +9806,10 @@ exports[`qwik > svelte > Typescript Test > slots 1`] = `
 export const MyComponent = component$((props: any) => {
   return (
     <div>
-      <Slot></Slot>
-      <Slot name=\\"Test\\"></Slot>
+      <Slot>default</Slot>
+      <Slot name=\\"Test\\">
+        <div>default</div>
+      </Slot>
     </div>
   );
 });
