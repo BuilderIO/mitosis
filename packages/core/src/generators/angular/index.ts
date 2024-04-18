@@ -319,7 +319,7 @@ export const blockToAngular = (
   } else if (json.name === 'Show') {
     let condition = json.bindings.when?.code;
     if (condition?.includes('typeof')) {
-      let wordAfterTypeof = condition.split('typeof')[1].trim();
+      let wordAfterTypeof = condition.split('typeof')[1].trim().split(' ')[0];
       condition = condition.replace(`typeof ${wordAfterTypeof}`, `useTypeOf(${wordAfterTypeof})`);
     }
     str += `<ng-container *ngIf="${condition}">`;
