@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-fix: react generator to appropriately add fragments when empty fragment with text
+fix: React generator: include `Fragment`s that only contain text content.
