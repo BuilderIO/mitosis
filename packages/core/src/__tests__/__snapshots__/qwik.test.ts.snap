@@ -3814,6 +3814,34 @@ export default MyComponent;
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > getterState 1`] = `
+"import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
+
+export const baz = function baz(props, state, i) {
+  return i + foo.value.length;
+};
+export const Button = component$((props) => {
+  const foo = useComputed$(() => {
+    return props.foo + \\"foo\\";
+  });
+  const bar = useComputed$(() => {
+    return \\"bar\\";
+  });
+  const state = {};
+
+  return (
+    <div>
+      <p>{foo.value}</p>
+      <p>{bar.value}</p>
+      <p>{baz(props, state, 1)}</p>
+    </div>
+  );
+});
+
+export default Button;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > import types 1`] = `
 "import RenderBlock from \\"./builder-render-block.raw\\";
 

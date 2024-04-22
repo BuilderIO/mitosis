@@ -2490,6 +2490,43 @@ export default class MyComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > getterState 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-button\\")
+export default class Button extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() foo: any;
+
+  get foo() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i) {
+    return i + this.foo.length;
+  }
+
+  render() {
+    return html\`
+
+          <div>
+          <p>\${this.foo}</p>
+          <p>\${this.bar}</p>
+          <p>\${this.baz(1)}</p>
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > import types 1`] = `
 "import RenderBlock from \\"./builder-render-block.raw\\";
 

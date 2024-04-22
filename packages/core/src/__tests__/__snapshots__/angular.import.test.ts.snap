@@ -2673,6 +2673,45 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > getterState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <p>{{foo}}</p>
+      <p>{{bar}}</p>
+      <p>{{baz(1)}}</p>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() foo!: any;
+
+  get foo() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i) {
+    return i + this.foo.length;
+  }
+}
+
+@NgModule({
+  declarations: [Button],
+  imports: [CommonModule],
+  exports: [Button],
+})
+export class ButtonModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > import types 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";

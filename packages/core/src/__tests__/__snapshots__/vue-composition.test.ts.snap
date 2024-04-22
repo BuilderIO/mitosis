@@ -1856,6 +1856,33 @@ const refToUse = ref(
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > getterState 1`] = `
+"<template>
+  <div>
+    <p>{{ foo }}</p>
+    <p>{{ bar }}</p>
+    <p>{{ baz(1) }}</p>
+  </div>
+</template>
+
+<script setup>
+import { computed } from \\"vue\\";
+
+const props = defineProps([\\"foo\\"]);
+
+const foo = computed(() => {
+  return props.foo + \\"foo\\";
+});
+const bar = computed(() => {
+  return \\"bar\\";
+});
+
+function baz(i) {
+  return i + foo.length;
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > import types 1`] = `
 "<template>
   <render-block

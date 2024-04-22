@@ -1758,6 +1758,29 @@ exports[`Svelte > jsx > Javascript Test > expressionState 1`] = `
 <div>{refToUse}</div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > getterState 1`] = `
+"<script>
+  export let foo;
+
+  function baz(i) {
+    return i + foo().length;
+  }
+  $: foo = () => {
+    return foo + \\"foo\\";
+  };
+
+  $: bar = () => {
+    return \\"bar\\";
+  };
+</script>
+
+<div>
+  <p>{foo()}</p>
+  <p>{bar()}</p>
+  <p>{baz(1)}</p>
+</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > import types 1`] = `
 "<script>
   import RenderBlock from \\"./builder-render-block.raw\\";

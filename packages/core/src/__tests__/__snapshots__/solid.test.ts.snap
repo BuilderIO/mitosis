@@ -4122,6 +4122,66 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > getterState 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function Button(props) {
+  const foo = createMemo(() => {
+    return props.foo + \\"foo\\";
+  });
+
+  const bar = createMemo(() => {
+    return \\"bar\\";
+  });
+
+  function baz(i) {
+    return i + foo().length;
+  }
+
+  return (
+    <div>
+      <p>{foo()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > getterState 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function Button(props) {
+  const foo = createMemo(() => {
+    return props.foo + \\"foo\\";
+  });
+
+  const bar = createMemo(() => {
+    return \\"bar\\";
+  });
+
+  function baz(i) {
+    return i + foo().length;
+  }
+
+  return (
+    <>
+      <div>
+        <p>{foo()}</p>
+        <p>{bar()}</p>
+        <p>{baz(1)}</p>
+      </div>
+    </>
+  );
+}
+
+export default Button;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > import types 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
