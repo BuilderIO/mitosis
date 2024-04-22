@@ -4,11 +4,7 @@ import { componentToQwik, parseJsx } from '..';
 /**
  * this test is for local development only, to conveniently iterate on one file/one generator.
  */
-
-// ignore this in CI
-if (process.env.CI) {
-  test.skip('file', () => {});
-}
+test.skip('file', () => {});
 
 const getRawFile = async (filePath: string) => {
   const code = await import(`${filePath}?raw`).then((x) => x.default as string);
