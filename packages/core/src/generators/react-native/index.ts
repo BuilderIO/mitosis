@@ -123,6 +123,9 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
             node.name = '';
           } else if (node.name.toLowerCase() === node.name && VALID_HTML_TAGS.includes(node.name)) {
             node.name = 'View';
+            if (node.bindings.onClick) {
+              node.name = 'Pressable';
+            }
           } else if (
             node.properties._text?.trim().length ||
             node.bindings._text?.code?.trim()?.length
