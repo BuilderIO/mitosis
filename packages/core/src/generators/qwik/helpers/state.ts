@@ -82,7 +82,6 @@ function emitStateMethods(
           // Erase type information
           code = convertTypeScriptToJS(code);
         }
-        console.log('WRITING FUNCTION', { functionName, code, initial: stateValue.code });
         file.exportConst(functionName, 'function ' + code, true);
         continue;
 
