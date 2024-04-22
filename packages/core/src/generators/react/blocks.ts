@@ -147,6 +147,12 @@ const BINDING_MAPPERS: {
   ...ATTTRIBUTE_MAPPERS,
 };
 
+const NATIVE_EVENT_MAPPER: {
+  [key: string]: string;
+} = {
+  onClick: 'onPress',
+};
+
 export const blockToReact = (
   json: MitosisNode,
   options: ToReactOptions,
@@ -213,7 +219,8 @@ export const blockToReact = (
       str += ` {...(${value})} `;
     } else if (key.startsWith('on')) {
       const { arguments: cusArgs = ['event'] } = json.bindings[key]!;
-      str += ` ${key}={(${cusArgs.join(',')}) => ${updateStateSettersInCode(
+      const eventName = options.type === 'native' ? NATIVE_EVENT_MAPPER[key] || key : key;
+      str += ` ${eventName}={(${cusArgs.join(',')}) => ${updateStateSettersInCode(
         useBindingValue,
         options,
       )} } `;
