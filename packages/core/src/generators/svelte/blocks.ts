@@ -213,38 +213,31 @@ type BlockToSvelte<T extends BaseNode = MitosisNode> = (props: {
 }) => string;
 
 const stringifyBinding =
-  (node: MitosisNode, options: ToSvelteOptions) =>
+  (node: MitosisNode, options: ToSvelteOptions, tagName: string) =>
   ([key, binding]: [string, Binding | undefined]) => {
     if (key === 'innerHTML' || !binding) {
       return '';
     }
 
     const { code, arguments: cusArgs = ['event'], type } = binding;
-    const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name) || node.name === 'svelte:element';
+    const isValidHtmlTag = VALID_HTML_TAGS.includes(tagName) || tagName === 'svelte:element';
 
     if (type === 'spread') {
       const spreadValue = key === 'props' ? '$$props' : code;
       return ` {...${spreadValue}} `;
-    } else if (key.startsWith('on') && isValidHtmlTag) {
+    } else if (key.startsWith('on')) {
       // handle html native on[event] props
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
 
       const valueWithoutBlock = removeSurroundingBlock(code);
 
-      if (valueWithoutBlock === key) {
-        return ` on:${event}={${valueWithoutBlock}} `;
-      } else {
-        return ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
-      }
-    } else if (key.startsWith('on')) {
-      // handle on[custom event] props
-      const valueWithoutBlock = removeSurroundingBlock(code);
+      const keyToUse = isValidHtmlTag ? `on:${event}` : key;
 
       if (valueWithoutBlock === key) {
-        return ` ${key}={${valueWithoutBlock}} `;
+        return ` ${keyToUse}={${valueWithoutBlock}} `;
       } else {
-        return ` ${key}={(${cusArgs.join(',')}) => ${valueWithoutBlock}}`;
+        return ` ${keyToUse}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
       }
     } else if (key === 'ref') {
       return ` bind:this={${code}} `;
@@ -300,7 +293,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   }
 
   const stringifiedBindings = Object.entries(json.bindings)
-    .map(stringifyBinding(json, options))
+    .map(stringifyBinding(json, options, tagName))
     .join('');
 
   str += stringifiedBindings;
