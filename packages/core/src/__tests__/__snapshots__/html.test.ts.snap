@@ -4217,7 +4217,7 @@ exports[`Html > jsx > Javascript Test > expressionState 1`] = `
 exports[`Html > jsx > Javascript Test > getterState 1`] = `
 "<div>
   <p>
-    <template data-el=\\"div-1\\"><!-- state.foo --></template>
+    <template data-el=\\"div-1\\"><!-- state.foo2 --></template>
   </p>
   <p>
     <template data-el=\\"div-2\\"><!-- state.bar --></template>
@@ -4229,14 +4229,14 @@ exports[`Html > jsx > Javascript Test > getterState 1`] = `
 <script>
   (() => {
     const state = {
-      get foo() {
+      get foo2() {
         return props.foo + \\"foo\\";
       },
       get bar() {
         return \\"bar\\";
       },
       baz(i) {
-        return i + state.foo.length;
+        return i + state.foo2.length;
       },
     };
     let props = {};
@@ -4260,7 +4260,7 @@ exports[`Html > jsx > Javascript Test > getterState 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
-        renderTextNode(el, state.foo);
+        renderTextNode(el, state.foo2);
       });
 
       document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {

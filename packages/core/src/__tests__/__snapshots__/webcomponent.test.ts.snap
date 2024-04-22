@@ -8888,14 +8888,14 @@ class Button extends HTMLElement {
     const self = this;
 
     this.state = {
-      get foo() {
+      get foo2() {
         return self.props.foo + \\"foo\\";
       },
       get bar() {
         return \\"bar\\";
       },
       baz(i) {
-        return i + self.state.foo.length;
+        return i + self.state.foo2.length;
       },
     };
     if (!this.props) {
@@ -8937,7 +8937,7 @@ class Button extends HTMLElement {
     this._root.innerHTML = \`
       <div>
         <p>
-          <template data-el=\\"div-button-1\\"><!-- state.foo --></template>
+          <template data-el=\\"div-button-1\\"><!-- state.foo2 --></template>
         </p>
         <p>
           <template data-el=\\"div-button-2\\"><!-- state.bar --></template>
@@ -8976,7 +8976,7 @@ class Button extends HTMLElement {
 
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='div-button-1']\\").forEach((el) => {
-      this.renderTextNode(el, this.state.foo);
+      this.renderTextNode(el, this.state.foo2);
     });
 
     this._root.querySelectorAll(\\"[data-el='div-button-2']\\").forEach((el) => {

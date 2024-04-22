@@ -82,6 +82,7 @@ function emitStateMethods(
           // Erase type information
           code = convertTypeScriptToJS(code);
         }
+        console.log('WRITING FUNCTION', { functionName, code, initial: stateValue.code });
         file.exportConst(functionName, 'function ' + code, true);
         continue;
 
@@ -111,7 +112,18 @@ const checkIsObjectWithCodeBlock = (obj: any): obj is { code: string } => {
 };
 
 export function getLexicalScopeVars(component: MitosisComponent) {
-  return ['props', 'state', ...Object.keys(component.refs), ...Object.keys(component.context.get)];
+  const newLocal = [
+    'props',
+    'state',
+
+    // all `useComputed` values
+    ...Object.keys(component.state).filter((k) => component.state[k]!.type === 'getter'),
+
+    ...Object.keys(component.refs),
+    ...Object.keys(component.context.get),
+  ];
+
+  return newLocal;
 }
 
 function rewriteCodeExpr(
