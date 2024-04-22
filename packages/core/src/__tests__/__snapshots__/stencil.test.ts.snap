@@ -4615,6 +4615,38 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Typescript Test > getterState 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"button\\",
+})
+export default class Button {
+  @Prop() foo: any;
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i: number) {
+    return i + this.foo2.length;
+  }
+
+  render() {
+    return (
+      <div>
+        <p>{this.foo2}</p>
+        <p>{this.bar}</p>
+        <p>{this.baz(1)}</p>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Typescript Test > import types 1`] = `
 "import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
 import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";

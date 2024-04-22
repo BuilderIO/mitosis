@@ -7341,6 +7341,37 @@ export default MyComponent;
 "
 `;
 
+exports[`qwik > jsx > Typescript Test > getterState 1`] = `
+"import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+export const baz = function baz(props, state, foo2, bar, i: number) {
+  return i + foo2.value.length;
+};
+export const Button = component$((props: ButtonProps) => {
+  const foo2 = useComputed$(() => {
+    return props.foo + \\"foo\\";
+  });
+  const bar = useComputed$(() => {
+    return \\"bar\\";
+  });
+  const state: any = {};
+
+  return (
+    <div>
+      <p>{foo2.value}</p>
+      <p>{bar.value}</p>
+      <p>{baz(props, state, foo2, bar, 1)}</p>
+    </div>
+  );
+});
+
+export default Button;
+"
+`;
+
 exports[`qwik > jsx > Typescript Test > import types 1`] = `
 "import {
   RenderBlockProps,

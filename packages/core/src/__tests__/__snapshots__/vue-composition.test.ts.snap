@@ -4974,6 +4974,37 @@ const refToUse = ref(
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > getterState 1`] = `
+"<template>
+  <div>
+    <p>{{ foo2 }}</p>
+    <p>{{ bar }}</p>
+    <p>{{ baz(1) }}</p>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { computed } from \\"vue\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+const props = defineProps<ButtonProps>();
+
+const foo2 = computed(() => {
+  return props.foo + \\"foo\\";
+});
+const bar = computed(() => {
+  return \\"bar\\";
+});
+
+function baz(i: number) {
+  return i + foo2.length;
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > import types 1`] = `
 "<template>
   <render-block
