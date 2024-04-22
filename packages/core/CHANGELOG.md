@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.4
+
+### Patch Changes
+
+- cee502f: feat: React Native: add support for `onClick` event handlers using `Pressable`
+
 ## 0.2.3
 
 ### Patch Changes
