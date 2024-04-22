@@ -10,7 +10,7 @@ const getRawFile = async (filePath: string) => {
 
 type RawFile = ReturnType<typeof getRawFile>;
 
-const getterState = getRawFile('./data/blocks/getter-state.raw.lite.tsx');
+const getterState = getRawFile('./data/blocks/getter-state.raw.tsx');
 const basicForShow = getRawFile('./data/basic-for-show.raw.tsx');
 const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw.tsx');
 const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw.tsx');

@@ -15,7 +15,7 @@ const getRawFile = async (filePath: string) => {
   return { code, filePath: ['src', '__tests__', filePath].join('/') };
 };
 
-const file = getRawFile('./data/blocks/getter-state.raw.lite.tsx');
+const file = getRawFile('./data/blocks/getter-state.raw.tsx');
 
 describe('LOCAL', () => {
   test('file', async () => {
