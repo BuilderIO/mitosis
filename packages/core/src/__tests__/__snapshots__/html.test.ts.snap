@@ -4214,6 +4214,88 @@ exports[`Html > jsx > Javascript Test > expressionState 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > getterState 1`] = `
+"<div>
+  <p>
+    <template data-el=\\"div-1\\"><!-- state.foo2 --></template>
+  </p>
+  <p>
+    <template data-el=\\"div-2\\"><!-- state.bar --></template>
+  </p>
+  <p>
+    <template data-el=\\"div-3\\"><!-- state.baz(1) --></template>
+  </p>
+</div>
+<script>
+  (() => {
+    const state = {
+      get foo2() {
+        return props.foo + \\"foo\\";
+      },
+      get bar() {
+        return \\"bar\\";
+      },
+      baz(i) {
+        return i + state.foo2.length;
+      },
+    };
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.foo2);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, state.bar);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
+        renderTextNode(el, state.baz(1));
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > import types 1`] = `
 "<RenderBlock data-el=\\"render-block\\"></RenderBlock>
 "
@@ -10461,6 +10543,88 @@ exports[`Html > jsx > Typescript Test > expressionState 1`] = `
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         renderTextNode(el, state.refToUse);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > getterState 1`] = `
+"<div>
+  <p>
+    <template data-el=\\"div-1\\"><!-- state.foo2 --></template>
+  </p>
+  <p>
+    <template data-el=\\"div-2\\"><!-- state.bar --></template>
+  </p>
+  <p>
+    <template data-el=\\"div-3\\"><!-- state.baz(1) --></template>
+  </p>
+</div>
+<script>
+  (() => {
+    const state = {
+      get foo2() {
+        return props.foo + \\"foo\\";
+      },
+      get bar() {
+        return \\"bar\\";
+      },
+      baz(i: number) {
+        return i + state.foo2.length;
+      },
+    };
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.foo2);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, state.bar);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
+        renderTextNode(el, state.baz(1));
       });
 
       destroyAnyNodes();
