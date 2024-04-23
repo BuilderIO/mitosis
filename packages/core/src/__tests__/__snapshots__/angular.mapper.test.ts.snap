@@ -2931,6 +2931,12 @@ import { Component, Input } from \\"@angular/core\\";
       <ng-container *ngIf=\\"!conditionB\\">
         <div>if condition A and condition B</div>
       </ng-container>
+      <ng-container *ngIf=\\"!(!conditionB)\\">
+        <div>else-condition-B</div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
     </ng-container>
   \`,
 })
@@ -3513,6 +3519,15 @@ import RenderRepeatedBlockModule from \\"./render-repeated-block.lite/angular\\"
         ></ng-container>
       </ng-container>
     </ng-container>
+    <ng-container *ngIf=\\"!(shouldWrap)\\">
+      <ng-container
+        *ngComponentOutlet=\\"
+              renderComponentTag;
+              inputs: { renderComponentProps: renderComponentProps, };
+              content: myContent;
+              \\"
+      ></ng-container>
+    </ng-container>
   \`,
 })
 export default class RenderBlock {
@@ -3832,6 +3847,7 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"render-styles, RenderStyles\\",
   template: \`
     <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container>
+    <ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
   \`,
 })
 export default class RenderStyles {
@@ -3925,6 +3941,9 @@ import { Component, Input } from \\"@angular/core\\";
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
 })
 export default class NestedShow {
@@ -3952,6 +3971,9 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"show-root-text, ShowRootText\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
 })
 export default class ShowRootText {
@@ -7694,6 +7716,12 @@ interface Props {
       <ng-container *ngIf=\\"!conditionB\\">
         <div>if condition A and condition B</div>
       </ng-container>
+      <ng-container *ngIf=\\"!(!conditionB)\\">
+        <div>else-condition-B</div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
     </ng-container>
   \`,
 })
@@ -8335,6 +8363,15 @@ import { RepeatData } from \\"./types.js\\";
         ></ng-container>
       </ng-container>
     </ng-container>
+    <ng-container *ngIf=\\"!(shouldWrap)\\">
+      <ng-container
+        *ngComponentOutlet=\\"
+              renderComponentTag;
+              inputs: { renderComponentProps: renderComponentProps, };
+              content: myContent;
+              \\"
+      ></ng-container>
+    </ng-container>
   \`,
 })
 export default class RenderBlock {
@@ -8673,6 +8710,7 @@ export interface RenderStylesProps {
   selector: \\"render-styles, RenderStyles\\",
   template: \`
     <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container>
+    <ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
   \`,
 })
 export default class RenderStyles {
@@ -8771,6 +8809,9 @@ interface Props {
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
 })
 export default class NestedShow {
@@ -8802,6 +8843,9 @@ interface Props {
   selector: \\"show-root-text, ShowRootText\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
 })
 export default class ShowRootText {
@@ -9585,6 +9629,9 @@ import { Component } from \\"@angular/core\\";
     <ng-container *ngIf=\\"show\\">
       <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
+    <ng-container *ngIf=\\"!(show)\\">
+      <button (click)=\\"toggle($event)\\">Show</button>
+    </ng-container>
   \`,
 })
 export default class MyComponent {
@@ -10129,6 +10176,9 @@ import { Component } from \\"@angular/core\\";
   template: \`
     <ng-container *ngIf=\\"show\\">
       <button (click)=\\"toggle($event)\\">Hide</button>
+    </ng-container>
+    <ng-container *ngIf=\\"!(show)\\">
+      <button (click)=\\"toggle($event)\\">Show</button>
     </ng-container>
   \`,
 })
