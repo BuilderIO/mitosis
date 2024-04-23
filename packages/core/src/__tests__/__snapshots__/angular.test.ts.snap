@@ -4948,6 +4948,77 @@ export default class MyComponent {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > getterState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <p>{{foo2}}</p>
+      <p>{{bar}}</p>
+      <p>{{baz(1)}}</p>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() foo!: any;
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i) {
+    return i + this.foo2.length;
+  }
+}
+
+@NgModule({
+  declarations: [Button],
+  imports: [CommonModule],
+  exports: [Button],
+})
+export class ButtonModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > getterState 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <p>{{foo2}}</p>
+      <p>{{bar}}</p>
+      <p>{{baz(1)}}</p>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class Button {
+  @Input() foo!: any;
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i) {
+    return i + this.foo2.length;
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > import types 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -13558,6 +13629,85 @@ export default class MyComponent {
   refToUse = !(this.componentRef instanceof Function)
     ? this.componentRef
     : null;
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > getterState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <p>{{foo2}}</p>
+      <p>{{bar}}</p>
+      <p>{{baz(1)}}</p>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() foo!: ButtonProps[\\"foo\\"];
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i: number) {
+    return i + this.foo2.length;
+  }
+}
+
+@NgModule({
+  declarations: [Button],
+  imports: [CommonModule],
+  exports: [Button],
+})
+export class ButtonModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > getterState 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <p>{{foo2}}</p>
+      <p>{{bar}}</p>
+      <p>{{baz(1)}}</p>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class Button {
+  @Input() foo!: ButtonProps[\\"foo\\"];
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i: number) {
+    return i + this.foo2.length;
+  }
 }
 "
 `;

@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.2.5
+
+### Patch Changes
+
+- 2e56b76: Fix: Qwik methods using computed variables
+
+## 0.2.4
+
+### Patch Changes
+
+- cee502f: feat: React Native: add support for `onClick` event handlers using `Pressable`
+
+## 0.2.3
+
+### Patch Changes
+
+- 2867f44: fix: React generator: include `Fragment`s that only contain text content.
+
 ## 0.2.2
 
 ### Patch Changes

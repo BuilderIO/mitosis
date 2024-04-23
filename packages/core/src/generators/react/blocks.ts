@@ -67,7 +67,7 @@ const NODE_MAPPERS: {
     return `<>{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}</>`;
   },
   Fragment(json, options, component) {
-    const wrap = wrapInFragment(json);
+    const wrap = wrapInFragment(json) || isRootTextNode(json);
     return `${wrap ? getFragment('open', options) : ''}${json.children
       .map((item) => blockToReact(item, options, component))
       .join('\n')}${wrap ? getFragment('close', options) : ''}`;
@@ -147,6 +147,12 @@ const BINDING_MAPPERS: {
   ...ATTTRIBUTE_MAPPERS,
 };
 
+const NATIVE_EVENT_MAPPER: {
+  [key: string]: string;
+} = {
+  onClick: 'onPress',
+};
+
 export const blockToReact = (
   json: MitosisNode,
   options: ToReactOptions,
@@ -213,7 +219,8 @@ export const blockToReact = (
       str += ` {...(${value})} `;
     } else if (key.startsWith('on')) {
       const { arguments: cusArgs = ['event'] } = json.bindings[key]!;
-      str += ` ${key}={(${cusArgs.join(',')}) => ${updateStateSettersInCode(
+      const eventName = options.type === 'native' ? NATIVE_EVENT_MAPPER[key] || key : key;
+      str += ` ${eventName}={(${cusArgs.join(',')}) => ${updateStateSettersInCode(
         useBindingValue,
         options,
       )} } `;

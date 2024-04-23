@@ -4122,6 +4122,66 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > getterState 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function Button(props) {
+  const foo2 = createMemo(() => {
+    return props.foo + \\"foo\\";
+  });
+
+  const bar = createMemo(() => {
+    return \\"bar\\";
+  });
+
+  function baz(i) {
+    return i + foo2().length;
+  }
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > getterState 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function Button(props) {
+  const foo2 = createMemo(() => {
+    return props.foo + \\"foo\\";
+  });
+
+  const bar = createMemo(() => {
+    return \\"bar\\";
+  });
+
+  function baz(i) {
+    return i + foo2().length;
+  }
+
+  return (
+    <>
+      <div>
+        <p>{foo2()}</p>
+        <p>{bar()}</p>
+        <p>{baz(1)}</p>
+      </div>
+    </>
+  );
+}
+
+export default Button;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > import types 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
@@ -11171,6 +11231,74 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > getterState 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+function Button(props: ButtonProps) {
+  const foo2 = createMemo(() => {
+    return props.foo + \\"foo\\";
+  });
+
+  const bar = createMemo(() => {
+    return \\"bar\\";
+  });
+
+  function baz(i: number) {
+    return i + foo2().length;
+  }
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > getterState 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+function Button(props: ButtonProps) {
+  const foo2 = createMemo(() => {
+    return props.foo + \\"foo\\";
+  });
+
+  const bar = createMemo(() => {
+    return \\"bar\\";
+  });
+
+  function baz(i: number) {
+    return i + foo2().length;
+  }
+
+  return (
+    <>
+      <div>
+        <p>{foo2()}</p>
+        <p>{bar()}</p>
+        <p>{baz(1)}</p>
+      </div>
+    </>
+  );
+}
+
+export default Button;
 "
 `;
 

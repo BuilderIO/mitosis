@@ -1758,6 +1758,29 @@ exports[`Svelte > jsx > Javascript Test > expressionState 1`] = `
 <div>{refToUse}</div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > getterState 1`] = `
+"<script>
+  export let foo;
+
+  function baz(i) {
+    return i + foo2().length;
+  }
+  $: foo2 = () => {
+    return foo + \\"foo\\";
+  };
+
+  $: bar = () => {
+    return \\"bar\\";
+  };
+</script>
+
+<div>
+  <p>{foo2()}</p>
+  <p>{bar()}</p>
+  <p>{baz(1)}</p>
+</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > import types 1`] = `
 "<script>
   import RenderBlock from \\"./builder-render-block.raw\\";
@@ -4830,6 +4853,35 @@ exports[`Svelte > jsx > Typescript Test > expressionState 1`] = `
 </script>
 
 <div>{refToUse}</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > getterState 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ButtonProps {
+    foo: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let foo: ButtonProps[\\"foo\\"];
+
+  function baz(i: number) {
+    return i + foo2().length;
+  }
+  $: foo2 = () => {
+    return foo + \\"foo\\";
+  };
+
+  $: bar = () => {
+    return \\"bar\\";
+  };
+</script>
+
+<div>
+  <p>{foo2()}</p>
+  <p>{bar()}</p>
+  <p>{baz(1)}</p>
+</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > import types 1`] = `
