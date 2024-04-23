@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.2.6
+
+### Patch Changes
+
+- 389018d: support else statements in Angular generator with negation
+- c7f2759: Fix: named slots generation for Vue, Qwik and Svelte.
+
 ## 0.2.5
 
 ### Patch Changes
