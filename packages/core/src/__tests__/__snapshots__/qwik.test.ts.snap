@@ -2336,7 +2336,7 @@ exports[`qwik > jsx > Javascript Test > ContentSlotJSX 1`] = `
   useStore,
 } from \\"@builder.io/qwik\\";
 
-export const show = function show(props, state) {
+export const show = function show(props, state, cls) {
   props.slotContent ? 1 : \\"\\";
 };
 export const ContentSlotJsxCode = component$((props) => {
@@ -2352,7 +2352,7 @@ export const ContentSlotJsxCode = component$((props) => {
           name={props.slotContent ? \\"name1\\" : \\"name2\\"}
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
-          onClick$={$((event) => show(props, state))}
+          onClick$={$((event) => show(props, state, cls))}
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
@@ -2549,7 +2549,13 @@ import {
   set,
 } from \\"@fake\\";
 
-export const onSubmit = function onSubmit(props, state, formRef, event) {
+export const onSubmit = function onSubmit(
+  props,
+  state,
+  submissionState,
+  formRef,
+  event
+) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
   if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -2784,7 +2790,9 @@ export const FormComponent = component$((props) => {
       })()}
       method={props.method}
       name={props.name}
-      onSubmit$={$((event) => onSubmit(props, state, formRef, event))}
+      onSubmit$={$((event) =>
+        onSubmit(props, state, submissionState, formRef, event)
+      )}
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
@@ -3802,6 +3810,34 @@ export const MyComponent = component$((props) => {
 });
 
 export default MyComponent;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > getterState 1`] = `
+"import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
+
+export const baz = function baz(props, state, foo2, bar, i) {
+  return i + foo2.value.length;
+};
+export const Button = component$((props) => {
+  const foo2 = useComputed$(() => {
+    return props.foo + \\"foo\\";
+  });
+  const bar = useComputed$(() => {
+    return \\"bar\\";
+  });
+  const state = {};
+
+  return (
+    <div>
+      <p>{foo2.value}</p>
+      <p>{bar.value}</p>
+      <p>{baz(props, state, foo2, bar, 1)}</p>
+    </div>
+  );
+});
+
+export default Button;
 "
 `;
 
@@ -5610,7 +5646,7 @@ import {
 type Props = {
   [key: string]: string | JSX.Element;
 };
-export const show = function show(props, state) {
+export const show = function show(props, state, cls) {
   props.slotContent ? 1 : \\"\\";
 };
 export const ContentSlotJsxCode = component$((props: Props) => {
@@ -5626,7 +5662,7 @@ export const ContentSlotJsxCode = component$((props: Props) => {
           name={props.slotContent ? \\"name1\\" : \\"name2\\"}
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
-          onClick$={$((event) => show(props, state))}
+          onClick$={$((event) => show(props, state, cls))}
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
@@ -5857,6 +5893,7 @@ export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"e
 export const onSubmit = function onSubmit(
   props,
   state,
+  submissionState,
   formRef,
   event: Event & {
     currentTarget: HTMLFormElement;
@@ -6099,7 +6136,9 @@ export const FormComponent = component$((props: FormProps) => {
       })()}
       method={props.method}
       name={props.name}
-      onSubmit$={$((event) => onSubmit(props, state, formRef, event))}
+      onSubmit$={$((event) =>
+        onSubmit(props, state, submissionState, formRef, event)
+      )}
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
@@ -7281,6 +7320,37 @@ export const MyComponent = component$((props: any) => {
 });
 
 export default MyComponent;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > getterState 1`] = `
+"import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+export const baz = function baz(props, state, foo2, bar, i: number) {
+  return i + foo2.value.length;
+};
+export const Button = component$((props: ButtonProps) => {
+  const foo2 = useComputed$(() => {
+    return props.foo + \\"foo\\";
+  });
+  const bar = useComputed$(() => {
+    return \\"bar\\";
+  });
+  const state: any = {};
+
+  return (
+    <div>
+      <p>{foo2.value}</p>
+      <p>{bar.value}</p>
+      <p>{baz(props, state, foo2, bar, 1)}</p>
+    </div>
+  );
+});
+
+export default Button;
 "
 `;
 

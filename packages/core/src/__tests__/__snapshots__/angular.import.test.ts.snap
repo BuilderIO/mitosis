@@ -2674,6 +2674,45 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > getterState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <p>{{foo2}}</p>
+      <p>{{bar}}</p>
+      <p>{{baz(1)}}</p>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() foo!: any;
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i) {
+    return i + this.foo2.length;
+  }
+}
+
+@NgModule({
+  declarations: [Button],
+  imports: [CommonModule],
+  exports: [Button],
+})
+export class ButtonModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > import types 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7320,6 +7359,49 @@ export default class MyComponent {
   exports: [MyComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > getterState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <p>{{foo2}}</p>
+      <p>{{bar}}</p>
+      <p>{{baz(1)}}</p>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() foo!: ButtonProps[\\"foo\\"];
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i: number) {
+    return i + this.foo2.length;
+  }
+}
+
+@NgModule({
+  declarations: [Button],
+  imports: [CommonModule],
+  exports: [Button],
+})
+export class ButtonModule {}
 "
 `;
 

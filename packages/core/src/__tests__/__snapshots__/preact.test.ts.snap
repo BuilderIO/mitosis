@@ -2034,6 +2034,36 @@ export default MyComponent;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > getterState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function Button(props) {
+  function foo2() {
+    return props.foo + \\"foo\\";
+  }
+
+  function bar() {
+    return \\"bar\\";
+  }
+
+  function baz(i) {
+    return i + foo2().length;
+  }
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > import types 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5563,6 +5593,40 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > getterState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+function Button(props: ButtonProps) {
+  function foo2() {
+    return props.foo + \\"foo\\";
+  }
+
+  function bar() {
+    return \\"bar\\";
+  }
+
+  function baz(i: number) {
+    return i + foo2().length;
+  }
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
 "
 `;
 
