@@ -212,11 +212,6 @@ const stringifyBinding =
     if (key === 'key') {
       return;
     }
-    if (key === 'attributes') {
-      // TODO: contains ternary operator which needs to be handled
-      return;
-    }
-
     const keyToUse = BINDINGS_MAPPER[key] || key;
     const { code, arguments: cusArgs = ['event'] } = binding!;
     // TODO: proper babel transform to replace. Util for this
@@ -251,10 +246,7 @@ const handleNgOutletBindings = (node: MitosisNode) => {
     }
     const { code, arguments: cusArgs = ['event'] } = node.bindings[key]!;
 
-    if (code.includes('?')) {
-      // TODO handle ternary
-      continue;
-    } else if (key.includes('props.')) {
+    if (key.includes('props.')) {
       allProps += `${key.replace('props.', '')}: ${code}, `;
     } else if (key.includes('.')) {
       // TODO: handle arbitrary spread props
@@ -326,12 +318,18 @@ export const blockToAngular = (
   } else if (json.name === 'Show') {
     let condition = json.bindings.when?.code;
     if (condition?.includes('typeof')) {
-      let wordAfterTypeof = condition.split('typeof')[1].trim();
+      let wordAfterTypeof = condition.split('typeof')[1].trim().split(' ')[0];
       condition = condition.replace(`typeof ${wordAfterTypeof}`, `useTypeOf(${wordAfterTypeof})`);
     }
     str += `<ng-container *ngIf="${condition}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
+    // else condition
+    if (isMitosisNode(json.meta?.else)) {
+      str += `<ng-container *ngIf="!(${condition})">`;
+      str += blockToAngular(json.meta.else, options, blockOptions);
+      str += `</ng-container>`;
+    }
   } else if (json.name.includes('.')) {
     const elSelector = childComponents.find((impName) => impName === json.name)
       ? kebabCase(json.name)

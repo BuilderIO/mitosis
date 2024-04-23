@@ -5358,6 +5358,12 @@ import { Component, Input } from \\"@angular/core\\";
       <ng-container *ngIf=\\"!conditionB\\">
         <div>if condition A and condition B</div>
       </ng-container>
+      <ng-container *ngIf=\\"!(!conditionB)\\">
+        <div>else-condition-B</div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
     </ng-container>
   \`,
 })
@@ -5386,6 +5392,12 @@ import { CommonModule } from \\"@angular/common\\";
       <ng-container *ngIf=\\"!conditionB\\">
         <div>if condition A and condition B</div>
       </ng-container>
+      <ng-container *ngIf=\\"!(!conditionB)\\">
+        <div>else-condition-B</div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
     </ng-container>
   \`,
   standalone: true,
@@ -6327,6 +6339,15 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
         ></ng-container>
       </ng-container>
     </ng-container>
+    <ng-container *ngIf=\\"!(shouldWrap)\\">
+      <ng-container
+        *ngComponentOutlet=\\"
+              renderComponentTag;
+              inputs: { renderComponentProps: renderComponentProps, };
+              content: myContent;
+              \\"
+      ></ng-container>
+    </ng-container>
   \`,
 })
 export default class RenderBlock {
@@ -6596,6 +6617,15 @@ import RenderRepeatedBlock from \\"./render-repeated-block.js\\";
               \\"
         ></ng-container>
       </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(shouldWrap)\\">
+      <ng-container
+        *ngComponentOutlet=\\"
+              renderComponentTag;
+              inputs: { renderComponentProps: renderComponentProps, };
+              content: myContent;
+              \\"
+      ></ng-container>
     </ng-container>
   \`,
   standalone: true,
@@ -6981,6 +7011,7 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"render-styles, RenderStyles\\",
   template: \`
     <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container>
+    <ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
   \`,
 })
 export default class RenderStyles {
@@ -7004,6 +7035,7 @@ import { CommonModule } from \\"@angular/common\\";
   selector: \\"render-styles, RenderStyles\\",
   template: \`
     <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container>
+    <ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
   \`,
   standalone: true,
   imports: [CommonModule],
@@ -7136,6 +7168,9 @@ import { Component, Input } from \\"@angular/core\\";
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
 })
 export default class NestedShow {
@@ -7164,6 +7199,9 @@ import { CommonModule } from \\"@angular/common\\";
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
   standalone: true,
   imports: [CommonModule],
@@ -7185,6 +7223,9 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"show-root-text, ShowRootText\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
 })
 export default class ShowRootText {
@@ -7208,6 +7249,9 @@ import { CommonModule } from \\"@angular/common\\";
   selector: \\"show-root-text, ShowRootText\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
   standalone: true,
   imports: [CommonModule],
@@ -14028,6 +14072,12 @@ interface Props {
       <ng-container *ngIf=\\"!conditionB\\">
         <div>if condition A and condition B</div>
       </ng-container>
+      <ng-container *ngIf=\\"!(!conditionB)\\">
+        <div>else-condition-B</div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
     </ng-container>
   \`,
 })
@@ -14061,6 +14111,12 @@ interface Props {
       <ng-container *ngIf=\\"!conditionB\\">
         <div>if condition A and condition B</div>
       </ng-container>
+      <ng-container *ngIf=\\"!(!conditionB)\\">
+        <div>else-condition-B</div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
     </ng-container>
   \`,
   standalone: true,
@@ -15106,6 +15162,15 @@ import type { RepeatData } from \\"./types.js\\";
         ></ng-container>
       </ng-container>
     </ng-container>
+    <ng-container *ngIf=\\"!(shouldWrap)\\">
+      <ng-container
+        *ngComponentOutlet=\\"
+              renderComponentTag;
+              inputs: { renderComponentProps: renderComponentProps, };
+              content: myContent;
+              \\"
+      ></ng-container>
+    </ng-container>
   \`,
 })
 export default class RenderBlock {
@@ -15388,6 +15453,15 @@ import type { RepeatData } from \\"./types.js\\";
               \\"
         ></ng-container>
       </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(shouldWrap)\\">
+      <ng-container
+        *ngComponentOutlet=\\"
+              renderComponentTag;
+              inputs: { renderComponentProps: renderComponentProps, };
+              content: myContent;
+              \\"
+      ></ng-container>
     </ng-container>
   \`,
   standalone: true,
@@ -15807,6 +15881,7 @@ export interface RenderStylesProps {
   selector: \\"render-styles, RenderStyles\\",
   template: \`
     <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container>
+    <ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
   \`,
 })
 export default class RenderStyles {
@@ -15834,6 +15909,7 @@ export interface RenderStylesProps {
   selector: \\"render-styles, RenderStyles\\",
   template: \`
     <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container>
+    <ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
   \`,
   standalone: true,
   imports: [CommonModule],
@@ -15971,6 +16047,9 @@ interface Props {
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
 })
 export default class NestedShow {
@@ -16004,6 +16083,9 @@ interface Props {
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
   standalone: true,
   imports: [CommonModule],
@@ -16029,6 +16111,9 @@ interface Props {
   selector: \\"show-root-text, ShowRootText\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
 })
 export default class ShowRootText {
@@ -16056,6 +16141,9 @@ interface Props {
   selector: \\"show-root-text, ShowRootText\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
   standalone: true,
   imports: [CommonModule],
@@ -17387,6 +17475,9 @@ import { Component } from \\"@angular/core\\";
     <ng-container *ngIf=\\"show\\">
       <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
+    <ng-container *ngIf=\\"!(show)\\">
+      <button (click)=\\"toggle($event)\\">Show</button>
+    </ng-container>
   \`,
 })
 export default class MyComponent {
@@ -17414,6 +17505,9 @@ import { CommonModule } from \\"@angular/common\\";
   template: \`
     <ng-container *ngIf=\\"show\\">
       <button (click)=\\"toggle($event)\\">Hide</button>
+    </ng-container>
+    <ng-container *ngIf=\\"!(show)\\">
+      <button (click)=\\"toggle($event)\\">Show</button>
     </ng-container>
   \`,
   standalone: true,
@@ -18331,6 +18425,9 @@ import { Component } from \\"@angular/core\\";
     <ng-container *ngIf=\\"show\\">
       <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
+    <ng-container *ngIf=\\"!(show)\\">
+      <button (click)=\\"toggle($event)\\">Show</button>
+    </ng-container>
   \`,
 })
 export default class MyComponent {
@@ -18358,6 +18455,9 @@ import { CommonModule } from \\"@angular/common\\";
   template: \`
     <ng-container *ngIf=\\"show\\">
       <button (click)=\\"toggle($event)\\">Hide</button>
+    </ng-container>
+    <ng-container *ngIf=\\"!(show)\\">
+      <button (click)=\\"toggle($event)\\">Show</button>
     </ng-container>
   \`,
   standalone: true,
