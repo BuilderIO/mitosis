@@ -17,7 +17,7 @@ import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { renderPreComponent } from '@/helpers/render-imports';
 import { replaceIdentifiers } from '@/helpers/replace-identifiers';
-import { isSlotProperty, stripSlotPrefix } from '@/helpers/slots';
+import { isSlotProperty, stripSlotPrefix, toKebabSlot } from '@/helpers/slots';
 import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import {
   DO_NOT_USE_VARS_TRANSFORMS,
@@ -302,8 +302,7 @@ export const blockToAngular = (
   const textCode = json.bindings._text?.code;
   if (textCode) {
     if (isSlotProperty(textCode)) {
-      const selector = pipe(textCode, stripSlotPrefix, kebabCase);
-      return `<ng-content select="[${selector}]"></ng-content>`;
+      return `<ng-content select="[${toKebabSlot(textCode)}]"></ng-content>`;
     }
 
     if (textCode.includes('JSON.stringify')) {
