@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.7
+
+### Patch Changes
+
+- 1dbdf32: add `includeMeta` option to Builder generator
+
 ## 0.2.6
 
 ### Patch Changes
