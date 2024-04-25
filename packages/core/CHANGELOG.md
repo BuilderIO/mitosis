@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.2.7
+
+### Patch Changes
+
+- 1dbdf32: add `includeMeta` option to Builder generator
+
+## 0.2.6
+
+### Patch Changes
+
+- 389018d: support else statements in Angular generator with negation
+- c7f2759: Fix: named slots generation for Vue, Qwik and Svelte.
+
+## 0.2.5
+
+### Patch Changes
+
+- 2e56b76: Fix: Qwik methods using computed variables
+
 ## 0.2.4
 
 ### Patch Changes

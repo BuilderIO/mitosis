@@ -485,6 +485,7 @@ type BuilderToMitosisOptions = {
   includeBuilderExtras?: boolean;
   preserveTextBlocks?: boolean;
   includeSpecialBindings?: boolean;
+  includeMeta?: boolean;
 };
 
 export const builderElementToMitosisNode = (
@@ -492,7 +493,7 @@ export const builderElementToMitosisNode = (
   options: BuilderToMitosisOptions,
   _internalOptions: InternalOptions = {},
 ): MitosisNode => {
-  const { includeSpecialBindings = true } = options;
+  const { includeSpecialBindings = true, includeMeta = false } = options;
 
   if (block.component?.name === 'Core:Fragment') {
     block.component.name = 'Fragment';
@@ -694,6 +695,12 @@ export const builderElementToMitosisNode = (
     slots: {
       ...slots,
     },
+    meta: includeMeta
+      ? {
+          'builder-id': block.id,
+          ...block.meta,
+        }
+      : {},
   });
 
   // Has single text node child

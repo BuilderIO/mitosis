@@ -1,5 +1,28 @@
 # @builder.io/mitosis-cli
 
+## 0.2.7
+
+### Patch Changes
+
+- Updated dependencies [1dbdf32]
+  - @builder.io/mitosis@0.2.7
+
+## 0.2.6
+
+### Patch Changes
+
+- Updated dependencies [389018d]
+- Updated dependencies [c7f2759]
+  - @builder.io/mitosis@0.2.6
+
+## 0.2.5
+
+### Patch Changes
+
+- 2e56b76: Fix: Qwik methods using computed variables
+- Updated dependencies [2e56b76]
+  - @builder.io/mitosis@0.2.5
+
 ## 0.2.4
 
 ### Patch Changes

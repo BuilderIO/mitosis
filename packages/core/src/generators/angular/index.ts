@@ -17,7 +17,7 @@ import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { renderPreComponent } from '@/helpers/render-imports';
 import { replaceIdentifiers } from '@/helpers/replace-identifiers';
-import { isSlotProperty, stripSlotPrefix } from '@/helpers/slots';
+import { isSlotProperty, stripSlotPrefix, toKebabSlot } from '@/helpers/slots';
 import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import {
   DO_NOT_USE_VARS_TRANSFORMS,
@@ -212,11 +212,6 @@ const stringifyBinding =
     if (key === 'key') {
       return;
     }
-    if (key === 'attributes') {
-      // TODO: contains ternary operator which needs to be handled
-      return;
-    }
-
     const keyToUse = BINDINGS_MAPPER[key] || key;
     const { code, arguments: cusArgs = ['event'] } = binding!;
     // TODO: proper babel transform to replace. Util for this
@@ -251,10 +246,7 @@ const handleNgOutletBindings = (node: MitosisNode) => {
     }
     const { code, arguments: cusArgs = ['event'] } = node.bindings[key]!;
 
-    if (code.includes('?')) {
-      // TODO handle ternary
-      continue;
-    } else if (key.includes('props.')) {
+    if (key.includes('props.')) {
       allProps += `${key.replace('props.', '')}: ${code}, `;
     } else if (key.includes('.')) {
       // TODO: handle arbitrary spread props
@@ -302,8 +294,7 @@ export const blockToAngular = (
   const textCode = json.bindings._text?.code;
   if (textCode) {
     if (isSlotProperty(textCode)) {
-      const selector = pipe(textCode, stripSlotPrefix, kebabCase);
-      return `<ng-content select="[${selector}]"></ng-content>`;
+      return `<ng-content select="[${toKebabSlot(textCode)}]"></ng-content>`;
     }
 
     if (textCode.includes('JSON.stringify')) {
@@ -327,12 +318,18 @@ export const blockToAngular = (
   } else if (json.name === 'Show') {
     let condition = json.bindings.when?.code;
     if (condition?.includes('typeof')) {
-      let wordAfterTypeof = condition.split('typeof')[1].trim();
+      let wordAfterTypeof = condition.split('typeof')[1].trim().split(' ')[0];
       condition = condition.replace(`typeof ${wordAfterTypeof}`, `useTypeOf(${wordAfterTypeof})`);
     }
     str += `<ng-container *ngIf="${condition}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
+    // else condition
+    if (isMitosisNode(json.meta?.else)) {
+      str += `<ng-container *ngIf="!(${condition})">`;
+      str += blockToAngular(json.meta.else, options, blockOptions);
+      str += `</ng-container>`;
+    }
   } else if (json.name.includes('.')) {
     const elSelector = childComponents.find((impName) => impName === json.name)
       ? kebabCase(json.name)

@@ -70,19 +70,23 @@ export function renderJSXNodes(
           !this.isJSX && this.emit(',');
           includedHelperDirectives(directive.toString(), directives);
         } else {
-          if (typeof directive == 'string') {
-            directives.set(childName, directive);
-            includedHelperDirectives(directive, directives);
-            if (file.module !== 'med' && file.imports.hasImport(childName)) {
-              file.import('./med.js', childName);
+          if (childName === 'Slot') {
+            this.file.import(this.file.qwikModule, 'Slot');
+          } else {
+            if (typeof directive == 'string') {
+              directives.set(childName, directive);
+              includedHelperDirectives(directive, directives);
+              if (file.module !== 'med' && file.imports.hasImport(childName)) {
+                file.import('./med.js', childName);
+              }
             }
-          }
-          if (isSymbol(childName)) {
-            // TODO(misko): We are hard coding './med.js' which is not right.
-            !file.imports.hasImport(childName) && file.import('./med.js', childName);
-            let exportedChildName = file.exports.get(childName);
-            if (exportedChildName) {
-              childName = exportedChildName;
+            if (isSymbol(childName)) {
+              // TODO(misko): We are hard coding './med.js' which is not right.
+              !file.imports.hasImport(childName) && file.import('./med.js', childName);
+              let exportedChildName = file.exports.get(childName);
+              if (exportedChildName) {
+                childName = exportedChildName;
+              }
             }
           }
           let props: Record<string, any> = child.properties;
