@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.8
+
+### Patch Changes
+
+- 18b9210: Feature: Vue: add `casing` option (defaults to `pascal`)
+
 ## 0.2.7
 
 ### Patch Changes
