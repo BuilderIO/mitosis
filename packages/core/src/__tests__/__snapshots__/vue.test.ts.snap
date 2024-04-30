@@ -292,15 +292,9 @@ exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
       {{ type }}
     </template>
 
-    <my-boolean-attribute-component
-      :toggle=\\"true\\"
-    ></my-boolean-attribute-component
-    ><my-boolean-attribute-component
-      :toggle=\\"true\\"
-    ></my-boolean-attribute-component
-    ><my-boolean-attribute-component
-      :list=\\"null\\"
-    ></my-boolean-attribute-component>
+    <MyBooleanAttributeComponent :toggle=\\"true\\"></MyBooleanAttributeComponent
+    ><MyBooleanAttributeComponent :toggle=\\"true\\"></MyBooleanAttributeComponent
+    ><MyBooleanAttributeComponent :list=\\"null\\"></MyBooleanAttributeComponent>
   </div>
 </template>
 
@@ -320,12 +314,12 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > BasicChildComponent 1`] = `
 "<template>
   <div>
-    <my-basic-component :id=\\"dev\\"></my-basic-component>
+    <MyBasicComponent :id=\\"dev\\"></MyBasicComponent>
     <div>
-      <my-basic-on-mount-update-component
+      <MyBasicOnMountUpdateComponent
         :hi=\\"name\\"
         :bye=\\"dev\\"
-      ></my-basic-on-mount-update-component>
+      ></MyBasicOnMountUpdateComponent>
     </div>
   </div>
 </template>
@@ -829,25 +823,25 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
         :key=\\"block.id\\"
         v-for=\\"(block, index) in builderBlock?.children\\"
       >
-        <builder-block-component
+        <BuilderBlockComponent
           :block=\\"block\\"
           :index=\\"index\\"
-        ></builder-block-component>
+        ></BuilderBlockComponent>
       </template>
     </template>
 
     <template v-if=\\"submissionState === 'error'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"errorMessage\\"
         :blocks=\\"errorMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
 
     <template v-if=\\"submissionState === 'sending'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"sendingMessage\\"
         :blocks=\\"sendingMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
 
     <template v-if=\\"submissionState === 'error' && responseData\\">
@@ -857,10 +851,10 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
     </template>
 
     <template v-if=\\"submissionState === 'success'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"successMessage\\"
         :blocks=\\"successMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
   </form>
 </template>
@@ -1331,11 +1325,11 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > InputParent 1`] = `
 "<template>
-  <form-input-component
+  <FormInputComponent
     name=\\"kingzez\\"
     type=\\"text\\"
     :onChange=\\"(value) => handleChange(value)\\"
-  ></form-input-component>
+  ></FormInputComponent>
 </template>
 
 <script>
@@ -1482,11 +1476,11 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > SlotHtml 1`] = `
 "<template>
   <div>
-    <content-slot-code>
+    <ContentSlotCode>
       <template #testing>
         <div>Hello</div>
       </template>
-    </content-slot-code>
+    </ContentSlotCode>
   </div>
 </template>
 
@@ -1504,9 +1498,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > SlotJsx 1`] = `
 "<template>
-  <div>
-    <content-slot-code :slotTesting=\\"<div>Hello</div>\\"></content-slot-code>
-  </div>
+  <div><ContentSlotCode :slotTesting=\\"<div>Hello</div>\\"></ContentSlotCode></div>
 </template>
 
 <script>
@@ -2300,9 +2292,9 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > import types 1`] = `
 "<template>
-  <render-block
+  <RenderBlock
     v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
-  ></render-block>
+  ></RenderBlock>
 </template>
 
 <script>
@@ -2821,10 +2813,10 @@ exports[`Vue > jsx > Javascript Test > renderBlock 1`] = `
 
     <template v-if=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
       <template :key=\\"index\\" v-for=\\"(data, index) in repeatItemData\\">
-        <render-repeated-block
+        <RenderRepeatedBlock
           :repeatContext=\\"data.context\\"
           :block=\\"data.block\\"
-        ></render-repeated-block>
+        ></RenderRepeatedBlock>
       </template>
     </template>
 
@@ -2838,18 +2830,18 @@ exports[`Vue > jsx > Javascript Test > renderBlock 1`] = `
           :key=\\"'render-block-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
-          <render-block
+          <RenderBlock
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></render-block> </template
+          ></RenderBlock> </template
         ><template
           :key=\\"'block-style-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
-          <block-styles
+          <BlockStyles
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></block-styles> </template
+          ></BlockStyles> </template
       ></component>
     </template>
   </template>
@@ -3074,7 +3066,7 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > renderContentExample 1`] = `
 "<template>
   <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
-    <render-blocks :blocks=\\"content.blocks\\"></render-blocks>
+    <RenderBlocks :blocks=\\"content.blocks\\"></RenderBlocks>
   </div>
 </template>
 
@@ -3197,7 +3189,7 @@ exports[`Vue > jsx > Javascript Test > self-referencing component 1`] = `
   <div>
     {{ name }}
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce Wayne\\"></my-component>
+      <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
     </template>
   </div>
 </template>
@@ -3218,7 +3210,7 @@ exports[`Vue > jsx > Javascript Test > self-referencing component with children 
   <div>
     {{ name }}<slot />
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
+      <MyComponent name=\\"Bruce\\"><div>Wayne</div></MyComponent>
     </template>
   </div>
 </template>
@@ -3416,7 +3408,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > subComponent 1`] = `
 "<template>
-  <foo></foo>
+  <Foo></Foo>
 </template>
 
 <script>
@@ -3927,15 +3919,9 @@ exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
       {{ type }}
     </template>
 
-    <my-boolean-attribute-component
-      :toggle=\\"true\\"
-    ></my-boolean-attribute-component
-    ><my-boolean-attribute-component
-      :toggle=\\"true\\"
-    ></my-boolean-attribute-component
-    ><my-boolean-attribute-component
-      :list=\\"null\\"
-    ></my-boolean-attribute-component>
+    <MyBooleanAttributeComponent :toggle=\\"true\\"></MyBooleanAttributeComponent
+    ><MyBooleanAttributeComponent :toggle=\\"true\\"></MyBooleanAttributeComponent
+    ><MyBooleanAttributeComponent :list=\\"null\\"></MyBooleanAttributeComponent>
   </div>
 </template>
 
@@ -3960,12 +3946,12 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > BasicChildComponent 1`] = `
 "<template>
   <div>
-    <my-basic-component :id=\\"dev\\"></my-basic-component>
+    <MyBasicComponent :id=\\"dev\\"></MyBasicComponent>
     <div>
-      <my-basic-on-mount-update-component
+      <MyBasicOnMountUpdateComponent
         :hi=\\"name\\"
         :bye=\\"dev\\"
-      ></my-basic-on-mount-update-component>
+      ></MyBasicOnMountUpdateComponent>
     </div>
   </div>
 </template>
@@ -4526,25 +4512,25 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
         :key=\\"block.id\\"
         v-for=\\"(block, index) in builderBlock?.children\\"
       >
-        <builder-block-component
+        <BuilderBlockComponent
           :block=\\"block\\"
           :index=\\"index\\"
-        ></builder-block-component>
+        ></BuilderBlockComponent>
       </template>
     </template>
 
     <template v-if=\\"submissionState === 'error'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"errorMessage\\"
         :blocks=\\"errorMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
 
     <template v-if=\\"submissionState === 'sending'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"sendingMessage\\"
         :blocks=\\"sendingMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
 
     <template v-if=\\"submissionState === 'error' && responseData\\">
@@ -4554,10 +4540,10 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
     </template>
 
     <template v-if=\\"submissionState === 'success'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"successMessage\\"
         :blocks=\\"successMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
   </form>
 </template>
@@ -5106,11 +5092,11 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > InputParent 1`] = `
 "<template>
-  <form-input-component
+  <FormInputComponent
     name=\\"kingzez\\"
     type=\\"text\\"
     :onChange=\\"(value) => handleChange(value)\\"
-  ></form-input-component>
+  ></FormInputComponent>
 </template>
 
 <script lang=\\"ts\\">
@@ -5289,11 +5275,11 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > SlotHtml 1`] = `
 "<template>
   <div>
-    <content-slot-code>
+    <ContentSlotCode>
       <template #testing>
         <div>Hello</div>
       </template>
-    </content-slot-code>
+    </ContentSlotCode>
   </div>
 </template>
 
@@ -5315,9 +5301,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > SlotJsx 1`] = `
 "<template>
-  <div>
-    <content-slot-code :slotTesting=\\"<div>Hello</div>\\"></content-slot-code>
-  </div>
+  <div><ContentSlotCode :slotTesting=\\"<div>Hello</div>\\"></ContentSlotCode></div>
 </template>
 
 <script lang=\\"ts\\">
@@ -6222,9 +6206,9 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > import types 1`] = `
 "<template>
-  <render-block
+  <RenderBlock
     v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
-  ></render-block>
+  ></RenderBlock>
 </template>
 
 <script lang=\\"ts\\">
@@ -6801,10 +6785,10 @@ exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
 
     <template v-if=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
       <template :key=\\"index\\" v-for=\\"(data, index) in repeatItemData\\">
-        <render-repeated-block
+        <RenderRepeatedBlock
           :repeatContext=\\"data.context\\"
           :block=\\"data.block\\"
-        ></render-repeated-block>
+        ></RenderRepeatedBlock>
       </template>
     </template>
 
@@ -6818,18 +6802,18 @@ exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
           :key=\\"'render-block-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
-          <render-block
+          <RenderBlock
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></render-block> </template
+          ></RenderBlock> </template
         ><template
           :key=\\"'block-style-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
-          <block-styles
+          <BlockStyles
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></block-styles> </template
+          ></BlockStyles> </template
       ></component>
     </template>
   </template>
@@ -7067,7 +7051,7 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > renderContentExample 1`] = `
 "<template>
   <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
-    <render-blocks :blocks=\\"content.blocks\\"></render-blocks>
+    <RenderBlocks :blocks=\\"content.blocks\\"></RenderBlocks>
   </div>
 </template>
 
@@ -7209,7 +7193,7 @@ exports[`Vue > jsx > Typescript Test > self-referencing component 1`] = `
   <div>
     {{ name }}
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce Wayne\\"></my-component>
+      <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
     </template>
   </div>
 </template>
@@ -7230,7 +7214,7 @@ exports[`Vue > jsx > Typescript Test > self-referencing component with children 
   <div>
     {{ name }}<slot />
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
+      <MyComponent name=\\"Bruce\\"><div>Wayne</div></MyComponent>
     </template>
   </div>
 </template>
@@ -7446,7 +7430,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > subComponent 1`] = `
 "<template>
-  <foo></foo>
+  <Foo></Foo>
 </template>
 
 <script lang=\\"ts\\">
@@ -7885,7 +7869,7 @@ export default defineComponent({
 exports[`Vue > svelte > Javascript Test > imports 1`] = `
 "<template>
   <div>
-    <button type=\\"button\\" :disabled=\\"disabled\\"><slot /></button>
+    <Button type=\\"button\\" :disabled=\\"disabled\\"><slot /></Button>
   </div>
 </template>
 
@@ -8310,7 +8294,7 @@ export default defineComponent({
 exports[`Vue > svelte > Typescript Test > imports 1`] = `
 "<template>
   <div>
-    <button type=\\"button\\" :disabled=\\"disabled\\"><slot /></button>
+    <Button type=\\"button\\" :disabled=\\"disabled\\"><slot /></Button>
   </div>
 </template>
 
