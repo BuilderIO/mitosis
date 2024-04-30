@@ -9,4 +9,5 @@ export interface ToVueOptions extends BaseTranspilerOptions {
   defineComponent?: boolean;
   api: Api;
   convertClassStringToObject?: boolean;
+  casing?: 'pascal' | 'kebab';
 }
