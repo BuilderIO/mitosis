@@ -200,9 +200,7 @@ export default function Fiddle() {
     inputCode: defaultInputCode,
     output: '',
     outputTab: getQueryParam('outputTab') || 'vue',
-    pendingBuilderChange: null as any,
     inputTab: getQueryParam('inputTab') || 'jsx',
-    builderData: {} as any,
     isDraggingJSXCodeBar: false,
     jsxCodeTabWidth: Number(localStorageGet('jsxCodeTabWidth')) || 45,
     setEditorRef(editor: Editor, monaco: EditorRefArgs[1]) {
@@ -227,18 +225,6 @@ export default function Fiddle() {
             if (elementIndex === -1) {
               return;
             }
-
-            (
-              document.querySelector('builder-editor iframe') as HTMLIFrameElement
-            )?.contentWindow?.postMessage(
-              {
-                type: 'builder.changeSelection',
-                data: {
-                  index: elementIndex,
-                },
-              },
-              '*',
-            );
           });
         }
       }
@@ -257,22 +243,9 @@ export default function Fiddle() {
       alpineInline: localStorageGet('options.alpineInline') || 'false',
       angularStandalone: localStorageGet('options.angularStandalone') || 'false',
     },
-    applyPendingBuilderChange(update?: any) {
-      const builderJson = update || state.pendingBuilderChange;
-      if (!builderJson) {
-        return;
-      }
-      mitosisCore().then((mitosis) => {
-        const jsxJson = mitosis.builderContentToMitosisComponent(builderJson);
-        state.code = mitosis.componentToMitosis()({ component: jsxJson });
-        state.pendingBuilderChange = null;
-      });
-    },
 
     async updateOutput() {
       try {
-        state.pendingBuilderChange = null;
-
         let json: MitosisComponent;
 
         const { parseSvelte, parseJsx } = await mitosisCore();
@@ -327,10 +300,6 @@ export default function Fiddle() {
             options: { ...generateOptions(), ...commonOptions },
           })
         )({ component: json, path: '' });
-
-        const { componentToBuilder } = await mitosisCore();
-        const newBuilderData = await componentToBuilder()({ component: json });
-        setBuilderData(newBuilderData);
       } catch (err) {
         if (debug) {
           throw err;
@@ -340,15 +309,6 @@ export default function Fiddle() {
       }
     },
   }));
-
-  useEventListener<KeyboardEvent>(document.body, 'keydown', (e) => {
-    // Cancel cmd+s, sometimes people hit it instinctively when editing code and the browser
-    // "save webpage" dialog is unwanted and annoying
-    if ((e.metaKey || e.ctrlKey) && e.key === 's') {
-      e.preventDefault();
-      state.applyPendingBuilderChange();
-    }
-  });
 
   useEventListener<MouseEvent>(document.body, 'mousemove', (e) => {
     if (state.isDraggingJSXCodeBar) {
@@ -361,47 +321,6 @@ export default function Fiddle() {
 
   useEventListener<MouseEvent>(document.body, 'mouseup', (e) => {
     state.isDraggingJSXCodeBar = false;
-  });
-  useEventListener<MessageEvent>(window, 'message', (e) => {
-    if (e.data?.type === 'builder.saveCommand') {
-      if (e.data.data || state.pendingBuilderChange) {
-        state.applyPendingBuilderChange(e.data.data || state.pendingBuilderChange);
-      }
-    } else if (e.data?.type === 'builder.selectionChange') {
-      if (SYNC_SELECTIONS) {
-        // TODO: only do this when this editor does *not* have focus
-        const { selectionIndices } = e.data.data;
-        if (Array.isArray(selectionIndices)) {
-          const index = selectionIndices[0];
-          if (typeof index === 'number') {
-            const code = state.code;
-            let match: RegExpExecArray | null;
-
-            let i = 0;
-            while ((match = openTagRe.exec(code)) != null) {
-              if (!match) {
-                break;
-              }
-              if (i++ === index) {
-                const index = match.index;
-                const length = match[1].length;
-                if (monaco) {
-                  const start = indexToRowAndColumn(code, index - 1);
-                  const end = indexToRowAndColumn(code, index + length + 1);
-                  const startPosition = new monaco.Position(start.row + 1, start.column + 1);
-                  const endPosition = new monaco.Position(end.row + 1, end.column + 1);
-
-                  monacoEditorRef.current?.setSelection(
-                    monaco.Selection.fromPositions(startPosition, endPosition),
-                  );
-                }
-                break;
-              }
-            }
-          }
-        }
-      }
-    }
   });
 
   const monacoEditorRef = useRef<Editor | null>(null);
