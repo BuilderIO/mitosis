@@ -1,7 +1,9 @@
 import { component$ } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
+import { Link, useLocation } from '@builder.io/qwik-city';
 
 export default component$(() => {
+  const location = useLocation();
+
   return (
     <header class="bg-neutral-800 p-4 text-white sticky top-0 z-10">
       <div class="flex justify-between items-center">
@@ -15,7 +17,7 @@ export default component$(() => {
         </a>
         <ul class="flex space-x-4">
           <li>
-            <Link href="/docs/intro" class="hover:underline">
+            <Link href="/docs/quickstart" class="hover:underline">
               Docs
             </Link>
           </li>
