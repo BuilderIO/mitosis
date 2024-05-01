@@ -1,6 +1,6 @@
-import todosState from '../shared/todos-state';
 import { Show, useStore } from '@builder.io/mitosis';
 import type { Todo as TodoType } from '../shared/todos-state';
+import todosState from '../shared/todos-state';
 
 export type TodoProps = {
   todo: TodoType;
@@ -11,16 +11,12 @@ export default function Todo(props: TodoProps) {
     editing: false,
     toggle() {
       const newBool: boolean = !props.todo.completed;
-      props.todo.completed = newBool
+      props.todo.completed = newBool;
     },
   });
 
   return (
-    <li
-      class={`${props.todo.completed ? 'completed' : ''} ${
-        state.editing ? 'editing' : ''
-      }`}
-    >
+    <li class={`${props.todo.completed ? 'completed' : ''} ${state.editing ? 'editing' : ''}`}>
       <div class="view">
         <input
           class="toggle"

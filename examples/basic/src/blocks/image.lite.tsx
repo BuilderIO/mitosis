@@ -45,21 +45,20 @@ export default function Image(props: ImageProps) {
         />
         <source srcSet={props.srcset} />
       </picture>
-      {props.aspectRatio &&
-        (
-          <div
-            style={{
-              paddingTop: props.aspectRatio * 100 + '%',
-            }}
-            css={{
-              width: '100%',
-              pointerEvents: 'none',
-              fontSize: '0',
-            }}
-          >
-            {' '}
-          </div>
-        )}
+      {props.aspectRatio && (
+        <div
+          style={{
+            paddingTop: props.aspectRatio * 100 + '%',
+          }}
+          css={{
+            width: '100%',
+            pointerEvents: 'none',
+            fontSize: '0',
+          }}
+        >
+          {' '}
+        </div>
+      )}
 
       <Show when={!props.fitContent}>
         <div

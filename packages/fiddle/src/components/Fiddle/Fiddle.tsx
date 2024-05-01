@@ -17,10 +17,8 @@ import {
 import { Alert } from '@material-ui/lab';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
-import stringify from 'fast-json-stable-stringify';
-import { adapt } from 'webcomponents-in-react';
 import { breakpoints } from '../../constants/breakpoints';
 import { colors } from '../../constants/colors';
 import { defaultCode, templates } from '../../constants/templates/jsx-templates';
@@ -135,18 +133,7 @@ const AlphaPreviewMessage = () => (
   </ThemeProvider>
 );
 
-const builderOptions = {
-  useDefaultStyles: false,
-  hideAnimateTab: true,
-};
-
-const BuilderEditor = adapt('builder-editor');
-
 const smallBreakpoint = breakpoints.mediaQueries.small;
-
-const builderEnvParam = getQueryParam('builderEnv');
-
-const useSaveButton = getQueryParam('realTime') !== 'true';
 
 const TabLogo = (props: { src: string }) => {
   const size = 12;
@@ -208,10 +195,6 @@ type Editor = EditorRefArgs[0];
 export default function Fiddle() {
   const monaco = useMonaco();
 
-  const [staticState] = useState(() => ({
-    ignoreNextBuilderUpdate: false,
-  }));
-  const [builderData, setBuilderData] = useState<any>(null);
   const state = useLocalObservable(() => ({
     code: getQueryParam('code') || defaultCode,
     inputCode: defaultInputCode,
@@ -220,10 +203,8 @@ export default function Fiddle() {
     pendingBuilderChange: null as any,
     inputTab: getQueryParam('inputTab') || 'jsx',
     builderData: {} as any,
-    isDraggingBuilderCodeBar: false,
     isDraggingJSXCodeBar: false,
     jsxCodeTabWidth: Number(localStorageGet('jsxCodeTabWidth')) || 45,
-    builderPaneHeight: Number(localStorageGet('builderPaneHeight')) || 35,
     setEditorRef(editor: Editor, monaco: EditorRefArgs[1]) {
       monacoEditorRef.current = editor;
       if (editor) {
@@ -291,7 +272,6 @@ export default function Fiddle() {
     async updateOutput() {
       try {
         state.pendingBuilderChange = null;
-        staticState.ignoreNextBuilderUpdate = true;
 
         let json: MitosisComponent;
 
@@ -376,21 +356,11 @@ export default function Fiddle() {
       const pointerRelativeXpos = e.clientX;
       const newWidth = Math.max((pointerRelativeXpos / windowWidth) * 100, 5);
       state.jsxCodeTabWidth = Math.min(newWidth, 95);
-    } else if (state.isDraggingBuilderCodeBar) {
-      const bannerHeight = 0;
-      const windowHeight = window.innerHeight;
-      const pointerRelativeYPos = e.clientY;
-      const newHeight = Math.max(
-        (1 - (pointerRelativeYPos + bannerHeight) / windowHeight) * 100,
-        5,
-      );
-      state.builderPaneHeight = Math.min(newHeight, 95);
     }
   });
 
   useEventListener<MouseEvent>(document.body, 'mouseup', (e) => {
     state.isDraggingJSXCodeBar = false;
-    state.isDraggingBuilderCodeBar = false;
   });
   useEventListener<MessageEvent>(window, 'message', (e) => {
     if (e.data?.type === 'builder.saveCommand') {
@@ -439,12 +409,6 @@ export default function Fiddle() {
   useReaction(
     () => state.jsxCodeTabWidth,
     (width) => localStorageSet('jsxCodeTabWidth', width),
-    { fireImmediately: false, delay: 1000 },
-  );
-
-  useReaction(
-    () => state.builderPaneHeight,
-    (width) => localStorageSet('builderPaneHeight', width),
     { fireImmediately: false, delay: 1000 },
   );
 
@@ -597,24 +561,6 @@ export default function Fiddle() {
                 🔆
               </Button>
 
-              <a
-                target="_blank"
-                rel="noreferrer"
-                css={{
-                  marginRight: 25,
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-                href="https://github.com/builderio/figma-html"
-              >
-                <span css={{ [smallBreakpoint]: { display: 'none' } }}>Figma</span>
-                <img
-                  width={20}
-                  src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb77e93c28e044178e4694cc939bf4cf"
-                  css={{ marginLeft: 10 }}
-                  alt="Figma Logo"
-                />
-              </a>
               <a
                 target="_blank"
                 rel="noreferrer"
@@ -1448,97 +1394,6 @@ export default function Fiddle() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div
-          css={{
-            flexShrink: 0,
-            height: `${state.builderPaneHeight}vh`,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'stretch',
-          }}
-        >
-          <div
-            css={{
-              borderBottom: `1px solid ${colors.contrast}`,
-              borderTop: `1px solid ${colors.contrast}`,
-              alignItems: 'center',
-              display: 'flex',
-              ...barStyle,
-              cursor: 'row-resize',
-            }}
-            onMouseDown={(event) => {
-              event.preventDefault();
-              state.isDraggingBuilderCodeBar = true;
-            }}
-          >
-            <Typography
-              variant="body2"
-              css={{
-                flexGrow: 1,
-                textAlign: 'left',
-                padding: '10px 15px',
-                color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-              }}
-            >
-              Builder.io
-            </Typography>
-            {state.pendingBuilderChange && (
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                css={{
-                  marginLeft: 'auto',
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
-                  marginRight: 10,
-                  flexShrink: 0,
-                }}
-                onMouseDown={(e) => {
-                  // Don't trigger the drag listeners on the parent element
-                  e.stopPropagation();
-                }}
-                onClick={() => {
-                  state.applyPendingBuilderChange(state.pendingBuilderChange);
-                }}
-              >
-                Save
-              </Button>
-            )}
-          </div>
-          <style>
-            {`
-              builder-editor { 
-                flex-grow: 1; 
-                pointer-events: ${state.isDraggingBuilderCodeBar ? 'none' : 'auto'}; 
-              }
-              
-              builder-editor iframe {
-                min-width: unset
-              }
-              `}
-          </style>
-          <BuilderEditor
-            onChange={(e: CustomEvent) => {
-              if (useSaveButton) {
-                // Only run this when the iframe is focused - aka is being actively used
-                if (document.activeElement?.tagName === 'IFRAME') {
-                  if (stringify(e.detail) !== stringify(builderData)) {
-                    state.pendingBuilderChange = e.detail;
-                  } else {
-                    state.pendingBuilderChange = null;
-                  }
-                }
-              } else {
-                state.applyPendingBuilderChange(e.detail);
-              }
-            }}
-            data={builderData}
-            options={builderOptions}
-            env={builderEnvParam || undefined}
-          />
         </div>
       </div>
     );
