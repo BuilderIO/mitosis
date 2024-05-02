@@ -12,7 +12,7 @@ export default component$(() => {
             class="object-contain -my-1"
             width={140}
             height={50}
-            src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fbec547b650d74b949faccad67013147f"
+            src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0fdb9aabd10f4205b3b3b56d7b950239"
           />
         </a>
         <ul class="flex space-x-4">

@@ -35,7 +35,7 @@ export default component$(() => {
 
   return (
     <>
-      <div class={['flex flex-col', isPlayground ? 'min-h-screen' : 'min-h-[50vh]']}>
+      <div class={['flex flex-col', isPlayground ? 'min-h-screen' : 'min-h-[80vh]']}>
         <Header />
         <main class={[isPlayground ? 'grow flex flex-col' : 'container mx-auto px-4']}>
           <Slot />
