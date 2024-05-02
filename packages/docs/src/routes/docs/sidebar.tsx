@@ -3,7 +3,7 @@ import { Link, useLocation } from '@builder.io/qwik-city';
 
 const SidebarLink = component$((props: { href: string }) => {
   const location = useLocation();
-  const activeClasses = '!bg-neutral-500';
+  const activeClasses = '!bg-neutral-600';
   return (
     <Link
       href={props.href}
