@@ -21,7 +21,7 @@ const SidebarLink = component$((props: { href: string }) => {
 
 export default component$((props: { class?: ClassList }) => {
   return (
-    <div class={[props.class, 'flex flex-col gap-4 p-4 bg-neutral-100 min-w-[200px]']}>
+    <div class={[props.class, 'flex flex-col gap-4 p-4 sticky top-0 mt-4 min-w-[200px]']}>
       <SidebarLink href="/docs/quickstart">Quickstart</SidebarLink>
       <SidebarLink href="/docs/components">Components</SidebarLink>
       <SidebarLink href="/docs/cli">CLI</SidebarLink>
