@@ -3,10 +3,13 @@ import { server$ } from '@builder.io/qwik-city';
 import { CodeEditor } from '~/components/code-editor';
 import Select from '~/components/select';
 
-export type Output = 'react' | 'svelte' | 'vue' | 'qwik' | 'angular';
-const outputs: Output[] = ['react', 'svelte', 'vue', 'qwik', 'angular'];
+export type OutputFramework = 'react' | 'svelte' | 'vue' | 'qwik' | 'angular';
+const outputs: OutputFramework[] = ['react', 'svelte', 'vue', 'qwik', 'angular'];
 
-export const compile = server$(async (code: string, output: Output) => {
+export type InputSyntax = 'jsx' | 'svelte';
+const inputs: InputSyntax[] = ['jsx', 'svelte'];
+
+export const compile = server$(async (code: string, output: OutputFramework) => {
   const {
     parseJsx,
     componentToSvelte,
@@ -54,10 +57,11 @@ export default function MyComponent(props) {
 
 export default component$(() => {
   const code = useSignal(defaultCode);
+  const inputSyntax = useSignal<InputSyntax>('jsx');
   const output = useSignal('');
-  const outputOneFramework = useSignal<Output>('svelte');
+  const outputOneFramework = useSignal<OutputFramework>('svelte');
   const output2 = useSignal('');
-  const outputTwoFramework = useSignal<Output>('vue');
+  const outputTwoFramework = useSignal<OutputFramework>('vue');
 
   useVisibleTask$(async ({ track }) => {
     track(() => code.value);
@@ -79,22 +83,32 @@ export default component$(() => {
 
   return (
     <div class="relative flex gap-4 mt-4 grow items-stretch">
-      <CodeEditor
-        language="typescript"
-        defaultValue={code.value}
-        onChange$={(newCode) => {
-          code.value = newCode;
-        }}
-        class="w-full"
-      />
+      <div class="w-full flex flex-col">
+        <Select
+          class="ml-auto mr-2"
+          value={inputSyntax.value}
+          onChange$={(framework: any) => (inputSyntax.value = framework)}
+          options={inputs}
+        />
+        <CodeEditor
+          language="typescript"
+          class="grow"
+          defaultValue={code.value}
+          onChange$={(newCode) => {
+            code.value = newCode;
+          }}
+        />
+      </div>
       <div class="flex gap-4 flex-col w-full h-[90vh]">
         <Select
+          class="ml-auto mr-2"
           value={outputOneFramework.value}
           onChange$={(framework: any) => (outputOneFramework.value = framework)}
           options={outputs}
         />
         <CodeEditor language="html" value={output.value} class="h-[50%]" />
         <Select
+          class="ml-auto mr-2"
           value={outputTwoFramework.value}
           onChange$={(framework: any) => (outputTwoFramework.value = framework)}
           options={outputs}
