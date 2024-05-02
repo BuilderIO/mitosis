@@ -1,9 +1,9 @@
-import { componentToSvelte, parseJsx } from '@builder.io/mitosis';
 import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { server$ } from '@builder.io/qwik-city';
 import { CodeEditor } from '~/components/code-editor';
 
 export const compile = server$(async (code: string) => {
+  const { parseJsx, componentToSvelte } = await import('@builder.io/mitosis');
   const parsed = parseJsx(code);
   const svelte = componentToSvelte()({ component: parsed });
   return svelte;
