@@ -107,8 +107,8 @@ export default component$(() => {
   });
 
   return (
-    <div class="relative flex gap-4 mt-4 grow items-stretch">
-      <div class="w-full flex flex-col">
+    <div class="relative flex gap-4 mt-4 grow items-stretch max-md:flex-col">
+      <div class="w-full flex flex-col max-md:h-[50vh]">
         <div class="flex items-center gap-2 mx-4 my-4 min-h-[50px]">
           <h3 class="text-lg">Input</h3>
           {visible.value && (
@@ -122,22 +122,23 @@ export default component$(() => {
             />
           )}
         </div>
-        {!visible.value ? (
-          <div class="h-[50%]">
-            <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
-          </div>
-        ) : (
-          <CodeEditor
-            language="typescript"
-            class="grow"
-            defaultValue={code.value}
-            onChange$={(newCode) => {
-              code.value = newCode;
-            }}
-          />
-        )}
+
+        <div class="w-full grow relative">
+          <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
+
+          {visible.value && (
+            <CodeEditor
+              language="typescript"
+              class="absolute inset-0 h-full w-full"
+              defaultValue={code.value}
+              onChange$={(newCode) => {
+                code.value = newCode;
+              }}
+            />
+          )}
+        </div>
       </div>
-      <div class="flex gap-4 flex-col w-full h-[90vh]">
+      <div class="flex gap-4 flex-col w-full h-[90vh] max-md:h-[50vh]">
         <div class="flex items-center gap-2 mx-4 my-4 min-h-[50px]">
           <h3 class="text-lg">Output</h3>
           {visible.value && (
@@ -151,20 +152,17 @@ export default component$(() => {
             />
           )}
         </div>
-        {!visible.value && (
-          <div class="h-[50%]">
-            <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
-          </div>
-        )}
-
-        {visible.value && (
-          <CodeEditor
-            language={languageByFramework[outputOneFramework.value]}
-            value={output.value}
-            class="h-[50%]"
-          />
-        )}
-        <div class="min-h-[50px]">
+        <div class="h-[50%] relative">
+          <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
+          {visible.value && (
+            <CodeEditor
+              language={languageByFramework[outputOneFramework.value]}
+              value={output.value}
+              class="absolute inset-0 h-full w-full"
+            />
+          )}
+        </div>
+        <div class="min-h-[50px] max-md:hidden">
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
             // server side
@@ -177,13 +175,15 @@ export default component$(() => {
           )}
         </div>
 
-        <div class="h-[50%] relative">
+        <div class="h-[50%] relative max-md:hidden">
           <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
-          <CodeEditor
-            language={languageByFramework[outputTwoFramework.value]}
-            value={output2.value}
-            class="absolute inset-0 h-full w-full"
-          />
+          {visible.value && (
+            <CodeEditor
+              language={languageByFramework[outputTwoFramework.value]}
+              value={output2.value}
+              class="absolute inset-0 h-full w-full"
+            />
+          )}
         </div>
       </div>
     </div>

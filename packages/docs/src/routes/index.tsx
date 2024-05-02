@@ -20,7 +20,7 @@ export default component$(() => {
           href="/playground"
           class="btn ml-4 border border-primary hover:bg-purple-700 text-white font-medium py-2 px-4 rounded"
         >
-          Try the Playground
+          Playground
         </Link>
       </div>
     </div>
