@@ -44,7 +44,7 @@ try {
   const data = await fs.readFile(secondFilePath, 'utf8');
 
   // Define the block of code to remove
-  const codeToRemove = 'process.env.NODE_ENV = "development"';
+  const codeToRemove = "process.env.NODE_ENV = 'development'";
 
   // Remove the code block
   const updatedData = data.replace(codeToRemove, '');
