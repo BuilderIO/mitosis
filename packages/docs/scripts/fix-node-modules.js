@@ -1,6 +1,6 @@
 // Update a node_modules file to remove a block of code that causes an error in vite
-// only in this project for some reason. I've spent hours looking for a real fix so
-// here we are
+// only in this project for some reason. I've spent hours looking for a real fix,
+// And of course, patch-package is erroring too, so here we are.
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -32,6 +32,25 @@ import("node:async_hooks").then((module) => {
 
   // Write the file back
   await fs.writeFile(filePath, updatedData, 'utf8');
+  console.log('File updated successfully!');
+} catch (err) {
+  console.error('Error processing file:', err);
+}
+
+const secondFilePath = path.join(process.cwd(), 'node_modules/postcss-load-config/src/index.js');
+
+try {
+  // Read the file
+  const data = await fs.readFile(secondFilePath, 'utf8');
+
+  // Define the block of code to remove
+  const codeToRemove = 'process.env.NODE_ENV = "development"';
+
+  // Remove the code block
+  const updatedData = data.replace(codeToRemove, '');
+
+  // Write the file back
+  await fs.writeFile(secondFilePath, updatedData, 'utf8');
   console.log('File updated successfully!');
 } catch (err) {
   console.error('Error processing file:', err);
