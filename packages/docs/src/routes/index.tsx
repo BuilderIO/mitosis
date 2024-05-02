@@ -8,7 +8,7 @@ export default component$(() => {
         class="aspect-[4] max-w-full w-[500px] mx-auto mt-24"
         src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0fdb9aabd10f4205b3b3b56d7b950239"
       />
-      <p class="text-lg mx-auto mt-6">Write components once, run everywhere.</p>
+      <p class="text-xl mx-auto mt-6">Write components once, run everywhere.</p>
       <div class="flex mx-auto mt-12">
         <Link
           href="/docs"

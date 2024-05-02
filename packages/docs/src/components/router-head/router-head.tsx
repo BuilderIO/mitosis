@@ -14,6 +14,13 @@ export const RouterHead = component$(() => {
       <title>{head.title}</title>
 
       <link rel="canonical" href={loc.url.href} />
+      {/* favicon */}
+      <link href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe828a5e84be0407d8cee4419cfa8d200" />
+      <meta
+        property="og:image"
+        content="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F644c071cb71f4184b7d6310f466e95fc"
+      />
+
       {loc.url.pathname.startsWith('/docs') && (
         <link
           rel="stylesheet"
