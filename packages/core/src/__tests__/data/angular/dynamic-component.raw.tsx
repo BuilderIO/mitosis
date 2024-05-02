@@ -1,7 +1,10 @@
 import { useState } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
-  const [obj, setObj] = useState(HelloComponent);
+  const [obj, setObj] = useState({
+    name: 'foo',
+    Component: FooComponent,
+  });
 
   function onClick() {
     console.log('hello');
