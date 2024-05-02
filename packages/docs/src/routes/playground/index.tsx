@@ -1,5 +1,6 @@
 import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { server$ } from '@builder.io/qwik-city';
+import { server$, useLocation } from '@builder.io/qwik-city';
+import { ContentLoaderCode } from 'qwik-content-loader';
 import { CodeEditor } from '~/components/code-editor';
 import Select from '~/components/select';
 
@@ -9,30 +10,42 @@ const outputs: OutputFramework[] = ['react', 'svelte', 'vue', 'qwik', 'angular']
 export type InputSyntax = 'jsx' | 'svelte';
 const inputs: InputSyntax[] = ['jsx', 'svelte'];
 
-export const compile = server$(async (code: string, output: OutputFramework) => {
-  const {
-    parseJsx,
-    componentToSvelte,
-    componentToVue,
-    componentToReact,
-    componentToQwik,
-    componentToAngular,
-  } = await import('@builder.io/mitosis');
-  const parsed = parseJsx(code);
-  const outputCode =
-    output === 'svelte'
-      ? componentToSvelte()({ component: parsed })
-      : output === 'react'
-      ? componentToReact()({ component: parsed })
-      : output === 'qwik'
-      ? componentToQwik()({ component: parsed })
-      : output === 'angular'
-      ? componentToAngular()({ component: parsed })
-      : componentToVue({
-          api: 'composition',
-        })({ component: parsed });
-  return outputCode;
-});
+const languageByFramework: Record<OutputFramework, string> = {
+  react: 'typescript',
+  svelte: 'html',
+  vue: 'html',
+  qwik: 'typescript',
+  angular: 'typescript',
+};
+
+export const compile = server$(
+  async (code: string, output: OutputFramework, inputSyntax: InputSyntax) => {
+    const {
+      parseJsx,
+      componentToSvelte,
+      componentToVue,
+      componentToReact,
+      componentToQwik,
+      componentToAngular,
+      parseSvelte,
+    } = await import('@builder.io/mitosis');
+    const parsed = inputSyntax === 'svelte' ? await parseSvelte(code) : parseJsx(code);
+    const outputCode =
+      output === 'svelte'
+        ? componentToSvelte()({ component: parsed })
+        : output === 'react'
+        ? componentToReact()({ component: parsed })
+        : output === 'qwik'
+        ? componentToQwik()({ component: parsed })
+        : output === 'angular'
+        ? componentToAngular()({ component: parsed })
+        : componentToVue({
+            api: 'composition',
+          })({ component: parsed });
+
+    return outputCode;
+  },
+);
 
 const defaultCode = `
 import { useState } from "@builder.io/mitosis";
@@ -56,10 +69,15 @@ export default function MyComponent(props) {
 `.trim();
 
 export default component$(() => {
-  const code = useSignal(defaultCode);
-  const inputSyntax = useSignal<InputSyntax>('jsx');
+  const location = useLocation();
+  const codeFromQueryParam = location.url.searchParams.get('code') as string;
+  const outputTab = location.url.searchParams.get('outputTab') as OutputFramework;
+  const inputTab = location.url.searchParams.get('inputTab') as InputSyntax;
+
+  const code = useSignal(codeFromQueryParam);
+  const inputSyntax = useSignal<InputSyntax>(inputTab || 'jsx');
   const output = useSignal('');
-  const outputOneFramework = useSignal<OutputFramework>('svelte');
+  const outputOneFramework = useSignal<OutputFramework>(outputTab || 'svelte');
   const output2 = useSignal('');
   const outputTwoFramework = useSignal<OutputFramework>('vue');
   const visible = useSignal(false);
@@ -69,58 +87,104 @@ export default component$(() => {
   });
 
   useVisibleTask$(async ({ track }) => {
-    track(() => code.value);
+    track(code);
+    track(outputOneFramework);
     try {
-      output.value = await compile(code.value, outputOneFramework.value);
+      output.value = await compile(code.value, outputOneFramework.value, inputSyntax.value);
     } catch (err) {
       console.warn(err);
     }
   });
 
   useVisibleTask$(async ({ track }) => {
-    track(() => code.value);
+    track(code);
+    track(outputTwoFramework);
     try {
-      output2.value = await compile(code.value, outputTwoFramework.value);
+      output2.value = await compile(code.value, outputTwoFramework.value, inputSyntax.value);
     } catch (err) {
       console.warn(err);
     }
   });
 
-  return !visible.value ? (
-    <></>
-  ) : (
+  return (
     <div class="relative flex gap-4 mt-4 grow items-stretch">
       <div class="w-full flex flex-col">
-        <Select
-          class="ml-auto mr-2"
-          value={inputSyntax.value}
-          onChange$={(framework: any) => (inputSyntax.value = framework)}
-          options={inputs}
-        />
-        <CodeEditor
-          language="typescript"
-          class="grow"
-          defaultValue={code.value}
-          onChange$={(newCode) => {
-            code.value = newCode;
-          }}
-        />
+        <div class="flex items-center gap-2 mx-4 my-4">
+          <h3 class="text-lg">Input</h3>
+          {visible.value && (
+            // Workaround weird bug where this doesn't render correctly
+            // server side
+            <Select
+              class="ml-auto"
+              value={inputSyntax.value}
+              onChange$={(framework: any) => (inputSyntax.value = framework)}
+              options={inputs}
+            />
+          )}
+        </div>
+        {!visible.value ? (
+          <div class="h-[50%]">
+            <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
+          </div>
+        ) : (
+          <CodeEditor
+            language="typescript"
+            class="grow"
+            defaultValue={code.value}
+            onChange$={(newCode) => {
+              code.value = newCode;
+            }}
+          />
+        )}
       </div>
       <div class="flex gap-4 flex-col w-full h-[90vh]">
-        <Select
-          class="ml-auto mr-2"
-          value={outputOneFramework.value}
-          onChange$={(framework: any) => (outputOneFramework.value = framework)}
-          options={outputs}
-        />
-        <CodeEditor language="html" value={output.value} class="h-[50%]" />
-        <Select
-          class="ml-auto mr-2"
-          value={outputTwoFramework.value}
-          onChange$={(framework: any) => (outputTwoFramework.value = framework)}
-          options={outputs}
-        />
-        <CodeEditor language="html" value={output2.value} class="h-[50%]" />
+        <div class="flex items-center gap-2 mx-4 my-4">
+          <h3 class="text-lg">Output</h3>
+          {visible.value && (
+            // Workaround weird bug where this doesn't render correctly
+            // server side
+            <Select
+              class="ml-auto mr-2"
+              value={outputOneFramework.value}
+              onChange$={(framework: any) => (outputOneFramework.value = framework)}
+              options={outputs}
+            />
+          )}
+        </div>
+        {!visible.value && (
+          <div class="h-[50%]">
+            <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
+          </div>
+        )}
+
+        {visible.value && (
+          <CodeEditor
+            language={languageByFramework[outputOneFramework.value]}
+            value={output.value}
+            class="h-[50%]"
+          />
+        )}
+        {visible.value && (
+          // Workaround weird bug where this doesn't render correctly
+          // server side
+          <Select
+            class="ml-auto mr-2"
+            value={outputTwoFramework.value}
+            onChange$={(framework: any) => (outputTwoFramework.value = framework)}
+            options={outputs}
+          />
+        )}
+        {!visible.value ? (
+          <div class="h-[50%]">
+            <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
+          </div>
+        ) : (
+          <CodeEditor
+            language={languageByFramework[outputTwoFramework.value]}
+            value={output2.value}
+            class="h-[50%]"
+          />
+        )}
       </div>
     </div>
   );
