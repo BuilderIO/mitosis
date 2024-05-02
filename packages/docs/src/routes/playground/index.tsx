@@ -1,26 +1,32 @@
-import { component$ } from '@builder.io/qwik';
-import { useLocation } from '@builder.io/qwik-city';
+import { componentToSvelte, parseJsx } from '@builder.io/mitosis';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { server$ } from '@builder.io/qwik-city';
+
+export const compile = server$(async (code: string) => {
+  const parsed = parseJsx(code);
+  const svelte = componentToSvelte()({ component: parsed });
+  return svelte;
+});
 
 export default component$(() => {
-  const location = useLocation();
-  const code = location.url.searchParams.get('code');
-  const outputTab = location.url.searchParams.get('outputTab');
-  const inputTab = location.url.searchParams.get('inputTab');
+  const code = useSignal(
+    'export default function MyComponent() {\n  return <div>Hello World</div>;\n}',
+  );
+  const output = useSignal('');
 
-  const iframeUrl = new URL('https://mitosis-three.vercel.app');
-  if (code) {
-    iframeUrl.searchParams.set('code', code);
-  }
-  if (outputTab) {
-    iframeUrl.searchParams.set('outputTab', outputTab);
-  }
-  if (inputTab) {
-    iframeUrl.searchParams.set('inputTab', inputTab);
-  }
+  useVisibleTask$(async ({ track }) => {
+    track(() => code.value);
+    output.value = await compile(code.value);
+  });
 
   return (
     <div class="relative">
-      <iframe class="fixed inset-0 top-1.5 w-full h-full" src={iframeUrl.href} />
+      <textarea bind:value={code} class="w-full h-32 p-3 border rounded shadow text-sm" />
+      <textarea
+        readOnly
+        value={output.value}
+        class="w-full h-32 p-3 border rounded shadow text-sm"
+      />
     </div>
   );
 });
