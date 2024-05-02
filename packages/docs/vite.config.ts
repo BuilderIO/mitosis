@@ -37,9 +37,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
           },
         ],
       }),
-      // viteCommonjs({
-      //   include: 'mitosis',
-      // }),
     ],
     // This tells Vite which dependencies to pre-build in dev mode.
     optimizeDeps: {
