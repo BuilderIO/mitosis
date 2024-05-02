@@ -248,7 +248,7 @@ const handleNgOutletBindings = (node: MitosisNode) => {
       continue;
     }
     const value = node.properties[key];
-    allProps += `${key}: ${value}, `;
+    allProps += `${key}: '${value}', `;
   }
 
   for (const key in node.bindings) {
