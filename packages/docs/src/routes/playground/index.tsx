@@ -74,7 +74,7 @@ export default component$(() => {
   const outputTab = location.url.searchParams.get('outputTab') as OutputFramework;
   const inputTab = location.url.searchParams.get('inputTab') as InputSyntax;
 
-  const code = useSignal(codeFromQueryParam);
+  const code = useSignal(codeFromQueryParam || defaultCode);
   const inputSyntax = useSignal<InputSyntax>(inputTab || 'jsx');
   const output = useSignal('');
   const outputOneFramework = useSignal<OutputFramework>(outputTab || 'svelte');
@@ -109,7 +109,7 @@ export default component$(() => {
   return (
     <div class="relative flex gap-4 mt-4 grow items-stretch">
       <div class="w-full flex flex-col">
-        <div class="flex items-center gap-2 mx-4 my-4">
+        <div class="flex items-center gap-2 mx-4 my-4 min-h-[50px]">
           <h3 class="text-lg">Input</h3>
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
@@ -138,7 +138,7 @@ export default component$(() => {
         )}
       </div>
       <div class="flex gap-4 flex-col w-full h-[90vh]">
-        <div class="flex items-center gap-2 mx-4 my-4">
+        <div class="flex items-center gap-2 mx-4 my-4 min-h-[50px]">
           <h3 class="text-lg">Output</h3>
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
@@ -164,27 +164,27 @@ export default component$(() => {
             class="h-[50%]"
           />
         )}
-        {visible.value && (
-          // Workaround weird bug where this doesn't render correctly
-          // server side
-          <Select
-            class="ml-auto mr-2"
-            value={outputTwoFramework.value}
-            onChange$={(framework: any) => (outputTwoFramework.value = framework)}
-            options={outputs}
-          />
-        )}
-        {!visible.value ? (
-          <div class="h-[50%]">
-            <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
-          </div>
-        ) : (
+        <div class="min-h-[50px]">
+          {visible.value && (
+            // Workaround weird bug where this doesn't render correctly
+            // server side
+            <Select
+              class="ml-auto mr-2"
+              value={outputTwoFramework.value}
+              onChange$={(framework: any) => (outputTwoFramework.value = framework)}
+              options={outputs}
+            />
+          )}
+        </div>
+
+        <div class="h-[50%] relative">
+          <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
           <CodeEditor
             language={languageByFramework[outputTwoFramework.value]}
             value={output2.value}
-            class="h-[50%]"
+            class="absolute inset-0 h-full w-full"
           />
-        )}
+        </div>
       </div>
     </div>
   );

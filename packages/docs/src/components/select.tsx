@@ -12,12 +12,12 @@ export default component$(
         value={props.value}
         onChange$={(_e, el) => props.onChange$(el.value)}
         class={[
-          'px-3 py-2 text-white bg-neutral-800 border border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-800 focus:ring-white',
+          'px-3 py-1.5 text-white bg-purple-990 border border-purple-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-purple-990 focus:ring-white',
           props.class,
         ]}
       >
         {props.options.map((option) => (
-          <option value={option} key={option} class="text-neutral-300">
+          <option value={option} key={option} class="text-purple-300">
             {option}
           </option>
         ))}

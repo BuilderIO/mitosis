@@ -3,12 +3,12 @@ import { Link, useLocation } from '@builder.io/qwik-city';
 
 const SidebarLink = component$((props: { href: string }) => {
   const location = useLocation();
-  const activeClasses = '!bg-neutral-600';
+  const activeClasses = '!bg-primary';
   return (
     <Link
       href={props.href}
       class={[
-        'p-3 rounded hover:bg-neutral-700 transition-colors duration-200 ease-in-out',
+        'p-3 rounded hover:bg-purple-700 transition-colors duration-200 ease-in-out',
         {
           [activeClasses]: location.url.pathname === props.href,
         },
