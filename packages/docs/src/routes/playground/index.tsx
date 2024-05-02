@@ -1,6 +1,7 @@
 import { componentToSvelte, parseJsx } from '@builder.io/mitosis';
 import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { server$ } from '@builder.io/qwik-city';
+import { CodeEditor } from '~/components/code-editor';
 
 export const compile = server$(async (code: string) => {
   const parsed = parseJsx(code);
@@ -16,17 +17,24 @@ export default component$(() => {
 
   useVisibleTask$(async ({ track }) => {
     track(() => code.value);
-    output.value = await compile(code.value);
+    try {
+      output.value = await compile(code.value);
+    } catch (err) {
+      console.warn(err);
+    }
   });
 
   return (
-    <div class="relative">
-      <textarea bind:value={code} class="w-full h-32 p-3 border rounded shadow text-sm" />
-      <textarea
-        readOnly
-        value={output.value}
-        class="w-full h-32 p-3 border rounded shadow text-sm"
+    <div class="relative flex gap-4 mt-4">
+      <CodeEditor
+        language="typescript"
+        defaultValue={code.value}
+        onChange$={(newCode) => {
+          code.value = newCode;
+        }}
+        class="w-full h-64"
       />
+      <CodeEditor language="typescript" value={output.value} class="w-full h-64" />
     </div>
   );
 });
