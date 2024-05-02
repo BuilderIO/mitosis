@@ -17,7 +17,7 @@ export default component$(() => {
         </a>
         <ul class="flex space-x-4">
           <li>
-            <Link href="/docs/quickstart" class="hover:underline">
+            <Link href="/docs" class="hover:underline">
               Docs
             </Link>
           </li>

@@ -5,7 +5,7 @@ export default component$(() => {
   return (
     <div class="flex container mx-auto px-4">
       <Sidebar class="sticky top-0" />
-      <div class="prose p-8">
+      <div class="prose p-8 lg:prose-xl">
         <Slot />
       </div>
     </div>

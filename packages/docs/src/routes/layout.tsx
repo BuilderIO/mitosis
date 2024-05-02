@@ -1,6 +1,6 @@
 import { component$, Slot } from '@builder.io/qwik';
 import type { RequestHandler } from '@builder.io/qwik-city';
-import { routeLoader$ } from '@builder.io/qwik-city';
+import { useLocation } from '@builder.io/qwik-city';
 
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
@@ -23,23 +23,24 @@ export const onGet: RequestHandler = async ({ cacheControl, url, redirect }) => 
       url.searchParams.get('inputTab'))
   ) {
     const newUrl = new URL(url.href);
-    url.pathname = '/playground';
     throw redirect(302, newUrl.href);
   }
 };
 
-export const useServerTimeLoader = routeLoader$(() => {
-  return {
-    date: new Date().toISOString(),
-  };
-});
-
 export default component$(() => {
+  const location = useLocation();
+
   return (
     <>
       <Header />
       <main>
-        <Slot />
+        {location.url.pathname === '/' ? (
+          <div class="prose p-8 lg:prose-xl">
+            <Slot />
+          </div>
+        ) : (
+          <Slot />
+        )}
       </main>
       <Footer />
     </>
