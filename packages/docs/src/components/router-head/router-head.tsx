@@ -28,7 +28,11 @@ export const RouterHead = component$(() => {
         />
       )}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link
+        rel="icon"
+        type="image/svg+xml"
+        href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F84ef4f61354b486989f4a749dbcb9281"
+      />
 
       {head.meta.map((m) => (
         <meta key={m.key} {...m} />
