@@ -29,8 +29,6 @@ export const CodeEditor = component$((props: CodeEditorProps) => {
       NoSerialize<monaco.editor.IStandaloneCodeEditor | monaco.editor.IStandaloneDiffEditor>
     >();
 
-  console.log('render?');
-
   useVisibleTask$(({ cleanup }) => {
     editorRef.value?.dispose();
     (editorRef.value?.getModel() as any)?.dispose?.();
@@ -58,8 +56,6 @@ export const CodeEditor = component$((props: CodeEditorProps) => {
         model: monaco.editor.createModel(value!, props.language),
       }),
     );
-
-    console.log('new mount');
 
     const listener =
       (editorRef.value as monaco.editor.IStandaloneCodeEditor)!.onDidChangeModelContent?.(() => {
