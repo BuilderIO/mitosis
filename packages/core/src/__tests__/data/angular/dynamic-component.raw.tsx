@@ -11,7 +11,12 @@ export default function MyComponent(props) {
   }
 
   return (
-    <obj.Component onClick={() => onClick()} {...props.attributes} {...props.something}>
+    <obj.Component
+      hello="world"
+      onClick={() => onClick()}
+      {...props.attributes}
+      {...props.something}
+    >
       hello
       {props.children}
     </obj.Component>
