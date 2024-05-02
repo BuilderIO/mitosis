@@ -20,10 +20,6 @@ const SidebarLink = component$((props: { href: string }) => {
 });
 
 export default component$((props: { class?: ClassList }) => {
-  const location = useLocation();
-
-  const activeClasses = 'font-bold';
-
   return (
     <div class={[props.class, 'flex flex-col gap-4 p-4 bg-neutral-100 min-w-[200px]']}>
       <SidebarLink href="/docs/quickstart">Quickstart</SidebarLink>
