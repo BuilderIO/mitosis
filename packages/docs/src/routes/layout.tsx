@@ -23,7 +23,8 @@ export const onGet: RequestHandler = async ({ cacheControl, url, redirect }) => 
       url.searchParams.get('inputTab'))
   ) {
     const newUrl = new URL(url.href);
-    throw redirect(302, newUrl.href);
+    newUrl.pathname = '/playground';
+    throw redirect(302, newUrl.pathname + newUrl.search);
   }
 };
 
