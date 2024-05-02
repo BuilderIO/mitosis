@@ -62,6 +62,11 @@ export default component$(() => {
   const outputOneFramework = useSignal<OutputFramework>('svelte');
   const output2 = useSignal('');
   const outputTwoFramework = useSignal<OutputFramework>('vue');
+  const visible = useSignal(false);
+
+  useVisibleTask$(() => {
+    visible.value = true;
+  });
 
   useVisibleTask$(async ({ track }) => {
     track(() => code.value);
@@ -81,7 +86,9 @@ export default component$(() => {
     }
   });
 
-  return (
+  return !visible.value ? (
+    <></>
+  ) : (
     <div class="relative flex gap-4 mt-4 grow items-stretch">
       <div class="w-full flex flex-col">
         <Select
