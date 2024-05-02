@@ -240,6 +240,17 @@ const stringifyBinding =
 
 const handleNgOutletBindings = (node: MitosisNode) => {
   let allProps = '';
+  for (const key in node.properties) {
+    if (key.startsWith('$')) {
+      continue;
+    }
+    if (key === 'key') {
+      continue;
+    }
+    const value = node.properties[key];
+    allProps += `${key}: ${value}, `;
+  }
+
   for (const key in node.bindings) {
     if (key.startsWith('"')) {
       continue;

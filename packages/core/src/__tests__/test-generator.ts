@@ -276,6 +276,7 @@ const IMPORT_TEST: Tests = {
 const ANGULAR_TESTS: Tests = {
   nativeAttributes: getRawFile('./data/angular/native-attributes.raw.tsx'),
   outputEventBinding: getRawFile('./data/angular/output-event-bindings.raw.tsx'),
+  dynamicComponent: getRawFile('./data/angular/dynamic-component.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {

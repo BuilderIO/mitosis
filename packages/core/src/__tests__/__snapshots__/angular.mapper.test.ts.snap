@@ -2700,6 +2700,44 @@ export class ComponentWithTypesModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > dynamicComponent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container
+      *ngComponentOutlet=\\"
+              obj.Component;
+              inputs: { onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  obj = HelloComponent;
+  onClick = function onClick() {
+    console.log(\\"hello\\");
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > expressionState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -3537,7 +3575,7 @@ import RenderRepeatedBlockModule from \\"./render-repeated-block.lite/angular\\"
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -3554,7 +3592,7 @@ import RenderRepeatedBlockModule from \\"./render-repeated-block.lite/angular\\"
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -3564,7 +3602,7 @@ import RenderRepeatedBlockModule from \\"./render-repeated-block.lite/angular\\"
       <ng-container
         *ngComponentOutlet=\\"
               renderComponentTag;
-              inputs: { renderComponentProps: renderComponentProps, };
+              inputs: { renderComponentProps: renderComponentProps };
               content: myContent;
               \\"
       ></ng-container>
@@ -7512,6 +7550,44 @@ export class ComponentWithTypesModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > dynamicComponent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container
+      *ngComponentOutlet=\\"
+              obj.Component;
+              inputs: { onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  obj = HelloComponent;
+  onClick = function onClick() {
+    console.log(\\"hello\\");
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > expressionState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -8426,7 +8502,7 @@ import { RepeatData } from \\"./types.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -8443,7 +8519,7 @@ import { RepeatData } from \\"./types.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -8453,7 +8529,7 @@ import { RepeatData } from \\"./types.js\\";
       <ng-container
         *ngComponentOutlet=\\"
               renderComponentTag;
-              inputs: { renderComponentProps: renderComponentProps, };
+              inputs: { renderComponentProps: renderComponentProps };
               content: myContent;
               \\"
       ></ng-container>
