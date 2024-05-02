@@ -24,7 +24,7 @@ export const onGet: RequestHandler = async ({ cacheControl, url, redirect }) => 
   ) {
     const newUrl = new URL(url.href);
     newUrl.pathname = '/playground';
-    throw redirect(302, newUrl.pathname + newUrl.search);
+    throw redirect(302, newUrl.href);
   }
 };
 
