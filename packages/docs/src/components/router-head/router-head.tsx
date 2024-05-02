@@ -14,6 +14,12 @@ export const RouterHead = component$(() => {
       <title>{head.title}</title>
 
       <link rel="canonical" href={loc.url.href} />
+      {loc.url.pathname.startsWith('/docs') && (
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/themes/prism-dark.min.css"
+        />
+      )}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
