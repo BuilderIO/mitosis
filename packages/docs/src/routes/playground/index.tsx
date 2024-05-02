@@ -25,16 +25,16 @@ export default component$(() => {
   });
 
   return (
-    <div class="relative flex gap-4 mt-4">
+    <div class="relative flex gap-4 mt-4 grow">
       <CodeEditor
         language="typescript"
         defaultValue={code.value}
         onChange$={(newCode) => {
           code.value = newCode;
         }}
-        class="w-full h-64"
+        class="w-full"
       />
-      <CodeEditor language="typescript" value={output.value} class="w-full h-64" />
+      <CodeEditor language="typescript" value={output.value} class="w-full" />
     </div>
   );
 });

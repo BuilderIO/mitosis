@@ -31,13 +31,17 @@ export const onGet: RequestHandler = async ({ cacheControl, url, redirect }) => 
 export default component$(() => {
   const location = useLocation();
 
+  const isPlayground = location.url.pathname === '/playground/';
+
   return (
     <>
-      <Header />
-      <main class="container mx-auto px-4">
-        <Slot />
-      </main>
-      <Footer />
+      <div class={['flex flex-col', isPlayground ? 'min-h-screen' : 'min-h-[50vh]']}>
+        <Header />
+        <main class={[isPlayground ? 'grow flex flex-col' : 'container mx-auto px-4']}>
+          <Slot />
+        </main>
+      </div>
+      {!isPlayground && <Footer />}
     </>
   );
 });
