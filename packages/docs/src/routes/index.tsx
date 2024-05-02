@@ -11,7 +11,7 @@ export default component$(() => {
       <p class="text-xl mx-auto mt-6">Write components once, run everywhere.</p>
       <div class="flex mx-auto mt-12">
         <Link
-          href="/docs"
+          href="/docs/quickstart"
           class="btn bg-neutral-500 hover:bg-neutral-700 text-white font-bold py-2 px-4 rounded"
         >
           Get Started
