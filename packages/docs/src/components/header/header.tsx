@@ -5,8 +5,8 @@ export default component$(() => {
   const location = useLocation();
 
   return (
-    <header class="bg-neutral-800 p-4 text-white sticky top-0 z-10">
-      <div class="flex justify-between items-center">
+    <header class="bg-neutral-800 text-white sticky top-0 z-10">
+      <div class="container mx-auto p-4 flex justify-between items-center">
         <a href="/" title="qwik" class="flex items-center">
           <img
             class="object-contain -my-1"

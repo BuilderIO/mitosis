@@ -3,9 +3,9 @@ import Sidebar from './sidebar';
 
 export default component$(() => {
   return (
-    <div class="flex container mx-auto px-4">
-      <Sidebar class="sticky top-0" />
-      <div class="prose p-8 lg:prose-xl">
+    <div class="flex items-start">
+      <Sidebar class="sticky top-20" />
+      <div class="prose p-8 lg:prose-xl min-w-0">
         <Slot />
       </div>
     </div>

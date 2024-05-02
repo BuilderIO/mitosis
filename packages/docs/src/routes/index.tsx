@@ -3,7 +3,7 @@ import type { DocumentHead } from '@builder.io/qwik-city';
 
 export default component$(() => {
   return (
-    <div class="container mx-auto p-8">
+    <div class="mt-8">
       <h1 class="text-4xl font-bold">Welcome to Mitosis</h1>
     </div>
   );

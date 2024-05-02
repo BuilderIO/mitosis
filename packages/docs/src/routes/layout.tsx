@@ -34,14 +34,8 @@ export default component$(() => {
   return (
     <>
       <Header />
-      <main>
-        {location.url.pathname === '/' ? (
-          <div class="prose p-8 lg:prose-xl">
-            <Slot />
-          </div>
-        ) : (
-          <Slot />
-        )}
+      <main class="container mx-auto px-4">
+        <Slot />
       </main>
       <Footer />
     </>
