@@ -1,24 +1,12 @@
-import { component$, useVisibleTask$ } from '@builder.io/qwik';
+import { component$ } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import { TbBrandDiscord, TbBrandGithub } from '@qwikest/icons/tablericons';
-
-const preloadUrls = ['/docs/', '/playground/', '/'];
 
 export default component$(() => {
   const location = useLocation();
 
   const isPlayground = location.url.pathname === '/playground/';
   const isDocs = location.url.pathname.startsWith('/docs/');
-
-  useVisibleTask$(() => {
-    // Qwik's preloading isn't working as well as I expected. lets do it manually
-    for (const url of preloadUrls) {
-      const link = document.createElement('link');
-      link.rel = 'prefetch';
-      link.href = url;
-      document.head.appendChild(link);
-    }
-  });
 
   return (
     <>
