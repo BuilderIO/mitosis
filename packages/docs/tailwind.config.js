@@ -10,6 +10,7 @@ export default {
       },
       colors: {
         primary: '#AC7EF4',
+        'primary-light': '#CCAFFB',
         purple: {
           990: '#120D19',
         },
