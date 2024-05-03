@@ -50,6 +50,13 @@ export const CodeEditor = component$((props: CodeEditorProps) => {
         automaticLayout: true,
         theme: 'vs-dark',
         fontSize: 15,
+        overviewRulerBorder: false,
+        foldingHighlight: false,
+        renderLineHighlightOnlyWhenFocus: true,
+        renderLineHighlight: 'none',
+        selectionHighlight: false,
+        scrollBeyondLastLine: false,
+        scrollbar: { vertical: 'hidden' },
         minimap: {
           enabled: false,
         },
