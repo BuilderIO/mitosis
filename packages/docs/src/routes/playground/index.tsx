@@ -229,7 +229,7 @@ export default component$(() => {
         </div>
 
         <div class="w-full grow relative">
-          <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
+          <ContentLoaderCode width={400} class="ml-16 mt-3 opacity-10 origin-top-left" />
 
           {visible.value && (
             <CodeEditor
@@ -259,7 +259,7 @@ export default component$(() => {
           )}
         </div>
         <div class="h-[50%] relative">
-          <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
+          <ContentLoaderCode width={400} class="ml-16 mt-3 opacity-10 origin-top-left" />
           {visible.value && (
             <CodeEditor
               language={languageByFramework[outputOneFramework.value]}
@@ -282,7 +282,7 @@ export default component$(() => {
         </div>
 
         <div class="h-[50%] relative max-md:hidden">
-          <ContentLoaderCode width={300} class="ml-4 mt-4 opacity-10 origin-top-left" />
+          <ContentLoaderCode width={400} class="ml-16 mt-3 opacity-10 origin-top-left" />
           {visible.value && (
             <CodeEditor
               language={languageByFramework[outputTwoFramework.value]}
