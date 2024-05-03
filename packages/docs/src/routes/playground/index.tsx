@@ -83,6 +83,8 @@ export default component$(() => {
   const visible = useSignal(false);
   const isThrottling = useSignal(false);
   const isThrottling2 = useSignal(false);
+  const throttleTimeout1 = useSignal(0);
+  const throttleTimeout2 = useSignal(0);
 
   useVisibleTask$(() => {
     visible.value = true;
@@ -90,7 +92,13 @@ export default component$(() => {
 
   const throttledCompileOne = $(
     async (code: string, outputFramework: OutputFramework, inputSyntax: InputSyntax) => {
+      if (throttleTimeout1.value) {
+        clearTimeout(throttleTimeout1.value);
+      }
       if (isThrottling.value) {
+        throttleTimeout1.value = setTimeout(() => {
+          compile(code, outputFramework, inputSyntax);
+        }, 80) as any;
         return;
       }
       isThrottling.value = true;
@@ -101,7 +109,13 @@ export default component$(() => {
 
   const throttledCompileTwo = $(
     async (code: string, outputFramework: OutputFramework, inputSyntax: InputSyntax) => {
+      if (throttleTimeout2.value) {
+        clearTimeout(throttleTimeout2.value);
+      }
       if (isThrottling2.value) {
+        throttleTimeout2.value = setTimeout(() => {
+          compile(code, outputFramework, inputSyntax);
+        }, 80) as any;
         return;
       }
       isThrottling2.value = true;
