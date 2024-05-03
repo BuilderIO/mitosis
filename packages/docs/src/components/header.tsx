@@ -30,6 +30,7 @@ export default component$(() => {
           <ul class="flex space-x-8 max-md:space-x-6 font-medium items-center">
             <li>
               <Link
+                prefetch
                 href="/docs"
                 class={['hover:text-primary-light', isDocs && 'text-primary-light']}
               >
@@ -38,6 +39,7 @@ export default component$(() => {
             </li>
             <li>
               <Link
+                prefetch
                 href="/playground"
                 class={['hover:text-primary-light', isPlayground && 'text-primary-light']}
               >
@@ -46,6 +48,7 @@ export default component$(() => {
             </li>
             <li class="max-md:hidden">
               <Link
+                prefetch
                 href="/docs/quickstart"
                 class="bg-primary rounded hover:bg-primary-light px-4 py-3 text-black"
               >
