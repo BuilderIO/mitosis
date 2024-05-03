@@ -12,7 +12,7 @@ export default component$(
         value={props.value}
         onChange$={(_e, el) => props.onChange$(el.value)}
         class={[
-          'px-3 py-1.5 text-white bg-purple-990 border border-purple-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-purple-990 focus:ring-white',
+          'px-3 py-1.5 text-white bg-purple-990 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-purple-990 focus:ring-white',
           props.class,
         ]}
       >
