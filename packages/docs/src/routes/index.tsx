@@ -3,7 +3,7 @@ import { Link, type DocumentHead } from '@builder.io/qwik-city';
 
 export default component$(() => {
   return (
-    <div class="mt-8 flex flex-col px-4">
+    <div class="mt-8 flex flex-col px-4 min-h-[90vh]">
       <img
         class="aspect-[4] max-w-full w-[500px] mx-auto mt-[20vh] max-md:mt-[10vh]"
         src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0fdb9aabd10f4205b3b3b56d7b950239"
