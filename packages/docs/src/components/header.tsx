@@ -5,9 +5,9 @@ export default component$(() => {
   return (
     <>
       <div class="bg-primary text-center font-medium text-black px-3 py-2 rounded">
-        Welcome to our new site! It's under construction, so please be patient as we add more
+        Welcome to our new site! It's WIP :)
       </div>
-      <header class="text-white sticky top-0 z-10 border-b border-primary border-opacity-50">
+      <header class="text-white sticky top-0 z-10 border-b border-primary border-opacity-50 bg-purple-990">
         <div class="container mx-auto p-4 flex justify-between items-center">
           <a href="/" title="qwik" class="flex items-center">
             <img

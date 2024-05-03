@@ -3,13 +3,13 @@ import { Link, type DocumentHead } from '@builder.io/qwik-city';
 
 export default component$(() => {
   return (
-    <div class="mt-8 flex flex-col">
+    <div class="mt-8 flex flex-col px-4">
       <img
-        class="aspect-[4] max-w-full w-[500px] mx-auto mt-[20vh]"
+        class="aspect-[4] max-w-full w-[500px] mx-auto mt-[20vh] max-md:mt-[10vh]"
         src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0fdb9aabd10f4205b3b3b56d7b950239"
       />
-      <p class="text-xl mx-auto mt-6">Write components once, run everywhere.</p>
-      <div class="flex mx-auto mt-12">
+      <p class="text-xl mx-auto mt-6 text-center">Write components once, run everywhere.</p>
+      <div class="flex mx-auto mt-12 mb-[20vh]">
         <Link
           href="/docs/quickstart"
           class="btn bg-primary hover:bg-purple-500 text-black py-2 px-4 font-medium rounded"
