@@ -19,15 +19,15 @@ export default component$(() => {
             isPlayground && 'max-w-[100vw]',
           ]}
         >
-          <a href="/" title="qwik" class="flex items-center">
+          <Link prefetch href="/" title="qwik" class="flex items-center">
             <img
               class="object-contain max-md:max-w-[110px]"
               width={140}
               height={50}
               src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0fdb9aabd10f4205b3b3b56d7b950239"
             />
-          </a>
-          <ul class="flex space-x-8 max-md:space-x-6 font-medium items-center">
+          </Link>
+          <ul class="flex space-x-8 max-md:space-x-6 font-medium">
             <li>
               <Link
                 prefetch
