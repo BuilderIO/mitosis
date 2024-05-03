@@ -118,7 +118,7 @@ export default component$(() => {
       if (isThrottling.value) {
         throttleTimeout1.value = setTimeout(async () => {
           output.value = await compile(code, outputFramework, inputSyntax);
-        }, 50) as any;
+        }, 100) as any;
         return;
       }
       isThrottling.value = true;
@@ -135,7 +135,7 @@ export default component$(() => {
       if (isThrottling2.value) {
         throttleTimeout2.value = setTimeout(async () => {
           output2.value = await compile(code, outputFramework, inputSyntax);
-        }, 50) as any;
+        }, 100) as any;
         return;
       }
       isThrottling2.value = true;
@@ -187,7 +187,9 @@ export default component$(() => {
             <Select
               class="ml-auto"
               value={inputSyntax.value}
-              onChange$={(framework: any) => (inputSyntax.value = framework)}
+              onChange$={(framework: any) => {
+                inputSyntax.value = framework;
+              }}
               options={inputs}
             />
           )}
