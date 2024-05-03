@@ -9,7 +9,7 @@ export default component$(() => {
 
   return (
     <>
-      <div class="bg-primary text-center font-medium text-black px-3 py-2 rounded">
+      <div class="bg-primary text-center font-medium text-black px-3 py-2 rounded max-md:text-sm">
         Welcome to our new site! It's WIP :)
       </div>
       <header class="text-white sticky top-0 z-10 border-b border-primary border-opacity-50 bg-purple-990">
