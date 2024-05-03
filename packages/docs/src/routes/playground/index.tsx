@@ -145,10 +145,10 @@ export default component$(() => {
   });
 
   return (
-    <div class="relative flex gap-4 mt-4 grow items-stretch max-md:flex-col">
+    <div class="relative flex gap-4 grow items-stretch max-md:flex-col">
       <div class="w-full flex flex-col max-md:h-[50vh]">
         <div class="flex items-center gap-2 mx-4 my-4 min-h-[50px]">
-          <h3 class="text-lg">Input</h3>
+          <h3 class="ml-4 text-lg">Input</h3>
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
             // server side
@@ -178,7 +178,7 @@ export default component$(() => {
       </div>
       <div class="flex gap-4 flex-col w-full h-[90vh] max-md:h-[50vh]">
         <div class="flex items-center gap-2 mx-4 my-4 min-h-[50px]">
-          <h3 class="text-lg">Output</h3>
+          <h3 class="ml-4 text-lg">Output</h3>
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
             // server side
@@ -200,7 +200,7 @@ export default component$(() => {
             />
           )}
         </div>
-        <div class="min-h-[50px] max-md:hidden">
+        <div class="min-h-[50px] max-md:hidden flex items-center">
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
             // server side
