@@ -1,5 +1,5 @@
 import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { server$, useLocation } from '@builder.io/qwik-city';
+import { routeLoader$, server$, useLocation } from '@builder.io/qwik-city';
 import { ContentLoaderCode } from 'qwik-content-loader';
 import { CodeEditor } from '~/components/code-editor';
 import Select from '~/components/select';
@@ -68,17 +68,37 @@ export default function MyComponent(props) {
 }
 `.trim();
 
+const useOutput1 = routeLoader$(async (requestEvent) => {
+  const code = (requestEvent.url.searchParams.get('code') as string) || defaultCode;
+  const outputTab = requestEvent.url.searchParams.get('outputTab') as OutputFramework;
+  const inputTab = requestEvent.url.searchParams.get('inputTab') as InputSyntax;
+
+  const output = await compile(code || defaultCode, outputTab || 'svelte', inputTab || 'jsx');
+  return output;
+});
+
+const useOutput2 = routeLoader$(async (requestEvent) => {
+  const code = (requestEvent.url.searchParams.get('code') as string) || defaultCode;
+  const outputTab = requestEvent.url.searchParams.get('outputTab') as OutputFramework;
+  const inputTab = requestEvent.url.searchParams.get('inputTab') as InputSyntax;
+
+  const output = await compile(code || defaultCode, outputTab || 'vue', inputTab || 'jsx');
+  return output;
+});
+
 export default component$(() => {
   const location = useLocation();
   const codeFromQueryParam = location.url.searchParams.get('code') as string;
   const outputTab = location.url.searchParams.get('outputTab') as OutputFramework;
   const inputTab = location.url.searchParams.get('inputTab') as InputSyntax;
+  const loaderOutput1 = useOutput1().value;
+  const loaderOutput2 = useOutput2().value;
 
   const code = useSignal(codeFromQueryParam || defaultCode);
   const inputSyntax = useSignal<InputSyntax>(inputTab || 'jsx');
-  const output = useSignal('');
+  const output = useSignal(loaderOutput1 || '');
   const outputOneFramework = useSignal<OutputFramework>(outputTab || 'svelte');
-  const output2 = useSignal('');
+  const output2 = useSignal(loaderOutput2 || '');
   const outputTwoFramework = useSignal<OutputFramework>('vue');
   const visible = useSignal(false);
   const isThrottling = useSignal(false);
