@@ -1,7 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import { TbBrandDiscord, TbBrandGithub } from '@qwikest/icons/tablericons';
-import { Search } from './search';
 
 export default component$(() => {
   const location = useLocation();
@@ -30,7 +29,7 @@ export default component$(() => {
             />
           </Link>
           <ul class="flex space-x-8 max-md:space-x-6 font-medium items-center">
-            <Search />
+            {/* <Search /> */}
             <li class="flex gap-4 items-center">
               <Link
                 class="hover:text-primary-light text-xl"
