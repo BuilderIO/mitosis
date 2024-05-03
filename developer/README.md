@@ -9,7 +9,7 @@ live under `packages/` and `examples/`:
 
 - `core` (`@builder.io/mitosis`): contains the Mitosis engine
 - `cli` (`@builder.io/mitosis-cli`): contains the Mitosis CLI, and _depends_ on `core`
-- `fiddle`: contains the code for the interactive Mitosis fiddle, which is hosted at mitosis.builder.io
+- `site`: contains the Mitosis sitw hosted at mitosis.builder.io
 - `eslint-plugin` (`@builder.io/eslint-plugin-mitosis`): contains the Mitosis eslint rules to enforce valid Mitosis component syntax. Yet to be released.
 
 ## Installation
@@ -32,7 +32,7 @@ We need your help! If you found a bug, it's best to [create an issue](https://gi
 
 ## Developing for Core & Testing
 
-In `core`, we use vitest snapshots & integeration tests for test coverage. If you are solving a problem that is reproducible by a fiddle in [mitosis.builder.io](https://mitosis.builder.io), we highly recommend the following flow:
+In `core`, we use vitest snapshots & integeration tests for test coverage. If you are solving a problem that is reproducible by a fiddle in [mitosis.builder.io/playground](https://mitosis.builder.io/playground), we highly recommend the following flow:
 
 ### Snapshot test
 

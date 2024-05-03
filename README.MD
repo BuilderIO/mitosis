@@ -6,7 +6,7 @@
 
 <p align="center">
   <p align="center">
-    Try our  <a href="https://mitosis.builder.io/"><b>interactive fiddle</b></a>
+    Try our <a href="https://mitosis.builder.io/playground"><b>interactive playground</b></a>
   </p>
 </p>
 
