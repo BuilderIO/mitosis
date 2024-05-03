@@ -22,7 +22,10 @@ const SidebarLink = component$((props: { href: string }) => {
 export default component$((props: { class?: ClassList }) => {
   return (
     <div
-      class={[props.class, 'flex flex-col gap-2 p-4 sticky top-0 mt-4 min-w-[200px] max-md:w-full']}
+      class={[
+        props.class,
+        'flex flex-col gap-2 p-4 sticky max-md:static top-0 mt-4 min-w-[200px] max-md:w-full',
+      ]}
     >
       <SidebarLink href="/docs/overview/">Overview</SidebarLink>
       <SidebarLink href="/docs/quickstart/">Quickstart</SidebarLink>
