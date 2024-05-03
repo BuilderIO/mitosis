@@ -4,6 +4,8 @@ import { RouterHead } from './components/router-head';
 
 import './global.css';
 
+import { Insights } from '@builder.io/qwik-labs-canary';
+
 export default component$(() => {
   /**
    * The root of a QwikCity site always start with the <QwikCityProvider> component,
@@ -17,6 +19,7 @@ export default component$(() => {
       <head>
         <meta charSet="utf-8" />
         <link rel="manifest" href="/manifest.json" />
+        <Insights publicApiKey="22gsbhtjcyv" />
         <RouterHead />
         <ServiceWorkerRegister />
       </head>

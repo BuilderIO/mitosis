@@ -3,6 +3,7 @@
  * When building, the adapter config is used which loads this file and extends it.
  */
 import { qwikCity } from '@builder.io/qwik-city/vite';
+import { qwikInsights } from '@builder.io/qwik-labs-canary/vite';
 import { qwikVite } from '@builder.io/qwik/optimizer';
 import { defineConfig, type UserConfig } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
@@ -29,6 +30,10 @@ export default defineConfig(({ command, mode }): UserConfig => {
       qwikVite(),
       tsconfigPaths({ root: './' }),
       nodePolyfills(),
+      qwikInsights({
+        publicApiKey: '22gsbhtjcyv',
+      }),
+
       replaceCodePlugin({
         replacements: [
           {
