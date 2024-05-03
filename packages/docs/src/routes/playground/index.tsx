@@ -4,11 +4,15 @@ import { ContentLoaderCode } from 'qwik-content-loader';
 import { CodeEditor } from '~/components/code-editor';
 import Select from '~/components/select';
 
-export type OutputFramework = 'react' | 'svelte' | 'vue' | 'qwik' | 'angular';
-const outputs: OutputFramework[] = ['react', 'svelte', 'vue', 'qwik', 'angular'];
+export type OutputFramework = 'react' | 'svelte' | 'vue' | 'qwik' | 'angular' | 'mitosis';
+const outputs: OutputFramework[] = ['react', 'svelte', 'vue', 'qwik', 'angular', 'mitosis'];
 
 export type InputSyntax = 'jsx' | 'svelte';
 const inputs: InputSyntax[] = ['jsx', 'svelte'];
+
+const defaultTopTab: OutputFramework = 'vue';
+const defaultBottomTab: OutputFramework = 'angular';
+const defaultInputTab = 'jsx';
 
 const languageByFramework: Record<OutputFramework, string> = {
   react: 'typescript',
@@ -16,6 +20,7 @@ const languageByFramework: Record<OutputFramework, string> = {
   vue: 'html',
   qwik: 'typescript',
   angular: 'typescript',
+  mitosis: 'typescript',
 };
 
 export const compile = server$(
@@ -27,6 +32,7 @@ export const compile = server$(
       componentToReact,
       componentToQwik,
       componentToAngular,
+      componentToMitosis,
       parseSvelte,
     } = await import('@builder.io/mitosis');
     const parsed = inputSyntax === 'svelte' ? await parseSvelte(code) : parseJsx(code);
@@ -39,6 +45,8 @@ export const compile = server$(
         ? componentToQwik()({ component: parsed })
         : output === 'angular'
         ? componentToAngular()({ component: parsed })
+        : output === 'mitosis'
+        ? componentToMitosis()({ component: parsed })
         : componentToVue({
             api: 'composition',
           })({ component: parsed });
@@ -73,7 +81,11 @@ const useOutput1 = routeLoader$(async (requestEvent) => {
   const outputTab = requestEvent.url.searchParams.get('outputTab') as OutputFramework;
   const inputTab = requestEvent.url.searchParams.get('inputTab') as InputSyntax;
 
-  const output = await compile(code || defaultCode, outputTab || 'svelte', inputTab || 'jsx');
+  const output = await compile(
+    code || defaultCode,
+    outputTab || defaultTopTab,
+    inputTab || defaultInputTab,
+  );
   return output;
 });
 
@@ -82,7 +94,11 @@ const useOutput2 = routeLoader$(async (requestEvent) => {
   const outputTab = requestEvent.url.searchParams.get('outputTab') as OutputFramework;
   const inputTab = requestEvent.url.searchParams.get('inputTab') as InputSyntax;
 
-  const output = await compile(code || defaultCode, outputTab || 'vue', inputTab || 'jsx');
+  const output = await compile(
+    code || defaultCode,
+    outputTab || defaultBottomTab,
+    inputTab || defaultInputTab,
+  );
   return output;
 });
 
@@ -95,11 +111,11 @@ export default component$(() => {
   const loaderOutput2 = useOutput2().value;
 
   const code = useSignal(codeFromQueryParam || defaultCode);
-  const inputSyntax = useSignal<InputSyntax>(inputTab || 'jsx');
+  const inputSyntax = useSignal<InputSyntax>(inputTab || defaultInputTab);
   const output = useSignal(loaderOutput1 || '');
-  const outputOneFramework = useSignal<OutputFramework>(outputTab || 'svelte');
+  const outputOneFramework = useSignal<OutputFramework>(outputTab || defaultTopTab);
   const output2 = useSignal(loaderOutput2 || '');
-  const outputTwoFramework = useSignal<OutputFramework>('vue');
+  const outputTwoFramework = useSignal<OutputFramework>(defaultBottomTab);
   const visible = useSignal(false);
   const isThrottling = useSignal(false);
   const isThrottling2 = useSignal(false);
@@ -191,8 +207,15 @@ export default component$(() => {
             <Select
               class="ml-auto"
               value={inputSyntax.value}
-              onChange$={(framework: any) => {
-                inputSyntax.value = framework;
+              onChange$={(syntax: any) => {
+                compile(
+                  code.value,
+                  syntax === 'jsx' ? 'mitosis' : 'svelte',
+                  inputSyntax.value,
+                ).then((output) => {
+                  code.value = output.replace(/\n?\n?import { useStore } from "..";\n?/g, '');
+                  inputSyntax.value = syntax;
+                });
               }}
               options={inputs}
             />
@@ -204,7 +227,8 @@ export default component$(() => {
 
           {visible.value && (
             <CodeEditor
-              language="typescript"
+              key={inputSyntax.value}
+              language={inputSyntax.value === 'jsx' ? 'typescript' : 'html'}
               class="absolute inset-0 h-full w-full"
               defaultValue={code.value}
               onChange$={(newCode) => {
