@@ -85,7 +85,10 @@ const useOutput1 = routeLoader$(async (requestEvent) => {
     code || defaultCode,
     outputTab || defaultTopTab,
     inputTab || defaultInputTab,
-  );
+  ).catch((err) => {
+    console.error(err);
+    return '';
+  });
   return output;
 });
 
@@ -98,7 +101,10 @@ const useOutput2 = routeLoader$(async (requestEvent) => {
     code || defaultCode,
     outputTab || defaultBottomTab,
     inputTab || defaultInputTab,
-  );
+  ).catch((err) => {
+    console.error(err);
+    return '';
+  });
   return output;
 });
 
