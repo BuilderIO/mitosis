@@ -27,7 +27,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
     plugins: [
       qwikCity(),
       qwikVite(),
-      tsconfigPaths(),
+      tsconfigPaths({ root: './' }),
       nodePolyfills(),
       replaceCodePlugin({
         replacements: [
