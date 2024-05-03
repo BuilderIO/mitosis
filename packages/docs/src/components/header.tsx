@@ -27,7 +27,7 @@ export default component$(() => {
               src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0fdb9aabd10f4205b3b3b56d7b950239"
             />
           </a>
-          <ul class="flex space-x-8 max-md:space-x-6 font-medium">
+          <ul class="flex space-x-8 max-md:space-x-6 font-medium items-center">
             <li>
               <Link
                 href="/docs"
@@ -51,6 +51,17 @@ export default component$(() => {
               >
                 Get Started
               </Link>
+            </li>
+            <li>
+              <a href="https://github.com/BuilderIO/mitosis">
+                <img
+                  width={30}
+                  height={30}
+                  src={'/github-logo.png'}
+                  alt="Github Mark"
+                  class="hover:opacity-75"
+                />
+              </a>
             </li>
           </ul>
         </div>
