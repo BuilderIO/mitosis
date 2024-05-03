@@ -116,9 +116,9 @@ export default component$(() => {
         clearTimeout(throttleTimeout1.value);
       }
       if (isThrottling.value) {
-        throttleTimeout1.value = setTimeout(() => {
-          compile(code, outputFramework, inputSyntax);
-        }, 80) as any;
+        throttleTimeout1.value = setTimeout(async () => {
+          output.value = await compile(code, outputFramework, inputSyntax);
+        }, 50) as any;
         return;
       }
       isThrottling.value = true;
@@ -133,9 +133,9 @@ export default component$(() => {
         clearTimeout(throttleTimeout2.value);
       }
       if (isThrottling2.value) {
-        throttleTimeout2.value = setTimeout(() => {
-          compile(code, outputFramework, inputSyntax);
-        }, 80) as any;
+        throttleTimeout2.value = setTimeout(async () => {
+          output2.value = await compile(code, outputFramework, inputSyntax);
+        }, 50) as any;
         return;
       }
       isThrottling2.value = true;
