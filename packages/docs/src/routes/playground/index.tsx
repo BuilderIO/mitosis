@@ -1,4 +1,4 @@
-import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { server$, useLocation } from '@builder.io/qwik-city';
 import { ContentLoaderCode } from 'qwik-content-loader';
 import { CodeEditor } from '~/components/code-editor';
@@ -81,16 +81,40 @@ export default component$(() => {
   const output2 = useSignal('');
   const outputTwoFramework = useSignal<OutputFramework>('vue');
   const visible = useSignal(false);
+  const isThrottling = useSignal(false);
+  const isThrottling2 = useSignal(false);
 
   useVisibleTask$(() => {
     visible.value = true;
   });
 
+  const throttledCompileOne = $(
+    async (code: string, outputFramework: OutputFramework, inputSyntax: InputSyntax) => {
+      if (isThrottling.value) {
+        return;
+      }
+      isThrottling.value = true;
+      output.value = await compile(code, outputFramework, inputSyntax);
+      isThrottling.value = false;
+    },
+  );
+
+  const throttledCompileTwo = $(
+    async (code: string, outputFramework: OutputFramework, inputSyntax: InputSyntax) => {
+      if (isThrottling2.value) {
+        return;
+      }
+      isThrottling2.value = true;
+      output2.value = await compile(code, outputFramework, inputSyntax);
+      isThrottling2.value = false;
+    },
+  );
+
   useVisibleTask$(async ({ track }) => {
     track(code);
     track(outputOneFramework);
     try {
-      output.value = await compile(code.value, outputOneFramework.value, inputSyntax.value);
+      await throttledCompileOne(code.value, outputOneFramework.value, inputSyntax.value);
     } catch (err) {
       console.warn(err);
     }
@@ -100,7 +124,7 @@ export default component$(() => {
     track(code);
     track(outputTwoFramework);
     try {
-      output2.value = await compile(code.value, outputTwoFramework.value, inputSyntax.value);
+      await throttledCompileTwo(code.value, outputTwoFramework.value, inputSyntax.value);
     } catch (err) {
       console.warn(err);
     }
