@@ -1,11 +1,24 @@
-import { component$ } from '@builder.io/qwik';
+import { component$, useVisibleTask$ } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
+import { TbBrandDiscord, TbBrandGithub } from '@qwikest/icons/tablericons';
+
+const preloadUrls = ['/docs/', '/playground/', '/'];
 
 export default component$(() => {
   const location = useLocation();
 
   const isPlayground = location.url.pathname === '/playground/';
   const isDocs = location.url.pathname.startsWith('/docs/');
+
+  useVisibleTask$(() => {
+    // Qwik's preloading isn't working as well as I expected. lets do it manually
+    for (const url of preloadUrls) {
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = url;
+      document.head.appendChild(link);
+    }
+  });
 
   return (
     <>
@@ -27,7 +40,23 @@ export default component$(() => {
               src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0fdb9aabd10f4205b3b3b56d7b950239"
             />
           </Link>
-          <ul class="flex space-x-8 max-md:space-x-6 font-medium">
+          <ul class="flex space-x-8 max-md:space-x-6 font-medium items-center">
+            <li class="flex gap-4 items-center">
+              <Link
+                class="hover:text-primary-light text-xl"
+                target="_blank"
+                href="https://github.com/BuilderIO/mitosis"
+              >
+                <TbBrandGithub />
+              </Link>
+              <Link
+                class="hover:text-primary-light text-xl max-sm:hidden"
+                target="_blank"
+                href="https://discord.com/invite/SNusEyNGsx"
+              >
+                <TbBrandDiscord />
+              </Link>
+            </li>
             <li>
               <Link
                 prefetch
@@ -54,17 +83,6 @@ export default component$(() => {
               >
                 Get Started
               </Link>
-            </li>
-            <li>
-              <a href="https://github.com/BuilderIO/mitosis">
-                <img
-                  width={30}
-                  height={30}
-                  src={'/github-logo.png'}
-                  alt="Github Mark"
-                  class="hover:opacity-75"
-                />
-              </a>
             </li>
           </ul>
         </div>
