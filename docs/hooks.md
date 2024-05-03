@@ -14,8 +14,8 @@
 
 Use the `useRef` hook to hold a reference to a rendered DOM element.
 
-```typescript
-import { useStore, useRef, Show } from '@builder.io/mitosis';
+```tsx
+import { Show, useRef, useStore } from '@builder.io/mitosis';
 
 export default function MyComponent() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -56,7 +56,7 @@ In React you may need to wrap your component with `forwardRef` to provide direct
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyInput(props) {
   return <input ref={props.inputRef} />;
 }
@@ -64,7 +64,7 @@ export default function MyInput(props) {
 
 _Mitosis output_
 
-```typescript
+```tsx
 import { forwardRef } from 'react';
 
 export default forwardRef(function MyInput(props, inputRef) {
@@ -79,7 +79,7 @@ export default forwardRef(function MyInput(props, inputRef) {
 
 The useStyle hook can be used to add extra CSS to your component.
 
-```jsx
+```tsx
 import { useStyle } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
@@ -106,7 +106,7 @@ export default function MyComponent(props) {
 
 `useStyle` can also be used outside of the component's body:
 
-```jsx
+```tsx
 import { useStyle } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
@@ -127,7 +127,7 @@ useStyle(`
 
 The `onInit` hook is the best place to put custom code to execute before the component mounts. It is executed before the `onMount` hook.
 
-```jsx
+```tsx
 import { onInit, onMount } from '@builder.io/mitosis';
 
 export default function MyComponent() {
@@ -147,7 +147,7 @@ export default function MyComponent() {
 
 The onMount hook is the best place to put custom code to execute once the component mounts.
 
-```jsx
+```tsx
 import { onMount } from '@builder.io/mitosis';
 
 export default function MyComponent() {
@@ -163,7 +163,7 @@ export default function MyComponent() {
 
 The onUnMount hook is the best place to put any cleanup you need to do when a component is removed
 
-```jsx
+```tsx
 import { onUnMount } from '@builder.io/mitosis';
 
 export default function MyComponent() {
@@ -182,8 +182,8 @@ The onUpdate hook is the best place to put custom code that will either:
 - if no `dependencies` array is provided: execute on every render
 - if a non-empty `dependencies` array is provided: execute whenever any value in `dependencies` changes
 
-```jsx
-import { useStore, onUpdate } from '@builder.io/mitosis';
+```tsx
+import { onUpdate, useStore } from '@builder.io/mitosis';
 
 export default function OnUpdateWithDeps() {
   const state = useStore({
@@ -207,7 +207,7 @@ export default function OnUpdateWithDeps() {
 
 The `useDefaultProps` hook sets default values for a component's props:
 
-```jsx
+```tsx
 import { useDefaultProps } from '@builder.io/mitosis';
 
 export default function Button(props) {
@@ -235,7 +235,7 @@ export default function Button(props) {
 
 You can also use `useDefaultProps` outside of the component body:
 
-```jsx
+```tsx
 import { useDefaultProps } from '@builder.io/mitosis';
 
 useDefaultProps({

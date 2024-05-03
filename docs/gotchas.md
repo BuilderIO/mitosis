@@ -24,7 +24,7 @@ We have put together ESLint rules that will warn you when encountering these lim
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent() {
   const state = useStore({
     foo: 'bar',
@@ -38,7 +38,7 @@ export default function MyComponent() {
 
 _Mitosis output_
 
-```typescript
+```tsx
 import { useState } from 'react';
 
 export default function MyComponent(props) {
@@ -57,7 +57,7 @@ Use a different variable name
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent() {
   const state = useStore({
     foo: 'bar',
@@ -71,7 +71,7 @@ export default function MyComponent() {
 
 _Mitosis output_
 
-```typescript
+```tsx
 import { useState } from 'react';
 
 export default function MyComponent(props) {
@@ -88,7 +88,7 @@ export default function MyComponent(props) {
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent() {
   const state = useStore({
     async doSomethingAsync(event) {
@@ -109,7 +109,7 @@ b. Use an immediately invoked async function
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent() {
   const state = useStore({
     doSomethingAsync(event) {
@@ -123,9 +123,7 @@ export default function MyComponent() {
 
 _Mitosis output_
 
-```typescript
-import { useState } from 'react';
-
+```tsx
 export default function MyComponent(props) {
   function doSomethingAsync(event) {
     void (async function () {
@@ -141,7 +139,7 @@ export default function MyComponent(props) {
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent() {
   const state = useStore({
     myCallback(event) {
@@ -155,9 +153,7 @@ export default function MyComponent() {
 
 _Mitosis output_
 
-```typescript
-import { useState } from 'react';
-
+```tsx
 export default function MyComponent(props) {
   function myCallback(event) {
     // do something
@@ -181,7 +177,7 @@ Define an anonymous function in the callback
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent() {
   const state = useStore({
     myCallback(event) {
@@ -195,9 +191,7 @@ export default function MyComponent() {
 
 _Mitosis output_
 
-```typescript
-import { useState } from 'react';
-
+```tsx
 export default function MyComponent(props) {
   function myCallback(event) {
     // do something
@@ -221,7 +215,7 @@ JSX lite parsing fails on referencing `props` in a call to `useState`.
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent(props) {
   const state = useStore({ text: props.text });
   //                             ^^^^^^^^^^
@@ -235,7 +229,7 @@ Use _onMount_:
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent(props) {
   const state = useStore({ text: null });
 
@@ -247,7 +241,7 @@ export default function MyComponent(props) {
 
 _Mitosis output_
 
-```typescript
+```tsx
 import { useState } from 'react';
 
 export default function MyComponent(props) {
@@ -269,7 +263,7 @@ If the initial state value is a computed value (whether based on `props` or the 
 
 _Mitosis input_
 
-```jsx
+```tsx
 import { kebabCase } from 'lodash';
 
 export default function MyComponent(props) {
@@ -293,7 +287,7 @@ Use a getter method:
 
 _Mitosis input_
 
-```jsx
+```tsx
 import { kebabCase } from 'lodash';
 
 export default function MyComponent(props) {
@@ -313,7 +307,7 @@ export default function MyComponent(props) {
 
 _Mitosis output_
 
-```jsx
+```tsx
 import { kebabCase } from 'lodash';
 
 export default function MyComponent(props) {
@@ -339,7 +333,7 @@ ignored by the compiler.
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent() {
   const state = useStore({ foo: '1' });
 
@@ -351,7 +345,7 @@ export default function MyComponent() {
 
 _Mitosis output_
 
-```typescript
+```tsx
 import { useState } from 'react';
 
 export default function MyComponent(props) {
@@ -371,7 +365,7 @@ Use standard assignment instead for now.
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent() {
   const state = useStore({ foo: '1' });
 
@@ -383,7 +377,7 @@ export default function MyComponent() {
 
 _Mitosis output_
 
-```typescript
+```tsx
 import { useState } from 'react';
 
 export default function MyComponent(props) {
@@ -404,7 +398,7 @@ ignored by the compiler.
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent({ color = 'blue' }) {
   return <div>{color}</div>;
 }
@@ -412,7 +406,7 @@ export default function MyComponent({ color = 'blue' }) {
 
 _Mitosis output_
 
-```typescript
+```tsx
 export default function MyComponent(props) {
   return <div>{color}</div>;
 }
@@ -424,7 +418,7 @@ define a local variable
 
 _Mitosis input_
 
-```typescript
+```tsx
 const DEFAULT_VALUES = {
   color: 'blue',
 };
@@ -435,7 +429,7 @@ export default function MyComponent(props) {
 
 _Mitosis output_
 
-```typescript
+```tsx
 const DEFAULT_VALUES = {
   color: 'blue',
 };
@@ -450,7 +444,7 @@ export default function MyComponent(props) {
 
 _Mitosis input_
 
-```typescript
+```tsx
 export default function MyComponent({ children, ...rest }) {
   return <div {...rest}>{children}</div>;
 }
@@ -458,7 +452,7 @@ export default function MyComponent({ children, ...rest }) {
 
 _Mitosis output_
 
-```typescript
+```tsx
 export default function MyComponent(props) {
   return <div {...rest}>{props.children}</div>;
 }

@@ -20,7 +20,7 @@ Mitosis is inspired by many modern frameworks. You'll see components look like R
 
 An example Mitosis component showing several features:
 
-```javascript
+```tsx
 import { For, Show, useStore } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
@@ -55,7 +55,7 @@ export default function MyComponent(props) {
 
 Mitosis is component-driven like most modern frontend frameworks. Each Mitosis component should be in its own file and be the single default export. They are simple functions that return JSX elements
 
-```jsx
+```tsx
 export default function MyComponent() {
   return <div>Hello world!</div>;
 }
@@ -67,7 +67,7 @@ export default function MyComponent() {
 
 Styling is done via the `css` prop on dom elements and components. It takes CSS properties in `camelCase` (like the `style` object on DOM elements) and properties as valid CSS strings
 
-```javascript
+```tsx
 export default function CSSExample() {
   return <div css={{ marginTop: '10px', color: 'red' }} />;
 }
@@ -75,7 +75,7 @@ export default function CSSExample() {
 
 You can also include media queries as keys, with values as style objects
 
-```javascript
+```tsx
 export default function ResponsiveExample() {
   return (
     <div
@@ -98,7 +98,7 @@ Mitosis prefers that you use `class` to provide class name strings, but it also 
 
 State is provided by the `useStore` hook. Currently, the name of this value must be `state` like below:
 
-```jsx
+```tsx
 export default function MyComponent() {
   const state = useStore({
     name: 'Steve',
@@ -115,7 +115,7 @@ export default function MyComponent() {
 
 If the initial state value is a computed value (whether based on `props` or the output of some function), then you cannot inline it. Instead, use a getter method:
 
-```jsx
+```tsx
 import { kebabCase } from 'lodash';
 
 export default function MyComponent(props) {
@@ -144,7 +144,7 @@ Components automatically update when state values change
 
 The state object can also take methods.
 
-```jsx
+```tsx
 export default function MyComponent() {
   const state = useStore({
     name: 'Steve',
@@ -168,7 +168,7 @@ Control flow in Builder is static like [Solid](https://github.com/ryansolid/soli
 
 ### Show
 
-```jsx
+```tsx
 export declare function Show<T>(props: {
   when: T | undefined | null | false;
   else?: JSX.Element;
@@ -178,7 +178,7 @@ export declare function Show<T>(props: {
 
 Use `<Show>` for conditional logic. It takes a singular `when` prop for a condition to match for. When the condition is truthy, the children will render, the `else` otherwise they will not.
 
-```jsx
+```tsx
 export default function MyComponent(props) {
   return (
     <>
@@ -195,7 +195,7 @@ export default function MyComponent(props) {
 
 Use `<For>` for repeating items, for instance mapping over an array. It takes a singular `each` prop for the array to iterate over. This component takes a singular function as a child that it passes the relevant item and index to, like below:
 
-```jsx
+```tsx
 export default function MyComponent(props) {
   const state = useStore({
     myArray: [1, 2, 3],
@@ -208,7 +208,7 @@ export default function MyComponent(props) {
 
 We use the standard method for passing children with `props.children`
 
-```jsx
+```tsx
 export default function MyComponent(props) {
   return <div>{props.children}</div>;
 }
@@ -217,7 +217,7 @@ export default function MyComponent(props) {
 <details>
   <summary>For <strong>Web Component</strong> you need to use ShadowDom metadata</summary>
 
-```jsx
+```tsx
 import { useMetadata } from '@builder.io/mitosis';
 
 useMetadata({
@@ -234,7 +234,7 @@ export default function MyComponent(props) {
 
 When you want to register a named slot you do so using a prop.
 
-```jsx
+```tsx
 <div>
   <Layout
     top={<NavBar/>}
@@ -250,7 +250,7 @@ In this example we are registering `top`, `left`, and `center` for the `Layout` 
 
 If the `Layout` component was also a Mitosis component then we simply use the reference in the props.
 
-```jsx
+```tsx
 export default function Layout(props) {
   return (
     <div className="layout">
@@ -265,7 +265,7 @@ export default function Layout(props) {
 
 or use the Slot component provided by component
 
-```jsx
+```tsx
 import { Slot } from '@builder.io/mitosis';
 
 export default function Layout(props) {
@@ -312,7 +312,7 @@ Mitosis compiles one component at a time and is only concerned with outputting t
 </div>
 ```
 
-```javascript
+```tsx
 @Component({
   selector: 'layout',
   template: `
@@ -338,7 +338,7 @@ In webcomponent you need to use ShadowDom metadata for named slots
 <details>
   <summary>For <strong>Web Component</strong> you need to use ShadowDom metadata named slots</summary>
 
-```jsx
+```tsx
 import { useMetadata } from '@builder.io/mitosis';
 
 useMetadata({
@@ -360,7 +360,7 @@ export default function Layout(props) {
 
 ### Default Slot content
 
-```jsx
+```tsx
 import { Slot } from '@builder.io/mitosis';
 
 export default function Layout(props) {

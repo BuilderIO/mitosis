@@ -6,7 +6,7 @@ In the root of the project, from which you run mitosis, you can add a `mitosis.
 
 The `mitosis.config.js` file can take the following shape:
 
-````typescript
+````tsx
 
 type MitosisConfig = {
   /**
@@ -67,7 +67,7 @@ type MitosisConfig = {
 
 The `Targets` type can be any one of, or an array of the following strings:
 
-```typescript
+```tsx
 type targets =
   | 'alpine'
   | 'angular'
