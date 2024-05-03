@@ -18,7 +18,7 @@ export const RouterHead = component$(() => {
       <link href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe828a5e84be0407d8cee4419cfa8d200" />
       <meta
         property="og:image"
-        content="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F644c071cb71f4184b7d6310f466e95fc"
+        content="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe811f4444d1146c9932e02412d31b748"
       />
 
       <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
