@@ -164,6 +164,18 @@ export default component$(() => {
     }
   });
 
+  // Always reload on window refocus to ensure cloudflare workers are warm
+  useVisibleTask$(({ cleanup }) => {
+    const fn = () => {
+      throttledCompileOne(code.value, outputOneFramework.value, inputSyntax.value);
+      throttledCompileTwo(code.value, outputTwoFramework.value, inputSyntax.value);
+    };
+    addEventListener('focus', fn);
+    cleanup(() => {
+      removeEventListener('focus', fn);
+    });
+  });
+
   return (
     <div class="relative flex gap-4 grow items-stretch max-md:flex-col">
       <div class="w-full flex flex-col max-md:h-[50vh]">
