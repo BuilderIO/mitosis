@@ -64,7 +64,7 @@ import("node:async_hooks").then((module) => {
       ],
       htmlWhitespaceSensitivity: "ignore"
     });`.trim(),
-    to: ''
+    to: '',
   },
 ];
 
