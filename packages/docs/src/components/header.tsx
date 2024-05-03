@@ -1,14 +1,20 @@
 import { component$ } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
+import { Link, useLocation } from '@builder.io/qwik-city';
 
 export default component$(() => {
+  const location = useLocation();
+
+  const isPlayground = location.url.pathname === '/playground/';
+
   return (
     <>
       <div class="bg-primary text-center font-medium text-black px-3 py-2 rounded">
         Welcome to our new site! It's WIP :)
       </div>
       <header class="text-white sticky top-0 z-10 border-b border-primary border-opacity-50 bg-purple-990">
-        <div class="container mx-auto p-6 flex justify-between items-center">
+        <div
+          class={['p-6 flex justify-between items-center', !isPlayground && 'container mx-auto']}
+        >
           <a href="/" title="qwik" class="flex items-center">
             <img
               class="object-contain"
