@@ -72,7 +72,7 @@ export const RightSidebar = component$((props: { class: ClassList }) => {
                 <a
                   href={`#${h.id}`}
                   class={[
-                    'block my-4 text-[rgba(255,255,255,0.7)] hover:opacity-100 hover:text-primary-light transition-colors duration-200 ease-in-out',
+                    'block my-4 text-[rgba(255,255,255,0.7)] hover:opacity-100 hover:text-primary-light ease-in-out',
                     `${h.level > 2 ? 'ml-4' : null}`,
                     activeHeadingIndex.value === i ? '!text-primary-light' : null,
                   ]}
@@ -91,7 +91,7 @@ export const RightSidebar = component$((props: { class: ClassList }) => {
           return (
             <li>
               <a
-                class="flex gap-2 items-center my-4 hover:text-primary-light transition-colors duration-200 ease-in-out"
+                class="flex gap-2 items-center my-4 hover:text-primary-light ease-in-out"
                 href={el.href}
                 rel="noopener"
                 target="_blank"

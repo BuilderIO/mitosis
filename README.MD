@@ -5,12 +5,6 @@
 </p>
 
 <p align="center">
-  <p align="center">
-    Try our <a href="https://mitosis.builder.io/playground"><b>interactive playground</b></a>
-  </p>
-</p>
-
-<p align="center">
   <a href="https://github.com/prettier/prettier"><img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" /></a>
   <a href="https://github.com/BuilderIO/mitosis/pulls"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" /></a>
   <a href="https://github.com/BuilderIO/mitosis"><img alt="License" src="https://img.shields.io/github/license/BuilderIO/mitosis" /></a>
@@ -18,21 +12,25 @@
   <a href="https://www.npmjs.com/package/@builder.io/mitosis" rel="nofollow"><img src="https://img.shields.io/npm/v/@builder.io/mitosis.svg?sanitize=true"></a>
 </p>
 
+## Overview
+
+Mitosis is a framework that allows you to write components once and compile them to every major frontend framework. It provides a unified development experience across all frameworks, enabling you to build components in a single codebase and compile them to React, Vue, Angular, Svelte, Solid, Alpine, and Qwik, and more.
+
+Using Mitosis, you can:
+
+- Maintain a consistent design system across multiple frameworks
+- Build high quality cross platform SDKs
+- Avoid the [pitfalls of web components](https://mitosis.builder.io/docs/overview/) by compiling to native framework code
+
 _PS: We are actively looking for folks interested in becoming contributors to Mitosis. If interested, look at our list of [good first issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or reach out on our [Discord](https://discord.gg/SNusEyNGsx)_
 
-## Quick Start
+## Quickstart
 
 To create a new Mitosis project from scratch, run the following `create` command:
 
 ```bash
 npm create @builder.io/mitosis@latest
 ```
-
-It will prompt you for a project name, and create a new directory with a basic monorepo project structure that includes:
-
-- npm workspaces
-- multiple generated outputs, along with build steps for each
-- multiple test servers that import the outputs for convenient debugging/testing
 
 Once completed, make sure to read the `README.md` generated in your new project. It will explain the structure of your project, and provide a walkthrough on how to build/test your components.
 
