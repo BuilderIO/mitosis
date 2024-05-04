@@ -232,14 +232,17 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
     isThrottling.value = false;
   });
 
-  useVisibleTask$(() => {
-    isLoaded.value = true;
-    setTimeout(() => {
-      makeVisible.value = true;
-    }, 100);
-  }, {
-    strategy: 'document-idle'
-  });
+  useVisibleTask$(
+    () => {
+      isLoaded.value = true;
+      setTimeout(() => {
+        makeVisible.value = true;
+      }, 100);
+    },
+    {
+      strategy: 'document-idle',
+    },
+  );
 
   useVisibleTask$(() => {
     const interval = setInterval(() => {

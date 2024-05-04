@@ -30,6 +30,7 @@ export const CodeEditor = component$((props: CodeEditorProps) => {
     useSignal<
       NoSerialize<monaco.editor.IStandaloneCodeEditor | monaco.editor.IStandaloneDiffEditor>
     >();
+  const lastContent = useSignal<string>(props.value || props.defaultValue || '');
 
   useVisibleTask$(({ cleanup }) => {
     editorRef.value?.dispose();
@@ -69,7 +70,11 @@ export const CodeEditor = component$((props: CodeEditorProps) => {
 
     const listener =
       (editorRef.value as monaco.editor.IStandaloneCodeEditor)!.onDidChangeModelContent?.(() => {
-        props.onChange$?.((editorRef.value as monaco.editor.IStandaloneCodeEditor)!.getValue());
+        const currentValue = (editorRef.value as monaco.editor.IStandaloneCodeEditor)!.getValue();
+        if (lastContent.value !== currentValue) {
+          props.onChange$?.((editorRef.value as monaco.editor.IStandaloneCodeEditor)!.getValue());
+          lastContent.value = currentValue;
+        }
       });
 
     editorRef.value!.addAction({
