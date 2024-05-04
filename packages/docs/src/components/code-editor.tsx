@@ -20,6 +20,7 @@ export type CodeEditorProps = {
   onChange$?: PropFunction<(value: string) => void>;
   onSave$?: PropFunction<(value: string) => void>;
   language?: string;
+  options?: monaco.editor.IStandaloneEditorConstructionOptions;
   readOnly?: boolean;
 } & ({ value: string; defaultValue?: string } | { defaultValue: string; value?: string });
 
@@ -62,6 +63,7 @@ export const CodeEditor = component$((props: CodeEditorProps) => {
         },
         model: monaco.editor.createModel(value!, props.language),
         readOnly: props.readOnly,
+        ...props.options,
       }),
     );
 

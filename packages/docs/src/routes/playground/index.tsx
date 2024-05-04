@@ -1,15 +1,16 @@
-import { MitosisComponent } from '@builder.io/mitosis';
 import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { routeLoader$, server$, useLocation } from '@builder.io/qwik-city';
+import { routeLoader$, useLocation } from '@builder.io/qwik-city';
 import { ContentLoaderCode } from 'qwik-content-loader';
 import { CodeEditor } from '~/components/code-editor';
 import Select from '~/components/select';
-
-export type OutputFramework = 'react' | 'svelte' | 'vue' | 'qwik' | 'angular' | 'mitosis' | 'json';
-const outputs: OutputFramework[] = ['react', 'svelte', 'vue', 'qwik', 'angular', 'mitosis', 'json'];
-
-export type InputSyntax = 'jsx' | 'svelte';
-const inputs: InputSyntax[] = ['jsx', 'svelte'];
+import {
+  InputSyntax,
+  OutputFramework,
+  compile,
+  defaultCode,
+  inputs,
+  outputs,
+} from '~/services/compile';
 
 const defaultTopTab: OutputFramework = 'vue';
 const defaultBottomTab: OutputFramework = 'angular';
@@ -24,72 +25,6 @@ const languageByFramework: Record<OutputFramework, string> = {
   mitosis: 'typescript',
   json: 'json',
 };
-
-const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
-  const {
-    componentToSvelte,
-    componentToVue,
-    componentToReact,
-    componentToQwik,
-    componentToAngular,
-    componentToMitosis,
-  } = await import('@builder.io/mitosis');
-
-  const options = {};
-
-  switch (output) {
-    case 'qwik':
-      return componentToQwik(options);
-    case 'react':
-      return componentToReact(options);
-    case 'angular':
-      return componentToAngular(options);
-    case 'svelte':
-      return componentToSvelte(options);
-    case 'mitosis':
-      return componentToMitosis();
-    case 'json':
-      return ({ component }: { component: MitosisComponent }) => JSON.stringify(component, null, 2);
-    case 'vue':
-      return componentToVue({ api: 'composition' });
-    default:
-      throw new Error('unexpected Output ' + output);
-  }
-};
-
-export const compile = server$(
-  async (code: string, output: OutputFramework, inputSyntax: InputSyntax) => {
-    const { parseJsx, parseSvelte } = await import('@builder.io/mitosis');
-    const parsed = inputSyntax === 'svelte' ? await parseSvelte(code) : parseJsx(code);
-
-    const outputGenerator = await getOutputGenerator({ output });
-
-    const outputCode = outputGenerator({ component: parsed });
-
-    return outputCode;
-  },
-);
-
-const defaultCode = `
-import { useState } from "@builder.io/mitosis";
-
-export default function MyComponent(props) {
-  const [name, setName] = useState("Steve");
-
-  return (
-    <div>
-      <input
-        css={{
-          color: "red",
-        }}
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-      />
-      Hello! I can run natively in React, Vue, Svelte, Qwik, and many more frameworks!
-    </div>
-  );
-}
-`.trim();
 
 const useOutput1 = routeLoader$(async (requestEvent) => {
   const code = (requestEvent.url.searchParams.get('code') as string) || defaultCode;

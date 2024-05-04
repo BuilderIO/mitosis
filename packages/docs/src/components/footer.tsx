@@ -7,7 +7,7 @@ export default component$(() => {
     <footer class="border-t border-primary border-opacity-50 pb-4">
       <div class="container p-8 md:my-8 mx-auto flex">
         <a href="https://www.builder.io/" target="_blank">
-          <span>Made with ❤️</span>
+          <span>Made with ❤️ by</span>
 
           <img
             class="object-contain mx-auto mt-3 max-sm:w-[150px]"
