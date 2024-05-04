@@ -13,7 +13,13 @@ export default component$(() => {
     <>
       <div class="bg-primary-dark text-primary-light text-center font-medium px-3 py-3 max-md:py-2.5 rounded max-md:text-sm">
         Welcome to our beta site! Please{' '}
-        <a href="https://forms.gle/ojZseBfg13ieco9RA" target="_blank" class="underline">
+        <a
+          href={`https://docs.google.com/forms/d/e/1FAIpQLSc6jOAOPMRHviiXv4Pkk28fmdFhcX-IprhHvKCIBhjuZKmgiA/viewform?usp=pp_url&entry.1953883676=${encodeURIComponent(
+            location.url.href,
+          )}`}
+          target="_blank"
+          class="underline"
+        >
           share your feedback
         </a>
       </div>
