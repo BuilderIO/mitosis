@@ -33,7 +33,7 @@ export default component$(() => {
           </Link>
         </div>
 
-        <CodeRotator class="mx-auto mt-[5vh] mb-[5vh]" />
+        <CodeRotator class="mx-auto mt-[5vh] mb-[9vh]" />
       </div>
     </div>
   );
