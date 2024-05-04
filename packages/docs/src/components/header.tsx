@@ -29,11 +29,11 @@ export default component$(() => {
               src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0fdb9aabd10f4205b3b3b56d7b950239"
             />
           </Link>
-          <ul class="flex space-x-8 max-md:space-x-6 font-medium items-center">
+          <ul class="flex space-x-8 max-md:space-x-6 max-sm:space-x-4 font-medium items-center">
             <li>
               <Search />
             </li>
-            <li class="flex gap-4 items-center max-sm:hidden">
+            <li class="flex gap-4 items-center">
               <Link
                 class="hover:text-primary-light text-xl"
                 target="_blank"
