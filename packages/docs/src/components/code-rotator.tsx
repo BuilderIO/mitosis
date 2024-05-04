@@ -1,6 +1,20 @@
-import { ClassList, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import {
+  $,
+  ClassList,
+  PropFunction,
+  component$,
+  useSignal,
+  useStore,
+  useVisibleTask$,
+} from '@builder.io/qwik';
 import type monaco from 'monaco-editor';
-import { InputSyntax, OutputFramework, defaultCode, languageByFramework } from '~/services/compile';
+import {
+  InputSyntax,
+  OutputFramework,
+  compile,
+  defaultCode,
+  languageByFramework,
+} from '~/services/compile';
 import { CodeEditor } from './code-editor';
 
 const vueOutput = `
@@ -134,7 +148,13 @@ const imagesByFramework: Partial<Record<OutputFramework, string>> = {
 };
 
 const CodePanel = component$(
-  (props: { code: string; isActive: boolean; framework: OutputFramework | InputSyntax }) => {
+  (props: {
+    code: string;
+    isActive: boolean;
+    framework: OutputFramework | InputSyntax;
+    readOnly?: boolean;
+    onChange$?: PropFunction<(code: string) => void>;
+  }) => {
     return (
       <div
         class={[
@@ -155,7 +175,8 @@ const CodePanel = component$(
         <div class="relative grow-1 h-full p-4">
           <CodeEditor
             options={monacoOptions}
-            readOnly
+            onChange$={props.onChange$}
+            readOnly={props.readOnly}
             language={languageByFramework[props.framework as OutputFramework] || 'typescript'}
             class="relative inset-0 w-full h-full -ml-4"
             value={props.code}
@@ -170,6 +191,43 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
   const currentIndex = useSignal(0);
   const mouseIsOver = useSignal(false);
   const maxIndex = frameworkExamples.length;
+  const isThrottling = useSignal(false);
+  const throttleTimeout = useSignal(0);
+  const outputs = useStore({
+    vue: vueOutput,
+    angular: angularOutput,
+    svelte: svelteOutput,
+    qwik: qwikOutput,
+  });
+
+  const compileAll = $(async (code: string) => {
+    await Promise.allSettled(
+      frameworkExamples.map(async (framework) => {
+        const output = await compile(code, framework as OutputFramework, 'jsx');
+        (outputs as any)[framework] = output.replace(
+          /\n?\n?import { useStore } from "..";\n?/g,
+          '',
+        );
+      }),
+    );
+  });
+
+  const throttledCompile = $(async (code: string) => {
+    if (throttleTimeout.value) {
+      clearTimeout(throttleTimeout.value);
+    }
+    if (isThrottling.value) {
+      throttleTimeout.value = setTimeout(async () => {
+        isThrottling.value = true;
+        await compileAll(code);
+        isThrottling.value = false;
+      }, 100) as any;
+      return;
+    }
+    isThrottling.value = true;
+    await compileAll(code);
+    isThrottling.value = false;
+  });
 
   useVisibleTask$(() => {
     const interval = setInterval(() => {
@@ -190,7 +248,12 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
       />
       <div class="flex gap-8 max-md:flex-col max-md:mt-8">
         <div class="w-[450px] max-md:h-[290px] max-w-full h-[400px] p-4 pl-0 relative">
-          <CodePanel code={defaultCode} isActive framework="mitosis" />
+          <CodePanel
+            onChange$={(code) => throttledCompile(code)}
+            code={defaultCode}
+            isActive
+            framework="mitosis"
+          />
         </div>
 
         <img
@@ -210,15 +273,8 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
         >
           {frameworkExamples.map((framework, index) => (
             <CodePanel
-              code={
-                framework === 'vue'
-                  ? vueOutput
-                  : framework === 'angular'
-                  ? angularOutput
-                  : framework === 'svelte'
-                  ? svelteOutput
-                  : qwikOutput
-              }
+              readOnly
+              code={(outputs as any)[framework as OutputFramework]}
               isActive={currentIndex.value === index}
               framework={framework}
             />
