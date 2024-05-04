@@ -238,20 +238,18 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
       setTimeout(() => {
         makeVisible.value = true;
       }, 100);
+
+      const interval = setInterval(() => {
+        const skip = mouseIsOver.value;
+        if (skip) return;
+        currentIndex.value = (currentIndex.value + 1) % maxIndex;
+      }, 3000);
+      return () => clearInterval(interval);
     },
     {
       strategy: 'document-idle',
     },
   );
-
-  useVisibleTask$(() => {
-    const interval = setInterval(() => {
-      const skip = mouseIsOver.value;
-      if (skip) return;
-      currentIndex.value = (currentIndex.value + 1) % maxIndex;
-    }, 3000);
-    return () => clearInterval(interval);
-  });
 
   return !isLoaded.value ? null : (
     <div

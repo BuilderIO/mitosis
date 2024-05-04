@@ -1,4 +1,4 @@
-import { MitosisComponent } from '@builder.io/mitosis';
+import type { MitosisComponent } from '@builder.io/mitosis';
 import { server$ } from '@builder.io/qwik-city';
 
 export type OutputFramework = 'react' | 'svelte' | 'vue' | 'qwik' | 'angular' | 'mitosis' | 'json';
