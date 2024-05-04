@@ -1,8 +1,10 @@
 <br>
-<p align="center"><picture>
-         <source media="(prefers-color-scheme: dark)" srcset="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F44413839f214431290930e447572b843">
-         <img width="300" alt="Mitosis logo" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F570f689e59824cb78cf5773350ab4144">
-       </picture></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F44413839f214431290930e447572b843">
+    <img width="300" alt="Mitosis logo" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F570f689e59824cb78cf5773350ab4144">
+  </picture>
+</p>
 
 <p align="center">
   Write components once, compile to every framework
@@ -22,8 +24,8 @@ Mitosis provides a unified development experience across all frameworks, enablin
 
 Using Mitosis, you can:
 
-- Maintain a consistent design system across multiple frameworks
-- Build high quality cross platform SDKs
+- Maintain a consistent design system across multiple frameworks ([example](https://github.com/db-ui/mono))
+- Build high quality cross-framework SDKs ([example](https://github.com/BuilderIO/builder/tree/main/packages/sdks#builderio-sdks))
 - Avoid the [pitfalls of web components](https://mitosis.builder.io/docs/overview/) by compiling to native framework code
 
 _PS: We are actively looking for folks interested in becoming contributors to Mitosis. If interested, look at our list of [good first issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or reach out on our [Discord](https://discord.gg/SNusEyNGsx)_
