@@ -232,24 +232,19 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
     isThrottling.value = false;
   });
 
-  useVisibleTask$(
-    () => {
-      isLoaded.value = true;
-      setTimeout(() => {
-        makeVisible.value = true;
-      }, 100);
+  useVisibleTask$(() => {
+    isLoaded.value = true;
+    setTimeout(() => {
+      makeVisible.value = true;
+    }, 100);
 
-      const interval = setInterval(() => {
-        const skip = mouseIsOver.value;
-        if (skip) return;
-        currentIndex.value = (currentIndex.value + 1) % maxIndex;
-      }, 3000);
-      return () => clearInterval(interval);
-    },
-    {
-      strategy: 'document-idle',
-    },
-  );
+    const interval = setInterval(() => {
+      const skip = mouseIsOver.value;
+      if (skip) return;
+      currentIndex.value = (currentIndex.value + 1) % maxIndex;
+    }, 3000);
+    return () => clearInterval(interval);
+  });
 
   return !isLoaded.value ? null : (
     <div

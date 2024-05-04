@@ -12,7 +12,10 @@ export default component$(() => {
   return (
     <>
       <div class="bg-primary-dark text-primary-light text-center font-medium px-3 py-3 max-md:py-2.5 rounded max-md:text-sm">
-        Welcome to our new site! It's WIP :)
+        Welcome to our beta site! Please{' '}
+        <a href="https://forms.gle/ojZseBfg13ieco9RA" target="_blank" class="underline">
+          share your feedback
+        </a>
       </div>
       <header class="text-white sticky top-0 z-10 border-y border-primary border-opacity-50 bg-purple-990">
         <div
