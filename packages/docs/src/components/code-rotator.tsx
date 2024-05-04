@@ -131,15 +131,15 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
   const outClass = 'opacity-0 translate-y-8';
 
   return (
-    <div class={['flex flex-col', props.class]}>
+    <div class={['flex flex-col max-w-full', props.class]}>
       <img
         width={100}
         height={80}
-        class="object-contain my-4 mx-auto"
+        class="object-contain my-4 mx-auto max-md:hidden"
         src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F298a3d9f6c3743cb8c3e17d209237da8"
       />
-      <div class="flex gap-8">
-        <div class="w-[400px] h-[400px] bg-primary-dark border-primary border rounded-lg p-4 pl-0 relative">
+      <div class="flex gap-8 max-md:flex-col max-md:mt-8">
+        <div class="w-[400px] max-md:h-[200px] max-w-full h-[400px] bg-primary-dark border-primary border rounded-lg p-4 pl-0 relative">
           <CodeEditor
             options={monacoOptions}
             language="typescript"
@@ -147,8 +147,15 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
             value={defaultCode}
           />
         </div>
+
+        <img
+        width={30}
+        height={80}
+        class="object-contain mx-auto md:hidden -my-4"
+        src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F66021c443ad24d858f16cb5c1ea46961"
+      />
         <div
-          class="relative w-[400px] h-[400px]"
+          class="relative w-[400px] max-md:h-[200px] max-w-full h-[400px]"
           onMouseEnter$={() => {
             mouseIsOver.value = true;
           }}
