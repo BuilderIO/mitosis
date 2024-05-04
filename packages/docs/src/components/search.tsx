@@ -1,10 +1,10 @@
 import { docsearch } from 'meilisearch-docsearch';
 import 'meilisearch-docsearch/css';
 
-import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { ClassList, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 
-export const Search = component$(() => {
+export const Search = component$((props: { class?: ClassList }) => {
   const divRef = useSignal<HTMLDivElement>();
   const nav = useNavigate();
 
@@ -32,7 +32,7 @@ export const Search = component$(() => {
   });
 
   return (
-    <div class="-my-2" id="searchbar" ref={divRef}>
+    <div class={props.class} id="searchbar" ref={divRef}>
       <button type="button" class="docsearch-btn" aria-label="Search">
         <span class="docsearch-btn-icon-container">
           <svg

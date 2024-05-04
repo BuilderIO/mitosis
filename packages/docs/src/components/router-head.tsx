@@ -15,7 +15,7 @@ export const RouterHead = component$(() => {
 
       <link rel="canonical" href={loc.url.href} />
       {/* favicon */}
-      <link href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe828a5e84be0407d8cee4419cfa8d200" />
+      <link href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F199eed663ae845baa8a6ea4136a40871" />
       <meta
         property="og:image"
         content="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe811f4444d1146c9932e02412d31b748"
@@ -33,7 +33,7 @@ export const RouterHead = component$(() => {
       <link
         rel="icon"
         type="image/svg+xml"
-        href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F84ef4f61354b486989f4a749dbcb9281"
+        href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F5a86bcaa3a784a6b9f64f13d4a3016f5"
       />
 
       {head.meta.map((m) => (
