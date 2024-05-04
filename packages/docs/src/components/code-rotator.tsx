@@ -237,6 +237,8 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
     setTimeout(() => {
       makeVisible.value = true;
     }, 100);
+  }, {
+    strategy: 'document-idle'
   });
 
   useVisibleTask$(() => {
