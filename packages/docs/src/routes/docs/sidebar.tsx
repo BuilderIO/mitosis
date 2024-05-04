@@ -32,6 +32,7 @@ export default component$((props: { class?: ClassList }) => {
       <SidebarLink href="/docs/components/">Components</SidebarLink>
       <SidebarLink href="/docs/hooks/">Hooks</SidebarLink>
       <SidebarLink href="/docs/context/">Context</SidebarLink>
+      <SidebarLink href="/docs/figma/">Figma</SidebarLink>
       <SidebarLink href="/docs/customizability/">Customization</SidebarLink>
       <SidebarLink href="/docs/configuration/">Configuration</SidebarLink>
       <SidebarLink href="/docs/project-structure/">Project Structure</SidebarLink>

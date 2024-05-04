@@ -1,6 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
-import { TbBrandDiscord, TbBrandGithub } from '@qwikest/icons/tablericons';
+import { TbBrandDiscord, TbBrandFigma, TbBrandGithub } from '@qwikest/icons/tablericons';
 import { Search } from './search';
 
 export default component$(() => {
@@ -49,6 +49,9 @@ export default component$(() => {
                 href="https://github.com/BuilderIO/mitosis"
               >
                 <TbBrandGithub />
+              </Link>
+              <Link class="hover:text-primary-light text-xl max-sm:hidden" href="/docs/figma/">
+                <TbBrandFigma />
               </Link>
               <Link
                 class="hover:text-primary-light text-xl max-sm:hidden"

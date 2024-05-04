@@ -1,6 +1,7 @@
-import { ClassList, component$ } from '@builder.io/qwik';
+import { ClassList, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { useContent, useLocation } from '@builder.io/qwik-city';
 import { TbBrandDiscord, TbEdit, TbMessage } from '@qwikest/icons/tablericons';
+import { throttle } from 'lodash-es';
 
 // Transform:
 //   /docs/overview/ to 'overview'
@@ -13,10 +14,31 @@ const getGithubFilePath = (path: string): string => {
 export const RightSidebar = component$((props: { class: ClassList }) => {
   const { headings } = useContent();
   const contentHeadings = headings?.filter((h) => h.level <= 3) || [];
+  const activeHeadingIndex = useSignal(0);
 
   const { url } = useLocation();
 
   const githubEditRoute = getGithubFilePath(url.pathname);
+
+  useVisibleTask$(({ cleanup }) => {
+    const fn = throttle(() => {
+      const activeIndex = contentHeadings.findIndex((h) => {
+        const el = document.getElementById(h.id);
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.top >= 150;
+      });
+      console.log('activeIndex', activeIndex);
+
+      activeHeadingIndex.value =
+        activeIndex > 0 ? activeIndex - 1 : activeIndex === -1 ? contentHeadings.length - 1 : 0;
+    }, 50);
+
+    window.addEventListener('scroll', fn);
+    cleanup(() => {
+      window.removeEventListener('scroll', fn);
+    });
+  });
 
   const editUrl = `https://github.com/Builderio/mitosis/edit/main/packages/docs/src/routes/docs/${githubEditRoute}/index.mdx`;
 
@@ -46,13 +68,14 @@ export const RightSidebar = component$((props: { class: ClassList }) => {
         <>
           <h6 class="font-medium uppercase text-xs">On This Page</h6>
           <ul class="">
-            {contentHeadings.map((h) => (
+            {contentHeadings.map((h, i) => (
               <li key={h.id}>
                 <a
                   href={`#${h.id}`}
                   class={[
-                    'block my-4 opacity-70 hover:opacity-100 hover:text-primary-light transition-colors duration-200 ease-in-out',
+                    'block my-4 text-[rgba(255,255,255,10)] hover:opacity-100 hover:text-primary-light transition-colors duration-200 ease-in-out',
                     `${h.level > 2 ? 'ml-4' : null}`,
+                    activeHeadingIndex.value === i ? '!text-primary-light' : null,
                   ]}
                 >
                   {h.text}
