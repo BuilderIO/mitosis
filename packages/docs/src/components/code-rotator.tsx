@@ -252,7 +252,7 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
     <div
       class={[
         'flex flex-col max-w-full transition-all duration-700',
-        makeVisible.value ? 'opacity-100' : 'opacity-0 translate-y-4',
+        makeVisible.value ? 'opacity-100' : 'opacity-0 translate-y-2',
         props.class,
       ]}
     >
@@ -279,7 +279,10 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
           src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F66021c443ad24d858f16cb5c1ea46961"
         />
         <div
-          class="relative w-[450px] max-md:h-[290px] max-w-full h-[400px]"
+          class={[
+            'relative w-[450px] max-md:h-[290px] max-w-full h-[400px] transition-all duration-500 delay-200',
+            makeVisible.value ? 'opacity-100' : 'opacity-0 translate-y-2',
+          ]}
           onMouseEnter$={() => {
             mouseIsOver.value = true;
           }}
