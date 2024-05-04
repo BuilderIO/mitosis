@@ -11,10 +11,10 @@ export default component$(() => {
 
   return (
     <>
-      <div class="bg-primary text-center font-medium text-black px-3 py-2 rounded max-md:text-sm">
+      <div class="bg-primary-dark text-primary-light text-center font-medium px-3 py-3 max-md:py-2.5 rounded max-md:text-sm">
         Welcome to our new site! It's WIP :)
       </div>
-      <header class="text-white sticky top-0 z-10 border-b border-primary border-opacity-50 bg-purple-990">
+      <header class="text-white sticky top-0 z-10 border-y border-primary border-opacity-50 bg-purple-990">
         <div
           class={[
             'p-6 max-md:p-4 flex justify-between items-center transition-all mx-auto container',
