@@ -28,7 +28,6 @@ export const RightSidebar = component$((props: { class: ClassList }) => {
         const rect = el.getBoundingClientRect();
         return rect.top >= 150;
       });
-      console.log('activeIndex', activeIndex);
 
       activeHeadingIndex.value =
         activeIndex > 0 ? activeIndex - 1 : activeIndex === -1 ? contentHeadings.length - 1 : 0;
@@ -51,7 +50,7 @@ export const RightSidebar = component$((props: { class: ClassList }) => {
       icon: TbMessage,
     },
     {
-      href: 'https://qwik.dev/chat',
+      href: 'https://discord.com/invite/SNusEyNGsx',
       text: 'Join our community',
       icon: TbBrandDiscord,
     },
@@ -73,7 +72,7 @@ export const RightSidebar = component$((props: { class: ClassList }) => {
                 <a
                   href={`#${h.id}`}
                   class={[
-                    'block my-4 text-[rgba(255,255,255,10)] hover:opacity-100 hover:text-primary-light transition-colors duration-200 ease-in-out',
+                    'block my-4 text-[rgba(255,255,255,0.7)] hover:opacity-100 hover:text-primary-light transition-colors duration-200 ease-in-out',
                     `${h.level > 2 ? 'ml-4' : null}`,
                     activeHeadingIndex.value === i ? '!text-primary-light' : null,
                   ]}
