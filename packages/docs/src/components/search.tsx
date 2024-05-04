@@ -2,9 +2,11 @@ import { docsearch } from 'meilisearch-docsearch';
 import 'meilisearch-docsearch/css';
 
 import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
 
 export const Search = component$(() => {
   const divRef = useSignal<HTMLDivElement>();
+  const nav = useNavigate();
 
   useVisibleTask$(() => {
     docsearch({
@@ -13,7 +15,18 @@ export const Search = component$(() => {
       apiKey: "86cf79d6194eff5fe82ed4e5afc7d8135a29697572b9979c8dc8fc506fc58d1a", 
       indexUid: "docs-site-crawl",
     });
+
+    (window as any).navigation?.addEventListener("navigate", (event: any) => {
+      if (event.canIntercept) {
+        const url = new URL(event.destination.url);
+        event.intercept({
+          async handler() {
+            await nav(url.pathname);
+          },
+        });
+      }
+    });
   });
 
-  return <div id="searchbar" ref={divRef} />;
+  return <div class="max-sm:hidden" id="searchbar" ref={divRef} />;
 });
