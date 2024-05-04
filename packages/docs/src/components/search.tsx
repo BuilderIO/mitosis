@@ -9,8 +9,9 @@ export const Search = component$(() => {
   const nav = useNavigate();
 
   useVisibleTask$(() => {
+    document.documentElement.setAttribute('data-theme', 'dark');
     docsearch({
-      container: '#searchbar',
+      container: divRef.value!,
       host: 'https://ms-0040a28198ad-9480.lon.meilisearch.io',
       apiKey: '86cf79d6194eff5fe82ed4e5afc7d8135a29697572b9979c8dc8fc506fc58d1a',
       indexUid: 'docs-site-crawl',
@@ -28,5 +29,5 @@ export const Search = component$(() => {
     });
   });
 
-  return <div class="max-sm:hidden" id="searchbar" ref={divRef} />;
+  return <div class="max-sm:hidden -my-2" id="searchbar" ref={divRef} />;
 });

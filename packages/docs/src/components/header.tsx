@@ -24,8 +24,8 @@ export default component$(() => {
           <Link prefetch href="/" title="qwik" class="flex items-center">
             <img
               class="object-contain max-md:max-w-[110px]"
-              width={140}
-              height={50}
+              width={160}
+              height={80}
               src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0fdb9aabd10f4205b3b3b56d7b950239"
             />
           </Link>
