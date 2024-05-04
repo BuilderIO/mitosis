@@ -11,7 +11,7 @@ export default component$(() => {
       <div class="grow prose prose-invert p-8 max-md:px-4 lg:prose-xl min-w-0 max-md:max-w-full mt-8 mb-12 max-w-none">
         <Slot />
       </div>
-      <div class="w-[280px] sticky top-20 shrink-0 ml-8 max-lg:hidden">
+      <div class="w-[240px] sticky top-20 shrink-0 ml-8 max-lg:hidden">
         <RightSidebar class="mt-16 max-md:mt-4" />
       </div>
     </div>
