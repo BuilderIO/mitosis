@@ -9,22 +9,13 @@ import {
   compile,
   defaultCode,
   inputs,
+  languageByFramework,
   outputs,
 } from '~/services/compile';
 
 const defaultTopTab: OutputFramework = 'vue';
 const defaultBottomTab: OutputFramework = 'angular';
 const defaultInputTab = 'jsx';
-
-const languageByFramework: Record<OutputFramework, string> = {
-  react: 'typescript',
-  svelte: 'html',
-  vue: 'html',
-  qwik: 'typescript',
-  angular: 'typescript',
-  mitosis: 'typescript',
-  json: 'json',
-};
 
 const useOutput1 = routeLoader$(async (requestEvent) => {
   const code = (requestEvent.url.searchParams.get('code') as string) || defaultCode;

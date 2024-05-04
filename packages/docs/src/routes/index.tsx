@@ -6,7 +6,7 @@ export default component$(() => {
   return (
     <div class="mt-8 flex flex-col px-4 min-h-[90vh]">
       <img
-        class="aspect-[4] max-w-full w-[500px] mx-auto mt-[10vh] max-md:mt-[5vh]"
+        class="aspect-[4] max-w-full w-[400px] mx-auto mt-[10vh] max-md:mt-[5vh]"
         src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0fdb9aabd10f4205b3b3b56d7b950239"
       />
       <p class="text-xl mx-auto mt-6 text-center">Write components once, run everywhere.</p>

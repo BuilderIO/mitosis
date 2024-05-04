@@ -1,6 +1,6 @@
 import { ClassList, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import type monaco from 'monaco-editor';
-import { defaultCode } from '~/services/compile';
+import { InputSyntax, OutputFramework, defaultCode, languageByFramework } from '~/services/compile';
 import { CodeEditor } from './code-editor';
 
 const vueOutput = `
@@ -108,15 +108,68 @@ export const STYLES = \`
 
 `.trim();
 
+const frameworkExamples: OutputFramework[] = ['vue', 'angular', 'svelte', 'qwik'];
+
 const monacoOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
   lineNumbers: 'off',
   fontSize: 12,
 };
 
+const filenameByFramework: Partial<Record<OutputFramework, string>> = {
+  vue: 'component.vue',
+  angular: 'angular.ts',
+  svelte: 'component.svelte',
+  qwik: 'qwik.tsx',
+};
+
+const imagesByFramework: Partial<Record<OutputFramework, string>> = {
+  vue: 'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F73a54a19443e48fab077e6f21687cd20',
+  angular:
+    'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F20c9914962994f4a9ca3435c90854e9e',
+  svelte:
+    'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffbe9dfb6bb09448ba4fe5feb4bb0e53e',
+  qwik: 'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F8469b183f0dd433aabd0fcd0a373b370',
+  mitosis:
+    'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fa45d49818e464caaab4f4bb416fed861',
+};
+
+const CodePanel = component$(
+  (props: { code: string; isActive: boolean; framework: OutputFramework | InputSyntax }) => {
+    return (
+      <div
+        class={[
+          'absolute inset-0 w-full h-full bg-primary-dark overflow-hidden border-primary border border-opacity-50 rounded-lg pl-0 transition-all duration-500',
+          props.isActive ? 'opacity-100' : 'opacity-0 translate-y-8',
+        ]}
+      >
+        <div class="border-b border-primary border-opacity-50 flex">
+          <div class="flex gap-3 items-center px-3 text-sm py-2 bg-primary bg-opacity-20 self-start border-r border-primary border-opacity-50">
+            <img
+              width={25}
+              height={25}
+              src={imagesByFramework[props.framework as OutputFramework]}
+            />
+            {filenameByFramework[props.framework as OutputFramework] || 'mitosis.jsx'}
+          </div>
+        </div>
+        <div class="relative grow-1 h-full p-4">
+          <CodeEditor
+            options={monacoOptions}
+            readOnly
+            language={languageByFramework[props.framework as OutputFramework] || 'typescript'}
+            class="relative inset-0 w-full h-full"
+            value={props.code}
+          />
+        </div>
+      </div>
+    );
+  },
+);
+
 export const CodeRotator = component$((props: { class: ClassList }) => {
   const currentIndex = useSignal(0);
   const mouseIsOver = useSignal(false);
-  const maxIndex = 4;
+  const maxIndex = frameworkExamples.length;
 
   useVisibleTask$(() => {
     const interval = setInterval(() => {
@@ -127,9 +180,6 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
     return () => clearInterval(interval);
   });
 
-  const inClass = 'opacity-100';
-  const outClass = 'opacity-0 translate-y-8';
-
   return (
     <div class={['flex flex-col max-w-full', props.class]}>
       <img
@@ -139,23 +189,18 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
         src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F298a3d9f6c3743cb8c3e17d209237da8"
       />
       <div class="flex gap-8 max-md:flex-col max-md:mt-8">
-        <div class="w-[400px] max-md:h-[200px] max-w-full h-[400px] bg-primary-dark border-primary border rounded-lg p-4 pl-0 relative">
-          <CodeEditor
-            options={monacoOptions}
-            language="typescript"
-            class="relative inset-0 w-full h-full"
-            value={defaultCode}
-          />
+        <div class="w-[450px] max-md:h-[200px] max-w-full h-[400px] p-4 pl-0 relative">
+          <CodePanel code={defaultCode} isActive framework="mitosis" />
         </div>
 
         <img
-        width={30}
-        height={80}
-        class="object-contain mx-auto md:hidden -my-4"
-        src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F66021c443ad24d858f16cb5c1ea46961"
-      />
+          width={30}
+          height={80}
+          class="object-contain mx-auto md:hidden -my-4"
+          src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F66021c443ad24d858f16cb5c1ea46961"
+        />
         <div
-          class="relative w-[400px] max-md:h-[200px] max-w-full h-[400px]"
+          class="relative w-[450px] max-md:h-[200px] max-w-full h-[400px]"
           onMouseEnter$={() => {
             mouseIsOver.value = true;
           }}
@@ -163,62 +208,21 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
             mouseIsOver.value = false;
           }}
         >
-          <div
-            class={[
-              'absolute inset-0 w-full h-full bg-primary-dark border-primary border rounded-lg p-4 pl-0 transition-all duration-500',
-              currentIndex.value === 0 ? inClass : outClass,
-            ]}
-          >
-            <CodeEditor
-              options={monacoOptions}
-              readOnly
-              language="html"
-              class="relative inset-0 w-full h-full"
-              value={vueOutput}
+          {frameworkExamples.map((framework, index) => (
+            <CodePanel
+              code={
+                framework === 'vue'
+                  ? vueOutput
+                  : framework === 'angular'
+                  ? angularOutput
+                  : framework === 'svelte'
+                  ? svelteOutput
+                  : qwikOutput
+              }
+              isActive={currentIndex.value === index}
+              framework={framework}
             />
-          </div>
-          <div
-            class={[
-              'absolute inset-0 w-full h-full bg-primary-dark border-primary border rounded-lg p-4 pl-0 transition-all duration-500',
-              currentIndex.value === 1 ? inClass : outClass,
-            ]}
-          >
-            <CodeEditor
-              options={monacoOptions}
-              readOnly
-              language="typescript"
-              class="relative inset-0 w-full h-full"
-              value={angularOutput}
-            />
-          </div>
-          <div
-            class={[
-              'absolute inset-0 w-full h-full bg-primary-dark border-primary border rounded-lg p-4 pl-0 transition-all duration-500',
-              currentIndex.value === 2 ? inClass : outClass,
-            ]}
-          >
-            <CodeEditor
-              options={monacoOptions}
-              readOnly
-              language="html"
-              class="relative inset-0 w-full h-full"
-              value={svelteOutput}
-            />
-          </div>
-          <div
-            class={[
-              'absolute inset-0 w-full h-full bg-primary-dark border-primary border rounded-lg p-4 pl-0 transition-all duration-500',
-              currentIndex.value === 3 ? inClass : outClass,
-            ]}
-          >
-            <CodeEditor
-              options={monacoOptions}
-              readOnly
-              language="typescript"
-              class="relative inset-0 w-full h-full"
-              value={qwikOutput}
-            />
-          </div>
+          ))}
         </div>
       </div>
     </div>

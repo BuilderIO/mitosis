@@ -15,6 +15,16 @@ export const outputs: OutputFramework[] = [
 export type InputSyntax = 'jsx' | 'svelte';
 export const inputs: InputSyntax[] = ['jsx', 'svelte'];
 
+export const languageByFramework: Record<OutputFramework, string> = {
+  react: 'typescript',
+  svelte: 'html',
+  vue: 'html',
+  qwik: 'typescript',
+  angular: 'typescript',
+  mitosis: 'typescript',
+  json: 'json',
+};
+
 const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
   const {
     componentToSvelte,
