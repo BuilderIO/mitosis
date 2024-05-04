@@ -40,6 +40,8 @@ npm create @builder.io/mitosis@latest
 
 Once completed, make sure to read the `README.md` generated in your new project. It will explain the structure of your project, and provide a walkthrough on how to build/test your components.
 
+Read the full [getting started docs](https://mitosis.builder.io/docs/quickstart/) for more.
+
 ## Resources
 
 - [Documentation](https://mitosis.builder.io/docs)
