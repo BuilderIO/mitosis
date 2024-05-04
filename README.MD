@@ -1,4 +1,8 @@
-<p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F17d87de923ff4b3e809024532d023981"></p>
+<br>
+<p align="center"><picture>
+         <source media="(prefers-color-scheme: dark)" srcset="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F44413839f214431290930e447572b843">
+         <img width="300" alt="Mitosis logo" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F570f689e59824cb78cf5773350ab4144">
+       </picture></p>
 
 <p align="center">
   Write components once, compile to every framework
@@ -14,7 +18,7 @@
 
 ## Overview
 
-Mitosis is a framework that allows you to write components once and compile them to every major frontend framework. It provides a unified development experience across all frameworks, enabling you to build components in a single codebase and compile them to React, Vue, Angular, Svelte, Solid, Alpine, and Qwik, and more.
+Mitosis provides a unified development experience across all frameworks, enabling you to build components in a single codebase and compile them to React, Vue, Angular, Svelte, Solid, Alpine, and Qwik, and more.
 
 Using Mitosis, you can:
 
