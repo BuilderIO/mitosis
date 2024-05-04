@@ -20,7 +20,7 @@
 
 ## Overview
 
-Mitosis provides a unified development experience across all frameworks, enabling you to build components in a single codebase and compile them to React, Vue, Angular, Svelte, Solid, Alpine, and Qwik, and more.
+Mitosis provides a unified development experience across all frameworks, enabling you to build components in a single codebase and compile them to React, Vue, Angular, Svelte, Solid, Alpine, Qwik, and more.
 
 Using Mitosis, you can:
 
