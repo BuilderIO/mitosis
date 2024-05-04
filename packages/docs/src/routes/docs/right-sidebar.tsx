@@ -1,58 +1,6 @@
-import { component$, useStyles$ } from '@builder.io/qwik';
+import { ClassList, component$ } from '@builder.io/qwik';
 import { useContent, useLocation } from '@builder.io/qwik-city';
 import { TbBrandDiscord, TbEdit, TbMessage } from '@qwikest/icons/tablericons';
-import styles from './on-this-page.css?inline';
-
-const QWIK_GROUP = [
-  'components',
-  'concepts',
-  'faq',
-  'getting-started',
-  'think-qwik',
-  'deprecated-features',
-];
-
-const QWIK_ADVANCED_GROUP = [
-  'containers',
-  'custom-build-dir',
-  'dollar',
-  'eslint',
-  'library',
-  'optimizer',
-  'modules-prefetching',
-  'qrl',
-  'qwikloader',
-  'vite',
-];
-
-const QWIKCITY_GROUP = [
-  'action',
-  'api',
-  'caching',
-  'endpoints',
-  'env-variables',
-  'guides',
-  'html-attributes',
-  'layout',
-  'middleware',
-  'pages',
-  'project-structure',
-  'qwikcity',
-  'route-loader',
-  'routing',
-  'server$',
-  'troubleshooting',
-  'validator',
-];
-const QWIKCITY_ADVANCED_GROUP = [
-  'content-security-policy',
-  'menu',
-  'request-handling',
-  'routing',
-  'sitemaps',
-  'speculative-module-fetching',
-  'static-assets',
-];
 
 // Transform:
 //   /docs/overview/ to 'overview'
@@ -62,8 +10,7 @@ const getGithubFilePath = (path: string): string => {
   return path.split('/').slice(2, -1).join('/');
 };
 
-export const OnThisPage = component$(() => {
-  useStyles$(styles);
+export const RightSidebar = component$((props: { class: ClassList }) => {
   const { headings } = useContent();
   const contentHeadings = headings?.filter((h) => h.level <= 3) || [];
 
@@ -94,7 +41,7 @@ export const OnThisPage = component$(() => {
   ];
 
   return (
-    <aside class="on-this-page text-sm overflow-y-auto hidden xl:block">
+    <aside class={['on-this-page text-sm overflow-y-auto hidden xl:block', props.class]}>
       {contentHeadings.length > 0 ? (
         <>
           <h6>On This Page</h6>
