@@ -12,13 +12,13 @@ export default component$(() => {
       <div class="flex mx-auto mt-12 mb-[20vh]">
         <Link
           href="/docs/quickstart"
-          class="btn bg-primary hover:bg-purple-500 text-black py-2 px-4 font-medium rounded"
+          class="btn bg-primary hover:bg-primary-light text-black py-2 px-4 font-medium rounded"
         >
           Get Started
         </Link>
         <Link
           href="/playground"
-          class="btn ml-4 border border-primary hover:bg-purple-700 text-white font-medium py-2 px-4 rounded"
+          class="btn ml-4 border border-primary hover:bg-primary hover:bg-opacity-20 text-white font-medium py-2 px-4 rounded"
         >
           Playground
         </Link>
