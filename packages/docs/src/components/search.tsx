@@ -16,6 +16,7 @@ export const Search = component$(() => {
       host: 'https://ms-0040a28198ad-9480.lon.meilisearch.io',
       apiKey: '86cf79d6194eff5fe82ed4e5afc7d8135a29697572b9979c8dc8fc506fc58d1a',
       indexUid: 'docs-site-crawl',
+      hotKeys: ['/'],
     });
 
     (window as any).navigation?.addEventListener('navigate', (event: any) => {

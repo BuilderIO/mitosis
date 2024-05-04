@@ -193,6 +193,9 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
   const maxIndex = frameworkExamples.length;
   const isThrottling = useSignal(false);
   const throttleTimeout = useSignal(0);
+  const isLoaded = useSignal(false);
+  const makeVisible = useSignal(false);
+
   const outputs = useStore({
     vue: vueOutput,
     angular: angularOutput,
@@ -230,6 +233,13 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
   });
 
   useVisibleTask$(() => {
+    isLoaded.value = true;
+    setTimeout(() => {
+      makeVisible.value = true;
+    }, 100);
+  });
+
+  useVisibleTask$(() => {
     const interval = setInterval(() => {
       const skip = mouseIsOver.value;
       if (skip) return;
@@ -238,8 +248,14 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
     return () => clearInterval(interval);
   });
 
-  return (
-    <div class={['flex flex-col max-w-full', props.class]}>
+  return !isLoaded.value ? null : (
+    <div
+      class={[
+        'flex flex-col max-w-full transition-all duration-700',
+        makeVisible.value ? 'opacity-100' : 'opacity-0 translate-y-4',
+        props.class,
+      ]}
+    >
       <img
         width={100}
         height={80}
