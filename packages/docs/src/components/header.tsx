@@ -30,8 +30,10 @@ export default component$(() => {
             />
           </Link>
           <ul class="flex space-x-8 max-md:space-x-6 font-medium items-center">
-            <Search />
-            <li class="flex gap-4 items-center">
+            <li>
+              <Search />
+            </li>
+            <li class="flex gap-4 items-center max-sm:hidden">
               <Link
                 class="hover:text-primary-light text-xl"
                 target="_blank"

@@ -31,7 +31,7 @@ export const Search = component$(() => {
   });
 
   return (
-    <div class="max-sm:hidden -my-2" id="searchbar" ref={divRef}>
+    <div class="-my-2" id="searchbar" ref={divRef}>
       <button type="button" class="docsearch-btn" aria-label="Search">
         <span class="docsearch-btn-icon-container">
           <svg
@@ -43,14 +43,11 @@ export const Search = component$(() => {
           >
             <path
               fill="currentColor"
-              d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z"></path>
+              d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z"
+            ></path>
           </svg>
         </span>
         <span class="docsearch-btn-placeholder"> Search</span>
-        <span class="docsearch-btn-keys">
-          <kbd class="docsearch-btn-key">⌘</kbd>
-          <kbd class="docsearch-btn-key">K</kbd>
-        </span>
       </button>
     </div>
   );
