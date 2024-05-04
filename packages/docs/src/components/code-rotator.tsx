@@ -159,7 +159,7 @@ const CodePanel = component$(
       <div
         class={[
           'absolute inset-0 w-full h-full bg-primary-dark overflow-hidden border-primary border border-opacity-50 rounded-lg pl-0 transition-all duration-500',
-          props.isActive ? 'opacity-100' : 'opacity-0 translate-y-8',
+          props.isActive ? 'opacity-100' : 'opacity-0 translate-y-8 pointer-events-none',
         ]}
       >
         <div class="border-b border-primary border-opacity-50 flex">
