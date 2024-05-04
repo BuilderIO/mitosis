@@ -33,12 +33,13 @@ export default component$(() => {
   const location = useLocation();
 
   const isPlayground = location.url.pathname === '/playground/';
+  const isHome = location.url.pathname === '/';
 
   return (
     <>
       <div class={['flex flex-col', isPlayground ? 'min-h-screen' : 'min-h-[80vh]']}>
         <Header />
-        <main class={[isPlayground ? 'grow flex flex-col' : 'container mx-auto px-4']}>
+        <main class={[isPlayground || isHome ? 'grow flex flex-col' : 'container mx-auto px-4']}>
           <Slot />
         </main>
       </div>

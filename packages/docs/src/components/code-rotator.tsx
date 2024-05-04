@@ -157,7 +157,7 @@ const CodePanel = component$(
             options={monacoOptions}
             readOnly
             language={languageByFramework[props.framework as OutputFramework] || 'typescript'}
-            class="relative inset-0 w-full h-full"
+            class="relative inset-0 w-full h-full -ml-4"
             value={props.code}
           />
         </div>
@@ -189,7 +189,7 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
         src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F298a3d9f6c3743cb8c3e17d209237da8"
       />
       <div class="flex gap-8 max-md:flex-col max-md:mt-8">
-        <div class="w-[450px] max-md:h-[200px] max-w-full h-[400px] p-4 pl-0 relative">
+        <div class="w-[450px] max-md:h-[290px] max-w-full h-[400px] p-4 pl-0 relative">
           <CodePanel code={defaultCode} isActive framework="mitosis" />
         </div>
 
@@ -200,7 +200,7 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
           src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F66021c443ad24d858f16cb5c1ea46961"
         />
         <div
-          class="relative w-[450px] max-md:h-[200px] max-w-full h-[400px]"
+          class="relative w-[450px] max-md:h-[290px] max-w-full h-[400px]"
           onMouseEnter$={() => {
             mouseIsOver.value = true;
           }}
