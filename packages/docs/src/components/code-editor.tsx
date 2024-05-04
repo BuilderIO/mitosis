@@ -56,7 +56,6 @@ export const CodeEditor = component$((props: CodeEditorProps) => {
         renderLineHighlightOnlyWhenFocus: true,
         renderLineHighlight: 'none',
         selectionHighlight: false,
-        scrollBeyondLastLine: false,
         scrollbar: { vertical: 'hidden' },
         minimap: {
           enabled: false,
