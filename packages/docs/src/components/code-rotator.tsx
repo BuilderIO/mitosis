@@ -152,7 +152,6 @@ const CodePanel = component$(
     code: string;
     isActive: boolean;
     framework: OutputFramework | InputSyntax;
-    spoofHtml?: boolean;
     readOnly?: boolean;
     onChange$?: PropFunction<(code: string) => void>;
   }) => {
@@ -174,18 +173,14 @@ const CodePanel = component$(
           </div>
         </div>
         <div class="relative grow-1 h-full p-4">
-          {props.spoofHtml ? (
-            <div dangerouslySetInnerHTML={placeholderHtml} />
-          ) : (
-            <CodeEditor
-              options={monacoOptions}
-              onChange$={props.onChange$}
-              readOnly={props.readOnly}
-              language={languageByFramework[props.framework as OutputFramework] || 'typescript'}
-              class="relative inset-0 w-full h-full -ml-4"
-              value={props.code}
-            />
-          )}
+          <CodeEditor
+            options={monacoOptions}
+            onChange$={props.onChange$}
+            readOnly={props.readOnly}
+            language={languageByFramework[props.framework as OutputFramework] || 'typescript'}
+            class="relative inset-0 w-full h-full -ml-4"
+            value={props.code}
+          />
         </div>
       </div>
     );
@@ -200,7 +195,6 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
   const throttleTimeout = useSignal(0);
   const isLoaded = useSignal(false);
   const makeVisible = useSignal(false);
-  const spoofInputBox = useSignal(false);
 
   const outputs = useStore({
     vue: vueOutput,
@@ -240,11 +234,12 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
 
   useVisibleTask$(() => {
     isLoaded.value = true;
-    spoofInputBox.value = false;
     setTimeout(() => {
       makeVisible.value = true;
     }, 100);
+  });
 
+  useVisibleTask$(() => {
     const interval = setInterval(() => {
       const skip = mouseIsOver.value;
       if (skip) return;
@@ -253,15 +248,18 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
     return () => clearInterval(interval);
   });
 
-  return (
-    <div class={['flex flex-col max-w-full', props.class]}>
+  return !isLoaded.value ? null : (
+    <div
+      class={[
+        'flex flex-col max-w-full transition-all duration-700',
+        makeVisible.value ? 'opacity-100' : 'opacity-0 translate-y-2',
+        props.class,
+      ]}
+    >
       <img
         width={100}
         height={80}
-        class={[
-          'object-contain my-4 mx-auto max-md:hidden transition-all duration-700 delay-300',
-          makeVisible.value ? 'opacity-100' : 'opacity-0 translate-y-2',
-        ]}
+        class="object-contain my-4 mx-auto max-md:hidden"
         src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F298a3d9f6c3743cb8c3e17d209237da8"
       />
       <div class="flex gap-8 max-md:flex-col max-md:mt-8">
@@ -270,7 +268,6 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
             onChange$={(code) => throttledCompile(code)}
             code={defaultCode}
             isActive
-            spoofHtml={spoofInputBox.value}
             framework="mitosis"
           />
         </div>
@@ -283,7 +280,7 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
         />
         <div
           class={[
-            'relative w-[450px] max-md:h-[290px] max-w-full h-[400px] transition-all duration-500',
+            'relative w-[450px] max-md:h-[290px] max-w-full h-[400px] transition-all duration-500 delay-200',
             makeVisible.value ? 'opacity-100' : 'opacity-0 translate-y-2',
           ]}
           onMouseEnter$={() => {
@@ -293,22 +290,16 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
             mouseIsOver.value = false;
           }}
         >
-          {isLoaded.value &&
-            frameworkExamples.map((framework, index) => (
-              <CodePanel
-                readOnly
-                code={(outputs as any)[framework as OutputFramework]}
-                isActive={currentIndex.value === index}
-                framework={framework}
-              />
-            ))}
+          {frameworkExamples.map((framework, index) => (
+            <CodePanel
+              readOnly
+              code={(outputs as any)[framework as OutputFramework]}
+              isActive={currentIndex.value === index}
+              framework={framework}
+            />
+          ))}
         </div>
       </div>
     </div>
   );
 });
-
-// SSR hack for monaco. Kinda works!
-const placeholderHtml = `
- <img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F29855c2e7a794cc69ec942b44dd2bb5f" />
-`;

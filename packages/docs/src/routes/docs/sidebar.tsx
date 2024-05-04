@@ -8,7 +8,7 @@ const SidebarLink = component$((props: { href: string }) => {
     <Link
       href={props.href}
       class={[
-        'p-2 rounded hover:text-primary-light transition-colors duration-200 ease-in-out',
+        'p-1.5 hover:text-primary-light transition-colors duration-200 ease-in-out',
         {
           [activeClasses]: location.url.pathname === props.href,
         },
@@ -24,7 +24,7 @@ export default component$((props: { class?: ClassList }) => {
     <div
       class={[
         props.class,
-        'flex flex-col gap-2 p-4 sticky max-md:static top-0 mt-4 min-w-[200px] max-md:w-full',
+        'flex flex-col gap-2 p-4 max-md:static mt-4 min-w-[200px] max-md:w-full overflow-y-auto max-h-full',
       ]}
     >
       <SidebarLink href="/docs/overview/">Overview</SidebarLink>

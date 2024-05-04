@@ -41,14 +41,20 @@ export const RightSidebar = component$((props: { class: ClassList }) => {
   ];
 
   return (
-    <aside class={['on-this-page text-sm overflow-y-auto hidden xl:block', props.class]}>
+    <aside class={['text-sm overflow-y-auto max-h-full', props.class]}>
       {contentHeadings.length > 0 ? (
         <>
-          <h6>On This Page</h6>
-          <ul class="px-2 font-medium text-[var(--interactive-text-color)]">
+          <h6 class="font-medium uppercase text-xs">On This Page</h6>
+          <ul class="">
             {contentHeadings.map((h) => (
               <li key={h.id}>
-                <a href={`#${h.id}`} class={`${h.level > 2 ? 'ml-4' : null} on-this-page-item`}>
+                <a
+                  href={`#${h.id}`}
+                  class={[
+                    'block my-4 opacity-70 hover:opacity-100 hover:text-primary-light transition-colors duration-200 ease-in-out',
+                    `${h.level > 2 ? 'ml-4' : null}`,
+                  ]}
+                >
                   {h.text}
                 </a>
               </li>
@@ -57,13 +63,20 @@ export const RightSidebar = component$((props: { class: ClassList }) => {
         </>
       ) : null}
 
-      <h6>More</h6>
-      <ul class="px-2 font-medium text-[var(--interactive-text-color)]">
+      <h6 class="font-medium uppercase text-xs mt-12">More options</h6>
+      <ul>
         {OnThisPageMore.map((el, index) => {
           return (
-            <li class={`rounded-lg`} key={`more-items-on-this-page-${index}`}>
-              <a class="more-item" href={el.href} rel="noopener" target="_blank">
-                <el.icon width={20} height={20} />
+            <li>
+              <a
+                class="flex gap-2 items-center my-4 hover:text-primary-light transition-colors duration-200 ease-in-out"
+                href={el.href}
+                rel="noopener"
+                target="_blank"
+              >
+                <div class="text-2xl">
+                  <el.icon />
+                </div>
                 <span>{el.text}</span>
               </a>
             </li>
