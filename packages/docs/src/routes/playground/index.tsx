@@ -27,14 +27,12 @@ const languageByFramework: Record<OutputFramework, string> = {
 
 const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
   const {
-    parseJsx,
     componentToSvelte,
     componentToVue,
     componentToReact,
     componentToQwik,
     componentToAngular,
     componentToMitosis,
-    parseSvelte,
   } = await import('@builder.io/mitosis');
 
   const options = {};
@@ -61,16 +59,7 @@ const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
 
 export const compile = server$(
   async (code: string, output: OutputFramework, inputSyntax: InputSyntax) => {
-    const {
-      parseJsx,
-      componentToSvelte,
-      componentToVue,
-      componentToReact,
-      componentToQwik,
-      componentToAngular,
-      componentToMitosis,
-      parseSvelte,
-    } = await import('@builder.io/mitosis');
+    const { parseJsx, parseSvelte } = await import('@builder.io/mitosis');
     const parsed = inputSyntax === 'svelte' ? await parseSvelte(code) : parseJsx(code);
 
     const outputGenerator = await getOutputGenerator({ output });
@@ -96,7 +85,7 @@ export default function MyComponent(props) {
         value={name}
         onChange={(event) => setName(event.target.value)}
       />
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      Hello! I can run natively in React, Vue, Svelte, Qwik, and many more frameworks!
     </div>
   );
 }
@@ -229,9 +218,9 @@ export default component$(() => {
   });
 
   return (
-    <div class="relative flex gap-4 grow items-stretch max-md:flex-col">
+    <div class="relative flex gap-4 grow items-stretch max-md:flex-col bg-primary-dark">
       <div class="w-full flex flex-col max-md:h-[50vh]">
-        <div class="flex items-center gap-2 mx-4 my-4 mb-0 min-h-[50px]">
+        <div class="flex items-center gap-2 mx-4 my-2 mb-4 min-h-[50px]">
           <h3 class="ml-4 text-lg">Input</h3>
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
@@ -270,8 +259,8 @@ export default component$(() => {
           )}
         </div>
       </div>
-      <div class="flex gap-4 flex-col w-full h-[90vh] max-md:h-[50vh]">
-        <div class="flex items-center gap-2 mx-4 my-4 mb-0 min-h-[50px]">
+      <div class="flex gap-4 flex-col w-full h-[90vh] max-md:h-[50vh] border-l border-primary border-opacity-50 max-md:border-l-0 max-md:border-t">
+        <div class="flex items-center gap-2 mx-4 my-2 mb-0 min-h-[50px]">
           <h3 class="ml-4 text-lg">Output</h3>
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
@@ -295,7 +284,7 @@ export default component$(() => {
             />
           )}
         </div>
-        <div class="min-h-[50px] max-md:hidden flex items-center">
+        <div class="min-h-[50px] max-md:hidden flex items-center border-primary border-opacity-50 border-t -mt-4 pt-4">
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
             // server side
