@@ -48,6 +48,10 @@ export const Search = component$(() => {
           </svg>
         </span>
         <span class="docsearch-btn-placeholder"> Search</span>
+        <span class="docsearch-btn-keys">
+          <kbd class="docsearch-btn-key">⌘</kbd>
+          <kbd class="docsearch-btn-key">K</kbd>
+        </span>
       </button>
     </div>
   );
