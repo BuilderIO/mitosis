@@ -21,8 +21,6 @@ export const RouterHead = component$(() => {
         content="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe811f4444d1146c9932e02412d31b748"
       />
 
-      <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-
       {loc.url.pathname.startsWith('/docs') && (
         <link
           rel="stylesheet"
