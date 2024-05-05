@@ -47,39 +47,6 @@ export default function MyComponent() {
 }
 ```
 
-## Styling
-
-### `css`
-
-Styling is done via the `css` prop on dom elements and components. It takes CSS properties in `camelCase` (like the `style` object on DOM elements) and properties as valid CSS strings
-
-```tsx
-export default function CSSExample() {
-  return <div css={{ marginTop: '10px', color: 'red' }} />;
-}
-```
-
-You can also include media queries as keys, with values as style objects
-
-```tsx
-export default function ResponsiveExample() {
-  return (
-    <div
-      css={{
-        marginTop: '10px',
-        '@media (max-width: 500px)': {
-          marginTop: '0px',
-        },
-      }}
-    />
-  );
-}
-```
-
-## `class` vs `className`
-
-Mitosis prefers that you use `class` to provide class name strings, but it also allows you to provide `className`. If both are used in the same component, it will attempt to merge the two. We recommend that you only use one (preferrably `class`, as that's what is internally preferred by Mitosis).
-
 ## State
 
 State is provided by the `useStore` hook. Currently, the name of this value must be `state` like below:
@@ -126,6 +93,23 @@ export default function MyComponent(props) {
 
 Components automatically update when state values change
 
+### useState
+
+Alternatlively, you can use the `useState` hook to create a single piece of state
+
+```tsx
+export default function MyComponent() {
+  const [name, setName] = useState('Steve');
+
+  return (
+    <div>
+      <h2>Hello, {name}</h2>
+      <input onInput={(event) => setName(event.target.value)} value={name} />
+    </div>
+  );
+}
+```
+
 ## Methods
 
 The state object can also take methods.
@@ -147,6 +131,43 @@ export default function MyComponent() {
   );
 }
 ```
+
+## Styling
+
+### `css`
+
+Styling is done via the `css` prop on dom elements and components. It takes CSS properties in `camelCase` (like the `style` object on DOM elements) and properties as valid CSS strings
+
+```tsx
+export default function CSSExample() {
+  return <div css={{ marginTop: '10px', color: 'red' }} />;
+}
+```
+
+You can also include media queries as keys, with values as style objects
+
+```tsx
+export default function ResponsiveExample() {
+  return (
+    <div
+      css={{
+        marginTop: '10px',
+        '@media (max-width: 500px)': {
+          marginTop: '0px',
+        },
+      }}
+    />
+  );
+}
+```
+
+You can also use the [useStyle](/docs/hooks#useStyle) hook to add styles to a component
+
+```tsx
+
+## `class` vs `className`
+
+Mitosis prefers that you use `class` to provide class name strings, but it also allows you to provide `className`. If both are used in the same component, it will attempt to merge the two. We recommend that you only use one (preferrably `class`, as that's what is internally preferred by Mitosis).
 
 ## Control flow
 
