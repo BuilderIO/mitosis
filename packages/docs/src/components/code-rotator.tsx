@@ -306,14 +306,14 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
         </div>
 
         <img
-          width={30}
-          height={80}
-          class="object-contain mx-auto md:hidden -my-4"
+          width={25}
+          height={60}
+          class="object-contain mx-auto md:hidden mt-16 -mb-4"
           src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F66021c443ad24d858f16cb5c1ea46961"
         />
         <div
           class={[
-            'relative w-[450px] max-md:h-[290px] max-w-full transition-all duration-500 delay-200',
+            'relative w-[450px] min-h-[540px] max-md:h-[290px] max-w-full transition-all duration-500 delay-200',
             makeVisible.value ? 'opacity-100' : 'opacity-0 translate-y-2',
           ]}
           onMouseEnter$={() => {
