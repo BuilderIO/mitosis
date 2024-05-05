@@ -181,10 +181,10 @@ const CodePanel = component$(
           useIndexInsteadOfActive && isNextUp
             ? 'opacity-0 blur-sm translate-y-1 -translate-x-1 z-10 scale-[0.95] pointer-events-none'
             : useIndexInsteadOfActive && wasLastUp
-            ? 'opacity-0 blur-sm -translate-y-1 translate-x-1 z-30 scale-[1.03] pointer-events-none'
+            ? 'opacity-0 blur-sm -translate-y-1 translate-x-1 z-20 scale-[1.03] pointer-events-none'
             : '',
           props.isActive
-            ? 'opacity-100 z-40'
+            ? 'opacity-100 z-30'
             : 'z-0 opacity-0 translate-y-2 -translate-x-2 pointer-events-none',
           props.class,
         ]}
