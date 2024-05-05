@@ -8,6 +8,7 @@ import {
   useVisibleTask$,
 } from '@builder.io/qwik';
 import type monaco from 'monaco-editor';
+import Prism from 'prismjs';
 import {
   InputSyntax,
   OutputFramework,
@@ -16,6 +17,20 @@ import {
   languageByFramework,
 } from '~/services/compile';
 import { CodeEditor } from './code-editor';
+
+// Set to global so that prism language plugins can find it.
+const _global =
+  (typeof globalThis !== 'undefined' && globalThis) ||
+  (typeof global !== 'undefined' && global) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof this !== 'undefined' && this) ||
+  (typeof window !== 'undefined' && window);
+(_global as any).PRISM = Prism;
+
+import 'prismjs/components/prism-jsx';
+import 'prismjs/components/prism-tsx';
+
+const INTERACTIVE = false;
 
 const vueOutput = `
 <template>
@@ -154,12 +169,15 @@ const CodePanel = component$(
     framework: OutputFramework | InputSyntax;
     readOnly?: boolean;
     onChange$?: PropFunction<(code: string) => void>;
+    class?: ClassList;
   }) => {
+    const language = languageByFramework[props.framework as OutputFramework] || 'typescript';
     return (
       <div
         class={[
-          'absolute inset-0 w-full h-full bg-primary-dark overflow-hidden border-primary border border-opacity-50 rounded-lg pl-0 transition-all duration-500',
+          'bg-primary-dark overflow-hidden border-primary border border-opacity-50 rounded-lg pl-0 transition-all duration-500',
           props.isActive ? 'opacity-100' : 'opacity-0 translate-y-8 pointer-events-none',
+          props.class,
         ]}
       >
         <div class="border-b border-primary border-opacity-50 flex">
@@ -173,14 +191,27 @@ const CodePanel = component$(
           </div>
         </div>
         <div class="relative grow-1 h-full p-4">
-          <CodeEditor
-            options={monacoOptions}
-            onChange$={props.onChange$}
-            readOnly={props.readOnly}
-            language={languageByFramework[props.framework as OutputFramework] || 'typescript'}
-            class="relative inset-0 w-full h-full -ml-4"
-            value={props.code}
-          />
+          {INTERACTIVE ? (
+            <CodeEditor
+              options={monacoOptions}
+              onChange$={props.onChange$}
+              readOnly={props.readOnly}
+              language={language}
+              class="relative inset-0 w-full h-full -ml-4"
+              value={props.code}
+            />
+          ) : (
+            <div class="hp-prose prose prose-invert">
+              <pre
+                class="-m-2 !text-xs"
+                dangerouslySetInnerHTML={Prism.highlight(
+                  props.code,
+                  Prism.languages[language === 'typescript' ? 'tsx' : language],
+                  language === 'typescript' ? 'tsx' : language,
+                )}
+              />
+            </div>
+          )}
         </div>
       </div>
     );
@@ -193,8 +224,8 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
   const maxIndex = frameworkExamples.length;
   const isThrottling = useSignal(false);
   const throttleTimeout = useSignal(0);
-  const isLoaded = useSignal(false);
-  const makeVisible = useSignal(false);
+  const isLoaded = useSignal(!INTERACTIVE);
+  const makeVisible = useSignal(!INTERACTIVE);
 
   const outputs = useStore({
     vue: vueOutput,
@@ -232,12 +263,14 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
     isThrottling.value = false;
   });
 
-  useVisibleTask$(() => {
-    isLoaded.value = true;
-    setTimeout(() => {
-      makeVisible.value = true;
-    }, 100);
-  });
+  if (INTERACTIVE) {
+    useVisibleTask$(() => {
+      isLoaded.value = true;
+      setTimeout(() => {
+        makeVisible.value = true;
+      }, 100);
+    });
+  }
 
   useVisibleTask$(() => {
     const interval = setInterval(() => {
@@ -263,7 +296,7 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
         src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F298a3d9f6c3743cb8c3e17d209237da8"
       />
       <div class="flex gap-8 max-md:flex-col max-md:mt-8">
-        <div class="w-[450px] max-md:h-[290px] max-w-full h-[400px] p-4 pl-0 relative">
+        <div class="w-[450px] max-md:h-[290px] max-w-full relative">
           <CodePanel
             onChange$={(code) => throttledCompile(code)}
             code={defaultCode}
@@ -280,11 +313,13 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
         />
         <div
           class={[
-            'relative w-[450px] max-md:h-[290px] max-w-full h-[400px] transition-all duration-500 delay-200',
+            'relative w-[450px] max-md:h-[290px] max-w-full transition-all duration-500 delay-200',
             makeVisible.value ? 'opacity-100' : 'opacity-0 translate-y-2',
           ]}
           onMouseEnter$={() => {
-            mouseIsOver.value = true;
+            if (INTERACTIVE) {
+              mouseIsOver.value = true;
+            }
           }}
           onMouseLeave$={() => {
             mouseIsOver.value = false;
@@ -292,6 +327,7 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
         >
           {frameworkExamples.map((framework, index) => (
             <CodePanel
+              class="absolute w-full"
               readOnly
               code={(outputs as any)[framework as OutputFramework]}
               isActive={currentIndex.value === index}
