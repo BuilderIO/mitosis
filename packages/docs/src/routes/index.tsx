@@ -21,11 +21,13 @@ export default component$(() => {
         <div class="flex mx-auto mt-12">
           <Link
             href="/docs/quickstart"
+            prefetch
             class="btn bg-primary hover:bg-primary-light text-black py-2 px-4 font-medium rounded"
           >
             Get Started
           </Link>
           <Link
+            prefetch
             href="/playground"
             class="btn ml-4 border border-primary hover:bg-primary hover:bg-opacity-20 text-white font-medium py-2 px-4 rounded"
           >
