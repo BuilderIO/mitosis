@@ -44,5 +44,10 @@ export default component$(() => {
 
 export const head: DocumentHead = {
   title: 'Mitosis - Write components once, run everywhere.',
-  meta: [],
+  meta: [
+    {
+      name: 'description',
+      content: 'Build multi-framework design systems with confidence.',
+    },
+  ],
 };

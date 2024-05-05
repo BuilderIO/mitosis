@@ -19,12 +19,13 @@ export const Search = component$((props: { class?: ClassList }) => {
       hotKeys: ['/'],
     });
 
+    // Don't allow server side routing, catch it here and navigate client side.
     (window as any).navigation?.addEventListener('navigate', (event: any) => {
       if (event.canIntercept) {
         const url = new URL(event.destination.url);
         event.intercept({
           async handler() {
-            await nav(url.pathname);
+            await nav(url.pathname + url.search + url.hash);
           },
         });
       }

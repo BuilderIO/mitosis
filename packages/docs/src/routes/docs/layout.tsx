@@ -21,7 +21,7 @@ export default component$(() => {
             nav(url.href);
           }
         }}
-        class="grow prose prose-invert p-8 max-md:px-4 lg:prose-xl min-w-0 max-md:max-w-full mt-8 max-md:mt-0 mb-12 max-w-none overflow-x-hidden"
+        class="grow prose prose-invert p-8 max-md:px-4 lg:prose-xl min-w-0 max-md:max-w-full mt-8 max-md:mt-0 mb-12 max-w-none max-md:overflow-x-hidden"
       >
         <Slot />
       </div>

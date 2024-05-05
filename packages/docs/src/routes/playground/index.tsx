@@ -19,8 +19,14 @@ const defaultInputTab = 'jsx';
 
 const useOutput1 = routeLoader$(async (requestEvent) => {
   const code = (requestEvent.url.searchParams.get('code') as string) || defaultCode;
-  const outputTab = requestEvent.url.searchParams.get('outputTab') as OutputFramework;
-  const inputTab = requestEvent.url.searchParams.get('inputTab') as InputSyntax;
+  let outputTab = requestEvent.url.searchParams.get('outputTab') as OutputFramework;
+  if (!outputs.includes(outputTab)) {
+    outputTab = defaultTopTab;
+  }
+  let inputTab = requestEvent.url.searchParams.get('inputTab') as InputSyntax;
+  if (!inputs.includes(inputTab)) {
+    inputTab = defaultInputTab;
+  }
 
   const output = await compile(
     code || defaultCode,
