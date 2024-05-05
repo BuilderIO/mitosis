@@ -46,8 +46,8 @@ Read the full [getting started docs](https://mitosis.builder.io/docs/quickstart/
 
 - [Documentation](https://mitosis.builder.io/docs)
 - [Playground](https://mitosis.builder.io/playground)
+- [Figma integration](https://mitosis.builder.io/docs/figma/)
 - [Mitosis Discord](https://discord.gg/SNusEyNGsx)
-- [@Builderio](https://twitter.com/builderio)
 
 ## E2E test status
 
