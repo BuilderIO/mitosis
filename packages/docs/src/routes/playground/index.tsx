@@ -145,6 +145,7 @@ export default component$(() => {
 
   return (
     <div class="relative flex gap-4 max-md:gap-0 grow items-stretch max-md:flex-col bg-primary-dark overflow-x-hidden">
+      <style>{`body { overflow: hidden }`}</style>
       <div class="w-full flex flex-col max-md:h-[calc(55dvh-35px)]">
         <div class="flex items-center gap-2 mx-4 my-2 mb-4 max-md:m-1.5 min-h-[50px] max-md:min-h-[40px]">
           <h3 class="ml-4 max-md:ml-2 text-lg max-md:text-base">Input</h3>
