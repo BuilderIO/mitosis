@@ -10,10 +10,7 @@ export default component$(() => {
       <div class="container md:my-8 p-8 mx-auto flex gap-4 max-md:flex-col-reverse">
         <div class="block max-md:mt-8">
           <a class="block text-primary-light" href="https://www.builder.io/" target="_blank">
-            <span>
-              Made with <span class="text-fuchsia-300">❤️</span> by
-            </span>
-
+            Made with ❤️ by
             <img
               alt="Builder.io logo"
               class="object-contain mt-3 max-sm:w-[150px]"
