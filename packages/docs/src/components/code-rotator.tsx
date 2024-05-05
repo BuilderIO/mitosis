@@ -103,15 +103,17 @@ export default class MyComponent {
 
 const qwikOutput = `
 import {
-  $,
   component$,
   useStore,
   useStylesScoped$,
 } from "@builder.io/qwik";
 
 export const MyComponent = component$((props) => {
-  useStylesScoped$(STYLES);
-
+  useStylesScoped$(\`
+    .input-MyComponent {
+      color: red;
+    }\`
+  );
   const state = useStore({ name: "Steve" });
 
   return (
@@ -119,22 +121,13 @@ export const MyComponent = component$((props) => {
       <input
         class="input-MyComponent"
         value={state.name}
-        onChange$={$((event) => (state.name = event.target.value))}
+        onChange$={(event) => (state.name = event.target.value)}
       />
       Hello! I can run natively in React, Vue, Svelte, Qwik, and many more
       frameworks!
     </div>
   );
 });
-
-export default MyComponent;
-
-export const STYLES = \`
-.input-MyComponent {
-  color: red;
-}
-\`;
-
 `.trim();
 
 const frameworkExamples: OutputFramework[] = ['vue', 'angular', 'svelte', 'qwik'];
@@ -186,13 +179,13 @@ const CodePanel = component$(
         class={[
           'bg-primary-dark overflow-hidden border-primary border border-opacity-50 rounded-lg pl-0 transition-all duration-500 origin-bottom-left',
           useIndexInsteadOfActive && isNextUp
-            ? 'opacity-0 blur-sm translate-y-3 -translate-x-3 z-10 scale-[0.9] pointer-events-none'
+            ? 'opacity-0 blur-sm translate-y-1 -translate-x-1 z-10 scale-[0.95] pointer-events-none'
             : useIndexInsteadOfActive && wasLastUp
-            ? 'opacity-0 blur-sm -translate-y-3 translate-x-3 z-30 scale-[1.01] pointer-events-none'
+            ? 'opacity-0 blur-sm -translate-y-1 translate-x-1 z-30 scale-[1.03] pointer-events-none'
             : '',
           props.isActive
-            ? 'opacity-100 z-20'
-            : 'z-0 opacity-0 translate-y-6 -translate-x-6 pointer-events-none',
+            ? 'opacity-100 z-40'
+            : 'z-0 opacity-0 translate-y-2 -translate-x-2 pointer-events-none',
           props.class,
         ]}
       >
