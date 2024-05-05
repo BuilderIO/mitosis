@@ -16,8 +16,10 @@ export const onGet: RequestHandler = async ({ cacheControl, url, redirect }) => 
     maxAge: 5,
   });
 
-  if (url.searchParams.get('redirectHome')) {
-    throw redirect(302, '/');
+  if (url.searchParams.get('removeParam')) {
+    const newUrl = new URL(url.href);
+    newUrl.searchParams.delete('removeParam');
+    throw redirect(302, newUrl.href);
   }
 
   if (
