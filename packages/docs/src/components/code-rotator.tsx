@@ -170,13 +170,29 @@ const CodePanel = component$(
     readOnly?: boolean;
     onChange$?: PropFunction<(code: string) => void>;
     class?: ClassList;
+    activeIndex?: number;
+    index?: number;
   }) => {
     const language = languageByFramework[props.framework as OutputFramework] || 'typescript';
+    const useIndexInsteadOfActive = props.activeIndex !== undefined;
+
+    const isNextUp = props.index === (props.activeIndex! + 1) % frameworkExamples.length;
+    const wasLastUp =
+      props.index ===
+      (props.activeIndex! - 1 + frameworkExamples.length) % frameworkExamples.length;
+
     return (
       <div
         class={[
-          'bg-primary-dark overflow-hidden border-primary border border-opacity-50 rounded-lg pl-0 transition-all duration-500',
-          props.isActive ? 'opacity-100' : 'opacity-0 translate-y-8 pointer-events-none',
+          'bg-primary-dark overflow-hidden border-primary border border-opacity-50 rounded-lg pl-0 transition-all duration-500 origin-bottom-left',
+          useIndexInsteadOfActive && isNextUp
+            ? 'opacity-0 blur-sm translate-y-3 -translate-x-3 z-10 scale-[0.9] pointer-events-none'
+            : useIndexInsteadOfActive && wasLastUp
+            ? 'opacity-0 blur-sm -translate-y-3 translate-x-3 z-30 scale-[1.01] pointer-events-none'
+            : '',
+          props.isActive
+            ? 'opacity-100 z-20'
+            : 'z-0 opacity-0 translate-y-6 -translate-x-6 pointer-events-none',
           props.class,
         ]}
       >
@@ -273,6 +289,7 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
   }
 
   useVisibleTask$(() => {
+    currentIndex.value = (currentIndex.value + 1) % maxIndex;
     const interval = setInterval(() => {
       const skip = mouseIsOver.value;
       if (skip) return;
@@ -331,6 +348,8 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
               readOnly
               code={(outputs as any)[framework as OutputFramework]}
               isActive={currentIndex.value === index}
+              index={index}
+              activeIndex={currentIndex.value}
               framework={framework}
             />
           ))}
