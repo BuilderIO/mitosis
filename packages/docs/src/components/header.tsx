@@ -23,7 +23,7 @@ export default component$(() => {
           share feedback
         </a>
       </div>
-      <header class="text-white sticky top-0 z-10 border-y border-primary border-opacity-50 bg-purple-990">
+      <header class="text-white sticky top-0 z-60 border-y border-primary border-opacity-50 bg-purple-990">
         <div
           class={[
             'p-6 max-md:p-4 flex justify-between items-center transition-all mx-auto container',

@@ -1,10 +1,11 @@
 import { component$, Slot } from '@builder.io/qwik';
-import { useNavigate } from '@builder.io/qwik-city';
+import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import { RightSidebar } from './right-sidebar';
 import Sidebar from './sidebar';
 
 export default component$(() => {
   const nav = useNavigate();
+  const location = useLocation();
 
   return (
     <div class="flex items-start max-md:flex-col-reverse gap-8 max-md:mt-2">
@@ -14,7 +15,6 @@ export default component$(() => {
       <div
         onClick$={(e, el) => {
           const closestHeading = (e.target as HTMLElement)?.closest('h1, h2, h3, h4, h5, h6');
-          console.log('closest heading', closestHeading, closestHeading?.id);
           if (closestHeading?.id) {
             const url = new URL(window.location.href);
             url.hash = closestHeading.id;
@@ -26,7 +26,7 @@ export default component$(() => {
         <Slot />
       </div>
       <div class="w-[240px] sticky top-20 shrink-0 ml-8 max-lg:hidden">
-        <RightSidebar class="mt-16 max-md:mt-4" />
+        <RightSidebar key={location.url.pathname} class="mt-16 max-md:mt-4" />
       </div>
     </div>
   );
