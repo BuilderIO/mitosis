@@ -65,29 +65,31 @@ export const RightSidebar = component$((props: { class: ClassList }) => {
 
   return (
     <aside class={['text-sm overflow-y-auto max-h-full', props.class]}>
-      {headingToUse.length > 0 ? (
-        <>
-          <h6 class="font-medium uppercase text-xs">On This Page</h6>
-          <ul class="">
-            {headingToUse.map((h, i) => (
-              <li key={h.id}>
-                <a
-                  href={`#${h.id}`}
-                  class={[
-                    'block my-4 text-[rgba(255,255,255,0.7)] hover:opacity-100 hover:text-primary-light ease-in-out',
-                    `${h.level > 2 ? 'ml-4' : null}`,
-                    activeHeadingIndex.value === i ? '!text-primary-light' : null,
-                  ]}
-                >
-                  {h.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : null}
+      <div class="max-xl:hidden">
+        {headingToUse.length > 0 ? (
+          <>
+            <h6 class="font-medium uppercase text-xs">On This Page</h6>
+            <ul class="">
+              {headingToUse.map((h, i) => (
+                <li key={h.id}>
+                  <a
+                    href={`#${h.id}`}
+                    class={[
+                      'block my-4 text-[rgba(255,255,255,0.7)] hover:opacity-100 hover:text-primary-light ease-in-out',
+                      `${h.level > 2 ? 'ml-4' : null}`,
+                      activeHeadingIndex.value === i ? '!text-primary-light' : null,
+                    ]}
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : null}
+      </div>
 
-      <h6 class="font-medium uppercase text-xs mt-12">More options</h6>
+      <h6 class="font-medium uppercase text-xs mt-12 max-xl:hidden">More options</h6>
       <ul>
         {OnThisPageMore.map((el, index) => {
           return (
