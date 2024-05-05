@@ -145,7 +145,7 @@ export default component$(() => {
 
   return (
     <div class="relative flex gap-4 max-md:gap-0 grow items-stretch max-md:flex-col bg-primary-dark overflow-x-hidden">
-      <div class="w-full flex flex-col max-md:h-[calc(55vh-35px)]">
+      <div class="w-full flex flex-col max-md:h-[calc(55dvh-35px)]">
         <div class="flex items-center gap-2 mx-4 my-2 mb-4 max-md:m-1.5 min-h-[50px] max-md:min-h-[40px]">
           <h3 class="ml-4 max-md:ml-2 text-lg max-md:text-base">Input</h3>
           {visible.value && (
@@ -188,7 +188,7 @@ export default component$(() => {
           )}
         </div>
       </div>
-      <div class="flex gap-4 max-md:gap-0 flex-col w-full h-[90vh] max-md:!h-[calc(45vh-35px)] border-l border-primary border-opacity-50 max-md:border-l-0 max-md:border-t">
+      <div class="flex gap-4 max-md:gap-0 flex-col w-full h-[90vh] max-md:!h-[calc(45dvh-35px)] border-l border-primary border-opacity-50 max-md:border-l-0 max-md:border-t">
         <div class="flex items-center gap-2 mx-4 max-md:m-1.5 my-2 mb-0 min-h-[50px] max-md:min-h-[40px]">
           <h3 class="ml-4 max-md:ml-2 text-lg max-md:text-base">Output</h3>
           {visible.value && (
