@@ -49,6 +49,22 @@ export const RouterHead = component$(() => {
       {head.scripts.map((s) => (
         <script key={s.key} {...s.props} dangerouslySetInnerHTML={s.script} />
       ))}
+
+      <script
+        type="text/partytown"
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-P6ZRY0ZT14"
+      ></script>
+      <script
+        type="text/partytown"
+        dangerouslySetInnerHTML={`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-P6ZRY0ZT14');
+        `}
+      />
     </>
   );
 });
