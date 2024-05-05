@@ -1,5 +1,5 @@
 import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { routeLoader$, useLocation } from '@builder.io/qwik-city';
+import { DocumentHead, routeLoader$, useLocation } from '@builder.io/qwik-city';
 import { ContentLoaderCode } from 'qwik-content-loader';
 import { CodeEditor } from '~/components/code-editor';
 import Select from '~/components/select';
@@ -254,3 +254,13 @@ export default component$(() => {
     </div>
   );
 });
+
+export const head: DocumentHead = {
+  title: 'Mitosis Playground',
+  meta: [
+    {
+      name: 'description',
+      content: 'Write components once, run everywhere.',
+    },
+  ],
+};

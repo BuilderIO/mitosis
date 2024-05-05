@@ -47,7 +47,8 @@ export const head: DocumentHead = {
   meta: [
     {
       name: 'description',
-      content: 'Build multi-framework design systems with confidence.',
+      content:
+        'Build multi-framework design systems with confidence. Compiles to React, Angular, Vue, Svelte, and more.',
     },
   ],
 };
