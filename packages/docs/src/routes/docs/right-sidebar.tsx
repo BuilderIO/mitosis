@@ -67,20 +67,24 @@ export const RightSidebar = component$((props: { class: ClassList }) => {
         <>
           <h6 class="font-medium uppercase text-xs">On This Page</h6>
           <ul class="">
-            {contentHeadings.map((h, i) => (
-              <li key={h.id}>
-                <a
-                  href={`#${h.id}`}
-                  class={[
-                    'block my-4 text-[rgba(255,255,255,0.7)] hover:opacity-100 hover:text-primary-light ease-in-out',
-                    `${h.level > 2 ? 'ml-4' : null}`,
-                    activeHeadingIndex.value === i ? '!text-primary-light' : null,
-                  ]}
-                >
-                  {h.text}
-                </a>
-              </li>
-            ))}
+            {contentHeadings.map(
+              (h, i) =>
+                h.level >= 2 &&
+                h.level <= 3 && (
+                  <li key={h.id}>
+                    <a
+                      href={`#${h.id}`}
+                      class={[
+                        'block my-4 text-[rgba(255,255,255,0.7)] hover:opacity-100 hover:text-primary-light ease-in-out',
+                        `${h.level > 2 ? 'ml-4' : null}`,
+                        activeHeadingIndex.value === i ? '!text-primary-light' : null,
+                      ]}
+                    >
+                      {h.text}
+                    </a>
+                  </li>
+                ),
+            )}
           </ul>
         </>
       ) : null}
