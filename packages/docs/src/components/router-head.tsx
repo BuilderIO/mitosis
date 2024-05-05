@@ -20,6 +20,14 @@ export const RouterHead = component$(() => {
         property="og:image"
         content="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe811f4444d1146c9932e02412d31b748"
       />
+      <meta property="og:image:width" content="1520" />
+      <meta property="og:image:height" content="842" />
+      <meta property="og:type" content="website" />
+      <meta property="og:locale" content="en_US" />
+      <meta property="og:image:alt" content="Mitosis - write components once, run everywhere" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@builderio" />
+      <meta name="twitter:creator" content="@builderio" />
 
       {loc.url.pathname.startsWith('/docs') && (
         <link
