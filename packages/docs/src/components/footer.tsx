@@ -1,7 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { TbBrandDiscord, TbBrandFigma, TbBrandGithub } from '@qwikest/icons/tablericons';
-import { Search } from './search';
 
 export default component$(() => {
   const year = new Date().getFullYear();
@@ -50,7 +49,7 @@ export default component$(() => {
             >
               <TbBrandDiscord />
             </Link>
-            <Search class="ml-3 max-md:-ml-3 max-md:mr-1" />
+            {/* <Search class="ml-3 max-md:-ml-3 max-md:mr-1" /> */}
           </div>
         </div>
       </div>
