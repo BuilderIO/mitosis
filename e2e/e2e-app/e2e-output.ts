@@ -8,6 +8,11 @@ export interface Entry {
   ok: boolean;
 }
 
+const friendlyCaseNames: Record<string, string> = {
+  '01-one-component': 'Single Component',
+  '02-two-components': 'Multiple Components',
+};
+
 export async function emitTable(allResults: Entry[]) {
   const cols: string[] = [];
   const rows: string[] = [];
@@ -31,7 +36,10 @@ export async function emitTable(allResults: Entry[]) {
     result[row][col] = e.ok ? ':white_check_mark:' : ':x:';
   }
 
-  output.push('Target | ' + cols.map((caseId) => caseId.replace(/-/g, ' ')).join(' | '));
+  output.push(
+    'Target | ' +
+      cols.map((caseId) => friendlyCaseNames[caseId] || caseId.replace(/-/g, ' ')).join(' | '),
+  );
   output.push('-|-'.repeat(cols.length));
 
   for (const index in rows) {

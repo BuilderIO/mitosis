@@ -51,16 +51,16 @@ Read the full [getting started docs](https://mitosis.builder.io/docs/quickstart/
 
 ## E2E test status
 
-| Target  | 01 one component   | 02 two components  |
-| ------- | ------------------ | ------------------ |
-| alpine  | :white_check_mark: | :white_check_mark: |
-| angular | :white_check_mark: | :white_check_mark: |
-| qwik    | :white_check_mark: | :white_check_mark: |
-| react   | :white_check_mark: | :white_check_mark: |
-| solid   | :white_check_mark: | :white_check_mark: |
-| svelte  | :white_check_mark: | :white_check_mark: |
-| vue2    | :white_check_mark: | :white_check_mark: |
-| vue3    | :white_check_mark: | :white_check_mark: |
+| Target  | Single Component   | Multiple Components |
+| ------- | ------------------ | ------------------- |
+| alpine  | :white_check_mark: | :white_check_mark:  |
+| angular | :white_check_mark: | :white_check_mark:  |
+| qwik    | :white_check_mark: | :white_check_mark:  |
+| react   | :white_check_mark: | :white_check_mark:  |
+| solid   | :white_check_mark: | :white_check_mark:  |
+| svelte  | :white_check_mark: | :white_check_mark:  |
+| vue2    | :white_check_mark: | :white_check_mark:  |
+| vue3    | :white_check_mark: | :white_check_mark:  |
 
 _NOTE: this matrix is programmatically generated and should not be manually edited._
 
