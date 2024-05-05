@@ -85,7 +85,7 @@ export default component$(() => {
                 Playground
               </Link>
             </li>
-            <li class="max-md:hidden">
+            <li class="max-lg:hidden">
               <Link
                 prefetch
                 href="/docs/quickstart/"

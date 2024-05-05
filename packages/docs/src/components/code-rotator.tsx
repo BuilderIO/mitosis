@@ -308,7 +308,7 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
         src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F298a3d9f6c3743cb8c3e17d209237da8"
       />
       <div class="flex gap-8 max-md:flex-col max-md:mt-8">
-        <div class="w-[450px] max-md:h-[290px] max-w-full relative">
+        <div class="w-[450px] max-lg:w-1/2 max-md:w-full max-md:h-[290px] max-w-full relative">
           <CodePanel
             onChange$={(code) => throttledCompile(code)}
             code={defaultCode}
@@ -321,12 +321,12 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
           width={25}
           height={60}
           alt="Arrow pointing down"
-          class="object-contain mx-auto md:hidden mt-16 -mb-4"
+          class="object-contain mx-auto md:hidden mt-14 -mb-6"
           src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F66021c443ad24d858f16cb5c1ea46961"
         />
         <div
           class={[
-            'relative w-[450px] min-h-[540px] max-md:h-[290px] max-w-full transition-all duration-500 delay-200',
+            'relative w-[450px] max-lg:w-1/2 max-md:w-full min-h-[540px] max-md:h-[290px] max-w-full transition-all duration-500 delay-200',
             makeVisible.value ? 'opacity-100' : 'opacity-0 translate-y-2',
           ]}
           onMouseEnter$={() => {
