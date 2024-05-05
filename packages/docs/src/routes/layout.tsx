@@ -16,6 +16,10 @@ export const onGet: RequestHandler = async ({ cacheControl, url, redirect }) => 
     maxAge: 5,
   });
 
+  if (url.searchParams.get('redirectHome')) {
+    throw redirect(302, '/');
+  }
+
   if (
     url.pathname === '/' &&
     // Old fiddle params to redirect to the new playground
