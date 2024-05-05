@@ -228,7 +228,7 @@ export default component$(() => {
             // Workaround weird bug where this doesn't render correctly
             // server side
             <Select
-              class="ml-auto mr-2"
+              class="ml-auto mr-2 md:mr-6"
               value={outputTwoFramework.value}
               onChange$={(framework: any) => (outputTwoFramework.value = framework)}
               options={outputs}
