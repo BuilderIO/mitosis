@@ -32,6 +32,7 @@ export default component$(() => {
         >
           <Link prefetch href="/" title="qwik" class="flex items-center">
             <img
+              alt="Mitosis logo"
               class="object-contain max-md:max-w-[110px]"
               width={160}
               height={80}

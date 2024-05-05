@@ -13,6 +13,7 @@ export default component$(() => {
             <span>Made with ❤️ by</span>
 
             <img
+              alt="Builder.io logo"
               class="object-contain mt-3 max-sm:w-[150px]"
               width={200}
               height={90}

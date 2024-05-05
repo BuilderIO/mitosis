@@ -145,11 +145,11 @@ const filenameByFramework: Partial<Record<OutputFramework, string>> = {
 };
 
 const imagesByFramework: Partial<Record<OutputFramework, string>> = {
-  vue: 'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F73a54a19443e48fab077e6f21687cd20',
+  vue: 'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F73a54a19443e48fab077e6f21687cd20?format=webp&width=50',
   angular:
-    'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F20c9914962994f4a9ca3435c90854e9e',
+    'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F20c9914962994f4a9ca3435c90854e9e?format=webp&width=50',
   svelte:
-    'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffbe9dfb6bb09448ba4fe5feb4bb0e53e',
+    'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffbe9dfb6bb09448ba4fe5feb4bb0e53e?format=webp&width=50',
   qwik: 'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F8469b183f0dd433aabd0fcd0a373b370',
   mitosis:
     'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fa45d49818e464caaab4f4bb416fed861',
@@ -192,6 +192,7 @@ const CodePanel = component$(
         <div class="border-b border-primary border-opacity-50 flex">
           <div class="flex gap-3 items-center px-3 text-sm py-2 bg-primary bg-opacity-20 self-start border-r border-primary border-opacity-50">
             <img
+              alt={`${props.framework} logo`}
               width={25}
               height={25}
               src={imagesByFramework[props.framework as OutputFramework]}
@@ -302,6 +303,7 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
       <img
         width={100}
         height={80}
+        alt="Arrow pointing right"
         class="object-contain my-4 mx-auto max-md:hidden"
         src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F298a3d9f6c3743cb8c3e17d209237da8"
       />
@@ -318,6 +320,7 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
         <img
           width={25}
           height={60}
+          alt="Arrow pointing down"
           class="object-contain mx-auto md:hidden mt-16 -mb-4"
           src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F66021c443ad24d858f16cb5c1ea46961"
         />
