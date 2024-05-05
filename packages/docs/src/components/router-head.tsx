@@ -18,13 +18,13 @@ export const RouterHead = component$(() => {
       <link href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F199eed663ae845baa8a6ea4136a40871" />
       <meta
         property="og:image"
-        content="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe811f4444d1146c9932e02412d31b748"
+        content="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F55995a55a8e9464b9f26cb206e8eff8f"
       />
-      <meta property="og:image:width" content="1520" />
-      <meta property="og:image:height" content="842" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="Mitosis - write components once, run everywhere" />
       <meta property="og:type" content="website" />
       <meta property="og:locale" content="en_US" />
-      <meta property="og:image:alt" content="Mitosis - write components once, run everywhere" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@builderio" />
       <meta name="twitter:creator" content="@builderio" />
