@@ -23,9 +23,16 @@ const SidebarLink = component$((props: { href: string }) => {
 export default component$((props: { class?: ClassList }) => {
   const expanded = useSignal(false);
 
+  const backdropStyles =
+    'max-md:bg-purple-990 max-md:bg-opacity-95 max-md:backdrop-blur max-md:transform-gpu max-md:!z-50';
+
   return (
     <div class={[props.class, 'mt-4 min-w-[200px] md:overflow-y-auto max-h-full']}>
-      <div class="hidden max-md:flex border-b border-primary border-opacity-50 items-center p-3 -mx-4">
+      <div
+        class={[
+          'hidden max-md:flex border-b border-primary border-opacity-50 items-center p-3 -mx-4',
+        ]}
+      >
         <button
           class="flex gap-2 items-center rounded w-full"
           onClick$={() => {
@@ -40,7 +47,8 @@ export default component$((props: { class?: ClassList }) => {
       </div>
       <div
         class={[
-          'max-md:overflow-auto transition-all max-md:-mx-4',
+          'md:sticky md:top-24 max-md:overflow-auto transition-all max-md:-mx-4 max-md:absolute max-md:top-15 max-md:w-full',
+          backdropStyles,
           {
             'max-md:max-h-0': !expanded.value,
             'max-md:max-h-[80vh]': expanded.value,

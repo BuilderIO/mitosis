@@ -9,8 +9,8 @@ export default component$(() => {
 
   return (
     <div class="flex items-start max-md:flex-col gap-8 max-md:mt-2">
-      <div class="border-primary border-r min-h-screen max-md:min-h-0 border-opacity-50 max-md:border-r-0 sticky top-20 max-md:top-16 max-md:border-t max-md:self-stretch max-md:-m-4 max-md:px-4 bg-purple-990 bg-opacity-80 backdrop-blur z-40">
-        <Sidebar class="mt-24 max-md:mt-2" />
+      <div class="border-primary border-r min-h-screen max-md:min-h-0 border-opacity-50 max-md:border-r-0 sticky top-20 max-md:top-16 max-md:border-t max-md:self-stretch max-md:-m-4 max-md:px-4 max-md:bg-purple-990 max-md:bg-opacity-80 max-md:backdrop-blur max-md:!z-50">
+        <Sidebar class="mt-24 max-md:mt-0" />
       </div>
       <div
         onClick$={(e, el) => {
