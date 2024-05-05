@@ -13,7 +13,7 @@ export default component$(() => {
     <>
       <div
         class={[
-          'bg-primary-dark text-primary-light text-center font-medium px-3 py-3 max-md:py-2.5 rounded max-md:text-sm transition-all max-h-[50px]',
+          'bg-primary-dark text-primary-light text-center font-medium px-3 py-3 max-md:py-2.5 rounded text-sm max-md:text-xs transition-all max-h-[50px]',
           isPlayground && 'max-md:max-h-0 max-md:!p-0',
         ]}
       >
