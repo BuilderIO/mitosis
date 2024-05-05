@@ -28,6 +28,8 @@ Using Mitosis, you can:
 - Build high quality cross-framework SDKs ([example](https://github.com/BuilderIO/builder/tree/main/packages/sdks#builderio-sdks))
 - Avoid the [pitfalls of web components](https://mitosis.builder.io/docs/overview/) by compiling to native framework code
 
+Additionally, Mitosis [integrates with Visual Copilot](https://mitosis.builder.io/docs/figma/) to sync your design systems in Figma to code.
+
 _PS: We are actively looking for folks interested in becoming contributors to Mitosis. If interested, look at our list of [good first issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or reach out on our [Discord](https://discord.gg/SNusEyNGsx)_
 
 ## Quickstart
