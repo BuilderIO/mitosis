@@ -11,7 +11,12 @@ export default component$(() => {
 
   return (
     <>
-      <div class="bg-primary-dark text-primary-light text-center font-medium px-3 py-3 max-md:py-2.5 rounded max-md:text-sm">
+      <div
+        class={[
+          'bg-primary-dark text-primary-light text-center font-medium px-3 py-3 max-md:py-2.5 rounded max-md:text-sm transition-all',
+          isPlayground && 'max-md:max-h-0 max-md:!p-0',
+        ]}
+      >
         Welcome to our new site! Please{' '}
         <a
           href={`https://docs.google.com/forms/d/e/1FAIpQLSc6jOAOPMRHviiXv4Pkk28fmdFhcX-IprhHvKCIBhjuZKmgiA/viewform?usp=pp_url&entry.1953883676=${encodeURIComponent(

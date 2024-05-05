@@ -144,15 +144,15 @@ export default component$(() => {
   });
 
   return (
-    <div class="relative flex gap-4 grow items-stretch max-md:flex-col bg-primary-dark">
-      <div class="w-full flex flex-col max-md:h-[50vh]">
-        <div class="flex items-center gap-2 mx-4 my-2 mb-4 min-h-[50px]">
-          <h3 class="ml-4 text-lg">Input</h3>
+    <div class="relative flex gap-4 max-md:gap-0 grow items-stretch max-md:flex-col bg-primary-dark overflow-x-hidden">
+      <div class="w-full flex flex-col max-md:h-[calc(55vh-35px)]">
+        <div class="flex items-center gap-2 mx-4 my-2 mb-4 max-md:m-1.5 min-h-[50px] max-md:min-h-[40px]">
+          <h3 class="ml-4 max-md:ml-2 text-lg max-md:text-base">Input</h3>
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
             // server side
             <Select
-              class="ml-auto"
+              class="ml-auto max-md:scale-[0.85] -my-2 max-md:-mr-1.5"
               value={inputSyntax.value}
               onChange$={(syntax: any) => {
                 compile(
@@ -170,7 +170,10 @@ export default component$(() => {
         </div>
 
         <div class="w-full grow relative">
-          <ContentLoaderCode width={400} class="ml-16 mt-3 opacity-10 origin-top-left" />
+          <ContentLoaderCode
+            width={400}
+            class="ml-16 mt-3 opacity-10 origin-top-left max-md:scale-75 max-md:ml-4"
+          />
 
           {visible.value && (
             <CodeEditor
@@ -185,22 +188,25 @@ export default component$(() => {
           )}
         </div>
       </div>
-      <div class="flex gap-4 flex-col w-full h-[90vh] max-md:h-[50vh] border-l border-primary border-opacity-50 max-md:border-l-0 max-md:border-t">
-        <div class="flex items-center gap-2 mx-4 my-2 mb-0 min-h-[50px]">
-          <h3 class="ml-4 text-lg">Output</h3>
+      <div class="flex gap-4 max-md:gap-0 flex-col w-full h-[90vh] max-md:!h-[calc(45vh-35px)] border-l border-primary border-opacity-50 max-md:border-l-0 max-md:border-t">
+        <div class="flex items-center gap-2 mx-4 max-md:m-1.5 my-2 mb-0 min-h-[50px] max-md:min-h-[40px]">
+          <h3 class="ml-4 max-md:ml-2 text-lg max-md:text-base">Output</h3>
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
             // server side
             <Select
-              class="ml-auto mr-2"
+              class="ml-auto mr-2 max-md:scale-[0.85] mx-md:-my-2 max-md:-mr-1.5"
               value={outputOneFramework.value}
               onChange$={(framework: any) => (outputOneFramework.value = framework)}
               options={outputs}
             />
           )}
         </div>
-        <div class="h-[50%] relative">
-          <ContentLoaderCode width={400} class="ml-16 mt-3 opacity-10 origin-top-left" />
+        <div class="h-[50%] max-md:h-auto grow relative">
+          <ContentLoaderCode
+            width={400}
+            class="ml-16 mt-3 opacity-10 origin-top-left max-md:scale-75 max-md:ml-4"
+          />
           {visible.value && (
             <CodeEditor
               language={languageByFramework[outputOneFramework.value]}
@@ -210,7 +216,7 @@ export default component$(() => {
             />
           )}
         </div>
-        <div class="min-h-[50px] max-md:hidden flex items-center border-primary border-opacity-50 border-t -mt-4 pt-4">
+        <div class="min-h-[50px] max-md:min-h-[40px] max-md:hidden flex items-center border-primary border-opacity-50 border-t -mt-4 pt-4">
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
             // server side
@@ -224,7 +230,10 @@ export default component$(() => {
         </div>
 
         <div class="h-[50%] relative max-md:hidden">
-          <ContentLoaderCode width={400} class="ml-16 mt-3 opacity-10 origin-top-left" />
+          <ContentLoaderCode
+            width={400}
+            class="ml-16 mt-3 opacity-10 origin-top-left max-md:scale-75 max-md:ml-4"
+          />
           {visible.value && (
             <CodeEditor
               language={languageByFramework[outputTwoFramework.value]}
