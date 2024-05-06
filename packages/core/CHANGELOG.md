@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.9
+
+### Patch Changes
+
+- a5d47bd: Fix: `events` to pass as inputs in dynamic components and pass properties too
+
 ## 0.2.8
 
 ### Patch Changes
