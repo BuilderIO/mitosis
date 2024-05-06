@@ -32,7 +32,7 @@ We need your help! If you found a bug, it's best to [create an issue](https://gi
 
 ## Developing for Core & Testing
 
-In `core`, we use vitest snapshots & integeration tests for test coverage. If you are solving a problem that is reproducible by a fiddle in [mitosis.builder.io/playground](https://mitosis.builder.io/playground), we highly recommend the following flow:
+In `core`, we use vitest snapshots & integeration tests for test coverage. If you are solving a problem that is reproducible by a fiddle in [mitosis.builder.io/playground](/playground), we highly recommend the following flow:
 
 ### Snapshot test
 

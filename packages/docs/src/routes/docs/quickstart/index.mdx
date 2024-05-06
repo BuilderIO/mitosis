@@ -63,39 +63,13 @@ export default function Greet() {
 }
 ```
 
-Saving the file triggers the automatic conversion of the Mitosis component into target components. Here are examples showing how a simple component is automatically translated from Mitosis to Svelte and Vue:
-
-Here’s the Svelte component code:
-
-```html
-<script lang="ts">
-  let name = '';
-</script>
-
-<div>
-  <input placeholder="Your name" bind:value="{name}" />
-  <div>Hello, {name}!</div>
-</div>
-```
-
-And here's the equivalent Vue component if you were to configure Vue as a target:
-
-```html
-<template>
-  <div>
-    <input placeholder="Your name" :value="name" @change="name = $event.target.value" />
-    <div>Hello, {{ name }}!</div>
-  </div>
-</template>
-
-<script setup lang="ts">
-  import { ref } from 'vue';
-
-  const name = ref('');
-</script>
-```
-
 3.  **Configure project settings**
     In the root of your project, add a `mitosis.config.js` file to specify the target output. Possible targets include Alpine, Angular, customElement, HTML, Mitosis, Liquid, React, React Native, Solid, Svelte, Swift, Template, Webcomponent, Vue (version 3), Stencil, Qwik, Marko, Preact, Lit, and RSC.
 
 By following these steps, you'll be well on your way to developing with Mitosis, taking advantage of its capability to write once and deploy to multiple frameworks.
+
+See our [CLI documentation](/docs/cli) for more commands you can run for developing and building.
+
+### Next steps
+
+Now, you can build [Mitosis components](/docs/components) and explore our [Figma integration](/docs/figma) to sync your design systems in Figma to code, and then run [`mitosis build`](/docs/cli#mitosis-build) to generate packages for each target output and publish them to npm.
