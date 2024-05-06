@@ -2,8 +2,8 @@ import { component$, Slot } from '@builder.io/qwik';
 import type { RequestHandler } from '@builder.io/qwik-city';
 import { useLocation } from '@builder.io/qwik-city';
 
-import Footer from '../components/footer/footer';
-import Header from '../components/header/header';
+import Footer from '../components/footer';
+import Header from '../components/header';
 
 export const onGet: RequestHandler = async ({ cacheControl, url, redirect }) => {
   // Control caching for this request for best performance and to reduce hosting costs:
@@ -23,6 +23,7 @@ export const onGet: RequestHandler = async ({ cacheControl, url, redirect }) => 
       url.searchParams.get('inputTab'))
   ) {
     const newUrl = new URL(url.href);
+    newUrl.pathname = '/playground';
     throw redirect(302, newUrl.href);
   }
 };
@@ -30,19 +31,17 @@ export const onGet: RequestHandler = async ({ cacheControl, url, redirect }) => 
 export default component$(() => {
   const location = useLocation();
 
+  const isPlayground = location.url.pathname === '/playground/';
+
   return (
     <>
-      <Header />
-      <main>
-        {location.url.pathname === '/' ? (
-          <div class="prose p-8 lg:prose-xl">
-            <Slot />
-          </div>
-        ) : (
+      <div class={['flex flex-col', isPlayground ? 'min-h-screen' : 'min-h-[80vh]']}>
+        <Header />
+        <main class={[isPlayground ? 'grow flex flex-col' : 'container mx-auto px-4']}>
           <Slot />
-        )}
-      </main>
-      <Footer />
+        </main>
+      </div>
+      {!isPlayground && <Footer />}
     </>
   );
 });
