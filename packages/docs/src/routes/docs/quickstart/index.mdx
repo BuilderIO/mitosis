@@ -1,15 +1,75 @@
-# Quick Start
+---
+title: Quickstart - Mitosis
+---
 
-To create a new Mitosis project from scratch, run the following `create` command:
+# Quickstart
+
+### Create a new project
+
+Start a new Mitosis project by running the following command in your terminal:
 
 ```bash
 npm create @builder.io/mitosis@latest
 ```
 
-It will prompt you for a project name, and create a new directory with a basic monorepo project structure that includes:
+When prompted, enter a project name and select your desired output. Currently, we support outputs for React, Svelte, and Qwik. After making your selection, navigate to the project folder and install the dependencies.
 
-- npm workspaces
-- multiple generated outputs, along with build steps for each
-- multiple test servers that import the outputs for convenient debugging/testing
+<video
+  autoplay
+  playsInline
+  muted
+  loop
+  src="https://cdn.builder.io/o/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fac60d98b072940cabb00bd2f2839a7b9%2Fcompressed?apiKey=YJIGb4i01jvw0SRdL5Bt&token=ac60d98b072940cabb00bd2f2839a7b9&alt=media&optimized=true"
+/>
 
-Once completed, make sure to read the `README.md` generated in your new project. It will explain the structure of your project, and provide a walkthrough on how to build/test your components.
+### Explore the project structure
+
+Focus on the `library` folder within your project. In `library/src`, you will find:
+
+- An `autocomplete` component
+- A `todo-app` component
+
+Each component is housed in its own folder and written in a `.lite.tsx` file, the standard file format for Mitosis components. Also, explore the `library/packages` folder, which contains starter code for the outputs you selected during setup.
+
+### Run the project
+
+1.  **Start the development server**
+    From within the `library` folder, run the following command to start the development server:
+    `npm run start`
+
+            This command automatically generates component code in the corresponding output folder. You write code once, and it gets converted into React, Qwik, and Svelte code.
+
+2.  **Add a new component**
+    Create a `library/src/greet.lite.tsx` file with the following code:
+
+```tsx
+import { useStore } from '@builder.io/mitosis';
+
+export default function Greet() {
+  const state = useStore({
+    name: '',
+  });
+
+  return (
+    <div>
+      <input
+        value={state.name}
+        onChange={(e) => (state.name = e.target.value)}
+        placeholder="Your name"
+      />
+      <div>Hello, {state.name}!</div>
+    </div>
+  );
+}
+```
+
+3.  **Configure project settings**
+    In the root of your project, add a `mitosis.config.js` file to specify the target output. Possible targets include Alpine, Angular, customElement, HTML, Mitosis, Liquid, React, React Native, Solid, Svelte, Swift, Template, Webcomponent, Vue (version 3), Stencil, Qwik, Marko, Preact, Lit, and RSC.
+
+By following these steps, you'll be well on your way to developing with Mitosis, taking advantage of its capability to write once and deploy to multiple frameworks.
+
+See our [CLI documentation](/docs/cli) for more commands you can run for developing and building.
+
+### Next steps
+
+Now, you can build [Mitosis components](/docs/components) and explore our [Figma integration](/docs/figma) to sync your design systems in Figma to code, and then run [`mitosis build`](/docs/cli#mitosis-build) to generate packages for each output framework and publish them to npm.

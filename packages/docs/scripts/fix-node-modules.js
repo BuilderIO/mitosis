@@ -42,6 +42,13 @@ import("node:async_hooks").then((module) => {
     from: "process.env.NODE_ENV = 'development'",
     to: '',
   },
+  // Prettier is a CJS module that can't be loaded from a "module" module,
+  // so we delete the import
+  {
+    path: 'node_modules/@builder.io/qwik-labs-canary/vite/index.js',
+    from: `import { format } from "prettier/standalone";`,
+    to: '',
+  },
 ];
 
 try {

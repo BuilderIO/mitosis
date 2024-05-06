@@ -6,6 +6,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-dark: #221931;
+}
+
 /**
  * WHAT IS THIS FILE?
  *
@@ -15,11 +19,162 @@
  */
 
 .monaco-editor {
-  --vscode-editor-background: #120d19 !important;
-  --vscode-editorGutter-background: #120d19 !important;
+  --vscode-editor-background: var(--primary-dark) !important;
+  --vscode-editorGutter-background: var(--primary-dark) !important;
   outline: none !important;
+}
+
+.monaco-editor .sticky-widget {
+  background-color: var(--primary-dark) !important;
 }
 
 body {
   @apply bg-purple-990 text-white;
+}
+
+.prose pre {
+  background-color: #221931;
+  font-size: 14px;
+}
+
+.prose
+  pre
+  :is(
+    .token.attr-name,
+    .token.builtin,
+    .token.char,
+    .token.inserted,
+    .token.selector,
+    .token.string
+  ) {
+  color: #b3e4b3;
+}
+
+.prose pre :is(.token.atrule, .token.attr-value, .token.keyword) {
+  color: #ceb5f4;
+}
+
+.prose
+  pre
+  :is(.token.boolean, .token.constant, .token.number, .token.property, .token.symbol, .token.tag) {
+  color: #ebaa94;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.mtk5 {
+  color: #ebaa94 !important;
+}
+
+.mtk8 {
+  color: #ceb5f4 !important;
+}
+
+.mtk22,
+.mtk11 {
+  color: #b3e4b3 !important;
+}
+
+.docsearch-btn-key {
+  display: none;
+}
+
+.docsearch-modal-footer {
+  display: none;
+}
+
+:root {
+  --docsearch-primary-color: #ac7ef4;
+  --docsearch-muted-color: #ac7ef4;
+}
+
+.docsearch-btn {
+  @apply max-md:!shadow-none max-md:-mr-4 hover:!bg-primary-dark;
+  box-shadow: var(--docsearch-searchbox-shadow);
+  background-color: transparent !important;
+  color: var(--docsearch-primary-color) !important;
+}
+
+.docsearch-btn:hover {
+  box-shadow: var(--docsearch-searchbox-shadow);
+  color: #ac7ef4 !important;
+}
+
+.docsearch-modal-search-hits-item--active * {
+  color: black !important;
+}
+
+.docsearch-modal-btn-icon {
+  @apply max-md:!stroke-white max-md:!text-white;
+  width: 17px;
+  margin: 5px;
+  stroke: var(--docsearch-highlight-color);
+  stroke-width: 1px;
+}
+
+@media (max-width: 768px) {
+  footer .docsearch-modal-btn-icon {
+    width: 26px;
+    height: 29px;
+    margin-top: 0;
+  }
+}
+
+.docsearch-btn-placeholder {
+  @apply max-md:hidden;
+}
+
+.docsearch-btn-icon-container {
+  @apply max-md:mr-0;
+}
+
+.docsearch-modal-empty-query {
+  margin-bottom: 14px;
+}
+
+.prose :is(h1, h2, h3, h4, h5, h6) {
+  @apply scroll-mt-32 relative cursor-pointer;
+}
+
+.prose :is(h2, h3, h4, h5, h6):hover .icon-link:after {
+  @apply text-primary;
+  position: absolute;
+  content: '#';
+  left: -1em;
+}
+
+.prose h1 {
+  @apply leading-tight;
+}
+
+/* Inter font */
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 300;
+  font-display: optional;
+  src: url('https://rsms.me/inter/font-files/Inter-Light.woff2?v=4.0') format('woff2');
+}
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 400;
+  font-display: optional;
+  src: url('https://rsms.me/inter/font-files/Inter-Regular.woff2?v=4.0') format('woff2');
+}
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-display: optional;
+  src: url('https://rsms.me/inter/font-files/Inter-Medium.woff2?v=4.0') format('woff2');
+}
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 600;
+  font-display: optional;
+  src: url('https://rsms.me/inter/font-files/Inter-SemiBold.woff2?v=4.0') format('woff2');
 }
