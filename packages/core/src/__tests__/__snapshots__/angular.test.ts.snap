@@ -4899,6 +4899,188 @@ export default class ComponentWithTypes {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > dynamicComponent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container
+      *ngComponentOutlet=\\"
+              obj.Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  obj = {
+    name: \\"foo\\",
+    Component: FooComponent,
+  };
+  onClick = function onClick() {
+    console.log(\\"hello\\");
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > dynamicComponent 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container
+      *ngComponentOutlet=\\"
+              obj.Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  obj = {
+    name: \\"foo\\",
+    Component: FooComponent,
+  };
+  onClick = function onClick() {
+    console.log(\\"hello\\");
+  };
+}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > dynamicComponentWithEventArg 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  @ViewChild(\\"componentTemplate\\", { static: true })
+  componentTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
+  Component = HelloComponent;
+  onClick = function onClick(event) {
+    console.log(\\"hello\\", event);
+  };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > dynamicComponentWithEventArg 2`] = `
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  @ViewChild(\\"componentTemplate\\", { static: true })
+  componentTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
+  Component = HelloComponent;
+  onClick = function onClick(event) {
+    console.log(\\"hello\\", event);
+  };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > expressionState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -6316,7 +6498,7 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -6333,7 +6515,7 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -6343,7 +6525,7 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
       <ng-container
         *ngComponentOutlet=\\"
               renderComponentTag;
-              inputs: { renderComponentProps: renderComponentProps, };
+              inputs: { renderComponentProps: renderComponentProps };
               content: myContent;
               \\"
       ></ng-container>
@@ -6595,7 +6777,7 @@ import RenderRepeatedBlock from \\"./render-repeated-block.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -6612,7 +6794,7 @@ import RenderRepeatedBlock from \\"./render-repeated-block.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -6622,7 +6804,7 @@ import RenderRepeatedBlock from \\"./render-repeated-block.js\\";
       <ng-container
         *ngComponentOutlet=\\"
               renderComponentTag;
-              inputs: { renderComponentProps: renderComponentProps, };
+              inputs: { renderComponentProps: renderComponentProps };
               content: myContent;
               \\"
       ></ng-container>
@@ -13586,6 +13768,188 @@ export default class ComponentWithTypes {
 "
 `;
 
+exports[`Angular > jsx > Typescript Test > dynamicComponent 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container
+      *ngComponentOutlet=\\"
+              obj.Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  obj = {
+    name: \\"foo\\",
+    Component: FooComponent,
+  };
+  onClick = function onClick() {
+    console.log(\\"hello\\");
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > dynamicComponent 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container
+      *ngComponentOutlet=\\"
+              obj.Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  obj = {
+    name: \\"foo\\",
+    Component: FooComponent,
+  };
+  onClick = function onClick() {
+    console.log(\\"hello\\");
+  };
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > dynamicComponentWithEventArg 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  @ViewChild(\\"componentTemplate\\", { static: true })
+  componentTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
+  Component = HelloComponent;
+  onClick = function onClick(event: any) {
+    console.log(\\"hello\\", event);
+  };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > dynamicComponentWithEventArg 2`] = `
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  @ViewChild(\\"componentTemplate\\", { static: true })
+  componentTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
+  Component = HelloComponent;
+  onClick = function onClick(event: any) {
+    console.log(\\"hello\\", event);
+  };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Typescript Test > expressionState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -15139,7 +15503,7 @@ import type { RepeatData } from \\"./types.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -15156,7 +15520,7 @@ import type { RepeatData } from \\"./types.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -15166,7 +15530,7 @@ import type { RepeatData } from \\"./types.js\\";
       <ng-container
         *ngComponentOutlet=\\"
               renderComponentTag;
-              inputs: { renderComponentProps: renderComponentProps, };
+              inputs: { renderComponentProps: renderComponentProps };
               content: myContent;
               \\"
       ></ng-container>
@@ -15431,7 +15795,7 @@ import type { RepeatData } from \\"./types.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -15448,7 +15812,7 @@ import type { RepeatData } from \\"./types.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: { attributes: attributes,actions: actions, };
+              inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
         ></ng-container>
@@ -15458,7 +15822,7 @@ import type { RepeatData } from \\"./types.js\\";
       <ng-container
         *ngComponentOutlet=\\"
               renderComponentTag;
-              inputs: { renderComponentProps: renderComponentProps, };
+              inputs: { renderComponentProps: renderComponentProps };
               content: myContent;
               \\"
       ></ng-container>

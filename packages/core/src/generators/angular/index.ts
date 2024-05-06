@@ -197,7 +197,10 @@ const processEventBinding = (key: string, code: string, nodeName: string, custom
   );
   const replacer = '$1$event$2';
   const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
-  return ` (${event})="${finalValue}" `;
+  return {
+    event,
+    value: finalValue,
+  };
 };
 
 const stringifyBinding =
@@ -217,7 +220,8 @@ const stringifyBinding =
     // TODO: proper babel transform to replace. Util for this
 
     if (keyToUse.startsWith('on')) {
-      return processEventBinding(keyToUse, code, node.name, cusArgs[0]);
+      const { event, value } = processEventBinding(keyToUse, code, node.name, cusArgs[0]);
+      return ` (${event})="${value}"`;
     } else if (keyToUse === 'class') {
       return ` [class]="${code}" `;
     } else if (keyToUse === 'ref') {
@@ -236,7 +240,17 @@ const stringifyBinding =
 
 const handleNgOutletBindings = (node: MitosisNode) => {
   let allProps = '';
-  let events = '';
+  for (const key in node.properties) {
+    if (key.startsWith('$')) {
+      continue;
+    }
+    if (key === 'key') {
+      continue;
+    }
+    const value = node.properties[key];
+    allProps += `${key}: '${value}', `;
+  }
+
   for (const key in node.bindings) {
     if (key.startsWith('"')) {
       continue;
@@ -250,9 +264,13 @@ const handleNgOutletBindings = (node: MitosisNode) => {
       allProps += `${key.replace('props.', '')}: ${code}, `;
     } else if (key.includes('.')) {
       // TODO: handle arbitrary spread props
-      allProps += `${key.split('.')[1]}: ${code},`;
+      allProps += `${key.split('.')[1]}: ${code}, `;
     } else if (key.startsWith('on')) {
-      events += processEventBinding(key, code, node.name, cusArgs[0]);
+      const { event, value } = processEventBinding(key, code, node.name, cusArgs[0]);
+      allProps += `on${event.charAt(0).toUpperCase() + event.slice(1)}: ${value.replace(
+        /\(.*?\)/g,
+        '',
+      )}, `;
     } else {
       const codeToUse = processCodeBlockInTemplate(code);
       const keyToUse = key.includes('-') ? `'${key}'` : key;
@@ -268,7 +286,7 @@ const handleNgOutletBindings = (node: MitosisNode) => {
     allProps = allProps.slice(2);
   }
 
-  return [allProps, events];
+  return allProps;
 };
 
 export const blockToAngular = (
@@ -335,9 +353,9 @@ export const blockToAngular = (
       ? kebabCase(json.name)
       : json.name;
 
-    const [allProps, events] = handleNgOutletBindings(json);
+    const allProps = handleNgOutletBindings(json);
 
-    str += `<ng-container ${events} *ngComponentOutlet="
+    str += `<ng-container *ngComponentOutlet="
       ${elSelector.replace('state.', '').replace('props.', '')};
       inputs: { ${allProps} };
       content: myContent;
