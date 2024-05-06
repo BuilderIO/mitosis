@@ -90,6 +90,12 @@ export default component$(() => {
     track(() => code.value);
 
     if (code.value === defaultCode || !code.value.trim()) {
+      if (location.url.searchParams.has('code')) {
+        location.url.searchParams.delete('code');
+        nav(location.url.toString(), {
+          replaceState: true,
+        });
+      }
       return;
     }
 
