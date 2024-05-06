@@ -1,5 +1,6 @@
 import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { DocumentHead, routeLoader$, useLocation } from '@builder.io/qwik-city';
+import { DocumentHead, routeLoader$, useLocation, useNavigate } from '@builder.io/qwik-city';
+import { compressToBase64, decompressFromBase64 } from 'lz-string';
 import { ContentLoaderCode } from 'qwik-content-loader';
 import { CodeEditor } from '~/components/code-editor';
 import Select from '~/components/select';
@@ -17,8 +18,13 @@ const defaultTopTab: OutputFramework = 'vue';
 const defaultBottomTab: OutputFramework = 'angular';
 const defaultInputTab = 'jsx';
 
+const decodeCode = (url: URL) => {
+  const code = url.searchParams.get('code');
+  return code ? decompressFromBase64(code) : defaultCode;
+};
+
 const useOutput1 = routeLoader$(async (requestEvent) => {
-  const code = (requestEvent.url.searchParams.get('code') as string) || defaultCode;
+  const code = decodeCode(requestEvent.url);
   let outputTab = requestEvent.url.searchParams.get('outputTab') as OutputFramework;
   if (!outputs.includes(outputTab)) {
     outputTab = defaultTopTab;
@@ -40,12 +46,12 @@ const useOutput1 = routeLoader$(async (requestEvent) => {
 });
 
 const useOutput2 = routeLoader$(async (requestEvent) => {
-  const code = (requestEvent.url.searchParams.get('code') as string) || defaultCode;
+  const code = decodeCode(requestEvent.url);
   const outputTab = requestEvent.url.searchParams.get('outputTab') as OutputFramework;
   const inputTab = requestEvent.url.searchParams.get('inputTab') as InputSyntax;
 
   const output = await compile(
-    code || defaultCode,
+    code,
     outputTab || defaultBottomTab,
     inputTab || defaultInputTab,
   ).catch((err) => {
@@ -56,14 +62,15 @@ const useOutput2 = routeLoader$(async (requestEvent) => {
 });
 
 export default component$(() => {
+  const nav = useNavigate();
   const location = useLocation();
-  const codeFromQueryParam = location.url.searchParams.get('code') as string;
+  const initialCode = decodeCode(location.url);
   const outputTab = location.url.searchParams.get('outputTab') as OutputFramework;
   const inputTab = location.url.searchParams.get('inputTab') as InputSyntax;
   const loaderOutput1 = useOutput1().value;
   const loaderOutput2 = useOutput2().value;
 
-  const code = useSignal(codeFromQueryParam || defaultCode);
+  const code = useSignal(initialCode || defaultCode);
   const inputSyntax = useSignal<InputSyntax>(inputTab || defaultInputTab);
   const output = useSignal(loaderOutput1 || '');
   const outputOneFramework = useSignal<OutputFramework>(outputTab || defaultTopTab);
@@ -77,6 +84,15 @@ export default component$(() => {
 
   useVisibleTask$(() => {
     visible.value = true;
+  });
+
+  useVisibleTask$(({ track }) => {
+    track(() => code.value);
+
+    const newURL = new URL(location.url);
+    newURL.searchParams.set('code', compressToBase64(code.value));
+
+    nav(newURL.toString(), { replaceState: true });
   });
 
   const throttledCompileOne = $(
