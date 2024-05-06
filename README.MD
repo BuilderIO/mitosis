@@ -1,14 +1,17 @@
 <br>
+<br>
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F44413839f214431290930e447572b843">
-    <img width="300" alt="Mitosis logo" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F570f689e59824cb78cf5773350ab4144">
+    <img width="400" alt="Mitosis logo" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F570f689e59824cb78cf5773350ab4144">
   </picture>
 </p>
 
 <p align="center">
   Write components once, compile to every framework
 </p>
+
+<br>
 
 <p align="center">
   <a href="https://github.com/prettier/prettier"><img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" /></a>
@@ -51,21 +54,6 @@ Read the full [getting started docs](https://mitosis.builder.io/docs/quickstart/
 - [Playground](https://mitosis.builder.io/playground)
 - [Figma integration](https://mitosis.builder.io/docs/figma/)
 - [Mitosis Discord](https://discord.gg/SNusEyNGsx)
-
-## E2E test status
-
-| Target  | Single Component   | Multiple Components |
-| ------- | ------------------ | ------------------- |
-| alpine  | :white_check_mark: | :white_check_mark:  |
-| angular | :white_check_mark: | :white_check_mark:  |
-| qwik    | :white_check_mark: | :white_check_mark:  |
-| react   | :white_check_mark: | :white_check_mark:  |
-| solid   | :white_check_mark: | :white_check_mark:  |
-| svelte  | :white_check_mark: | :white_check_mark:  |
-| vue2    | :white_check_mark: | :white_check_mark:  |
-| vue3    | :white_check_mark: | :white_check_mark:  |
-
-_NOTE: this matrix is programmatically generated and should not be manually edited._
 
 ## Contribute
 
