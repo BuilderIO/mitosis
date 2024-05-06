@@ -1,6 +1,6 @@
 import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { DocumentHead, routeLoader$, useLocation, useNavigate } from '@builder.io/qwik-city';
-import { compressToBase64, decompressFromBase64 } from 'lz-string';
+import lzString from 'lz-string';
 import { ContentLoaderCode } from 'qwik-content-loader';
 import { CodeEditor } from '~/components/code-editor';
 import Select from '~/components/select';
@@ -20,7 +20,7 @@ const defaultInputTab = 'jsx';
 
 const decodeCode = (url: URL) => {
   const code = url.searchParams.get('code');
-  return code ? decompressFromBase64(code) : defaultCode;
+  return code ? lzString.decompressFromBase64(code) : defaultCode;
 };
 
 const useOutput1 = routeLoader$(async (requestEvent) => {
@@ -90,7 +90,7 @@ export default component$(() => {
     track(() => code.value);
 
     const newURL = new URL(location.url);
-    newURL.searchParams.set('code', compressToBase64(code.value));
+    newURL.searchParams.set('code', lzString.compressToBase64(code.value));
 
     nav(newURL.toString(), { replaceState: true });
   });
