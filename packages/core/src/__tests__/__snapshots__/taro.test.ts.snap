@@ -1324,6 +1324,7 @@ import { View, Text } from \\"@tarojs/components\\";
 function SlotCode(props) {
   return (
     <View>
+      <>{props.myAwesomeSlot}</>
       <>{props.top}</>
       <>{props.left || \\"Default left\\"}</>
       <>{props.children || \\"Default Child\\"}</>
@@ -1846,7 +1847,7 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        {foo.value}
+        <>{foo.value}</>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -1883,7 +1884,7 @@ function ComponentWithContext(props) {
         }}
       >
         <>
-          {foo.value}
+          <>{foo.value}</>
           <View>other</View>
         </>
       </Context1.Provider>
@@ -2031,6 +2032,36 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > getterState 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function Button(props) {
+  function foo2() {
+    return props.foo + \\"foo\\";
+  }
+
+  function bar() {
+    return \\"bar\\";
+  }
+
+  function baz(i) {
+    return i + foo2().length;
+  }
+
+  return (
+    <View>
+      <View>{foo2()}</View>
+      <View>{bar()}</View>
+      <View>{baz(1)}</View>
+    </View>
+  );
+}
+
+export default Button;
 "
 `;
 
@@ -4776,6 +4807,7 @@ import { View, Text } from \\"@tarojs/components\\";
 function SlotCode(props: Props) {
   return (
     <View>
+      <>{props.myAwesomeSlot}</>
       <>{props.top}</>
       <>{props.left || \\"Default left\\"}</>
       <>{props.children || \\"Default Child\\"}</>
@@ -5377,7 +5409,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
           },
         }}
       >
-        {foo.value}
+        <>{foo.value}</>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -5419,7 +5451,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
         }}
       >
         <>
-          {foo.value}
+          <>{foo.value}</>
           <View>other</View>
         </>
       </Context1.Provider>
@@ -5591,6 +5623,41 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > getterState 1`] = `
+"import * as React from \\"react\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+import { View, Text } from \\"@tarojs/components\\";
+
+function Button(props: ButtonProps) {
+  function foo2() {
+    return props.foo + \\"foo\\";
+  }
+
+  function bar() {
+    return \\"bar\\";
+  }
+
+  function baz(i: number) {
+    return i + foo2().length;
+  }
+
+  return (
+    <View>
+      <View>{foo2()}</View>
+      <View>{bar()}</View>
+      <View>{baz(1)}</View>
+    </View>
+  );
+}
+
+export default Button;
 "
 `;
 

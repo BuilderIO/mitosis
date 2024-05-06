@@ -1,5 +1,42 @@
 # Change Log
 
+## 0.2.8
+
+### Patch Changes
+
+- 18b9210: Feature: Vue: add `casing` option (defaults to `pascal`)
+
+## 0.2.7
+
+### Patch Changes
+
+- 1dbdf32: add `includeMeta` option to Builder generator
+
+## 0.2.6
+
+### Patch Changes
+
+- 389018d: support else statements in Angular generator with negation
+- c7f2759: Fix: named slots generation for Vue, Qwik and Svelte.
+
+## 0.2.5
+
+### Patch Changes
+
+- 2e56b76: Fix: Qwik methods using computed variables
+
+## 0.2.4
+
+### Patch Changes
+
+- cee502f: feat: React Native: add support for `onClick` event handlers using `Pressable`
+
+## 0.2.3
+
+### Patch Changes
+
+- 2867f44: fix: React generator: include `Fragment`s that only contain text content.
+
 ## 0.2.2
 
 ### Patch Changes

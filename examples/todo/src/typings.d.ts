@@ -1,4 +1,4 @@
-declare module "*.svelte" {
+declare module '*.svelte' {
   const SvelteComponent: any;
-  export default SvelteComponent
+  export default SvelteComponent;
 }

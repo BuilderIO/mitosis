@@ -1686,6 +1686,7 @@ export default class SlotCode extends LitElement {
     return html\`
 
           <div>
+          <my-slot name=\\"myAwesomeSlot\\"></my-slot>
           <my-slot name=\\"top\\"></my-slot>
           <my-slot name=\\"left\\">Default left</my-slot>
           <my-slot>Default Child</my-slot>
@@ -2483,6 +2484,43 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>\${this.refToUse}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > getterState 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-button\\")
+export default class Button extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() foo: any;
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i) {
+    return i + this.foo2.length;
+  }
+
+  render() {
+    return html\`
+
+          <div>
+          <p>\${this.foo2}</p>
+          <p>\${this.bar}</p>
+          <p>\${this.baz(1)}</p>
+        </div>
 
         \`;
   }
@@ -5900,6 +5938,7 @@ export default class SlotCode extends LitElement {
     return html\`
 
           <div>
+          <my-slot name=\\"myAwesomeSlot\\"></my-slot>
           <my-slot name=\\"top\\"></my-slot>
           <my-slot name=\\"left\\">Default left</my-slot>
           <my-slot>Default Child</my-slot>
@@ -6796,6 +6835,47 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>\${this.refToUse}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > getterState 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+@customElement(\\"my-button\\")
+export default class Button extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() foo: any;
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i: number) {
+    return i + this.foo2.length;
+  }
+
+  render() {
+    return html\`
+
+          <div>
+          <p>\${this.foo2}</p>
+          <p>\${this.bar}</p>
+          <p>\${this.baz(1)}</p>
+        </div>
 
         \`;
   }

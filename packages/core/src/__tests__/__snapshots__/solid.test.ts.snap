@@ -2864,6 +2864,7 @@ exports[`Solid > jsx > Javascript Test > SlotNamed 1`] = `
 "function SlotCode(props) {
   return (
     <div>
+      <Slot name=\\"myAwesomeSlot\\"></Slot>
       <Slot name=\\"top\\"></Slot>
       <Slot name=\\"left\\">Default left</Slot>
       <Slot>Default Child</Slot>
@@ -2880,6 +2881,7 @@ exports[`Solid > jsx > Javascript Test > SlotNamed 2`] = `
   return (
     <>
       <div>
+        <Slot name=\\"myAwesomeSlot\\"></Slot>
         <Slot name=\\"top\\"></Slot>
         <Slot name=\\"left\\">Default left</Slot>
         <Slot>Default Child</Slot>
@@ -4119,6 +4121,66 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > getterState 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function Button(props) {
+  const foo2 = createMemo(() => {
+    return props.foo + \\"foo\\";
+  });
+
+  const bar = createMemo(() => {
+    return \\"bar\\";
+  });
+
+  function baz(i) {
+    return i + foo2().length;
+  }
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > getterState 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function Button(props) {
+  const foo2 = createMemo(() => {
+    return props.foo + \\"foo\\";
+  });
+
+  const bar = createMemo(() => {
+    return \\"bar\\";
+  });
+
+  function baz(i) {
+    return i + foo2().length;
+  }
+
+  return (
+    <>
+      <div>
+        <p>{foo2()}</p>
+        <p>{bar()}</p>
+        <p>{baz(1)}</p>
+      </div>
+    </>
+  );
+}
+
+export default Button;
 "
 `;
 
@@ -9735,6 +9797,7 @@ exports[`Solid > jsx > Typescript Test > SlotNamed 1`] = `
 function SlotCode(props: Props) {
   return (
     <div>
+      <Slot name=\\"myAwesomeSlot\\"></Slot>
       <Slot name=\\"top\\"></Slot>
       <Slot name=\\"left\\">Default left</Slot>
       <Slot>Default Child</Slot>
@@ -9755,6 +9818,7 @@ function SlotCode(props: Props) {
   return (
     <>
       <div>
+        <Slot name=\\"myAwesomeSlot\\"></Slot>
         <Slot name=\\"top\\"></Slot>
         <Slot name=\\"left\\">Default left</Slot>
         <Slot>Default Child</Slot>
@@ -11171,6 +11235,74 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > getterState 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+function Button(props: ButtonProps) {
+  const foo2 = createMemo(() => {
+    return props.foo + \\"foo\\";
+  });
+
+  const bar = createMemo(() => {
+    return \\"bar\\";
+  });
+
+  function baz(i: number) {
+    return i + foo2().length;
+  }
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > getterState 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+function Button(props: ButtonProps) {
+  const foo2 = createMemo(() => {
+    return props.foo + \\"foo\\";
+  });
+
+  const bar = createMemo(() => {
+    return \\"bar\\";
+  });
+
+  function baz(i: number) {
+    return i + foo2().length;
+  }
+
+  return (
+    <>
+      <div>
+        <p>{foo2()}</p>
+        <p>{bar()}</p>
+        <p>{baz(1)}</p>
+      </div>
+    </>
+  );
+}
+
+export default Button;
 "
 `;
 

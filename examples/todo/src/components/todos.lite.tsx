@@ -1,8 +1,7 @@
 import { For, Show, createContext } from '@builder.io/mitosis';
 import todosState from '../shared/todos-state';
-import Todo from './todo.lite';
 import Header from './header.svelte';
-
+import Todo from './todo.lite';
 
 export type TodosProps = {};
 
@@ -11,9 +10,7 @@ export default function Todos(props: TodosProps) {
 
   return (
     <section class="main">
-      <Header name={"World"}>
-        Hello
-      </Header>
+      <Header name={'World'}>Hello</Header>
       <Show when={todosState.todos.length}>
         <input
           class="toggle-all"

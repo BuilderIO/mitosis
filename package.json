@@ -14,12 +14,12 @@
     "g:changeset": "yarn changeset",
     "ci:release": "yarn ci:build:release && yarn workspace @builder.io/mitosis-cli fix-core-version && yarn changeset publish",
     "build:core": "nx build @builder.io/mitosis",
-    "build:fiddle": "nx build @builder.io/mitosis-fiddle",
+    "build:site": "nx build @builder.io/mitosis-site",
     "build:eslint-plugin": "nx build @builder.io/eslint-plugin-mitosis",
     "ci:build:release": "nx run-many --skip-nx-cache --target build --parallel 4 -p @builder.io/mitosis @builder.io/mitosis-cli @builder.io/eslint-plugin-mitosis @builder.io/create-mitosis",
     "ci:build": "nx run-many --skip-nx-cache --target build --parallel 4 --exclude \"*/e2e-alpine,@builder.io/mitosis-fiddle,@builder.io/talk-*,@builder.io/example-apps\"",
     "ci:build:core": "yarn run build:core",
-    "ci:build:fiddle": "yarn run build:fiddle",
+    "ci:build:site": "yarn run build:site",
     "ci:build:eslint-plugin": "yarn run build:eslint-plugin",
     "ci:lint": "yarn run lint:prettier && yarn run lint:eslint",
     "ci:test": "yarn workspaces foreach run test",
@@ -62,7 +62,7 @@
     "rimraf": "5.0.5",
     "typescript": "^5.3.2"
   },
-  "packageManager": "yarn@3.2.0",
+  "packageManager": "yarn@4.1.1",
   "dependencies": {
     "@babel/core": "^7.18.2",
     "@builder.io/e2e-app": "workspace:*"

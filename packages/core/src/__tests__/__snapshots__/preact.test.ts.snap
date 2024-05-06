@@ -1339,6 +1339,7 @@ import { h, Fragment } from \\"preact\\";
 function SlotCode(props) {
   return (
     <div>
+      <>{props.myAwesomeSlot}</>
       <>{props.top}</>
       <>{props.left || \\"Default left\\"}</>
       <>{props.children || \\"Default Child\\"}</>
@@ -1847,7 +1848,7 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        {foo.value}
+        <Fragment>{foo.value}</Fragment>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -1883,7 +1884,7 @@ function ComponentWithContext(props) {
         }}
       >
         <Fragment>
-          {foo.value}
+          <Fragment>{foo.value}</Fragment>
           <div>other</div>
         </Fragment>
       </Context1.Provider>
@@ -2030,6 +2031,36 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > getterState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function Button(props) {
+  function foo2() {
+    return props.foo + \\"foo\\";
+  }
+
+  function bar() {
+    return \\"bar\\";
+  }
+
+  function baz(i) {
+    return i + foo2().length;
+  }
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
 "
 `;
 
@@ -4769,6 +4800,7 @@ type Props = {
 function SlotCode(props: Props) {
   return (
     <div>
+      <>{props.myAwesomeSlot}</>
       <>{props.top}</>
       <>{props.left || \\"Default left\\"}</>
       <>{props.children || \\"Default Child\\"}</>
@@ -5351,7 +5383,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
           },
         }}
       >
-        {foo.value}
+        <Fragment>{foo.value}</Fragment>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -5392,7 +5424,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
         }}
       >
         <Fragment>
-          {foo.value}
+          <Fragment>{foo.value}</Fragment>
           <div>other</div>
         </Fragment>
       </Context1.Provider>
@@ -5561,6 +5593,40 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > getterState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+function Button(props: ButtonProps) {
+  function foo2() {
+    return props.foo + \\"foo\\";
+  }
+
+  function bar() {
+    return \\"bar\\";
+  }
+
+  function baz(i: number) {
+    return i + foo2().length;
+  }
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
 "
 `;
 

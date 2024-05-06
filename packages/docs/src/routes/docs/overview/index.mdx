@@ -1,0 +1,65 @@
+# Mitosis Overview
+
+Mitosis is a subset of [JSX](https://github.com/facebook/jsx). It supports generating code for a number of frontend frameworks, including React, Vue, Angular, Svelte, and Solid.
+
+## How does it work
+
+Mitosis uses a static subset of JSX, inspired by [Solid](https://www.solidjs.com/guide#jsx-compilation). This means we can parse it to a simple JSON structure, then easily build serializers that target various frameworks and implementations.
+
+```tsx
+export function MyComponent() {
+  const state = useStore({
+    name: 'Steve',
+  });
+
+  return (
+    <div>
+      <input value={state.name} onChange={(event) => (state.name = event.target.value)} />
+    </div>
+  );
+}
+```
+
+becomes:
+
+```json
+{
+  "@type": "@builder.io/mitosis/component",
+  "state": {
+    "name": "Steve"
+  },
+  "nodes": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "name": "div",
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "name": "input",
+          "bindings": {
+            "value": "state.name",
+            "onChange": "state.name = event.target.value"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+Which can be reserialized into many languages and frameworks. For example, to support angular, we just make a serializer that loops over the json and produces:
+
+```ts
+@Component({
+  template: `
+    <div>
+      <input [value]="name" (change)="name = $event.target.value" />
+    </div>
+  `,
+})
+class MyComponent {
+  name = 'Steve';
+}
+```
+
+Adding framework support is surprisingly easy with the plugin system (docs coming soon).

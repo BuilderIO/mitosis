@@ -1133,6 +1133,7 @@ export default class SlotCode {
   render() {
     return (
       <div>
+        <Slot name=\\"myAwesomeSlot\\"></Slot>
         <Slot name=\\"top\\"></Slot>
         <Slot name=\\"left\\">Default left</Slot>
         <Slot>Default Child</Slot>
@@ -1849,6 +1850,38 @@ export default class MyComponent {
 
   render() {
     return <div>{this.refToUse}</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > getterState 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"button\\",
+})
+export default class Button {
+  @Prop() foo: any;
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i) {
+    return i + this.foo2.length;
+  }
+
+  render() {
+    return (
+      <div>
+        <p>{this.foo2}</p>
+        <p>{this.bar}</p>
+        <p>{this.baz(1)}</p>
+      </div>
+    );
   }
 }
 "
@@ -3860,6 +3893,7 @@ export default class SlotCode {
   render() {
     return (
       <div>
+        <Slot name=\\"myAwesomeSlot\\"></Slot>
         <Slot name=\\"top\\"></Slot>
         <Slot name=\\"left\\">Default left</Slot>
         <Slot>Default Child</Slot>
@@ -4578,6 +4612,38 @@ export default class MyComponent {
 
   render() {
     return <div>{this.refToUse}</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > getterState 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"button\\",
+})
+export default class Button {
+  @Prop() foo: any;
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i: number) {
+    return i + this.foo2.length;
+  }
+
+  render() {
+    return (
+      <div>
+        <p>{this.foo2}</p>
+        <p>{this.bar}</p>
+        <p>{this.baz(1)}</p>
+      </div>
+    );
   }
 }
 "

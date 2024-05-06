@@ -10,6 +10,7 @@ const getRawFile = async (filePath: string) => {
 
 type RawFile = ReturnType<typeof getRawFile>;
 
+const getterState = getRawFile('./data/blocks/getter-state.raw.tsx');
 const basicForShow = getRawFile('./data/basic-for-show.raw.tsx');
 const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw.tsx');
 const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw.tsx');
@@ -118,6 +119,7 @@ const builderRenderContent = getRawFile('./data/blocks/builder-render-content.ra
 
 const rootFragmentMultiNode = getRawFile('./data/blocks/root-fragment-multi-node.raw.tsx');
 const renderContentExample = getRawFile('./data/render-content.raw.tsx');
+const onClickToPressable = getRawFile('./data/react-native/onclick-to-pressable.raw.tsx');
 
 type Tests = { [index: string]: RawFile };
 
@@ -138,6 +140,10 @@ const SVELTE_SYNTAX_TESTS: Tests = {
   slots: getRawFile('./syntax/svelte/slots.raw.svelte'),
   style: getRawFile('./syntax/svelte/style.raw.svelte'),
   textExpressions: getRawFile('./syntax/svelte/text-expressions.raw.svelte'),
+};
+
+const REACT_NATIVE_TESTS: Tests = {
+  onClickToPressable,
 };
 
 const BASIC_TESTS: Tests = {
@@ -216,6 +222,7 @@ const BASIC_TESTS: Tests = {
   renderBlock,
   useTarget,
   signalsOnUpdate,
+  getterState,
 };
 
 const SLOTS_TESTS: Tests = {
@@ -446,6 +453,7 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FORM_BLOCK_TESTS,
     ADVANCED_REF,
     ON_UPDATE_RETURN,
+    REACT_NATIVE_TESTS,
     // FOR_SHOW_TESTS,
   ],
   liquid: [

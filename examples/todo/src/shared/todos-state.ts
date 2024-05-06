@@ -18,8 +18,6 @@ export default {
     });
   },
   get allCompleted() {
-    return (
-      this.todos.filter((item) => item.completed).length === this.todos.length
-    );
+    return this.todos.filter((item) => item.completed).length === this.todos.length;
   },
 };

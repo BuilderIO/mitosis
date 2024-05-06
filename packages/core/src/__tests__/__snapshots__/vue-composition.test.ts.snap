@@ -219,15 +219,9 @@ exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
       {{ type }}
     </template>
 
-    <my-boolean-attribute-component
-      :toggle=\\"true\\"
-    ></my-boolean-attribute-component
-    ><my-boolean-attribute-component
-      :toggle=\\"true\\"
-    ></my-boolean-attribute-component
-    ><my-boolean-attribute-component
-      :list=\\"null\\"
-    ></my-boolean-attribute-component>
+    <MyBooleanAttributeComponent :toggle=\\"true\\"></MyBooleanAttributeComponent
+    ><MyBooleanAttributeComponent :toggle=\\"true\\"></MyBooleanAttributeComponent
+    ><MyBooleanAttributeComponent :list=\\"null\\"></MyBooleanAttributeComponent>
   </div>
 </template>
 
@@ -241,12 +235,12 @@ const props = defineProps([\\"children\\", \\"type\\"]);
 exports[`Vue > jsx > Javascript Test > BasicChildComponent 1`] = `
 "<template>
   <div>
-    <my-basic-component :id=\\"dev\\"></my-basic-component>
+    <MyBasicComponent :id=\\"dev\\"></MyBasicComponent>
     <div>
-      <my-basic-on-mount-update-component
+      <MyBasicOnMountUpdateComponent
         :hi=\\"name\\"
         :bye=\\"dev\\"
-      ></my-basic-on-mount-update-component>
+      ></MyBasicOnMountUpdateComponent>
     </div>
   </div>
 </template>
@@ -674,25 +668,25 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
         :key=\\"block.id\\"
         v-for=\\"(block, index) in builderBlock?.children\\"
       >
-        <builder-block-component
+        <BuilderBlockComponent
           :block=\\"block\\"
           :index=\\"index\\"
-        ></builder-block-component>
+        ></BuilderBlockComponent>
       </template>
     </template>
 
     <template v-if=\\"submissionState === 'error'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"errorMessage\\"
         :blocks=\\"errorMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
 
     <template v-if=\\"submissionState === 'sending'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"sendingMessage\\"
         :blocks=\\"sendingMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
 
     <template v-if=\\"submissionState === 'error' && responseData\\">
@@ -702,10 +696,10 @@ exports[`Vue > jsx > Javascript Test > Form 1`] = `
     </template>
 
     <template v-if=\\"submissionState === 'success'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"successMessage\\"
         :blocks=\\"successMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
   </form>
 </template>
@@ -1145,11 +1139,11 @@ const props = defineProps([
 
 exports[`Vue > jsx > Javascript Test > InputParent 1`] = `
 "<template>
-  <form-input-component
+  <FormInputComponent
     name=\\"kingzez\\"
     type=\\"text\\"
     :onChange=\\"(value) => handleChange(value)\\"
-  ></form-input-component>
+  ></FormInputComponent>
 </template>
 
 <script setup>
@@ -1261,11 +1255,11 @@ exports[`Vue > jsx > Javascript Test > SlotDefault 1`] = `
 exports[`Vue > jsx > Javascript Test > SlotHtml 1`] = `
 "<template>
   <div>
-    <content-slot-code>
+    <ContentSlotCode>
       <template #testing>
         <div>Hello</div>
       </template>
-    </content-slot-code>
+    </ContentSlotCode>
   </div>
 </template>
 
@@ -1276,9 +1270,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 exports[`Vue > jsx > Javascript Test > SlotJsx 1`] = `
 "<template>
-  <div>
-    <content-slot-code :slotTesting=\\"<div>Hello</div>\\"></content-slot-code>
-  </div>
+  <div><ContentSlotCode :slotTesting=\\"<div>Hello</div>\\"></ContentSlotCode></div>
 </template>
 
 <script setup>
@@ -1289,8 +1281,8 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 exports[`Vue > jsx > Javascript Test > SlotNamed 1`] = `
 "<template>
   <div>
-    <slot name=\\"top\\"></slot><slot name=\\"left\\">Default left</slot
-    ><slot>Default Child</slot>
+    <slot name=\\"my-awesome-slot\\"></slot><slot name=\\"top\\"></slot
+    ><slot name=\\"left\\">Default left</slot><slot>Default Child</slot>
   </div>
 </template>"
 `;
@@ -1856,11 +1848,38 @@ const refToUse = ref(
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > getterState 1`] = `
+"<template>
+  <div>
+    <p>{{ foo2 }}</p>
+    <p>{{ bar }}</p>
+    <p>{{ baz(1) }}</p>
+  </div>
+</template>
+
+<script setup>
+import { computed } from \\"vue\\";
+
+const props = defineProps([\\"foo\\"]);
+
+const foo2 = computed(() => {
+  return props.foo + \\"foo\\";
+});
+const bar = computed(() => {
+  return \\"bar\\";
+});
+
+function baz(i) {
+  return i + foo2.length;
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > import types 1`] = `
 "<template>
-  <render-block
+  <RenderBlock
     v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
-  ></render-block>
+  ></RenderBlock>
 </template>
 
 <script setup>
@@ -2235,10 +2254,10 @@ exports[`Vue > jsx > Javascript Test > renderBlock 1`] = `
 
     <template v-if=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
       <template :key=\\"index\\" v-for=\\"(data, index) in repeatItemData\\">
-        <render-repeated-block
+        <RenderRepeatedBlock
           :repeatContext=\\"data.context\\"
           :block=\\"data.block\\"
-        ></render-repeated-block>
+        ></RenderRepeatedBlock>
       </template>
     </template>
 
@@ -2252,18 +2271,18 @@ exports[`Vue > jsx > Javascript Test > renderBlock 1`] = `
           :key=\\"'render-block-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
-          <render-block
+          <RenderBlock
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></render-block> </template
+          ></RenderBlock> </template
         ><template
           :key=\\"'block-style-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
-          <block-styles
+          <BlockStyles
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></block-styles> </template
+          ></BlockStyles> </template
       ></component>
     </template>
   </template>
@@ -2474,7 +2493,7 @@ const renderComponentTag = computed(() => {
 exports[`Vue > jsx > Javascript Test > renderContentExample 1`] = `
 "<template>
   <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
-    <render-blocks :blocks=\\"content.blocks\\"></render-blocks>
+    <RenderBlocks :blocks=\\"content.blocks\\"></RenderBlocks>
   </div>
 </template>
 
@@ -2563,7 +2582,7 @@ exports[`Vue > jsx > Javascript Test > self-referencing component 1`] = `
   <div>
     {{ name }}
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce Wayne\\"></my-component>
+      <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
     </template>
   </div>
 </template>
@@ -2578,7 +2597,7 @@ exports[`Vue > jsx > Javascript Test > self-referencing component with children 
   <div>
     {{ name }}<slot />
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
+      <MyComponent name=\\"Bruce\\"><div>Wayne</div></MyComponent>
     </template>
   </div>
 </template>
@@ -2710,7 +2729,7 @@ const props = defineProps([\\"attributes\\"]);
 
 exports[`Vue > jsx > Javascript Test > subComponent 1`] = `
 "<template>
-  <foo></foo>
+  <Foo></Foo>
 </template>
 
 <script setup>
@@ -3087,15 +3106,9 @@ exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
       {{ type }}
     </template>
 
-    <my-boolean-attribute-component
-      :toggle=\\"true\\"
-    ></my-boolean-attribute-component
-    ><my-boolean-attribute-component
-      :toggle=\\"true\\"
-    ></my-boolean-attribute-component
-    ><my-boolean-attribute-component
-      :list=\\"null\\"
-    ></my-boolean-attribute-component>
+    <MyBooleanAttributeComponent :toggle=\\"true\\"></MyBooleanAttributeComponent
+    ><MyBooleanAttributeComponent :toggle=\\"true\\"></MyBooleanAttributeComponent
+    ><MyBooleanAttributeComponent :list=\\"null\\"></MyBooleanAttributeComponent>
   </div>
 </template>
 
@@ -3114,12 +3127,12 @@ const props = defineProps<Props>();
 exports[`Vue > jsx > Typescript Test > BasicChildComponent 1`] = `
 "<template>
   <div>
-    <my-basic-component :id=\\"dev\\"></my-basic-component>
+    <MyBasicComponent :id=\\"dev\\"></MyBasicComponent>
     <div>
-      <my-basic-on-mount-update-component
+      <MyBasicOnMountUpdateComponent
         :hi=\\"name\\"
         :bye=\\"dev\\"
-      ></my-basic-on-mount-update-component>
+      ></MyBasicOnMountUpdateComponent>
     </div>
   </div>
 </template>
@@ -3604,25 +3617,25 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
         :key=\\"block.id\\"
         v-for=\\"(block, index) in builderBlock?.children\\"
       >
-        <builder-block-component
+        <BuilderBlockComponent
           :block=\\"block\\"
           :index=\\"index\\"
-        ></builder-block-component>
+        ></BuilderBlockComponent>
       </template>
     </template>
 
     <template v-if=\\"submissionState === 'error'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"errorMessage\\"
         :blocks=\\"errorMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
 
     <template v-if=\\"submissionState === 'sending'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"sendingMessage\\"
         :blocks=\\"sendingMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
 
     <template v-if=\\"submissionState === 'error' && responseData\\">
@@ -3632,10 +3645,10 @@ exports[`Vue > jsx > Typescript Test > Form 1`] = `
     </template>
 
     <template v-if=\\"submissionState === 'success'\\">
-      <builder-blocks
+      <BuilderBlocks
         dataPath=\\"successMessage\\"
         :blocks=\\"successMessage\\"
-      ></builder-blocks>
+      ></BuilderBlocks>
     </template>
   </form>
 </template>
@@ -4111,11 +4124,11 @@ const props = defineProps<FormInputProps>();
 
 exports[`Vue > jsx > Typescript Test > InputParent 1`] = `
 "<template>
-  <form-input-component
+  <FormInputComponent
     name=\\"kingzez\\"
     type=\\"text\\"
     :onChange=\\"(value) => handleChange(value)\\"
-  ></form-input-component>
+  ></FormInputComponent>
 </template>
 
 <script setup lang=\\"ts\\">
@@ -4255,11 +4268,11 @@ type Props = {
 exports[`Vue > jsx > Typescript Test > SlotHtml 1`] = `
 "<template>
   <div>
-    <content-slot-code>
+    <ContentSlotCode>
       <template #testing>
         <div>Hello</div>
       </template>
-    </content-slot-code>
+    </ContentSlotCode>
   </div>
 </template>
 
@@ -4274,9 +4287,7 @@ type Props = {
 
 exports[`Vue > jsx > Typescript Test > SlotJsx 1`] = `
 "<template>
-  <div>
-    <content-slot-code :slotTesting=\\"<div>Hello</div>\\"></content-slot-code>
-  </div>
+  <div><ContentSlotCode :slotTesting=\\"<div>Hello</div>\\"></ContentSlotCode></div>
 </template>
 
 <script setup lang=\\"ts\\">
@@ -4291,8 +4302,8 @@ type Props = {
 exports[`Vue > jsx > Typescript Test > SlotNamed 1`] = `
 "<template>
   <div>
-    <slot name=\\"top\\"></slot><slot name=\\"left\\">Default left</slot
-    ><slot>Default Child</slot>
+    <slot name=\\"my-awesome-slot\\"></slot><slot name=\\"top\\"></slot
+    ><slot name=\\"left\\">Default left</slot><slot>Default Child</slot>
   </div>
 </template>
 
@@ -4947,11 +4958,42 @@ const refToUse = ref(
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > getterState 1`] = `
+"<template>
+  <div>
+    <p>{{ foo2 }}</p>
+    <p>{{ bar }}</p>
+    <p>{{ baz(1) }}</p>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { computed } from \\"vue\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+const props = defineProps<ButtonProps>();
+
+const foo2 = computed(() => {
+  return props.foo + \\"foo\\";
+});
+const bar = computed(() => {
+  return \\"bar\\";
+});
+
+function baz(i: number) {
+  return i + foo2.length;
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > import types 1`] = `
 "<template>
-  <render-block
+  <RenderBlock
     v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
-  ></render-block>
+  ></RenderBlock>
 </template>
 
 <script setup lang=\\"ts\\">
@@ -5384,10 +5426,10 @@ exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
 
     <template v-if=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
       <template :key=\\"index\\" v-for=\\"(data, index) in repeatItemData\\">
-        <render-repeated-block
+        <RenderRepeatedBlock
           :repeatContext=\\"data.context\\"
           :block=\\"data.block\\"
-        ></render-repeated-block>
+        ></RenderRepeatedBlock>
       </template>
     </template>
 
@@ -5401,18 +5443,18 @@ exports[`Vue > jsx > Typescript Test > renderBlock 1`] = `
           :key=\\"'render-block-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
-          <render-block
+          <RenderBlock
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></render-block> </template
+          ></RenderBlock> </template
         ><template
           :key=\\"'block-style-' + child.id\\"
           v-for=\\"(child, index) in childrenWithoutParentComponent\\"
         >
-          <block-styles
+          <BlockStyles
             :block=\\"child\\"
             :context=\\"childrenContext\\"
-          ></block-styles> </template
+          ></BlockStyles> </template
       ></component>
     </template>
   </template>
@@ -5636,7 +5678,7 @@ const renderComponentTag = computed(() => {
 exports[`Vue > jsx > Typescript Test > renderContentExample 1`] = `
 "<template>
   <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
-    <render-blocks :blocks=\\"content.blocks\\"></render-blocks>
+    <RenderBlocks :blocks=\\"content.blocks\\"></RenderBlocks>
   </div>
 </template>
 
@@ -5744,7 +5786,7 @@ exports[`Vue > jsx > Typescript Test > self-referencing component 1`] = `
   <div>
     {{ name }}
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce Wayne\\"></my-component>
+      <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
     </template>
   </div>
 </template>
@@ -5759,7 +5801,7 @@ exports[`Vue > jsx > Typescript Test > self-referencing component with children 
   <div>
     {{ name }}<slot />
     <template v-if=\\"name === 'Batman'\\">
-      <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
+      <MyComponent name=\\"Bruce\\"><div>Wayne</div></MyComponent>
     </template>
   </div>
 </template>
@@ -5909,7 +5951,7 @@ const props = defineProps([\\"attributes\\"]);
 
 exports[`Vue > jsx > Typescript Test > subComponent 1`] = `
 "<template>
-  <foo></foo>
+  <Foo></Foo>
 </template>
 
 <script setup lang=\\"ts\\">
@@ -6229,7 +6271,7 @@ function toggle() {
 exports[`Vue > svelte > Javascript Test > imports 1`] = `
 "<template>
   <div>
-    <button type=\\"button\\" :disabled=\\"disabled\\"><slot /></button>
+    <Button type=\\"button\\" :disabled=\\"disabled\\"><slot /></Button>
   </div>
 </template>
 
@@ -6535,7 +6577,7 @@ function toggle() {
 exports[`Vue > svelte > Typescript Test > imports 1`] = `
 "<template>
   <div>
-    <button type=\\"button\\" :disabled=\\"disabled\\"><slot /></button>
+    <Button type=\\"button\\" :disabled=\\"disabled\\"><slot /></Button>
   </div>
 </template>
 
