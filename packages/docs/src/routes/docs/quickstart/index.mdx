@@ -70,6 +70,64 @@ By following these steps, you'll be well on your way to developing with Mitosis,
 
 See our [CLI documentation](/docs/cli) for more commands you can run for developing and building.
 
+### Verify your components
+
+After generating the component code with Mitosis, the next step is to ensure that your components work as expected. Here's how to verify them using Svelte as the target framework:
+
+1. **Export the components**
+
+   Export the `Greet` component from the `library/src/index.ts` file:
+
+   ```tsx
+   export { default as Greet } from './greet/greet.lite';
+   ```
+
+2. **Build the library**
+
+   From the `library/packages/svelte` folder, build the Svelte components by running the following command:
+
+   ```bash
+   npm run build:watch
+   ```
+
+3. **Test in a an application**
+
+   We'll use Svelte for this example, but these same steps work for any other output frameworks.
+
+   - Navigate to the `test-apps/svelte` folder:
+     ```bash
+     cd test-apps/svelte
+     ```
+   - Open the `src/routes/+page.svelte` file and import the component:
+
+     ```tsx
+     <script lang="ts">
+       import { AutoComplete, Todos, Greet } from '@demo-one/library-svelte';
+     </script>
+
+     <h1>Welcome to SvelteKit</h1>
+     <AutoComplete />
+     <Todos />
+     <Greet />
+     <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+
+     ```
+
+4. **Start the dev server**
+
+   Start the development server for your Svelte app with the following command:
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Verify the component**
+
+   Open [http://localhost:5173](http://localhost:5173/) in your browser. You should see the functioning Greet component along with the other components.
+
+By following these steps, you'll be well on your way to developing with Mitosis, taking advantage of its capability to write once and deploy to multiple frameworks.
+
 ### Next steps
 
-Now, you can build [Mitosis components](/docs/components) and explore our [Figma integration](/docs/figma) to sync your design systems in Figma to code, and then run [`mitosis build`](/docs/cli#mitosis-build) to generate packages for each output framework and publish them to npm.
+- Read more on writing [Mitosis components](/docs/components)
+- Explore the [Figma integration](/docs/figma) for generating Mitosis components from Figma designs
