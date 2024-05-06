@@ -28,11 +28,8 @@ Mitosis provides a unified development experience across all frameworks, enablin
 Using Mitosis, you can:
 
 - Maintain a consistent design system across multiple frameworks ([example](https://github.com/db-ui/mono))
-- Sync your [design systems from Figma to code](/docs/figma) and publish them to npm across frameworks
-- Build high quality cross-framework SDKs ([example](https://github.com/BuilderIO/builder/tree/main/packages/sdks#builderio-sdks))
+- Sync your [design systems from Figma to code](https://mitosis.builder.io/docs/figma/) and publish them to npm across frameworks
 - Avoid the [pitfalls of web components](https://mitosis.builder.io/docs/overview/) by compiling to native framework code
-
-Additionally, Mitosis [integrates with Figma](https://mitosis.builder.io/docs/figma/) to sync your design systems in Figma to code.
 
 _PS: We are actively looking for folks interested in becoming contributors to Mitosis. If interested, look at our list of [good first issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or reach out on our [Discord](https://discord.gg/SNusEyNGsx)_
 
