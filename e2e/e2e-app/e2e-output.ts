@@ -51,8 +51,8 @@ export async function emitTable(allResults: Entry[]) {
   await writeFile('./e2e-test-status.md', formattedTable, 'utf8');
 
   // Write it in to the README
-  const readmeFile = '../../README.MD';
-  const currentReadme = await readFile(readmeFile, 'utf-8');
+  const outputFile = '../../docs/test-status.md';
+  const currentReadme = await readFile(outputFile, 'utf-8');
 
   const before = currentReadme.match(/.*## E2E test status/gms)![0];
   const after = currentReadme.match(/## Contribute.*/gms)![0];
@@ -63,7 +63,7 @@ _NOTE: this matrix is programmatically generated and should not be manually edit
 
 ${after}`;
 
-  await writeFile(readmeFile, newReadme, 'utf-8');
+  await writeFile(outputFile, newReadme, 'utf-8');
   // cut before/after the heading and next heading
   // write with this inserted
 
