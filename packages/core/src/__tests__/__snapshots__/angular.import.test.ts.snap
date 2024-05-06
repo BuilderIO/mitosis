@@ -2685,6 +2685,64 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > dynamicComponentWithEventArg 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  @ViewChild(\\"componentTemplate\\", { static: true })
+  componentTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
+  Component = HelloComponent;
+  onClick = function onClick(event) {
+    console.log(\\"hello\\", event);
+  };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > expressionState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7424,6 +7482,64 @@ export default class MyComponent {
   onClick = function onClick() {
     console.log(\\"hello\\");
   };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > dynamicComponentWithEventArg 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  @ViewChild(\\"componentTemplate\\", { static: true })
+  componentTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
+  Component = HelloComponent;
+  onClick = function onClick(event: any) {
+    console.log(\\"hello\\", event);
+  };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
 }
 
 @NgModule({

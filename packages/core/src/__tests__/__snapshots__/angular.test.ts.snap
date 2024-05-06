@@ -4972,6 +4972,115 @@ export default class MyComponent {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > dynamicComponentWithEventArg 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  @ViewChild(\\"componentTemplate\\", { static: true })
+  componentTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
+  Component = HelloComponent;
+  onClick = function onClick(event) {
+    console.log(\\"hello\\", event);
+  };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > dynamicComponentWithEventArg 2`] = `
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  @ViewChild(\\"componentTemplate\\", { static: true })
+  componentTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
+  Component = HelloComponent;
+  onClick = function onClick(event) {
+    console.log(\\"hello\\", event);
+  };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > expressionState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -13728,6 +13837,115 @@ export default class MyComponent {
   onClick = function onClick() {
     console.log(\\"hello\\");
   };
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > dynamicComponentWithEventArg 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  @ViewChild(\\"componentTemplate\\", { static: true })
+  componentTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
+  Component = HelloComponent;
+  onClick = function onClick(event: any) {
+    console.log(\\"hello\\", event);
+  };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > dynamicComponentWithEventArg 2`] = `
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component;
+              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              content: myContent;
+              \\"
+    ></ng-container>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
+
+  @ViewChild(\\"componentTemplate\\", { static: true })
+  componentTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
+  Component = HelloComponent;
+  onClick = function onClick(event: any) {
+    console.log(\\"hello\\", event);
+  };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
 }
 "
 `;
