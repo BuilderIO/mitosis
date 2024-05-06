@@ -1322,6 +1322,7 @@ exports[`RSC > jsx > Javascript Test > SlotNamed 1`] = `
 function SlotCode(props) {
   return (
     <div>
+      <>{props.myAwesomeSlot}</>
       <>{props.top}</>
       <>{props.left || \\"Default left\\"}</>
       <>{props.children || \\"Default Child\\"}</>
@@ -1828,7 +1829,7 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        {foo.value}
+        <>{foo.value}</>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -1864,7 +1865,7 @@ function ComponentWithContext(props) {
         }}
       >
         <>
-          {foo.value}
+          <>{foo.value}</>
           <div>other</div>
         </>
       </Context1.Provider>
@@ -2010,6 +2011,33 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`RSC > jsx > Javascript Test > getterState 1`] = `
+"import * as React from \\"react\\";
+
+function Button(props) {
+  const foo2 = function foo2() {
+    return props.foo + \\"foo\\";
+  };
+  const bar = function bar() {
+    return \\"bar\\";
+  };
+  const baz = function baz(i) {
+    return i + foo2().length;
+  };
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
 "
 `;
 
@@ -4449,6 +4477,7 @@ type Props = {
 function SlotCode(props: Props) {
   return (
     <div>
+      <>{props.myAwesomeSlot}</>
       <>{props.top}</>
       <>{props.left || \\"Default left\\"}</>
       <>{props.children || \\"Default Child\\"}</>
@@ -5029,7 +5058,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
           },
         }}
       >
-        {foo.value}
+        <>{foo.value}</>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -5070,7 +5099,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
         }}
       >
         <>
-          {foo.value}
+          <>{foo.value}</>
           <div>other</div>
         </>
       </Context1.Provider>
@@ -5238,6 +5267,37 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > getterState 1`] = `
+"import * as React from \\"react\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+function Button(props: ButtonProps) {
+  const foo2 = function foo2() {
+    return props.foo + \\"foo\\";
+  };
+  const bar = function bar() {
+    return \\"bar\\";
+  };
+  const baz = function baz(i: number) {
+    return i + foo2().length;
+  };
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
 "
 `;
 

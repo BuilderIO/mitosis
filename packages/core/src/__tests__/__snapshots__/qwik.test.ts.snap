@@ -2305,9 +2305,7 @@ export const STYLES = \`
 `;
 
 exports[`qwik > jsx > Javascript Test > ContentSlotHtml 1`] = `
-"import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
 
 export const ContentSlotCode = component$((props) => {
   return (
@@ -2328,9 +2326,7 @@ export default ContentSlotCode;
 `;
 
 exports[`qwik > jsx > Javascript Test > ContentSlotJSX 1`] = `
-"import { Slot } from \\"./med.js\\";
-
-import {
+"import {
   $,
   Fragment,
   Slot,
@@ -2340,7 +2336,7 @@ import {
   useStore,
 } from \\"@builder.io/qwik\\";
 
-export const show = function show(props, state) {
+export const show = function show(props, state, cls) {
   props.slotContent ? 1 : \\"\\";
 };
 export const ContentSlotJsxCode = component$((props) => {
@@ -2356,7 +2352,7 @@ export const ContentSlotJsxCode = component$((props) => {
           name={props.slotContent ? \\"name1\\" : \\"name2\\"}
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
-          onClick$={$((event) => show(props, state))}
+          onClick$={$((event) => show(props, state, cls))}
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
@@ -2553,7 +2549,13 @@ import {
   set,
 } from \\"@fake\\";
 
-export const onSubmit = function onSubmit(props, state, formRef, event) {
+export const onSubmit = function onSubmit(
+  props,
+  state,
+  submissionState,
+  formRef,
+  event
+) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
   if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -2788,7 +2790,9 @@ export const FormComponent = component$((props) => {
       })()}
       method={props.method}
       name={props.name}
-      onSubmit$={$((event) => onSubmit(props, state, formRef, event))}
+      onSubmit$={$((event) =>
+        onSubmit(props, state, submissionState, formRef, event)
+      )}
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
@@ -3149,9 +3153,7 @@ export default SelectComponent;
 `;
 
 exports[`qwik > jsx > Javascript Test > SlotDefault 1`] = `
-"import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
 
 export const SlotCode = component$((props) => {
   return (
@@ -3170,9 +3172,7 @@ export default SlotCode;
 exports[`qwik > jsx > Javascript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
 
 export const SlotCode = component$((props) => {
   return (
@@ -3214,13 +3214,12 @@ export default SlotCode;
 `;
 
 exports[`qwik > jsx > Javascript Test > SlotNamed 1`] = `
-"import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
 
 export const SlotCode = component$((props) => {
   return (
     <div>
+      <Slot name=\\"myAwesomeSlot\\"></Slot>
       <Slot name=\\"top\\"></Slot>
       <Slot name=\\"left\\">Default left</Slot>
       <Slot>Default Child</Slot>
@@ -3811,6 +3810,34 @@ export const MyComponent = component$((props) => {
 });
 
 export default MyComponent;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > getterState 1`] = `
+"import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
+
+export const baz = function baz(props, state, foo2, bar, i) {
+  return i + foo2.value.length;
+};
+export const Button = component$((props) => {
+  const foo2 = useComputed$(() => {
+    return props.foo + \\"foo\\";
+  });
+  const bar = useComputed$(() => {
+    return \\"bar\\";
+  });
+  const state = {};
+
+  return (
+    <div>
+      <p>{foo2.value}</p>
+      <p>{bar.value}</p>
+      <p>{baz(props, state, foo2, bar, 1)}</p>
+    </div>
+  );
+});
+
+export default Button;
 "
 `;
 
@@ -5579,9 +5606,7 @@ export const STYLES = \`
 exports[`qwik > jsx > Typescript Test > ContentSlotHtml 1`] = `
 "import { JSX } from \\"../../../../jsx-runtime\\";
 
-import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -5608,8 +5633,6 @@ export default ContentSlotCode;
 exports[`qwik > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "import { JSX } from \\"../../../../jsx-runtime\\";
 
-import { Slot } from \\"./med.js\\";
-
 import {
   $,
   Fragment,
@@ -5623,7 +5646,7 @@ import {
 type Props = {
   [key: string]: string | JSX.Element;
 };
-export const show = function show(props, state) {
+export const show = function show(props, state, cls) {
   props.slotContent ? 1 : \\"\\";
 };
 export const ContentSlotJsxCode = component$((props: Props) => {
@@ -5639,7 +5662,7 @@ export const ContentSlotJsxCode = component$((props: Props) => {
           name={props.slotContent ? \\"name1\\" : \\"name2\\"}
           title={props.slotContent ? \\"title1\\" : \\"title2\\"}
           {...props.attributes}
-          onClick$={$((event) => show(props, state))}
+          onClick$={$((event) => show(props, state, cls))}
           class={cls.value}
         >
           {state.showContent && props.slotContent ? (
@@ -5870,6 +5893,7 @@ export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"e
 export const onSubmit = function onSubmit(
   props,
   state,
+  submissionState,
   formRef,
   event: Event & {
     currentTarget: HTMLFormElement;
@@ -6112,7 +6136,9 @@ export const FormComponent = component$((props: FormProps) => {
       })()}
       method={props.method}
       name={props.name}
-      onSubmit$={$((event) => onSubmit(props, state, formRef, event))}
+      onSubmit$={$((event) =>
+        onSubmit(props, state, submissionState, formRef, event)
+      )}
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
@@ -6541,9 +6567,7 @@ export default SelectComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > SlotDefault 1`] = `
-"import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
 
 type Props = {
   [key: string]: string;
@@ -6565,9 +6589,7 @@ export default SlotCode;
 exports[`qwik > jsx > Typescript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
 
 type Props = {
   [key: string]: string;
@@ -6615,9 +6637,7 @@ export default SlotCode;
 `;
 
 exports[`qwik > jsx > Typescript Test > SlotNamed 1`] = `
-"import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
 
 type Props = {
   [key: string]: string;
@@ -6625,6 +6645,7 @@ type Props = {
 export const SlotCode = component$((props: Props) => {
   return (
     <div>
+      <Slot name=\\"myAwesomeSlot\\"></Slot>
       <Slot name=\\"top\\"></Slot>
       <Slot name=\\"left\\">Default left</Slot>
       <Slot>Default Child</Slot>
@@ -7299,6 +7320,37 @@ export const MyComponent = component$((props: any) => {
 });
 
 export default MyComponent;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > getterState 1`] = `
+"import { Fragment, component$, h, useComputed$ } from \\"@builder.io/qwik\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+export const baz = function baz(props, state, foo2, bar, i: number) {
+  return i + foo2.value.length;
+};
+export const Button = component$((props: ButtonProps) => {
+  const foo2 = useComputed$(() => {
+    return props.foo + \\"foo\\";
+  });
+  const bar = useComputed$(() => {
+    return \\"bar\\";
+  });
+  const state: any = {};
+
+  return (
+    <div>
+      <p>{foo2.value}</p>
+      <p>{bar.value}</p>
+      <p>{baz(props, state, foo2, bar, 1)}</p>
+    </div>
+  );
+});
+
+export default Button;
 "
 `;
 
@@ -9301,9 +9353,7 @@ export default MyComponent;
 exports[`qwik > svelte > Javascript Test > imports 1`] = `
 "import Button from \\"./Button.jsx\\";
 
-import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props) => {
   const state = useStore({ disabled: false });
@@ -9415,9 +9465,7 @@ export default MyComponent;
 `;
 
 exports[`qwik > svelte > Javascript Test > slots 1`] = `
-"import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props) => {
   return (
@@ -9711,9 +9759,7 @@ export default MyComponent;
 exports[`qwik > svelte > Typescript Test > imports 1`] = `
 "import Button from \\"./Button.jsx\\";
 
-import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props: any) => {
   const state = useStore<any>({ disabled: false });
@@ -9825,9 +9871,7 @@ export default MyComponent;
 `;
 
 exports[`qwik > svelte > Typescript Test > slots 1`] = `
-"import { Slot } from \\"./med.js\\";
-
-import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
 
 export const MyComponent = component$((props: any) => {
   return (

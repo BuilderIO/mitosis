@@ -39,11 +39,11 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicRefComponent {
-  @Input() showInput: any;
+export default class MyBasicRefComponent {
+  @Input() showInput!: any;
 
-  @ViewChild(\\"inputRef\\") inputRef: ElementRef;
-  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef: ElementRef;
+  @ViewChild(\\"inputRef\\") inputRef!: ElementRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef!: ElementRef;
 
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
@@ -98,7 +98,7 @@ export const DEFAULT_VALUES = {
     \`,
   ],
 })
-export class MyBasicComponent {
+export default class MyBasicComponent {
   DEFAULT_VALUES = DEFAULT_VALUES;
 
   name = \\"Steve\\";
@@ -144,7 +144,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyBasicForShowComponent {
+export default class MyBasicForShowComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 }
@@ -177,7 +177,7 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
     </div>
   \`,
 })
-export class MyBasicComponent {
+export default class MyBasicComponent {
   name = \\"PatrickJS\\";
   onChange = function onChange() {
     const change = this.myService.method(\\"change\\");
@@ -216,9 +216,9 @@ import { Component, Input } from \\"@angular/core\\";
     <div>Hello {{name}}</div>
   \`,
 })
-export class MyBasicOnMountUpdateComponent {
-  @Input() bye: any;
-  @Input() hi: any;
+export default class MyBasicOnMountUpdateComponent {
+  @Input() bye!: any;
+  @Input() hi!: any;
 
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
@@ -253,8 +253,8 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class MyBasicOutputsComponent {
-  @Input() message: any;
+export default class MyBasicOutputsComponent {
+  @Input() message!: any;
 
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
@@ -288,8 +288,8 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class MyBasicOutputsComponent {
-  @Input() message: any;
+export default class MyBasicOutputsComponent {
+  @Input() message!: any;
 
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
@@ -323,7 +323,7 @@ import { Component } from \\"@angular/core\\";
     <input autocapitalize=\\"on\\" autocomplete=\\"on\\" [attr.spellcheck]=\\"true\\" />
   \`,
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -362,8 +362,8 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
     </div>
   \`,
 })
-export class MyBooleanAttribute {
-  @Input() type: any;
+export default class MyBooleanAttribute {
+  @Input() type!: any;
 }
 
 @NgModule({
@@ -398,7 +398,7 @@ import MyBasicComponent from \\"./basic.raw\\";
     </div>
   \`,
 })
-export class MyBasicChildComponent {
+export default class MyBasicChildComponent {
   name = \\"Steve\\";
   dev = \\"PatrickJS\\";
 }
@@ -442,7 +442,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyBasicForComponent {
+export default class MyBasicForComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
@@ -499,11 +499,11 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicRefComponent {
-  @Input() showInput: any;
+export default class MyBasicRefComponent {
+  @Input() showInput!: any;
 
-  @ViewChild(\\"inputRef\\") inputRef: ElementRef;
-  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef: ElementRef;
+  @ViewChild(\\"inputRef\\") inputRef!: ElementRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef!: ElementRef;
 
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
@@ -536,7 +536,7 @@ import { Component } from \\"@angular/core\\";
     <div><button (click)=\\"handlerClick($event)\\">Click</button></div>
   \`,
 })
-export class MyBasicRefAssignmentComponent {
+export default class MyBasicRefAssignmentComponent {
   handlerClick = function handlerClick(event) {
     event.preventDefault();
     console.log(\\"current value\\", this._holdValueRef);
@@ -583,7 +583,7 @@ export function usePrevious(value) {
     </div>
   \`,
 })
-export class MyPreviousComponent {
+export default class MyPreviousComponent {
   count = 0;
 
   private _prevCount = this.count;
@@ -626,11 +626,11 @@ import { Component, Input } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class Button {
-  @Input() link: any;
-  @Input() attributes: any;
-  @Input() openLinkInNewTab: any;
-  @Input() text: any;
+export default class Button {
+  @Input() link!: any;
+  @Input() attributes!: any;
+  @Input() openLinkInNewTab!: any;
+  @Input() text!: any;
 }
 
 @NgModule({
@@ -681,9 +681,9 @@ import { Component, Input } from \\"@angular/core\\";
     \`,
   ],
 })
-export class Column {
-  @Input() columns: any;
-  @Input() space: any;
+export default class Column {
+  @Input() columns!: any;
+  @Input() space!: any;
 
   getColumns() {
     return this.columns || [];
@@ -728,7 +728,7 @@ import { Component, Input } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class ContentSlotCode {}
+export default class ContentSlotCode {}
 
 @NgModule({
   declarations: [ContentSlotCode],
@@ -770,9 +770,9 @@ const defaultProps = {
     </ng-container>
   \`,
 })
-export class ContentSlotJsxCode {
-  @Input() attributes: any;
-  @Input() content: any = defaultProps[\\"content\\"];
+export default class ContentSlotJsxCode {
+  @Input() attributes!: any;
+  @Input() content!: any = defaultProps[\\"content\\"];
 
   name = \\"king\\";
   showContent = false;
@@ -809,11 +809,11 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     ></div>
   \`,
 })
-export class CustomCode {
-  @Input() replaceNodes: any;
-  @Input() code: any;
+export default class CustomCode {
+  @Input() replaceNodes!: any;
+  @Input() code!: any;
 
-  @ViewChild(\\"elem\\") elem: ElementRef;
+  @ViewChild(\\"elem\\") elem!: ElementRef;
 
   scriptsInserted = [];
   scriptsRun = [];
@@ -889,11 +889,11 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     ></div>
   \`,
 })
-export class CustomCode {
-  @Input() replaceNodes: any;
-  @Input() code: any;
+export default class CustomCode {
+  @Input() replaceNodes!: any;
+  @Input() code!: any;
 
-  @ViewChild(\\"elem\\") elem: ElementRef;
+  @ViewChild(\\"elem\\") elem!: ElementRef;
 
   scriptsInserted = [];
   scriptsRun = [];
@@ -983,7 +983,6 @@ import {
           *ngFor=\\"let block of builderBlock?.children; let index = index\\"
         >
           <BuilderBlockComponent
-            [key]=\\"block.id\\"
             [block]=\\"block\\"
             [index]=\\"index\\"
           ></BuilderBlockComponent>
@@ -1002,9 +1001,7 @@ import {
         ></BuilderBlocks>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'error' && responseData\\">
-        <pre class=\\"builder-form-error-text pre\\">
-        {{JSON.stringify(responseData, null, 2)}}</pre
-        >
+        <pre class=\\"builder-form-error-text pre\\">{{useJsonStringify}}</pre>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'success'\\">
         <BuilderBlocks
@@ -1024,29 +1021,29 @@ import {
     \`,
   ],
 })
-export class FormComponent {
+export default class FormComponent {
   builder = builder;
 
-  @Input() previewState: any;
-  @Input() sendWithJs: any;
-  @Input() sendSubmissionsTo: any;
-  @Input() action: any;
-  @Input() customHeaders: any;
-  @Input() contentType: any;
-  @Input() sendSubmissionsToEmail: any;
-  @Input() name: any;
-  @Input() method: any;
-  @Input() errorMessagePath: any;
-  @Input() resetFormOnSubmit: any;
-  @Input() successUrl: any;
-  @Input() validate: any;
-  @Input() attributes: any;
-  @Input() builderBlock: any;
-  @Input() errorMessage: any;
-  @Input() sendingMessage: any;
-  @Input() successMessage: any;
+  @Input() previewState!: any;
+  @Input() sendWithJs!: any;
+  @Input() sendSubmissionsTo!: any;
+  @Input() action!: any;
+  @Input() customHeaders!: any;
+  @Input() contentType!: any;
+  @Input() sendSubmissionsToEmail!: any;
+  @Input() name!: any;
+  @Input() method!: any;
+  @Input() errorMessagePath!: any;
+  @Input() resetFormOnSubmit!: any;
+  @Input() successUrl!: any;
+  @Input() validate!: any;
+  @Input() attributes!: any;
+  @Input() builderBlock!: any;
+  @Input() errorMessage!: any;
+  @Input() sendingMessage!: any;
+  @Input() successMessage!: any;
 
-  @ViewChild(\\"formRef\\") formRef: ElementRef;
+  @ViewChild(\\"formRef\\") formRef!: ElementRef;
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -1267,6 +1264,10 @@ export class FormComponent {
       );
     }
   }
+
+  useJsonStringify(obj: any): string {
+    return JSON.stringify(obj);
+  }
 }
 
 @NgModule({
@@ -1316,15 +1317,15 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     \`,
   ],
 })
-export class Image {
-  @Input() lazy: any;
-  @Input() altText: any;
-  @Input() _class: any;
-  @Input() image: any;
-  @Input() srcset: any;
-  @Input() sizes: any;
+export default class Image {
+  @Input() lazy!: any;
+  @Input() altText!: any;
+  @Input() _class!: any;
+  @Input() image!: any;
+  @Input() srcset!: any;
+  @Input() sizes!: any;
 
-  @ViewChild(\\"pictureRef\\") pictureRef: ElementRef;
+  @ViewChild(\\"pictureRef\\") pictureRef!: ElementRef;
 
   scrollListener = null;
   imageLoaded = false;
@@ -1395,13 +1396,13 @@ import { Component } from \\"@angular/core\\";
     <div>
       <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
         <ng-container>
-          <img class=\\"custom-class\\" [attr.src]=\\"item\\" [attr.key]=\\"itemIndex\\" />
+          <img class=\\"custom-class\\" [attr.src]=\\"item\\" />
         </ng-container>
       </ng-container>
     </div>
   \`,
 })
-export class ImgStateComponent {
+export default class ImgStateComponent {
   canShow = true;
   images = [\\"http://example.com/qwik.png\\"];
 }
@@ -1427,22 +1428,26 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"img-component, ImgComponent\\",
   template: \`
     <img
-      [ngStyle]=\\"{
-          objectFit: backgroundSize || 'cover',
-          objectPosition: backgroundPosition || 'center'
-        }\\"
-      [attr.key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
+      [ngStyle]=\\"useObjectWrapper({ objectFit: backgroundSize || 'cover' }, { objectPosition: backgroundPosition || 'center' })\\"
       [attr.alt]=\\"altText\\"
       [attr.src]=\\"imgSrc\\"
     />
   \`,
 })
-export class ImgComponent {
-  @Input() backgroundSize: any;
-  @Input() backgroundPosition: any;
-  @Input() attributes: any;
-  @Input() imgSrc: any;
-  @Input() altText: any;
+export default class ImgComponent {
+  @Input() backgroundSize!: any;
+  @Input() backgroundPosition!: any;
+  @Input() attributes!: any;
+  @Input() imgSrc!: any;
+  @Input() altText!: any;
+
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
 }
 
 @NgModule({
@@ -1466,7 +1471,6 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"form-input-component, FormInputComponent\\",
   template: \`
     <input
-      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
       [attr.placeholder]=\\"placeholder\\"
       [attr.type]=\\"type\\"
       [attr.name]=\\"name\\"
@@ -1477,15 +1481,15 @@ import { Builder } from \\"@builder.io/sdk\\";
     />
   \`,
 })
-export class FormInputComponent {
-  @Input() attributes: any;
-  @Input() defaultValue: any;
-  @Input() placeholder: any;
-  @Input() type: any;
-  @Input() name: any;
-  @Input() value: any;
-  @Input() required: any;
-  @Input() onChange: any;
+export default class FormInputComponent {
+  @Input() attributes!: any;
+  @Input() defaultValue!: any;
+  @Input() placeholder!: any;
+  @Input() type!: any;
+  @Input() name!: any;
+  @Input() value!: any;
+  @Input() required!: any;
+  @Input() onChange!: any;
 }
 
 @NgModule({
@@ -1515,7 +1519,7 @@ import FormInputComponent from \\"./input.raw\\";
     ></form-input-component>
   \`,
 })
-export class Stepper {
+export default class Stepper {
   handleChange(value) {
     console.log(value);
   }
@@ -1545,9 +1549,9 @@ import { Component, Input } from \\"@angular/core\\";
     ></span>
   \`,
 })
-export class RawText {
-  @Input() attributes: any;
-  @Input() text: any;
+export default class RawText {
+  @Input() attributes!: any;
+  @Input() text!: any;
 }
 
 @NgModule({
@@ -1577,9 +1581,9 @@ import { Component, Input } from \\"@angular/core\\";
     </section>
   \`,
 })
-export class SectionComponent {
-  @Input() attributes: any;
-  @Input() maxWidth: any;
+export default class SectionComponent {
+  @Input() attributes!: any;
+  @Input() maxWidth!: any;
 }
 
 @NgModule({
@@ -1602,22 +1606,26 @@ import { Component, Input } from \\"@angular/core\\";
   template: \`
     <ng-container *ngIf=\\"max\\">
       <ng-container *ngFor=\\"let item of items\\">
-        <section
-          [ngStyle]=\\"{
-          maxWidth: item + max
-        }\\"
-        >
+        <section [ngStyle]=\\"useObjectWrapper({ maxWidth: item + max })\\">
           <ng-content></ng-content>
         </section>
       </ng-container>
     </ng-container>
   \`,
 })
-export class SectionStateComponent {
-  @Input() attributes: any;
+export default class SectionStateComponent {
+  @Input() attributes!: any;
 
   max = 42;
   items = [42];
+
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
 }
 
 @NgModule({
@@ -1642,7 +1650,6 @@ import { Builder } from \\"@builder.io/sdk\\";
   template: \`
     <select
       [attr.value]=\\"value\\"
-      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.name]=\\"name\\"
     >
@@ -1654,12 +1661,12 @@ import { Builder } from \\"@builder.io/sdk\\";
     </select>
   \`,
 })
-export class SelectComponent {
-  @Input() attributes: any;
-  @Input() value: any;
-  @Input() defaultValue: any;
-  @Input() name: any;
-  @Input() options: any;
+export default class SelectComponent {
+  @Input() attributes!: any;
+  @Input() value!: any;
+  @Input() defaultValue!: any;
+  @Input() name!: any;
+  @Input() options!: any;
 }
 
 @NgModule({
@@ -1685,7 +1692,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class SlotCode {}
+export default class SlotCode {}
 
 @NgModule({
   declarations: [SlotCode],
@@ -1714,7 +1721,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
     </div>
   \`,
 })
-export class SlotCode {}
+export default class SlotCode {}
 
 @NgModule({
   declarations: [SlotCode],
@@ -1737,11 +1744,11 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
   selector: \\"slot-code, SlotCode\\",
   template: \`
     <div>
-      <content-slot-code><div testing>Hello</div></content-slot-code>
+      <content-slot-code [slotTesting]=\\"<div>Hello</div>\\"></content-slot-code>
     </div>
   \`,
 })
-export class SlotCode {}
+export default class SlotCode {}
 
 @NgModule({
   declarations: [SlotCode],
@@ -1762,13 +1769,14 @@ import { Component } from \\"@angular/core\\";
   selector: \\"slot-code, SlotCode\\",
   template: \`
     <div>
+      <ng-content select=\\"[my-awesome-slot]\\"></ng-content>
       <ng-content select=\\"[top]\\"></ng-content>
       <ng-content select=\\"[left]\\">Default left</ng-content>
       <ng-content>Default Child</ng-content>
     </div>
   \`,
 })
-export class SlotCode {}
+export default class SlotCode {}
 
 @NgModule({
   declarations: [SlotCode],
@@ -1810,7 +1818,7 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
       <ng-container *ngFor=\\"let review of reviews; let index = index\\">
-        <div class=\\"review\\" [attr.key]=\\"review.id\\">
+        <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
             <div>N: {{index}}</div>
@@ -1849,9 +1857,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
     \`,
   ],
 })
-export class SmileReviews {
-  @Input() apiKey: any;
-  @Input() productId: any;
+export default class SmileReviews {
+  @Input() apiKey!: any;
+  @Input() productId!: any;
 
   reviews = [];
   name = \\"test\\";
@@ -1897,9 +1905,9 @@ import { Component, Input } from \\"@angular/core\\";
     <button type=\\"submit\\">{{text}}</button>
   \`,
 })
-export class SubmitButton {
-  @Input() attributes: any;
-  @Input() text: any;
+export default class SubmitButton {
+  @Input() attributes!: any;
+  @Input() text!: any;
 }
 
 @NgModule({
@@ -1931,9 +1939,9 @@ import { Builder } from \\"@builder.io/sdk\\";
     ></div>
   \`,
 })
-export class Text {
-  @Input() text: any;
-  @Input() content: any;
+export default class Text {
+  @Input() text!: any;
+  @Input() content!: any;
 
   name = \\"Decadef20\\";
 }
@@ -1964,12 +1972,12 @@ import { Component, Input } from \\"@angular/core\\";
     ></textarea>
   \`,
 })
-export class Textarea {
-  @Input() attributes: any;
-  @Input() placeholder: any;
-  @Input() name: any;
-  @Input() value: any;
-  @Input() defaultValue: any;
+export default class Textarea {
+  @Input() attributes!: any;
+  @Input() placeholder!: any;
+  @Input() name!: any;
+  @Input() value!: any;
+  @Input() defaultValue!: any;
 }
 
 @NgModule({
@@ -1992,17 +2000,7 @@ import { Component, Input } from \\"@angular/core\\";
   template: \`
     <video
       preload=\\"none\\"
-      [ngStyle]=\\"{
-          width: '100%',
-          height: '100%',
-          ...attributes?.style,
-          objectFit: fit,
-          objectPosition: position,
-          // Hack to get object fit to work as expected and
-          // not have the video overflow
-          borderRadius: 1
-        }\\"
-      [attr.key]=\\"video || 'no-src'\\"
+      [ngStyle]=\\"useObjectWrapper(attributes?.style, { width: '100%' }, { height: '100%' }, { objectFit: fit }, { objectPosition: position }, { borderRadius: 1 })\\"
       [attr.poster]=\\"posterImage\\"
       [attr.autoplay]=\\"autoPlay\\"
       [attr.muted]=\\"muted\\"
@@ -2011,16 +2009,24 @@ import { Component, Input } from \\"@angular/core\\";
     ></video>
   \`,
 })
-export class Video {
-  @Input() attributes: any;
-  @Input() fit: any;
-  @Input() position: any;
-  @Input() video: any;
-  @Input() posterImage: any;
-  @Input() autoPlay: any;
-  @Input() muted: any;
-  @Input() controls: any;
-  @Input() loop: any;
+export default class Video {
+  @Input() attributes!: any;
+  @Input() fit!: any;
+  @Input() position!: any;
+  @Input() video!: any;
+  @Input() posterImage!: any;
+  @Input() autoPlay!: any;
+  @Input() muted!: any;
+  @Input() controls!: any;
+  @Input() loop!: any;
+
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
 }
 
 @NgModule({
@@ -2044,7 +2050,7 @@ import { Component } from \\"@angular/core\\";
     <div>Hello {{name}}</div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   name = \\"steve\\";
   setName(value) {
     this.name = value;
@@ -2067,31 +2073,57 @@ exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Te
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-for-no-tag-ref-component, MyBasicForNoTagRefComponent\\",
   template: \`
-    <state.TagNameGetter>
-      Hello
-      <state.tag>{{name}}</state.tag>
-      <ng-container *ngFor=\\"let action of actions\\">
-        <state.TagName>
-          <action.icon></action.icon>
-          <span>{{action.text}}</span>
-        </state.TagName>
-      </ng-container>
-    </state.TagNameGetter>
+    <ng-template #iconTemplate></ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              TagNameGetter;
+              inputs: {  };
+              content: myContent;
+              \\"
+    ></ng-container>
   \`,
 })
-export class MyBasicForNoTagRefComponent {
-  @Input() actions: any;
+export default class MyBasicForNoTagRefComponent {
+  @Input() actions!: any;
+
+  @ViewChild(\\"tagnamegetterTemplate\\", { static: true })
+  tagnamegetterTemplateRef!: TemplateRef<any>;
+  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef!: TemplateRef<any>;
+  @ViewChild(\\"tagnameTemplate\\", { static: true })
+  tagnameTemplateRef!: TemplateRef<any>;
+  @ViewChild(\\"iconTemplate\\", { static: true })
+  iconTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
 
   name = \\"VincentW\\";
   TagName = \\"div\\";
   tag = \\"span\\";
   get TagNameGetter() {
     return \\"span\\";
+  }
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.tagnamegetterTemplateRef).rootNodes,
+      this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes,
+      this.vcRef.createEmbeddedView(this.tagnameTemplateRef).rootNodes,
+      this.vcRef.createEmbeddedView(this.iconTemplateRef).rootNodes,
+    ];
   }
 }
 
@@ -2129,7 +2161,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicForwardRefComponent {
+export default class MyBasicForwardRefComponent {
   name = \\"PatrickJS\\";
 }
 
@@ -2167,7 +2199,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicForwardRefComponent {
+export default class MyBasicForwardRefComponent {
   name = \\"PatrickJS\\";
 }
 
@@ -2193,7 +2225,7 @@ import { Component } from \\"@angular/core\\";
     <div>Hello! {{name}}</div>
   \`,
 })
-export class MyBasicOnUpdateReturnComponent {
+export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
   ngAfterContentChecked() {
@@ -2244,7 +2276,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -2276,7 +2308,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -2308,7 +2340,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -2334,7 +2366,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class ClassNameCode {
+export default class ClassNameCode {
   bindings = \\"a binding\\";
 }
 
@@ -2368,7 +2400,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicComponent {
+export default class MyBasicComponent {
   classState = \\"testClassName\\";
   styleState = {
     color: \\"red\\",
@@ -2401,8 +2433,8 @@ import Context2 from \\"@dummy/2\\";
     </ng-container>
   \`,
 })
-export class ComponentWithContext {
-  @Input() content: any;
+export default class ComponentWithContext {
+  @Input() content!: any;
 
   constructor(public foo: Context1) {}
 }
@@ -2434,8 +2466,8 @@ import Context2 from \\"@dummy/2\\";
     </ng-container>
   \`,
 })
-export class ComponentWithContext {
-  @Input() content: any;
+export default class ComponentWithContext {
+  @Input() content!: any;
 
   constructor(public foo: Context1) {}
 }
@@ -2463,9 +2495,9 @@ import BuilderContext from \\"@dummy/context.js\\";
     <div>setting context</div>
   \`,
 })
-export class RenderContent {
-  @Input() content: any;
-  @Input() customComponents: any;
+export default class RenderContent {
+  @Input() content!: any;
+  @Input() customComponents!: any;
 }
 
 @NgModule({
@@ -2512,12 +2544,12 @@ const defaultProps = {
     </div>
   \`,
 })
-export class Button {
-  @Input() link: any = defaultProps[\\"link\\"];
-  @Input() attributes: any;
-  @Input() openLinkInNewTab: any = defaultProps[\\"openLinkInNewTab\\"];
-  @Input() text: any = defaultProps[\\"text\\"];
-  @Input() buttonText: any;
+export default class Button {
+  @Input() link!: any = defaultProps[\\"link\\"];
+  @Input() attributes!: any;
+  @Input() openLinkInNewTab!: any = defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text!: any = defaultProps[\\"text\\"];
+  @Input() buttonText!: any;
 
   @Output() onClick = new EventEmitter();
 }
@@ -2564,11 +2596,11 @@ const defaultProps = {
     </div>
   \`,
 })
-export class Button {
-  @Input() link: any = defaultProps[\\"link\\"];
-  @Input() attributes: any;
-  @Input() openLinkInNewTab: any = defaultProps[\\"openLinkInNewTab\\"];
-  @Input() text: any = defaultProps[\\"text\\"];
+export default class Button {
+  @Input() link!: any = defaultProps[\\"link\\"];
+  @Input() attributes!: any;
+  @Input() openLinkInNewTab!: any = defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text!: any = defaultProps[\\"text\\"];
 
   @Output() onClick = new EventEmitter();
 }
@@ -2598,10 +2630,10 @@ const DEFAULT_VALUES = {
     <div>Hello {{name || DEFAULT_VALUES.name}}</div>
   \`,
 })
-export class ComponentWithTypes {
+export default class ComponentWithTypes {
   DEFAULT_VALUES = DEFAULT_VALUES;
 
-  @Input() name: any;
+  @Input() name!: any;
 }
 
 @NgModule({
@@ -2625,8 +2657,8 @@ import { Component, Input } from \\"@angular/core\\";
     <div>{{refToUse}}</div>
   \`,
 })
-export class MyComponent {
-  @Input() componentRef: any;
+export default class MyComponent {
+  @Input() componentRef!: any;
 
   refToUse = !(this.componentRef instanceof Function)
     ? this.componentRef
@@ -2639,6 +2671,45 @@ export class MyComponent {
   exports: [MyComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > getterState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <p>{{foo2}}</p>
+      <p>{{bar}}</p>
+      <p>{{baz(1)}}</p>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() foo!: any;
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i) {
+    return i + this.foo2.length;
+  }
+}
+
+@NgModule({
+  declarations: [Button],
+  imports: [CommonModule],
+  exports: [Button],
+})
+export class ButtonModule {}
 "
 `;
 
@@ -2656,8 +2727,8 @@ import RenderBlock from \\"./builder-render-block.raw\\";
     <render-block></render-block>
   \`,
 })
-export class RenderContent {
-  @Input() renderContentProps: any;
+export default class RenderContent {
+  @Input() renderContentProps!: any;
 
   getRenderContentProps(block, index) {
     return {
@@ -2688,7 +2759,7 @@ import { Component } from \\"@angular/core\\";
     <div>Testing which imports get excluded!</div>
   \`,
 })
-export class MyImportComponent {}
+export default class MyImportComponent {}
 
 @NgModule({
   declarations: [MyImportComponent],
@@ -2711,7 +2782,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class MultipleOnUpdate {
+export default class MultipleOnUpdate {
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
     console.log(\\"Runs on every update/rerender as well\\");
@@ -2739,7 +2810,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class MultipleOnUpdateWithDeps {
+export default class MultipleOnUpdateWithDeps {
   a = \\"a\\";
   b = \\"b\\";
   c = \\"c\\";
@@ -2780,7 +2851,7 @@ import { Component } from \\"@angular/core\\";
     <input />
   \`,
 })
-export class MyBasicComponent {
+export default class MyBasicComponent {
   attrs = {
     hello: \\"world\\",
   };
@@ -2792,6 +2863,36 @@ export class MyBasicComponent {
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > nativeAttributes 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input [disabled]=\\"disabled\\" />
+
+      Hello! If someone passes \\\\\`[disabled]=\\"false\\"\\\\\` to me, disabled shouldn't
+      be visible in the DOM.
+    </div>
+  \`,
+})
+export default class MyComponent {
+  @Input() disabled!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -2808,12 +2909,18 @@ import { Component, Input } from \\"@angular/core\\";
       <ng-container *ngIf=\\"!conditionB\\">
         <div>if condition A and condition B</div>
       </ng-container>
+      <ng-container *ngIf=\\"!(!conditionB)\\">
+        <div>else-condition-B</div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
     </ng-container>
   \`,
 })
-export class NestedShow {
-  @Input() conditionA: any;
-  @Input() conditionB: any;
+export default class NestedShow {
+  @Input() conditionA!: any;
+  @Input() conditionB!: any;
 }
 
 @NgModule({
@@ -2866,7 +2973,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class NestedStyles {}
+export default class NestedStyles {}
 
 @NgModule({
   declarations: [NestedStyles],
@@ -2889,8 +2996,8 @@ import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
     <div class=\\"builder-embed\\" #elem><div>Test</div></div>
   \`,
 })
-export class Embed {
-  @ViewChild(\\"elem\\") elem: ElementRef;
+export default class Embed {
+  @ViewChild(\\"elem\\") elem!: ElementRef;
 
   foo(event) {
     console.log(\\"test2\\");
@@ -2922,7 +3029,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class OnInit {
+export default class OnInit {
   constructor() {
     console.log(\\"onInit\\");
   }
@@ -2957,8 +3064,8 @@ export const defaultValues = {
     <div>Default name defined by parent {{name}}</div>
   \`,
 })
-export class OnInit {
-  @Input() name: any;
+export default class OnInit {
+  @Input() name!: any;
 
   name = \\"\\";
 
@@ -2989,7 +3096,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class Comp {
+export default class Comp {
   ngOnInit() {
     console.log(\\"Runs on mount\\");
   }
@@ -3020,7 +3127,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class Comp {
+export default class Comp {
   ngOnInit() {
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
@@ -3058,7 +3165,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class OnUpdate {
+export default class OnUpdate {
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
   }
@@ -3085,8 +3192,8 @@ import { Component, Input } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class OnUpdateWithDeps {
-  @Input() size: any;
+export default class OnUpdateWithDeps {
+  @Input() size!: any;
 
   a = \\"a\\";
   b = \\"b\\";
@@ -3130,7 +3237,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   name = \\"Steve\\";
 }
 
@@ -3161,7 +3268,7 @@ export function run(value) {}
     <div></div>
   \`,
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -3184,8 +3291,8 @@ import { Component, Input } from \\"@angular/core\\";
     <div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
   \`,
 })
-export class MyBasicComponent {
-  @Input() name: any;
+export default class MyBasicComponent {
+  @Input() name!: any;
 }
 
 @NgModule({
@@ -3212,8 +3319,8 @@ import { Component, Input } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyBasicComponent {
-  @Input() type: any;
+export default class MyBasicComponent {
+  @Input() type!: any;
 
   name = \\"Decadef20\\";
 }
@@ -3239,8 +3346,8 @@ import { Component, Input } from \\"@angular/core\\";
     <div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
   \`,
 })
-export class MyBasicComponent {
-  @Input() name: any;
+export default class MyBasicComponent {
+  @Input() name!: any;
 }
 
 @NgModule({
@@ -3264,8 +3371,8 @@ import { Component, Input } from \\"@angular/core\\";
     <div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
   \`,
 })
-export class MyBasicComponent {
-  @Input() name: any;
+export default class MyBasicComponent {
+  @Input() name!: any;
 }
 
 @NgModule({
@@ -3289,7 +3396,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class OnUpdate {
+export default class OnUpdate {
   foo = function foo(params) {};
   bar = function bar() {};
   zoo = function zoo() {
@@ -3318,7 +3425,14 @@ exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Te
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
 import { TARGET } from \\"../../constants/target.js\\";
 import { evaluate } from \\"../../functions/evaluate.js\\";
@@ -3338,51 +3452,62 @@ import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
 @Component({
   selector: \\"render-block, RenderBlock\\",
   template: \`
+    <ng-template #rendercomponenttagTemplate></ng-template>
     <ng-container *ngIf=\\"shouldWrap\\">
       <ng-container *ngIf=\\"isEmptyHtmlElement(tag)\\">
-        <state.tag></state.tag>
+        <ng-container
+          *ngComponentOutlet=\\"
+              tag;
+              inputs: { attributes: attributes,actions: actions, };
+              content: myContent;
+              \\"
+        ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
         <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
           <render-repeated-block
-            [key]=\\"index\\"
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
           ></render-repeated-block>
         </ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
-        <state.tag>
-          <state.renderComponentTag></state.renderComponentTag>
-          <ng-container *ngFor=\\"let child of childrenWithoutParentComponent\\">
-            <RenderBlock
-              [key]=\\"'render-block-' + child.id\\"
-              [block]=\\"child\\"
-              [context]=\\"childrenContext\\"
-            ></RenderBlock>
-          </ng-container>
-          <ng-container *ngFor=\\"let child of childrenWithoutParentComponent\\">
-            <block-styles
-              [key]=\\"'block-style-' + child.id\\"
-              [block]=\\"child\\"
-              [context]=\\"childrenContext\\"
-            ></block-styles>
-          </ng-container>
-        </state.tag>
+        <ng-container
+          *ngComponentOutlet=\\"
+              tag;
+              inputs: { attributes: attributes,actions: actions, };
+              content: myContent;
+              \\"
+        ></ng-container>
       </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(shouldWrap)\\">
+      <ng-container
+        *ngComponentOutlet=\\"
+              renderComponentTag;
+              inputs: { renderComponentProps: renderComponentProps, };
+              content: myContent;
+              \\"
+      ></ng-container>
     </ng-container>
   \`,
 })
-export class RenderBlock {
+export default class RenderBlock {
   isEmptyHtmlElement = isEmptyHtmlElement;
 
-  @Input() block: any;
-  @Input() context: any;
+  @Input() block!: any;
+  @Input() context!: any;
+
+  @ViewChild(\\"rendercomponenttagTemplate\\", { static: true })
+  rendercomponenttagTemplateRef!: TemplateRef<any>;
+  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
 
   get component() {
     const componentName = getProcessedBlock({
       block: this.block,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
@@ -3411,7 +3536,7 @@ export class RenderBlock {
       ? this.block
       : getProcessedBlock({
           block: this.block,
-          this: this.context.state,
+          state: this.context.state,
           context: this.context.context,
           shouldEvaluateBindings: true,
         });
@@ -3419,7 +3544,7 @@ export class RenderBlock {
   get actions() {
     return getBlockActions({
       block: this.useBlock,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
   }
@@ -3493,7 +3618,7 @@ export class RenderBlock {
 
     const itemsArray = evaluate({
       code: repeat.collection,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
 
@@ -3507,7 +3632,7 @@ export class RenderBlock {
     const repeatArray = itemsArray.map((item, index) => ({
       context: {
         ...this.context,
-        this: {
+        state: {
           ...this.context.state,
           $index: index,
           $item: item,
@@ -3534,7 +3659,7 @@ export class RenderBlock {
   get childrenContext() {
     return {
       apiKey: this.context.apiKey,
-      this: this.context.state,
+      state: this.context.state,
       content: this.context.content,
       context: this.context.context,
       registeredComponents: this.context.registeredComponents,
@@ -3550,6 +3675,16 @@ export class RenderBlock {
     } else {
       return RenderComponent;
     }
+  }
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.rendercomponenttagTemplateRef)
+        .rootNodes,
+      this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes,
+    ];
   }
 }
 
@@ -3597,11 +3732,11 @@ import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
     \`,
   ],
 })
-export class RenderContent {
+export default class RenderContent {
   trackClick = trackClick;
 
-  @Input() content: any;
-  @Input() customComponents: any;
+  @Input() customComponents!: any;
+  @Input() content!: any;
 
   ngOnInit() {
     sendComponentsToVisualEditor(this.customComponents);
@@ -3645,11 +3780,11 @@ import { Component, Input } from \\"@angular/core\\";
     </ng-container>
   \`,
 })
-export class Button {
-  @Input() link: any;
-  @Input() attributes: any;
-  @Input() openLinkInNewTab: any;
-  @Input() text: any;
+export default class Button {
+  @Input() link!: any;
+  @Input() attributes!: any;
+  @Input() openLinkInNewTab!: any;
+  @Input() text!: any;
 }
 
 @NgModule({
@@ -3671,10 +3806,11 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"render-styles, RenderStyles\\",
   template: \`
     <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container>
+    <ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
   \`,
 })
-export class RenderStyles {
-  @Input() foo: any;
+export default class RenderStyles {
+  @Input() foo!: any;
 }
 
 @NgModule({
@@ -3703,8 +3839,8 @@ import { Component, Input } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
-  @Input() name: any;
+export default class MyComponent {
+  @Input() name!: any;
 }
 
 @NgModule({
@@ -3734,8 +3870,8 @@ import { Component, Input } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
-  @Input() name: any;
+export default class MyComponent {
+  @Input() name!: any;
 }
 
 @NgModule({
@@ -3758,14 +3894,17 @@ import { Component, Input } from \\"@angular/core\\";
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container *ngFor=\\"let item of items; let idx = index\\">
-        <div [attr.key]=\\"idx\\">{{item}}</div>
+        <div>{{item}}</div>
       </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
     </ng-container>
   \`,
 })
-export class NestedShow {
-  @Input() conditionA: any;
-  @Input() items: any;
+export default class NestedShow {
+  @Input() conditionA!: any;
+  @Input() items!: any;
 }
 
 @NgModule({
@@ -3787,10 +3926,13 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"show-root-text, ShowRootText\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
 })
-export class ShowRootText {
-  @Input() conditionA: any;
+export default class ShowRootText {
+  @Input() conditionA!: any;
 }
 
 @NgModule({
@@ -3821,9 +3963,9 @@ import { Component, Input } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicComponent {
-  @Input() id: any;
-  @Input() foo: any;
+export default class MyBasicComponent {
+  @Input() id!: any;
+  @Input() foo!: any;
 
   ngAfterContentChecked() {
     console.log(\\"props.id changed\\", this.id);
@@ -3852,7 +3994,7 @@ import { Component } from \\"@angular/core\\";
     <input />
   \`,
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -3875,8 +4017,8 @@ import { Component, Input } from \\"@angular/core\\";
     <input />
   \`,
 })
-export class MyBasicComponent {
-  @Input() nested: any;
+export default class MyBasicComponent {
+  @Input() nested!: any;
 }
 
 @NgModule({
@@ -3900,7 +4042,7 @@ import { Component } from \\"@angular/core\\";
     <input />
   \`,
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -3922,9 +4064,7 @@ import { Component } from \\"@angular/core\\";
   template: \`
     <div
       class=\\"builder-column div\\"
-      [ngStyle]=\\"{
-          width: '100%'
-        }\\"
+      [ngStyle]=\\"useObjectWrapper({ width: '100%' })\\"
     ></div>
   \`,
   styles: [
@@ -3937,7 +4077,15 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyComponent {}
+export default class MyComponent {
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+}
 
 @NgModule({
   declarations: [MyComponent],
@@ -3969,8 +4117,8 @@ import { Component, Input } from \\"@angular/core\\";
     \`,
   ],
 })
-export class StylePropClassAndCss {
-  @Input() attributes: any;
+export default class StylePropClassAndCss {
+  @Input() attributes!: any;
 }
 
 @NgModule({
@@ -3996,7 +4144,7 @@ import Foo from \\"./foo-sub-component.lite\\";
     <foo></foo>
   \`,
 })
-export class SubComponent {}
+export default class SubComponent {}
 
 @NgModule({
   declarations: [SubComponent],
@@ -4040,7 +4188,7 @@ import { Component } from \\"@angular/core\\";
     </svg>
   \`,
 })
-export class SvgComponent {}
+export default class SvgComponent {}
 
 @NgModule({
   declarations: [SvgComponent],
@@ -4063,8 +4211,8 @@ import { Component, Input } from \\"@angular/core\\";
     <div>{{foo}}</div>
   \`,
 })
-export class TypeDependency {
-  @Input() foo: any;
+export default class TypeDependency {
+  @Input() foo!: any;
 }
 
 @NgModule({
@@ -4098,7 +4246,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -4134,7 +4282,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -4167,7 +4315,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -4190,7 +4338,7 @@ import { Component } from \\"@angular/core\\";
     <div>{{name}}</div>
   \`,
 })
-export class UseTargetComponent {
+export default class UseTargetComponent {
   get name() {
     const prefix = true;
     return prefix + \\"foo\\";
@@ -4227,7 +4375,7 @@ import { register } from \\"swiper/element/bundle\\";
     </swiper-container>
   \`,
 })
-export class MyBasicWebComponent {
+export default class MyBasicWebComponent {
   constructor() {
     register();
   }
@@ -4254,7 +4402,7 @@ import { Component } from \\"@angular/core\\";
     <div>Hello {{name}} ! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
   \`,
 })
-export class MyBasicComponent {
+export default class MyBasicComponent {
   name = \\"PatrickJS\\";
 }
 
@@ -4310,11 +4458,11 @@ export interface Props {
     \`,
   ],
 })
-export class MyBasicRefComponent {
-  @Input() showInput: Props[\\"showInput\\"];
+export default class MyBasicRefComponent {
+  @Input() showInput!: Props[\\"showInput\\"];
 
-  @ViewChild(\\"inputRef\\") inputRef: ElementRef;
-  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef: ElementRef;
+  @ViewChild(\\"inputRef\\") inputRef!: ElementRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef!: ElementRef;
 
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
@@ -4373,7 +4521,7 @@ export const DEFAULT_VALUES = {
     \`,
   ],
 })
-export class MyBasicComponent {
+export default class MyBasicComponent {
   DEFAULT_VALUES = DEFAULT_VALUES;
 
   name = \\"Steve\\";
@@ -4419,7 +4567,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyBasicForShowComponent {
+export default class MyBasicForShowComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 }
@@ -4452,7 +4600,7 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
     </div>
   \`,
 })
-export class MyBasicComponent {
+export default class MyBasicComponent {
   name = \\"PatrickJS\\";
   onChange = function onChange() {
     const change = this.myService.method(\\"change\\");
@@ -4496,9 +4644,9 @@ export interface Props {
     <div>Hello {{name}}</div>
   \`,
 })
-export class MyBasicOnMountUpdateComponent {
-  @Input() bye: Props[\\"bye\\"];
-  @Input() hi: Props[\\"hi\\"];
+export default class MyBasicOnMountUpdateComponent {
+  @Input() bye!: Props[\\"bye\\"];
+  @Input() hi!: Props[\\"hi\\"];
 
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
@@ -4533,8 +4681,8 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class MyBasicOutputsComponent {
-  @Input() message: any;
+export default class MyBasicOutputsComponent {
+  @Input() message!: any;
 
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
@@ -4568,8 +4716,8 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class MyBasicOutputsComponent {
-  @Input() message: any;
+export default class MyBasicOutputsComponent {
+  @Input() message!: any;
 
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
@@ -4603,7 +4751,7 @@ import { Component } from \\"@angular/core\\";
     <input autocapitalize=\\"on\\" autocomplete=\\"on\\" [attr.spellcheck]=\\"true\\" />
   \`,
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -4647,8 +4795,8 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
     </div>
   \`,
 })
-export class MyBooleanAttribute {
-  @Input() type: Props[\\"type\\"];
+export default class MyBooleanAttribute {
+  @Input() type!: Props[\\"type\\"];
 }
 
 @NgModule({
@@ -4683,7 +4831,7 @@ import MyBasicComponent from \\"./basic.raw\\";
     </div>
   \`,
 })
-export class MyBasicChildComponent {
+export default class MyBasicChildComponent {
   name = \\"Steve\\";
   dev = \\"PatrickJS\\";
 }
@@ -4727,7 +4875,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyBasicForComponent {
+export default class MyBasicForComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
@@ -4788,11 +4936,11 @@ export interface Props {
     \`,
   ],
 })
-export class MyBasicRefComponent {
-  @Input() showInput: Props[\\"showInput\\"];
+export default class MyBasicRefComponent {
+  @Input() showInput!: Props[\\"showInput\\"];
 
-  @ViewChild(\\"inputRef\\") inputRef: ElementRef;
-  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef: ElementRef;
+  @ViewChild(\\"inputRef\\") inputRef!: ElementRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef!: ElementRef;
 
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
@@ -4829,7 +4977,7 @@ export interface Props {
     <div><button (click)=\\"handlerClick($event)\\">Click</button></div>
   \`,
 })
-export class MyBasicRefAssignmentComponent {
+export default class MyBasicRefAssignmentComponent {
   handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", this._holdValueRef);
@@ -4880,7 +5028,7 @@ export function usePrevious<T>(value: T) {
     </div>
   \`,
 })
-export class MyPreviousComponent {
+export default class MyPreviousComponent {
   count = 0;
 
   private _prevCount = this.count;
@@ -4930,11 +5078,11 @@ export interface ButtonProps {
     </div>
   \`,
 })
-export class Button {
-  @Input() link: ButtonProps[\\"link\\"];
-  @Input() attributes: ButtonProps[\\"attributes\\"];
-  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
-  @Input() text: ButtonProps[\\"text\\"];
+export default class Button {
+  @Input() link!: ButtonProps[\\"link\\"];
+  @Input() attributes!: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"];
+  @Input() text!: ButtonProps[\\"text\\"];
 }
 
 @NgModule({
@@ -5000,9 +5148,9 @@ export interface ColumnProps {
     \`,
   ],
 })
-export class Column {
-  @Input() columns: ColumnProps[\\"columns\\"];
-  @Input() space: ColumnProps[\\"space\\"];
+export default class Column {
+  @Input() columns!: ColumnProps[\\"columns\\"];
+  @Input() space!: ColumnProps[\\"space\\"];
 
   getColumns() {
     return this.columns || [];
@@ -5054,7 +5202,7 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
     </div>
   \`,
 })
-export class ContentSlotCode {}
+export default class ContentSlotCode {}
 
 @NgModule({
   declarations: [ContentSlotCode],
@@ -5101,9 +5249,9 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
     </ng-container>
   \`,
 })
-export class ContentSlotJsxCode {
-  @Input() attributes: Props[\\"attributes\\"];
-  @Input() content: Props[\\"content\\"] = defaultProps[\\"content\\"];
+export default class ContentSlotJsxCode {
+  @Input() attributes!: Props[\\"attributes\\"];
+  @Input() content!: Props[\\"content\\"] = defaultProps[\\"content\\"];
 
   name = \\"king\\";
   showContent = false;
@@ -5145,11 +5293,11 @@ export interface CustomCodeProps {
     ></div>
   \`,
 })
-export class CustomCode {
-  @Input() replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
-  @Input() code: CustomCodeProps[\\"code\\"];
+export default class CustomCode {
+  @Input() replaceNodes!: CustomCodeProps[\\"replaceNodes\\"];
+  @Input() code!: CustomCodeProps[\\"code\\"];
 
-  @ViewChild(\\"elem\\") elem: ElementRef;
+  @ViewChild(\\"elem\\") elem!: ElementRef;
 
   scriptsInserted = [];
   scriptsRun = [];
@@ -5230,11 +5378,11 @@ export interface CustomCodeProps {
     ></div>
   \`,
 })
-export class CustomCode {
-  @Input() replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
-  @Input() code: CustomCodeProps[\\"code\\"];
+export default class CustomCode {
+  @Input() replaceNodes!: CustomCodeProps[\\"replaceNodes\\"];
+  @Input() code!: CustomCodeProps[\\"code\\"];
 
-  @ViewChild(\\"elem\\") elem: ElementRef;
+  @ViewChild(\\"elem\\") elem!: ElementRef;
 
   scriptsInserted = [];
   scriptsRun = [];
@@ -5348,7 +5496,6 @@ import {
           *ngFor=\\"let block of builderBlock?.children; let index = index\\"
         >
           <BuilderBlockComponent
-            [key]=\\"block.id\\"
             [block]=\\"block\\"
             [index]=\\"index\\"
           ></BuilderBlockComponent>
@@ -5367,9 +5514,7 @@ import {
         ></BuilderBlocks>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'error' && responseData\\">
-        <pre class=\\"builder-form-error-text pre\\">
-        {{JSON.stringify(responseData, null, 2)}}</pre
-        >
+        <pre class=\\"builder-form-error-text pre\\">{{useJsonStringify}}</pre>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'success'\\">
         <BuilderBlocks
@@ -5389,29 +5534,29 @@ import {
     \`,
   ],
 })
-export class FormComponent {
+export default class FormComponent {
   builder = builder;
 
-  @Input() previewState: FormProps[\\"previewState\\"];
-  @Input() sendWithJs: FormProps[\\"sendWithJs\\"];
-  @Input() sendSubmissionsTo: FormProps[\\"sendSubmissionsTo\\"];
-  @Input() action: FormProps[\\"action\\"];
-  @Input() customHeaders: FormProps[\\"customHeaders\\"];
-  @Input() contentType: FormProps[\\"contentType\\"];
-  @Input() sendSubmissionsToEmail: FormProps[\\"sendSubmissionsToEmail\\"];
-  @Input() name: FormProps[\\"name\\"];
-  @Input() method: FormProps[\\"method\\"];
-  @Input() errorMessagePath: FormProps[\\"errorMessagePath\\"];
-  @Input() resetFormOnSubmit: FormProps[\\"resetFormOnSubmit\\"];
-  @Input() successUrl: FormProps[\\"successUrl\\"];
-  @Input() validate: FormProps[\\"validate\\"];
-  @Input() attributes: FormProps[\\"attributes\\"];
-  @Input() builderBlock: FormProps[\\"builderBlock\\"];
-  @Input() errorMessage: FormProps[\\"errorMessage\\"];
-  @Input() sendingMessage: FormProps[\\"sendingMessage\\"];
-  @Input() successMessage: FormProps[\\"successMessage\\"];
+  @Input() previewState!: FormProps[\\"previewState\\"];
+  @Input() sendWithJs!: FormProps[\\"sendWithJs\\"];
+  @Input() sendSubmissionsTo!: FormProps[\\"sendSubmissionsTo\\"];
+  @Input() action!: FormProps[\\"action\\"];
+  @Input() customHeaders!: FormProps[\\"customHeaders\\"];
+  @Input() contentType!: FormProps[\\"contentType\\"];
+  @Input() sendSubmissionsToEmail!: FormProps[\\"sendSubmissionsToEmail\\"];
+  @Input() name!: FormProps[\\"name\\"];
+  @Input() method!: FormProps[\\"method\\"];
+  @Input() errorMessagePath!: FormProps[\\"errorMessagePath\\"];
+  @Input() resetFormOnSubmit!: FormProps[\\"resetFormOnSubmit\\"];
+  @Input() successUrl!: FormProps[\\"successUrl\\"];
+  @Input() validate!: FormProps[\\"validate\\"];
+  @Input() attributes!: FormProps[\\"attributes\\"];
+  @Input() builderBlock!: FormProps[\\"builderBlock\\"];
+  @Input() errorMessage!: FormProps[\\"errorMessage\\"];
+  @Input() sendingMessage!: FormProps[\\"sendingMessage\\"];
+  @Input() successMessage!: FormProps[\\"successMessage\\"];
 
-  @ViewChild(\\"formRef\\") formRef: ElementRef;
+  @ViewChild(\\"formRef\\") formRef!: ElementRef;
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -5639,6 +5784,10 @@ export class FormComponent {
       );
     }
   }
+
+  useJsonStringify(obj: any): string {
+    return JSON.stringify(obj);
+  }
 }
 
 @NgModule({
@@ -5707,15 +5856,15 @@ export interface ImageProps {
     \`,
   ],
 })
-export class Image {
-  @Input() lazy: ImageProps[\\"lazy\\"];
-  @Input() altText: ImageProps[\\"altText\\"];
-  @Input() _class: ImageProps[\\"_class\\"];
-  @Input() image: ImageProps[\\"image\\"];
-  @Input() srcset: ImageProps[\\"srcset\\"];
-  @Input() sizes: ImageProps[\\"sizes\\"];
+export default class Image {
+  @Input() lazy!: ImageProps[\\"lazy\\"];
+  @Input() altText!: ImageProps[\\"altText\\"];
+  @Input() _class!: ImageProps[\\"_class\\"];
+  @Input() image!: ImageProps[\\"image\\"];
+  @Input() srcset!: ImageProps[\\"srcset\\"];
+  @Input() sizes!: ImageProps[\\"sizes\\"];
 
-  @ViewChild(\\"pictureRef\\") pictureRef: ElementRef;
+  @ViewChild(\\"pictureRef\\") pictureRef!: ElementRef;
 
   scrollListener = null;
   imageLoaded = false;
@@ -5786,13 +5935,13 @@ import { Component } from \\"@angular/core\\";
     <div>
       <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
         <ng-container>
-          <img class=\\"custom-class\\" [attr.src]=\\"item\\" [attr.key]=\\"itemIndex\\" />
+          <img class=\\"custom-class\\" [attr.src]=\\"item\\" />
         </ng-container>
       </ng-container>
     </div>
   \`,
 })
-export class ImgStateComponent {
+export default class ImgStateComponent {
   canShow = true;
   images = [\\"http://example.com/qwik.png\\"];
 }
@@ -5835,22 +5984,26 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"img-component, ImgComponent\\",
   template: \`
     <img
-      [ngStyle]=\\"{
-          objectFit: backgroundSize || 'cover',
-          objectPosition: backgroundPosition || 'center'
-        }\\"
-      [attr.key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
+      [ngStyle]=\\"useObjectWrapper({ objectFit: backgroundSize || 'cover' }, { objectPosition: backgroundPosition || 'center' })\\"
       [attr.alt]=\\"altText\\"
       [attr.src]=\\"imgSrc\\"
     />
   \`,
 })
-export class ImgComponent {
-  @Input() backgroundSize: ImgProps[\\"backgroundSize\\"];
-  @Input() backgroundPosition: ImgProps[\\"backgroundPosition\\"];
-  @Input() attributes: ImgProps[\\"attributes\\"];
-  @Input() imgSrc: ImgProps[\\"imgSrc\\"];
-  @Input() altText: ImgProps[\\"altText\\"];
+export default class ImgComponent {
+  @Input() backgroundSize!: ImgProps[\\"backgroundSize\\"];
+  @Input() backgroundPosition!: ImgProps[\\"backgroundPosition\\"];
+  @Input() attributes!: ImgProps[\\"attributes\\"];
+  @Input() imgSrc!: ImgProps[\\"imgSrc\\"];
+  @Input() altText!: ImgProps[\\"altText\\"];
+
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
 }
 
 @NgModule({
@@ -5885,7 +6038,6 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"form-input-component, FormInputComponent\\",
   template: \`
     <input
-      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
       [attr.placeholder]=\\"placeholder\\"
       [attr.type]=\\"type\\"
       [attr.name]=\\"name\\"
@@ -5896,15 +6048,15 @@ import { Builder } from \\"@builder.io/sdk\\";
     />
   \`,
 })
-export class FormInputComponent {
-  @Input() attributes: FormInputProps[\\"attributes\\"];
-  @Input() defaultValue: FormInputProps[\\"defaultValue\\"];
-  @Input() placeholder: FormInputProps[\\"placeholder\\"];
-  @Input() type: FormInputProps[\\"type\\"];
-  @Input() name: FormInputProps[\\"name\\"];
-  @Input() value: FormInputProps[\\"value\\"];
-  @Input() required: FormInputProps[\\"required\\"];
-  @Input() onChange: FormInputProps[\\"onChange\\"];
+export default class FormInputComponent {
+  @Input() attributes!: FormInputProps[\\"attributes\\"];
+  @Input() defaultValue!: FormInputProps[\\"defaultValue\\"];
+  @Input() placeholder!: FormInputProps[\\"placeholder\\"];
+  @Input() type!: FormInputProps[\\"type\\"];
+  @Input() name!: FormInputProps[\\"name\\"];
+  @Input() value!: FormInputProps[\\"value\\"];
+  @Input() required!: FormInputProps[\\"required\\"];
+  @Input() onChange!: FormInputProps[\\"onChange\\"];
 }
 
 @NgModule({
@@ -5934,7 +6086,7 @@ import FormInputComponent from \\"./input.raw\\";
     ></form-input-component>
   \`,
 })
-export class Stepper {
+export default class Stepper {
   handleChange(value: string) {
     console.log(value);
   }
@@ -5969,9 +6121,9 @@ export interface RawTextProps {
     ></span>
   \`,
 })
-export class RawText {
-  @Input() attributes: RawTextProps[\\"attributes\\"];
-  @Input() text: RawTextProps[\\"text\\"];
+export default class RawText {
+  @Input() attributes!: RawTextProps[\\"attributes\\"];
+  @Input() text!: RawTextProps[\\"text\\"];
 }
 
 @NgModule({
@@ -6007,9 +6159,9 @@ export interface SectionProps {
     </section>
   \`,
 })
-export class SectionComponent {
-  @Input() attributes: SectionProps[\\"attributes\\"];
-  @Input() maxWidth: SectionProps[\\"maxWidth\\"];
+export default class SectionComponent {
+  @Input() attributes!: SectionProps[\\"attributes\\"];
+  @Input() maxWidth!: SectionProps[\\"maxWidth\\"];
 }
 
 @NgModule({
@@ -6038,22 +6190,26 @@ export interface SectionProps {
   template: \`
     <ng-container *ngIf=\\"max\\">
       <ng-container *ngFor=\\"let item of items\\">
-        <section
-          [ngStyle]=\\"{
-          maxWidth: item + max
-        }\\"
-        >
+        <section [ngStyle]=\\"useObjectWrapper({ maxWidth: item + max })\\">
           <ng-content></ng-content>
         </section>
       </ng-container>
     </ng-container>
   \`,
 })
-export class SectionStateComponent {
-  @Input() attributes: SectionProps[\\"attributes\\"];
+export default class SectionStateComponent {
+  @Input() attributes!: SectionProps[\\"attributes\\"];
 
   max = 42;
   items = [42];
+
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
 }
 
 @NgModule({
@@ -6089,7 +6245,6 @@ import { Builder } from \\"@builder.io/sdk\\";
   template: \`
     <select
       [attr.value]=\\"value\\"
-      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.name]=\\"name\\"
     >
@@ -6101,12 +6256,12 @@ import { Builder } from \\"@builder.io/sdk\\";
     </select>
   \`,
 })
-export class SelectComponent {
-  @Input() attributes: FormSelectProps[\\"attributes\\"];
-  @Input() value: FormSelectProps[\\"value\\"];
-  @Input() defaultValue: FormSelectProps[\\"defaultValue\\"];
-  @Input() name: FormSelectProps[\\"name\\"];
-  @Input() options: FormSelectProps[\\"options\\"];
+export default class SelectComponent {
+  @Input() attributes!: FormSelectProps[\\"attributes\\"];
+  @Input() value!: FormSelectProps[\\"value\\"];
+  @Input() defaultValue!: FormSelectProps[\\"defaultValue\\"];
+  @Input() name!: FormSelectProps[\\"name\\"];
+  @Input() options!: FormSelectProps[\\"options\\"];
 }
 
 @NgModule({
@@ -6136,7 +6291,7 @@ type Props = {
     </div>
   \`,
 })
-export class SlotCode {}
+export default class SlotCode {}
 
 @NgModule({
   declarations: [SlotCode],
@@ -6169,7 +6324,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
     </div>
   \`,
 })
-export class SlotCode {}
+export default class SlotCode {}
 
 @NgModule({
   declarations: [SlotCode],
@@ -6196,11 +6351,11 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
   selector: \\"slot-code, SlotCode\\",
   template: \`
     <div>
-      <content-slot-code><div testing>Hello</div></content-slot-code>
+      <content-slot-code [slotTesting]=\\"<div>Hello</div>\\"></content-slot-code>
     </div>
   \`,
 })
-export class SlotCode {}
+export default class SlotCode {}
 
 @NgModule({
   declarations: [SlotCode],
@@ -6225,13 +6380,14 @@ type Props = {
   selector: \\"slot-code, SlotCode\\",
   template: \`
     <div>
+      <ng-content select=\\"[my-awesome-slot]\\"></ng-content>
       <ng-content select=\\"[top]\\"></ng-content>
       <ng-content select=\\"[left]\\">Default left</ng-content>
       <ng-content>Default Child</ng-content>
     </div>
   \`,
 })
-export class SlotCode {}
+export default class SlotCode {}
 
 @NgModule({
   declarations: [SlotCode],
@@ -6278,7 +6434,7 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
       <ng-container *ngFor=\\"let review of reviews; let index = index\\">
-        <div class=\\"review\\" [attr.key]=\\"review.id\\">
+        <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
             <div>N: {{index}}</div>
@@ -6317,9 +6473,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
     \`,
   ],
 })
-export class SmileReviews {
-  @Input() apiKey: SmileReviewsProps[\\"apiKey\\"];
-  @Input() productId: SmileReviewsProps[\\"productId\\"];
+export default class SmileReviews {
+  @Input() apiKey!: SmileReviewsProps[\\"apiKey\\"];
+  @Input() productId!: SmileReviewsProps[\\"productId\\"];
 
   reviews = [];
   name = \\"test\\";
@@ -6370,9 +6526,9 @@ export interface ButtonProps {
     <button type=\\"submit\\">{{text}}</button>
   \`,
 })
-export class SubmitButton {
-  @Input() attributes: ButtonProps[\\"attributes\\"];
-  @Input() text: ButtonProps[\\"text\\"];
+export default class SubmitButton {
+  @Input() attributes!: ButtonProps[\\"attributes\\"];
+  @Input() text!: ButtonProps[\\"text\\"];
 }
 
 @NgModule({
@@ -6412,9 +6568,9 @@ import { Builder } from \\"@builder.io/sdk\\";
     ></div>
   \`,
 })
-export class Text {
-  @Input() text: TextProps[\\"text\\"];
-  @Input() content: TextProps[\\"content\\"];
+export default class Text {
+  @Input() text!: TextProps[\\"text\\"];
+  @Input() content!: TextProps[\\"content\\"];
 
   name = \\"Decadef20\\";
 }
@@ -6453,12 +6609,12 @@ export interface TextareaProps {
     ></textarea>
   \`,
 })
-export class Textarea {
-  @Input() attributes: TextareaProps[\\"attributes\\"];
-  @Input() placeholder: TextareaProps[\\"placeholder\\"];
-  @Input() name: TextareaProps[\\"name\\"];
-  @Input() value: TextareaProps[\\"value\\"];
-  @Input() defaultValue: TextareaProps[\\"defaultValue\\"];
+export default class Textarea {
+  @Input() attributes!: TextareaProps[\\"attributes\\"];
+  @Input() placeholder!: TextareaProps[\\"placeholder\\"];
+  @Input() name!: TextareaProps[\\"name\\"];
+  @Input() value!: TextareaProps[\\"value\\"];
+  @Input() defaultValue!: TextareaProps[\\"defaultValue\\"];
 }
 
 @NgModule({
@@ -6507,17 +6663,7 @@ export interface VideoProps {
   template: \`
     <video
       preload=\\"none\\"
-      [ngStyle]=\\"{
-          width: '100%',
-          height: '100%',
-          ...attributes?.style,
-          objectFit: fit,
-          objectPosition: position,
-          // Hack to get object fit to work as expected and
-          // not have the video overflow
-          borderRadius: 1
-        }\\"
-      [attr.key]=\\"video || 'no-src'\\"
+      [ngStyle]=\\"useObjectWrapper(attributes?.style, { width: '100%' }, { height: '100%' }, { objectFit: fit }, { objectPosition: position }, { borderRadius: 1 })\\"
       [attr.poster]=\\"posterImage\\"
       [attr.autoplay]=\\"autoPlay\\"
       [attr.muted]=\\"muted\\"
@@ -6526,16 +6672,24 @@ export interface VideoProps {
     ></video>
   \`,
 })
-export class Video {
-  @Input() attributes: VideoProps[\\"attributes\\"];
-  @Input() fit: VideoProps[\\"fit\\"];
-  @Input() position: VideoProps[\\"position\\"];
-  @Input() video: VideoProps[\\"video\\"];
-  @Input() posterImage: VideoProps[\\"posterImage\\"];
-  @Input() autoPlay: VideoProps[\\"autoPlay\\"];
-  @Input() muted: VideoProps[\\"muted\\"];
-  @Input() controls: VideoProps[\\"controls\\"];
-  @Input() loop: VideoProps[\\"loop\\"];
+export default class Video {
+  @Input() attributes!: VideoProps[\\"attributes\\"];
+  @Input() fit!: VideoProps[\\"fit\\"];
+  @Input() position!: VideoProps[\\"position\\"];
+  @Input() video!: VideoProps[\\"video\\"];
+  @Input() posterImage!: VideoProps[\\"posterImage\\"];
+  @Input() autoPlay!: VideoProps[\\"autoPlay\\"];
+  @Input() muted!: VideoProps[\\"muted\\"];
+  @Input() controls!: VideoProps[\\"controls\\"];
+  @Input() loop!: VideoProps[\\"loop\\"];
+
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
 }
 
 @NgModule({
@@ -6559,7 +6713,7 @@ import { Component } from \\"@angular/core\\";
     <div>Hello {{name}}</div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   name = \\"steve\\";
   setName(value) {
     this.name = value;
@@ -6582,31 +6736,57 @@ exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Te
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-for-no-tag-ref-component, MyBasicForNoTagRefComponent\\",
   template: \`
-    <state.TagNameGetter>
-      Hello
-      <state.tag>{{name}}</state.tag>
-      <ng-container *ngFor=\\"let action of actions\\">
-        <state.TagName>
-          <action.icon></action.icon>
-          <span>{{action.text}}</span>
-        </state.TagName>
-      </ng-container>
-    </state.TagNameGetter>
+    <ng-template #iconTemplate></ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              TagNameGetter;
+              inputs: {  };
+              content: myContent;
+              \\"
+    ></ng-container>
   \`,
 })
-export class MyBasicForNoTagRefComponent {
-  @Input() actions: any;
+export default class MyBasicForNoTagRefComponent {
+  @Input() actions!: any;
+
+  @ViewChild(\\"tagnamegetterTemplate\\", { static: true })
+  tagnamegetterTemplateRef!: TemplateRef<any>;
+  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef!: TemplateRef<any>;
+  @ViewChild(\\"tagnameTemplate\\", { static: true })
+  tagnameTemplateRef!: TemplateRef<any>;
+  @ViewChild(\\"iconTemplate\\", { static: true })
+  iconTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
 
   name = \\"VincentW\\";
   TagName = \\"div\\";
   tag = \\"span\\";
   get TagNameGetter() {
     return \\"span\\";
+  }
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.tagnamegetterTemplateRef).rootNodes,
+      this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes,
+      this.vcRef.createEmbeddedView(this.tagnameTemplateRef).rootNodes,
+      this.vcRef.createEmbeddedView(this.iconTemplateRef).rootNodes,
+    ];
   }
 }
 
@@ -6649,7 +6829,7 @@ export interface Props {
     \`,
   ],
 })
-export class MyBasicForwardRefComponent {
+export default class MyBasicForwardRefComponent {
   name = \\"PatrickJS\\";
 }
 
@@ -6692,7 +6872,7 @@ export interface Props {
     \`,
   ],
 })
-export class MyBasicForwardRefComponent {
+export default class MyBasicForwardRefComponent {
   name = \\"PatrickJS\\";
 }
 
@@ -6718,7 +6898,7 @@ import { Component } from \\"@angular/core\\";
     <div>Hello! {{name}}</div>
   \`,
 })
-export class MyBasicOnUpdateReturnComponent {
+export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
   ngAfterContentChecked() {
@@ -6769,7 +6949,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -6801,7 +6981,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -6833,7 +7013,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -6866,7 +7046,7 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
     </div>
   \`,
 })
-export class ClassNameCode {
+export default class ClassNameCode {
   bindings = \\"a binding\\";
 }
 
@@ -6900,7 +7080,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyBasicComponent {
+export default class MyBasicComponent {
   classState = \\"testClassName\\";
   styleState = {
     color: \\"red\\",
@@ -6937,8 +7117,8 @@ import Context2 from \\"@dummy/2\\";
     </ng-container>
   \`,
 })
-export class ComponentWithContext {
-  @Input() content: ComponentWithContextProps[\\"content\\"];
+export default class ComponentWithContext {
+  @Input() content!: ComponentWithContextProps[\\"content\\"];
 
   constructor(public foo: Context1) {}
 }
@@ -6974,8 +7154,8 @@ import Context2 from \\"@dummy/2\\";
     </ng-container>
   \`,
 })
-export class ComponentWithContext {
-  @Input() content: ComponentWithContextProps[\\"content\\"];
+export default class ComponentWithContext {
+  @Input() content!: ComponentWithContextProps[\\"content\\"];
 
   constructor(public foo: Context1) {}
 }
@@ -7003,9 +7183,9 @@ import BuilderContext from \\"@dummy/context.js\\";
     <div>setting context</div>
   \`,
 })
-export class RenderContent {
-  @Input() content: any;
-  @Input() customComponents: any;
+export default class RenderContent {
+  @Input() content!: any;
+  @Input() customComponents!: any;
 }
 
 @NgModule({
@@ -7061,13 +7241,13 @@ const defaultProps = {
     </div>
   \`,
 })
-export class Button {
-  @Input() link: ButtonProps[\\"link\\"] = defaultProps[\\"link\\"];
-  @Input() attributes: ButtonProps[\\"attributes\\"];
-  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
+export default class Button {
+  @Input() link!: ButtonProps[\\"link\\"] = defaultProps[\\"link\\"];
+  @Input() attributes!: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
-  @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
-  @Input() buttonText: ButtonProps[\\"buttonText\\"];
+  @Input() text!: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+  @Input() buttonText!: ButtonProps[\\"buttonText\\"];
 
   @Output() onClick = new EventEmitter();
 }
@@ -7121,12 +7301,12 @@ const defaultProps = {
     </div>
   \`,
 })
-export class Button {
-  @Input() link: ButtonProps[\\"link\\"] = defaultProps[\\"link\\"];
-  @Input() attributes: ButtonProps[\\"attributes\\"];
-  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
+export default class Button {
+  @Input() link!: ButtonProps[\\"link\\"] = defaultProps[\\"link\\"];
+  @Input() attributes!: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
-  @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+  @Input() text!: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
 
   @Output() onClick = new EventEmitter();
 }
@@ -7160,10 +7340,10 @@ const DEFAULT_VALUES: Props = {
     <div>Hello {{name || DEFAULT_VALUES.name}}</div>
   \`,
 })
-export class ComponentWithTypes {
+export default class ComponentWithTypes {
   DEFAULT_VALUES = DEFAULT_VALUES;
 
-  @Input() name: Props[\\"name\\"];
+  @Input() name!: Props[\\"name\\"];
 }
 
 @NgModule({
@@ -7187,8 +7367,8 @@ import { Component, Input } from \\"@angular/core\\";
     <div>{{refToUse}}</div>
   \`,
 })
-export class MyComponent {
-  @Input() componentRef: any;
+export default class MyComponent {
+  @Input() componentRef!: any;
 
   refToUse = !(this.componentRef instanceof Function)
     ? this.componentRef
@@ -7201,6 +7381,49 @@ export class MyComponent {
   exports: [MyComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > getterState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <p>{{foo2}}</p>
+      <p>{{bar}}</p>
+      <p>{{baz(1)}}</p>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() foo!: ButtonProps[\\"foo\\"];
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i: number) {
+    return i + this.foo2.length;
+  }
+}
+
+@NgModule({
+  declarations: [Button],
+  imports: [CommonModule],
+  exports: [Button],
+})
+export class ButtonModule {}
 "
 `;
 
@@ -7225,8 +7448,8 @@ import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
     <render-block></render-block>
   \`,
 })
-export class RenderContent {
-  @Input() renderContentProps: RenderContentProps[\\"renderContentProps\\"];
+export default class RenderContent {
+  @Input() renderContentProps!: RenderContentProps[\\"renderContentProps\\"];
 
   getRenderContentProps(block, index) {
     return {
@@ -7257,7 +7480,7 @@ import { Component } from \\"@angular/core\\";
     <div>Testing which imports get excluded!</div>
   \`,
 })
-export class MyImportComponent {}
+export default class MyImportComponent {}
 
 @NgModule({
   declarations: [MyImportComponent],
@@ -7280,7 +7503,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class MultipleOnUpdate {
+export default class MultipleOnUpdate {
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
     console.log(\\"Runs on every update/rerender as well\\");
@@ -7308,7 +7531,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class MultipleOnUpdateWithDeps {
+export default class MultipleOnUpdateWithDeps {
   a = \\"a\\";
   b = \\"b\\";
   c = \\"c\\";
@@ -7349,7 +7572,7 @@ import { Component } from \\"@angular/core\\";
     <input />
   \`,
 })
-export class MyBasicComponent {
+export default class MyBasicComponent {
   attrs = {
     hello: \\"world\\",
   };
@@ -7361,6 +7584,36 @@ export class MyBasicComponent {
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > nativeAttributes 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input [disabled]=\\"disabled\\" />
+
+      Hello! If someone passes \\\\\`[disabled]=\\"false\\"\\\\\` to me, disabled shouldn't
+      be visible in the DOM.
+    </div>
+  \`,
+})
+export default class MyComponent {
+  @Input() disabled!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -7382,12 +7635,18 @@ interface Props {
       <ng-container *ngIf=\\"!conditionB\\">
         <div>if condition A and condition B</div>
       </ng-container>
+      <ng-container *ngIf=\\"!(!conditionB)\\">
+        <div>else-condition-B</div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
     </ng-container>
   \`,
 })
-export class NestedShow {
-  @Input() conditionA: Props[\\"conditionA\\"];
-  @Input() conditionB: Props[\\"conditionB\\"];
+export default class NestedShow {
+  @Input() conditionA!: Props[\\"conditionA\\"];
+  @Input() conditionB!: Props[\\"conditionB\\"];
 }
 
 @NgModule({
@@ -7440,7 +7699,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class NestedStyles {}
+export default class NestedStyles {}
 
 @NgModule({
   declarations: [NestedStyles],
@@ -7463,8 +7722,8 @@ import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
     <div class=\\"builder-embed\\" #elem><div>Test</div></div>
   \`,
 })
-export class Embed {
-  @ViewChild(\\"elem\\") elem: ElementRef;
+export default class Embed {
+  @ViewChild(\\"elem\\") elem!: ElementRef;
 
   foo(event) {
     console.log(\\"test2\\");
@@ -7496,7 +7755,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class OnInit {
+export default class OnInit {
   constructor() {
     console.log(\\"onInit\\");
   }
@@ -7535,8 +7794,8 @@ export const defaultValues = {
     <div>Default name defined by parent {{name}}</div>
   \`,
 })
-export class OnInit {
-  @Input() name: Props[\\"name\\"];
+export default class OnInit {
+  @Input() name!: Props[\\"name\\"];
 
   name = \\"\\";
 
@@ -7567,7 +7826,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class Comp {
+export default class Comp {
   ngOnInit() {
     console.log(\\"Runs on mount\\");
   }
@@ -7598,7 +7857,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class Comp {
+export default class Comp {
   ngOnInit() {
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
@@ -7636,7 +7895,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class OnUpdate {
+export default class OnUpdate {
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
   }
@@ -7667,8 +7926,8 @@ type Props = {
     <div></div>
   \`,
 })
-export class OnUpdateWithDeps {
-  @Input() size: Props[\\"size\\"];
+export default class OnUpdateWithDeps {
+  @Input() size!: Props[\\"size\\"];
 
   a = \\"a\\";
   b = \\"b\\";
@@ -7712,7 +7971,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   name = \\"Steve\\";
 }
 
@@ -7753,7 +8012,7 @@ export function run<T>(value: T) {}
     <div></div>
   \`,
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -7789,8 +8048,8 @@ export interface MyBasicComponentProps {
     <div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
   \`,
 })
-export class MyBasicComponent {
-  @Input() name: MyBasicComponentProps[\\"name\\"];
+export default class MyBasicComponent {
+  @Input() name!: MyBasicComponentProps[\\"name\\"];
 }
 
 @NgModule({
@@ -7822,8 +8081,8 @@ type Props = {
     </div>
   \`,
 })
-export class MyBasicComponent {
-  @Input() type: Props[\\"type\\"];
+export default class MyBasicComponent {
+  @Input() type!: Props[\\"type\\"];
 
   name = \\"Decadef20\\";
 }
@@ -7854,8 +8113,8 @@ interface Person {
     <div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
   \`,
 })
-export class MyBasicComponent {
-  @Input() name: Person | never[\\"name\\"];
+export default class MyBasicComponent {
+  @Input() name!: Person | never[\\"name\\"];
 }
 
 @NgModule({
@@ -7884,8 +8143,8 @@ type Person = {
     <div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
   \`,
 })
-export class MyBasicComponent {
-  @Input() name: Person[\\"name\\"];
+export default class MyBasicComponent {
+  @Input() name!: Person[\\"name\\"];
 }
 
 @NgModule({
@@ -7909,7 +8168,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class OnUpdate {
+export default class OnUpdate {
   foo = function foo(params) {};
   bar = function bar() {};
   zoo = function zoo() {
@@ -7938,7 +8197,14 @@ exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Te
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
 export type RenderBlockProps = {
   block: BuilderBlock;
@@ -7971,51 +8237,62 @@ import type { RepeatData } from \\"./types.js\\";
 @Component({
   selector: \\"render-block, RenderBlock\\",
   template: \`
+    <ng-template #rendercomponenttagTemplate></ng-template>
     <ng-container *ngIf=\\"shouldWrap\\">
       <ng-container *ngIf=\\"isEmptyHtmlElement(tag)\\">
-        <state.tag></state.tag>
+        <ng-container
+          *ngComponentOutlet=\\"
+              tag;
+              inputs: { attributes: attributes,actions: actions, };
+              content: myContent;
+              \\"
+        ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
         <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
           <render-repeated-block
-            [key]=\\"index\\"
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
           ></render-repeated-block>
         </ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
-        <state.tag>
-          <state.renderComponentTag></state.renderComponentTag>
-          <ng-container *ngFor=\\"let child of childrenWithoutParentComponent\\">
-            <RenderBlock
-              [key]=\\"'render-block-' + child.id\\"
-              [block]=\\"child\\"
-              [context]=\\"childrenContext\\"
-            ></RenderBlock>
-          </ng-container>
-          <ng-container *ngFor=\\"let child of childrenWithoutParentComponent\\">
-            <block-styles
-              [key]=\\"'block-style-' + child.id\\"
-              [block]=\\"child\\"
-              [context]=\\"childrenContext\\"
-            ></block-styles>
-          </ng-container>
-        </state.tag>
+        <ng-container
+          *ngComponentOutlet=\\"
+              tag;
+              inputs: { attributes: attributes,actions: actions, };
+              content: myContent;
+              \\"
+        ></ng-container>
       </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(shouldWrap)\\">
+      <ng-container
+        *ngComponentOutlet=\\"
+              renderComponentTag;
+              inputs: { renderComponentProps: renderComponentProps, };
+              content: myContent;
+              \\"
+      ></ng-container>
     </ng-container>
   \`,
 })
-export class RenderBlock {
+export default class RenderBlock {
   isEmptyHtmlElement = isEmptyHtmlElement;
 
-  @Input() block: RenderBlockProps[\\"block\\"];
-  @Input() context: RenderBlockProps[\\"context\\"];
+  @Input() block!: RenderBlockProps[\\"block\\"];
+  @Input() context!: RenderBlockProps[\\"context\\"];
+
+  @ViewChild(\\"rendercomponenttagTemplate\\", { static: true })
+  rendercomponenttagTemplateRef!: TemplateRef<any>;
+  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
 
   get component() {
     const componentName = getProcessedBlock({
       block: this.block,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
@@ -8044,7 +8321,7 @@ export class RenderBlock {
       ? this.block
       : getProcessedBlock({
           block: this.block,
-          this: this.context.state,
+          state: this.context.state,
           context: this.context.context,
           shouldEvaluateBindings: true,
         });
@@ -8052,7 +8329,7 @@ export class RenderBlock {
   get actions() {
     return getBlockActions({
       block: this.useBlock,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
   }
@@ -8126,7 +8403,7 @@ export class RenderBlock {
 
     const itemsArray = evaluate({
       code: repeat.collection,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
 
@@ -8140,7 +8417,7 @@ export class RenderBlock {
     const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.context,
-        this: {
+        state: {
           ...this.context.state,
           $index: index,
           $item: item,
@@ -8167,7 +8444,7 @@ export class RenderBlock {
   get childrenContext() {
     return {
       apiKey: this.context.apiKey,
-      this: this.context.state,
+      state: this.context.state,
       content: this.context.content,
       context: this.context.context,
       registeredComponents: this.context.registeredComponents,
@@ -8183,6 +8460,16 @@ export class RenderBlock {
     } else {
       return RenderComponent;
     }
+  }
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.rendercomponenttagTemplateRef)
+        .rootNodes,
+      this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes,
+    ];
   }
 }
 
@@ -8238,11 +8525,11 @@ import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
     \`,
   ],
 })
-export class RenderContent {
+export default class RenderContent {
   trackClick = trackClick;
 
-  @Input() content: Props[\\"content\\"];
-  @Input() customComponents: Props[\\"customComponents\\"];
+  @Input() customComponents!: Props[\\"customComponents\\"];
+  @Input() content!: Props[\\"content\\"];
 
   ngOnInit() {
     sendComponentsToVisualEditor(this.customComponents);
@@ -8293,11 +8580,11 @@ export interface ButtonProps {
     </ng-container>
   \`,
 })
-export class Button {
-  @Input() link: ButtonProps[\\"link\\"];
-  @Input() attributes: ButtonProps[\\"attributes\\"];
-  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
-  @Input() text: ButtonProps[\\"text\\"];
+export default class Button {
+  @Input() link!: ButtonProps[\\"link\\"];
+  @Input() attributes!: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"];
+  @Input() text!: ButtonProps[\\"text\\"];
 }
 
 @NgModule({
@@ -8323,10 +8610,11 @@ export interface RenderStylesProps {
   selector: \\"render-styles, RenderStyles\\",
   template: \`
     <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container>
+    <ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
   \`,
 })
-export class RenderStyles {
-  @Input() foo: RenderStylesProps[\\"foo\\"];
+export default class RenderStyles {
+  @Input() foo!: RenderStylesProps[\\"foo\\"];
 }
 
 @NgModule({
@@ -8355,8 +8643,8 @@ import { Component, Input } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
-  @Input() name: any;
+export default class MyComponent {
+  @Input() name!: any;
 }
 
 @NgModule({
@@ -8386,8 +8674,8 @@ import { Component, Input } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
-  @Input() name: any;
+export default class MyComponent {
+  @Input() name!: any;
 }
 
 @NgModule({
@@ -8415,14 +8703,17 @@ interface Props {
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container *ngFor=\\"let item of items; let idx = index\\">
-        <div [attr.key]=\\"idx\\">{{item}}</div>
+        <div>{{item}}</div>
       </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
     </ng-container>
   \`,
 })
-export class NestedShow {
-  @Input() conditionA: Props[\\"conditionA\\"];
-  @Input() items: Props[\\"items\\"];
+export default class NestedShow {
+  @Input() conditionA!: Props[\\"conditionA\\"];
+  @Input() items!: Props[\\"items\\"];
 }
 
 @NgModule({
@@ -8448,10 +8739,13 @@ interface Props {
   selector: \\"show-root-text, ShowRootText\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+    <ng-container *ngIf=\\"!(conditionA)\\">
+      <div>else-condition-A</div>
+    </ng-container>
   \`,
 })
-export class ShowRootText {
-  @Input() conditionA: Props[\\"conditionA\\"];
+export default class ShowRootText {
+  @Input() conditionA!: Props[\\"conditionA\\"];
 }
 
 @NgModule({
@@ -8491,9 +8785,9 @@ type Props = {
     \`,
   ],
 })
-export class MyBasicComponent {
-  @Input() id: Props[\\"id\\"];
-  @Input() foo: Props[\\"foo\\"];
+export default class MyBasicComponent {
+  @Input() id!: Props[\\"id\\"];
+  @Input() foo!: Props[\\"foo\\"];
 
   ngAfterContentChecked() {
     console.log(\\"props.id changed\\", this.id);
@@ -8522,7 +8816,7 @@ import { Component } from \\"@angular/core\\";
     <input />
   \`,
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -8545,8 +8839,8 @@ import { Component, Input } from \\"@angular/core\\";
     <input />
   \`,
 })
-export class MyBasicComponent {
-  @Input() nested: any;
+export default class MyBasicComponent {
+  @Input() nested!: any;
 }
 
 @NgModule({
@@ -8570,7 +8864,7 @@ import { Component } from \\"@angular/core\\";
     <input />
   \`,
 })
-export class MyBasicComponent {}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -8592,9 +8886,7 @@ import { Component } from \\"@angular/core\\";
   template: \`
     <div
       class=\\"builder-column div\\"
-      [ngStyle]=\\"{
-          width: '100%'
-        }\\"
+      [ngStyle]=\\"useObjectWrapper({ width: '100%' })\\"
     ></div>
   \`,
   styles: [
@@ -8607,7 +8899,15 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyComponent {}
+export default class MyComponent {
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+}
 
 @NgModule({
   declarations: [MyComponent],
@@ -8639,8 +8939,8 @@ import { Component, Input } from \\"@angular/core\\";
     \`,
   ],
 })
-export class StylePropClassAndCss {
-  @Input() attributes: any;
+export default class StylePropClassAndCss {
+  @Input() attributes!: any;
 }
 
 @NgModule({
@@ -8666,7 +8966,7 @@ import Foo from \\"./foo-sub-component.lite\\";
     <foo></foo>
   \`,
 })
-export class SubComponent {}
+export default class SubComponent {}
 
 @NgModule({
   declarations: [SubComponent],
@@ -8710,7 +9010,7 @@ import { Component } from \\"@angular/core\\";
     </svg>
   \`,
 })
-export class SvgComponent {}
+export default class SvgComponent {}
 
 @NgModule({
   declarations: [SvgComponent],
@@ -8741,8 +9041,8 @@ import type { Foo as Foo2 } from \\"./type-export.lite\\";
     <div>{{foo}}</div>
   \`,
 })
-export class TypeDependency {
-  @Input() foo: TypeDependencyProps[\\"foo\\"];
+export default class TypeDependency {
+  @Input() foo!: TypeDependencyProps[\\"foo\\"];
 }
 
 @NgModule({
@@ -8776,7 +9076,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -8812,7 +9112,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -8845,7 +9145,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -8868,7 +9168,7 @@ import { Component } from \\"@angular/core\\";
     <div>{{name}}</div>
   \`,
 })
-export class UseTargetComponent {
+export default class UseTargetComponent {
   get name() {
     const prefix = true;
     return prefix + \\"foo\\";
@@ -8905,7 +9205,7 @@ import { register } from \\"swiper/element/bundle\\";
     </swiper-container>
   \`,
 })
-export class MyBasicWebComponent {
+export default class MyBasicWebComponent {
   constructor() {
     register();
   }
@@ -8936,7 +9236,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   name = \\"Steve\\";
 }
 
@@ -9008,7 +9308,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   tortilla = \\"Plain\\";
   fillings = [];
 }
@@ -9034,7 +9334,7 @@ import { Component } from \\"@angular/core\\";
     <input [attr.value]=\\"value\\" />
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   value = \\"hello\\";
 }
 
@@ -9063,8 +9363,8 @@ const defaultProps = {};
     />
   \`,
 })
-export class MyComponent {
-  @Input() disabled: any;
+export default class MyComponent {
+  @Input() disabled!: any;
 
   focus = true;
 }
@@ -9090,7 +9390,7 @@ import { Component } from \\"@angular/core\\";
     <div>{{activeTab}}</div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   activeTab = 0;
 
   constructor(public disabled: \\"disabled\\") {}
@@ -9121,7 +9421,7 @@ import { Component } from \\"@angular/core\\";
     </ul>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   numbers = [\\"one\\", \\"two\\", \\"three\\"];
 }
 
@@ -9150,7 +9450,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   log = function log(msg = \\"hello\\") {
     console.log(msg);
   };
@@ -9177,7 +9477,7 @@ import { Component } from \\"@angular/core\\";
     <div [innerHTML]=\\"html\\"></div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   html = \\"<b>bold</b>\\";
 }
 
@@ -9202,9 +9502,12 @@ import { Component } from \\"@angular/core\\";
     <ng-container *ngIf=\\"show\\">
       <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
+    <ng-container *ngIf=\\"!(show)\\">
+      <button (click)=\\"toggle($event)\\">Show</button>
+    </ng-container>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   show = true;
   toggle = function toggle() {
     this.show = !this.show;
@@ -9238,7 +9541,7 @@ import Button from \\"./Button.lite\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   disabled = false;
 }
 
@@ -9263,7 +9566,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   ngOnInit() {
     console.log(\\"onMount\\");
   }
@@ -9302,7 +9605,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   name = \\"Steve\\";
   get lowercaseName() {
     return this.name.toLowerCase();
@@ -9335,7 +9638,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   a = 2;
   b = 5;
   result = null;
@@ -9372,7 +9675,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -9407,7 +9710,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -9435,7 +9738,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   a = 5;
   b = 12;
 }
@@ -9465,7 +9768,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   name = \\"Steve\\";
 }
 
@@ -9537,7 +9840,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   tortilla = \\"Plain\\";
   fillings = [];
 }
@@ -9563,7 +9866,7 @@ import { Component } from \\"@angular/core\\";
     <input [attr.value]=\\"value\\" />
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   value = \\"hello\\";
 }
 
@@ -9592,8 +9895,8 @@ const defaultProps = {};
     />
   \`,
 })
-export class MyComponent {
-  @Input() disabled: any;
+export default class MyComponent {
+  @Input() disabled!: any;
 
   focus = true;
 }
@@ -9619,7 +9922,7 @@ import { Component } from \\"@angular/core\\";
     <div>{{activeTab}}</div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   activeTab = 0;
 
   constructor(public disabled: \\"disabled\\") {}
@@ -9650,7 +9953,7 @@ import { Component } from \\"@angular/core\\";
     </ul>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   numbers = [\\"one\\", \\"two\\", \\"three\\"];
 }
 
@@ -9679,7 +9982,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   log = function log(msg = \\"hello\\") {
     console.log(msg);
   };
@@ -9706,7 +10009,7 @@ import { Component } from \\"@angular/core\\";
     <div [innerHTML]=\\"html\\"></div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   html = \\"<b>bold</b>\\";
 }
 
@@ -9731,9 +10034,12 @@ import { Component } from \\"@angular/core\\";
     <ng-container *ngIf=\\"show\\">
       <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
+    <ng-container *ngIf=\\"!(show)\\">
+      <button (click)=\\"toggle($event)\\">Show</button>
+    </ng-container>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   show = true;
   toggle = function toggle() {
     this.show = !this.show;
@@ -9767,7 +10073,7 @@ import Button from \\"./Button.lite\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   disabled = false;
 }
 
@@ -9792,7 +10098,7 @@ import { Component } from \\"@angular/core\\";
     <div></div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   ngOnInit() {
     console.log(\\"onMount\\");
   }
@@ -9831,7 +10137,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   name = \\"Steve\\";
   get lowercaseName() {
     return this.name.toLowerCase();
@@ -9864,7 +10170,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   a = 2;
   b = 5;
   result = null;
@@ -9901,7 +10207,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -9936,7 +10242,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export class MyComponent {}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -9964,7 +10270,7 @@ import { Component } from \\"@angular/core\\";
     </div>
   \`,
 })
-export class MyComponent {
+export default class MyComponent {
   a = 5;
   b = 12;
 }

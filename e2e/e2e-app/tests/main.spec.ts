@@ -33,12 +33,18 @@ test.describe('e2e', () => {
 
     // await expect(page.locator('li')).toHaveCount(3);
   });
-  test('show-for component test', async ({ page }) => {
+  test('show-for component test', async ({ page, packageName }) => {
     await page.goto('/show-for-component/');
 
-    await expect(page.locator('text=number :1')).toBeVisible();
-    await expect(page.locator('text=number :2')).toBeVisible();
-    await expect(page.locator('text=number :3')).toBeVisible();
+    let textLocator = 'text=number :';
+    if (['e2e-angular'].includes(packageName)) {
+      // angular adds extra whitespace
+      textLocator += ' ';
+    }
+
+    await expect(page.locator(`${textLocator}1`)).toBeVisible();
+    await expect(page.locator(`${textLocator}2`)).toBeVisible();
+    await expect(page.locator(`${textLocator}3`)).toBeVisible();
   });
 
   test.describe('special HTML tags', () => {
@@ -49,23 +55,50 @@ test.describe('e2e', () => {
     });
 
     test('script tag', async ({ page, packageName }) => {
-      test.skip(
-        packageName === 'e2e-solid' || packageName === 'e2e-react' || packageName === 'e2e-svelte',
-      );
+      if (
+        ['e2e-solid', 'e2e-react', 'e2e-angular', 'e2e-qwik', 'e2e-svelte'].includes(packageName)
+      ) {
+        test.skip();
+      }
 
       const consoleMsg: string[] = [];
       page.on('console', (msg) => consoleMsg.push(msg.text()));
 
       await page.goto('/special-tags/');
-
       await expect(consoleMsg.includes('hello from script tag.')).toBe(true);
     });
 
     test('style tag', async ({ page, packageName }) => {
+      if (['e2e-angular'].includes(packageName)) {
+        test.skip();
+      }
+
       await page.goto('/special-tags/');
 
       const div = page.locator('.wrap');
       await expect(div).toHaveCSS('background-color', 'rgb(255, 0, 0)');
+    });
+
+    test('simple input disabled', async ({ page, packageName }) => {
+      await page.goto('/disabled-input/');
+
+      const disabled = page.getByTestId('simple-input-disabled');
+      await expect(disabled).toBeDisabled();
+
+      const enabled = page.getByTestId('simple-input-enabled');
+      if (['e2e-angular'].includes(packageName)) {
+        // this is the exception for angular it will generate [attr.disabled]
+        // which will be a string, so it is always true
+        await expect(disabled).toBeDisabled();
+      } else {
+        await expect(enabled).toBeEditable();
+      }
+
+      const nativeDisabled = page.getByTestId('native-input-disabled');
+      await expect(nativeDisabled).toBeDisabled();
+
+      const nativeEnabled = page.getByTestId('native-input-enabled');
+      await expect(nativeEnabled).toBeEditable();
     });
   });
 });

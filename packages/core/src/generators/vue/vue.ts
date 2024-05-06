@@ -16,7 +16,7 @@ import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import { collectCss } from '@/helpers/styles/collect-css';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
-import { flow, pipe } from 'fp-ts/lib/function';
+import { flow } from 'fp-ts/lib/function';
 import { pickBy, size, uniq } from 'lodash';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
@@ -99,6 +99,7 @@ const onUpdatePlugin: Plugin = (options) => ({
 const BASE_OPTIONS: ToVueOptions = {
   api: 'options',
   defineComponent: true,
+  casing: 'pascal',
 };
 
 export const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
@@ -199,10 +200,14 @@ export const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
 
     stripMetaProperties(component);
 
-    const template = pipe(
-      component.children.map((item) => blockToVue(item, options, { isRootNode: true })).join('\n'),
-      renameMitosisComponentsToKebabCase,
-    );
+    const templateStrBody = component.children
+      .map((item) => blockToVue(item, options, { isRootNode: true }))
+      .join('\n');
+
+    const template =
+      options.casing === 'kebab'
+        ? renameMitosisComponentsToKebabCase(templateStrBody)
+        : templateStrBody;
 
     const onUpdateWithDeps = component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
     const onUpdateWithoutDeps =

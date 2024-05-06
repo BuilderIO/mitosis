@@ -1,5 +1,79 @@
 # @builder.io/mitosis-cli
 
+## 0.2.8
+
+### Patch Changes
+
+- Updated dependencies [18b9210]
+  - @builder.io/mitosis@0.2.8
+
+## 0.2.7
+
+### Patch Changes
+
+- Updated dependencies [1dbdf32]
+  - @builder.io/mitosis@0.2.7
+
+## 0.2.6
+
+### Patch Changes
+
+- Updated dependencies [389018d]
+- Updated dependencies [c7f2759]
+  - @builder.io/mitosis@0.2.6
+
+## 0.2.5
+
+### Patch Changes
+
+- 2e56b76: Fix: Qwik methods using computed variables
+- Updated dependencies [2e56b76]
+  - @builder.io/mitosis@0.2.5
+
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies [cee502f]
+  - @builder.io/mitosis@0.2.4
+
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [2867f44]
+  - @builder.io/mitosis@0.2.3
+
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [18e890c]
+  - @builder.io/mitosis@0.2.2
+
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [5ef7920]
+  - @builder.io/mitosis@0.2.1
+
+## 0.2.0
+
+### Minor Changes
+
+- 0a39722: 💣 Breaking Change: Angular generator: all components are now exported as a `default` export instead of a named export.
+
+### Patch Changes
+
+- 0a39722: Feat: remove all explicit `.js` import extensions when `explicitImportFileExtension` config is `false`
+- 0a39722: Feat: update angular generator to support dynamic components, context and more
+- Updated dependencies [0a39722]
+- Updated dependencies [0a39722]
+- Updated dependencies [0a39722]
+- Updated dependencies [0a39722]
+  - @builder.io/mitosis@0.2.0
+
 ## 0.1.7
 
 ### Patch Changes

@@ -1686,6 +1686,7 @@ export default class SlotCode extends LitElement {
     return html\`
 
           <div>
+          <my-slot name=\\"myAwesomeSlot\\"></my-slot>
           <my-slot name=\\"top\\"></my-slot>
           <my-slot name=\\"left\\">Default left</my-slot>
           <my-slot>Default Child</my-slot>
@@ -2490,6 +2491,43 @@ export default class MyComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > getterState 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-button\\")
+export default class Button extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() foo: any;
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i) {
+    return i + this.foo2.length;
+  }
+
+  render() {
+    return html\`
+
+          <div>
+          <p>\${this.foo2}</p>
+          <p>\${this.bar}</p>
+          <p>\${this.baz(1)}</p>
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > import types 1`] = `
 "import RenderBlock from \\"./builder-render-block.raw\\";
 
@@ -3127,7 +3165,7 @@ export default class RenderBlock extends LitElement {
   get component() {
     const componentName = getProcessedBlock({
       block: this.block,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
@@ -3156,7 +3194,7 @@ export default class RenderBlock extends LitElement {
       ? this.block
       : getProcessedBlock({
           block: this.block,
-          this: this.context.state,
+          state: this.context.state,
           context: this.context.context,
           shouldEvaluateBindings: true,
         });
@@ -3164,7 +3202,7 @@ export default class RenderBlock extends LitElement {
   get actions() {
     return getBlockActions({
       block: this.useBlock,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
   }
@@ -3238,7 +3276,7 @@ export default class RenderBlock extends LitElement {
 
     const itemsArray = evaluate({
       code: repeat.collection,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
 
@@ -3252,7 +3290,7 @@ export default class RenderBlock extends LitElement {
     const repeatArray = itemsArray.map((item, index) => ({
       context: {
         ...this.context,
-        this: {
+        state: {
           ...this.context.state,
           $index: index,
           $item: item,
@@ -3279,7 +3317,7 @@ export default class RenderBlock extends LitElement {
   get childrenContext() {
     return {
       apiKey: this.context.apiKey,
-      this: this.context.state,
+      state: this.context.state,
       content: this.context.content,
       context: this.context.context,
       registeredComponents: this.context.registeredComponents,
@@ -3370,8 +3408,8 @@ export default class RenderContent extends LitElement {
     return this;
   }
 
-  @property() content: any;
   @property() customComponents: any;
+  @property() content: any;
 
   connectedCallback() {
     sendComponentsToVisualEditor(this.customComponents);
@@ -5900,6 +5938,7 @@ export default class SlotCode extends LitElement {
     return html\`
 
           <div>
+          <my-slot name=\\"myAwesomeSlot\\"></my-slot>
           <my-slot name=\\"top\\"></my-slot>
           <my-slot name=\\"left\\">Default left</my-slot>
           <my-slot>Default Child</my-slot>
@@ -6803,6 +6842,47 @@ export default class MyComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Typescript Test > getterState 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+@customElement(\\"my-button\\")
+export default class Button extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() foo: any;
+
+  get foo2() {
+    return this.foo + \\"foo\\";
+  }
+  get bar() {
+    return \\"bar\\";
+  }
+  baz(i: number) {
+    return i + this.foo2.length;
+  }
+
+  render() {
+    return html\`
+
+          <div>
+          <p>\${this.foo2}</p>
+          <p>\${this.bar}</p>
+          <p>\${this.baz(1)}</p>
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Typescript Test > import types 1`] = `
 "import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
 import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
@@ -7511,7 +7591,7 @@ export default class RenderBlock extends LitElement {
   get component() {
     const componentName = getProcessedBlock({
       block: this.block,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
@@ -7540,7 +7620,7 @@ export default class RenderBlock extends LitElement {
       ? this.block
       : getProcessedBlock({
           block: this.block,
-          this: this.context.state,
+          state: this.context.state,
           context: this.context.context,
           shouldEvaluateBindings: true,
         });
@@ -7548,7 +7628,7 @@ export default class RenderBlock extends LitElement {
   get actions() {
     return getBlockActions({
       block: this.useBlock,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
   }
@@ -7622,7 +7702,7 @@ export default class RenderBlock extends LitElement {
 
     const itemsArray = evaluate({
       code: repeat.collection,
-      this: this.context.state,
+      state: this.context.state,
       context: this.context.context,
     });
 
@@ -7636,7 +7716,7 @@ export default class RenderBlock extends LitElement {
     const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
         ...this.context,
-        this: {
+        state: {
           ...this.context.state,
           $index: index,
           $item: item,
@@ -7663,7 +7743,7 @@ export default class RenderBlock extends LitElement {
   get childrenContext() {
     return {
       apiKey: this.context.apiKey,
-      this: this.context.state,
+      state: this.context.state,
       content: this.context.content,
       context: this.context.context,
       registeredComponents: this.context.registeredComponents,
@@ -7762,8 +7842,8 @@ export default class RenderContent extends LitElement {
     return this;
   }
 
-  @property() content: any;
   @property() customComponents: any;
+  @property() content: any;
 
   connectedCallback() {
     sendComponentsToVisualEditor(this.customComponents);

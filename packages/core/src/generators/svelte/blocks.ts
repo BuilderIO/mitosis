@@ -3,7 +3,7 @@ import isChildren from '@/helpers/is-children';
 import { isUpperCase } from '@/helpers/is-upper-case';
 import { getForArguments } from '@/helpers/nodes/for';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
-import { isSlotProperty, stripSlotPrefix } from '@/helpers/slots';
+import { isSlotProperty, stripSlotPrefix, toKebabSlot } from '@/helpers/slots';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { BaseNode, Binding, ForNode, MitosisNode } from '@/types/mitosis-node';
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '../../constants/html_tags';
@@ -139,10 +139,7 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
       `;
     }
 
-    return `<slot name="${stripSlotPrefix(
-      slotName,
-      SLOT_PREFIX,
-    ).toLowerCase()}">${renderChildren()}</slot>`;
+    return `<slot name="${toKebabSlot(slotName, SLOT_PREFIX)}">${renderChildren()}</slot>`;
   },
 };
 
@@ -289,7 +286,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   if ((json.bindings.style?.code || json.properties.style) && !isComponent) {
     const useValue = json.bindings.style?.code || json.properties.style;
 
-    str += `use:mitosis_styling={${useValue}}`;
+    str += `style={stringifyStyles(${useValue})}`;
     delete json.bindings.style;
     delete json.properties.style;
   }
