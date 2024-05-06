@@ -29,7 +29,7 @@ export default component$(
         ]}
       >
         {props.options.map((option) => (
-          <option value={option} key={option} class="capitalize">
+          <option value={option} key={option} class="capitalize text-black">
             {option}
           </option>
         ))}
