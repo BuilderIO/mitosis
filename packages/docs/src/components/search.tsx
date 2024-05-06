@@ -23,7 +23,8 @@ export const Search = component$((props: { class?: ClassList }) => {
     (window as any).navigation?.addEventListener('navigate', (event: any) => {
       // Don't intercept hash changes, whacky behavior ensues (manually scrolling to the top of the page on chrome snaps
       // back down to the anchor for some reason which is janky
-      const isHashChange = event.destination.url.split('#')[0] === window.location.href.split('#')[0];
+      const isHashChange =
+        event.destination.url.split('#')[0] === window.location.href.split('#')[0];
       if (isHashChange) {
         return;
       }
