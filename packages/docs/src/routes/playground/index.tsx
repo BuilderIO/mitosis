@@ -89,10 +89,16 @@ export default component$(() => {
   useVisibleTask$(({ track }) => {
     track(() => code.value);
 
+    if (code.value === defaultCode || !code.value.trim()) {
+      return;
+    }
+
     const newURL = new URL(location.url);
     newURL.searchParams.set('code', lzString.compressToBase64(code.value));
 
-    // nav(newURL.toString(), { replaceState: true });
+    nav(newURL.toString(), {
+      replaceState: true,
+    });
   });
 
   const throttledCompileOne = $(
