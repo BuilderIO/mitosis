@@ -26,7 +26,7 @@ export default component$(() => {
         <div class="prose prose-invert lg:prose-xl max-lg:max-w-full max-w-none min-w-0">
           <Slot />
         </div>
-        <div class="w-[240px] shrink-0 ml-8 max-xl:ml-0 max-xl:mt-8 max-xl:static max-xl:top-none max-xl:w-full max-xl:border-t border-primary border-opacity-50">
+        <div class="w-[240px] shrink-0 ml-12 max-xl:ml-0 max-xl:mt-8 max-xl:static max-xl:top-none max-xl:w-full max-xl:border-t border-primary border-opacity-50">
           <RightSidebar key={location.url.pathname} class="mt-4 max-md:mt-4 sticky top-36" />
         </div>
       </div>
