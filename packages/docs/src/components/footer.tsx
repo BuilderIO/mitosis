@@ -34,10 +34,11 @@ export default component$(() => {
             </Link>
           </div>
           <div class="flex gap-4">
-            <Link class="hover:text-primary-light" href="/docs/figma/">
+            <Link aria-label="Figma logo" class="hover:text-primary-light" href="/docs/figma/">
               <TbBrandFigma />
             </Link>
             <Link
+              aria-label="GitHub logo"
               class="hover:text-primary-light"
               target="_blank"
               href="https://github.com/BuilderIO/mitosis"
@@ -45,6 +46,7 @@ export default component$(() => {
               <TbBrandGithub />
             </Link>
             <Link
+              aria-label="Discord logo"
               class="hover:text-primary-light"
               target="_blank"
               href="https://discord.com/invite/SNusEyNGsx"
