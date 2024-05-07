@@ -86,9 +86,7 @@ export default component$(() => {
     visible.value = true;
   });
 
-  useVisibleTask$(({ track }) => {
-    track(() => code.value);
-
+  const updateUrl = $(() => {
     if (code.value === defaultCode || !code.value.trim()) {
       if (location.url.searchParams.has('code')) {
         location.url.searchParams.delete('code');
@@ -105,10 +103,11 @@ export default component$(() => {
     nav(newURL.toString(), {
       replaceState: true,
     });
-  });
+  })
 
   const throttledCompileOne = $(
     async (code: string, outputFramework: OutputFramework, inputSyntax: InputSyntax) => {
+      updateUrl();
       if (throttleTimeout1.value) {
         clearTimeout(throttleTimeout1.value);
       }
@@ -116,6 +115,7 @@ export default component$(() => {
         throttleTimeout1.value = setTimeout(async () => {
           isThrottling.value = true;
           output.value = await compile(code, outputFramework, inputSyntax);
+          updateUrl();
           isThrottling.value = false;
         }, 100) as any;
         return;
