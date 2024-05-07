@@ -103,7 +103,7 @@ export default component$(() => {
     nav(newURL.toString(), {
       replaceState: true,
     });
-  })
+  });
 
   const throttledCompileOne = $(
     async (code: string, outputFramework: OutputFramework, inputSyntax: InputSyntax) => {
