@@ -49,7 +49,9 @@ Read the full [getting started docs](https://mitosis.builder.io/docs/quickstart/
 
 ### Integration with Figma
 
-This integration streamlines the design-to-code process, ensuring that your design system remains consistent across all platforms from one singular source of truth. Learn more about our [Figma integration](https://mitosis.builder.io/docs/figma).
+To make generating Mitosis components easier, as well as to keep your design system in code in sync with your design system in Figma, Mitosis integrates with Figma.
+
+Learn more about our [Figma integration](https://mitosis.builder.io/docs/figma).
 
 ![Demo of using Mitosis with Figma](https://cdn.builder.io/api/v1/file/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fde65b7d174354c0baf189ee4e652a31b)
 
