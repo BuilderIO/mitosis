@@ -21,10 +21,6 @@ export type generatorsOption = {
 
 export type MitosisConfig = {
   generators?: generatorsOption;
-  /**
-   * link https://github.com/BuilderIO/mitosis/issues/1322
-   * to achieve some specific business requirements that are not compatible with current coding standards.
-   */
   commonOptions?: Omit<BaseTranspilerOptions, 'experimental'>;
   /**
    * List of targets to compile to.
