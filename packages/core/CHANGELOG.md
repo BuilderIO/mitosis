@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.10
+
+### Patch Changes
+
+- 90b3b02: Support for custom generators / targets
+
 ## 0.2.9
 
 ### Patch Changes
