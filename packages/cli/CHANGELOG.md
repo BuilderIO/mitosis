@@ -1,5 +1,13 @@
 # @builder.io/mitosis-cli
 
+## 0.2.10
+
+### Patch Changes
+
+- 90b3b02: Support for custom generators / targets
+- Updated dependencies [90b3b02]
+  - @builder.io/mitosis@0.2.10
+
 ## 0.2.9
 
 ### Patch Changes
