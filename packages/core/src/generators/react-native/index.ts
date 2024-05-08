@@ -126,13 +126,15 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
             if (node.bindings.onClick) {
               node.name = 'Pressable';
             }
+            if(node.bindings.onChange){
+              node.name = 'TextInput'
+            }
           } else if (
             node.properties._text?.trim().length ||
             node.bindings._text?.code?.trim()?.length
           ) {
             node.name = 'Text';
           }
-
           if (node.properties.class) {
             delete node.properties.class;
           }
