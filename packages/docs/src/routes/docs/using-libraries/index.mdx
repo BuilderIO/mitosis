@@ -10,10 +10,49 @@ You can use any JavaScript library in your Mitosis components just like you woul
 other framework. Here's an example of using `lodash` in a Mitosis component:
 
 ```tsx
+import { useStore } from '@builder.io/mitosis';
 import { kebabCase } from 'lodash';
 
+// ✅ Just Works™!
+export default function MyComponent(props: { name: string }) {
+  const state = useStore({
+    getKebabName() {
+      return kebabCase(props.name);
+    },
+  });
+
+  return <div>{state.getKebabName()}</div>;
+}
+```
+
+Just be careful of one gotcha - not all frameworks support directly referencing
+local variables in a template, so avoid referencing libraries directly in JSX as opposed to
+component level functions or [useStore](/docs/components/#state).
+
+```jsx
+import { kebabCase } from 'lodash';
+
+// ❌ won't work in all frameworks, such as Angular which uses string
+// templates that can't reference outside variables
 export default function MyComponent(props: { name: string }) {
   return <div>{kebabCase(props.name)}</div>;
+}
+```
+
+For instsance, in the above example, it would compile to this code in Angular
+which is invalid, as templates can't reference outside variables:
+
+```ts
+import { kebabCase } from 'lodash';
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'my-component',
+  // ❌ won't work in Angular, templates can't reference outside variables
+  template: `<div>{{ kebabCase(props.name) }}</div>`,
+})
+export class MyComponent {
+  props = { name: 'Hello' };
 }
 ```
 
