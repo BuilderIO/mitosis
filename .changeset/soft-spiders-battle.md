@@ -1,6 +1,6 @@
 ---
-'@builder.io/mitosis': minor
-'@builder.io/mitosis-cli': minor
+'@builder.io/mitosis': patch
+'@builder.io/mitosis-cli': patch
 ---
 
 Support for custom generators / targets
