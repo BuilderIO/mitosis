@@ -2,4 +2,4 @@
 '@builder.io/create-mitosis': patch
 ---
 
-Fix: .eslintrc.js mitosis rules
+Fix: remove duplicate `.eslintrc.js` `extends` config.
