@@ -8,11 +8,13 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
   preserveFileExtensions?: boolean;
   importMapper?: Function;
   bootstrapMapper?: Function;
+  visuallyIgnoreHostElement?: boolean;
 }
 
 export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
   preserveImports: false,
   preserveFileExtensions: false,
+  visuallyIgnoreHostElement: true,
 };
 
 export interface AngularBlockOptions {
