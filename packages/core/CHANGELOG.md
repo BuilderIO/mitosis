@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.0
+
+### Minor Changes
+
+- c249052: Feat: `visuallyIgnoreHostElement` option for angular to ignore angular components as elements in the DOM
+
 ## 0.2.10
 
 ### Patch Changes
