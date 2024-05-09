@@ -33,10 +33,19 @@ const rule: Rule.RuleModule = {
     //
     const listener: Rule.RuleListener = {
       Property(node) {
-        const name = node.parent?.parent?.callee?.name;
-        if (types.isIdentifier(node.key) && name === 'useStore') {
+        if (
+          types.isIdentifier(node.key) &&
+          types.isCallExpression(node.parent?.parent) &&
+          types.isIdentifier(node.parent?.parent?.callee) &&
+          node.parent?.parent?.callee?.name === 'useStore'
+        ) {
           const stateKeys = types.isObjectExpression(node.parent)
-            ? node.parent.properties.map((property) => property?.key?.name || undefined)
+            ? node.parent.properties.map((property) => {
+                if (property.type === 'Property' && types.isIdentifier(property.key)) {
+                  return property.key.name;
+                }
+                return undefined;
+              })
             : [];
 
           const propName = node.key.name;
