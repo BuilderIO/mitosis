@@ -8,7 +8,6 @@ module.exports = {
     'plugin:@builder.io/mitosis/recommended',
   ],
   parser: '@typescript-eslint/parser',
-  extends: [],
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
