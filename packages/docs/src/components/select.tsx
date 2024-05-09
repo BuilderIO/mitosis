@@ -24,7 +24,7 @@ export default component$(
         value={props.value}
         onChange$={(_e, el) => props.onChange$(el.value)}
         class={[
-          'px-3 capitalize py-1.5 outline-0 pr-8 rounded text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-purple-990 bg-primary focus:ring-primary bg-opacity-10 border border-primary border-opacity-50 transition-colors duration-200 ease-in-out appearance-none',
+          'px-3 py-1.5 outline-0 pr-8 rounded text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-purple-990 bg-primary focus:ring-primary bg-opacity-10 border border-primary border-opacity-50 transition-colors duration-200 ease-in-out appearance-none',
           props.class,
         ]}
       >

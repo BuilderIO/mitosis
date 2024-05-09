@@ -1,7 +1,21 @@
 import type { MitosisComponent } from '@builder.io/mitosis';
 import { server$ } from '@builder.io/qwik-city';
 
-export type OutputFramework = 'react' | 'svelte' | 'vue' | 'qwik' | 'angular' | 'mitosis' | 'json';
+export type OutputFramework =
+  | 'react'
+  | 'svelte'
+  | 'vue'
+  | 'qwik'
+  | 'angular'
+  | 'mitosis'
+  | 'json'
+  | 'marko'
+  | 'reactNative'
+  | 'lit'
+  | 'solid'
+  | 'preact'
+  | 'stencil'
+  | 'alpine';
 export const outputs: OutputFramework[] = [
   'react',
   'svelte',
@@ -10,6 +24,13 @@ export const outputs: OutputFramework[] = [
   'angular',
   'mitosis',
   'json',
+  'marko',
+  'lit',
+  'solid',
+  'preact',
+  'stencil',
+  'reactNative',
+  'alpine',
 ];
 
 export type InputSyntax = 'jsx' | 'svelte';
@@ -23,6 +44,13 @@ export const languageByFramework: Record<OutputFramework, string> = {
   angular: 'typescript',
   mitosis: 'typescript',
   json: 'json',
+  marko: 'html',
+  lit: 'typescript',
+  solid: 'typescript',
+  preact: 'typescript',
+  stencil: 'typescript',
+  reactNative: 'typescript',
+  alpine: 'html',
 };
 
 const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
@@ -33,6 +61,13 @@ const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
     componentToQwik,
     componentToAngular,
     componentToMitosis,
+    componentToAlpine,
+    componentToLit,
+    componentToMarko,
+    componentToPreact,
+    componentToReactNative,
+    componentToSolid,
+    componentToStencil,
   } = await import('@builder.io/mitosis');
 
   const options = {};
@@ -48,6 +83,20 @@ const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
       return componentToSvelte(options);
     case 'mitosis':
       return componentToMitosis();
+    case 'alpine':
+      return componentToAlpine();
+    case 'lit':
+      return componentToLit();
+    case 'marko':
+      return componentToMarko();
+    case 'preact':
+      return componentToPreact();
+    case 'reactNative':
+      return componentToReactNative();
+    case 'solid':
+      return componentToSolid();
+    case 'stencil':
+      return componentToStencil();
     case 'json':
       return ({ component }: { component: MitosisComponent }) => JSON.stringify(component, null, 2);
     case 'vue':
