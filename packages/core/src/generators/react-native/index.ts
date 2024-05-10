@@ -126,7 +126,7 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
             if (node.bindings.onClick) {
               node.name = 'Pressable';
             }
-            if(node.bindings.onChange){
+            if(node.bindings.onChange && node.bindings.value){
               node.name = 'TextInput'
             }
           } else if (
