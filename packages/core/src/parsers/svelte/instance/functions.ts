@@ -2,7 +2,7 @@ import { isAssignmentExpression, isIdentifier, isUpdateExpression } from '@babel
 import { generate } from 'astring';
 import type { CallExpression, FunctionDeclaration, Identifier } from 'estree';
 import { capitalize } from 'lodash';
-import { walk } from 'svelte/compiler';
+import { walk } from 'estree-walker';
 import { stripQuotes } from '../helpers/string';
 
 import type { SveltosisComponent } from '../types';
