@@ -4,6 +4,7 @@ export const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
+  selector?: string;
   preserveImports?: boolean;
   preserveFileExtensions?: boolean;
   importMapper?: Function;
