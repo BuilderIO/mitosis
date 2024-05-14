@@ -21,6 +21,7 @@ const recommendedRules: Record<RulesKeys, 'error' | 'warn' | 'off' | 0 | 1 | 2> 
   '@builder.io/mitosis/static-control-flow': 'error',
   '@builder.io/mitosis/no-var-name-same-as-prop-name': 'error',
   '@builder.io/mitosis/no-map-function-in-jsx-return-body': 'warn',
+  '@builder.io/mitosis/no-setter-with-same-name-as-state-prop': 'error',
 };
 
 export default {
