@@ -110,9 +110,12 @@ export const blockToSolid = ({
   str += '>';
   if (json.children) {
     str += json.children
-      .flatMap((item) => {
+      .map((item) => {
         const Fragment = item.children.find((item) => item.name === 'Fragment');
-        return Fragment ? Fragment.children : item;
+        if (Fragment) {
+          item.children = [...Fragment.children];
+        }
+        return item;
       })
       .filter(filterEmptyTextNodes)
       .map((item) => blockToSolid({ component, json: item, options }))
