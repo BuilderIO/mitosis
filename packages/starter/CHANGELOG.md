@@ -1,5 +1,11 @@
 # @builder.io/create-mitosis
 
+## 0.0.8
+
+### Patch Changes
+
+- 7955e1f: Fix: `npm run start` command on Windows.
+
 ## 0.0.7
 
 ### Patch Changes
