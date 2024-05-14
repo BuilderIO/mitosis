@@ -8,6 +8,11 @@ export interface Entry {
   ok: boolean;
 }
 
+const friendlyCaseNames: Record<string, string> = {
+  '01-one-component': 'Single Component',
+  '02-two-components': 'Multiple Components',
+};
+
 export async function emitTable(allResults: Entry[]) {
   const cols: string[] = [];
   const rows: string[] = [];
@@ -31,7 +36,10 @@ export async function emitTable(allResults: Entry[]) {
     result[row][col] = e.ok ? ':white_check_mark:' : ':x:';
   }
 
-  output.push('Target | ' + cols.map((caseId) => caseId.replace(/-/g, ' ')).join(' | '));
+  output.push(
+    'Target | ' +
+      cols.map((caseId) => friendlyCaseNames[caseId] || caseId.replace(/-/g, ' ')).join(' | '),
+  );
   output.push('-|-'.repeat(cols.length));
 
   for (const index in rows) {
@@ -43,8 +51,8 @@ export async function emitTable(allResults: Entry[]) {
   await writeFile('./e2e-test-status.md', formattedTable, 'utf8');
 
   // Write it in to the README
-  const readmeFile = '../../README.MD';
-  const currentReadme = await readFile(readmeFile, 'utf-8');
+  const outputFile = '../../docs/test-status.md';
+  const currentReadme = await readFile(outputFile, 'utf-8');
 
   const before = currentReadme.match(/.*## E2E test status/gms)![0];
   const after = currentReadme.match(/## Contribute.*/gms)![0];
@@ -55,7 +63,7 @@ _NOTE: this matrix is programmatically generated and should not be manually edit
 
 ${after}`;
 
-  await writeFile(readmeFile, newReadme, 'utf-8');
+  await writeFile(outputFile, newReadme, 'utf-8');
   // cut before/after the heading and next heading
   // write with this inserted
 

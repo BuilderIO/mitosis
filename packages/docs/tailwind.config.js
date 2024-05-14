@@ -6,11 +6,12 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
       },
       colors: {
         primary: '#AC7EF4',
         'primary-light': '#CCAFFB',
+        'primary-dark': '#221931',
         purple: {
           990: '#120D19',
         },

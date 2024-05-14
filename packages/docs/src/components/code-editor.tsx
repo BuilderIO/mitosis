@@ -20,6 +20,7 @@ export type CodeEditorProps = {
   onChange$?: PropFunction<(value: string) => void>;
   onSave$?: PropFunction<(value: string) => void>;
   language?: string;
+  options?: monaco.editor.IStandaloneEditorConstructionOptions;
   readOnly?: boolean;
 } & ({ value: string; defaultValue?: string } | { defaultValue: string; value?: string });
 
@@ -29,6 +30,7 @@ export const CodeEditor = component$((props: CodeEditorProps) => {
     useSignal<
       NoSerialize<monaco.editor.IStandaloneCodeEditor | monaco.editor.IStandaloneDiffEditor>
     >();
+  const lastContent = useSignal<string>(props.value || props.defaultValue || '');
 
   useVisibleTask$(({ cleanup }) => {
     editorRef.value?.dispose();
@@ -50,25 +52,30 @@ export const CodeEditor = component$((props: CodeEditorProps) => {
         language: props.language || 'typescript',
         automaticLayout: true,
         theme: 'vs-dark',
-        fontSize: 15,
+        fontSize: window.innerWidth < 500 ? 12 : 15,
+        lineNumbers: window.innerWidth < 500 ? 'off' : 'on',
         overviewRulerBorder: false,
         foldingHighlight: false,
         renderLineHighlightOnlyWhenFocus: true,
         renderLineHighlight: 'none',
         selectionHighlight: false,
-        scrollBeyondLastLine: false,
         scrollbar: { vertical: 'hidden' },
         minimap: {
           enabled: false,
         },
         model: monaco.editor.createModel(value!, props.language),
         readOnly: props.readOnly,
+        ...props.options,
       }),
     );
 
     const listener =
       (editorRef.value as monaco.editor.IStandaloneCodeEditor)!.onDidChangeModelContent?.(() => {
-        props.onChange$?.((editorRef.value as monaco.editor.IStandaloneCodeEditor)!.getValue());
+        const currentValue = (editorRef.value as monaco.editor.IStandaloneCodeEditor)!.getValue();
+        if (lastContent.value !== currentValue) {
+          props.onChange$?.((editorRef.value as monaco.editor.IStandaloneCodeEditor)!.getValue());
+          lastContent.value = currentValue;
+        }
       });
 
     editorRef.value!.addAction({

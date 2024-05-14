@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.3.0
+
+### Minor Changes
+
+- c249052: Feat: `visuallyIgnoreHostElement` option for angular to ignore angular components as elements in the DOM
+
+## 0.2.10
+
+### Patch Changes
+
+- 90b3b02: Support for custom generators / targets
+
+## 0.2.9
+
+### Patch Changes
+
+- a5d47bd: Fix: `events` to pass as inputs in dynamic components and pass properties too
+
 ## 0.2.8
 
 ### Patch Changes

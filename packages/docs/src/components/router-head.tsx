@@ -15,13 +15,19 @@ export const RouterHead = component$(() => {
 
       <link rel="canonical" href={loc.url.href} />
       {/* favicon */}
-      <link href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe828a5e84be0407d8cee4419cfa8d200" />
+      <link href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F199eed663ae845baa8a6ea4136a40871" />
       <meta
         property="og:image"
-        content="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe811f4444d1146c9932e02412d31b748"
+        content="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F55995a55a8e9464b9f26cb206e8eff8f"
       />
-
-      <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="Mitosis - write components once, run everywhere" />
+      <meta property="og:type" content="website" />
+      <meta property="og:locale" content="en_US" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@builderio" />
+      <meta name="twitter:creator" content="@builderio" />
 
       {loc.url.pathname.startsWith('/docs') && (
         <link
@@ -33,7 +39,7 @@ export const RouterHead = component$(() => {
       <link
         rel="icon"
         type="image/svg+xml"
-        href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F84ef4f61354b486989f4a749dbcb9281"
+        href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F5a86bcaa3a784a6b9f64f13d4a3016f5"
       />
 
       {head.meta.map((m) => (
@@ -51,6 +57,22 @@ export const RouterHead = component$(() => {
       {head.scripts.map((s) => (
         <script key={s.key} {...s.props} dangerouslySetInnerHTML={s.script} />
       ))}
+
+      <script
+        type="text/partytown"
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-P6ZRY0ZT14"
+      ></script>
+      <script
+        type="text/partytown"
+        dangerouslySetInnerHTML={`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-P6ZRY0ZT14');
+        `}
+      />
     </>
   );
 });

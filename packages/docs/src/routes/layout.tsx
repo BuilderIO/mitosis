@@ -11,9 +11,16 @@ export const onGet: RequestHandler = async ({ cacheControl, url, redirect }) => 
   cacheControl({
     // Always serve a cached response by default, up to a week stale
     staleWhileRevalidate: 60 * 60 * 24 * 7,
+    staleIfError: 60 * 60 * 24 * 7,
     // Max once every 5 seconds, revalidate on the server to get a fresh version of this page
     maxAge: 5,
   });
+
+  if (url.searchParams.get('removeParam')) {
+    const newUrl = new URL(url.href);
+    newUrl.searchParams.delete('removeParam');
+    throw redirect(302, newUrl.href);
+  }
 
   if (
     url.pathname === '/' &&
@@ -32,12 +39,13 @@ export default component$(() => {
   const location = useLocation();
 
   const isPlayground = location.url.pathname === '/playground/';
+  const isHome = location.url.pathname === '/';
 
   return (
     <>
       <div class={['flex flex-col', isPlayground ? 'min-h-screen' : 'min-h-[80vh]']}>
         <Header />
-        <main class={[isPlayground ? 'grow flex flex-col' : 'container mx-auto px-4']}>
+        <main class={[isPlayground || isHome ? 'grow flex flex-col' : 'container mx-auto px-4']}>
           <Slot />
         </main>
       </div>

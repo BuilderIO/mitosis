@@ -1,0 +1,16 @@
+name: Crawl the docs site with Meilisearch Cloud to update the contents to the latest
+
+on:
+  push:
+    branches:
+      - main
+  # We allow manually dispatching workflow when needed. Most often, this will not be needed.
+  workflow_dispatch:
+
+jobs:
+  crawler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: meilisearch/actions/cloud-crawler@main
+        with:
+          token: ${{ secrets.MEILISEARCH_CLOUD_CRAWLER_TOKEN }}

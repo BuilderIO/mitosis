@@ -1,6 +1,63 @@
+---
+title: Overview - Mitosis
+---
+
 # Mitosis Overview
 
-Mitosis is a subset of [JSX](https://github.com/facebook/jsx). It supports generating code for a number of frontend frameworks, including React, Vue, Angular, Svelte, and Solid.
+## What is Mitosis?
+
+[Mitosis](https://github.com/BuilderIO/mitosis) is an open-source tool that transforms JSX components into fully functional components for frameworks like Angular, React, Qwik, Vue, Svelte, Solid, and React Native.
+
+By writing your UI components once in JSX, you can deploy them across any platform, eliminating the need to rewrite code for each framework.
+
+Using Mitosis, you can:
+
+- Maintain a consistent design system across multiple frameworks ([example](https://github.com/db-ui/mono))
+- Sync your [design systems from Figma to code](/docs/figma) and publish them to npm across frameworks
+- Build high quality cross-framework SDKs ([example](https://github.com/BuilderIO/builder/tree/main/packages/sdks#builderio-sdks))
+- Avoid the [pitfalls of web components](#challenges-with-web-components) by compiling to native framework code
+
+<video
+  width="752"
+  height="428"
+  autoplay
+  playsInline
+  muted
+  loop
+  src="https://cdn.builder.io/o/assets%2FYJIGb4i01jvw0SRdL5Bt%2F65318cd035a940f88f7c19bfb0844e31%2Fcompressed?apiKey=YJIGb4i01jvw0SRdL5Bt&token=65318cd035a940f88f7c19bfb0844e31&alt=media&optimized=true"
+/>
+
+## Why use Mitosis?
+
+With Mitosis, you can streamline your workflow and reduce redundancy without compromising the quality of your design system. Mitosis ensures that your design language speaks clearly and consistently, whether you're working in React, Vue, or any other framework.
+
+By simplifying the development process through having one singular source of truth, Mitosis accelerates project timelines, allowing your team to focus more on innovation and less on integration.
+
+### Challenges with web components
+
+While [web components](https://developer.mozilla.org/en-US/docs/Web/API/Web_components) are standalone elements designed for reuse across web applications, they present some [key challenges](https://designsystemcentral.com/why-web-components-arent-the-design-system-silver-bullet-just-yet/152/) for design systems:
+
+- Web components do not natively render on the server side. This can be problematic when using frameworks that rely on server-side rendering for performance and SEO benefits.
+- Web components do not seamlessly integrate with your library or framework. For instance, web components do not inherently understand or interact with React's context.
+- Web components often come with their own rendering libraries and dependencies, which can lead to performance overhead.
+
+Although web components offer a modular and reusable approach to UI elements, these challenges can limit their viability. However, if supporting web components is a requirement, you can use Mitosis to generate them from a single source of truth. Mitosis supports [Lit](https://lit.dev/), [Stencil](https://stenciljs.com/), and raw web components as outputs.
+
+### Integration with Figma
+
+Mitosis integrates with Figma to sync your design systems in Figma to code.
+
+<video
+  width="752"
+  height="428"
+  autoplay
+  playsInline
+  muted
+  loop
+  src="https://cdn.builder.io/o/assets%2FYJIGb4i01jvw0SRdL5Bt%2F65d28d32b11d4577b116d6853dd72ce8%2Fcompressed?apiKey=YJIGb4i01jvw0SRdL5Bt&token=65d28d32b11d4577b116d6853dd72ce8&alt=media&optimized=true"
+/>
+
+This integration streamlines the design-to-code process, ensuring that your design system remains consistent across all platforms from one singular source of truth. Learn more about our [Figma integration](/docs/figma).
 
 ## How does it work
 
@@ -49,7 +106,7 @@ becomes:
 
 Which can be reserialized into many languages and frameworks. For example, to support angular, we just make a serializer that loops over the json and produces:
 
-```ts
+```typescript
 @Component({
   template: `
     <div>
