@@ -639,7 +639,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     const componentMetadata: Record<string, any> = {
       selector: options.selector
         ? `'${options.selector}'`
-        : `'${kebabCase(json.name || 'my-component')}, ${json.name}'`,
+        : `'${kebabCase(json.name || 'my-component')}'`,
       template: `\`
       ${indent(dynamicTemplate, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
       ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
