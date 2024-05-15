@@ -120,16 +120,16 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
         if (isMitosisNode(node)) {
           // TODO: handle TextInput, Image, etc
           if (isChildren({ node })) {
-            node.name = '';
           } else if (node.name.toLowerCase() === node.name && VALID_HTML_TAGS.includes(node.name)) {
-            node.name = 'View';
-            if (node.bindings.onClick) {
+            if (node.name === 'input') {
+              node.name = 'TextInput';
+            } else if (node.bindings.onClick) {
               node.name = 'Pressable';
+            } else {
+              node.name = 'View';
             }
-            if(node.bindings.onChange && node.bindings.value){
-              node.name = 'TextInput'
-            }
-          } else if (
+           }
+            else if (
             node.properties._text?.trim().length ||
             node.bindings._text?.code?.trim()?.length
           ) {
