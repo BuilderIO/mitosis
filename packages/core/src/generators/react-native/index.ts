@@ -128,8 +128,7 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
             } else {
               node.name = 'View';
             }
-           }
-            else if (
+          } else if (
             node.properties._text?.trim().length ||
             node.bindings._text?.code?.trim()?.length
           ) {

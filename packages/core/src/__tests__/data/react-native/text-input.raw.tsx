@@ -1,13 +1,13 @@
-import { useState } from "@builder.io/mitosis";
+import { useState } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
-  const [name, setName] = useState("Steve");
+  const [name, setName] = useState('Steve');
 
   return (
     <div>
       <input
         css={{
-          color: "red",
+          color: 'red',
         }}
         value={name}
         onChange={(event) => setName(event.target.value)}
