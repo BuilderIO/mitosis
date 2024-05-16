@@ -120,6 +120,7 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
         if (isMitosisNode(node)) {
           // TODO: handle TextInput, Image, etc
           if (isChildren({ node })) {
+            node.name = '';
           } else if (node.name.toLowerCase() === node.name && VALID_HTML_TAGS.includes(node.name)) {
             if (node.name === 'input') {
               node.name = 'TextInput';
