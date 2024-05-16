@@ -5,6 +5,7 @@ import noAssignPropsToState from './no-assign-props-to-state';
 import noAsyncMethodsOnState from './no-async-methods-on-state';
 import noConditionalLogicInComponentRender from './no-conditional-logic-in-component-render';
 import noMapFunctionInJsxReturnBody from './no-map-function-in-jsx-return-body';
+import noSetterWithSameNameAsStateProp from './no-setter-with-same-name-as-state-prop';
 import noStateDestructuring from './no-state-destructuring';
 import notVarDeclarationInJSX from './no-var-declaration-in-jsx';
 import noVarDeclarationOrAssignmentInComponent from './no-var-declaration-or-assignment-in-component';
@@ -32,4 +33,5 @@ export const rules = {
   'no-conditional-logic-in-component-render': noConditionalLogicInComponentRender,
   'no-var-declaration-or-assignment-in-component': noVarDeclarationOrAssignmentInComponent,
   'no-map-function-in-jsx-return-body': noMapFunctionInJsxReturnBody,
+  'no-setter-with-same-name-as-state-prop': noSetterWithSameNameAsStateProp,
 };
