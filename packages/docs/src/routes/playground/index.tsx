@@ -1,10 +1,12 @@
-import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { DocumentHead, routeLoader$, useLocation, useNavigate } from '@builder.io/qwik-city';
 import lzString from 'lz-string';
 import { ContentLoaderCode } from 'qwik-content-loader';
 import { CodeEditor } from '~/components/code-editor';
+import OptionsModal, { getDefaultOptions } from '~/components/options-modal';
 import Select from '~/components/select';
 import {
+  CompileArgs,
   InputSyntax,
   OutputFramework,
   compile,
@@ -39,9 +41,9 @@ const useOutput1 = routeLoader$(async (requestEvent) => {
   }
 
   const output = await compile(
-    code || defaultCode,
-    outputTab || defaultTopTab,
-    inputTab || defaultInputTab,
+    {code: code || defaultCode,
+    output: outputTab || defaultTopTab,
+    inputSyntax: inputTab || defaultInputTab,}
   ).catch((err) => {
     console.error(err);
     return formatErrorToDisplay(err);
@@ -54,11 +56,11 @@ const useOutput2 = routeLoader$(async (requestEvent) => {
   const outputTab = requestEvent.url.searchParams.get('outputTab') as OutputFramework;
   const inputTab = requestEvent.url.searchParams.get('inputTab') as InputSyntax;
 
-  const output = await compile(
+  const output = await compile({
     code,
-    outputTab || defaultBottomTab,
-    inputTab || defaultInputTab,
-  ).catch((err) => {
+   output: outputTab || defaultBottomTab,
+   inputSyntax: inputTab || defaultInputTab,
+  }).catch((err) => {
     console.error(err);
     return formatErrorToDisplay(err);
   });
@@ -73,13 +75,19 @@ export default component$(() => {
   const inputTab = location.url.searchParams.get('inputTab') as InputSyntax;
   const loaderOutput1 = useOutput1().value;
   const loaderOutput2 = useOutput2().value;
-
+  const showSecondOutput = useSignal(true);
   const code = useSignal(initialCode || defaultCode);
   const inputSyntax = useSignal<InputSyntax>(inputTab || defaultInputTab);
   const output = useSignal(loaderOutput1 || '');
   const outputOneFramework = useSignal<OutputFramework>(outputTab || defaultTopTab);
+  const optionsOne = useStore(getDefaultOptions(outputTab || defaultTopTab), {
+    deep: true
+  });
   const output2 = useSignal(loaderOutput2 || '');
   const outputTwoFramework = useSignal<OutputFramework>(defaultBottomTab);
+  const optionsTwo = useStore(getDefaultOptions(defaultBottomTab), {
+    deep: true
+  })
   const visible = useSignal(false);
   const isThrottling = useSignal(false);
   const isThrottling2 = useSignal(false);
@@ -112,7 +120,7 @@ export default component$(() => {
   });
 
   const throttledCompileOne = $(
-    async (code: string, outputFramework: OutputFramework, inputSyntax: InputSyntax) => {
+    async (args: CompileArgs) => {
       updateUrl();
       if (throttleTimeout1.value) {
         clearTimeout(throttleTimeout1.value);
@@ -121,7 +129,7 @@ export default component$(() => {
         throttleTimeout1.value = setTimeout(async () => {
           isThrottling.value = true;
           try {
-            output.value = await compile(code, outputFramework, inputSyntax);
+            output.value = await compile(args);
             errorOne.value = '';
           } catch (err) {
             errorOne.value = formatErrorToDisplay(err);
@@ -134,7 +142,7 @@ export default component$(() => {
       }
       isThrottling.value = true;
       try {
-        output.value = await compile(code, outputFramework, inputSyntax);
+        output.value = await compile(args);
         errorOne.value = '';
       } catch (err) {
         errorOne.value = formatErrorToDisplay(err);
@@ -145,7 +153,7 @@ export default component$(() => {
   );
 
   const throttledCompileTwo = $(
-    async (code: string, outputFramework: OutputFramework, inputSyntax: InputSyntax) => {
+    async (args: CompileArgs) => {
       if (throttleTimeout2.value) {
         clearTimeout(throttleTimeout2.value);
       }
@@ -153,7 +161,7 @@ export default component$(() => {
         throttleTimeout2.value = setTimeout(async () => {
           isThrottling.value = true;
           try {
-            output2.value = await compile(code, outputFramework, inputSyntax);
+            output2.value = await compile(args);
             errorTwo.value = '';
           } catch (err) {
             errorTwo.value = formatErrorToDisplay(err);
@@ -165,7 +173,7 @@ export default component$(() => {
       }
       isThrottling2.value = true;
       try {
-        output2.value = await compile(code, outputFramework, inputSyntax);
+        output2.value = await compile(args);
         errorTwo.value = '';
       } catch (err) {
         errorTwo.value = formatErrorToDisplay(err);
@@ -178,8 +186,9 @@ export default component$(() => {
   useVisibleTask$(async ({ track }) => {
     track(code);
     track(outputOneFramework);
+    track(optionsOne);
     try {
-      await throttledCompileOne(code.value, outputOneFramework.value, inputSyntax.value);
+      await throttledCompileOne({code: code.value, output: outputOneFramework.value, inputSyntax: inputSyntax.value, outputOptions: optionsOne});
     } catch (err) {
       console.warn(err);
     }
@@ -188,8 +197,9 @@ export default component$(() => {
   useVisibleTask$(async ({ track }) => {
     track(code);
     track(outputTwoFramework);
+    track(optionsTwo);
     try {
-      await throttledCompileTwo(code.value, outputTwoFramework.value, inputSyntax.value);
+      await throttledCompileTwo({code: code.value, output: outputTwoFramework.value, inputSyntax: inputSyntax.value, outputOptions: optionsTwo});
     } catch (err) {
       console.warn(err);
     }
@@ -198,8 +208,12 @@ export default component$(() => {
   // Always reload on window refocus to ensure cloudflare workers are warm
   useVisibleTask$(({ cleanup }) => {
     const fn = () => {
-      throttledCompileOne(code.value, outputOneFramework.value, inputSyntax.value);
-      throttledCompileTwo(code.value, outputTwoFramework.value, inputSyntax.value);
+      throttledCompileOne({
+        code: code.value, output: outputOneFramework.value, inputSyntax: inputSyntax.value, outputOptions: optionsOne
+      });
+      throttledCompileTwo({
+        code: code.value, output: outputTwoFramework.value, inputSyntax: inputSyntax.value, outputOptions: optionsTwo
+      });
     };
     addEventListener('focus', fn);
     cleanup(() => {
@@ -220,11 +234,12 @@ export default component$(() => {
               class="ml-auto max-md:scale-[0.85] -my-2 max-md:-mr-1.5"
               value={inputSyntax.value}
               onChange$={(syntax: any) => {
-                compile(
-                  code.value,
-                  syntax === 'jsx' ? 'mitosis' : 'svelte',
-                  inputSyntax.value,
-                ).then((output) => {
+                compile({
+                code:  code.value,
+                  output: syntax === 'jsx' ? 'mitosis' : 'svelte',
+                  inputSyntax: inputSyntax.value,
+                
+                }).then((output) => {
                   code.value = output.replace(/\n?\n?import { useStore } from "..";\n?/g, '');
                   inputSyntax.value = syntax;
                 });
@@ -259,12 +274,16 @@ export default component$(() => {
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
             // server side
+<div class="ml-auto mr-2 max-md:scale-[0.85] mx-md:-my-2 max-md:-mr-1.5 flex gap-2 items-baseline">
+<OptionsModal options={optionsOne} target={outputOneFramework} />
             <Select
-              class="ml-auto mr-2 max-md:scale-[0.85] mx-md:-my-2 max-md:-mr-1.5"
               value={outputOneFramework.value}
-              onChange$={(framework: any) => (outputOneFramework.value = framework)}
+              onChange$={(framework: any) => {
+                 outputOneFramework.value = framework;
+                 Object.assign(optionsOne, getDefaultOptions(framework))
+              }}
               options={outputs}
-            />
+            /></div>
           )}
         </div>
         <div class="h-[50%] max-md:h-auto grow relative">
@@ -284,20 +303,27 @@ export default component$(() => {
             </div>
           )}
         </div>
-        <div class="min-h-[50px] max-md:min-h-[40px] max-md:hidden flex items-center border-primary border-opacity-50 border-t -mt-4 pt-4">
+        <div class={["min-h-[50px] max-md:min-h-[40px] max-md:hidden flex border-primary border-opacity-50 border-t -mt-4 pt-4", showSecondOutput.value ? '' : 'pb-4']}>
           {visible.value && (
             // Workaround weird bug where this doesn't render correctly
             // server side
+            <div class="ml-auto mr-2 md:mr-6 gap-2 flex  items-baseline">
+            <button class={'px-3 py-1.5 outline-0 rounded text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-purple-990 bg-primary focus:ring-primary bg-opacity-10 border border-primary border-opacity-50 transition-colors duration-200 ease-in-out appearance-none'} onClick$={$(() => {
+              showSecondOutput.value = !showSecondOutput.value
+            })}>{showSecondOutput.value ? 'hide' : 'show'}</button>
+            <OptionsModal options={optionsTwo} target={outputTwoFramework} />
             <Select
-              class="ml-auto mr-2 md:mr-6"
               value={outputTwoFramework.value}
-              onChange$={(framework: any) => (outputTwoFramework.value = framework)}
+              onChange$={(framework: any) => {
+                outputTwoFramework.value = framework;
+                Object.assign(optionsTwo, getDefaultOptions(framework))
+              }}
               options={outputs}
-            />
+            /></div>
           )}
         </div>
 
-        <div class="h-[50%] relative max-md:hidden">
+        {showSecondOutput.value && <div class="h-[50%] relative max-md:hidden">
           <ContentLoaderCode
             width={400}
             class="ml-16 mt-3 opacity-10 origin-top-left max-md:scale-75 max-md:ml-4"
@@ -313,7 +339,7 @@ export default component$(() => {
               <ErrorWarning errorMessage={errorTwo.value} />
             </div>
           )}
-        </div>
+        </div>}
       </div>
     </div>
   );

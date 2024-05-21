@@ -16,6 +16,7 @@ export type OutputFramework =
   | 'preact'
   | 'stencil'
   | 'alpine';
+
 export const outputs: OutputFramework[] = [
   'react',
   'svelte',
@@ -53,66 +54,34 @@ export const languageByFramework: Record<OutputFramework, string> = {
   alpine: 'html',
 };
 
-const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
-  const {
-    componentToSvelte,
-    componentToVue,
-    componentToReact,
-    componentToQwik,
-    componentToAngular,
-    componentToMitosis,
-    componentToAlpine,
-    componentToLit,
-    componentToMarko,
-    componentToPreact,
-    componentToReactNative,
-    componentToSolid,
-    componentToStencil,
-  } = await import('@builder.io/mitosis');
-
-  const options = {};
+const getOutputGenerator = async ({ output, options }: { output: OutputFramework, options: any }) => {
+  const { targets } = await import('@builder.io/mitosis');
 
   switch (output) {
-    case 'qwik':
-      return componentToQwik(options);
-    case 'react':
-      return componentToReact(options);
-    case 'angular':
-      return componentToAngular(options);
-    case 'svelte':
-      return componentToSvelte(options);
-    case 'mitosis':
-      return componentToMitosis();
-    case 'alpine':
-      return componentToAlpine();
-    case 'lit':
-      return componentToLit();
-    case 'marko':
-      return componentToMarko();
-    case 'preact':
-      return componentToPreact();
-    case 'reactNative':
-      return componentToReactNative();
-    case 'solid':
-      return componentToSolid();
-    case 'stencil':
-      return componentToStencil();
     case 'json':
       return ({ component }: { component: MitosisComponent }) => JSON.stringify(component, null, 2);
-    case 'vue':
-      return componentToVue({ api: 'composition' });
     default:
-      throw new Error('unexpected Output ' + output);
+      if (output in targets) {
+        return targets[output](options)
+      }
+
+      throw new Error(`unexpected output: \`${output}\`.`);
   }
 };
 
+export type CompileArgs = {
+  code: string, output: OutputFramework, inputSyntax: InputSyntax, outputOptions?: any
+}
+
 export const compile = server$(
-  async (code: string, output: OutputFramework, inputSyntax: InputSyntax) => {
+  async ({code, output, inputSyntax, outputOptions}: CompileArgs) => {
     const { parseJsx, parseSvelte } = await import('@builder.io/mitosis');
     const parsed = inputSyntax === 'svelte' ? await parseSvelte(code) : parseJsx(code);
 
-    const outputGenerator = await getOutputGenerator({ output });
+    const outputGenerator = await getOutputGenerator({ output, options: outputOptions });
 
+    console.log('getting generator with: ', {output, outputOptions});
+    
     const outputCode = outputGenerator({ component: parsed });
 
     return outputCode;

@@ -245,7 +245,11 @@ export const CodeRotator = component$((props: { class: ClassList }) => {
   const compileAll = $(async (code: string) => {
     await Promise.allSettled(
       frameworkExamples.map(async (framework) => {
-        const output = await compile(code, framework as OutputFramework, 'jsx');
+        const output = await compile({
+          code,
+          output: framework as OutputFramework,
+          inputSyntax: 'jsx'
+        });
         (outputs as any)[framework] = output.replace(
           /\n?\n?import { useStore } from "..";\n?/g,
           '',
