@@ -1,5 +1,5 @@
 import { ToVueOptions } from '@builder.io/mitosis';
-import { $, Signal, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, Signal, component$, useSignal } from '@builder.io/qwik';
 import { OutputFramework } from '~/services/compile';
 import Select from './select';
 
@@ -67,14 +67,7 @@ const getOptions = (target:OutputFramework) => {
 
 export default component$(
   ({options, target}: {    options: Options, target:Signal<OutputFramework> }) => {
-    const showModal = useSignal(true);
-
-    useVisibleTask$(() => {
-      if (target.value === 'angular') {
-        showModal.value = false
-      }
-    })
-
+    const showModal = useSignal(false);
 
 
     return (
@@ -83,7 +76,7 @@ export default component$(
         showModal.value = !showModal.value
       })} class={'px-3 py-1.5 outline-0 rounded text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-purple-990 bg-primary focus:ring-primary bg-opacity-10 border border-primary border-opacity-50 transition-colors duration-200 ease-in-out appearance-none'}>options</button>
 
-      {showModal.value && <div class={"absolute top-40 bottom-40 left-40 right-40 bg-purple-990 z-50 p-10"}>
+      {showModal.value && <div class={"absolute top-40 bottom-40 left-40 right-40 bg-purple-990 z-50 p-10 max-w-2xl"}>
       <h1>{target.value} settings.</h1>
 
 <div class="w-full flex flex-col gap-4 pt-4">
