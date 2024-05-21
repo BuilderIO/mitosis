@@ -1,4 +1,4 @@
-import { ToVueOptions } from '@builder.io/mitosis';
+import { ToReactOptions, ToVueOptions } from '@builder.io/mitosis';
 import { $, Signal, component$, useSignal } from '@builder.io/qwik';
 import { OutputFramework } from '~/services/compile';
 import Select from './select';
@@ -37,7 +37,7 @@ export const getDefaultOptions = (target: OutputFramework) => {
 
 const _getOptions = (target:OutputFramework) => {
   switch (target) {
-    case 'vue':
+    case 'vue':{
       const o: Array<Option<ToVueOptions>> = [{
         name: 'casing',
         type: 'enum',
@@ -51,9 +51,19 @@ const _getOptions = (target:OutputFramework) => {
       default: 'composition'
     }]
 
-      return o
+      return o}
       
-  
+    case 'react': {
+
+    const o: Array<Option<ToReactOptions>> = [{
+      name: 'stylesType',
+      type: 'enum',
+      enum: [
+        'emotion', 'styled-components', 'styled-jsx', 'react-native', 'style-tag'
+      ],
+      default: 'style-tag'
+    }]
+ return o }
     default:
       return []
   }
