@@ -9,5 +9,6 @@ export function createMitosisNode(): MitosisNode {
     children: [],
     bindings: {},
     properties: {},
+    slots: {},
   };
 }

@@ -50,6 +50,7 @@ export function parseHtmlNode(
     children: [],
     bindings: {},
     properties: {},
+    slots: {},
   };
 
   switch (node.type) {
