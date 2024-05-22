@@ -235,6 +235,9 @@ export const jsxElementToJson = (
           if (!slotNode) return memo;
 
           memo.slots[key] = [slotNode];
+
+          // Temporarily keep the slot as a binding until we migrate generators to use the slots.
+          memo.bindings[key] = createSingleBinding({ code: generate(expression).code });
         } else {
           memo.bindings[key] = createSingleBinding({ code: generate(expression).code });
         }
