@@ -1,10 +1,148 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Preact > jsx > Javascript Test > AdvancedRef 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+exports[`Preact > jsx > Javascript Test > AdvancedRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Javascript Test > Basic 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+function MyBasicRefComponent(props) {
+  const inputRef = useRef(null);
+  const inputNoArgRef = useRef(null);
+  const [name, setName] = useState(() => \\"PatrickJS\\");
 
-exports[`Preact > jsx > Javascript Test > Basic Context 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  useEffect(() => {
+    console.log(\\"Received an update\\");
+  }, [inputRef.current, inputNoArgRef.current]);
+
+  return (
+    <Fragment>
+      <div>
+        {props.showInput ? (
+          <Fragment>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => setName(event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </Fragment>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicRefComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Basic 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+function MyBasicComponent(props) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  const [age, setAge] = useState(() => 1);
+
+  const [sports, setSports] = useState(() => [\\"\\"]);
+
+  return (
+    <Fragment>
+      <div className=\\"test div\\">
+        <input
+          value={DEFAULT_VALUES.name || name}
+          onChange={(myEvent) => setName(myEvent.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Basic Context 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useContext, useEffect } from \\"preact/hooks\\";
+import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
+
+function MyBasicComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
+
+  const myService = useContext(MyService);
+
+  useEffect(() => {
+    const hi = myService.method(\\"hi\\");
+    console.log(hi);
+  }, []);
+
+  useEffect(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }, []);
+
+  return (
+    <Injector.Provider value={createInjector()}>
+      <div>
+        {myService.method(\\"hello\\") + name}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        <input onChange={(event) => onChange} />
+      </div>
+    </Injector.Provider>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > Basic OnMount Update 1`] = `
 "/** @jsx h */
@@ -71,21 +209,256 @@ export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > BasicAttribute 1`] = `"Cannot read properties of undefined (reading 'spellcheck')"`;
+exports[`Preact > jsx > Javascript Test > BasicAttribute 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
-exports[`Preact > jsx > Javascript Test > BasicBooleanAttribute 1`] = `"Cannot read properties of undefined (reading 'toggle')"`;
+function MyComponent(props) {
+  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck />;
+}
 
-exports[`Preact > jsx > Javascript Test > BasicChildComponent 1`] = `"Cannot read properties of undefined (reading 'id')"`;
+export default MyComponent;
+"
+`;
 
-exports[`Preact > jsx > Javascript Test > BasicFor 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+exports[`Preact > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-exports[`Preact > jsx > Javascript Test > BasicRef 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+function MyBooleanAttribute(props) {
+  return (
+    <div>
+      {props.children ? (
+        <Fragment>
+          {props.children}
+          {props.type}
+        </Fragment>
+      ) : null}
+      <MyBooleanAttributeComponent toggle />
+      <MyBooleanAttributeComponent toggle />
+      <MyBooleanAttributeComponent list={null} />
+    </div>
+  );
+}
 
-exports[`Preact > jsx > Javascript Test > BasicRefAssignment 1`] = `"Cannot read properties of undefined (reading 'onClick')"`;
+export default MyBooleanAttribute;
+"
+`;
 
-exports[`Preact > jsx > Javascript Test > BasicRefPrevious 1`] = `"Cannot read properties of undefined (reading 'onClick')"`;
+exports[`Preact > jsx > Javascript Test > BasicChildComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
 
-exports[`Preact > jsx > Javascript Test > Button 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+function MyBasicChildComponent(props) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  const [dev, setDev] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <div>
+      <MyBasicComponent id={dev} />
+      <div>
+        <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+      </div>
+    </div>
+  );
+}
+
+export default MyBasicChildComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > BasicFor 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+function MyBasicForComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+
+  useEffect(() => {
+    console.log(\\"onMount code\\");
+  }, []);
+
+  return (
+    <div>
+      {names?.map((person) => (
+        <Fragment>
+          <input
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value + \\" and \\" + person);
+            }}
+          />
+          Hello
+          {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+          Liquid!
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default MyBasicForComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > BasicRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef } from \\"preact/hooks\\";
+
+function MyBasicRefComponent(props) {
+  const inputRef = useRef(null);
+  const inputNoArgRef = useRef(null);
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  return (
+    <Fragment>
+      <div>
+        {props.showInput ? (
+          <Fragment>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => setName(event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </Fragment>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicRefComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > BasicRefAssignment 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
+
+function MyBasicRefAssignmentComponent(props) {
+  const holdValueRef = useRef(\\"Patrick\\");
+  function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef.current);
+    holdValueRef.current = holdValueRef.current + \\"JS\\";
+  }
+
+  return (
+    <div>
+      <button onClick={(evt) => handlerClick(evt)}>Click</button>
+    </div>
+  );
+}
+
+export default MyBasicRefAssignmentComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > BasicRefPrevious 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
+
+export function usePrevious(value) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+function MyPreviousComponent(props) {
+  const [count, setCount] = useState(() => 0);
+
+  const prevCount = useRef(count);
+
+  useEffect(() => {
+    prevCount.current = count;
+  }, [count]);
+
+  return (
+    <div>
+      <h1>
+        Now: {count}, before: {prevCount.current}
+      </h1>
+      <button onClick={(event) => setCount(1)}>Increment</button>
+    </div>
+  );
+}
+
+export default MyPreviousComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Button 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function Button(props) {
+  return (
+    <div>
+      {props.link ? (
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      ) : null}
+      {!props.link ? (
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+export default Button;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > Columns 1`] = `
 "/** @jsx h */
@@ -173,29 +546,739 @@ export default ContentSlotCode;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > ContentSlotJSX 1`] = `"Cannot read properties of undefined (reading 'name')"`;
+exports[`Preact > jsx > Javascript Test > ContentSlotJSX 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Javascript Test > CustomCode 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+function ContentSlotJsxCode(props) {
+  const [name, setName] = useState(() => \\"king\\");
 
-exports[`Preact > jsx > Javascript Test > Embed 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+  const [showContent, setShowContent] = useState(() => false);
 
-exports[`Preact > jsx > Javascript Test > Form 1`] = `"Cannot read properties of undefined (reading 'validate')"`;
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
 
-exports[`Preact > jsx > Javascript Test > Image 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
 
-exports[`Preact > jsx > Javascript Test > Image State 1`] = `"Cannot read properties of undefined (reading 'src')"`;
+  return (
+    <Fragment>
+      {props.slotReference ? (
+        <Fragment>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={cls()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.content || \\"{props.content}\\"}</>
+            ) : null}
+            <div>
+              <hr />
+            </div>
+            <div>{props.children}</div>
+          </div>
+        </Fragment>
+      ) : null}
+    </Fragment>
+  );
+}
 
-exports[`Preact > jsx > Javascript Test > Img 1`] = `"Cannot read properties of undefined (reading 'style')"`;
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: undefined,
+};
 
-exports[`Preact > jsx > Javascript Test > Input 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+export default ContentSlotJsxCode;
+"
+`;
 
-exports[`Preact > jsx > Javascript Test > InputParent 1`] = `"Cannot read properties of undefined (reading 'onChange')"`;
+exports[`Preact > jsx > Javascript Test > CustomCode 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Javascript Test > RawText 1`] = `"Cannot read properties of undefined (reading 'class')"`;
+function CustomCode(props) {
+  const elem = useRef(null);
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
-exports[`Preact > jsx > Javascript Test > Section 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+  const [scriptsRun, setScriptsRun] = useState(() => []);
 
-exports[`Preact > jsx > Javascript Test > Select 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    findAndRunScripts();
+  }, []);
+
+  return (
+    <div
+      ref={elem}
+      className={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      dangerouslySetInnerHTML={{ __html: props.code }}
+    />
+  );
+}
+
+export default CustomCode;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Embed 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
+
+function CustomCode(props) {
+  const elem = useRef(null);
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
+
+  const [scriptsRun, setScriptsRun] = useState(() => []);
+
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    findAndRunScripts();
+  }, []);
+
+  return (
+    <div
+      ref={elem}
+      className={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      dangerouslySetInnerHTML={{ __html: props.code }}
+    />
+  );
+}
+
+export default CustomCode;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Form 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef } from \\"preact/hooks\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
+
+function FormComponent(props) {
+  const formRef = useRef(null);
+  const [formState, setFormState] = useState(() => \\"unsubmitted\\");
+
+  const [responseData, setResponseData] = useState(() => null);
+
+  const [formErrorMessage, setFormErrorMessage] = useState(() => \\"\\");
+
+  function submissionState() {
+    return (Builder.isEditing && props.previewState) || formState;
+  }
+
+  function onSubmit(event) {
+    const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+    if (props.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = props.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = props.contentType;
+
+      if (props.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */ !(
+            sendWithJs && props.action?.includes(\\"zapier.com\\")
+          )
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", { detail: { body } });
+      if (formRef.current) {
+        formRef.current.dispatchEvent(presubmitEvent);
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+      setFormState(\\"sending\\");
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        props.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+      fetch(
+        props.sendSubmissionsTo === \\"email\\"
+          ? formUrl
+          : props.action /* TODO: throw error if no action URL */,
+        { body, headers, method: props.method || \\"post\\" }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+          if (!res.ok && props.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */ let message =
+              get(body, props.errorMessagePath);
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like          error: - email has been taken */ message =
+                  JSON.stringify(message);
+              }
+              setFormErrorMessage(message);
+            }
+          }
+          setResponseData(body);
+          setFormState(res.ok ? \\"success\\" : \\"error\\");
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: { res, body },
+            });
+            if (formRef.current) {
+              formRef.current.dispatchEvent(submitSuccessEvent);
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */ if (
+                props.resetFormOnSubmit !== false
+              ) {
+                formRef.current.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */ if (
+              props.successUrl
+            ) {
+              if (formRef.current) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: { url: props.successUrl },
+                });
+                formRef.current.dispatchEvent(event);
+                if (!event.defaultPrevented) {
+                  location.href = props.successUrl;
+                }
+              } else {
+                location.href = props.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: { error: err },
+          });
+          if (formRef.current) {
+            formRef.current.dispatchEvent(submitErrorEvent);
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+          setResponseData(err);
+          setFormState(\\"error\\");
+        }
+      );
+    }
+  }
+  return (
+    <Fragment>
+      {\\" \\"}
+      <form
+        validate={props.validate}
+        ref={formRef}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => onSubmit(event)}
+        {...props.attributes}
+      >
+        {props.builderBlock && props.builderBlock.children ? (
+          <Fragment>
+            {props.builderBlock?.children?.map((block, index) => (
+              <BuilderBlockComponent
+                key={block.id}
+                block={block}
+                index={index}
+              />
+            ))}
+          </Fragment>
+        ) : null}
+        {submissionState() === \\"error\\" ? (
+          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
+        ) : null}
+        {submissionState() === \\"sending\\" ? (
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          />
+        ) : null}
+        {submissionState() === \\"error\\" && responseData ? (
+          <pre className=\\"builder-form-error-text pre\\">
+            {JSON.stringify(responseData, null, 2)}
+          </pre>
+        ) : null}
+        {submissionState() === \\"success\\" ? (
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          />
+        ) : null}
+      </form>{\\" \\"}
+      <style jsx>{\`
+        .pre {
+          padding: 10px;
+          color: red;
+          text-align: center;
+        }
+      \`}</style>{\\" \\"}
+    </Fragment>
+  );
+}
+export default FormComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Image 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
+
+function Image(props) {
+  const pictureRef = useRef(null);
+  const [scrollListener, setScrollListener] = useState(() => null);
+
+  const [imageLoaded, setImageLoaded] = useState(() => false);
+
+  function setLoaded() {
+    setImageLoaded(true);
+  }
+
+  function useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  }
+
+  function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  }
+
+  const [load, setLoad] = useState(() => false);
+
+  useEffect(() => {
+    if (useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef.current) {
+          const rect = pictureRef.current.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            setScrollListener(null);
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      setScrollListener(listener);
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (scrollListener) {
+        window.removeEventListener(\\"scroll\\", scrollListener);
+      }
+    };
+  }, []);
+
+  return (
+    <Fragment>
+      <div>
+        <picture ref={pictureRef}>
+          {!useLazyLoading() || load ? (
+            <img
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              className={
+                \\"builder-image\\" +
+                (props._class ? \\" \\" + props._class : \\"\\") +
+                \\" img\\"
+              }
+              src={props.image}
+              onLoad={(event) => setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+            />
+          ) : null}
+          <source srcset={props.srcset} />
+        </picture>
+        {props.children}
+      </div>
+      <style jsx>{\`
+        .img {
+          opacity: 1;
+          transition: opacity 0.2s ease-in-out;
+          object-fit: cover;
+          object-position: center;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default Image;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Image State 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function ImgStateComponent(props) {
+  const [canShow, setCanShow] = useState(() => true);
+
+  const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
+
+  return (
+    <div>
+      {images?.map((item, itemIndex) => (
+        <img className=\\"custom-class\\" src={item} key={itemIndex} />
+      ))}
+    </div>
+  );
+}
+
+export default ImgStateComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Img 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { Builder } from \\"@builder.io/sdk\\";
+
+function ImgComponent(props) {
+  return (
+    <img
+      style={{
+        objectFit: props.backgroundSize || \\"cover\\",
+        objectPosition: props.backgroundPosition || \\"center\\",
+      }}
+      {...props.attributes}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      src={props.imgSrc}
+    />
+  );
+}
+
+export default ImgComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Input 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { Builder } from \\"@builder.io/sdk\\";
+
+function FormInputComponent(props) {
+  return (
+    <input
+      {...props.attributes}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      placeholder={props.placeholder}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+      onChange={(event) => props.onChange?.(event.target.value)}
+    />
+  );
+}
+
+export default FormInputComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > InputParent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props) {
+  function handleChange(value) {
+    console.log(value);
+  }
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange={(value) => handleChange(value)}
+    />
+  );
+}
+
+export default Stepper;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > RawText 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function RawText(props) {
+  return (
+    <span
+      className={props.attributes?.class || props.attributes?.className}
+      dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }}
+    />
+  );
+}
+
+export default RawText;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Section 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function SectionComponent(props) {
+  return (
+    <section
+      {...props.attributes}
+      style={
+        props.maxWidth && typeof props.maxWidth === \\"number\\"
+          ? {
+              maxWidth: props.maxWidth,
+            }
+          : undefined
+      }
+    >
+      {props.children}
+    </section>
+  );
+}
+
+export default SectionComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Select 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { Builder } from \\"@builder.io/sdk\\";
+
+function SelectComponent(props) {
+  return (
+    <select
+      {...props.attributes}
+      value={props.value}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      defaultValue={props.defaultValue}
+      name={props.name}
+    >
+      {props.options?.map((option, index) => (
+        <option value={option.value} data-index={index}>
+          {option.name || option.value}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+export default SelectComponent;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > SlotDefault 1`] = `
 "/** @jsx h */
@@ -268,15 +1351,206 @@ export default SlotCode;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > Stamped.io 1`] = `"Cannot read properties of undefined (reading 'data-user')"`;
+exports[`Preact > jsx > Javascript Test > Stamped.io 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+import { kebabCase, snakeCase } from \\"lodash\\";
 
-exports[`Preact > jsx > Javascript Test > Submit 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+function SmileReviews(props) {
+  const [reviews, setReviews] = useState(() => []);
 
-exports[`Preact > jsx > Javascript Test > Text 1`] = `"Cannot read properties of undefined (reading 'contentEditable')"`;
+  const [name, setName] = useState(() => \\"test\\");
 
-exports[`Preact > jsx > Javascript Test > Textarea 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+  const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
 
-exports[`Preact > jsx > Javascript Test > Video 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+  function kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+
+  function snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  useEffect(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setReviews(data.data);
+      });
+  }, []);
+
+  return (
+    <Fragment>
+      <div data-user={name}>
+        <button onClick={(event) => setShowReviewPrompt(true)}>
+          Write a review
+        </button>
+        {showReviewPrompt || \\"asdf\\" ? (
+          <Fragment>
+            <input placeholder=\\"Email\\" />
+            <input placeholder=\\"Title\\" className=\\"input\\" />
+            <textarea
+              placeholder=\\"How was your experience?\\"
+              className=\\"textarea\\"
+            />
+            <button
+              className=\\"button\\"
+              onClick={(event) => {
+                event.preventDefault();
+                setShowReviewPrompt(false);
+              }}
+            >
+              Submit
+            </button>
+          </Fragment>
+        ) : null}
+        {reviews?.map((review, index) => (
+          <div className=\\"review\\" key={review.id}>
+            <img className=\\"img\\" src={review.avatar} />
+            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+              <div>N: {index}</div>
+              <div>{review.author}</div>
+              <div>{review.reviewMessage}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <style jsx>{\`
+        .input {
+          display: block;
+        }
+        .textarea {
+          display: block;
+        }
+        .button {
+          display: block;
+        }
+        .review {
+          margin: 10px;
+          padding: 10px;
+          background: white;
+          display: flex;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          -webkit-font-smoothing: antialiased;
+        }
+        .img {
+          height: 30px;
+          width: 30px;
+          margin-right: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default SmileReviews;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Submit 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function SubmitButton(props) {
+  return (
+    <button type=\\"submit\\" {...props.attributes}>
+      {props.text}
+    </button>
+  );
+}
+
+export default SubmitButton;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Text 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+import { Builder } from \\"@builder.io/sdk\\";
+
+function Text(props) {
+  const [name, setName] = useState(() => \\"Decadef20\\");
+
+  return (
+    <div
+      contentEditable={allowEditingText || undefined}
+      data-name={{
+        test: name || \\"any name\\",
+      }}
+      dangerouslySetInnerHTML={{
+        __html:
+          props.text ||
+          props.content ||
+          name ||
+          '<p class=\\"text-lg\\">my name</p>',
+      }}
+    />
+  );
+}
+
+export default Text;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Textarea 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function Textarea(props) {
+  return (
+    <textarea
+      {...props.attributes}
+      placeholder={props.placeholder}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+    />
+  );
+}
+
+export default Textarea;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > Video 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function Video(props) {
+  return (
+    <video
+      preload=\\"none\\"
+      {...props.attributes}
+      style={{
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...props.attributes?.style,
+        objectFit: props.fit,
+        objectPosition: props.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      }}
+      key={props.video || \\"no-src\\"}
+      poster={props.posterImage}
+      autoplay={props.autoPlay}
+      muted={props.muted}
+      controls={props.controls}
+      loop={props.loop}
+    />
+  );
+}
+
+export default Video;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 "/** @jsx h */
@@ -336,9 +1610,67 @@ export default MyBasicForNoTagRefComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > basicForwardRef 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+exports[`Preact > jsx > Javascript Test > basicForwardRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Javascript Test > basicForwardRefMetadata 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+function MyBasicForwardRefComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicForwardRefComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function MyBasicForwardRefComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicForwardRefComponent;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 "/** @jsx h */
@@ -441,19 +1773,233 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > className 1`] = `"Cannot read properties of undefined (reading 'class')"`;
+exports[`Preact > jsx > Javascript Test > className 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Javascript Test > classState 1`] = `"Cannot read properties of undefined (reading 'class')"`;
+function ClassNameCode(props) {
+  const [bindings, setBindings] = useState(() => \\"a binding\\");
 
-exports[`Preact > jsx > Javascript Test > componentWithContext 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+  return (
+    <div>
+      <div className=\\"no binding\\">Without Binding</div>
+      <div className={bindings}>With binding</div>
+    </div>
+  );
+}
 
-exports[`Preact > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+export default ClassNameCode;
+"
+`;
 
-exports[`Preact > jsx > Javascript Test > contentState 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+exports[`Preact > jsx > Javascript Test > classState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Javascript Test > defaultProps 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+function MyBasicComponent(props) {
+  const [classState, setClassState] = useState(() => \\"testClassName\\");
 
-exports[`Preact > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+  const [styleState, setStyleState] = useState(() => ({
+    color: \\"red\\",
+  }));
+
+  return (
+    <Fragment>
+      <div className={classState + \\" div\\"} style={styleState}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > componentWithContext 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext } from \\"preact/hooks\\";
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <Fragment>{foo.value}</Fragment>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext } from \\"preact/hooks\\";
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <Fragment>
+          <Fragment>{foo.value}</Fragment>
+          <div>other</div>
+        </Fragment>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > contentState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext } from \\"preact/hooks\\";
+import BuilderContext from \\"@dummy/context.js\\";
+
+function RenderContent(props) {
+  return (
+    <BuilderContext.Provider
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+    >
+      <div>setting context</div>
+    </BuilderContext.Provider>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > defaultProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function Button(props) {
+  return (
+    <div>
+      {props.link ? (
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      ) : null}
+      {!props.link ? (
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.buttonText}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
+};
+
+export default Button;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function Button(props) {
+  return (
+    <div>
+      {props.link ? (
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      ) : null}
+      {!props.link ? (
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.text}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+  onClick: () => {},
+};
+
+export default Button;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "/** @jsx h */
@@ -518,7 +2064,29 @@ export default Button;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > import types 1`] = `"Cannot read properties of undefined (reading 'state.getRenderContentProps(props.renderContentProps.block, 0)')"`;
+exports[`Preact > jsx > Javascript Test > import types 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import RenderBlock from \\"./builder-render-block.raw\\";
+
+function RenderContent(props) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <RenderBlock
+      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
+    />
+  );
+}
+
+export default RenderContent;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > multipleOnUpdate 1`] = `
 "/** @jsx h */
@@ -576,7 +2144,22 @@ export default MultipleOnUpdateWithDeps;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > multipleSpreads 1`] = `"Cannot read properties of undefined (reading 'attrs')"`;
+exports[`Preact > jsx > Javascript Test > multipleSpreads 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function MyBasicComponent(props) {
+  const [attrs, setAttrs] = useState(() => ({
+    hello: \\"world\\",
+  }));
+
+  return <input {...state.attrs} {...props} />;
+}
+
+export default MyBasicComponent;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > nestedShow 1`] = `
 "/** @jsx h */
@@ -647,7 +2230,45 @@ export default NestedStyles;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > onEvent 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+exports[`Preact > jsx > Javascript Test > onEvent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef, useEffect } from \\"preact/hooks\\";
+
+function Embed(props) {
+  const elem = useRef(null);
+  function foo(event) {
+    console.log(\\"test2\\");
+  }
+
+  function elem_onInitEditingBldr(event) {
+    console.log(\\"test\\");
+    foo(event);
+  }
+
+  useEffect(() => {
+    elem.current?.addEventListener(\\"initEditingBldr\\", elem_onInitEditingBldr);
+    return () =>
+      elem.current?.removeEventListener(
+        \\"initEditingBldr\\",
+        elem_onInitEditingBldr
+      );
+  }, []);
+
+  useEffect(() => {
+    elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  }, []);
+
+  return (
+    <div className=\\"builder-embed\\" ref={elem}>
+      <div>Test</div>
+    </div>
+  );
+}
+
+export default Embed;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > onInit & onMount 1`] = `
 "/** @jsx h */
@@ -888,11 +2509,347 @@ export default OnUpdate;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > renderBlock 1`] = `"Cannot read properties of undefined (reading 'state.attributes')"`;
+exports[`Preact > jsx > Javascript Test > renderBlock 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
+import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
+import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
+import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import BlockStyles from \\"./block-styles\\";
+import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
+import RenderComponent from \\"./render-component\\";
+import RenderRepeatedBlock from \\"./render-repeated-block\\";
 
-exports[`Preact > jsx > Javascript Test > renderContentExample 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+function RenderBlock(props) {
+  function component() {
+    const componentName = getProcessedBlock({
+      block: props.block,
+      state: props.context.state,
+      context: props.context.context,
+      shouldEvaluateBindings: false,
+    }).component?.name;
 
-exports[`Preact > jsx > Javascript Test > rootFragmentMultiNode 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+    if (!componentName) {
+      return null;
+    }
+
+    const ref = props.context.registeredComponents[componentName];
+
+    if (!ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+      return undefined;
+    } else {
+      return ref;
+    }
+  }
+
+  function tag() {
+    return getBlockTag(useBlock());
+  }
+
+  function useBlock() {
+    return repeatItemData()
+      ? props.block
+      : getProcessedBlock({
+          block: props.block,
+          state: props.context.state,
+          context: props.context.context,
+          shouldEvaluateBindings: true,
+        });
+  }
+
+  function actions() {
+    return getBlockActions({
+      block: useBlock(),
+      state: props.context.state,
+      context: props.context.context,
+    });
+  }
+
+  function attributes() {
+    const blockProperties = getBlockProperties(useBlock());
+    return {
+      ...blockProperties,
+      ...(TARGET === \\"reactNative\\"
+        ? {
+            style: getReactNativeBlockStyles({
+              block: useBlock(),
+              context: props.context,
+              blockStyles: blockProperties.style,
+            }),
+          }
+        : {}),
+    };
+  }
+
+  function shouldWrap() {
+    return !component?.()?.noWrap;
+  }
+
+  function renderComponentProps() {
+    return {
+      blockChildren: useChildren(),
+      componentRef: component?.()?.component,
+      componentOptions: {
+        ...getBlockComponentOptions(useBlock()),
+
+        /**
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
+         */
+        ...(shouldWrap()
+          ? {}
+          : {
+              attributes: { ...attributes(), ...actions() },
+            }),
+        customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
+      },
+      context: childrenContext(),
+    };
+  }
+
+  function useChildren() {
+    // TO-DO: When should \`canHaveChildren\` dictate rendering?
+    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+    // but still receive and need to render children.
+    // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
+    return useBlock().children ?? [];
+  }
+
+  function childrenWithoutParentComponent() {
+    /**
+     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+     * we render them outside of \`componentRef\`.
+     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+     * blocks, and the children will be repeated within those blocks.
+     */
+    const shouldRenderChildrenOutsideRef =
+      !component?.()?.component && !repeatItemData();
+    return shouldRenderChildrenOutsideRef ? useChildren() : [];
+  }
+
+  function repeatItemData() {
+    /**
+     * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
+     * which will not work if there is a repeat.
+     */
+    const { repeat, ...blockWithoutRepeat } = props.block;
+
+    if (!repeat?.collection) {
+      return undefined;
+    }
+
+    const itemsArray = evaluate({
+      code: repeat.collection,
+      state: props.context.state,
+      context: props.context.context,
+    });
+
+    if (!Array.isArray(itemsArray)) {
+      return undefined;
+    }
+
+    const collectionName = repeat.collection.split(\\".\\").pop();
+    const itemNameToUse =
+      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+    const repeatArray = itemsArray.map((item, index) => ({
+      context: {
+        ...props.context,
+        state: {
+          ...props.context.state,
+          $index: index,
+          $item: item,
+          [itemNameToUse]: item,
+          [\`$\${itemNameToUse}Index\`]: index,
+        },
+      },
+      block: blockWithoutRepeat,
+    }));
+    return repeatArray;
+  }
+
+  function inheritedTextStyles() {
+    if (TARGET !== \\"reactNative\\") {
+      return {};
+    }
+
+    const styles = getReactNativeBlockStyles({
+      block: useBlock(),
+      context: props.context,
+      blockStyles: attributes().style,
+    });
+    return extractTextStyles(styles);
+  }
+
+  function childrenContext() {
+    return {
+      apiKey: props.context.apiKey,
+      state: props.context.state,
+      content: props.context.content,
+      context: props.context.context,
+      registeredComponents: props.context.registeredComponents,
+      inheritedStyles: inheritedTextStyles(),
+    };
+  }
+
+  function renderComponentTag() {
+    if (TARGET === \\"reactNative\\") {
+      return RenderComponentWithContext;
+    } else if (TARGET === \\"vue3\\") {
+      // vue3 expects a string for the component tag
+      return \\"RenderComponent\\";
+    } else {
+      return RenderComponent;
+    }
+  }
+
+  const [componentInfo, setComponentInfo] = useState(() => null);
+
+  const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
+
+  return (
+    <Fragment>
+      {shouldWrap() ? (
+        <Fragment>
+          {isEmptyHtmlElement(tag()) ? (
+            <TagRef {...attributes()} {...actions()} />
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+            <Fragment>
+              {repeatItemData()?.map((data, index) => (
+                <RenderRepeatedBlock
+                  key={index}
+                  repeatContext={data.context}
+                  block={data.block}
+                />
+              ))}
+            </Fragment>
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
+            <TagRef {...attributes()} {...actions()}>
+              <RenderComponentTagRef {...renderComponentProps()} />
+              {childrenWithoutParentComponent()?.map((child) => (
+                <RenderBlock
+                  key={\\"render-block-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+              {childrenWithoutParentComponent()?.map((child) => (
+                <BlockStyles
+                  key={\\"block-style-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+            </TagRef>
+          ) : null}
+        </Fragment>
+      ) : (
+        <Fragment>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </Fragment>
+      )}
+    </Fragment>
+  );
+}
+
+export default RenderBlock;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > renderContentExample 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext, useEffect } from \\"preact/hooks\\";
+import BuilderContext from \\"@dummy/context.js\\";
+import {
+  dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import RenderBlocks from \\"@dummy/RenderBlocks\\";
+
+function RenderContent(props) {
+  useEffect(() => {
+    sendComponentsToVisualEditor(props.customComponents);
+  }, []);
+
+  useEffect(() => {
+    dispatchNewContentToVisualEditor(props.content);
+  }, [props.content]);
+
+  return (
+    <Fragment>
+      <BuilderContext.Provider
+        value={{
+          get content() {
+            return 3;
+          },
+
+          get registeredComponents() {
+            return 4;
+          },
+        }}
+      >
+        <div className=\\"div\\" onClick={(event) => trackClick(props.content.id)}>
+          <RenderBlocks blocks={props.content.blocks} />
+        </div>
+      </BuilderContext.Provider>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: columns;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function Button(props) {
+  return (
+    <Fragment>
+      {props.link ? (
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      ) : null}
+      {!props.link ? (
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      ) : null}
+    </Fragment>
+  );
+}
+
+export default Button;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > rootShow 1`] = `
 "/** @jsx h */
@@ -955,7 +2912,29 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > showWithFor 1`] = `"Cannot read properties of undefined (reading 'key')"`;
+exports[`Preact > jsx > Javascript Test > showWithFor 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function NestedShow(props) {
+  return (
+    <Fragment>
+      {props.conditionA ? (
+        <Fragment>
+          {props.items?.map((item, idx) => (
+            <div key={idx}>{item}</div>
+          ))}
+        </Fragment>
+      ) : (
+        <div>else-condition-A</div>
+      )}
+    </Fragment>
+  );
+}
+
+export default NestedShow;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > showWithRootText 1`] = `
 "/** @jsx h */
@@ -1007,15 +2986,95 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > spreadAttrs 1`] = `"Cannot read properties of undefined (reading 'attrs')"`;
+exports[`Preact > jsx > Javascript Test > spreadAttrs 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
-exports[`Preact > jsx > Javascript Test > spreadNestedProps 1`] = `"Cannot read properties of undefined (reading 'props.nested')"`;
+function MyBasicComponent(props) {
+  return <input {...attrs} />;
+}
 
-exports[`Preact > jsx > Javascript Test > spreadProps 1`] = `"Cannot read properties of undefined (reading 'props')"`;
+export default MyBasicComponent;
+"
+`;
 
-exports[`Preact > jsx > Javascript Test > styleClassAndCss 1`] = `"Cannot read properties of undefined (reading 'style')"`;
+exports[`Preact > jsx > Javascript Test > spreadNestedProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
-exports[`Preact > jsx > Javascript Test > stylePropClassAndCss 1`] = `"Cannot read properties of undefined (reading 'style')"`;
+function MyBasicComponent(props) {
+  return <input {...props.nested} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > spreadProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function MyBasicComponent(props) {
+  return <input {...props} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > styleClassAndCss 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function MyComponent(props) {
+  return (
+    <Fragment>
+      <div
+        className=\\"builder-column div\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > stylePropClassAndCss 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function StylePropClassAndCss(props) {
+  return (
+    <Fragment>
+      <div
+        style={props.attributes.style}
+        className={props.attributes.class + \\" div\\"}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > subComponent 1`] = `
 "/** @jsx h */
@@ -1030,7 +3089,33 @@ export default SubComponent;
 "
 `;
 
-exports[`Preact > jsx > Javascript Test > svgComponent 1`] = `"Cannot read properties of undefined (reading 'viewBox')"`;
+exports[`Preact > jsx > Javascript Test > svgComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function SvgComponent(props) {
+  return (
+    <svg
+      fill=\\"none\\"
+      role=\\"img\\"
+      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+      width={42}
+      height={42}
+    >
+      <defs>
+        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+          <feFlood result=\\"BackgroundImageFix\\" />
+          <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
+          <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
+export default SvgComponent;
+"
+`;
 
 exports[`Preact > jsx > Javascript Test > typeDependency 1`] = `
 "/** @jsx h */
@@ -1184,11 +3269,157 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > AdvancedRef 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+exports[`Preact > jsx > Typescript Test > AdvancedRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Typescript Test > Basic 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+export interface Props {
+  showInput: boolean;
+}
 
-exports[`Preact > jsx > Typescript Test > Basic Context 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+function MyBasicRefComponent(props: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  useEffect(() => {
+    console.log(\\"Received an update\\");
+  }, [inputRef.current, inputNoArgRef.current]);
+
+  return (
+    <Fragment>
+      <div>
+        {props.showInput ? (
+          <Fragment>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => setName(event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </Fragment>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicRefComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Basic 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export interface MyBasicComponentProps {
+  id: string;
+}
+
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+function MyBasicComponent(props: MyBasicComponentProps) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  const [age, setAge] = useState(() => 1);
+
+  const [sports, setSports] = useState(() => [\\"\\"]);
+
+  return (
+    <Fragment>
+      <div className=\\"test div\\">
+        <input
+          value={DEFAULT_VALUES.name || name}
+          onChange={(myEvent) => setName(myEvent.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Basic Context 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useContext, useEffect } from \\"preact/hooks\\";
+import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
+
+function MyBasicComponent(props: any) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
+
+  const myService = useContext(MyService);
+
+  useEffect(() => {
+    const hi = myService.method(\\"hi\\");
+    console.log(hi);
+  }, []);
+
+  useEffect(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }, []);
+
+  return (
+    <Injector.Provider value={createInjector()}>
+      <div>
+        {myService.method(\\"hello\\") + name}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        <input onChange={(event) => onChange} />
+      </div>
+    </Injector.Provider>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > Basic OnMount Update 1`] = `
 "/** @jsx h */
@@ -1260,21 +3491,280 @@ export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > BasicAttribute 1`] = `"Cannot read properties of undefined (reading 'spellcheck')"`;
+exports[`Preact > jsx > Typescript Test > BasicAttribute 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
-exports[`Preact > jsx > Typescript Test > BasicBooleanAttribute 1`] = `"Cannot read properties of undefined (reading 'toggle')"`;
+function MyComponent(props: any) {
+  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck />;
+}
 
-exports[`Preact > jsx > Typescript Test > BasicChildComponent 1`] = `"Cannot read properties of undefined (reading 'id')"`;
+export default MyComponent;
+"
+`;
 
-exports[`Preact > jsx > Typescript Test > BasicFor 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+exports[`Preact > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
-exports[`Preact > jsx > Typescript Test > BasicRef 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+type Props = {
+  children: any;
+  type: string;
+};
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
-exports[`Preact > jsx > Typescript Test > BasicRefAssignment 1`] = `"Cannot read properties of undefined (reading 'onClick')"`;
+function MyBooleanAttribute(props: Props) {
+  return (
+    <div>
+      {props.children ? (
+        <Fragment>
+          {props.children}
+          {props.type}
+        </Fragment>
+      ) : null}
+      <MyBooleanAttributeComponent toggle />
+      <MyBooleanAttributeComponent toggle />
+      <MyBooleanAttributeComponent list={null} />
+    </div>
+  );
+}
 
-exports[`Preact > jsx > Typescript Test > BasicRefPrevious 1`] = `"Cannot read properties of undefined (reading 'onClick')"`;
+export default MyBooleanAttribute;
+"
+`;
 
-exports[`Preact > jsx > Typescript Test > Button 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+exports[`Preact > jsx > Typescript Test > BasicChildComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicComponent from \\"./basic.raw\\";
+
+function MyBasicChildComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  const [dev, setDev] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <div>
+      <MyBasicComponent id={dev} />
+      <div>
+        <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+      </div>
+    </div>
+  );
+}
+
+export default MyBasicChildComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > BasicFor 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+function MyBasicForComponent(props: any) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+
+  useEffect(() => {
+    console.log(\\"onMount code\\");
+  }, []);
+
+  return (
+    <div>
+      {names?.map((person) => (
+        <Fragment>
+          <input
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value + \\" and \\" + person);
+            }}
+          />
+          Hello
+          {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+          Liquid!
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default MyBasicForComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > BasicRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef } from \\"preact/hooks\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+function MyBasicRefComponent(props: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  return (
+    <Fragment>
+      <div>
+        {props.showInput ? (
+          <Fragment>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => setName(event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </Fragment>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicRefComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > BasicRefAssignment 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+function MyBasicRefAssignmentComponent(props: Props) {
+  const holdValueRef = useRef(\\"Patrick\\");
+  function handlerClick(event: Event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef.current);
+    holdValueRef.current = holdValueRef.current + \\"JS\\";
+  }
+
+  return (
+    <div>
+      <button onClick={(evt) => handlerClick(evt)}>Click</button>
+    </div>
+  );
+}
+
+export default MyBasicRefAssignmentComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > BasicRefPrevious 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+function MyPreviousComponent(props: Props) {
+  const [count, setCount] = useState(() => 0);
+
+  const prevCount = useRef(count);
+
+  useEffect(() => {
+    prevCount.current = count;
+  }, [count]);
+
+  return (
+    <div>
+      <h1>
+        Now: {count}, before: {prevCount.current}
+      </h1>
+      <button onClick={(event) => setCount(1)}>Increment</button>
+    </div>
+  );
+}
+
+export default MyPreviousComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Button 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+function Button(props: ButtonProps) {
+  return (
+    <div>
+      {props.link ? (
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      ) : null}
+      {!props.link ? (
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+export default Button;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > Columns 1`] = `
 "/** @jsx h */
@@ -1383,29 +3873,857 @@ export default ContentSlotCode;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > ContentSlotJSX 1`] = `"Cannot read properties of undefined (reading 'name')"`;
+exports[`Preact > jsx > Typescript Test > ContentSlotJSX 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Typescript Test > CustomCode 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+type Props = {
+  [key: string]: string | JSX.Element;
+};
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
-exports[`Preact > jsx > Typescript Test > Embed 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+function ContentSlotJsxCode(props: Props) {
+  const [name, setName] = useState(() => \\"king\\");
 
-exports[`Preact > jsx > Typescript Test > Form 1`] = `"Cannot read properties of undefined (reading 'validate')"`;
+  const [showContent, setShowContent] = useState(() => false);
 
-exports[`Preact > jsx > Typescript Test > Image 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+  function cls() {
+    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
+  }
 
-exports[`Preact > jsx > Typescript Test > Image State 1`] = `"Cannot read properties of undefined (reading 'src')"`;
+  function show() {
+    props.slotContent ? 1 : \\"\\";
+  }
 
-exports[`Preact > jsx > Typescript Test > Img 1`] = `"Cannot read properties of undefined (reading 'style')"`;
+  return (
+    <Fragment>
+      {props.slotReference ? (
+        <Fragment>
+          <div
+            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+            {...props.attributes}
+            onClick={(event) => show()}
+            className={cls()}
+          >
+            {showContent && props.slotContent ? (
+              <>{props.content || \\"{props.content}\\"}</>
+            ) : null}
+            <div>
+              <hr />
+            </div>
+            <div>{props.children}</div>
+          </div>
+        </Fragment>
+      ) : null}
+    </Fragment>
+  );
+}
 
-exports[`Preact > jsx > Typescript Test > Input 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+ContentSlotJsxCode.defaultProps = {
+  content: \\"\\",
+  slotReference: undefined,
+  slotContent: undefined,
+};
 
-exports[`Preact > jsx > Typescript Test > InputParent 1`] = `"Cannot read properties of undefined (reading 'onChange')"`;
+export default ContentSlotJsxCode;
+"
+`;
 
-exports[`Preact > jsx > Typescript Test > RawText 1`] = `"Cannot read properties of undefined (reading 'class')"`;
+exports[`Preact > jsx > Typescript Test > CustomCode 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Typescript Test > Section 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
 
-exports[`Preact > jsx > Typescript Test > Select 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+function CustomCode(props: CustomCodeProps) {
+  const elem = useRef<HTMLDivElement>(null);
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
+
+  const [scriptsRun, setScriptsRun] = useState(() => []);
+
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    findAndRunScripts();
+  }, []);
+
+  return (
+    <div
+      ref={elem}
+      className={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      dangerouslySetInnerHTML={{ __html: props.code }}
+    />
+  );
+}
+
+export default CustomCode;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Embed 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
+
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+function CustomCode(props: CustomCodeProps) {
+  const elem = useRef<HTMLDivElement>(null);
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
+
+  const [scriptsRun, setScriptsRun] = useState(() => []);
+
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    findAndRunScripts();
+  }, []);
+
+  return (
+    <div
+      ref={elem}
+      className={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      dangerouslySetInnerHTML={{ __html: props.code }}
+    />
+  );
+}
+
+export default CustomCode;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Form 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef } from \\"preact/hooks\\";
+
+export interface FormProps {
+  attributes?: any;
+  name?: string;
+  action?: string;
+  validate?: boolean;
+  method?: string;
+  builderBlock?: BuilderElement;
+  sendSubmissionsTo?: string;
+  sendSubmissionsToEmail?: string;
+  sendWithJs?: boolean;
+  contentType?: string;
+  customHeaders?: {
+    [key: string]: string;
+  };
+  successUrl?: string;
+  previewState?: FormState;
+  successMessage?: BuilderElement[];
+  errorMessage?: BuilderElement[];
+  sendingMessage?: BuilderElement[];
+  resetFormOnSubmit?: boolean;
+  errorMessagePath?: string;
+}
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
+import { Builder, BuilderElement, builder } from \\"@builder.io/sdk\\";
+import {
+  BuilderBlock as BuilderBlockComponent,
+  BuilderBlocks,
+  get,
+  set,
+} from \\"@fake\\";
+
+function FormComponent(props: FormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [formState, setFormState] = useState(() => \\"unsubmitted\\");
+
+  const [responseData, setResponseData] = useState(() => null);
+
+  const [formErrorMessage, setFormErrorMessage] = useState(() => \\"\\");
+
+  function submissionState() {
+    return (Builder.isEditing && props.previewState) || formState;
+  }
+
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
+    const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+    if (props.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = props.customHeaders || {};
+      let body: any;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!(el as HTMLInputElement).name)
+        .map((el) => {
+          let value: any;
+          const key = (el as HTMLImageElement).name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = (el as HTMLInputElement).value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = props.contentType;
+
+      if (props.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */ !(
+            sendWithJs && props.action?.includes(\\"zapier.com\\")
+          )
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", { detail: { body } });
+      if (formRef.current) {
+        formRef.current.dispatchEvent(presubmitEvent);
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+      setFormState(\\"sending\\");
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        props.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+      fetch(
+        props.sendSubmissionsTo === \\"email\\"
+          ? formUrl
+          : props.action! /* TODO: throw error if no action URL */,
+        { body, headers, method: props.method || \\"post\\" }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+          if (!res.ok && props.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */ let message =
+              get(body, props.errorMessagePath);
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like          error: - email has been taken */ message =
+                  JSON.stringify(message);
+              }
+              setFormErrorMessage(message);
+            }
+          }
+          setResponseData(body);
+          setFormState(res.ok ? \\"success\\" : \\"error\\");
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: { res, body },
+            });
+            if (formRef.current) {
+              formRef.current.dispatchEvent(submitSuccessEvent);
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */ if (
+                props.resetFormOnSubmit !== false
+              ) {
+                formRef.current.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */ if (
+              props.successUrl
+            ) {
+              if (formRef.current) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: { url: props.successUrl },
+                });
+                formRef.current.dispatchEvent(event);
+                if (!event.defaultPrevented) {
+                  location.href = props.successUrl;
+                }
+              } else {
+                location.href = props.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: { error: err },
+          });
+          if (formRef.current) {
+            formRef.current.dispatchEvent(submitErrorEvent);
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+          setResponseData(err);
+          setFormState(\\"error\\");
+        }
+      );
+    }
+  }
+  return (
+    <Fragment>
+      {\\" \\"}
+      <form
+        validate={props.validate}
+        ref={formRef}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => onSubmit(event)}
+        {...props.attributes}
+      >
+        {props.builderBlock && props.builderBlock.children ? (
+          <Fragment>
+            {props.builderBlock?.children?.map((block, index) => (
+              <BuilderBlockComponent
+                key={block.id}
+                block={block}
+                index={index}
+              />
+            ))}
+          </Fragment>
+        ) : null}
+        {submissionState() === \\"error\\" ? (
+          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage!} />
+        ) : null}
+        {submissionState() === \\"sending\\" ? (
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage!}
+          />
+        ) : null}
+        {submissionState() === \\"error\\" && responseData ? (
+          <pre className=\\"builder-form-error-text pre\\">
+            {JSON.stringify(responseData, null, 2)}
+          </pre>
+        ) : null}
+        {submissionState() === \\"success\\" ? (
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage!}
+          />
+        ) : null}
+      </form>{\\" \\"}
+      <style jsx>{\`
+        .pre {
+          padding: 10px;
+          color: red;
+          text-align: center;
+        }
+      \`}</style>{\\" \\"}
+    </Fragment>
+  );
+}
+export default FormComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Image 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
+
+// TODO: AMP Support?
+export interface ImageProps {
+  _class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}
+
+function Image(props: ImageProps) {
+  const pictureRef = useRef<HTMLElement>(null);
+  const [scrollListener, setScrollListener] = useState(() => null);
+
+  const [imageLoaded, setImageLoaded] = useState(() => false);
+
+  function setLoaded() {
+    setImageLoaded(true);
+  }
+
+  function useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  }
+
+  function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  }
+
+  const [load, setLoad] = useState(() => false);
+
+  useEffect(() => {
+    if (useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef.current) {
+          const rect = pictureRef.current.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            setScrollListener(null);
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      setScrollListener(listener);
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (scrollListener) {
+        window.removeEventListener(\\"scroll\\", scrollListener);
+      }
+    };
+  }, []);
+
+  return (
+    <Fragment>
+      <div>
+        <picture ref={pictureRef}>
+          {!useLazyLoading() || load ? (
+            <img
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              className={
+                \\"builder-image\\" +
+                (props._class ? \\" \\" + props._class : \\"\\") +
+                \\" img\\"
+              }
+              src={props.image}
+              onLoad={(event) => setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+            />
+          ) : null}
+          <source srcset={props.srcset} />
+        </picture>
+        {props.children}
+      </div>
+      <style jsx>{\`
+        .img {
+          opacity: 1;
+          transition: opacity 0.2s ease-in-out;
+          object-fit: cover;
+          object-position: center;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default Image;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Image State 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function ImgStateComponent(props: any) {
+  const [canShow, setCanShow] = useState(() => true);
+
+  const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
+
+  return (
+    <div>
+      {images?.map((item, itemIndex) => (
+        <img className=\\"custom-class\\" src={item} key={itemIndex} />
+      ))}
+    </div>
+  );
+}
+
+export default ImgStateComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Img 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function ImgComponent(props: ImgProps) {
+  return (
+    <img
+      style={{
+        objectFit: props.backgroundSize || \\"cover\\",
+        objectPosition: props.backgroundPosition || \\"center\\",
+      }}
+      {...props.attributes}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      src={props.imgSrc}
+    />
+  );
+}
+
+export default ImgComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Input 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+  onChange?: (value: string) => void;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function FormInputComponent(props: FormInputProps) {
+  return (
+    <input
+      {...props.attributes}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      placeholder={props.placeholder}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+      onChange={(event) => props.onChange?.(event.target.value)}
+    />
+  );
+}
+
+export default FormInputComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > InputParent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props: any) {
+  function handleChange(value: string) {
+    console.log(value);
+  }
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange={(value) => handleChange(value)}
+    />
+  );
+}
+
+export default Stepper;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > RawText 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface RawTextProps {
+  attributes?: any;
+  text?: string; // builderBlock?: any;
+}
+
+function RawText(props: RawTextProps) {
+  return (
+    <span
+      className={props.attributes?.class || props.attributes?.className}
+      dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }}
+    />
+  );
+}
+
+export default RawText;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Section 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+function SectionComponent(props: SectionProps) {
+  return (
+    <section
+      {...props.attributes}
+      style={
+        props.maxWidth && typeof props.maxWidth === \\"number\\"
+          ? {
+              maxWidth: props.maxWidth,
+            }
+          : undefined
+      }
+    >
+      {props.children}
+    </section>
+  );
+}
+
+export default SectionComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Select 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface FormSelectProps {
+  options?: {
+    name?: string;
+    value: string;
+  }[];
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function SelectComponent(props: FormSelectProps) {
+  return (
+    <select
+      {...props.attributes}
+      value={props.value}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      defaultValue={props.defaultValue}
+      name={props.name}
+    >
+      {props.options?.map((option, index) => (
+        <option value={option.value} data-index={index}>
+          {option.name || option.value}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+export default SelectComponent;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > SlotDefault 1`] = `
 "/** @jsx h */
@@ -1494,15 +4812,259 @@ export default SlotCode;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > Stamped.io 1`] = `"Cannot read properties of undefined (reading 'data-user')"`;
+exports[`Preact > jsx > Typescript Test > Stamped.io 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Typescript Test > Submit 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
+import { kebabCase, snakeCase } from \\"lodash\\";
 
-exports[`Preact > jsx > Typescript Test > Text 1`] = `"Cannot read properties of undefined (reading 'contentEditable')"`;
+function SmileReviews(props: SmileReviewsProps) {
+  const [reviews, setReviews] = useState(() => []);
 
-exports[`Preact > jsx > Typescript Test > Textarea 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+  const [name, setName] = useState(() => \\"test\\");
 
-exports[`Preact > jsx > Typescript Test > Video 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+  const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
+
+  function kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+
+  function snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  useEffect(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setReviews(data.data);
+      });
+  }, []);
+
+  return (
+    <Fragment>
+      <div data-user={name}>
+        <button onClick={(event) => setShowReviewPrompt(true)}>
+          Write a review
+        </button>
+        {showReviewPrompt || \\"asdf\\" ? (
+          <Fragment>
+            <input placeholder=\\"Email\\" />
+            <input placeholder=\\"Title\\" className=\\"input\\" />
+            <textarea
+              placeholder=\\"How was your experience?\\"
+              className=\\"textarea\\"
+            />
+            <button
+              className=\\"button\\"
+              onClick={(event) => {
+                event.preventDefault();
+                setShowReviewPrompt(false);
+              }}
+            >
+              Submit
+            </button>
+          </Fragment>
+        ) : null}
+        {reviews?.map((review, index) => (
+          <div className=\\"review\\" key={review.id}>
+            <img className=\\"img\\" src={review.avatar} />
+            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+              <div>N: {index}</div>
+              <div>{review.author}</div>
+              <div>{review.reviewMessage}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <style jsx>{\`
+        .input {
+          display: block;
+        }
+        .textarea {
+          display: block;
+        }
+        .button {
+          display: block;
+        }
+        .review {
+          margin: 10px;
+          padding: 10px;
+          background: white;
+          display: flex;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          -webkit-font-smoothing: antialiased;
+        }
+        .img {
+          height: 30px;
+          width: 30px;
+          margin-right: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default SmileReviews;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Submit 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+}
+
+function SubmitButton(props: ButtonProps) {
+  return (
+    <button type=\\"submit\\" {...props.attributes}>
+      {props.text}
+    </button>
+  );
+}
+
+export default SubmitButton;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Text 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function Text(props: TextProps) {
+  const [name, setName] = useState(() => \\"Decadef20\\");
+
+  return (
+    <div
+      contentEditable={allowEditingText || undefined}
+      data-name={{
+        test: name || \\"any name\\",
+      }}
+      dangerouslySetInnerHTML={{
+        __html:
+          props.text ||
+          props.content ||
+          name ||
+          '<p class=\\"text-lg\\">my name</p>',
+      }}
+    />
+  );
+}
+
+export default Text;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Textarea 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface TextareaProps {
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  placeholder?: string;
+}
+
+function Textarea(props: TextareaProps) {
+  return (
+    <textarea
+      {...props.attributes}
+      placeholder={props.placeholder}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+    />
+  );
+}
+
+export default Textarea;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > Video 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface VideoProps {
+  attributes?: any;
+  video?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  playsInline?: boolean;
+  aspectRatio?: number;
+  width?: number;
+  height?: number;
+  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+  position?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+  posterImage?: string;
+  lazyLoad?: boolean;
+}
+
+function Video(props: VideoProps) {
+  return (
+    <video
+      preload=\\"none\\"
+      {...props.attributes}
+      style={{
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...props.attributes?.style,
+        objectFit: props.fit,
+        objectPosition: props.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      }}
+      key={props.video || \\"no-src\\"}
+      poster={props.posterImage}
+      autoplay={props.autoPlay}
+      muted={props.muted}
+      controls={props.controls}
+      loop={props.loop}
+    />
+  );
+}
+
+export default Video;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 "/** @jsx h */
@@ -1562,9 +5124,77 @@ export default MyBasicForNoTagRefComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > basicForwardRef 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+exports[`Preact > jsx > Typescript Test > basicForwardRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Typescript Test > basicForwardRefMetadata 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+function MyBasicForwardRefComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicForwardRefComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+function MyBasicForwardRefComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <Fragment>
+      <div>
+        <input
+          className=\\"input\\"
+          ref={props.inputRef}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicForwardRefComponent;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 "/** @jsx h */
@@ -1667,19 +5297,267 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > className 1`] = `"Cannot read properties of undefined (reading 'class')"`;
+exports[`Preact > jsx > Typescript Test > className 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Typescript Test > classState 1`] = `"Cannot read properties of undefined (reading 'class')"`;
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+import type { JSX } from \\"../../../../jsx-runtime\\";
 
-exports[`Preact > jsx > Typescript Test > componentWithContext 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+function ClassNameCode(props: Props) {
+  const [bindings, setBindings] = useState(() => \\"a binding\\");
 
-exports[`Preact > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+  return (
+    <div>
+      <div className=\\"no binding\\">Without Binding</div>
+      <div className={bindings}>With binding</div>
+    </div>
+  );
+}
 
-exports[`Preact > jsx > Typescript Test > contentState 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+export default ClassNameCode;
+"
+`;
 
-exports[`Preact > jsx > Typescript Test > defaultProps 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+exports[`Preact > jsx > Typescript Test > classState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+function MyBasicComponent(props: any) {
+  const [classState, setClassState] = useState(() => \\"testClassName\\");
+
+  const [styleState, setStyleState] = useState(() => ({
+    color: \\"red\\",
+  }));
+
+  return (
+    <Fragment>
+      <div className={classState + \\" div\\"} style={styleState}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > componentWithContext 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext } from \\"preact/hooks\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <Fragment>{foo.value}</Fragment>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext } from \\"preact/hooks\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <Fragment>
+          <Fragment>{foo.value}</Fragment>
+          <div>other</div>
+        </Fragment>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > contentState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext } from \\"preact/hooks\\";
+import BuilderContext from \\"@dummy/context.js\\";
+
+function RenderContent(props: any) {
+  return (
+    <BuilderContext.Provider
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+    >
+      <div>setting context</div>
+    </BuilderContext.Provider>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > defaultProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  buttonText?: string; // no default value
+
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick?: () => void;
+}
+
+function Button(props: ButtonProps) {
+  return (
+    <div>
+      {props.link ? (
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      ) : null}
+      {!props.link ? (
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.buttonText}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
+};
+
+export default Button;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick: () => void;
+}
+
+function Button(props: ButtonProps) {
+  return (
+    <div>
+      {props.link ? (
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      ) : null}
+      {!props.link ? (
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick(event)}
+        >
+          {props.text}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+  onClick: () => {},
+};
+
+export default Button;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > defaultValsWithTypes 1`] = `
 "/** @jsx h */
@@ -1752,7 +5630,36 @@ export default Button;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > import types 1`] = `"Cannot read properties of undefined (reading 'state.getRenderContentProps(props.renderContentProps.block, 0)')"`;
+exports[`Preact > jsx > Typescript Test > import types 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+function RenderContent(props: RenderContentProps) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <RenderBlock
+      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
+    />
+  );
+}
+
+export default RenderContent;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > multipleOnUpdate 1`] = `
 "/** @jsx h */
@@ -1810,7 +5717,22 @@ export default MultipleOnUpdateWithDeps;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > multipleSpreads 1`] = `"Cannot read properties of undefined (reading 'attrs')"`;
+exports[`Preact > jsx > Typescript Test > multipleSpreads 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function MyBasicComponent(props: any) {
+  const [attrs, setAttrs] = useState(() => ({
+    hello: \\"world\\",
+  }));
+
+  return <input {...state.attrs} {...props} />;
+}
+
+export default MyBasicComponent;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > nestedShow 1`] = `
 "/** @jsx h */
@@ -1886,7 +5808,45 @@ export default NestedStyles;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > onEvent 1`] = `"Cannot read properties of undefined (reading 'ref')"`;
+exports[`Preact > jsx > Typescript Test > onEvent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef, useEffect } from \\"preact/hooks\\";
+
+function Embed(props: any) {
+  const elem = useRef<HTMLDivElement>(null);
+  function foo(event) {
+    console.log(\\"test2\\");
+  }
+
+  function elem_onInitEditingBldr(event) {
+    console.log(\\"test\\");
+    foo(event);
+  }
+
+  useEffect(() => {
+    elem.current?.addEventListener(\\"initEditingBldr\\", elem_onInitEditingBldr);
+    return () =>
+      elem.current?.removeEventListener(
+        \\"initEditingBldr\\",
+        elem_onInitEditingBldr
+      );
+  }, []);
+
+  useEffect(() => {
+    elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  }, []);
+
+  return (
+    <div className=\\"builder-embed\\" ref={elem}>
+      <div>Test</div>
+    </div>
+  );
+}
+
+export default Embed;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > onInit & onMount 1`] = `
 "/** @jsx h */
@@ -2173,11 +6133,375 @@ export default OnUpdate;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > renderBlock 1`] = `"Cannot read properties of undefined (reading 'state.attributes')"`;
+exports[`Preact > jsx > Typescript Test > renderBlock 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
-exports[`Preact > jsx > Typescript Test > renderContentExample 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+export type RenderBlockProps = {
+  block: BuilderBlock;
+  context: BuilderContextInterface;
+};
+import { TARGET } from \\"../../constants/target.js\\";
+import type {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
+import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
+import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
+import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
+import type { BuilderBlock } from \\"../../types/builder-block.js\\";
+import type { Nullable } from \\"../../types/typescript.js\\";
+import BlockStyles from \\"./block-styles\\";
+import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import RenderComponentWithContext from \\"./render-component-with-context.js\\";
+import type { RenderComponentProps } from \\"./render-component\\";
+import RenderComponent from \\"./render-component\\";
+import RenderRepeatedBlock from \\"./render-repeated-block\\";
+import type { RepeatData } from \\"./types.js\\";
 
-exports[`Preact > jsx > Typescript Test > rootFragmentMultiNode 1`] = `"Cannot read properties of undefined (reading 'props.attributes')"`;
+function RenderBlock(props: RenderBlockProps) {
+  function component() {
+    const componentName = getProcessedBlock({
+      block: props.block,
+      state: props.context.state,
+      context: props.context.context,
+      shouldEvaluateBindings: false,
+    }).component?.name;
+
+    if (!componentName) {
+      return null;
+    }
+
+    const ref = props.context.registeredComponents[componentName];
+
+    if (!ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+      return undefined;
+    } else {
+      return ref;
+    }
+  }
+
+  function tag() {
+    return getBlockTag(useBlock());
+  }
+
+  function useBlock() {
+    return repeatItemData()
+      ? props.block
+      : getProcessedBlock({
+          block: props.block,
+          state: props.context.state,
+          context: props.context.context,
+          shouldEvaluateBindings: true,
+        });
+  }
+
+  function actions() {
+    return getBlockActions({
+      block: useBlock(),
+      state: props.context.state,
+      context: props.context.context,
+    });
+  }
+
+  function attributes() {
+    const blockProperties = getBlockProperties(useBlock());
+    return {
+      ...blockProperties,
+      ...(TARGET === \\"reactNative\\"
+        ? {
+            style: getReactNativeBlockStyles({
+              block: useBlock(),
+              context: props.context,
+              blockStyles: blockProperties.style,
+            }),
+          }
+        : {}),
+    };
+  }
+
+  function shouldWrap() {
+    return !component?.()?.noWrap;
+  }
+
+  function renderComponentProps() {
+    return {
+      blockChildren: useChildren(),
+      componentRef: component?.()?.component,
+      componentOptions: {
+        ...getBlockComponentOptions(useBlock()),
+
+        /**
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
+         */
+        ...(shouldWrap()
+          ? {}
+          : {
+              attributes: { ...attributes(), ...actions() },
+            }),
+        customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
+      },
+      context: childrenContext(),
+    };
+  }
+
+  function useChildren() {
+    // TO-DO: When should \`canHaveChildren\` dictate rendering?
+    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+    // but still receive and need to render children.
+    // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
+    return useBlock().children ?? [];
+  }
+
+  function childrenWithoutParentComponent() {
+    /**
+     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+     * we render them outside of \`componentRef\`.
+     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+     * blocks, and the children will be repeated within those blocks.
+     */
+    const shouldRenderChildrenOutsideRef =
+      !component?.()?.component && !repeatItemData();
+    return shouldRenderChildrenOutsideRef ? useChildren() : [];
+  }
+
+  function repeatItemData() {
+    /**
+     * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
+     * which will not work if there is a repeat.
+     */
+    const { repeat, ...blockWithoutRepeat } = props.block;
+
+    if (!repeat?.collection) {
+      return undefined;
+    }
+
+    const itemsArray = evaluate({
+      code: repeat.collection,
+      state: props.context.state,
+      context: props.context.context,
+    });
+
+    if (!Array.isArray(itemsArray)) {
+      return undefined;
+    }
+
+    const collectionName = repeat.collection.split(\\".\\").pop();
+    const itemNameToUse =
+      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+      context: {
+        ...props.context,
+        state: {
+          ...props.context.state,
+          $index: index,
+          $item: item,
+          [itemNameToUse]: item,
+          [\`$\${itemNameToUse}Index\`]: index,
+        },
+      },
+      block: blockWithoutRepeat,
+    }));
+    return repeatArray;
+  }
+
+  function inheritedTextStyles() {
+    if (TARGET !== \\"reactNative\\") {
+      return {};
+    }
+
+    const styles = getReactNativeBlockStyles({
+      block: useBlock(),
+      context: props.context,
+      blockStyles: attributes().style,
+    });
+    return extractTextStyles(styles);
+  }
+
+  function childrenContext() {
+    return {
+      apiKey: props.context.apiKey,
+      state: props.context.state,
+      content: props.context.content,
+      context: props.context.context,
+      registeredComponents: props.context.registeredComponents,
+      inheritedStyles: inheritedTextStyles(),
+    };
+  }
+
+  function renderComponentTag() {
+    if (TARGET === \\"reactNative\\") {
+      return RenderComponentWithContext;
+    } else if (TARGET === \\"vue3\\") {
+      // vue3 expects a string for the component tag
+      return \\"RenderComponent\\";
+    } else {
+      return RenderComponent;
+    }
+  }
+
+  const [componentInfo, setComponentInfo] = useState(() => null);
+
+  const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
+
+  return (
+    <Fragment>
+      {shouldWrap() ? (
+        <Fragment>
+          {isEmptyHtmlElement(tag()) ? (
+            <TagRef {...attributes()} {...actions()} />
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+            <Fragment>
+              {repeatItemData()?.map((data, index) => (
+                <RenderRepeatedBlock
+                  key={index}
+                  repeatContext={data.context}
+                  block={data.block}
+                />
+              ))}
+            </Fragment>
+          ) : null}
+          {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
+            <TagRef {...attributes()} {...actions()}>
+              <RenderComponentTagRef {...renderComponentProps()} />
+              {childrenWithoutParentComponent()?.map((child) => (
+                <RenderBlock
+                  key={\\"render-block-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+              {childrenWithoutParentComponent()?.map((child) => (
+                <BlockStyles
+                  key={\\"block-style-\\" + child.id}
+                  block={child}
+                  context={childrenContext()}
+                />
+              ))}
+            </TagRef>
+          ) : null}
+        </Fragment>
+      ) : (
+        <Fragment>
+          <RenderComponentTagRef {...renderComponentProps()} />
+        </Fragment>
+      )}
+    </Fragment>
+  );
+}
+
+export default RenderBlock;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > renderContentExample 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext, useEffect } from \\"preact/hooks\\";
+
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+import BuilderContext from \\"@dummy/context.js\\";
+import {
+  dispatchNewContentToVisualEditor,
+  sendComponentsToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import RenderBlocks from \\"@dummy/RenderBlocks\\";
+
+function RenderContent(props: Props) {
+  useEffect(() => {
+    sendComponentsToVisualEditor(props.customComponents);
+  }, []);
+
+  useEffect(() => {
+    dispatchNewContentToVisualEditor(props.content);
+  }, [props.content]);
+
+  return (
+    <Fragment>
+      <BuilderContext.Provider
+        value={{
+          get content() {
+            return 3;
+          },
+
+          get registeredComponents() {
+            return 4;
+          },
+        }}
+      >
+        <div className=\\"div\\" onClick={(event) => trackClick(props.content.id)}>
+          <RenderBlocks blocks={props.content.blocks} />
+        </div>
+      </BuilderContext.Provider>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: columns;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+function Button(props: ButtonProps) {
+  return (
+    <Fragment>
+      {props.link ? (
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      ) : null}
+      {!props.link ? (
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      ) : null}
+    </Fragment>
+  );
+}
+
+export default Button;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > rootShow 1`] = `
 "/** @jsx h */
@@ -2244,7 +6568,34 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > showWithFor 1`] = `"Cannot read properties of undefined (reading 'key')"`;
+exports[`Preact > jsx > Typescript Test > showWithFor 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+interface Props {
+  conditionA: boolean;
+  items: string[];
+}
+
+function NestedShow(props: Props) {
+  return (
+    <Fragment>
+      {props.conditionA ? (
+        <Fragment>
+          {props.items?.map((item, idx) => (
+            <div key={idx}>{item}</div>
+          ))}
+        </Fragment>
+      ) : (
+        <div>else-condition-A</div>
+      )}
+    </Fragment>
+  );
+}
+
+export default NestedShow;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > showWithRootText 1`] = `
 "/** @jsx h */
@@ -2309,15 +6660,95 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > spreadAttrs 1`] = `"Cannot read properties of undefined (reading 'attrs')"`;
+exports[`Preact > jsx > Typescript Test > spreadAttrs 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
-exports[`Preact > jsx > Typescript Test > spreadNestedProps 1`] = `"Cannot read properties of undefined (reading 'props.nested')"`;
+function MyBasicComponent(props: any) {
+  return <input {...attrs} />;
+}
 
-exports[`Preact > jsx > Typescript Test > spreadProps 1`] = `"Cannot read properties of undefined (reading 'props')"`;
+export default MyBasicComponent;
+"
+`;
 
-exports[`Preact > jsx > Typescript Test > styleClassAndCss 1`] = `"Cannot read properties of undefined (reading 'style')"`;
+exports[`Preact > jsx > Typescript Test > spreadNestedProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
-exports[`Preact > jsx > Typescript Test > stylePropClassAndCss 1`] = `"Cannot read properties of undefined (reading 'style')"`;
+function MyBasicComponent(props: any) {
+  return <input {...props.nested} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > spreadProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function MyBasicComponent(props: any) {
+  return <input {...props} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > styleClassAndCss 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function MyComponent(props: any) {
+  return (
+    <Fragment>
+      <div
+        className=\\"builder-column div\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > stylePropClassAndCss 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function StylePropClassAndCss(props: any) {
+  return (
+    <Fragment>
+      <div
+        style={props.attributes.style}
+        className={props.attributes.class + \\" div\\"}
+      />
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+
+export default StylePropClassAndCss;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > subComponent 1`] = `
 "/** @jsx h */
@@ -2332,7 +6763,33 @@ export default SubComponent;
 "
 `;
 
-exports[`Preact > jsx > Typescript Test > svgComponent 1`] = `"Cannot read properties of undefined (reading 'viewBox')"`;
+exports[`Preact > jsx > Typescript Test > svgComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function SvgComponent(props: any) {
+  return (
+    <svg
+      fill=\\"none\\"
+      role=\\"img\\"
+      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+      width={42}
+      height={42}
+    >
+      <defs>
+        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+          <feFlood result=\\"BackgroundImageFix\\" />
+          <feBlend in=\\"SourceGraphic\\" in2=\\"BackgroundImageFix\\" result=\\"shape\\" />
+          <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
+export default SvgComponent;
+"
+`;
 
 exports[`Preact > jsx > Typescript Test > typeDependency 1`] = `
 "/** @jsx h */
@@ -2600,7 +7057,16 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > context 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+exports[`Preact > svelte > Javascript Test > context 1`] = `
+"'>' expected. (35:13)
+  33 | return (
+  34 |
+> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+     |             ^
+  36 |
+  37 |
+  38 |"
+`;
 
 exports[`Preact > svelte > Javascript Test > each 1`] = `
 "/** @jsx h */
@@ -2995,7 +7461,16 @@ export default MyComponent;
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > context 1`] = `"Cannot read properties of undefined (reading 'value')"`;
+exports[`Preact > svelte > Typescript Test > context 1`] = `
+"'>' expected. (35:13)
+  33 | return (
+  34 |
+> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+     |             ^
+  36 |
+  37 |
+  38 |"
+`;
 
 exports[`Preact > svelte > Typescript Test > each 1`] = `
 "/** @jsx h */
