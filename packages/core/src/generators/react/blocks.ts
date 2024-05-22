@@ -208,7 +208,7 @@ export const blockToReact = (
 
   for (const key in json.bindings) {
     // ignore duplicate slot attribute
-    if (json.slots[key]) {
+    if (json.slots?.[key]) {
       continue;
     }
 

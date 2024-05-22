@@ -359,6 +359,109 @@ exports[`Context > Use and set context in complex components 1`] = `
 }
 `;
 
+exports[`Context > Use and set context in complex components 2`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+import BuilderContext from \\"../context/builder.context.js\\";
+import { getBlockActions } from \\"../functions/get-block-actions\\";
+import { getBlockComponentOptions } from \\"../functions/get-block-component-options\\";
+import { getBlockProperties } from \\"../functions/get-block-properties\\";
+import { getBlockStyles } from \\"../functions/get-block-styles\\";
+import { getBlockTag } from \\"../functions/get-block-tag\\";
+import { getProcessedBlock } from \\"../functions/get-processed-block\\";
+import { components } from \\"../functions/register-component\\";
+import BlockStyles from \\"./block-styles\\";
+
+function RenderBlock(props) {
+  function component() {
+    const componentName = useBlock().component?.name;
+
+    if (!componentName) {
+      return null;
+    }
+
+    const ref = components[useBlock().component?.name];
+
+    if (componentName && !ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+    }
+
+    return ref;
+  }
+
+  function componentInfo() {
+    return component?.()?.info;
+  }
+
+  function componentRef() {
+    return component?.()?.component;
+  }
+
+  function tagName() {
+    return getBlockTag(useBlock());
+  }
+
+  function properties() {
+    return getBlockProperties(useBlock());
+  }
+
+  function useBlock() {
+    return getProcessedBlock({
+      block: props.block,
+      state: builderContext.state,
+      context: builderContext.context,
+    });
+  }
+
+  function actions() {
+    return getBlockActions({
+      block: useBlock(),
+      state: builderContext.state,
+      context: builderContext.context,
+    });
+  }
+
+  function css() {
+    return getBlockStyles(useBlock());
+  }
+
+  function componentOptions() {
+    return getBlockComponentOptions(useBlock());
+  }
+
+  const builderContext = useContext(BuilderContext);
+
+  const TagNameRef = tagName();
+  const ComponentRefRef = componentRef();
+
+  return (
+    <TagNameRef {...properties()} style={css()}>
+      <BlockStyles block={useBlock()} />
+      {componentRef() ? (
+        <ComponentRefRef
+          {...componentOptions()}
+          children={useBlock().children}
+        />
+      ) : null}
+      {!componentRef() && useBlock().children && useBlock().children.length ? (
+        <>
+          {useBlock().children?.map((child, index) => (
+            <RenderBlock index={index} block={child} />
+          ))}
+        </>
+      ) : null}
+    </TagNameRef>
+  );
+}
+
+export default RenderBlock;
+"
+`;
+
 exports[`Context > Use and set context in components 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -462,4 +565,85 @@ exports[`Context > Use and set context in components 1`] = `
   "state": {},
   "subComponents": [],
 }
+`;
+
+exports[`Context > Use and set context in components 2`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>{foo.value}</>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Context > Use and set context in components 3`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+} from \\"react-native\\";
+import { useContext } from \\"react\\";
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          <Text>{foo.value}</Text>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+
+export default ComponentWithContext;
+"
 `;
