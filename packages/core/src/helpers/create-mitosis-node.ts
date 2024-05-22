@@ -8,6 +8,5 @@ export const createMitosisNode = (options: Partial<MitosisNode>): MitosisNode =>
   properties: {},
   bindings: {},
   children: [],
-  slots: {},
   ...options,
 });

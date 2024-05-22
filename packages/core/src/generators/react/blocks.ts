@@ -207,6 +207,11 @@ export const blockToReact = (
   }
 
   for (const key in json.bindings) {
+    // ignore duplicate slot attribute
+    if (json.slots[key]) {
+      continue;
+    }
+
     const value = String(json.bindings[key]?.code);
 
     if (key === 'css' && value.trim() === '{}') {

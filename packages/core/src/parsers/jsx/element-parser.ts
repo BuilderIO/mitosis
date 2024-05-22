@@ -193,7 +193,7 @@ export const jsxElementToJson = (
   const { bindings, properties, slots } = node.openingElement.attributes.reduce<{
     bindings: MitosisNode['bindings'];
     properties: MitosisNode['properties'];
-    slots: MitosisNode['slots'];
+    slots: {} & MitosisNode['slots'];
   }>(
     (memo, item) => {
       if (types.isJSXAttribute(item)) {
@@ -270,6 +270,6 @@ export const jsxElementToJson = (
     properties,
     bindings,
     children: node.children.map(jsxElementToJson).filter(checkIsDefined),
-    slots,
+    slots: Object.keys(slots).length > 0 ? slots : undefined,
   });
 };
