@@ -264,7 +264,7 @@ const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): stri
   if (type === 'native') {
     return `
     import * as React from 'react';
-    import { FlatList, ScrollView, View, StyleSheet, Image, Text, Pressable } from 'react-native';
+    import { FlatList, ScrollView, View, StyleSheet, Image, Text, Pressable, TextInput } from 'react-native';
     `;
   }
   if (type === 'taro') {
