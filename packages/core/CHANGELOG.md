@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.1
+
+### Patch Changes
+
+- c8b7883: Fix: parse slots into `MitosisNode` `slots` property.
+
 ## 0.3.0
 
 ### Minor Changes
