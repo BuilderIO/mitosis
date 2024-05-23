@@ -122,9 +122,12 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           if (isChildren({ node })) {
             node.name = '';
           } else if (node.name.toLowerCase() === node.name && VALID_HTML_TAGS.includes(node.name)) {
-            node.name = 'View';
-            if (node.bindings.onClick) {
+            if (node.name === 'input') {
+              node.name = 'TextInput';
+            } else if (node.bindings.onClick) {
               node.name = 'Pressable';
+            } else {
+              node.name = 'View';
             }
           } else if (
             node.properties._text?.trim().length ||
@@ -132,7 +135,6 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           ) {
             node.name = 'Text';
           }
-
           if (node.properties.class) {
             delete node.properties.class;
           }

@@ -50,16 +50,22 @@ export default component$(() => {
             </li>
             <li class="flex gap-4 items-center">
               <Link
+                aria-label="GitHub logo"
                 class="hover:text-primary-light text-xl"
                 target="_blank"
                 href="https://github.com/BuilderIO/mitosis"
               >
                 <TbBrandGithub />
               </Link>
-              <Link class="hover:text-primary-light text-xl max-sm:hidden" href="/docs/figma/">
+              <Link
+                aria-label="Figma logo"
+                class="hover:text-primary-light text-xl max-sm:hidden"
+                href="/docs/figma/"
+              >
                 <TbBrandFigma />
               </Link>
               <Link
+                aria-label="Discord logo"
                 class="hover:text-primary-light text-xl max-sm:hidden"
                 target="_blank"
                 href="https://discord.com/invite/SNusEyNGsx"

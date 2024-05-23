@@ -632,6 +632,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       },
     );
 
+    const hostDisplayCss = options.visuallyIgnoreHostElement ? ':host { display: contents; }' : '';
+    const styles = css.length ? [hostDisplayCss, css].join('\n') : hostDisplayCss;
+
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
       selector: `'${kebabCase(json.name || 'my-component')}, ${json.name}'`,
@@ -639,9 +642,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         ${indent(dynamicTemplate, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
         ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
         \``,
-      ...(css.length
+      ...(styles
         ? {
-            styles: `[\`${indent(css, 8)}\`]`,
+            styles: `[\`${indent(styles, 8)}\`]`,
           }
         : {}),
       ...(options.standalone

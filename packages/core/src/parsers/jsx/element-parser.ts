@@ -186,51 +186,63 @@ export const jsxElementToJson = (
     }
   }
 
-  return createMitosisNode({
-    name: nodeName,
-    properties: node.openingElement.attributes.reduce<MitosisNode['properties']>((memo, item) => {
-      if (types.isJSXAttribute(item)) {
-        const key = transformAttributeName(item.name.name as string);
-        const value = item.value;
-        if (types.isStringLiteral(value)) {
-          memo[key] = value.value;
-          return memo;
-        }
-        if (types.isJSXExpressionContainer(value) && types.isStringLiteral(value.expression)) {
-          memo[key] = value.expression.value;
-          return memo;
-        }
-      }
-      return memo;
-    }, {}),
-    bindings: node.openingElement.attributes.reduce<MitosisNode['bindings']>((memo, item) => {
+  // const properties: MitosisNode['properties'] = {}
+  // const bindings: MitosisNode['bindings'] = {}
+  // const slots: MitosisNode['slots'] = {}
+
+  const { bindings, properties, slots } = node.openingElement.attributes.reduce<{
+    bindings: MitosisNode['bindings'];
+    properties: MitosisNode['properties'];
+    slots: {} & MitosisNode['slots'];
+  }>(
+    (memo, item) => {
       if (types.isJSXAttribute(item)) {
         const key = transformAttributeName(item.name.name as string);
         const value = item.value;
 
-        // boolean attribute
+        // <Foo myProp />
         if (value === null) {
-          memo[key] = createSingleBinding({ code: 'true' });
+          memo.bindings[key] = createSingleBinding({ code: 'true' });
           return memo;
         }
-        if (types.isJSXExpressionContainer(value) && !types.isStringLiteral(value.expression)) {
-          const { expression } = value;
-          if (types.isArrowFunctionExpression(expression)) {
-            if (key.startsWith('on')) {
-              const args = expression.params.map((node) => (node as babel.types.Identifier)?.name);
-              memo[key] = createSingleBinding({
-                code: generate(expression.body).code,
-                arguments: args.length ? args : undefined,
-              });
-            } else {
-              memo[key] = createSingleBinding({ code: generate(expression.body).code });
-            }
-          } else {
-            memo[key] = createSingleBinding({ code: generate(expression).code });
-          }
 
+        // <Foo myProp="hello" />
+        if (types.isStringLiteral(value)) {
+          memo.properties[key] = value.value;
           return memo;
         }
+
+        if (!types.isJSXExpressionContainer(value)) return memo;
+
+        const { expression } = value;
+
+        if (types.isStringLiteral(expression)) {
+          // <Foo myProp={"hello"} />
+          memo.properties[key] = expression.value;
+        } else if (types.isArrowFunctionExpression(expression)) {
+          // <Foo myProp={() => {}} />
+          const args = key.startsWith('on')
+            ? expression.params.map((node) => (node as babel.types.Identifier)?.name)
+            : [];
+
+          memo.bindings[key] = createSingleBinding({
+            code: generate(expression.body).code,
+            arguments: args.length ? args : undefined,
+          });
+        } else if (types.isJSXElement(expression)) {
+          // <Foo myProp={<MoreMitosisNode><div /></MoreMitosisNode>} />
+          const slotNode = jsxElementToJson(expression);
+          if (!slotNode) return memo;
+
+          memo.slots[key] = [slotNode];
+
+          // Temporarily keep the slot as a binding until we migrate generators to use the slots.
+          memo.bindings[key] = createSingleBinding({ code: generate(expression).code });
+        } else {
+          memo.bindings[key] = createSingleBinding({ code: generate(expression).code });
+        }
+
+        return memo;
       } else if (types.isJSXSpreadAttribute(item)) {
         // TODO: potentially like Vue store bindings and properties as array of key value pairs
         // too so can do this accurately when order matters. Also tempting to not support spread,
@@ -238,14 +250,26 @@ export const jsxElementToJson = (
 
         const { code: key } = generate(item.argument);
 
-        memo[key] = {
+        memo.bindings[key] = {
           code: types.stringLiteral(generate(item.argument).code).value,
           type: 'spread',
           spreadType: 'normal',
         };
       }
       return memo;
-    }, {}),
+    },
+    {
+      bindings: {},
+      properties: {},
+      slots: {},
+    },
+  );
+
+  return createMitosisNode({
+    name: nodeName,
+    properties,
+    bindings,
     children: node.children.map(jsxElementToJson).filter(checkIsDefined),
+    slots: Object.keys(slots).length > 0 ? slots : undefined,
   });
 };

@@ -1,0 +1,72 @@
+---
+title: Using Libraries - Mitosis
+---
+
+# Using Libraries
+
+## JavaScript libraries
+
+You can use any JavaScript library in your Mitosis components just like you would in any
+other framework. Here's an example of using `lodash` in a Mitosis component:
+
+```tsx
+import { kebabCase } from 'lodash';
+
+export default function MyComponent(props: { name: string }) {
+  return <div>{kebabCase(props.name)}</div>;
+}
+```
+
+## Framework-specific libraries
+
+Because of the cross-framework nature of Mitosis, you cannot use framework-specific libraries
+directly in Mitosis code.
+
+For instance a React form library wouldn't make sense in the context of Mitosis, because
+Mitosis components are framework-agnostic, so how would it work with Vue or Svelte?
+
+### Focus on web fundamentals
+
+The web platform has come a long way, and you may not need as many libraries as you think.
+
+For example, for form handling, instead of using a library you can use the native `form` element
+and its built-in validation:
+
+```tsx
+export default function MyComponent() {
+  function handleSubmit(event: SubmitEvent) {
+    event.preventDefault();
+
+    const form = event.target as HTMLFormElement;
+    if (!form.checkValidity()) {
+      alert('Form is invalid');
+      return;
+    }
+    const data = new FormData(form);
+    const email = data.get('email');
+    console.log(email);
+  }
+
+  return (
+    <form onSubmit={(event) => handleSubmit(event)}>
+      <input type="email" name="email" required />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+### Use overrides (sparringly)
+
+If you really need to use a framework-specific library, you can use overrides to
+provide different implementations for different frameworks.
+
+In the `overrides/` directory of a [Mitosis project](/docs/project-structure/), you can create a file for each
+you want to override.
+
+For example, if you have a file in `src/components/foo.lite.tsx` and you need a specific
+implementation for Angular, for instance to use a specific library or unique feature, you can
+create a file `overrides/angular/src/components.foo.ts` and provide the Angular-specific implementation.
+
+See examples in the [overrides directory](https://github.com/BuilderIO/builder/tree/main/packages/sdks/overrides)
+of the builder.io SDK.
