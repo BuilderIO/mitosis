@@ -23,10 +23,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'yarn'
 
-      - name: Install dependencies
-        run: yarn --immutable
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-nm-install
+        with:
+          cache-node-modules: true
+          cache-install-state: true
 
       - name: Lint
         run: yarn ci:lint
@@ -47,10 +49,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'yarn'
 
-      - name: Install dependencies
-        run: yarn --immutable
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-nm-install
+        with:
+          cache-node-modules: true
+          cache-install-state: true
 
       - name: Build Site
         run: yarn nx build @builder.io/mitosis-site
@@ -65,10 +69,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'yarn'
 
-      - name: Install dependencies
-        run: yarn --immutable
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-nm-install
+        with:
+          cache-node-modules: true
+          cache-install-state: true
 
       - name: Build
         run: yarn ci:build
