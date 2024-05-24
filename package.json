@@ -17,7 +17,7 @@
     "build:site": "nx build @builder.io/mitosis-site",
     "build:eslint-plugin": "nx build @builder.io/eslint-plugin-mitosis",
     "ci:build:release": "nx run-many --skip-nx-cache --target build -p @builder.io/mitosis @builder.io/mitosis-cli @builder.io/eslint-plugin-mitosis @builder.io/create-mitosis",
-    "ci:build": "nx run-many --target build --exclude \"*/e2e-alpine,@builder.io/mitosis-fiddle,@builder.io/talk-*,@builder.io/example-apps\"",
+    "ci:build": "nx run-many --target build --exclude \"@builder.io/e2e-alpine\"",
     "ci:build:core": "yarn run build:core",
     "ci:build:site": "yarn run build:site",
     "ci:build:eslint-plugin": "yarn run build:eslint-plugin",
@@ -25,18 +25,13 @@
     "ci:test": "yarn workspaces foreach run test",
     "ci:e2e-prep": "yarn workspace @builder.io/e2e-app run install:playwright",
     "ci:e2e": "yarn workspace @builder.io/e2e-app run e2e",
-    "ci": "run-s \"ci:*\"",
-    "commit": "git-cz",
     "fmt": "run-s 'fmt:*'",
     "fmt:eslint": "yarn lint:eslint --fix",
     "fmt:prettier": "yarn lint:prettier --write",
     "lint": "run-p -c 'lint:*'",
     "lint:eslint": "eslint --cache 'packages/**/*.ts{,x}'",
     "lint:prettier": "yarn run prettier --check",
-    "prerelease": "yarn build",
-    "prettier": "prettier --cache --loglevel warn '{packages,docs,e2e}/**/*.{js,jsx,ts,tsx,json,md,html}'",
-    "release:dev": "cd packages/core && yarn run release:dev && cd ../cli && yarn run release:dev && cd ../eslint-plugin && yarn run release:dev",
-    "release:patch": "cd packages/core && yarn run release:patch && cd ../cli && yarn run release:patch && cd ../eslint-plugin && yarn run release:patch"
+    "prettier": "prettier --cache --loglevel warn '{packages,docs,e2e}/**/*.{js,jsx,ts,tsx,json,md,html}'"
   },
   "repository": {
     "type": "git",
@@ -48,13 +43,11 @@
     "@nrwl/nx-cloud": "15.0.2",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
-    "commitizen": "^3.0.2",
     "esbuild": "0.19.10",
     "esbuild-register": "3.3.2",
     "eslint": "^7.11.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "execa": "6.1.0",
-    "jsdom": "~20.0.3",
     "npm-run-all": "^4.1.5",
     "nx": "^19.0.8",
     "nx-cloud": "^19.0.0",
@@ -64,10 +57,6 @@
     "typescript": "^5.3.2"
   },
   "packageManager": "yarn@4.1.1",
-  "dependencies": {
-    "@babel/core": "^7.18.2",
-    "@builder.io/e2e-app": "workspace:*"
-  },
   "resolutions": {
     "@sveltejs/package@1.0.0-next.1": "patch:@sveltejs/package@npm:1.0.0-next.1#.yarn/patches/@sveltejs-package-npm-1.0.0-next.1-2fd015530b.patch",
     "prettier": "^2.8.7",
