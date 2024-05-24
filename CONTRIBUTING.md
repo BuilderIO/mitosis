@@ -63,4 +63,4 @@ From there, you can keep iterating until the snapshots look as expected, and the
 Before submitting your PR, please make sure to format the codebase and update all snapshots:
 
 - format the codebase: from the root, run `yarn fmt:prettier`.
-- update all snapshots (in core & CLI): from the root, run `yarn nx test:update`.
+- update all snapshots (in core & CLI): from the root, run `yarn test:update`. This will run an Nx command that will update all the snapshots in the `core` and `cli` packages. while making sure all required dependencies are built beforehand.
