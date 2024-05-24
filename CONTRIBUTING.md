@@ -1,6 +1,6 @@
 # Local Development
 
-Welcome ⚡️!! If you've found a bug, or have an idea to add a feature we'd love to hear from you. It may save time to first ping the group on [Mitosis' Discord channel](https://discord.com/channels/842438759945601056/935218469799071835) to talk through any ideas or any issues that may be a bug.
+Welcome ⚡️!! If you've found a bug, or have an idea to add a feature we'd love to hear from you. It may save time to first ping the group on [Mitosis' Discord channel](https://discord.gg/yxjk5vn6pn) to talk through any ideas or any issues that may be a bug.
 
 ## Project Structure
 

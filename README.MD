@@ -31,7 +31,7 @@ Using Mitosis, you can:
 - Sync your [design systems from Figma to code](https://mitosis.builder.io/docs/figma/) and publish them to npm across frameworks
 - Avoid the [pitfalls of web components](https://mitosis.builder.io/docs/overview/) by compiling to native framework code
 
-_PS: We are actively looking for folks interested in becoming contributors to Mitosis. If interested, look at our list of [good first issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or reach out on our [Discord](https://discord.gg/SNusEyNGsx)_
+_PS: We are actively looking for folks interested in becoming contributors to Mitosis. If interested, look at our list of [good first issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or reach out on our [Discord](https://discord.gg/yxjk5vn6pn)_
 
 ![Gif example of devloping with Mitosis](https://cdn.builder.io/api/v1/file/assets%2FYJIGb4i01jvw0SRdL5Bt%2F868af1e6d9fd4923b18ecd1d892f3a6e)
 
@@ -60,11 +60,11 @@ Learn more about our [Figma integration](https://mitosis.builder.io/docs/figma).
 - [Documentation](https://mitosis.builder.io/docs)
 - [Playground](https://mitosis.builder.io/playground)
 - [Figma integration](https://mitosis.builder.io/docs/figma/)
-- [Mitosis Discord](https://discord.gg/SNusEyNGsx)
+- [Mitosis Discord](https://discord.gg/yxjk5vn6pn)
 
 ## Contribute
 
-Interested in contribute? Head over to the [developer](developer/) docs and see how you can get setup & started!
+Interested in contribute? Head over to the [CONTRIBUTING](CONTRIBUTING.md) docs and see how you can get setup & started!
 
 Once you're ready, checkout our [issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) page and grab your first issue!
 
