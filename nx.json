@@ -28,11 +28,20 @@
       "dependsOn": ["^build", "prebuild"],
       "outputs": ["{projectRoot}/dist"]
     },
-    "test:watch": {
-      /**
+    /**
       We need to build packages before running tests because some of the tests 
       (like the Signal ones in core) rely on the project being built.
-      */
+    */
+    "test:watch": {
+      "dependsOn": ["build"]
+    },
+    "test:watch:update": {
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "dependsOn": ["build"]
+    },
+    "test:update": {
       "dependsOn": ["build"]
     }
   },
