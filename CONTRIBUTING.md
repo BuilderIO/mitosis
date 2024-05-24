@@ -4,7 +4,7 @@ Welcome ⚡️!! If you've found a bug, or have an idea to add a feature we'd lo
 
 ## Project Structure
 
-Mitosis is structured as a mono-repo using Yarn (v3) Workspaces. The packages
+Mitosis is structured as a mono-repo using Yarn (v3) Workspaces and Nx. The packages
 live under `packages/` and `examples/`:
 
 - `core` (`@builder.io/mitosis`): contains the Mitosis engine
@@ -58,7 +58,9 @@ PS: don't worry about failing imports in the raw test TSX files. These are not a
 
 From there, you can keep iterating until the snapshots look as expected, and the integration tests pass!
 
-### Pre-submit
+### Preparing your PR
 
-- format the codebase: from the root, run `yarn fmt:prettier`
-- update all snapshots: from the root, run `yarn test:update`
+Before submitting your PR, please make sure to format the codebase and update all snapshots:
+
+- format the codebase: from the root, run `yarn fmt:prettier`.
+- update all snapshots (in core & CLI): from the root, run `yarn test:update`.
