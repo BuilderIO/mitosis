@@ -1,10 +1,10 @@
 # Local Development
 
-Welcome ⚡️!! If you've found a bug, or have an idea to add a feature we'd love to hear from you. It may save time to first ping the group on [Mitosis' Discord channel](https://discord.com/channels/842438759945601056/935218469799071835) to talk through any ideas or any issues that may be a bug.
+Welcome ⚡️!! If you've found a bug, or have an idea to add a feature we'd love to hear from you. It may save time to first ping the group on [Mitosis' Discord channel](https://discord.gg/yxjk5vn6pn) to talk through any ideas or any issues that may be a bug.
 
 ## Project Structure
 
-Mitosis is structured as a mono-repo using Yarn (v3) Workspaces. The packages
+Mitosis is structured as a mono-repo using Yarn (v3) Workspaces and Nx. The packages
 live under `packages/` and `examples/`:
 
 - `core` (`@builder.io/mitosis`): contains the Mitosis engine
@@ -38,7 +38,7 @@ In `core`, we use vitest snapshots & integeration tests for test coverage. If yo
 
 - copy your fiddle component into a file in `packages/core/src/__tests__/data`. See [packages/core/src/**tests**/data/basic.raw.tsx](/packages/core/src/__tests__/data/basic.raw.tsx) as an example.
 - add that test to the [test generator](/packages/core/src/__tests__/test-generator.ts), most likely in `BASIC_TESTS`.
-- run `yarn test:watch` in the `packages/core` directory to run the snapshot tests in watch mode
+- run `yarn nx test:watch` in the `packages/core` directory to run the snapshot tests in watch mode
 
 PS: don't worry about failing imports in the raw test TSX files. These are not an issue, since the files are standalone and don't actually belong to a cohesive project.
 
@@ -58,6 +58,9 @@ PS: don't worry about failing imports in the raw test TSX files. These are not a
 
 From there, you can keep iterating until the snapshots look as expected, and the integration tests pass!
 
-### Pre-submit
+### Preparing your PR
 
-- format: `yarn run fmt:prettier`
+Before submitting your PR, please make sure to format the codebase and update all snapshots:
+
+- format the codebase: from the root, run `yarn fmt:prettier`.
+- update all snapshots (in core & CLI): from the root, run `yarn test:update`. This will run an Nx command that will update all the snapshots in the `core` and `cli` packages. while making sure all required dependencies are built beforehand.

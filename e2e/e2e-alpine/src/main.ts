@@ -1,11 +1,12 @@
+import { E2eApp } from '@builder.io/e2e-app/alpine';
 import Alpine from 'alpinejs';
-// import myComponent from '@builder.io/e2e-app/alpine/components/my-component.html?raw'
 
 window.Alpine = Alpine;
 
-// Alpine.data('myComponent', myComponent)
+console.log('hello', E2eApp);
 
-// console.log(myComponent)
-// document.getElementById('app').innerHTML = myComponent;
+Alpine.data('e2e-app', E2eApp);
+
+document.getElementById('app')!.innerHTML = E2eApp;
 
 Alpine.start();

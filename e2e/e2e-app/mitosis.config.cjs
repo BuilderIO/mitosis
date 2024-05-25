@@ -1,15 +1,10 @@
-const vueConfig = {
-  transpiler: { format: 'esm' },
-  asyncComponentImports: true,
-  typescript: true,
-};
-
 /**
  * @type {import('@builder.io/mitosis'.MitosisConfig)}
  */
 module.exports = {
   files: 'src/**',
   targets: [
+    'alpine',
     'angular',
     'customElement',
     'html',
@@ -21,9 +16,11 @@ module.exports = {
     'vue',
     'webcomponent',
   ],
+  commonOptions: {
+    typescript: true,
+  },
   options: {
     angular: {
-      typescript: true,
       preserveImports: true,
       importMapper: (component, theImport, importedValues, componentsUsed) => {
         if (theImport.path.endsWith('.lite')) {
@@ -40,10 +37,14 @@ module.exports = {
         return `import ${importedValues.namedImports} from '${theImport.path}';`;
       },
     },
-    react: { transpiler: { format: 'esm', languages: ['ts'] }, typescript: true },
-    solid: { transpiler: { languages: ['ts'] }, typescript: true },
-    vue: { ...vueConfig, api: 'composition' },
-    qwik: { typescript: true },
-    svelte: { typescript: true },
+    react: { transpiler: { format: 'esm', languages: ['ts'] } },
+    solid: { transpiler: { languages: ['ts'] } },
+    vue: {
+      transpiler: { format: 'esm' },
+      asyncComponentImports: true,
+      api: 'composition',
+    },
+    qwik: {},
+    svelte: {},
   },
 };

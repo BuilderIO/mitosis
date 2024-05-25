@@ -68,7 +68,7 @@ export default component$(() => {
                 aria-label="Discord logo"
                 class="hover:text-primary-light text-xl max-sm:hidden"
                 target="_blank"
-                href="https://discord.com/invite/SNusEyNGsx"
+                href="https://discord.gg/yxjk5vn6pn"
               >
                 <TbBrandDiscord />
               </Link>
