@@ -25,6 +25,7 @@ import {
 } from '@/helpers/strip-state-and-props-refs';
 import { collectCss } from '@/helpers/styles/collect-css';
 import { nodeHasCss } from '@/helpers/styles/helpers';
+import { traverseNodes } from '@/helpers/traverse-nodes';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -141,7 +142,7 @@ const processEventBinding = (key: string, code: string, nodeName: string, custom
 const stringifyBinding =
   (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
-    if (key.startsWith('$')) {
+    if (key.startsWith('$') || key.startsWith('"')) {
       return;
     }
     if (key === 'key') {
@@ -372,6 +373,56 @@ const processAngularCode =
       (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
     );
 
+const handleBindingsForAngular = (
+  json: MitosisComponent,
+  item: MitosisNode,
+  index: number,
+): number => {
+  for (const key in item.bindings) {
+    if (key.startsWith('"') || key.startsWith('$') || key === 'css' || key === 'ref') {
+      continue;
+    }
+    const newBindingName = `node_${index}_${item.name.replaceAll('.', '_').replaceAll('-', '_')}`;
+    if (item.bindings && item.bindings[key] && item.bindings[key]?.code) {
+      if (item.bindings[key]?.type !== 'spread') {
+        json.state[newBindingName] = {
+          code: item.bindings[key]!.code,
+          type: 'property',
+        };
+        item.bindings[key]!.code = `state.${newBindingName}`;
+      } else {
+        json.state[newBindingName] = {
+          code: `{...(${item.bindings[key]!.code})}`,
+          type: 'property',
+        };
+        item.bindings[newBindingName] = item.bindings[key];
+        item.bindings[key]!.code = `state.${newBindingName}`;
+        delete item.bindings[key];
+      }
+    }
+    index++;
+  }
+
+  for (const key in item.properties) {
+    if (key.startsWith('$')) {
+      continue;
+    }
+    const newBindingName = `node_${index}_${item.name.replaceAll('.', '_').replaceAll('-', '_')}`;
+    json.state[newBindingName] = {
+      code: '`' + `${item.properties[key]}` + '`',
+      type: 'property',
+    };
+    item.bindings[key] = {
+      code: `state.${newBindingName}`,
+      type: 'single',
+    };
+    delete item.properties[key];
+    index++;
+  }
+
+  return index;
+};
+
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
   ({ component: _component }) => {
@@ -395,42 +446,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
     options.plugins = [
       ...(options.plugins || []),
-      () => ({
-        json: {
-          pre: (json) => {
-            let lastId = 0;
-            traverse(json).forEach((item) => {
-              if (isMitosisNode(item)) {
-                for (const key in item.bindings) {
-                  const newBindingName = `node_${lastId}_${key
-                    .replaceAll('.', '_')
-                    .replaceAll('-', '_')}`;
-                  if (item.bindings && item.bindings[key] && key !== 'css') {
-                    if (item.bindings[key]?.type !== 'spread') {
-                      json.state[newBindingName] = {
-                        code: item.bindings[key]!.code,
-                        type: 'property',
-                      };
-                      item.bindings[key]!.code = `state.${newBindingName}`;
-                    } else {
-                      json.state[newBindingName] = {
-                        code: `{...(${item.bindings[key]!.code})}`,
-                        type: 'property',
-                      };
-                      item.bindings[newBindingName] = item.bindings[key];
-                      item.bindings[key]!.code = `state.${newBindingName}`;
-                      delete item.bindings[key];
-                    }
-                  }
-                  lastId++;
-                }
-              }
-            });
-
-            return json;
-          },
-        },
-      }),
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'hooks':
@@ -472,6 +487,29 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           case 'types':
             return (x) => x;
         }
+      }),
+      () => ({
+        json: {
+          pre: (json) => {
+            let lastId = 0;
+            traverseNodes(json, (item) => {
+              if (isMitosisNode(item)) {
+                if (item.name === 'For') {
+                  // handle for forName and index
+                  traverseNodes(item, (child) => {
+                    if (isMitosisNode(child)) {
+                      lastId = handleBindingsForAngular(json, child, lastId);
+                    }
+                  });
+                  return;
+                }
+                lastId = handleBindingsForAngular(json, item, lastId);
+              }
+            });
+
+            return json;
+          },
+        },
       }),
     ];
 
