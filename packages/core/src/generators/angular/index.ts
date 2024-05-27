@@ -706,7 +706,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .filter((item) => !isSlotProperty(item) && item !== 'children')
         .map((item) => {
           const propType = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
-          let propDeclaration = `@Input() ${item}!: ${propType}`;
+          let propDeclaration = `@Input() ${item}${options.typescript ? `!: ${propType}` : ''}`;
           if (json.defaultProps && json.defaultProps.hasOwnProperty(item)) {
             propDeclaration += ` = defaultProps["${item}"]`;
           }
@@ -731,7 +731,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         )
         .join('\n')}
 
-      ${dynamicComponents.size ? 'myContent?: any[][];' : ''}
+      ${dynamicComponents.size ? `myContent${options.typescript ? '?: any[][];' : ''}` : ''}
 
       ${dataString}
 
