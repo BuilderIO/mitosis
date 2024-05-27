@@ -40,7 +40,6 @@ import { format } from 'prettier/standalone';
 import traverse from 'traverse';
 import isChildren from '../../helpers/is-children';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
-import { HELPER_FUNCTIONS, getAppropriateTemplateFunctionKeys } from './helpers';
 import {
   AngularBlockOptions,
   BUILT_IN_COMPONENTS,
@@ -118,70 +117,6 @@ const BINDINGS_MAPPER: { [key: string]: string | undefined } = {
   style: 'ngStyle',
 };
 
-const handleObjectBindings = (code: string) => {
-  let objectCode = code.replace(/^{/, '').replace(/}$/, '');
-  objectCode = objectCode.replace(/\/\/.*\n/g, '');
-
-  const spreadOutObjects = objectCode
-    .split(',')
-    .filter((item) => item.includes('...'))
-    .map((item) => item.replace('...', '').trim());
-
-  const objectKeys = objectCode
-    .split(',')
-    .filter((item) => !item.includes('...'))
-    .map((item) => item.trim());
-
-  const otherObjs = objectKeys.map((item) => {
-    return `{ ${item} }`;
-  });
-
-  let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
-
-  if (temp.endsWith(', ')) {
-    temp = temp.slice(0, -2);
-  }
-
-  if (temp.startsWith(', ')) {
-    temp = temp.slice(2);
-  }
-
-  // handle template strings
-  if (temp.includes('`')) {
-    // template str
-    let str = temp.match(/`[^`]*`/g);
-
-    let values = str && str[0].match(/\${[^}]*}/g);
-    let forValues = values?.map((val) => val.slice(2, -1)).join(' + ');
-
-    if (str && forValues) {
-      temp = temp.replace(str[0], forValues);
-    }
-  }
-
-  return temp;
-};
-
-const processCodeBlockInTemplate = (code: string) => {
-  // contains helper calls as Angular doesn't support JS expressions in templates
-  if (code.startsWith('{')) {
-    // Objects cannot be spread out directly in Angular so we need to use `useObjectWrapper`
-    return `useObjectWrapper(${handleObjectBindings(code)})`;
-  } else if (code.startsWith('Object.values')) {
-    let stripped = code.replace('Object.values', '');
-    return `useObjectDotValues${stripped}`;
-  } else if (code.includes('JSON.stringify')) {
-    let obj = code.match(/JSON.stringify\([^)]*\)/g);
-    return `useJsonStringify(${obj})`;
-  } else if (code.includes(' as ')) {
-    const asIndex = code.indexOf('as');
-    const asCode = code.slice(0, asIndex - 1);
-    return `$any${asCode})`;
-  } else {
-    return `${code}`;
-  }
-};
-
 const processEventBinding = (key: string, code: string, nodeName: string, customArg: string) => {
   let event = key.replace('on', '');
   event = event.charAt(0).toLowerCase() + event.slice(1);
@@ -206,9 +141,6 @@ const processEventBinding = (key: string, code: string, nodeName: string, custom
 const stringifyBinding =
   (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
-    if (binding?.type === 'spread') {
-      return;
-    }
     if (key.startsWith('$')) {
       return;
     }
@@ -234,7 +166,7 @@ const stringifyBinding =
       // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
       return ` [attr.${keyToUse}]="${code}" `;
     } else {
-      return `[${keyToUse}]="${processCodeBlockInTemplate(code)}"`;
+      return `[${keyToUse}]="${code}"`;
     }
   };
 
@@ -272,9 +204,8 @@ const handleNgOutletBindings = (node: MitosisNode) => {
         '',
       )}, `;
     } else {
-      const codeToUse = processCodeBlockInTemplate(code);
       const keyToUse = key.includes('-') ? `'${key}'` : key;
-      allProps += `${keyToUse}: ${codeToUse}, `;
+      allProps += `${keyToUse}: ${code}, `;
     }
   }
 
@@ -315,12 +246,6 @@ export const blockToAngular = (
       return `<ng-content select="[${toKebabSlot(textCode)}]"></ng-content>`;
     }
 
-    if (textCode.includes('JSON.stringify')) {
-      let obj = textCode.replace('JSON.stringify', '');
-      obj = obj.replace(/\(.*?\)/, '');
-      return `{{useJsonStringify${obj}}}`;
-    }
-
     return `{{${textCode}}}`;
   }
 
@@ -334,11 +259,7 @@ export const blockToAngular = (
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
-    let condition = json.bindings.when?.code;
-    if (condition?.includes('typeof')) {
-      let wordAfterTypeof = condition.split('typeof')[1].trim().split(' ')[0];
-      condition = condition.replace(`typeof ${wordAfterTypeof}`, `useTypeOf(${wordAfterTypeof})`);
-    }
+    const condition = json.bindings.when?.code;
     str += `<ng-container *ngIf="${condition}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
@@ -481,13 +402,25 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             traverse(json).forEach((item) => {
               if (isMitosisNode(item)) {
                 for (const key in item.bindings) {
-                  const newBindingName = `node_${lastId}_${item.name.replaceAll('.', '_')}`;
+                  const newBindingName = `node_${lastId}_${key
+                    .replaceAll('.', '_')
+                    .replaceAll('-', '_')}`;
                   if (item.bindings && item.bindings[key] && key !== 'css') {
-                    json.state[newBindingName] = {
-                      code: item.bindings[key]!.code,
-                      type: 'property',
-                    };
-                    item.bindings[key]!.code = `state.${newBindingName}`;
+                    if (item.bindings[key]?.type !== 'spread') {
+                      json.state[newBindingName] = {
+                        code: item.bindings[key]!.code,
+                        type: 'property',
+                      };
+                      item.bindings[key]!.code = `state.${newBindingName}`;
+                    } else {
+                      json.state[newBindingName] = {
+                        code: `{...(${item.bindings[key]!.code})}`,
+                        type: 'property',
+                      };
+                      item.bindings[newBindingName] = item.bindings[key];
+                      item.bindings[key]!.code = `state.${newBindingName}`;
+                      delete item.bindings[key];
+                    }
                   }
                   lastId++;
                 }
@@ -617,17 +550,12 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       css = tryFormat(css, 'css');
     }
 
-    const helperFunctions = new Set<string>();
     let template = json.children
       .map((item) => {
-        const tmpl = blockToAngular(item, options, {
+        return blockToAngular(item, options, {
           childComponents,
           nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
         });
-        getAppropriateTemplateFunctionKeys(tmpl).forEach((key) =>
-          helperFunctions.add(HELPER_FUNCTIONS[key]),
-        );
-        return tmpl;
       })
       .join('\n');
     if (options.prettier !== false) {
@@ -761,8 +689,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${dynamicComponents.size ? `myContent${options.typescript ? '?: any[][];' : ''}` : ''}
 
       ${dataString}
-
-      ${helperFunctions.size ? Array.from(helperFunctions).join('\n') : ''}
 
       ${jsRefs
         .map((ref) => {
