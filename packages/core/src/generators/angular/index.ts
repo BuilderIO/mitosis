@@ -474,6 +474,30 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
     options.plugins = [
       ...(options.plugins || []),
+      () => ({
+        json: {
+          pre: (json) => {
+            let lastId = 0;
+            traverse(json).forEach((item) => {
+              if (isMitosisNode(item)) {
+                for (const key in item.bindings) {
+                  const newBindingName = `node_${lastId}_${item.name.replaceAll('.', '_')}`;
+                  if (item.bindings && item.bindings[key] && key !== 'css') {
+                    json.state[newBindingName] = {
+                      code: item.bindings[key]!.code,
+                      type: 'property',
+                    };
+                    item.bindings[key]!.code = `state.${newBindingName}`;
+                  }
+                  lastId++;
+                }
+              }
+            });
+
+            return json;
+          },
+        },
+      }),
       CODE_PROCESSOR_PLUGIN((codeType) => {
         switch (codeType) {
           case 'hooks':
@@ -717,7 +741,10 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${outputs.join('\n')}
 
       ${Array.from(domRefs)
-        .map((refName) => `@ViewChild('${refName}') ${refName}!: ElementRef`)
+        .map(
+          (refName) =>
+            `@ViewChild('${refName}') ${refName}${options.typescript ? '!: ElementRef' : ''}`,
+        )
         .join('\n')}
       
       ${Array.from(dynamicComponents)
@@ -727,7 +754,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
               .split('.')[1]
               .toLowerCase()}Template', { static: true }) ${component
               .split('.')[1]
-              .toLowerCase()}TemplateRef!: TemplateRef<any>`,
+              .toLowerCase()}TemplateRef${options.typescript ? '!: TemplateRef<any>' : ''}`,
         )
         .join('\n')}
 
@@ -759,7 +786,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         !hasConstructor && !dynamicComponents.size
           ? ''
           : `constructor(\n${injectables.join(',\n')}${
-              dynamicComponents.size ? '\nprivate vcRef: ViewContainerRef,\n' : ''
+              dynamicComponents.size
+                ? `\nprivate vcRef${options.typescript ? ': ViewContainerRef' : ''},\n`
+                : ''
             }) {
             ${
               !json.hooks?.onInit
