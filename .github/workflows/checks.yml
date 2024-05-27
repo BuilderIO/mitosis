@@ -9,7 +9,7 @@ on:
   push:
   pull_request:
 
-env: 
+env:
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
 jobs:
@@ -23,10 +23,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'yarn'
 
-      - name: Install dependencies
-        run: yarn --immutable
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-nm-install
+        with:
+          cache-node-modules: true
+          cache-install-state: true
 
       - name: Lint
         run: yarn ci:lint
@@ -47,19 +49,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'yarn'
 
-      - name: Install dependencies
-        run: yarn --immutable
-
-      - name: Build Core
-        run: yarn ci:build:core
-      
-      - name: Build eslint-plugin
-        run: yarn ci:build:eslint-plugin
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-nm-install
+        with:
+          cache-node-modules: true
+          cache-install-state: true
 
       - name: Build Site
-        run: yarn ci:build:site
+        run: yarn nx build @builder.io/mitosis-site
 
   e2e:
     runs-on: ubuntu-latest
@@ -71,10 +69,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'yarn'
 
-      - name: Install dependencies
-        run: yarn --immutable
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-nm-install
+        with:
+          cache-node-modules: true
+          cache-install-state: true
 
       - name: Build
         run: yarn ci:build

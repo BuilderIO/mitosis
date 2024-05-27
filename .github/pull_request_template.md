@@ -1,9 +1,14 @@
 ## Description
 
-Add a short description of:
-- what changes you made, 
-- why you made them, and 
-- any other context that you think might be helpful for someone to better understand what is contained in this pull request. 
+Please provide the following information:
 
-This sort of information is useful for people reviewing the code, as well as anyone from the future trying to understand why changes were made or why a bug started happening.
+- What changes you made:
 
+- Why you made them, and:
+
+- Any other useful context:
+
+Make sure to follow the PR preparation steps in [CONTRIBUTING.md](../CONTRIBUTING.md#preparing-your-pr) before submitting your PR:
+
+- [ ] Format the codebase
+- [ ] Update all snapshots

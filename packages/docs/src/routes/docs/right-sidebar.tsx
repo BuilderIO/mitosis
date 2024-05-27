@@ -50,7 +50,7 @@ export const RightSidebar = component$((props: { class: ClassList }) => {
       icon: TbMessage,
     },
     {
-      href: 'https://discord.com/invite/SNusEyNGsx',
+      href: 'https://discord.gg/yxjk5vn6pn',
       text: 'Join our community',
       icon: TbBrandDiscord,
     },
