@@ -47,7 +47,9 @@ export default defineConfig(({ command, mode }): UserConfig => {
     optimizeDeps: {
       // Put problematic deps that break bundling here, mostly those with binaries.
       // For example ['better-sqlite3'] if you use that in server functions.
-      exclude: ['@builder.io/mitosis'],
+      exclude: [
+        // '@builder.io/mitosis'
+      ],
     },
     // This tells Vite how to bundle the server code.
     ssr:
@@ -62,9 +64,10 @@ export default defineConfig(({ command, mode }): UserConfig => {
             // external: [...Object.keys(dependencies), 'bcrypt']
             external: Object.keys(dependencies),
           }
-        : {
-            external: ['@builder.io/mitosis'],
-          },
+          : undefined,
+        // : {
+        //     external: ['@builder.io/mitosis'],
+        //   },
     server: {
       headers: {
         // Don't cache the server response in dev mode
@@ -77,5 +80,11 @@ export default defineConfig(({ command, mode }): UserConfig => {
         'Cache-Control': 'public, max-age=600',
       },
     },
+    // resolve: { preserveSymlinks: true },
+    // build: {
+    //   commonjsOptions: {
+    //     include: [/@builder.io\/mitosis/, /.*.cjs/, ],
+    //   },
+    // },
   };
 });
