@@ -60,6 +60,7 @@ export const CodeEditor = component$((props: CodeEditorProps) => {
         renderLineHighlight: 'none',
         selectionHighlight: false,
         scrollbar: { vertical: 'hidden' },
+        overviewRulerLanes: 0,
         minimap: {
           enabled: false,
         },
