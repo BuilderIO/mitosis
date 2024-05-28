@@ -10,6 +10,14 @@ export default extendConfig(baseConfig, () => {
         input: ['src/entry.cloudflare-pages.tsx', '@qwik-city-plan'],
       },
     },
+    optimizeDeps: {
+      // Put problematic deps that break bundling here, mostly those with binaries.
+      // For example ['better-sqlite3'] if you use that in server functions.
+      exclude: ['@builder.io/mitosis'],
+    },
+    ssr: {
+      external: ['@builder.io/mitosis'],
+    },
     plugins: [cloudflarePagesAdapter()],
   };
 });
