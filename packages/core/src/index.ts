@@ -1,4 +1,4 @@
-import { JSX } from '@builder.io/mitosis/jsx-runtime';
+import { JSX } from '../jsx-runtime';
 import { Dictionary } from './helpers/typescript';
 import { ComponentMetadata } from './types/metadata';
 import { ReactivityType, TargetBlock } from './types/mitosis-component';
