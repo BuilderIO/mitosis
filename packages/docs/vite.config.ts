@@ -62,7 +62,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
             // external: [...Object.keys(dependencies), 'bcrypt']
             external: Object.keys(dependencies),
           }
-          : undefined,
+        : undefined,
     server: {
       headers: {
         // Don't cache the server response in dev mode
