@@ -4,20 +4,11 @@ import baseConfig from '../../vite.config';
 
 export default extendConfig(baseConfig, () => {
   return {
-    // resolve: { preserveSymlinks: true },
     build: {
       ssr: true,
       rollupOptions: {
         input: ['src/entry.cloudflare-pages.tsx', '@qwik-city-plan'],
       },
-    },
-    optimizeDeps: {
-      // Put problematic deps that break bundling here, mostly those with binaries.
-      // For example ['better-sqlite3'] if you use that in server functions.
-      // exclude: ['@builder.io/mitosis'],
-    },
-    ssr: {
-      // external: ['@builder.io/mitosis'],
     },
     plugins: [cloudflarePagesAdapter()],
   };
