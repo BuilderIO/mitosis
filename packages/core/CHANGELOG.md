@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.2
+
+### Patch Changes
+
+- 78f6a64: Misc: remove unused dependencies.
+
 ## 0.3.1
 
 ### Patch Changes
