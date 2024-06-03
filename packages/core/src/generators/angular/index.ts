@@ -379,6 +379,7 @@ const handleAngularBindings = (
   index: number,
   { forName, indexName }: { forName?: string; indexName?: string } = {},
 ): number => {
+  if (isChildren({ node: item })) return index;
   for (const key in item.bindings) {
     if (key.startsWith('"') || key.startsWith('$') || key === 'css' || key === 'ref') {
       continue;
