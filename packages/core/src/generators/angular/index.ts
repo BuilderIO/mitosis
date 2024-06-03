@@ -373,17 +373,35 @@ const processAngularCode =
       (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
     );
 
-const handleBindingsForAngular = (
+const handleAngularBindings = (
   json: MitosisComponent,
   item: MitosisNode,
   index: number,
+  forName?: string,
 ): number => {
   for (const key in item.bindings) {
     if (key.startsWith('"') || key.startsWith('$') || key === 'css' || key === 'ref') {
       continue;
     }
     const newBindingName = `node_${index}_${item.name.replaceAll('.', '_').replaceAll('-', '_')}`;
-    if (item.bindings && item.bindings[key] && item.bindings[key]?.code) {
+    if (forName) {
+      for (const key in item.bindings) {
+        const newBindingName = `node_${index}_${item.name
+          .replaceAll('.', '_')
+          .replaceAll('-', '_')}`;
+        if (item.bindings[key]?.code) {
+          console.log('handleAngularBindings', forName, key, item.bindings[key]!.code);
+          json.state[newBindingName] = {
+            code: `(${forName}, index) => {
+            return (${item.bindings[key]!.code});
+          }`,
+            type: 'function',
+          };
+          item.bindings[key]!.code = `state.${newBindingName}(${forName}, index)`;
+        }
+        index++;
+      }
+    } else if (item.bindings && item.bindings[key]?.code) {
       if (item.bindings[key]?.type !== 'spread') {
         json.state[newBindingName] = {
           code: item.bindings[key]!.code,
@@ -401,23 +419,23 @@ const handleBindingsForAngular = (
       }
     }
     index++;
-  }
 
-  for (const key in item.properties) {
-    if (key.startsWith('$')) {
-      continue;
+    for (const key in item.properties) {
+      if (key.startsWith('$')) {
+        continue;
+      }
+      const newBindingName = `node_${index}_${item.name.replaceAll('.', '_').replaceAll('-', '_')}`;
+      json.state[newBindingName] = {
+        code: '`' + `${item.properties[key]}` + '`',
+        type: 'property',
+      };
+      item.bindings[key] = {
+        code: `state.${newBindingName}`,
+        type: 'single',
+      };
+      delete item.properties[key];
+      index++;
     }
-    const newBindingName = `node_${index}_${item.name.replaceAll('.', '_').replaceAll('-', '_')}`;
-    json.state[newBindingName] = {
-      code: '`' + `${item.properties[key]}` + '`',
-      type: 'property',
-    };
-    item.bindings[key] = {
-      code: `state.${newBindingName}`,
-      type: 'single',
-    };
-    delete item.properties[key];
-    index++;
   }
 
   return index;
@@ -495,18 +513,18 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             traverseNodes(json, (item) => {
               if (isMitosisNode(item)) {
                 if (item.name === 'For') {
-                  // handle for forName and index
+                  const forName = (item.scope as any).forName;
                   traverseNodes(item, (child) => {
                     if (isMitosisNode(child)) {
-                      lastId = handleBindingsForAngular(json, child, lastId);
+                      (child as any)._traversed = true;
+                      lastId = handleAngularBindings(json, child, lastId, forName);
                     }
                   });
-                  return;
+                } else if (!(item as any)._traversed) {
+                  lastId = handleAngularBindings(json, item, lastId);
                 }
-                lastId = handleBindingsForAngular(json, item, lastId);
               }
             });
-
             return json;
           },
         },
