@@ -49,16 +49,16 @@ import {
 } from './types';
 
 const mappers: {
-  [key: string]: (json: MitosisNode, options: ToAngularOptions) => string;
+  [key: string]: (root: MitosisComponent, json: MitosisNode, options: ToAngularOptions) => string;
 } = {
-  Fragment: (json, options) => {
+  Fragment: (root, json, options) => {
     return `<ng-container>${json.children
-      .map((item) => blockToAngular(item, options))
+      .map((item) => blockToAngular(root, item, options))
       .join('\n')}</ng-container>`;
   },
-  Slot: (json, options) => {
+  Slot: (root, json, options) => {
     const renderChildren = () =>
-      json.children?.map((item) => blockToAngular(item, options)).join('\n');
+      json.children?.map((item) => blockToAngular(root, item, options)).join('\n');
 
     return `<ng-content ${Object.entries({ ...json.bindings, ...json.properties })
       .map(([binding, value]) => {
@@ -191,13 +191,18 @@ const handleNgOutletBindings = (node: MitosisNode) => {
     if (key.startsWith('$')) {
       continue;
     }
-    const { code, arguments: cusArgs = ['event'] } = node.bindings[key]!;
+    let { code, arguments: cusArgs = ['event'] } = node.bindings[key]!;
+    code = `this.${code}`;
+
+    if (node.bindings[key]?.type === 'spread') {
+      allProps += `...${code}, `;
+      continue;
+    }
 
     if (key.includes('props.')) {
       allProps += `${key.replace('props.', '')}: ${code}, `;
-    } else if (key.includes('.')) {
-      // TODO: handle arbitrary spread props
-      allProps += `${key.split('.')[1]}: ${code}, `;
+    } else if (key.includes('state.')) {
+      allProps += `${key.replace('state.', '')}: ${code}, `;
     } else if (key.startsWith('on')) {
       const { event, value } = processEventBinding(key, code, node.name, cusArgs[0]);
       allProps += `on${event.charAt(0).toUpperCase() + event.slice(1)}: ${value.replace(
@@ -222,6 +227,7 @@ const handleNgOutletBindings = (node: MitosisNode) => {
 };
 
 export const blockToAngular = (
+  root: MitosisComponent,
   json: MitosisNode,
   options: ToAngularOptions = {},
   blockOptions: AngularBlockOptions = {
@@ -231,7 +237,7 @@ export const blockToAngular = (
   const childComponents = blockOptions?.childComponents || [];
 
   if (mappers[json.name]) {
-    return mappers[json.name](json, options);
+    return mappers[json.name](root, json, options);
   }
 
   if (isChildren({ node: json })) {
@@ -257,17 +263,21 @@ export const blockToAngular = (
     str += `<ng-container *ngFor="let ${json.scope.forName} of ${json.bindings.each?.code}${
       indexName ? `; let ${indexName} = index` : ''
     }">`;
-    str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
+    str += json.children
+      .map((item) => blockToAngular(root, item, options, blockOptions))
+      .join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
     const condition = json.bindings.when?.code;
     str += `<ng-container *ngIf="${condition}">`;
-    str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
+    str += json.children
+      .map((item) => blockToAngular(root, item, options, blockOptions))
+      .join('\n');
     str += `</ng-container>`;
     // else condition
     if (isMitosisNode(json.meta?.else)) {
       str += `<ng-container *ngIf="!(${condition})">`;
-      str += blockToAngular(json.meta.else, options, blockOptions);
+      str += blockToAngular(root, json.meta.else, options, blockOptions);
       str += `</ng-container>`;
     }
   } else if (json.name.includes('.')) {
@@ -276,10 +286,19 @@ export const blockToAngular = (
       : json.name;
 
     const allProps = handleNgOutletBindings(json);
+    const inputsPropsStateName = `mergedInputs_${Math.floor(Math.random() * 1000)}`;
+    root.state[inputsPropsStateName] = {
+      code: 'null',
+      type: 'property',
+    };
+    root.hooks.onMount.push({
+      code: `this.${inputsPropsStateName} = {${allProps}}`,
+      onSSR: false,
+    });
 
     str += `<ng-container *ngComponentOutlet="
       ${elSelector.replace('state.', '').replace('props.', '')};
-      inputs: { ${allProps} };
+      inputs: ${inputsPropsStateName};
       content: myContent;
       ">  `;
 
@@ -316,7 +335,9 @@ export const blockToAngular = (
     str += '>';
 
     if (json.children) {
-      str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
+      str += json.children
+        .map((item) => blockToAngular(root, item, options, blockOptions))
+        .join('\n');
     }
 
     str += `</${elSelector}>`;
@@ -334,7 +355,7 @@ const traverseToGetAllDynamicComponents = (
   traverse(json).forEach((item) => {
     if (isMitosisNode(item) && item.name.includes('.') && item.name.split('.').length === 2) {
       const children = item.children
-        .map((child) => blockToAngular(child, options, blockOptions))
+        .map((child) => blockToAngular(json, child, options, blockOptions))
         .join('\n');
       dynamicTemplate = `<ng-template #${
         item.name.split('.')[1].toLowerCase() + 'Template'
@@ -373,6 +394,17 @@ const processAngularCode =
       (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
     );
 
+const isASimpleProperty = (code: string) => {
+  const expressions = ['==', '===', '!=', '!==', '<', '>', '<=', '>='];
+  return (
+    !code.includes('{') &&
+    !code.includes('}') &&
+    !code.includes('(') &&
+    !code.includes(')') &&
+    !expressions.includes(code)
+  );
+};
+
 const handleAngularBindings = (
   json: MitosisComponent,
   item: MitosisNode,
@@ -384,13 +416,16 @@ const handleAngularBindings = (
     if (key.startsWith('"') || key.startsWith('$') || key === 'css' || key === 'ref') {
       continue;
     }
+    if (isASimpleProperty(item.bindings[key]!.code)) {
+      continue;
+    }
     const newBindingName = `node_${index}_${item.name.replaceAll('.', '_').replaceAll('-', '_')}`;
     if (forName) {
       if (item.name === 'For') continue;
       const newBindingName = `node_${index}_${item.name.replaceAll('.', '_').replaceAll('-', '_')}`;
       if (item.bindings[key]?.code) {
         json.state[newBindingName] = {
-          code: `(${forName}${indexName ? `, ${indexName}` : ''}) => {
+          code: `(${forName ? `${forName}` : ''}${indexName ? `, ${indexName}` : ''}) => {
             return (${item.bindings[key]!.code});
           }`,
           type: 'function',
@@ -403,24 +438,30 @@ const handleAngularBindings = (
     } else if (item.bindings && item.bindings[key]?.code) {
       if (item.bindings[key]?.type !== 'spread' && !key.startsWith('on')) {
         json.state[newBindingName] = {
-          code: item.bindings[key]!.code,
+          code: 'null',
           type: 'property',
         };
+        json.hooks['onMount'].push({
+          code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
+          onSSR: false,
+        });
         item.bindings[key]!.code = `state.${newBindingName}`;
       } else if (key.startsWith('on')) {
-        const { arguments: cusArgs } = item.bindings[key]!;
+        const { arguments: cusArgs = ['event'] } = item.bindings[key]!;
         json.state[newBindingName] = {
-          code: `(${cusArgs?.join(', ')}) => {
-            return (${item.bindings[key]!.code});
-          }`,
+          code: `(${cusArgs?.join(', ')}) => ${item.bindings[key]!.code}`,
           type: 'function',
         };
         item.bindings[key]!.code = `state.${newBindingName}(${cusArgs?.join(', ')})`;
       } else {
         json.state[newBindingName] = {
-          code: `{...(${item.bindings[key]!.code})}`,
+          code: `null`,
           type: 'property',
         };
+        json.hooks['onMount'].push({
+          code: `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
+          onSSR: false,
+        });
         item.bindings[newBindingName] = item.bindings[key];
         item.bindings[key]!.code = `state.${newBindingName}`;
         delete item.bindings[key];
@@ -620,7 +661,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     let template = json.children
       .map((item) => {
-        return blockToAngular(item, options, {
+        return blockToAngular(json, item, options, {
           childComponents,
           nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
         });
@@ -819,7 +860,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${
         !json.hooks.onUpdate?.length
           ? ''
-          : `ngAfterContentChecked() {
+          : `ngOnChanges() {
               ${json.hooks.onUpdate.reduce((code, hook) => {
                 code += hook.code;
                 return code + '\n';
