@@ -32,6 +32,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '@/modules/plugins';
+import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { Binding, MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
@@ -287,16 +288,30 @@ export const blockToAngular = (
       : json.name;
 
     const allProps = handleNgOutletBindings(json);
-    const inputsPropsStateName = `mergedInputs_${Math.floor(Math.random() * 1000)}`;
+    const inputsPropsStateName = `mergedInputs_${hashCodeAsString(allProps)}`;
     root.state[inputsPropsStateName] = {
       code: 'null',
       type: 'property',
     };
-    root.hooks.onMount.push({
-      code: `this.${inputsPropsStateName} = {${allProps}}`,
-      onSSR: false,
-    });
-    if (root.hooks.onUpdate && root.hooks.onUpdate.length > 0) {
+    if (
+      !root.hooks.onMount
+        .map((hook) => hook.code)
+        .join('')
+        .includes(inputsPropsStateName)
+    ) {
+      root.hooks.onMount.push({
+        code: `this.${inputsPropsStateName} = {${allProps}}`,
+        onSSR: false,
+      });
+    }
+    if (
+      root.hooks.onUpdate &&
+      root.hooks.onUpdate.length > 0 &&
+      !root.hooks.onUpdate
+        .map((hook) => hook.code)
+        .join('')
+        .includes(inputsPropsStateName)
+    ) {
       root.hooks.onUpdate.push({
         code: `this.${inputsPropsStateName} = {${allProps}}`,
       });
