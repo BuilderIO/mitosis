@@ -131,12 +131,49 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > Basic 2`] = `
-"unknown: Unexpected token, expected \\",\\" (2:7)
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m [90m 1 |[39m [36mlet[39m _ [33m=[39m (person) [33m=>[39m ({[0m
-[0m[31m[1m>[22m[39m[90m 2 |[39m   state[33m.[39mname [33m=[39m event[33m.[39mtarget[33m.[39mvalue [33m+[39m [32m' and '[39m [33m+[39m person[33m;[39m[0m
-[0m [90m   |[39m        [31m[1m^[22m[39m[0m
-[0m [90m 3 |[39m })[0m"
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-show-component, MyBasicForShowComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let person of names\\">
+        <ng-container *ngIf=\\"person === name\\">
+          <input [attr.value]=\\"name\\" (input)=\\"node_0_input($event, person)\\" />
+
+          Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
+          Solid, or Liquid!
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForShowComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+  node_0_input_event = (event, person) => {
+    this.name = event.target.value + \\" and \\" + person;
+  };
+  node_0_input = (event, person) => this.node_0_input_event(event, person);
+}
+
+@NgModule({
+  declarations: [MyBasicForShowComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForShowComponent],
+})
+export class MyBasicForShowComponentModule {}
+"
 `;
 
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > Basic Context 1`] = `
@@ -458,12 +495,53 @@ export class MyBasicChildComponentModule {}
 `;
 
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > BasicFor 1`] = `
-"unknown: Unexpected token, expected \\",\\" (2:7)
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m [90m 1 |[39m [36mlet[39m _ [33m=[39m (person) [33m=>[39m ({[0m
-[0m[31m[1m>[22m[39m[90m 2 |[39m   state[33m.[39mname [33m=[39m event[33m.[39mtarget[33m.[39mvalue [33m+[39m [32m' and '[39m [33m+[39m person[33m;[39m[0m
-[0m [90m   |[39m        [31m[1m^[22m[39m[0m
-[0m [90m 3 |[39m })[0m"
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-component, MyBasicForComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let person of names\\">
+        <ng-container>
+          <input [attr.value]=\\"name\\" (input)=\\"node_0_input($event, person)\\" />
+
+          Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
+          Solid, or Liquid!
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+  node_0_input_event = (event, person) => {
+    this.name = event.target.value + \\" and \\" + person;
+  };
+  node_0_input = (event, person) => this.node_0_input_event(event, person);
+
+  ngOnInit() {
+    console.log(\\"onMount code\\");
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicForComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForComponent],
+})
+export class MyBasicForComponentModule {}
+"
 `;
 
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > BasicRef 1`] = `
@@ -2099,7 +2177,7 @@ export default class SmileReviews {
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
-  node_0_button = function (event) {
+  node_0_button = (event) => {
     event.preventDefault();
     this.showReviewPrompt = false;
   };
@@ -2390,7 +2468,7 @@ import {
     <ng-container
       *ngComponentOutlet=\\"
               TagNameGetter;
-              inputs: mergedInputs_951;
+              inputs: mergedInputs_709;
               content: myContent;
               \\"
     ></ng-container>
@@ -2420,25 +2498,25 @@ export default class MyBasicForNoTagRefComponent {
   get TagNameGetter() {
     return \\"span\\";
   }
-  mergedInputs_951 = null;
+  mergedInputs_709 = null;
 
   constructor(private vcRef) {}
 
   ngOnInit() {
     const onMountHook_0 = () => {
-      this.mergedInputs_951 = {};
+      this.mergedInputs_709 = {};
     };
     onMountHook_0();
     const onMountHook_1 = () => {
-      this.mergedInputs_262 = {};
+      this.mergedInputs_615 = {};
     };
     onMountHook_1();
     const onMountHook_2 = () => {
-      this.mergedInputs_728 = {};
+      this.mergedInputs_300 = {};
     };
     onMountHook_2();
     const onMountHook_3 = () => {
-      this.mergedInputs_437 = {};
+      this.mergedInputs_168 = {};
     };
     onMountHook_3();
 
@@ -3065,7 +3143,7 @@ import { Component, Input } from \\"@angular/core\\";
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
-              inputs: mergedInputs_44;
+              inputs: mergedInputs_167;
               content: myContent;
               \\"
     ></ng-container>
@@ -3089,10 +3167,10 @@ export default class MyComponent {
   onClick = function onClick() {
     console.log(\\"hello\\");
   };
-  mergedInputs_44 = null;
+  mergedInputs_167 = null;
 
   ngOnInit() {
-    this.mergedInputs_44 = {
+    this.mergedInputs_167 = {
       hello: \\"world\\",
       onClick: this.onClick.bind(this),
       ...this.attributes,
@@ -3130,7 +3208,7 @@ import {
     <ng-container
       *ngComponentOutlet=\\"
               Component;
-              inputs: mergedInputs_41;
+              inputs: mergedInputs_909;
               content: myContent;
               \\"
     ></ng-container>
@@ -3155,12 +3233,12 @@ export default class MyComponent {
   onClick = function onClick(event) {
     console.log(\\"hello\\", event);
   };
-  mergedInputs_41 = null;
+  mergedInputs_909 = null;
 
   constructor(private vcRef) {}
 
   ngOnInit() {
-    this.mergedInputs_41 = {
+    this.mergedInputs_909 = {
       hello: \\"world\\",
       onClick: this.onClick.bind(this),
       ...this.attributes,
@@ -4181,7 +4259,7 @@ import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: mergedInputs_414;
+              inputs: mergedInputs_587;
               content: myContent;
               \\"
         ></ng-container>
@@ -4198,7 +4276,7 @@ import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: mergedInputs_453;
+              inputs: mergedInputs_515;
               content: myContent;
               \\"
         ></ng-container>
@@ -4208,7 +4286,7 @@ import RenderRepeatedBlock from \\"./render-repeated-block.lite\\";
       <ng-container
         *ngComponentOutlet=\\"
               renderComponentTag;
-              inputs: mergedInputs_789;
+              inputs: mergedInputs_964;
               content: myContent;
               \\"
       ></ng-container>
@@ -4407,9 +4485,9 @@ export default class RenderBlock {
   node_0_Show = null;
   node_1_Show = null;
   node_2_Show = null;
-  mergedInputs_414 = null;
-  mergedInputs_453 = null;
-  mergedInputs_789 = null;
+  mergedInputs_587 = null;
+  mergedInputs_515 = null;
+  mergedInputs_964 = null;
 
   constructor(private vcRef) {}
 
@@ -4427,19 +4505,19 @@ export default class RenderBlock {
     };
     onMountHook_2();
     const onMountHook_3 = () => {
-      this.mergedInputs_414 = { ...this.attributes, ...this.actions };
+      this.mergedInputs_587 = { ...this.attributes, ...this.actions };
     };
     onMountHook_3();
     const onMountHook_4 = () => {
-      this.mergedInputs_453 = { ...this.attributes, ...this.actions };
+      this.mergedInputs_515 = { ...this.attributes, ...this.actions };
     };
     onMountHook_4();
     const onMountHook_5 = () => {
-      this.mergedInputs_789 = { ...this.renderComponentProps };
+      this.mergedInputs_964 = { ...this.renderComponentProps };
     };
     onMountHook_5();
     const onMountHook_6 = () => {
-      this.mergedInputs_661 = { ...this.renderComponentProps };
+      this.mergedInputs_502 = { ...this.renderComponentProps };
     };
     onMountHook_6();
 
@@ -4454,10 +4532,10 @@ export default class RenderBlock {
     this.node_0_Show = isEmptyHtmlElement(this.tag);
     this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
     this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
-    this.mergedInputs_414 = { ...this.attributes, ...this.actions };
-    this.mergedInputs_453 = { ...this.attributes, ...this.actions };
-    this.mergedInputs_789 = { ...this.renderComponentProps };
-    this.mergedInputs_661 = { ...this.renderComponentProps };
+    this.mergedInputs_587 = { ...this.attributes, ...this.actions };
+    this.mergedInputs_515 = { ...this.attributes, ...this.actions };
+    this.mergedInputs_964 = { ...this.renderComponentProps };
+    this.mergedInputs_502 = { ...this.renderComponentProps };
   }
 }
 
@@ -5459,12 +5537,49 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > Basic 2`] = `
-"unknown: Unexpected token, expected \\",\\" (2:7)
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m [90m 1 |[39m [36mlet[39m _ [33m=[39m (person) [33m=>[39m ({[0m
-[0m[31m[1m>[22m[39m[90m 2 |[39m   state[33m.[39mname [33m=[39m event[33m.[39mtarget[33m.[39mvalue [33m+[39m [32m' and '[39m [33m+[39m person[33m;[39m[0m
-[0m [90m   |[39m        [31m[1m^[22m[39m[0m
-[0m [90m 3 |[39m })[0m"
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-show-component, MyBasicForShowComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let person of names\\">
+        <ng-container *ngIf=\\"person === name\\">
+          <input [attr.value]=\\"name\\" (input)=\\"node_0_input($event, person)\\" />
+
+          Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
+          Solid, or Liquid!
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForShowComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+  node_0_input_event = (event, person) => {
+    this.name = event.target.value + \\" and \\" + person;
+  };
+  node_0_input = (event, person) => this.node_0_input_event(event, person);
+}
+
+@NgModule({
+  declarations: [MyBasicForShowComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForShowComponent],
+})
+export class MyBasicForShowComponentModule {}
+"
 `;
 
 exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > Basic Context 1`] = `
@@ -5796,12 +5911,53 @@ export class MyBasicChildComponentModule {}
 `;
 
 exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > BasicFor 1`] = `
-"unknown: Unexpected token, expected \\",\\" (2:7)
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m [90m 1 |[39m [36mlet[39m _ [33m=[39m (person) [33m=>[39m ({[0m
-[0m[31m[1m>[22m[39m[90m 2 |[39m   state[33m.[39mname [33m=[39m event[33m.[39mtarget[33m.[39mvalue [33m+[39m [32m' and '[39m [33m+[39m person[33m;[39m[0m
-[0m [90m   |[39m        [31m[1m^[22m[39m[0m
-[0m [90m 3 |[39m })[0m"
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-component, MyBasicForComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let person of names\\">
+        <ng-container>
+          <input [attr.value]=\\"name\\" (input)=\\"node_0_input($event, person)\\" />
+
+          Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
+          Solid, or Liquid!
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+  node_0_input_event = (event, person) => {
+    this.name = event.target.value + \\" and \\" + person;
+  };
+  node_0_input = (event, person) => this.node_0_input_event(event, person);
+
+  ngOnInit() {
+    console.log(\\"onMount code\\");
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicForComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForComponent],
+})
+export class MyBasicForComponentModule {}
+"
 `;
 
 exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > BasicRef 1`] = `
@@ -7620,7 +7776,7 @@ export default class SmileReviews {
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
-  node_0_button = function (event) {
+  node_0_button = (event) => {
     event.preventDefault();
     this.showReviewPrompt = false;
   };
@@ -7958,7 +8114,7 @@ import {
     <ng-container
       *ngComponentOutlet=\\"
               TagNameGetter;
-              inputs: mergedInputs_709;
+              inputs: mergedInputs_306;
               content: myContent;
               \\"
     ></ng-container>
@@ -7990,25 +8146,25 @@ export default class MyBasicForNoTagRefComponent {
   get TagNameGetter() {
     return \\"span\\";
   }
-  mergedInputs_709 = null;
+  mergedInputs_306 = null;
 
   constructor(private vcRef: ViewContainerRef) {}
 
   ngOnInit() {
     const onMountHook_0 = () => {
-      this.mergedInputs_709 = {};
+      this.mergedInputs_306 = {};
     };
     onMountHook_0();
     const onMountHook_1 = () => {
-      this.mergedInputs_888 = {};
+      this.mergedInputs_205 = {};
     };
     onMountHook_1();
     const onMountHook_2 = () => {
-      this.mergedInputs_108 = {};
+      this.mergedInputs_898 = {};
     };
     onMountHook_2();
     const onMountHook_3 = () => {
-      this.mergedInputs_901 = {};
+      this.mergedInputs_327 = {};
     };
     onMountHook_3();
 
@@ -8682,7 +8838,7 @@ import { Component, Input } from \\"@angular/core\\";
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
-              inputs: mergedInputs_730;
+              inputs: mergedInputs_416;
               content: myContent;
               \\"
     ></ng-container>
@@ -8706,10 +8862,10 @@ export default class MyComponent {
   onClick = function onClick() {
     console.log(\\"hello\\");
   };
-  mergedInputs_730 = null;
+  mergedInputs_416 = null;
 
   ngOnInit() {
-    this.mergedInputs_730 = {
+    this.mergedInputs_416 = {
       hello: \\"world\\",
       onClick: this.onClick.bind(this),
       ...this.attributes,
@@ -8747,7 +8903,7 @@ import {
     <ng-container
       *ngComponentOutlet=\\"
               Component;
-              inputs: mergedInputs_442;
+              inputs: mergedInputs_434;
               content: myContent;
               \\"
     ></ng-container>
@@ -8773,12 +8929,12 @@ export default class MyComponent {
   onClick = function onClick(event: any) {
     console.log(\\"hello\\", event);
   };
-  mergedInputs_442 = null;
+  mergedInputs_434 = null;
 
   constructor(private vcRef: ViewContainerRef) {}
 
   ngOnInit() {
-    this.mergedInputs_442 = {
+    this.mergedInputs_434 = {
       hello: \\"world\\",
       onClick: this.onClick.bind(this),
       ...this.attributes,
@@ -9874,7 +10030,7 @@ import type { RepeatData } from \\"./types.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: mergedInputs_25;
+              inputs: mergedInputs_955;
               content: myContent;
               \\"
         ></ng-container>
@@ -9891,7 +10047,7 @@ import type { RepeatData } from \\"./types.js\\";
         <ng-container
           *ngComponentOutlet=\\"
               tag;
-              inputs: mergedInputs_684;
+              inputs: mergedInputs_986;
               content: myContent;
               \\"
         ></ng-container>
@@ -9901,7 +10057,7 @@ import type { RepeatData } from \\"./types.js\\";
       <ng-container
         *ngComponentOutlet=\\"
               renderComponentTag;
-              inputs: mergedInputs_439;
+              inputs: mergedInputs_262;
               content: myContent;
               \\"
       ></ng-container>
@@ -10100,9 +10256,9 @@ export default class RenderBlock {
   node_0_Show = null;
   node_1_Show = null;
   node_2_Show = null;
-  mergedInputs_25 = null;
-  mergedInputs_684 = null;
-  mergedInputs_439 = null;
+  mergedInputs_955 = null;
+  mergedInputs_986 = null;
+  mergedInputs_262 = null;
 
   constructor(private vcRef: ViewContainerRef) {}
 
@@ -10120,19 +10276,19 @@ export default class RenderBlock {
     };
     onMountHook_2();
     const onMountHook_3 = () => {
-      this.mergedInputs_25 = { ...this.attributes, ...this.actions };
+      this.mergedInputs_955 = { ...this.attributes, ...this.actions };
     };
     onMountHook_3();
     const onMountHook_4 = () => {
-      this.mergedInputs_684 = { ...this.attributes, ...this.actions };
+      this.mergedInputs_986 = { ...this.attributes, ...this.actions };
     };
     onMountHook_4();
     const onMountHook_5 = () => {
-      this.mergedInputs_439 = { ...this.renderComponentProps };
+      this.mergedInputs_262 = { ...this.renderComponentProps };
     };
     onMountHook_5();
     const onMountHook_6 = () => {
-      this.mergedInputs_166 = { ...this.renderComponentProps };
+      this.mergedInputs_142 = { ...this.renderComponentProps };
     };
     onMountHook_6();
 
@@ -10147,10 +10303,10 @@ export default class RenderBlock {
     this.node_0_Show = isEmptyHtmlElement(this.tag);
     this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
     this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
-    this.mergedInputs_25 = { ...this.attributes, ...this.actions };
-    this.mergedInputs_684 = { ...this.attributes, ...this.actions };
-    this.mergedInputs_439 = { ...this.renderComponentProps };
-    this.mergedInputs_166 = { ...this.renderComponentProps };
+    this.mergedInputs_955 = { ...this.attributes, ...this.actions };
+    this.mergedInputs_986 = { ...this.attributes, ...this.actions };
+    this.mergedInputs_262 = { ...this.renderComponentProps };
+    this.mergedInputs_142 = { ...this.renderComponentProps };
   }
 }
 
