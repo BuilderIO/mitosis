@@ -486,7 +486,7 @@ const handleBindings = (
 
 const handleProperties = (json: MitosisComponent, item: MitosisNode, index: number) => {
   for (const key in item.properties) {
-    if (key.startsWith('$')) {
+    if (key.startsWith('$') || isASimpleProperty(item.properties[key]!)) {
       continue;
     }
     const newBindingName = generateNewBindingName(index, item.name);
