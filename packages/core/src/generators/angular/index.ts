@@ -433,13 +433,37 @@ const handleBindings = (
     if (forName) {
       if (item.name === 'For') continue;
 
-      json.state[newBindingName] = {
-        code: `(${forName}${indexName ? `, ${indexName}` : ''}) => (${item.bindings[key]!.code})`,
-        type: 'function',
-      };
-      item.bindings[key]!.code = `state.${newBindingName}(${forName}${
-        indexName ? `, ${indexName}` : ''
-      })`;
+      if (key.startsWith('on')) {
+        const { arguments: cusArgs = ['event'] } = item.bindings[key]!;
+        const eventBindingName = `${generateNewBindingName(index, item.name)}_event`;
+        if (
+          item.bindings[key]?.code.trim().startsWith('{') &&
+          item.bindings[key]?.code.trim().endsWith('}')
+        ) {
+          const forAndIndex = `${forName ? `, ${forName}` : ''}${
+            indexName ? `, ${indexName}` : ''
+          }`;
+          const eventArgs = `${cusArgs.join(', ')}${forAndIndex}`;
+          json.state[eventBindingName] = {
+            code: `(${eventArgs}) => ${item.bindings[key]!.code}`,
+            type: 'function',
+          };
+          item.bindings[key]!.code = `state.${eventBindingName}(${eventArgs})`;
+          json.state[newBindingName] = {
+            code: `(${eventArgs}) => (${item.bindings[key]!.code})`,
+            type: 'function',
+          };
+          item.bindings[key]!.code = `state.${newBindingName}($${eventArgs})`;
+        }
+      } else {
+        json.state[newBindingName] = {
+          code: `(${forName}${indexName ? `, ${indexName}` : ''}) => (${item.bindings[key]!.code})`,
+          type: 'function',
+        };
+        item.bindings[key]!.code = `state.${newBindingName}(${forName}${
+          indexName ? `, ${indexName}` : ''
+        })`;
+      }
     } else if (item.bindings[key]?.code) {
       if (item.bindings[key]?.type !== 'spread' && !key.startsWith('on')) {
         json.state[newBindingName] = { code: 'null', type: 'property' };
@@ -459,7 +483,7 @@ const handleBindings = (
           item.bindings[key]?.code.trim().endsWith('}')
         ) {
           json.state[newBindingName] = {
-            code: `function (${cusArgs.join(', ')}) ${item.bindings[key]!.code}`,
+            code: `(${cusArgs.join(', ')}) => ${item.bindings[key]!.code}`,
             type: 'function',
           };
           item.bindings[key]!.code = `state.${newBindingName}(${cusArgs.join(', ')})`;
