@@ -203,12 +203,13 @@ const handleNgOutletBindings = (node: MitosisNode) => {
       allProps += `${key.replace('props.', '')}: ${code}, `;
     } else if (key.includes('state.')) {
       allProps += `${key.replace('state.', '')}: ${code}, `;
-    } else if (key.startsWith('on')) {
+    }
+    if (key.startsWith('on')) {
       const { event, value } = processEventBinding(key, code, node.name, cusArgs[0]);
       allProps += `on${event.charAt(0).toUpperCase() + event.slice(1)}: ${value.replace(
         /\(.*?\)/g,
         '',
-      )}, `;
+      )}.bind(this), `;
     } else {
       const keyToUse = key.includes('-') ? `'${key}'` : key;
       allProps += `${keyToUse}: ${code}, `;
@@ -295,6 +296,11 @@ export const blockToAngular = (
       code: `this.${inputsPropsStateName} = {${allProps}}`,
       onSSR: false,
     });
+    if (root.hooks.onUpdate && root.hooks.onUpdate.length > 0) {
+      root.hooks.onUpdate.push({
+        code: `this.${inputsPropsStateName} = {${allProps}}`,
+      });
+    }
 
     str += `<ng-container *ngComponentOutlet="
       ${elSelector.replace('state.', '').replace('props.', '')};
@@ -396,13 +402,100 @@ const processAngularCode =
 
 const isASimpleProperty = (code: string) => {
   const expressions = ['==', '===', '!=', '!==', '<', '>', '<=', '>='];
-  return (
-    !code.includes('{') &&
-    !code.includes('}') &&
-    !code.includes('(') &&
-    !code.includes(')') &&
-    !expressions.includes(code)
-  );
+  const invalidChars = ['{', '}', '(', ')', 'typeof'];
+
+  return !invalidChars.some((char) => code.includes(char)) && !expressions.includes(code);
+};
+
+const generateNewBindingName = (index: number, name: string) =>
+  `node_${index}_${name.replaceAll('.', '_').replaceAll('-', '_')}`;
+
+const handleBindings = (
+  json: MitosisComponent,
+  item: MitosisNode,
+  index: number,
+  forName?: string,
+  indexName?: string,
+) => {
+  for (const key in item.bindings) {
+    if (
+      key.startsWith('"') ||
+      key.startsWith('$') ||
+      key === 'css' ||
+      key === 'ref' ||
+      isASimpleProperty(item.bindings[key]!.code)
+    ) {
+      continue;
+    }
+
+    const newBindingName = generateNewBindingName(index, item.name);
+
+    if (forName) {
+      if (item.name === 'For') continue;
+
+      json.state[newBindingName] = {
+        code: `(${forName}${indexName ? `, ${indexName}` : ''}) => (${item.bindings[key]!.code})`,
+        type: 'function',
+      };
+      item.bindings[key]!.code = `state.${newBindingName}(${forName}${
+        indexName ? `, ${indexName}` : ''
+      })`;
+    } else if (item.bindings[key]?.code) {
+      if (item.bindings[key]?.type !== 'spread' && !key.startsWith('on')) {
+        json.state[newBindingName] = { code: 'null', type: 'property' };
+        json.hooks['onMount'].push({
+          code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
+          onSSR: false,
+        });
+        json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
+        json.hooks['onUpdate'].push({
+          code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
+        });
+        item.bindings[key]!.code = `state.${newBindingName}`;
+      } else if (key.startsWith('on')) {
+        const { arguments: cusArgs = ['event'] } = item.bindings[key]!;
+        if (
+          item.bindings[key]?.code.trim().startsWith('{') &&
+          item.bindings[key]?.code.trim().endsWith('}')
+        ) {
+          json.state[newBindingName] = {
+            code: `function (${cusArgs.join(', ')}) ${item.bindings[key]!.code}`,
+            type: 'function',
+          };
+          item.bindings[key]!.code = `state.${newBindingName}(${cusArgs.join(', ')})`;
+        }
+      } else {
+        json.state[newBindingName] = { code: `null`, type: 'property' };
+        json.hooks['onMount'].push({
+          code: `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
+          onSSR: false,
+        });
+        json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
+        json.hooks['onUpdate'].push({
+          code: `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
+        });
+        item.bindings[newBindingName] = item.bindings[key];
+        item.bindings[key]!.code = `state.${newBindingName}`;
+        delete item.bindings[key];
+      }
+    }
+    index++;
+  }
+  return index;
+};
+
+const handleProperties = (json: MitosisComponent, item: MitosisNode, index: number) => {
+  for (const key in item.properties) {
+    if (key.startsWith('$')) {
+      continue;
+    }
+    const newBindingName = generateNewBindingName(index, item.name);
+    json.state[newBindingName] = { code: '`' + `${item.properties[key]}` + '`', type: 'property' };
+    item.bindings[key] = { code: `state.${newBindingName}`, type: 'single' };
+    delete item.properties[key];
+    index++;
+  }
+  return index;
 };
 
 const handleAngularBindings = (
@@ -412,80 +505,9 @@ const handleAngularBindings = (
   { forName, indexName }: { forName?: string; indexName?: string } = {},
 ): number => {
   if (isChildren({ node: item })) return index;
-  for (const key in item.bindings) {
-    if (key.startsWith('"') || key.startsWith('$') || key === 'css' || key === 'ref') {
-      continue;
-    }
-    if (isASimpleProperty(item.bindings[key]!.code)) {
-      continue;
-    }
-    const newBindingName = `node_${index}_${item.name.replaceAll('.', '_').replaceAll('-', '_')}`;
-    if (forName) {
-      if (item.name === 'For') continue;
-      const newBindingName = `node_${index}_${item.name.replaceAll('.', '_').replaceAll('-', '_')}`;
-      if (item.bindings[key]?.code) {
-        json.state[newBindingName] = {
-          code: `(${forName ? `${forName}` : ''}${indexName ? `, ${indexName}` : ''}) => {
-            return (${item.bindings[key]!.code});
-          }`,
-          type: 'function',
-        };
-        item.bindings[key]!.code = `state.${newBindingName}(${forName}${
-          indexName ? `, ${indexName}` : ''
-        })`;
-      }
-      index++;
-    } else if (item.bindings && item.bindings[key]?.code) {
-      if (item.bindings[key]?.type !== 'spread' && !key.startsWith('on')) {
-        json.state[newBindingName] = {
-          code: 'null',
-          type: 'property',
-        };
-        json.hooks['onMount'].push({
-          code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
-          onSSR: false,
-        });
-        item.bindings[key]!.code = `state.${newBindingName}`;
-      } else if (key.startsWith('on')) {
-        const { arguments: cusArgs = ['event'] } = item.bindings[key]!;
-        json.state[newBindingName] = {
-          code: `(${cusArgs?.join(', ')}) => ${item.bindings[key]!.code}`,
-          type: 'function',
-        };
-        item.bindings[key]!.code = `state.${newBindingName}(${cusArgs?.join(', ')})`;
-      } else {
-        json.state[newBindingName] = {
-          code: `null`,
-          type: 'property',
-        };
-        json.hooks['onMount'].push({
-          code: `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
-          onSSR: false,
-        });
-        item.bindings[newBindingName] = item.bindings[key];
-        item.bindings[key]!.code = `state.${newBindingName}`;
-        delete item.bindings[key];
-      }
-    }
-    index++;
 
-    for (const key in item.properties) {
-      if (key.startsWith('$')) {
-        continue;
-      }
-      const newBindingName = `node_${index}_${item.name.replaceAll('.', '_').replaceAll('-', '_')}`;
-      json.state[newBindingName] = {
-        code: '`' + `${item.properties[key]}` + '`',
-        type: 'property',
-      };
-      item.bindings[key] = {
-        code: `state.${newBindingName}`,
-        type: 'single',
-      };
-      delete item.properties[key];
-      index++;
-    }
-  }
+  index = handleBindings(json, item, index, forName, indexName);
+  index = handleProperties(json, item, index);
 
   return index;
 };
