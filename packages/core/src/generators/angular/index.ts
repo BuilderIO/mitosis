@@ -54,12 +54,12 @@ const mappers: {
 } = {
   Fragment: (root, json, options) => {
     return `<ng-container>${json.children
-      .map((item) => blockToAngular(root, item, options))
+      .map((item) => blockToAngular({ root, json: item, options }))
       .join('\n')}</ng-container>`;
   },
   Slot: (root, json, options) => {
     const renderChildren = () =>
-      json.children?.map((item) => blockToAngular(root, item, options)).join('\n');
+      json.children?.map((item) => blockToAngular({ root, json: item, options })).join('\n');
 
     return `<ng-content ${Object.entries({ ...json.bindings, ...json.properties })
       .map(([binding, value]) => {
@@ -228,14 +228,19 @@ const handleNgOutletBindings = (node: MitosisNode) => {
   return allProps;
 };
 
-export const blockToAngular = (
-  root: MitosisComponent,
-  json: MitosisNode,
-  options: ToAngularOptions = {},
-  blockOptions: AngularBlockOptions = {
+export const blockToAngular = ({
+  root,
+  json,
+  options = {},
+  blockOptions = {
     nativeAttributes: [],
   },
-): string => {
+}: {
+  root: MitosisComponent;
+  json: MitosisNode;
+  options?: ToAngularOptions;
+  blockOptions?: AngularBlockOptions;
+}): string => {
   const childComponents = blockOptions?.childComponents || [];
 
   if (mappers[json.name]) {
@@ -266,20 +271,20 @@ export const blockToAngular = (
       indexName ? `; let ${indexName} = index` : ''
     }">`;
     str += json.children
-      .map((item) => blockToAngular(root, item, options, blockOptions))
+      .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
       .join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
     const condition = json.bindings.when?.code;
     str += `<ng-container *ngIf="${condition}">`;
     str += json.children
-      .map((item) => blockToAngular(root, item, options, blockOptions))
+      .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
       .join('\n');
     str += `</ng-container>`;
     // else condition
     if (isMitosisNode(json.meta?.else)) {
       str += `<ng-container *ngIf="!(${condition})">`;
-      str += blockToAngular(root, json.meta.else, options, blockOptions);
+      str += blockToAngular({ root, json: json.meta.else, options, blockOptions });
       str += `</ng-container>`;
     }
   } else if (json.name.includes('.')) {
@@ -357,7 +362,7 @@ export const blockToAngular = (
 
     if (json.children) {
       str += json.children
-        .map((item) => blockToAngular(root, item, options, blockOptions))
+        .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
         .join('\n');
     }
 
@@ -376,7 +381,7 @@ const traverseToGetAllDynamicComponents = (
   traverse(json).forEach((item) => {
     if (isMitosisNode(item) && item.name.includes('.') && item.name.split('.').length === 2) {
       const children = item.children
-        .map((child) => blockToAngular(json, child, options, blockOptions))
+        .map((child) => blockToAngular({ root: json, json: child, options, blockOptions }))
         .join('\n');
       dynamicTemplate = `<ng-template #${
         item.name.split('.')[1].toLowerCase() + 'Template'
@@ -722,9 +727,14 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     let template = json.children
       .map((item) => {
-        return blockToAngular(json, item, options, {
-          childComponents,
-          nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
+        return blockToAngular({
+          root: json,
+          json: item,
+          options,
+          blockOptions: {
+            childComponents,
+            nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
+          },
         });
       })
       .join('\n');
