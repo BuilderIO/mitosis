@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.3
+
+### Patch Changes
+
+- 027e9cc: Feature: Add metadata to component mappers in Builder generator
+
 ## 0.3.2
 
 ### Patch Changes
