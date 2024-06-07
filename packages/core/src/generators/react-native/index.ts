@@ -126,7 +126,14 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
               node.name = 'TextInput';
             } else if (node.bindings.onClick) {
               node.name = 'Pressable';
-            } else {
+            }else if (node.name === 'img') { 
+              node.name = 'Image';
+            } else if (node.name === 'a') { 
+              node.name = 'TouchableOpacity'
+            } else if (node.name === 'button') { 
+              node.name = 'Button';
+            }
+            else {
               node.name = 'View';
             }
           } else if (

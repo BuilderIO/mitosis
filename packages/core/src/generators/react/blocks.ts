@@ -163,6 +163,11 @@ export const blockToReact = (
     return NODE_MAPPERS[json.name](json, options, component, parentSlots);
   }
 
+  if( options.type === 'native' && json.name === 'img'){
+    const isURLImage = json.properties.src?.includes('https');
+    const src = isURLImage ? `{uri:json.properties.src}` : `{uri:"require(json.properties.src)"}`;
+    return `<Image soruce={${src}} />`;
+  }
   if (json.properties._text) {
     const text = json.properties._text;
     if (options.type === 'native' && text.trim().length) {
