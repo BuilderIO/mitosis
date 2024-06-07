@@ -706,7 +706,7 @@ export const builderElementToMitosisNode = (
     slots: {
       ...slots,
     },
-    meta: getMetaFromBlock(block, options)
+    meta: getMetaFromBlock(block, options),
   });
 
   // Has single text node child
@@ -763,12 +763,13 @@ const getBuilderPropsForSymbol = (
 
 export const getMetaFromBlock = (block: BuilderElement, options: BuilderToMitosisOptions) => {
   const { includeMeta = false } = options;
-  return includeMeta ? {
-      'builder-id': block.id,
-      ...block.meta,
-    }
-  : {};
-}
+  return includeMeta
+    ? {
+        'builder-id': block.id,
+        ...block.meta,
+      }
+    : {};
+};
 
 const getHooks = (content: BuilderContent) => {
   const code = convertExportDefaultToReturn(content.data?.tsCode || content.data?.jsCode || '');
