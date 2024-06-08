@@ -163,8 +163,10 @@ export const blockToReact = (
     return NODE_MAPPERS[json.name](json, options, component, parentSlots);
   }
 
-  if( options.type === 'native' && json.name === 'Image'){
-    const isUrl = json.properties.src ? /^(http|https):\/\/[^ "]+$/.test(json.properties.src):false;
+  if (options.type === 'native' && json.name === 'Image') {
+    const isUrl = json.properties.src
+      ? /^(http|https):\/\/[^ "]+$/.test(json.properties.src)
+      : false;
     let source;
     if (isUrl) {
       source = `{ uri: '${json.properties.src}' }`;
@@ -173,7 +175,7 @@ export const blockToReact = (
     }
     return `<Image source={${source}} />`;
   }
-  if(options.type === 'native' && json.name === 'TouchableOpacity' ) { 
+  if (options.type === 'native' && json.name === 'TouchableOpacity') {
     let onPress;
     if (json.properties.href) {
       onPress = `() => Linking.openURL('${json.properties.href}')`;
@@ -182,15 +184,15 @@ export const blockToReact = (
     } else {
       onPress = `() => {}`;
     }
-   const childrenNodes:string = json.children
-    .map((item) => blockToReact(item, options, component, needsToRenderSlots))
-    .join('');
-    if(childrenNodes) { 
+    const childrenNodes: string = json.children
+      .map((item) => blockToReact(item, options, component, needsToRenderSlots))
+      .join('');
+    if (childrenNodes) {
       return `<TouchableOpacity onPress={${onPress}}>
       ${childrenNodes}
     </TouchableOpacity>`;
     }
-    return `<TouchableOpacity onPress={${onPress}}/> `
+    return `<TouchableOpacity onPress={${onPress}}/> `;
   }
   if (json.properties._text) {
     const text = json.properties._text;

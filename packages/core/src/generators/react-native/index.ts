@@ -124,14 +124,13 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           } else if (node.name.toLowerCase() === node.name && VALID_HTML_TAGS.includes(node.name)) {
             if (node.name === 'input') {
               node.name = 'TextInput';
-            } else if (node.name === 'img') { 
+            } else if (node.name === 'img') {
               node.name = 'Image';
-            } else if (node.name === 'a') { 
-              node.name = 'TouchableOpacity'
-            } else if (node.name === 'button') { 
+            } else if (node.name === 'a') {
+              node.name = 'TouchableOpacity';
+            } else if (node.name === 'button') {
               node.name = 'Button';
-            }
-            else {
+            } else {
               node.name = 'View';
             }
           } else if (
