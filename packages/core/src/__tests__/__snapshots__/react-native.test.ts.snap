@@ -513,9 +513,9 @@ function MyBasicRefAssignmentComponent(props) {
 
   return (
     <View>
-      <Pressable onPress={(evt) => handlerClick(evt)}>
+      <Button onPress={(evt) => handlerClick(evt)}>
         <Text>Click</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -570,9 +570,9 @@ function MyPreviousComponent(props) {
         <Text>, before: </Text>
         <Text>{prevCount.current}</Text>
       </View>
-      <Pressable onPress={(event) => setCount(1)}>
+      <Button onPress={(event) => setCount(1)}>
         <Text>Increment</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -744,7 +744,7 @@ function ContentSlotJsxCode(props) {
     <>
       {props.slotReference ? (
         <>
-          <Pressable
+          <View
             name={props.slotContent ? \\"name1\\" : \\"name2\\"}
             title={props.slotContent ? \\"title1\\" : \\"title2\\"}
             {...props.attributes}
@@ -757,7 +757,7 @@ function ContentSlotJsxCode(props) {
               <View />
             </View>
             <View>{props.children}</View>
-          </Pressable>
+          </View>
         </>
       ) : null}
     </>
@@ -1265,15 +1265,7 @@ function Image(props) {
     <View>
       <View ref={pictureRef}>
         {!useLazyLoading() || load ? (
-          <Image
-            alt={props.altText}
-            aria-role={props.altText ? \\"presentation\\" : undefined}
-            src={props.image}
-            onLoad={(event) => setLoaded()}
-            srcset={props.srcset}
-            sizes={props.sizes}
-            style={styles.image1}
-          />
+          <Image source={require(\\"undefined\\")} />
         ) : null}
         <View srcset={props.srcset} />
       </View>
@@ -1319,7 +1311,7 @@ function ImgStateComponent(props) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <Image src={item} key={itemIndex} />
+        <Image source={require(\\"undefined\\")} />
       ))}
     </View>
   );
@@ -1346,18 +1338,7 @@ import {
 import { Builder } from \\"@builder.io/sdk\\";
 
 function ImgComponent(props) {
-  return (
-    <Image
-      style={{
-        objectFit: props.backgroundSize || \\"cover\\",
-        objectPosition: props.backgroundPosition || \\"center\\",
-      }}
-      {...props.attributes}
-      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
-      alt={props.altText}
-      src={props.imgSrc}
-    />
-  );
+  return <Image source={require(\\"undefined\\")} />;
 }
 
 export default ImgComponent;
@@ -1704,27 +1685,27 @@ function SmileReviews(props) {
 
   return (
     <View data-user={name}>
-      <Pressable onPress={(event) => setShowReviewPrompt(true)}>
+      <Button onPress={(event) => setShowReviewPrompt(true)}>
         <Text>Write a review</Text>
-      </Pressable>
+      </Button>
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <TextInput placeholder=\\"Email\\" />
           <TextInput placeholder=\\"Title\\" />
           <View placeholder=\\"How was your experience?\\" />
-          <Pressable
+          <Button
             onPress={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
             }}
           >
             <Text>Submit</Text>
-          </Pressable>
+          </Button>
         </>
       ) : null}
       {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
-          <Image src={review.avatar} style={styles.image1} />
+          <Image source={require(\\"undefined\\")} />
           <View>
             <View>
               <Text>N: </Text>
@@ -2442,13 +2423,13 @@ function Button(props) {
         </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <Pressable
+        <Button
           type=\\"button\\"
           {...props.attributes}
           onPress={(event) => props.onClick(event)}
         >
           <Text>{props.buttonText}</Text>
-        </Pressable>
+        </Button>
       ) : null}
     </View>
   );
@@ -2495,13 +2476,13 @@ function Button(props) {
         </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <Pressable
+        <Button
           type=\\"button\\"
           {...props.attributes}
           onPress={(event) => props.onClick(event)}
         >
           <Text>{props.text}</Text>
-        </Pressable>
+        </Button>
       ) : null}
     </View>
   );
@@ -2908,9 +2889,9 @@ import {
 function MyComponent(props) {
   return (
     <View>
-      <Pressable onPress={(e) => console.log(\\"event\\")}>
+      <Button onPress={(e) => console.log(\\"event\\")}>
         <Text>Hello</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -3344,7 +3325,7 @@ function MyComponent(props) {
         style={styles.textInput1}
       />
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-      <Image />
+      <Image source={require(\\"undefined\\")} />
     </View>
   );
 }
@@ -3711,18 +3692,18 @@ function RenderContent(props) {
         },
       }}
     >
-      <Pressable
+      <View
         onPress={(event) => trackClick(props.content.id)}
-        style={styles.pressable1}
+        style={styles.view1}
       >
         <RenderBlocks blocks={props.content.blocks} />
-      </Pressable>
+      </View>
     </BuilderContext.Provider>
   );
 }
 
 const styles = StyleSheet.create({
-  pressable1: { display: \\"flex\\", flexDirection: \\"columns\\" },
+  view1: { display: \\"flex\\", flexDirection: \\"columns\\" },
 });
 
 export default RenderContent;
@@ -4937,9 +4918,9 @@ function MyBasicRefAssignmentComponent(props: Props) {
 
   return (
     <View>
-      <Pressable onPress={(evt) => handlerClick(evt)}>
+      <Button onPress={(evt) => handlerClick(evt)}>
         <Text>Click</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -4998,9 +4979,9 @@ function MyPreviousComponent(props: Props) {
         <Text>, before: </Text>
         <Text>{prevCount.current}</Text>
       </View>
-      <Pressable onPress={(event) => setCount(1)}>
+      <Button onPress={(event) => setCount(1)}>
         <Text>Increment</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -5205,7 +5186,7 @@ function ContentSlotJsxCode(props: Props) {
     <>
       {props.slotReference ? (
         <>
-          <Pressable
+          <View
             name={props.slotContent ? \\"name1\\" : \\"name2\\"}
             title={props.slotContent ? \\"title1\\" : \\"title2\\"}
             {...props.attributes}
@@ -5218,7 +5199,7 @@ function ContentSlotJsxCode(props: Props) {
               <View />
             </View>
             <View>{props.children}</View>
-          </Pressable>
+          </View>
         </>
       ) : null}
     </>
@@ -5786,15 +5767,7 @@ function Image(props: ImageProps) {
     <View>
       <View ref={pictureRef}>
         {!useLazyLoading() || load ? (
-          <Image
-            alt={props.altText}
-            aria-role={props.altText ? \\"presentation\\" : undefined}
-            src={props.image}
-            onLoad={(event) => setLoaded()}
-            srcset={props.srcset}
-            sizes={props.sizes}
-            style={styles.image1}
-          />
+          <Image source={require(\\"undefined\\")} />
         ) : null}
         <View srcset={props.srcset} />
       </View>
@@ -5840,7 +5813,7 @@ function ImgStateComponent(props: any) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <Image src={item} key={itemIndex} />
+        <Image source={require(\\"undefined\\")} />
       ))}
     </View>
   );
@@ -5885,18 +5858,7 @@ export interface ImgProps {
 import { Builder } from \\"@builder.io/sdk\\";
 
 function ImgComponent(props: ImgProps) {
-  return (
-    <Image
-      style={{
-        objectFit: props.backgroundSize || \\"cover\\",
-        objectPosition: props.backgroundPosition || \\"center\\",
-      }}
-      {...props.attributes}
-      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
-      alt={props.altText}
-      src={props.imgSrc}
-    />
-  );
+  return <Image source={require(\\"undefined\\")} />;
 }
 
 export default ImgComponent;
@@ -6299,27 +6261,27 @@ function SmileReviews(props: SmileReviewsProps) {
 
   return (
     <View data-user={name}>
-      <Pressable onPress={(event) => setShowReviewPrompt(true)}>
+      <Button onPress={(event) => setShowReviewPrompt(true)}>
         <Text>Write a review</Text>
-      </Pressable>
+      </Button>
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <TextInput placeholder=\\"Email\\" />
           <TextInput placeholder=\\"Title\\" />
           <View placeholder=\\"How was your experience?\\" />
-          <Pressable
+          <Button
             onPress={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
             }}
           >
             <Text>Submit</Text>
-          </Pressable>
+          </Button>
         </>
       ) : null}
       {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
-          <Image src={review.avatar} style={styles.image1} />
+          <Image source={require(\\"undefined\\")} />
           <View>
             <View>
               <Text>N: </Text>
@@ -7121,13 +7083,13 @@ function Button(props: ButtonProps) {
         </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <Pressable
+        <Button
           type=\\"button\\"
           {...props.attributes}
           onPress={(event) => props.onClick(event)}
         >
           <Text>{props.buttonText}</Text>
-        </Pressable>
+        </Button>
       ) : null}
     </View>
   );
@@ -7182,13 +7144,13 @@ function Button(props: ButtonProps) {
         </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <Pressable
+        <Button
           type=\\"button\\"
           {...props.attributes}
           onPress={(event) => props.onClick(event)}
         >
           <Text>{props.text}</Text>
-        </Pressable>
+        </Button>
       ) : null}
     </View>
   );
@@ -7615,9 +7577,9 @@ import {
 function MyComponent(props: any) {
   return (
     <View>
-      <Pressable onPress={(e) => console.log(\\"event\\")}>
+      <Button onPress={(e) => console.log(\\"event\\")}>
         <Text>Hello</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -8097,7 +8059,7 @@ function MyComponent(props: any) {
         style={styles.textInput1}
       />
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-      <Image />
+      <Image source={require(\\"undefined\\")} />
     </View>
   );
 }
@@ -8485,18 +8447,18 @@ function RenderContent(props: Props) {
         },
       }}
     >
-      <Pressable
+      <View
         onPress={(event) => trackClick(props.content.id)}
-        style={styles.pressable1}
+        style={styles.view1}
       >
         <RenderBlocks blocks={props.content.blocks} />
-      </Pressable>
+      </View>
     </BuilderContext.Provider>
   );
 }
 
 const styles = StyleSheet.create({
-  pressable1: { display: \\"flex\\", flexDirection: \\"columns\\" },
+  view1: { display: \\"flex\\", flexDirection: \\"columns\\" },
 });
 
 export default RenderContent;
@@ -9414,15 +9376,15 @@ function MyComponent(props) {
 
   return (
     <View>
-      <Pressable onPress={(a) => log(\\"hi\\")}>
+      <Button onPress={(a) => log(\\"hi\\")}>
         <Text>Log</Text>
-      </Pressable>
-      <Pressable onPress={(event) => log(event)}>
+      </Button>
+      <Button onPress={(event) => log(event)}>
         <Text>Log</Text>
-      </Pressable>
-      <Pressable onPress={(event) => log(event)}>
+      </Button>
+      <Button onPress={(event) => log(event)}>
         <Text>Log</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -9484,14 +9446,14 @@ function MyComponent(props) {
     <>
       {show ? (
         <>
-          <Pressable onPress={(event) => toggle(event)}>
+          <Button onPress={(event) => toggle(event)}>
             <Text> Hide </Text>
-          </Pressable>
+          </Button>
         </>
       ) : (
-        <Pressable onPress={(event) => toggle(event)}>
+        <Button onPress={(event) => toggle(event)}>
           <Text> Show </Text>
-        </Pressable>
+        </Button>
       )}
     </>
   );
@@ -9994,15 +9956,15 @@ function MyComponent(props: any) {
 
   return (
     <View>
-      <Pressable onPress={(a) => log(\\"hi\\")}>
+      <Button onPress={(a) => log(\\"hi\\")}>
         <Text>Log</Text>
-      </Pressable>
-      <Pressable onPress={(event) => log(event)}>
+      </Button>
+      <Button onPress={(event) => log(event)}>
         <Text>Log</Text>
-      </Pressable>
-      <Pressable onPress={(event) => log(event)}>
+      </Button>
+      <Button onPress={(event) => log(event)}>
         <Text>Log</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -10064,14 +10026,14 @@ function MyComponent(props: any) {
     <>
       {show ? (
         <>
-          <Pressable onPress={(event) => toggle(event)}>
+          <Button onPress={(event) => toggle(event)}>
             <Text> Hide </Text>
-          </Pressable>
+          </Button>
         </>
       ) : (
-        <Pressable onPress={(event) => toggle(event)}>
+        <Button onPress={(event) => toggle(event)}>
           <Text> Show </Text>
-        </Pressable>
+        </Button>
       )}
     </>
   );

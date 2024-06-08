@@ -163,10 +163,15 @@ export const blockToReact = (
     return NODE_MAPPERS[json.name](json, options, component, parentSlots);
   }
 
-  if( options.type === 'native' && json.name === 'img'){
-    const isURLImage = json.properties.src?.includes('https');
-    const src = isURLImage ? `{uri:json.properties.src}` : `{uri:"require(json.properties.src)"}`;
-    return `<Image soruce={${src}} />`;
+  if( options.type === 'native' && json.name === 'Image'){
+    const isUrl = json.properties.src ? /^(http|https):\/\/[^ "]+$/.test(json.properties.src):false;
+    let source;
+    if (isUrl) {
+      source = `{ uri: '${json.properties.src}' }`;
+    } else {
+      source = `require('${json.properties.src}')`;
+    }
+    return `<Image source={${source}} />`;
   }
   if (json.properties._text) {
     const text = json.properties._text;
@@ -175,6 +180,7 @@ export const blockToReact = (
     }
     return text;
   }
+  
   if (json.bindings._text?.code) {
     const processed = processBinding(json.bindings._text.code, options);
     if (
