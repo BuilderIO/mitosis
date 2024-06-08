@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.3.3
+
+### Patch Changes
+
+- 027e9cc: Feature: Add metadata to component mappers in Builder generator
+
+## 0.3.2
+
+### Patch Changes
+
+- 78f6a64: Misc: remove unused dependencies.
+
+## 0.3.1
+
+### Patch Changes
+
+- c8b7883: Fix: parse slots into `MitosisNode` `slots` property.
+
 ## 0.3.0
 
 ### Minor Changes

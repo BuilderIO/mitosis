@@ -1,5 +1,27 @@
 # @builder.io/mitosis-cli
 
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies [027e9cc]
+  - @builder.io/mitosis@0.3.3
+
+## 0.3.2
+
+### Patch Changes
+
+- 78f6a64: Misc: remove unused dependencies.
+- Updated dependencies [78f6a64]
+  - @builder.io/mitosis@0.3.2
+
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [c8b7883]
+  - @builder.io/mitosis@0.3.1
+
 ## 0.3.0
 
 ### Patch Changes
