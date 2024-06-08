@@ -120,7 +120,6 @@ const rootFragmentMultiNode = getRawFile('./data/blocks/root-fragment-multi-node
 const renderContentExample = getRawFile('./data/render-content.raw.tsx');
 const onClickToPressable = getRawFile('./data/react-native/onclick-to-pressable.raw.tsx');
 const inputToTextInputRN = getRawFile('./data/react-native/text-input.raw.tsx');
-const reactNativeTest = getRawFile('./data/react-native/react-native-full-test.raw.tsx')
 type Tests = { [index: string]: RawFile };
 
 const SVELTE_SYNTAX_TESTS: Tests = {
@@ -145,7 +144,7 @@ const SVELTE_SYNTAX_TESTS: Tests = {
 const REACT_NATIVE_TESTS: Tests = {
   onClickToPressable,
   inputToTextInputRN,
-  reactNativeTest,
+
 };
 
 const BASIC_TESTS: Tests = {
