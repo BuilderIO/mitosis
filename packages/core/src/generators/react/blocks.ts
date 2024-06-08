@@ -173,6 +173,25 @@ export const blockToReact = (
     }
     return `<Image source={${source}} />`;
   }
+  if(options.type === 'native' && json.name === 'TouchableOpacity' ) { 
+    let onPress;
+    if (json.properties.href) {
+      onPress = `() => Linking.openURL('${json.properties.href}')`;
+    } else if (json.properties.onClick) {
+      onPress = `() => ${json.properties.onClick}`;
+    } else {
+      onPress = `() => {}`;
+    }
+   const childrenNodes:string = json.children
+    .map((item) => blockToReact(item, options, component, needsToRenderSlots))
+    .join('');
+    if(childrenNodes) { 
+      return `<TouchableOpacity onPress={${onPress}}>
+      ${childrenNodes}
+    </TouchableOpacity>`;
+    }
+    return `<TouchableOpacity onPress={${onPress}}/> `
+  }
   if (json.properties._text) {
     const text = json.properties._text;
     if (options.type === 'native' && text.trim().length) {
@@ -180,7 +199,7 @@ export const blockToReact = (
     }
     return text;
   }
-  
+
   if (json.bindings._text?.code) {
     const processed = processBinding(json.bindings._text.code, options);
     if (
