@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.4
+
+### Patch Changes
+
+- 42287fe: chore: Fix typo in CSS property name of Builder compiled-away `Image` component.
+
 ## 0.3.3
 
 ### Patch Changes
