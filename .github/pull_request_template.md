@@ -10,5 +10,6 @@ Please provide the following information:
 
 Make sure to follow the PR preparation steps in [CONTRIBUTING.md](../CONTRIBUTING.md#preparing-your-pr) before submitting your PR:
 
-- [ ] Format the codebase
-- [ ] Update all snapshots
+- [ ] format the codebase: from the root, run `yarn fmt:prettier`.
+- [ ] update all snapshots (in core & CLI): from the root, run `yarn test:update`
+- [ ] add Changeset entry: from the root, run `yarn g:changeset` and follow the CLI instructions. Alternatively, use the Changeset Github Bot to create the file.
