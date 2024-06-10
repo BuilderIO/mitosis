@@ -208,10 +208,10 @@ const processEventBinding = (key: string, code: string, nodeName: string, custom
 const stringifyBinding =
   (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
-    if (key.startsWith('$') || key.startsWith('"')) {
+    if (options.state === 'inline-with-wrappers' && binding?.type === 'spread') {
       return;
     }
-    if (key === 'key') {
+    if (key.startsWith('$') || key.startsWith('"') || key === 'key') {
       return;
     }
     const keyToUse = BINDINGS_MAPPER[key] || key;
@@ -269,11 +269,9 @@ const handleNgOutletBindings = (node: MitosisNode, options: ToAngularOptions) =>
       }
     }
 
-    if (key.includes('props.')) {
-      allProps += `${key.replace('props.', '')}: ${code}, `;
-    } else if (key.includes('state.')) {
-      allProps += `${key.replace('state.', '')}: ${code}, `;
-    }
+    let keyToUse = key.includes('-') ? `'${key}'` : key;
+    keyToUse = keyToUse.replace('state.', '').replace('props.', '');
+
     if (key.startsWith('on')) {
       const { event, value } = processEventBinding(key, code, node.name, cusArgs[0]);
       allProps += `on${event.charAt(0).toUpperCase() + event.slice(1)}: ${value.replace(
@@ -281,7 +279,6 @@ const handleNgOutletBindings = (node: MitosisNode, options: ToAngularOptions) =>
         '',
       )}.bind(this), `;
     } else {
-      const keyToUse = key.includes('-') ? `'${key}'` : key;
       const codeToUse =
         options.state === 'inline-with-wrappers' ? processCodeBlockInTemplate(code) : code;
       allProps += `${keyToUse}: ${codeToUse}, `;
