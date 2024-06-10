@@ -173,7 +173,7 @@ const processCodeBlockInTemplate = (code: string) => {
     let stripped = code.replace('Object.values', '');
     return `useObjectDotValues${stripped}`;
   } else if (code.includes('JSON.stringify')) {
-    let obj = code.match(/JSON.stringify\([^)]*\)/g);
+    let obj = code.match(/JSON.stringify\((.*)\)/);
     return `useJsonStringify(${obj})`;
   } else if (code.includes(' as ')) {
     const asIndex = code.indexOf('as');
@@ -329,6 +329,11 @@ export const blockToAngular = ({
   if (textCode) {
     if (isSlotProperty(textCode)) {
       return `<ng-content select="[${toKebabSlot(textCode)}]"></ng-content>`;
+    }
+
+    if (textCode.includes('JSON.stringify')) {
+      const obj = textCode.replace(/JSON.stringify\(\s*(\w+)\s*,?.*\)/, '$1');
+      return `{{${obj} | json}}`;
     }
 
     return `{{${textCode}}}`;
@@ -814,7 +819,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     let template = json.children
       .map((item) => {
-        return blockToAngular({
+        const tmpl = blockToAngular({
           root: json,
           json: item,
           options,
@@ -823,14 +828,14 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
           },
         });
+        if (options.state === 'inline-with-wrappers') {
+          getAppropriateTemplateFunctionKeys(tmpl).forEach((key) =>
+            helperFunctions.add(HELPER_FUNCTIONS(options.typescript)[key]),
+          );
+        }
+        return tmpl;
       })
       .join('\n');
-
-    if (options.state === 'inline-with-wrappers') {
-      getAppropriateTemplateFunctionKeys(template).forEach((key) =>
-        helperFunctions.add(HELPER_FUNCTIONS[key]),
-      );
-    }
 
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
