@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.5
+
+### Patch Changes
+
+- 14a9a90: Feat: Angular generator: add `state` config with options `'class-properties'` (new, puts all template code in class properties) and `'inline-with-wrappers'` (existing default, wraps problematic JS expressions within template)
+
 ## 0.3.4
 
 ### Patch Changes
