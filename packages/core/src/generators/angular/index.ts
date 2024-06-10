@@ -367,39 +367,44 @@ export const blockToAngular = ({
       ? kebabCase(json.name)
       : json.name;
 
-    const allProps = handleNgOutletBindings(json, options);
-    const inputsPropsStateName = `mergedInputs_${hashCodeAsString(allProps)}`;
-    root.state[inputsPropsStateName] = {
-      code: 'null',
-      type: 'property',
-    };
-    if (
-      !root.hooks.onMount
-        .map((hook) => hook.code)
-        .join('')
-        .includes(inputsPropsStateName)
-    ) {
-      root.hooks.onMount.push({
-        code: `this.${inputsPropsStateName} = {${allProps}}`,
-        onSSR: false,
-      });
-    }
-    if (
-      root.hooks.onUpdate &&
-      root.hooks.onUpdate.length > 0 &&
-      !root.hooks.onUpdate
-        .map((hook) => hook.code)
-        .join('')
-        .includes(inputsPropsStateName)
-    ) {
-      root.hooks.onUpdate.push({
-        code: `this.${inputsPropsStateName} = {${allProps}}`,
-      });
+    let allProps = handleNgOutletBindings(json, options);
+    if (options.state === 'class-properties') {
+      const inputsPropsStateName = `mergedInputs_${hashCodeAsString(allProps)}`;
+      root.state[inputsPropsStateName] = {
+        code: 'null',
+        type: 'property',
+      };
+      if (
+        !root.hooks.onMount
+          .map((hook) => hook.code)
+          .join('')
+          .includes(inputsPropsStateName)
+      ) {
+        root.hooks.onMount.push({
+          code: `this.${inputsPropsStateName} = {${allProps}}`,
+          onSSR: false,
+        });
+      }
+      if (
+        root.hooks.onUpdate &&
+        root.hooks.onUpdate.length > 0 &&
+        !root.hooks.onUpdate
+          .map((hook) => hook.code)
+          .join('')
+          .includes(inputsPropsStateName)
+      ) {
+        root.hooks.onUpdate.push({
+          code: `this.${inputsPropsStateName} = {${allProps}}`,
+        });
+      }
+      allProps = `${inputsPropsStateName}`;
+    } else {
+      allProps = `{ ${allProps} }`;
     }
 
     str += `<ng-container *ngComponentOutlet="
       ${elSelector.replace('state.', '').replace('props.', '')};
-      inputs: ${inputsPropsStateName};
+      inputs: ${allProps};
       content: myContent;
       ">  `;
 

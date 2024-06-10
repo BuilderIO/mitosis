@@ -2393,7 +2393,7 @@ import {
     <ng-container
       *ngComponentOutlet=\\"
               TagNameGetter;
-              inputs: mergedInputs_0;
+              inputs: {  };
               content: myContent;
               \\"
     ></ng-container>
@@ -2423,13 +2423,10 @@ export default class MyBasicForNoTagRefComponent {
   get TagNameGetter() {
     return \\"span\\";
   }
-  mergedInputs_0 = null;
 
   constructor(private vcRef) {}
 
   ngOnInit() {
-    this.mergedInputs_0 = {};
-
     this.myContent = [
       this.vcRef.createEmbeddedView(this.tagnamegetterTemplateRef).rootNodes,
       this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes,
@@ -3060,163 +3057,113 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > dynamicCompo
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import {   Component , Input  } from '@angular/core';
+import { Component, Input } from \\"@angular/core\\";
 
-
-
-
-
-
-
-
-
-
-   @Component({
-     selector: 'my-component, MyComponent',template: \`
-
-        <ng-container
-          *ngComponentOutlet=\\"
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container
+      *ngComponentOutlet=\\"
               obj.Component;
-              inputs: mergedInputs_kck5vh;
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, props.attributes: attributes, something: something, props.something: something };
               content: myContent;
               \\"
-        ></ng-container>
+    ></ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() attributes;
+  @Input() something;
 
-        \`,styles: [\`:host { display: contents; }\`]
-   })
-   export default class MyComponent {
-
-
-
-     @Input() attributes
-@Input() something
-
-
-
-
-
-
-
-
-
-      obj= {
- name: 'foo',
- Component: FooComponent
+  obj = {
+    name: \\"foo\\",
+    Component: FooComponent,
+  };
+  onClick = function onClick() {
+    console.log(\\"hello\\");
+  };
 }
-onClick = function onClick() {
- console.log('hello');
-}
-mergedInputs_kck5vh= null
-
-
-
-
-
-
-
-     ngOnInit() {
-             this.mergedInputs_kck5vh = {hello: 'world', onClick: onClick.bind(this), attributes: attributes, props.attributes: attributes, something: something, props.something: something}
-
-           }
-
-
-
-
-
-   }
 
 @NgModule({
   declarations: [MyComponent],
   imports: [CommonModule],
   exports: [MyComponent],
-  bootstrap: [SomeOtherComponent]
+  bootstrap: [SomeOtherComponent],
 })
-export class MyComponentModule {}"
+export class MyComponentModule {}
+"
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > dynamicComponentWithEventArg 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import {   Component , ViewChild, ElementRef, Input , ViewContainerRef, TemplateRef } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
-
-
-
-
-
-
-
-
-
-   @Component({
-     selector: 'my-component, MyComponent',template: \`
-        <ng-template #componentTemplate>
-              hello
-            </ng-template>
-        <ng-container
-          *ngComponentOutlet=\\"
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
               Component;
-              inputs: mergedInputs_kck5vh;
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, props.attributes: attributes, something: something, props.something: something };
               content: myContent;
               \\"
-        ></ng-container>
+    ></ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() attributes;
+  @Input() something;
 
-        \`,styles: [\`:host { display: contents; }\`]
-   })
-   export default class MyComponent {
+  @ViewChild(\\"componentTemplate\\", { static: true }) componentTemplateRef;
 
+  myContent;
 
+  Component = HelloComponent;
+  onClick = function onClick(event) {
+    console.log(\\"hello\\", event);
+  };
 
-     @Input() attributes
-@Input() something
+  constructor(private vcRef) {}
 
-
-
-
-
-     @ViewChild('componentTemplate', { static: true }) componentTemplateRef
-
-     myContent
-
-      Component= HelloComponent
-onClick = function onClick(event) {
- console.log('hello', event);
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
 }
-mergedInputs_kck5vh= null
-
-
-
-
-
-
-     constructor(
-
-private vcRef,
-) {
-
-         }
-
-     ngOnInit() {
-             this.mergedInputs_kck5vh = {hello: 'world', onClick: onClick.bind(this), attributes: attributes, props.attributes: attributes, something: something, props.something: something}
-
-             this.myContent = [this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes];
-
-           }
-
-
-
-
-
-   }
 
 @NgModule({
   declarations: [MyComponent],
   imports: [CommonModule],
   exports: [MyComponent],
-  bootstrap: [SomeOtherComponent]
+  bootstrap: [SomeOtherComponent],
 })
-export class MyComponentModule {}"
+export class MyComponentModule {}
+"
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > expressionState 1`] = `
@@ -4190,297 +4137,289 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > renderBlock 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import {   Component , ViewChild, ElementRef, Input , ViewContainerRef, TemplateRef } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
+import { TARGET } from \\"../../constants/target.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
+import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
+import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
+import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStylesModule } from \\"../../functions/get-react-native-block-styles.js\\";
+import BlockStylesModule from \\"./block-styles.lite/angular\\";
+import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import RenderComponent from \\"./render-component.lite\\";
+import RenderRepeatedBlockModule from \\"./render-repeated-block.lite/angular\\";
 
-
-
-
-   import { TARGET } from '../../constants/target.js';
-import { evaluate } from '../../functions/evaluate.js';
-import { extractTextStyles } from '../../functions/extract-text-styles.js';
-import { getBlockActions } from '../../functions/get-block-actions.js';
-import { getBlockComponentOptions } from '../../functions/get-block-component-options.js';
-import { getBlockProperties } from '../../functions/get-block-properties.js';
-import { getBlockTag } from '../../functions/get-block-tag.js';
-import { getProcessedBlock } from '../../functions/get-processed-block.js';
-import { getReactNativeBlockStylesModule } from '../../functions/get-react-native-block-styles.js';
-import BlockStylesModule from './block-styles.lite/angular';
-import { isEmptyHtmlElement } from './render-block.helpers.js';
-import RenderComponentWithContext from './render-component-with-context.lite';
-import RenderComponent from './render-component.lite';
-import RenderRepeatedBlockModule from './render-repeated-block.lite/angular';
-
-
-
-
-   @Component({
-     selector: 'render-block, RenderBlock',template: \`
-        <ng-template #rendercomponenttagTemplate></ng-template>
-        <ng-container *ngIf=\\"shouldWrap\\">
-          <ng-container *ngIf=\\"isEmptyHtmlElement(tag)\\">
-            <ng-container
-              *ngComponentOutlet=\\"
+@Component({
+  selector: \\"render-block, RenderBlock\\",
+  template: \`
+    <ng-template #rendercomponenttagTemplate></ng-template>
+    <ng-container *ngIf=\\"shouldWrap\\">
+      <ng-container *ngIf=\\"isEmptyHtmlElement(tag)\\">
+        <ng-container
+          *ngComponentOutlet=\\"
               tag;
-              inputs: mergedInputs_xrhhv5;
+              inputs: { attributes: attributes, state.attributes: attributes, actions: actions, state.actions: actions };
               content: myContent;
               \\"
-            ></ng-container>
-          </ng-container>
-          <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
-            <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
-              <render-repeated-block
-                [repeatContext]=\\"data.context\\"
-                [block]=\\"data.block\\"
-              ></render-repeated-block>
-            </ng-container>
-          </ng-container>
-          <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
-            <ng-container
-              *ngComponentOutlet=\\"
-              tag;
-              inputs: mergedInputs_xrhhv5;
-              content: myContent;
-              \\"
-            ></ng-container>
-          </ng-container>
+        ></ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
+        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+          <render-repeated-block
+            [repeatContext]=\\"data.context\\"
+            [block]=\\"data.block\\"
+          ></render-repeated-block>
         </ng-container>
-        <ng-container *ngIf=\\"!(shouldWrap)\\">
-          <ng-container
-            *ngComponentOutlet=\\"
+      </ng-container>
+      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
+        <ng-container
+          *ngComponentOutlet=\\"
+              tag;
+              inputs: { attributes: attributes, state.attributes: attributes, actions: actions, state.actions: actions };
+              content: myContent;
+              \\"
+        ></ng-container>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(shouldWrap)\\">
+      <ng-container
+        *ngComponentOutlet=\\"
               renderComponentTag;
-              inputs: mergedInputs_ybdr5s;
+              inputs: { renderComponentProps: renderComponentProps, state.renderComponentProps: renderComponentProps };
               content: myContent;
               \\"
-          ></ng-container>
-        </ng-container>
+      ></ng-container>
+    </ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class RenderBlock {
+  isEmptyHtmlElement = isEmptyHtmlElement;
 
-        \`,styles: [\`:host { display: contents; }\`]
-   })
-   export default class RenderBlock {
+  @Input() block;
+  @Input() context;
 
-     isEmptyHtmlElement = isEmptyHtmlElement
+  @ViewChild(\\"rendercomponenttagTemplate\\", { static: true })
+  rendercomponenttagTemplateRef;
+  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef;
 
-     @Input() block
-@Input() context
+  myContent;
 
+  get component() {
+    const componentName = getProcessedBlock({
+      block: this.block,
+      state: this.context.state,
+      context: this.context.context,
+      shouldEvaluateBindings: false,
+    }).component?.name;
 
+    if (!componentName) {
+      return null;
+    }
 
+    const ref = this.context.registeredComponents[componentName];
 
-
-     @ViewChild('rendercomponenttagTemplate', { static: true }) rendercomponenttagTemplateRef
-@ViewChild('tagTemplate', { static: true }) tagTemplateRef
-
-     myContent
-
-      get component() {
- const componentName = getProcessedBlock({
-   block: this.block,
-   state: this.context.state,
-   context: this.context.context,
-   shouldEvaluateBindings: false
- }).component?.name;
-
- if (!componentName) {
-   return null;
- }
-
- const ref = this.context.registeredComponents[componentName];
-
- if (!ref) {
-   // TODO: Public doc page with more info about this message
-   console.warn(\`
+    if (!ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
           Could not find a registered this.component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
-   return undefined;
- } else {
-   return ref;
- }
+      return undefined;
+    } else {
+      return ref;
+    }
+  }
+  get tag() {
+    return getBlockTag(this.useBlock);
+  }
+  get useBlock() {
+    return this.repeatItemData
+      ? this.block
+      : getProcessedBlock({
+          block: this.block,
+          state: this.context.state,
+          context: this.context.context,
+          shouldEvaluateBindings: true,
+        });
+  }
+  get actions() {
+    return getBlockActions({
+      block: this.useBlock,
+      state: this.context.state,
+      context: this.context.context,
+    });
+  }
+  get attributes() {
+    const blockProperties = getBlockProperties(this.useBlock);
+    return {
+      ...blockProperties,
+      ...(TARGET === \\"reactNative\\"
+        ? {
+            style: getReactNativeBlockStyles({
+              block: this.useBlock,
+              context: this.context,
+              blockStyles: blockProperties.style,
+            }),
+          }
+        : {}),
+    };
+  }
+  get shouldWrap() {
+    return !this.component?.noWrap;
+  }
+  get renderComponentProps() {
+    return {
+      blockChildren: this.useChildren,
+      componentRef: this.component?.component,
+      componentOptions: {
+        ...getBlockComponentOptions(this.useBlock),
+
+        /**
+         * These this.attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the this.component itself directly.
+         */
+        ...(this.shouldWrap
+          ? {}
+          : {
+              attributes: { ...this.attributes, ...this.actions },
+            }),
+        customBreakpoints: this.childrenContext?.content?.meta?.breakpoints,
+      },
+      context: this.childrenContext,
+    };
+  }
+  get useChildren() {
+    // TO-DO: When should \`canHaveChildren\` dictate rendering?
+    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+    // but still receive and need to render children.
+    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
+    return this.useBlock.children ?? [];
+  }
+  get childrenWithoutParentComponent() {
+    /**
+     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+     * we render them outside of \`componentRef\`.
+     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+     * blocks, and the children will be repeated within those blocks.
+     */
+    const shouldRenderChildrenOutsideRef =
+      !this.component?.component && !this.repeatItemData;
+    return shouldRenderChildrenOutsideRef ? this.useChildren : [];
+  }
+  get repeatItemData() {
+    /**
+     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
+     * which will not work if there is a repeat.
+     */
+    const { repeat, ...blockWithoutRepeat } = this.block;
+
+    if (!repeat?.collection) {
+      return undefined;
+    }
+
+    const itemsArray = evaluate({
+      code: repeat.collection,
+      state: this.context.state,
+      context: this.context.context,
+    });
+
+    if (!Array.isArray(itemsArray)) {
+      return undefined;
+    }
+
+    const collectionName = repeat.collection.split(\\".\\").pop();
+    const itemNameToUse =
+      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+    const repeatArray = itemsArray.map((item, index) => ({
+      context: {
+        ...this.context,
+        state: {
+          ...this.context.state,
+          $index: index,
+          $item: item,
+          [itemNameToUse]: item,
+          [\`$\${itemNameToUse}Index\`]: index,
+        },
+      },
+      block: blockWithoutRepeat,
+    }));
+    return repeatArray;
+  }
+  get inheritedTextStyles() {
+    if (TARGET !== \\"reactNative\\") {
+      return {};
+    }
+
+    const styles = getReactNativeBlockStyles({
+      block: this.useBlock,
+      context: this.context,
+      blockStyles: this.attributes.style,
+    });
+    return extractTextStyles(styles);
+  }
+  get childrenContext() {
+    return {
+      apiKey: this.context.apiKey,
+      state: this.context.state,
+      content: this.context.content,
+      context: this.context.context,
+      registeredComponents: this.context.registeredComponents,
+      inheritedStyles: this.inheritedTextStyles,
+    };
+  }
+  get renderComponentTag() {
+    if (TARGET === \\"reactNative\\") {
+      return RenderComponentWithContext;
+    } else if (TARGET === \\"vue3\\") {
+      // vue3 expects a string for the this.component tag
+      return \\"RenderComponent\\";
+    } else {
+      return RenderComponent;
+    }
+  }
+
+  constructor(private vcRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.rendercomponenttagTemplateRef)
+        .rootNodes,
+      this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes,
+    ];
+  }
 }
-get tag() {
- return getBlockTag(this.useBlock);
-}
-get useBlock() {
- return this.repeatItemData ? this.block : getProcessedBlock({
-   block: this.block,
-   state: this.context.state,
-   context: this.context.context,
-   shouldEvaluateBindings: true
- });
-}
-get actions() {
- return getBlockActions({
-   block: this.useBlock,
-   state: this.context.state,
-   context: this.context.context
- });
-}
-get attributes() {
- const blockProperties = getBlockProperties(this.useBlock);
- return { ...blockProperties,
-   ...(TARGET === 'reactNative' ? {
-     style: getReactNativeBlockStyles({
-       block: this.useBlock,
-       context: this.context,
-       blockStyles: blockProperties.style
-     })
-   } : {})
- };
-}
-get shouldWrap() {
- return !this.component?.noWrap;
-}
-get renderComponentProps() {
- return {
-   blockChildren: this.useChildren,
-   componentRef: this.component?.component,
-   componentOptions: { ...getBlockComponentOptions(this.useBlock),
-
-     /**
-      * These this.attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-      * they are provided to the this.component itself directly.
-      */
-     ...(this.shouldWrap ? {} : {
-       attributes: { ...this.attributes,
-         ...this.actions
-       }
-     }),
-     customBreakpoints: this.childrenContext?.content?.meta?.breakpoints
-   },
-   context: this.childrenContext
- };
-}
-get useChildren() {
- // TO-DO: When should \`canHaveChildren\` dictate rendering?
- // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
- // but still receive and need to render children.
- // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
- return this.useBlock.children ?? [];
-}
-get childrenWithoutParentComponent() {
- /**
-  * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-  * we render them outside of \`componentRef\`.
-  * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-  * blocks, and the children will be repeated within those blocks.
-  */
- const shouldRenderChildrenOutsideRef = !this.component?.component && !this.repeatItemData;
- return shouldRenderChildrenOutsideRef ? this.useChildren : [];
-}
-get repeatItemData() {
- /**
-  * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-  * which will not work if there is a repeat.
-  */
- const {
-   repeat,
-   ...blockWithoutRepeat
- } = this.block;
-
- if (!repeat?.collection) {
-   return undefined;
- }
-
- const itemsArray = evaluate({
-   code: repeat.collection,
-   state: this.context.state,
-   context: this.context.context
- });
-
- if (!Array.isArray(itemsArray)) {
-   return undefined;
- }
-
- const collectionName = repeat.collection.split('.').pop();
- const itemNameToUse = repeat.itemName || (collectionName ? collectionName + 'Item' : 'item');
- const repeatArray = itemsArray.map((item, index) => ({
-   context: { ...this.context,
-     state: { ...this.context.state,
-       $index: index,
-       $item: item,
-       [itemNameToUse]: item,
-       [\`$\${itemNameToUse}Index\`]: index
-     }
-   },
-   block: blockWithoutRepeat
- }));
- return repeatArray;
-}
-get inheritedTextStyles() {
- if (TARGET !== 'reactNative') {
-   return {};
- }
-
- const styles = getReactNativeBlockStyles({
-   block: this.useBlock,
-   context: this.context,
-   blockStyles: this.attributes.style
- });
- return extractTextStyles(styles);
-}
-get childrenContext() {
- return {
-   apiKey: this.context.apiKey,
-   state: this.context.state,
-   content: this.context.content,
-   context: this.context.context,
-   registeredComponents: this.context.registeredComponents,
-   inheritedStyles: this.inheritedTextStyles
- };
-}
-get renderComponentTag() {
- if (TARGET === 'reactNative') {
-   return RenderComponentWithContext;
- } else if (TARGET === 'vue3') {
-   // vue3 expects a string for the this.component tag
-   return 'RenderComponent';
- } else {
-   return RenderComponent;
- }
-}
-mergedInputs_xrhhv5= null
-mergedInputs_ybdr5s= null
-
-
-
-
-
-
-     constructor(
-
-private vcRef,
-) {
-
-         }
-
-     ngOnInit() {
-
-   const onMountHook_0 = () => {
-     this.mergedInputs_xrhhv5 = {attributes: attributes, state.attributes: attributes, actions: actions, state.actions: actions}
-   }
-   onMountHook_0();
-   const onMountHook_1 = () => {
-     this.mergedInputs_ybdr5s = {renderComponentProps: renderComponentProps, state.renderComponentProps: renderComponentProps}
-   }
-   onMountHook_1();
-
-             this.myContent = [this.vcRef.createEmbeddedView(this.rendercomponenttagTemplateRef).rootNodes, this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes];
-
-           }
-
-
-
-
-
-   }
 
 @NgModule({
   declarations: [RenderBlock],
-  imports: [CommonModule, RenderRepeatedBlockModule, RenderBlockModule, BlockStylesModule],
+  imports: [
+    CommonModule,
+    RenderRepeatedBlockModule,
+    RenderBlockModule,
+    BlockStylesModule,
+  ],
   exports: [RenderBlock],
-  bootstrap: [SomeOtherComponent]
+  bootstrap: [SomeOtherComponent],
 })
-export class RenderBlockModule {}"
+export class RenderBlockModule {}
+"
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > renderContentExample 1`] = `
@@ -7988,7 +7927,7 @@ import {
     <ng-container
       *ngComponentOutlet=\\"
               TagNameGetter;
-              inputs: mergedInputs_0;
+              inputs: {  };
               content: myContent;
               \\"
     ></ng-container>
@@ -8020,13 +7959,10 @@ export default class MyBasicForNoTagRefComponent {
   get TagNameGetter() {
     return \\"span\\";
   }
-  mergedInputs_0 = null;
 
   constructor(private vcRef: ViewContainerRef) {}
 
   ngOnInit() {
-    this.mergedInputs_0 = {};
-
     this.myContent = [
       this.vcRef.createEmbeddedView(this.tagnamegetterTemplateRef).rootNodes,
       this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes,
@@ -8704,163 +8640,114 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > dynamicCompo
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import {   Component , Input  } from '@angular/core';
+import { Component, Input } from \\"@angular/core\\";
 
-
-
-
-
-
-
-
-
-
-   @Component({
-     selector: 'my-component, MyComponent',template: \`
-
-        <ng-container
-          *ngComponentOutlet=\\"
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container
+      *ngComponentOutlet=\\"
               obj.Component;
-              inputs: mergedInputs_kck5vh;
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, props.attributes: attributes, something: something, props.something: something };
               content: myContent;
               \\"
-        ></ng-container>
+    ></ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
 
-        \`,styles: [\`:host { display: contents; }\`]
-   })
-   export default class MyComponent {
-
-
-
-     @Input() attributes!: any
-@Input() something!: any
-
-
-
-
-
-
-
-
-
-      obj= {
- name: 'foo',
- Component: FooComponent
+  obj = {
+    name: \\"foo\\",
+    Component: FooComponent,
+  };
+  onClick = function onClick() {
+    console.log(\\"hello\\");
+  };
 }
-onClick = function onClick() {
- console.log('hello');
-}
-mergedInputs_kck5vh= null
-
-
-
-
-
-
-
-     ngOnInit() {
-             this.mergedInputs_kck5vh = {hello: 'world', onClick: onClick.bind(this), attributes: attributes, props.attributes: attributes, something: something, props.something: something}
-
-           }
-
-
-
-
-
-   }
 
 @NgModule({
   declarations: [MyComponent],
   imports: [CommonModule],
   exports: [MyComponent],
-  bootstrap: [SomeOtherComponent]
+  bootstrap: [SomeOtherComponent],
 })
-export class MyComponentModule {}"
+export class MyComponentModule {}
+"
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > dynamicComponentWithEventArg 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import {   Component , ViewChild, ElementRef, Input , ViewContainerRef, TemplateRef } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
-
-
-
-
-
-
-
-
-
-   @Component({
-     selector: 'my-component, MyComponent',template: \`
-        <ng-template #componentTemplate>
-              hello
-            </ng-template>
-        <ng-container
-          *ngComponentOutlet=\\"
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
               Component;
-              inputs: mergedInputs_kck5vh;
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, props.attributes: attributes, something: something, props.something: something };
               content: myContent;
               \\"
-        ></ng-container>
+    ></ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() something!: any;
 
-        \`,styles: [\`:host { display: contents; }\`]
-   })
-   export default class MyComponent {
+  @ViewChild(\\"componentTemplate\\", { static: true })
+  componentTemplateRef!: TemplateRef<any>;
 
+  myContent?: any[][];
 
+  Component = HelloComponent;
+  onClick = function onClick(event: any) {
+    console.log(\\"hello\\", event);
+  };
 
-     @Input() attributes!: any
-@Input() something!: any
+  constructor(private vcRef: ViewContainerRef) {}
 
-
-
-
-
-     @ViewChild('componentTemplate', { static: true }) componentTemplateRef!: TemplateRef<any>
-
-     myContent?: any[][];
-
-      Component= HelloComponent
-onClick = function onClick(event: any) {
- console.log('hello', event);
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
+    ];
+  }
 }
-mergedInputs_kck5vh= null
-
-
-
-
-
-
-     constructor(
-
-private vcRef: ViewContainerRef,
-) {
-
-         }
-
-     ngOnInit() {
-             this.mergedInputs_kck5vh = {hello: 'world', onClick: onClick.bind(this), attributes: attributes, props.attributes: attributes, something: something, props.something: something}
-
-             this.myContent = [this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes];
-
-           }
-
-
-
-
-
-   }
 
 @NgModule({
   declarations: [MyComponent],
   imports: [CommonModule],
   exports: [MyComponent],
-  bootstrap: [SomeOtherComponent]
+  bootstrap: [SomeOtherComponent],
 })
-export class MyComponentModule {}"
+export class MyComponentModule {}
+"
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > expressionState 1`] = `
@@ -9898,305 +9785,302 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > renderBlock 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import {   Component , ViewChild, ElementRef, Input , ViewContainerRef, TemplateRef } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
+export type RenderBlockProps = {
+  block: BuilderBlock;
+  context: BuilderContextInterface;
+};
 
-   export type RenderBlockProps = {
- block: BuilderBlock;
- context: BuilderContextInterface;
-}
+import { TARGET } from \\"../../constants/target.js\\";
+import {
+  BuilderContextInterface,
+  RegisteredComponent,
+} from \\"../../context/types.js\\";
+import { evaluate } from \\"../../functions/evaluate.js\\";
+import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
+import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
+import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
+import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
+import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
+import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
+import { getReactNativeBlockStylesModule } from \\"../../functions/get-react-native-block-styles.js\\";
+import { BuilderBlock } from \\"../../types/builder-block.js\\";
+import { Nullable } from \\"../../types/typescript.js\\";
+import BlockStylesModule from \\"./block-styles.lite/angular\\";
+import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
+import RenderComponentWithContext from \\"./render-component-with-context.lite\\";
+import { RenderComponentProps } from \\"./render-component.lite\\";
+import RenderComponent from \\"./render-component.lite\\";
+import RenderRepeatedBlockModule from \\"./render-repeated-block.lite/angular\\";
+import { RepeatData } from \\"./types.js\\";
 
-
-   import { TARGET } from '../../constants/target.js';
-import { BuilderContextInterface, RegisteredComponent } from '../../context/types.js';
-import { evaluate } from '../../functions/evaluate.js';
-import { extractTextStyles } from '../../functions/extract-text-styles.js';
-import { getBlockActions } from '../../functions/get-block-actions.js';
-import { getBlockComponentOptions } from '../../functions/get-block-component-options.js';
-import { getBlockProperties } from '../../functions/get-block-properties.js';
-import { getBlockTag } from '../../functions/get-block-tag.js';
-import { getProcessedBlock } from '../../functions/get-processed-block.js';
-import { getReactNativeBlockStylesModule } from '../../functions/get-react-native-block-styles.js';
-import { BuilderBlock } from '../../types/builder-block.js';
-import { Nullable } from '../../types/typescript.js';
-import BlockStylesModule from './block-styles.lite/angular';
-import { isEmptyHtmlElement } from './render-block.helpers.js';
-import RenderComponentWithContext from './render-component-with-context.lite';
-import { RenderComponentProps } from './render-component.lite';
-import RenderComponent from './render-component.lite';
-import RenderRepeatedBlockModule from './render-repeated-block.lite/angular';
-import { RepeatData } from './types.js';
-
-
-
-
-   @Component({
-     selector: 'render-block, RenderBlock',template: \`
-        <ng-template #rendercomponenttagTemplate></ng-template>
-        <ng-container *ngIf=\\"shouldWrap\\">
-          <ng-container *ngIf=\\"isEmptyHtmlElement(tag)\\">
-            <ng-container
-              *ngComponentOutlet=\\"
+@Component({
+  selector: \\"render-block, RenderBlock\\",
+  template: \`
+    <ng-template #rendercomponenttagTemplate></ng-template>
+    <ng-container *ngIf=\\"shouldWrap\\">
+      <ng-container *ngIf=\\"isEmptyHtmlElement(tag)\\">
+        <ng-container
+          *ngComponentOutlet=\\"
               tag;
-              inputs: mergedInputs_xrhhv5;
+              inputs: { attributes: attributes, state.attributes: attributes, actions: actions, state.actions: actions };
               content: myContent;
               \\"
-            ></ng-container>
-          </ng-container>
-          <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
-            <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
-              <render-repeated-block
-                [repeatContext]=\\"data.context\\"
-                [block]=\\"data.block\\"
-              ></render-repeated-block>
-            </ng-container>
-          </ng-container>
-          <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
-            <ng-container
-              *ngComponentOutlet=\\"
-              tag;
-              inputs: mergedInputs_xrhhv5;
-              content: myContent;
-              \\"
-            ></ng-container>
-          </ng-container>
+        ></ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
+        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+          <render-repeated-block
+            [repeatContext]=\\"data.context\\"
+            [block]=\\"data.block\\"
+          ></render-repeated-block>
         </ng-container>
-        <ng-container *ngIf=\\"!(shouldWrap)\\">
-          <ng-container
-            *ngComponentOutlet=\\"
+      </ng-container>
+      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
+        <ng-container
+          *ngComponentOutlet=\\"
+              tag;
+              inputs: { attributes: attributes, state.attributes: attributes, actions: actions, state.actions: actions };
+              content: myContent;
+              \\"
+        ></ng-container>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf=\\"!(shouldWrap)\\">
+      <ng-container
+        *ngComponentOutlet=\\"
               renderComponentTag;
-              inputs: mergedInputs_ybdr5s;
+              inputs: { renderComponentProps: renderComponentProps, state.renderComponentProps: renderComponentProps };
               content: myContent;
               \\"
-          ></ng-container>
-        </ng-container>
+      ></ng-container>
+    </ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class RenderBlock {
+  isEmptyHtmlElement = isEmptyHtmlElement;
 
-        \`,styles: [\`:host { display: contents; }\`]
-   })
-   export default class RenderBlock {
+  @Input() block!: RenderBlockProps[\\"block\\"];
+  @Input() context!: RenderBlockProps[\\"context\\"];
 
-     isEmptyHtmlElement = isEmptyHtmlElement
+  @ViewChild(\\"rendercomponenttagTemplate\\", { static: true })
+  rendercomponenttagTemplateRef!: TemplateRef<any>;
+  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef!: TemplateRef<any>;
 
-     @Input() block!: RenderBlockProps[\\"block\\"]
-@Input() context!: RenderBlockProps[\\"context\\"]
+  myContent?: any[][];
 
+  get component() {
+    const componentName = getProcessedBlock({
+      block: this.block,
+      state: this.context.state,
+      context: this.context.context,
+      shouldEvaluateBindings: false,
+    }).component?.name;
 
+    if (!componentName) {
+      return null;
+    }
 
+    const ref = this.context.registeredComponents[componentName];
 
-
-     @ViewChild('rendercomponenttagTemplate', { static: true }) rendercomponenttagTemplateRef!: TemplateRef<any>
-@ViewChild('tagTemplate', { static: true }) tagTemplateRef!: TemplateRef<any>
-
-     myContent?: any[][];
-
-      get component() {
- const componentName = getProcessedBlock({
-   block: this.block,
-   state: this.context.state,
-   context: this.context.context,
-   shouldEvaluateBindings: false
- }).component?.name;
-
- if (!componentName) {
-   return null;
- }
-
- const ref = this.context.registeredComponents[componentName];
-
- if (!ref) {
-   // TODO: Public doc page with more info about this message
-   console.warn(\`
+    if (!ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
           Could not find a registered this.component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
-   return undefined;
- } else {
-   return ref;
- }
+      return undefined;
+    } else {
+      return ref;
+    }
+  }
+  get tag() {
+    return getBlockTag(this.useBlock);
+  }
+  get useBlock() {
+    return this.repeatItemData
+      ? this.block
+      : getProcessedBlock({
+          block: this.block,
+          state: this.context.state,
+          context: this.context.context,
+          shouldEvaluateBindings: true,
+        });
+  }
+  get actions() {
+    return getBlockActions({
+      block: this.useBlock,
+      state: this.context.state,
+      context: this.context.context,
+    });
+  }
+  get attributes() {
+    const blockProperties = getBlockProperties(this.useBlock);
+    return {
+      ...blockProperties,
+      ...(TARGET === \\"reactNative\\"
+        ? {
+            style: getReactNativeBlockStyles({
+              block: this.useBlock,
+              context: this.context,
+              blockStyles: blockProperties.style,
+            }),
+          }
+        : {}),
+    };
+  }
+  get shouldWrap() {
+    return !this.component?.noWrap;
+  }
+  get renderComponentProps() {
+    return {
+      blockChildren: this.useChildren,
+      componentRef: this.component?.component,
+      componentOptions: {
+        ...getBlockComponentOptions(this.useBlock),
+
+        /**
+         * These this.attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the this.component itself directly.
+         */
+        ...(this.shouldWrap
+          ? {}
+          : {
+              attributes: { ...this.attributes, ...this.actions },
+            }),
+        customBreakpoints: this.childrenContext?.content?.meta?.breakpoints,
+      },
+      context: this.childrenContext,
+    };
+  }
+  get useChildren() {
+    // TO-DO: When should \`canHaveChildren\` dictate rendering?
+    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+    // but still receive and need to render children.
+    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
+    return this.useBlock.children ?? [];
+  }
+  get childrenWithoutParentComponent() {
+    /**
+     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+     * we render them outside of \`componentRef\`.
+     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+     * blocks, and the children will be repeated within those blocks.
+     */
+    const shouldRenderChildrenOutsideRef =
+      !this.component?.component && !this.repeatItemData;
+    return shouldRenderChildrenOutsideRef ? this.useChildren : [];
+  }
+  get repeatItemData() {
+    /**
+     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
+     * which will not work if there is a repeat.
+     */
+    const { repeat, ...blockWithoutRepeat } = this.block;
+
+    if (!repeat?.collection) {
+      return undefined;
+    }
+
+    const itemsArray = evaluate({
+      code: repeat.collection,
+      state: this.context.state,
+      context: this.context.context,
+    });
+
+    if (!Array.isArray(itemsArray)) {
+      return undefined;
+    }
+
+    const collectionName = repeat.collection.split(\\".\\").pop();
+    const itemNameToUse =
+      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
+    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+      context: {
+        ...this.context,
+        state: {
+          ...this.context.state,
+          $index: index,
+          $item: item,
+          [itemNameToUse]: item,
+          [\`$\${itemNameToUse}Index\`]: index,
+        },
+      },
+      block: blockWithoutRepeat,
+    }));
+    return repeatArray;
+  }
+  get inheritedTextStyles() {
+    if (TARGET !== \\"reactNative\\") {
+      return {};
+    }
+
+    const styles = getReactNativeBlockStyles({
+      block: this.useBlock,
+      context: this.context,
+      blockStyles: this.attributes.style,
+    });
+    return extractTextStyles(styles);
+  }
+  get childrenContext() {
+    return {
+      apiKey: this.context.apiKey,
+      state: this.context.state,
+      content: this.context.content,
+      context: this.context.context,
+      registeredComponents: this.context.registeredComponents,
+      inheritedStyles: this.inheritedTextStyles,
+    };
+  }
+  get renderComponentTag() {
+    if (TARGET === \\"reactNative\\") {
+      return RenderComponentWithContext;
+    } else if (TARGET === \\"vue3\\") {
+      // vue3 expects a string for the this.component tag
+      return \\"RenderComponent\\";
+    } else {
+      return RenderComponent;
+    }
+  }
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.rendercomponenttagTemplateRef)
+        .rootNodes,
+      this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes,
+    ];
+  }
 }
-get tag() {
- return getBlockTag(this.useBlock);
-}
-get useBlock() {
- return this.repeatItemData ? this.block : getProcessedBlock({
-   block: this.block,
-   state: this.context.state,
-   context: this.context.context,
-   shouldEvaluateBindings: true
- });
-}
-get actions() {
- return getBlockActions({
-   block: this.useBlock,
-   state: this.context.state,
-   context: this.context.context
- });
-}
-get attributes() {
- const blockProperties = getBlockProperties(this.useBlock);
- return { ...blockProperties,
-   ...(TARGET === 'reactNative' ? {
-     style: getReactNativeBlockStyles({
-       block: this.useBlock,
-       context: this.context,
-       blockStyles: blockProperties.style
-     })
-   } : {})
- };
-}
-get shouldWrap() {
- return !this.component?.noWrap;
-}
-get renderComponentProps() {
- return {
-   blockChildren: this.useChildren,
-   componentRef: this.component?.component,
-   componentOptions: { ...getBlockComponentOptions(this.useBlock),
-
-     /**
-      * These this.attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-      * they are provided to the this.component itself directly.
-      */
-     ...(this.shouldWrap ? {} : {
-       attributes: { ...this.attributes,
-         ...this.actions
-       }
-     }),
-     customBreakpoints: this.childrenContext?.content?.meta?.breakpoints
-   },
-   context: this.childrenContext
- };
-}
-get useChildren() {
- // TO-DO: When should \`canHaveChildren\` dictate rendering?
- // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
- // but still receive and need to render children.
- // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
- return this.useBlock.children ?? [];
-}
-get childrenWithoutParentComponent() {
- /**
-  * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-  * we render them outside of \`componentRef\`.
-  * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-  * blocks, and the children will be repeated within those blocks.
-  */
- const shouldRenderChildrenOutsideRef = !this.component?.component && !this.repeatItemData;
- return shouldRenderChildrenOutsideRef ? this.useChildren : [];
-}
-get repeatItemData() {
- /**
-  * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-  * which will not work if there is a repeat.
-  */
- const {
-   repeat,
-   ...blockWithoutRepeat
- } = this.block;
-
- if (!repeat?.collection) {
-   return undefined;
- }
-
- const itemsArray = evaluate({
-   code: repeat.collection,
-   state: this.context.state,
-   context: this.context.context
- });
-
- if (!Array.isArray(itemsArray)) {
-   return undefined;
- }
-
- const collectionName = repeat.collection.split('.').pop();
- const itemNameToUse = repeat.itemName || (collectionName ? collectionName + 'Item' : 'item');
- const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
-   context: { ...this.context,
-     state: { ...this.context.state,
-       $index: index,
-       $item: item,
-       [itemNameToUse]: item,
-       [\`$\${itemNameToUse}Index\`]: index
-     }
-   },
-   block: blockWithoutRepeat
- }));
- return repeatArray;
-}
-get inheritedTextStyles() {
- if (TARGET !== 'reactNative') {
-   return {};
- }
-
- const styles = getReactNativeBlockStyles({
-   block: this.useBlock,
-   context: this.context,
-   blockStyles: this.attributes.style
- });
- return extractTextStyles(styles);
-}
-get childrenContext() {
- return {
-   apiKey: this.context.apiKey,
-   state: this.context.state,
-   content: this.context.content,
-   context: this.context.context,
-   registeredComponents: this.context.registeredComponents,
-   inheritedStyles: this.inheritedTextStyles
- };
-}
-get renderComponentTag() {
- if (TARGET === 'reactNative') {
-   return RenderComponentWithContext;
- } else if (TARGET === 'vue3') {
-   // vue3 expects a string for the this.component tag
-   return 'RenderComponent';
- } else {
-   return RenderComponent;
- }
-}
-mergedInputs_xrhhv5= null
-mergedInputs_ybdr5s= null
-
-
-
-
-
-
-     constructor(
-
-private vcRef: ViewContainerRef,
-) {
-
-         }
-
-     ngOnInit() {
-
-   const onMountHook_0 = () => {
-     this.mergedInputs_xrhhv5 = {attributes: attributes, state.attributes: attributes, actions: actions, state.actions: actions}
-   }
-   onMountHook_0();
-   const onMountHook_1 = () => {
-     this.mergedInputs_ybdr5s = {renderComponentProps: renderComponentProps, state.renderComponentProps: renderComponentProps}
-   }
-   onMountHook_1();
-
-             this.myContent = [this.vcRef.createEmbeddedView(this.rendercomponenttagTemplateRef).rootNodes, this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes];
-
-           }
-
-
-
-
-
-   }
 
 @NgModule({
   declarations: [RenderBlock],
-  imports: [CommonModule, RenderRepeatedBlockModule, RenderBlockModule, BlockStylesModule],
+  imports: [
+    CommonModule,
+    RenderRepeatedBlockModule,
+    RenderBlockModule,
+    BlockStylesModule,
+  ],
   exports: [RenderBlock],
-  bootstrap: [SomeOtherComponent]
+  bootstrap: [SomeOtherComponent],
 })
-export class RenderBlockModule {}"
+export class RenderBlockModule {}
+"
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > renderContentExample 1`] = `
