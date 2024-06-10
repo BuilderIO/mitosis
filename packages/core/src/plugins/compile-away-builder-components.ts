@@ -390,7 +390,7 @@ export const components: CompileAwayComponentsMap = {
       bindings: noUndefined({
         css: createSingleBinding({
           code: JSON.stringify({
-            disply: 'flex',
+            display: 'flex',
             flexDirection: 'column',
             ...css,
             position: 'relative',
