@@ -42,6 +42,7 @@ import { format } from 'prettier/standalone';
 import traverse from 'traverse';
 import isChildren from '../../helpers/is-children';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
+import { HELPER_FUNCTIONS, getAppropriateTemplateFunctionKeys } from './helpers';
 import {
   AngularBlockOptions,
   BUILT_IN_COMPONENTS,
@@ -119,6 +120,70 @@ const BINDINGS_MAPPER: { [key: string]: string | undefined } = {
   style: 'ngStyle',
 };
 
+const handleObjectBindings = (code: string) => {
+  let objectCode = code.replace(/^{/, '').replace(/}$/, '');
+  objectCode = objectCode.replace(/\/\/.*\n/g, '');
+
+  const spreadOutObjects = objectCode
+    .split(',')
+    .filter((item) => item.includes('...'))
+    .map((item) => item.replace('...', '').trim());
+
+  const objectKeys = objectCode
+    .split(',')
+    .filter((item) => !item.includes('...'))
+    .map((item) => item.trim());
+
+  const otherObjs = objectKeys.map((item) => {
+    return `{ ${item} }`;
+  });
+
+  let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
+
+  if (temp.endsWith(', ')) {
+    temp = temp.slice(0, -2);
+  }
+
+  if (temp.startsWith(', ')) {
+    temp = temp.slice(2);
+  }
+
+  // handle template strings
+  if (temp.includes('`')) {
+    // template str
+    let str = temp.match(/`[^`]*`/g);
+
+    let values = str && str[0].match(/\${[^}]*}/g);
+    let forValues = values?.map((val) => val.slice(2, -1)).join(' + ');
+
+    if (str && forValues) {
+      temp = temp.replace(str[0], forValues);
+    }
+  }
+
+  return temp;
+};
+
+const processCodeBlockInTemplate = (code: string) => {
+  // contains helper calls as Angular doesn't support JS expressions in templates
+  if (code.startsWith('{')) {
+    // Objects cannot be spread out directly in Angular so we need to use `useObjectWrapper`
+    return `useObjectWrapper(${handleObjectBindings(code)})`;
+  } else if (code.startsWith('Object.values')) {
+    let stripped = code.replace('Object.values', '');
+    return `useObjectDotValues${stripped}`;
+  } else if (code.includes('JSON.stringify')) {
+    let obj = code.match(/JSON.stringify\([^)]*\)/g);
+    return `useJsonStringify(${obj})`;
+  } else if (code.includes(' as ')) {
+    const asIndex = code.indexOf('as');
+    const asCode = code.slice(0, asIndex - 1);
+    return `$any${asCode})`;
+  } else {
+    return `${code}`;
+  }
+};
+
 const processEventBinding = (key: string, code: string, nodeName: string, customArg: string) => {
   let event = key.replace('on', '');
   event = event.charAt(0).toLowerCase() + event.slice(1);
@@ -168,11 +233,13 @@ const stringifyBinding =
       // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
       return ` [attr.${keyToUse}]="${code}" `;
     } else {
-      return `[${keyToUse}]="${code}"`;
+      const codeToUse =
+        options.state === 'inline-with-wrappers' ? processCodeBlockInTemplate(code) : code;
+      return `[${keyToUse}]="${codeToUse}"`;
     }
   };
 
-const handleNgOutletBindings = (node: MitosisNode) => {
+const handleNgOutletBindings = (node: MitosisNode, options: ToAngularOptions) => {
   let allProps = '';
   for (const key in node.properties) {
     if (key.startsWith('$')) {
@@ -193,11 +260,13 @@ const handleNgOutletBindings = (node: MitosisNode) => {
       continue;
     }
     let { code, arguments: cusArgs = ['event'] } = node.bindings[key]!;
-    code = `this.${code}`;
+    if (options.state === 'class-properties') {
+      code = `this.${code}`;
 
-    if (node.bindings[key]?.type === 'spread') {
-      allProps += `...${code}, `;
-      continue;
+      if (node.bindings[key]?.type === 'spread') {
+        allProps += `...${code}, `;
+        continue;
+      }
     }
 
     if (key.includes('props.')) {
@@ -213,7 +282,9 @@ const handleNgOutletBindings = (node: MitosisNode) => {
       )}.bind(this), `;
     } else {
       const keyToUse = key.includes('-') ? `'${key}'` : key;
-      allProps += `${keyToUse}: ${code}, `;
+      const codeToUse =
+        options.state === 'inline-with-wrappers' ? processCodeBlockInTemplate(code) : code;
+      allProps += `${keyToUse}: ${codeToUse}, `;
     }
   }
 
@@ -275,7 +346,11 @@ export const blockToAngular = ({
       .join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
-    const condition = json.bindings.when?.code;
+    let condition = json.bindings.when?.code;
+    if (options.state === 'inline-with-wrappers' && condition?.includes('typeof')) {
+      let wordAfterTypeof = condition.split('typeof')[1].trim().split(' ')[0];
+      condition = condition.replace(`typeof ${wordAfterTypeof}`, `useTypeOf(${wordAfterTypeof})`);
+    }
     str += `<ng-container *ngIf="${condition}">`;
     str += json.children
       .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
@@ -292,7 +367,7 @@ export const blockToAngular = ({
       ? kebabCase(json.name)
       : json.name;
 
-    const allProps = handleNgOutletBindings(json);
+    const allProps = handleNgOutletBindings(json, options);
     const inputsPropsStateName = `mergedInputs_${hashCodeAsString(allProps)}`;
     root.state[inputsPropsStateName] = {
       code: 'null',
@@ -556,6 +631,34 @@ const handleAngularBindings = (
   return index;
 };
 
+const classPropertiesPlugin = () => ({
+  json: {
+    pre: (json: MitosisComponent) => {
+      let lastId = 0;
+      traverseNodes(json, (item) => {
+        if (isMitosisNode(item)) {
+          if (item.name === 'For') {
+            const forName = (item.scope as any).forName;
+            const indexName = (item.scope as any).indexName;
+            traverseNodes(item, (child) => {
+              if (isMitosisNode(child)) {
+                (child as any)._traversed = true;
+                lastId = handleAngularBindings(json, child, lastId, {
+                  forName,
+                  indexName,
+                });
+              }
+            });
+          } else if (!(item as any)._traversed) {
+            lastId = handleAngularBindings(json, item, lastId);
+          }
+        }
+      });
+      return json;
+    },
+  },
+});
+
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
   ({ component: _component }) => {
@@ -621,34 +724,11 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             return (x) => x;
         }
       }),
-      () => ({
-        json: {
-          pre: (json) => {
-            let lastId = 0;
-            traverseNodes(json, (item) => {
-              if (isMitosisNode(item)) {
-                if (item.name === 'For') {
-                  const forName = (item.scope as any).forName;
-                  const indexName = (item.scope as any).indexName;
-                  traverseNodes(item, (child) => {
-                    if (isMitosisNode(child)) {
-                      (child as any)._traversed = true;
-                      lastId = handleAngularBindings(json, child, lastId, {
-                        forName,
-                        indexName,
-                      });
-                    }
-                  });
-                } else if (!(item as any)._traversed) {
-                  lastId = handleAngularBindings(json, item, lastId);
-                }
-              }
-            });
-            return json;
-          },
-        },
-      }),
     ];
+
+    if (options.state === 'class-properties') {
+      options.plugins.push(classPropertiesPlugin);
+    }
 
     if (options.plugins) {
       json = runPreJsonPlugins({ json, plugins: options.plugins });
@@ -725,6 +805,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       css = tryFormat(css, 'css');
     }
 
+    const helperFunctions = new Set<string>();
+
     let template = json.children
       .map((item) => {
         return blockToAngular({
@@ -738,6 +820,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         });
       })
       .join('\n');
+
+    if (options.state === 'inline-with-wrappers') {
+      getAppropriateTemplateFunctionKeys(template).forEach((key) =>
+        helperFunctions.add(HELPER_FUNCTIONS[key]),
+      );
+    }
+
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
     }
@@ -869,6 +958,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${dynamicComponents.size ? `myContent${options.typescript ? '?: any[][];' : ''}` : ''}
 
       ${dataString}
+
+      ${helperFunctions.size ? Array.from(helperFunctions).join('\n') : ''}
 
       ${jsRefs
         .map((ref) => {
