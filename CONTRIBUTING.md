@@ -64,3 +64,4 @@ Before submitting your PR, please make sure to format the codebase and update al
 
 - format the codebase: from the root, run `yarn fmt:prettier`.
 - update all snapshots (in core & CLI): from the root, run `yarn test:update`. This will run an Nx command that will update all the snapshots in the `core` and `cli` packages. while making sure all required dependencies are built beforehand.
+- add Changeset entry: from the root, run `yarn g:changeset` and follow the CLI instructions.
