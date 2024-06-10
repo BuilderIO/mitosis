@@ -21,5 +21,5 @@ export const HELPER_FUNCTIONS = (
   }`,
 });
 
-export const getAppropriateTemplateFunctionKeys = (code: string, isTs?: boolean) =>
-  Object.keys(HELPER_FUNCTIONS(isTs)).filter((key) => code.includes(key));
+export const getAppropriateTemplateFunctionKeys = (code: string) =>
+  Object.keys(HELPER_FUNCTIONS()).filter((key) => code.includes(key));
