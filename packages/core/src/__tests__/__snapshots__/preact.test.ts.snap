@@ -2912,6 +2912,17 @@ export default MyComponent;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > showExpressions 1`] = `
+"',' expected. (45:11)
+  43 | ) : <Fragment>ContentF</Fragment>}{props.conditionA === 'Default' ? (
+  44 | <Fragment>4mb</Fragment>
+> 45 | ) : {props.conditionB === 'Complete' ? (
+     |           ^
+  46 | <Fragment>20mb</Fragment>
+  47 | ) : <Fragment>9mb</Fragment>}}{props.conditionA === 'Default' ? (
+  48 | <Fragment>{props.conditionB === 'Complete' ? ("
+`;
+
 exports[`Preact > jsx > Javascript Test > showWithFor 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -2933,6 +2944,39 @@ function NestedShow(props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > showWithOtherValues 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function ShowWithOtherValues(props) {
+  return (
+    <div>
+      {props.conditionA ? <Fragment>ContentA</Fragment> : null}
+      {props.conditionA ? (
+        <Fragment>ContentB</Fragment>
+      ) : (
+        <Fragment>{undefined}</Fragment>
+      )}
+      {props.conditionA ? <Fragment>ContentC</Fragment> : null}
+      {props.conditionA ? <Fragment>ContentD</Fragment> : null}
+      {props.conditionA ? (
+        <Fragment>ContentE</Fragment>
+      ) : (
+        <Fragment>hello</Fragment>
+      )}
+      {props.conditionA ? (
+        <Fragment>ContentF</Fragment>
+      ) : (
+        <Fragment>123</Fragment>
+      )}
+    </div>
+  );
+}
+
+export default ShowWithOtherValues;
 "
 `;
 
@@ -6568,6 +6612,17 @@ export default MyComponent;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > showExpressions 1`] = `
+"',' expected. (48:11)
+  46 | ) : <Fragment>ContentF</Fragment>}{props.conditionA === 'Default' ? (
+  47 | <Fragment>4mb</Fragment>
+> 48 | ) : {props.conditionB === 'Complete' ? (
+     |           ^
+  49 | <Fragment>20mb</Fragment>
+  50 | ) : <Fragment>9mb</Fragment>}}{props.conditionA === 'Default' ? (
+  51 | <Fragment>{props.conditionB === 'Complete' ? ("
+`;
+
 exports[`Preact > jsx > Typescript Test > showWithFor 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -6594,6 +6649,43 @@ function NestedShow(props: Props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > showWithOtherValues 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowWithOtherValues(props: Props) {
+  return (
+    <div>
+      {props.conditionA ? <Fragment>ContentA</Fragment> : null}
+      {props.conditionA ? (
+        <Fragment>ContentB</Fragment>
+      ) : (
+        <Fragment>{undefined}</Fragment>
+      )}
+      {props.conditionA ? <Fragment>ContentC</Fragment> : null}
+      {props.conditionA ? <Fragment>ContentD</Fragment> : null}
+      {props.conditionA ? (
+        <Fragment>ContentE</Fragment>
+      ) : (
+        <Fragment>hello</Fragment>
+      )}
+      {props.conditionA ? (
+        <Fragment>ContentF</Fragment>
+      ) : (
+        <Fragment>123</Fragment>
+      )}
+    </div>
+  );
+}
+
+export default ShowWithOtherValues;
 "
 `;
 

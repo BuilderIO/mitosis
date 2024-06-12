@@ -4523,6 +4523,73 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > showExpressions 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">Content0</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">hello</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">123</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">4mb</ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA;
+  @Input() conditionB;
+}
+
+@NgModule({
+  declarations: [ShowWithOtherValues],
+  imports: [CommonModule],
+  exports: [ShowWithOtherValues],
+})
+export class ShowWithOtherValuesModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > showWithFor 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -4560,6 +4627,48 @@ export default class NestedShow {
   exports: [NestedShow],
 })
 export class NestedShowModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > showWithOtherValues 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA;
+}
+
+@NgModule({
+  declarations: [ShowWithOtherValues],
+  imports: [CommonModule],
+  exports: [ShowWithOtherValues],
+})
+export class ShowWithOtherValuesModule {}
 "
 `;
 
@@ -10065,6 +10174,78 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > showExpressions 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">Content0</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">hello</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">123</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">4mb</ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA!: Props[\\"conditionA\\"];
+  @Input() conditionB!: Props[\\"conditionB\\"];
+}
+
+@NgModule({
+  declarations: [ShowWithOtherValues],
+  imports: [CommonModule],
+  exports: [ShowWithOtherValues],
+})
+export class ShowWithOtherValuesModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > showWithFor 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -10107,6 +10288,52 @@ export default class NestedShow {
   exports: [NestedShow],
 })
 export class NestedShowModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > showWithOtherValues 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA!: Props[\\"conditionA\\"];
+}
+
+@NgModule({
+  declarations: [ShowWithOtherValues],
+  imports: [CommonModule],
+  exports: [ShowWithOtherValues],
+})
+export class ShowWithOtherValuesModule {}
 "
 `;
 
