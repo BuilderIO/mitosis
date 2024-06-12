@@ -27,31 +27,50 @@ import { collectClassString } from './collect-class-string';
 
 export interface ToStencilOptions extends BaseTranspilerOptions {}
 
-const blockToStencil = (json: MitosisNode, options: ToStencilOptions = {}): string => {
+const blockToStencil = (
+  json: MitosisNode,
+  options: ToStencilOptions = {},
+  insideJsx: boolean,
+): string => {
   if (json.properties._text) {
     return json.properties._text;
   }
   if (json.bindings._text?.code) {
-    return `{${processBinding(json.bindings?._text.code as string)}}`;
+    if (insideJsx) {
+      return `{${processBinding(json.bindings._text.code as string)}}`;
+    }
+    return processBinding(json.bindings?._text.code as string);
   }
 
   if (checkIsForNode(json)) {
     const wrap = json.children.length !== 1;
     const forArgs = getForArguments(json).join(', ');
-    return `{${processBinding(json.bindings.each?.code as string)}?.map((${forArgs}) => (
+
+    const expression = `${processBinding(json.bindings.each?.code as string)}?.map((${forArgs}) => (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
-      .map((item) => blockToStencil(item, options))
+      .map((item) => blockToStencil(item, options, wrap))
       .join('\n')}${wrap ? '</>' : ''}
-    ))}`;
+    ))`;
+    if (insideJsx) {
+      return `{${expression}}`;
+    } else {
+      return expression;
+    }
   } else if (json.name === 'Show') {
     const wrap = json.children.length !== 1;
-    return `{${processBinding(json.bindings.when?.code as string)} ? (
+    const expression = `${processBinding(json.bindings.when?.code as string)} ? (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
-      .map((item) => blockToStencil(item, options))
+      .map((item) => blockToStencil(item, options, wrap))
       .join('\n')}${wrap ? '</>' : ''}
-    ) : ${!json.meta.else ? 'null' : blockToStencil(json.meta.else as any, options)}}`;
+    ) : ${!json.meta.else ? 'null' : blockToStencil(json.meta.else as any, options, false)}`;
+
+    if (insideJsx) {
+      return `{${expression}}`;
+    } else {
+      return expression;
+    }
   }
 
   let str = '';
@@ -86,7 +105,7 @@ const blockToStencil = (json: MitosisNode, options: ToStencilOptions = {}): stri
   }
   str += '>';
   if (json.children) {
-    str += json.children.map((item) => blockToStencil(item, options)).join('\n');
+    str += json.children.map((item) => blockToStencil(item, options, true)).join('\n');
   }
 
   str += `</${json.name}>`;
@@ -176,14 +195,14 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
       }
     })
     export default class ${json.name} {
-    
+
       ${Array.from(props)
         .map((item) => `@Prop() ${item}: any`)
         .join('\n')}
 
         ${dataString}
         ${methodsString}
-      
+
         ${
           !json.hooks.onMount.length
             ? ''
@@ -201,11 +220,11 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
                 (hook) => `componentDidUpdate() { ${processBinding(hook.code)} }`,
               )
         }
-    
+
       render() {
         return (${wrap ? '<>' : ''}
-        
-          ${json.children.map((item) => blockToStencil(item, options)).join('\n')}
+
+          ${json.children.map((item) => blockToStencil(item, options, true)).join('\n')}
 
         ${wrap ? '</>' : ''})
       }

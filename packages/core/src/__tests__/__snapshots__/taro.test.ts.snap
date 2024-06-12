@@ -2928,14 +2928,43 @@ export default MyComponent;
 `;
 
 exports[`Taro > jsx > Javascript Test > showExpressions 1`] = `
-"',' expected. (44:11)
-  42 | ) : <>ContentF</>}{props.conditionA === 'Default' ? (
-  43 | <>4mb</>
-> 44 | ) : {props.conditionB === 'Complete' ? (
-     |           ^
-  45 | <>20mb</>
-  46 | ) : <>9mb</>}}{props.conditionA === 'Default' ? (
-  47 | <>{props.conditionB === 'Complete' ? ("
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function ShowWithOtherValues(props) {
+  return (
+    <View>
+      {props.conditionA ? <>Content0</> : <>ContentA</>}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <></> : <>ContentA</>}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>{undefined}</> : <>ContentB</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <></> : <>ContentC</>}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <></> : <>ContentD</>}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>hello</> : <>ContentE</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+      {props.conditionA ? <>123</> : <>ContentF</>}
+      {props.conditionA === \\"Default\\" ? (
+        <>4mb</>
+      ) : props.conditionB === \\"Complete\\" ? (
+        <>20mb</>
+      ) : (
+        <>9mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <>20mb</> : <>9mb</>}</>
+      ) : (
+        <>4mb</>
+      )}
+    </View>
+  );
+}
+
+export default ShowWithOtherValues;
+"
 `;
 
 exports[`Taro > jsx > Javascript Test > showWithFor 1`] = `
@@ -6652,14 +6681,49 @@ export default MyComponent;
 `;
 
 exports[`Taro > jsx > Typescript Test > showExpressions 1`] = `
-"',' expected. (47:11)
-  45 | ) : <>ContentF</>}{props.conditionA === 'Default' ? (
-  46 | <>4mb</>
-> 47 | ) : {props.conditionB === 'Complete' ? (
-     |           ^
-  48 | <>20mb</>
-  49 | ) : <>9mb</>}}{props.conditionA === 'Default' ? (
-  50 | <>{props.conditionB === 'Complete' ? ("
+"import * as React from \\"react\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+import { View, Text } from \\"@tarojs/components\\";
+
+function ShowWithOtherValues(props: Props) {
+  return (
+    <View>
+      {props.conditionA ? <>Content0</> : <>ContentA</>}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <></> : <>ContentA</>}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>{undefined}</> : <>ContentB</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <></> : <>ContentC</>}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <></> : <>ContentD</>}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>hello</> : <>ContentE</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+      {props.conditionA ? <>123</> : <>ContentF</>}
+      {props.conditionA === \\"Default\\" ? (
+        <>4mb</>
+      ) : props.conditionB === \\"Complete\\" ? (
+        <>20mb</>
+      ) : (
+        <>9mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <>20mb</> : <>9mb</>}</>
+      ) : (
+        <>4mb</>
+      )}
+    </View>
+  );
+}
+
+export default ShowWithOtherValues;
+"
 `;
 
 exports[`Taro > jsx > Typescript Test > showWithFor 1`] = `

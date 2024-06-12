@@ -2884,14 +2884,42 @@ export default MyComponent;
 `;
 
 exports[`React > jsx > Javascript Test > showExpressions 1`] = `
-"',' expected. (43:11)
-  41 | ) : <>ContentF</>}{props.conditionA === 'Default' ? (
-  42 | <>4mb</>
-> 43 | ) : {props.conditionB === 'Complete' ? (
-     |           ^
-  44 | <>20mb</>
-  45 | ) : <>9mb</>}}{props.conditionA === 'Default' ? (
-  46 | <>{props.conditionB === 'Complete' ? ("
+"import * as React from \\"react\\";
+
+function ShowWithOtherValues(props) {
+  return (
+    <div>
+      {props.conditionA ? <>Content0</> : <>ContentA</>}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <></> : <>ContentA</>}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>{undefined}</> : <>ContentB</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <></> : <>ContentC</>}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <></> : <>ContentD</>}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>hello</> : <>ContentE</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+      {props.conditionA ? <>123</> : <>ContentF</>}
+      {props.conditionA === \\"Default\\" ? (
+        <>4mb</>
+      ) : props.conditionB === \\"Complete\\" ? (
+        <>20mb</>
+      ) : (
+        <>9mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <>20mb</> : <>9mb</>}</>
+      ) : (
+        <>4mb</>
+      )}
+    </div>
+  );
+}
+
+export default ShowWithOtherValues;
+"
 `;
 
 exports[`React > jsx > Javascript Test > showWithFor 1`] = `
@@ -6523,14 +6551,47 @@ export default MyComponent;
 `;
 
 exports[`React > jsx > Typescript Test > showExpressions 1`] = `
-"',' expected. (46:11)
-  44 | ) : <>ContentF</>}{props.conditionA === 'Default' ? (
-  45 | <>4mb</>
-> 46 | ) : {props.conditionB === 'Complete' ? (
-     |           ^
-  47 | <>20mb</>
-  48 | ) : <>9mb</>}}{props.conditionA === 'Default' ? (
-  49 | <>{props.conditionB === 'Complete' ? ("
+"import * as React from \\"react\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+function ShowWithOtherValues(props: Props) {
+  return (
+    <div>
+      {props.conditionA ? <>Content0</> : <>ContentA</>}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <></> : <>ContentA</>}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>{undefined}</> : <>ContentB</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <></> : <>ContentC</>}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <></> : <>ContentD</>}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>hello</> : <>ContentE</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+      {props.conditionA ? <>123</> : <>ContentF</>}
+      {props.conditionA === \\"Default\\" ? (
+        <>4mb</>
+      ) : props.conditionB === \\"Complete\\" ? (
+        <>20mb</>
+      ) : (
+        <>9mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <>20mb</> : <>9mb</>}</>
+      ) : (
+        <>4mb</>
+      )}
+    </div>
+  );
+}
+
+export default ShowWithOtherValues;
+"
 `;
 
 exports[`React > jsx > Typescript Test > showWithFor 1`] = `
