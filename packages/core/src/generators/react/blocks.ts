@@ -16,17 +16,18 @@ const NODE_MAPPERS: {
     json: MitosisNode,
     options: ToReactOptions,
     component: MitosisComponent,
+    insideJsx: boolean,
     parentSlots: any[],
   ) => string;
 } = {
-  Slot(json, options, component, parentSlots) {
+  Slot(json, options, component, _insideJsx, parentSlots) {
     const slotName = json.bindings.name?.code || json.properties.name;
 
     const hasChildren = json.children.length;
 
     const renderChildren = () => {
       const childrenStr = json.children
-        ?.map((item) => blockToReact(item, options, component))
+        ?.map((item) => blockToReact(item, options, component, true))
         .join('\n')
         .trim();
       /**
@@ -69,24 +70,29 @@ const NODE_MAPPERS: {
   Fragment(json, options, component) {
     const wrap = wrapInFragment(json) || isRootTextNode(json);
     return `${wrap ? getFragment('open', options) : ''}${json.children
-      .map((item) => blockToReact(item, options, component))
+      .map((item) => blockToReact(item, options, component, wrap))
       .join('\n')}${wrap ? getFragment('close', options) : ''}`;
   },
-  For(_json, options, component) {
+  For(_json, options, component, insideJsx) {
     const json = _json as ForNode;
     const wrap = wrapInFragment(json);
     const forArguments = getForArguments(json).join(', ');
-    return `{${processBinding(
+    const expression = `${processBinding(
       json.bindings.each?.code as string,
       options,
     )}?.map((${forArguments}) => (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options, component))
+      .map((item) => blockToReact(item, options, component, wrap))
       .join('\n')}${wrap ? closeFrag(options) : ''}
-    ))}`;
+    ))`;
+    if (insideJsx) {
+      return `{${expression}}`;
+    } else {
+      return expression;
+    }
   },
-  Show(json, options, component) {
+  Show(json, options, component, insideJsx) {
     const wrap =
       wrapInFragment(json) ||
       isRootTextNode(json) ||
@@ -95,22 +101,28 @@ const NODE_MAPPERS: {
       // since it's a `.map()` call
       (json.children.length === 1 && ['For', 'Show'].includes(json.children[0].name));
 
-    const wrapElse =
+    const wrapElse = !!(
       json.meta.else &&
-      (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
+      (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any))
+    );
 
-    return `{${processBinding(json.bindings.when?.code as string, options)} ? (
+    const expression = `${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options, component))
+      .map((item) => blockToReact(item, options, component, wrap))
       .join('\n')}${wrap ? closeFrag(options) : ''}
     ) : ${
       !json.meta.else
         ? 'null'
         : (wrapElse ? openFrag(options) : '') +
-          blockToReact(json.meta.else as any, options, component) +
+          blockToReact(json.meta.else as any, options, component, wrapElse) +
           (wrapElse ? closeFrag(options) : '')
-    }}`;
+    }`;
+    if (insideJsx) {
+      return `{${expression}}`;
+    } else {
+      return expression;
+    }
   },
 };
 
@@ -157,10 +169,11 @@ export const blockToReact = (
   json: MitosisNode,
   options: ToReactOptions,
   component: MitosisComponent,
+  insideJsx: boolean,
   parentSlots: any[] = [],
 ) => {
   if (NODE_MAPPERS[json.name]) {
-    return NODE_MAPPERS[json.name](json, options, component, parentSlots);
+    return NODE_MAPPERS[json.name](json, options, component, insideJsx, parentSlots);
   }
 
   if (json.properties._text) {
@@ -266,7 +279,7 @@ export const blockToReact = (
       if (!value?.length) {
         continue;
       }
-      const reactComponents = value.map((node) => blockToReact(node, options, component));
+      const reactComponents = value.map((node) => blockToReact(node, options, component, true));
       const slotStringValue =
         reactComponents.length === 1 ? reactComponents[0] : `<>${reactComponents.join('\n')}</>`;
       str += ` ${key}={${slotStringValue}} `;
@@ -288,7 +301,7 @@ export const blockToReact = (
   let childrenNodes = '';
   if (json.children) {
     childrenNodes = json.children
-      .map((item) => blockToReact(item, options, component, needsToRenderSlots))
+      .map((item) => blockToReact(item, options, component, true, needsToRenderSlots))
       .join('');
   }
   if (needsToRenderSlots.length) {

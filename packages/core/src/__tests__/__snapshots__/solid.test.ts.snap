@@ -5856,6 +5856,28 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > showExpressions 1`] = `
+"An identifier or keyword cannot immediately follow a numeric literal. (35:34)
+  33 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
+  34 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
+> 35 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
+     |                                  ^
+  36 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
+  37 |
+  38 |"
+`;
+
+exports[`Solid > jsx > Javascript Test > showExpressions 2`] = `
+"An identifier or keyword cannot immediately follow a numeric literal. (35:34)
+  33 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
+  34 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
+> 35 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
+     |                                  ^
+  36 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
+  37 |
+  38 |"
+`;
+
 exports[`Solid > jsx > Javascript Test > showWithFor 1`] = `
 "import { Show, For } from \\"solid-js\\";
 
@@ -5895,6 +5917,60 @@ function NestedShow(props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > showWithOtherValues 1`] = `
+"import { Show } from \\"solid-js\\";
+
+function ShowWithOtherValues(props) {
+  return (
+    <div>
+      <Show when={props.conditionA}>ContentA</Show>
+      <Show fallback={{ undefined }} when={props.conditionA}>
+        ContentB
+      </Show>
+      <Show when={props.conditionA}>ContentC</Show>
+      <Show when={props.conditionA}>ContentD</Show>
+      <Show fallback={hello} when={props.conditionA}>
+        ContentE
+      </Show>
+      <Show fallback={123} when={props.conditionA}>
+        ContentF
+      </Show>
+    </div>
+  );
+}
+
+export default ShowWithOtherValues;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > showWithOtherValues 2`] = `
+"import { Show } from \\"solid-js\\";
+
+function ShowWithOtherValues(props) {
+  return (
+    <>
+      <div>
+        <Show when={props.conditionA}>ContentA</Show>
+        <Show fallback={{ undefined }} when={props.conditionA}>
+          ContentB
+        </Show>
+        <Show when={props.conditionA}>ContentC</Show>
+        <Show when={props.conditionA}>ContentD</Show>
+        <Show fallback={hello} when={props.conditionA}>
+          ContentE
+        </Show>
+        <Show fallback={123} when={props.conditionA}>
+          ContentF
+        </Show>
+      </div>
+    </>
+  );
+}
+
+export default ShowWithOtherValues;
 "
 `;
 
@@ -13157,6 +13233,28 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > jsx > Typescript Test > showExpressions 1`] = `
+"An identifier or keyword cannot immediately follow a numeric literal. (38:34)
+  36 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
+  37 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
+> 38 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
+     |                                  ^
+  39 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
+  40 |
+  41 |"
+`;
+
+exports[`Solid > jsx > Typescript Test > showExpressions 2`] = `
+"An identifier or keyword cannot immediately follow a numeric literal. (38:34)
+  36 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
+  37 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
+> 38 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
+     |                                  ^
+  39 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
+  40 |
+  41 |"
+`;
+
 exports[`Solid > jsx > Typescript Test > showWithFor 1`] = `
 "import { Show, For } from \\"solid-js\\";
 
@@ -13206,6 +13304,68 @@ function NestedShow(props: Props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > showWithOtherValues 1`] = `
+"import { Show } from \\"solid-js\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowWithOtherValues(props: Props) {
+  return (
+    <div>
+      <Show when={props.conditionA}>ContentA</Show>
+      <Show fallback={{ undefined }} when={props.conditionA}>
+        ContentB
+      </Show>
+      <Show when={props.conditionA}>ContentC</Show>
+      <Show when={props.conditionA}>ContentD</Show>
+      <Show fallback={hello} when={props.conditionA}>
+        ContentE
+      </Show>
+      <Show fallback={123} when={props.conditionA}>
+        ContentF
+      </Show>
+    </div>
+  );
+}
+
+export default ShowWithOtherValues;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > showWithOtherValues 2`] = `
+"import { Show } from \\"solid-js\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowWithOtherValues(props: Props) {
+  return (
+    <>
+      <div>
+        <Show when={props.conditionA}>ContentA</Show>
+        <Show fallback={{ undefined }} when={props.conditionA}>
+          ContentB
+        </Show>
+        <Show when={props.conditionA}>ContentC</Show>
+        <Show when={props.conditionA}>ContentD</Show>
+        <Show fallback={hello} when={props.conditionA}>
+          ContentE
+        </Show>
+        <Show fallback={123} when={props.conditionA}>
+          ContentF
+        </Show>
+      </div>
+    </>
+  );
+}
+
+export default ShowWithOtherValues;
 "
 `;
 

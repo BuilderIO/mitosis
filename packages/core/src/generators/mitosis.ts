@@ -53,6 +53,7 @@ export const blockToMitosis = (
         prettier: options.prettier,
       },
       component,
+      true,
     );
   }
 

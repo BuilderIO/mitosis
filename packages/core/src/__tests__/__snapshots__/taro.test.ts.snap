@@ -2927,6 +2927,46 @@ export default MyComponent;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > showExpressions 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function ShowWithOtherValues(props) {
+  return (
+    <View>
+      {props.conditionA ? <>Content0</> : <>ContentA</>}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <></> : <>ContentA</>}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>{undefined}</> : <>ContentB</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <></> : <>ContentC</>}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <></> : <>ContentD</>}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>hello</> : <>ContentE</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+      {props.conditionA ? <>123</> : <>ContentF</>}
+      {props.conditionA === \\"Default\\" ? (
+        <>4mb</>
+      ) : props.conditionB === \\"Complete\\" ? (
+        <>20mb</>
+      ) : (
+        <>9mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <>20mb</> : <>9mb</>}</>
+      ) : (
+        <>4mb</>
+      )}
+    </View>
+  );
+}
+
+export default ShowWithOtherValues;
+"
+`;
+
 exports[`Taro > jsx > Javascript Test > showWithFor 1`] = `
 "import * as React from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
@@ -2948,6 +2988,27 @@ function NestedShow(props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > showWithOtherValues 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function ShowWithOtherValues(props) {
+  return (
+    <View>
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+    </View>
+  );
+}
+
+export default ShowWithOtherValues;
 "
 `;
 
@@ -6619,6 +6680,52 @@ export default MyComponent;
 "
 `;
 
+exports[`Taro > jsx > Typescript Test > showExpressions 1`] = `
+"import * as React from \\"react\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+import { View, Text } from \\"@tarojs/components\\";
+
+function ShowWithOtherValues(props: Props) {
+  return (
+    <View>
+      {props.conditionA ? <>Content0</> : <>ContentA</>}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <></> : <>ContentA</>}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>{undefined}</> : <>ContentB</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <></> : <>ContentC</>}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <></> : <>ContentD</>}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>hello</> : <>ContentE</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+      {props.conditionA ? <>123</> : <>ContentF</>}
+      {props.conditionA === \\"Default\\" ? (
+        <>4mb</>
+      ) : props.conditionB === \\"Complete\\" ? (
+        <>20mb</>
+      ) : (
+        <>9mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <>20mb</> : <>9mb</>}</>
+      ) : (
+        <>4mb</>
+      )}
+    </View>
+  );
+}
+
+export default ShowWithOtherValues;
+"
+`;
+
 exports[`Taro > jsx > Typescript Test > showWithFor 1`] = `
 "import * as React from \\"react\\";
 
@@ -6646,6 +6753,32 @@ function NestedShow(props: Props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > showWithOtherValues 1`] = `
+"import * as React from \\"react\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+import { View, Text } from \\"@tarojs/components\\";
+
+function ShowWithOtherValues(props: Props) {
+  return (
+    <View>
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+    </View>
+  );
+}
+
+export default ShowWithOtherValues;
 "
 `;
 
