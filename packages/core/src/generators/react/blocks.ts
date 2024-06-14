@@ -159,6 +159,8 @@ export const blockToReact = (
   component: MitosisComponent,
   parentSlots: any[] = [],
 ) => {
+  const needsToRenderSlots: any[] = [];
+
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options, component, parentSlots);
   }
@@ -316,7 +318,6 @@ export const blockToReact = (
   }
 
   // TODO: update MitosisNode for simple code
-  const needsToRenderSlots: any[] = [];
   let childrenNodes = '';
   if (json.children) {
     childrenNodes = json.children
