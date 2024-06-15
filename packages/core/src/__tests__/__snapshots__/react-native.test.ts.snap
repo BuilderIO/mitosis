@@ -594,7 +594,42 @@ export default MyPreviousComponent;
 "
 `;
 
-exports[`React Native > jsx > Javascript Test > Button 1`] = `"Cannot access 'needsToRenderSlots' before initialization"`;
+exports[`React Native > jsx > Javascript Test > Button 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+function Button(props) {
+  return (
+    <View>
+      {props.link ? (
+        <TouchableOpacity onPress={() => {}}>
+          <Text>{props.text}</Text>
+        </TouchableOpacity>
+      ) : null}
+      {!props.link ? (
+        <Button type=\\"button\\" {...props.attributes}>
+          <Text>{props.text}</Text>
+        </Button>
+      ) : null}
+    </View>
+  );
+}
+
+export default Button;
+"
+`;
 
 exports[`React Native > jsx > Javascript Test > Columns 1`] = `
 "import * as React from \\"react\\";
@@ -2412,9 +2447,103 @@ export default RenderContent;
 "
 `;
 
-exports[`React Native > jsx > Javascript Test > defaultProps 1`] = `"Cannot access 'needsToRenderSlots' before initialization"`;
+exports[`React Native > jsx > Javascript Test > defaultProps 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
 
-exports[`React Native > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `"Cannot access 'needsToRenderSlots' before initialization"`;
+function Button(props) {
+  return (
+    <View>
+      {props.link ? (
+        <TouchableOpacity onPress={() => {}}>
+          <Text>{props.text}</Text>
+        </TouchableOpacity>
+      ) : null}
+      {!props.link ? (
+        <Button
+          type=\\"button\\"
+          {...props.attributes}
+          onPress={(event) => props.onClick(event)}
+        >
+          <Text>{props.buttonText}</Text>
+        </Button>
+      ) : null}
+    </View>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
+};
+
+export default Button;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+function Button(props) {
+  return (
+    <View>
+      {props.link ? (
+        <TouchableOpacity onPress={() => {}}>
+          <Text>{props.text}</Text>
+        </TouchableOpacity>
+      ) : null}
+      {!props.link ? (
+        <Button
+          type=\\"button\\"
+          {...props.attributes}
+          onPress={(event) => props.onClick(event)}
+        >
+          <Text>{props.text}</Text>
+        </Button>
+      ) : null}
+    </View>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+  onClick: () => {},
+};
+
+export default Button;
+"
+`;
 
 exports[`React Native > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "import * as React from \\"react\\";
@@ -3615,7 +3744,42 @@ export default RenderContent;
 "
 `;
 
-exports[`React Native > jsx > Javascript Test > rootFragmentMultiNode 1`] = `"Cannot access 'needsToRenderSlots' before initialization"`;
+exports[`React Native > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+function Button(props) {
+  return (
+    <>
+      {props.link ? (
+        <TouchableOpacity onPress={() => {}}>
+          <Text>{props.text}</Text>
+        </TouchableOpacity>
+      ) : null}
+      {!props.link ? (
+        <Button type=\\"button\\" {...props.attributes}>
+          <Text>{props.text}</Text>
+        </Button>
+      ) : null}
+    </>
+  );
+}
+
+export default Button;
+"
+`;
 
 exports[`React Native > jsx > Javascript Test > rootShow 1`] = `
 "import * as React from \\"react\\";
@@ -3731,6 +3895,9 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
 } from \\"react-native\\";
 
 function ShowWithOtherValues(props) {
@@ -3924,6 +4091,9 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
 } from \\"react-native\\";
 
 function ShowWithOtherValues(props) {
@@ -5109,7 +5279,49 @@ export default MyPreviousComponent;
 "
 `;
 
-exports[`React Native > jsx > Typescript Test > Button 1`] = `"Cannot access 'needsToRenderSlots' before initialization"`;
+exports[`React Native > jsx > Typescript Test > Button 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+function Button(props: ButtonProps) {
+  return (
+    <View>
+      {props.link ? (
+        <TouchableOpacity onPress={() => {}}>
+          <Text>{props.text}</Text>
+        </TouchableOpacity>
+      ) : null}
+      {!props.link ? (
+        <Button type=\\"button\\" {...props.attributes}>
+          <Text>{props.text}</Text>
+        </Button>
+      ) : null}
+    </View>
+  );
+}
+
+export default Button;
+"
+`;
 
 exports[`React Native > jsx > Typescript Test > Columns 1`] = `
 "import * as React from \\"react\\";
@@ -7161,9 +7373,121 @@ export default RenderContent;
 "
 `;
 
-exports[`React Native > jsx > Typescript Test > defaultProps 1`] = `"Cannot access 'needsToRenderSlots' before initialization"`;
+exports[`React Native > jsx > Typescript Test > defaultProps 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
 
-exports[`React Native > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `"Cannot access 'needsToRenderSlots' before initialization"`;
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  buttonText?: string; // no default value
+
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick?: () => void;
+}
+
+function Button(props: ButtonProps) {
+  return (
+    <View>
+      {props.link ? (
+        <TouchableOpacity onPress={() => {}}>
+          <Text>{props.text}</Text>
+        </TouchableOpacity>
+      ) : null}
+      {!props.link ? (
+        <Button
+          type=\\"button\\"
+          {...props.attributes}
+          onPress={(event) => props.onClick(event)}
+        >
+          <Text>{props.buttonText}</Text>
+        </Button>
+      ) : null}
+    </View>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
+};
+
+export default Button;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick: () => void;
+}
+
+function Button(props: ButtonProps) {
+  return (
+    <View>
+      {props.link ? (
+        <TouchableOpacity onPress={() => {}}>
+          <Text>{props.text}</Text>
+        </TouchableOpacity>
+      ) : null}
+      {!props.link ? (
+        <Button
+          type=\\"button\\"
+          {...props.attributes}
+          onPress={(event) => props.onClick(event)}
+        >
+          <Text>{props.text}</Text>
+        </Button>
+      ) : null}
+    </View>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+  onClick: () => {},
+};
+
+export default Button;
+"
+`;
 
 exports[`React Native > jsx > Typescript Test > defaultValsWithTypes 1`] = `
 "import * as React from \\"react\\";
@@ -8451,7 +8775,49 @@ export default RenderContent;
 "
 `;
 
-exports[`React Native > jsx > Typescript Test > rootFragmentMultiNode 1`] = `"Cannot access 'needsToRenderSlots' before initialization"`;
+exports[`React Native > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+function Button(props: ButtonProps) {
+  return (
+    <>
+      {props.link ? (
+        <TouchableOpacity onPress={() => {}}>
+          <Text>{props.text}</Text>
+        </TouchableOpacity>
+      ) : null}
+      {!props.link ? (
+        <Button type=\\"button\\" {...props.attributes}>
+          <Text>{props.text}</Text>
+        </Button>
+      ) : null}
+    </>
+  );
+}
+
+export default Button;
+"
+`;
 
 exports[`React Native > jsx > Typescript Test > rootShow 1`] = `
 "import * as React from \\"react\\";
@@ -8571,6 +8937,9 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
 } from \\"react-native\\";
 
 interface Props {
@@ -8774,6 +9143,9 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
 } from \\"react-native\\";
 
 interface Props {
