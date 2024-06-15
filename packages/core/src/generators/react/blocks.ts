@@ -199,9 +199,12 @@ export const blockToReact = (
     } else {
       onPress = `() => {}`;
     }
-    const childrenNodes: string = json.children
-      .map((item) => blockToReact(item, options, component, needsToRenderSlots))
-      .join('');
+    let childrenNodes = '';
+    if (json.children) {
+      childrenNodes = json.children
+        .map((item) => blockToReact(item, options, component, true, needsToRenderSlots))
+        .join('');
+    }
     if (childrenNodes) {
       return `<TouchableOpacity onPress={${onPress}}>
       ${childrenNodes}
