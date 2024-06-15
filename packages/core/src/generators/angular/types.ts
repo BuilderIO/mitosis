@@ -3,6 +3,7 @@ import { BaseTranspilerOptions } from '@/types/transpiler';
 export const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
+  state?: 'class-properties' | 'inline-with-wrappers';
   standalone?: boolean;
   preserveImports?: boolean;
   preserveFileExtensions?: boolean;
@@ -12,6 +13,7 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
 }
 
 export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
+  state: 'inline-with-wrappers',
   preserveImports: false,
   preserveFileExtensions: false,
   visuallyIgnoreHostElement: true,

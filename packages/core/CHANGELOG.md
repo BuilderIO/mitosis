@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.3.6
+
+### Patch Changes
+
+- 2c1b162: Support complex conditional cases
+
+## 0.3.5
+
+### Patch Changes
+
+- 14a9a90: Feat: Angular generator: add `state` config with options `'class-properties'` (new, puts all template code in class properties) and `'inline-with-wrappers'` (existing default, wraps problematic JS expressions within template)
+
+## 0.3.4
+
+### Patch Changes
+
+- 42287fe: chore: Fix typo in CSS property name of Builder compiled-away `Image` component.
+
 ## 0.3.3
 
 ### Patch Changes

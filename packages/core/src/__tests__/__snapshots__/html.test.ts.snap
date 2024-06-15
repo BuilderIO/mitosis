@@ -5658,6 +5658,212 @@ exports[`Html > jsx > Javascript Test > self-referencing component with children
 "
 `;
 
+exports[`Html > jsx > Javascript Test > showExpressions 1`] = `
+"<div>
+  <template data-el=\\"show\\">Content0</template>
+  <template data-el=\\"show-2\\">ContentA</template>
+  <template data-el=\\"show-3\\"></template>
+  <template data-el=\\"show-4\\">ContentB</template>
+  <template data-el=\\"show-5\\">
+    <template data-el=\\"div-1\\"><!-- undefined --></template>
+  </template>
+  <template data-el=\\"show-6\\">ContentC</template>
+  <template data-el=\\"show-7\\"></template>
+  <template data-el=\\"show-8\\">ContentD</template>
+  <template data-el=\\"show-9\\"></template>
+  <template data-el=\\"show-10\\">ContentE</template>
+  <template data-el=\\"show-11\\">hello</template>
+  <template data-el=\\"show-12\\">ContentF</template>
+  <template data-el=\\"show-13\\">123</template>
+  <template data-el=\\"show-14\\">4mb</template>
+  <template data-el=\\"show-15\\">
+    <template data-el=\\"show-16\\">20mb</template>
+  </template>
+</div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-2']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-3']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-4']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-5']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, undefined);
+      });
+
+      document.querySelectorAll(\\"[data-el='show-6']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-7']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-8']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-9']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-10']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-11']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-12']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-13']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-14']\\").forEach((el) => {
+        const whenCondition = props.conditionA === \\"Default\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-15']\\").forEach((el) => {
+        const whenCondition = props.conditionA === \\"Default\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-16']\\").forEach((el) => {
+        const whenCondition = props.conditionB === \\"Complete\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > showWithFor 1`] = `
 "<template data-el=\\"show\\">
   <template data-el=\\"for\\">
@@ -5803,6 +6009,125 @@ exports[`Html > jsx > Javascript Test > showWithFor 1`] = `
           return value;
         }
       } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > showWithOtherValues 1`] = `
+"<div>
+  <template data-el=\\"show\\">ContentA</template>
+  <template data-el=\\"show-2\\">ContentB</template>
+  <template data-el=\\"show-3\\">ContentC</template>
+  <template data-el=\\"show-4\\">ContentD</template>
+  <template data-el=\\"show-5\\">ContentE</template>
+  <template data-el=\\"show-6\\">ContentF</template>
+</div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-2']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-3']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-4']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-5']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-6']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
     }
   })();
 </script>
@@ -12018,6 +12343,212 @@ exports[`Html > jsx > Typescript Test > self-referencing component with children
 "
 `;
 
+exports[`Html > jsx > Typescript Test > showExpressions 1`] = `
+"<div>
+  <template data-el=\\"show\\">Content0</template>
+  <template data-el=\\"show-2\\">ContentA</template>
+  <template data-el=\\"show-3\\"></template>
+  <template data-el=\\"show-4\\">ContentB</template>
+  <template data-el=\\"show-5\\">
+    <template data-el=\\"div-1\\"><!-- undefined --></template>
+  </template>
+  <template data-el=\\"show-6\\">ContentC</template>
+  <template data-el=\\"show-7\\"></template>
+  <template data-el=\\"show-8\\">ContentD</template>
+  <template data-el=\\"show-9\\"></template>
+  <template data-el=\\"show-10\\">ContentE</template>
+  <template data-el=\\"show-11\\">hello</template>
+  <template data-el=\\"show-12\\">ContentF</template>
+  <template data-el=\\"show-13\\">123</template>
+  <template data-el=\\"show-14\\">4mb</template>
+  <template data-el=\\"show-15\\">
+    <template data-el=\\"show-16\\">20mb</template>
+  </template>
+</div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-2']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-3']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-4']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-5']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, undefined);
+      });
+
+      document.querySelectorAll(\\"[data-el='show-6']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-7']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-8']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-9']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-10']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-11']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-12']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-13']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-14']\\").forEach((el) => {
+        const whenCondition = props.conditionA === \\"Default\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-15']\\").forEach((el) => {
+        const whenCondition = props.conditionA === \\"Default\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-16']\\").forEach((el) => {
+        const whenCondition = props.conditionB === \\"Complete\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Typescript Test > showWithFor 1`] = `
 "<template data-el=\\"show\\">
   <template data-el=\\"for\\">
@@ -12163,6 +12694,125 @@ exports[`Html > jsx > Typescript Test > showWithFor 1`] = `
           return value;
         }
       } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > showWithOtherValues 1`] = `
+"<div>
+  <template data-el=\\"show\\">ContentA</template>
+  <template data-el=\\"show-2\\">ContentB</template>
+  <template data-el=\\"show-3\\">ContentC</template>
+  <template data-el=\\"show-4\\">ContentD</template>
+  <template data-el=\\"show-5\\">ContentE</template>
+  <template data-el=\\"show-6\\">ContentF</template>
+</div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-2']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-3']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-4']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-5']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-6']\\").forEach((el) => {
+        const whenCondition = props.conditionA;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
     }
   })();
 </script>

@@ -473,7 +473,7 @@ const _componentToReact = (
       `;
       })
       .join('\n')}
-      
+
     ${json.hooks.onMount
       .map(
         (hook) =>
@@ -512,7 +512,7 @@ const _componentToReact = (
 
     return (
       ${wrap ? openFrag(options) : ''}
-      ${json.children.map((item) => blockToReact(item, options, json, [])).join('\n')}
+      ${json.children.map((item) => blockToReact(item, options, json, wrap, [])).join('\n')}
       ${
         componentHasStyles && options.stylesType === 'styled-jsx'
           ? `<style jsx>{\`${css}\`}</style>`

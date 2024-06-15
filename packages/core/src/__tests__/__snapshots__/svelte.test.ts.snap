@@ -2449,6 +2449,85 @@ exports[`Svelte > jsx > Javascript Test > self-referencing component with childr
 </div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > showExpressions 1`] = `
+"<script>
+  export let conditionA;
+  export let conditionB;
+</script>
+
+<div>
+  {#if conditionA}
+    Content0
+  {:else}
+    ContentA
+  {/if}
+  {#if conditionA}
+    ContentA
+  {/if}
+  {#if conditionA}{:else}
+    ContentA
+  {/if}
+  {#if conditionA}
+    ContentB
+  {:else}
+    {undefined}
+  {/if}
+  {#if conditionA}
+    {undefined}
+  {:else}
+    ContentB
+  {/if}
+  {#if conditionA}
+    ContentC
+  {/if}
+  {#if conditionA}{:else}
+    ContentC
+  {/if}
+  {#if conditionA}
+    ContentD
+  {/if}
+  {#if conditionA}{:else}
+    ContentD
+  {/if}
+  {#if conditionA}
+    ContentE
+  {:else}
+    hello
+  {/if}
+  {#if conditionA}
+    hello
+  {:else}
+    ContentE
+  {/if}
+  {#if conditionA}
+    ContentF
+  {:else}
+    123
+  {/if}
+  {#if conditionA}
+    123
+  {:else}
+    ContentF
+  {/if}
+  {#if conditionA === \\"Default\\"}
+    4mb
+  {:else if conditionB === \\"Complete\\"}
+    20mb
+  {:else}
+    9mb
+  {/if}
+  {#if conditionA === \\"Default\\"}
+    {#if conditionB === \\"Complete\\"}
+      20mb
+    {:else}
+      9mb
+    {/if}
+  {:else}
+    4mb
+  {/if}
+</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > showWithFor 1`] = `
 "<script>
   export let conditionA;
@@ -2462,6 +2541,39 @@ exports[`Svelte > jsx > Javascript Test > showWithFor 1`] = `
 {:else}
   <div>else-condition-A</div>
 {/if}"
+`;
+
+exports[`Svelte > jsx > Javascript Test > showWithOtherValues 1`] = `
+"<script>
+  export let conditionA;
+</script>
+
+<div>
+  {#if conditionA}
+    ContentA
+  {/if}
+  {#if conditionA}
+    ContentB
+  {:else}
+    {undefined}
+  {/if}
+  {#if conditionA}
+    ContentC
+  {/if}
+  {#if conditionA}
+    ContentD
+  {/if}
+  {#if conditionA}
+    ContentE
+  {:else}
+    hello
+  {/if}
+  {#if conditionA}
+    ContentF
+  {:else}
+    123
+  {/if}
+</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > showWithRootText 1`] = `
@@ -5677,6 +5789,92 @@ exports[`Svelte > jsx > Typescript Test > self-referencing component with childr
 </div>"
 `;
 
+exports[`Svelte > jsx > Typescript Test > showExpressions 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  interface Props {
+    conditionA: boolean;
+    conditionB: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let conditionA: Props[\\"conditionA\\"];
+  export let conditionB: Props[\\"conditionB\\"];
+</script>
+
+<div>
+  {#if conditionA}
+    Content0
+  {:else}
+    ContentA
+  {/if}
+  {#if conditionA}
+    ContentA
+  {/if}
+  {#if conditionA}{:else}
+    ContentA
+  {/if}
+  {#if conditionA}
+    ContentB
+  {:else}
+    {undefined}
+  {/if}
+  {#if conditionA}
+    {undefined}
+  {:else}
+    ContentB
+  {/if}
+  {#if conditionA}
+    ContentC
+  {/if}
+  {#if conditionA}{:else}
+    ContentC
+  {/if}
+  {#if conditionA}
+    ContentD
+  {/if}
+  {#if conditionA}{:else}
+    ContentD
+  {/if}
+  {#if conditionA}
+    ContentE
+  {:else}
+    hello
+  {/if}
+  {#if conditionA}
+    hello
+  {:else}
+    ContentE
+  {/if}
+  {#if conditionA}
+    ContentF
+  {:else}
+    123
+  {/if}
+  {#if conditionA}
+    123
+  {:else}
+    ContentF
+  {/if}
+  {#if conditionA === \\"Default\\"}
+    4mb
+  {:else if conditionB === \\"Complete\\"}
+    20mb
+  {:else}
+    9mb
+  {/if}
+  {#if conditionA === \\"Default\\"}
+    {#if conditionB === \\"Complete\\"}
+      20mb
+    {:else}
+      9mb
+    {/if}
+  {:else}
+    4mb
+  {/if}
+</div>"
+`;
+
 exports[`Svelte > jsx > Typescript Test > showWithFor 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   interface Props {
@@ -5697,6 +5895,45 @@ exports[`Svelte > jsx > Typescript Test > showWithFor 1`] = `
 {:else}
   <div>else-condition-A</div>
 {/if}"
+`;
+
+exports[`Svelte > jsx > Typescript Test > showWithOtherValues 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  interface Props {
+    conditionA: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let conditionA: Props[\\"conditionA\\"];
+</script>
+
+<div>
+  {#if conditionA}
+    ContentA
+  {/if}
+  {#if conditionA}
+    ContentB
+  {:else}
+    {undefined}
+  {/if}
+  {#if conditionA}
+    ContentC
+  {/if}
+  {#if conditionA}
+    ContentD
+  {/if}
+  {#if conditionA}
+    ContentE
+  {:else}
+    hello
+  {/if}
+  {#if conditionA}
+    ContentF
+  {:else}
+    123
+  {/if}
+</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > showWithRootText 1`] = `

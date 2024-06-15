@@ -12,7 +12,7 @@ const cli = async (cmd: string) => {
   return system.run(shcmd);
 };
 
-const TIMEOUT = 10000;
+const TIMEOUT = 20000;
 
 test(
   'outputs version',

@@ -181,7 +181,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       return sourceFile;
     } catch (e) {
       console.error(e);
-      return (e as Error).stack || String(e);
+      throw e;
     }
   };
 
