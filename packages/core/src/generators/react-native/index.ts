@@ -130,7 +130,12 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
               node.name = 'TouchableOpacity';
             } else if (node.name === 'button') {
               node.name = 'Button';
-            } else {
+            }
+            // if node is not button or a and still has onClick it needs to pressable
+            else if(node.bindings.onClick) {
+               node.name = 'Pressable';
+            }  
+            else {
               node.name = 'View';
             }
           } else if (
