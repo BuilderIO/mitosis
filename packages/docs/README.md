@@ -46,3 +46,13 @@ By default, the Cloudflare pages adaptor _does not_ include a `public/_routes.js
 In the above example, it's saying _all_ pages should be SSR'd. However, the root static files such as `/favicon.ico` and any static assets in `/build/*` should be excluded from the Functions, and instead treated as a static file.
 
 In most cases the generated `dist/_routes.json` file is ideal. However, if you need more granular control over each path, you can instead provide you're own `public/_routes.json` file. When the project provides its own `public/_routes.json` file, then the Cloudflare adaptor will not auto-generate the routes config and instead use the committed one within the `public` directory.
+
+## Express Server
+
+This app has a minimal [Express server](https://expressjs.com/) implementation. After running a full build, you can preview the build using the command:
+
+```
+npm run serve
+```
+
+Then visit [http://localhost:8080/](http://localhost:8080/)
