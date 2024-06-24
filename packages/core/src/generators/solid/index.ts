@@ -64,6 +64,9 @@ function getContextString(component: MitosisComponent, options: ToSolidOptions) 
 const getRefsString = (json: MitosisComponent, options: ToSolidOptions) =>
   Array.from(getRefs(json))
     .map((ref) => {
+      // fix prettier issue when encounter `let props.ref`
+      // Prettier playground: https://prettier.io/playground/#N4Igxg9gdgLgprEAuEAzArlMMCW0AEAsgJ4DCEAtgA7QIwAUVAThFQM5ICGUxAlPsAA6UfPgA2cGPmas2AOhxQq6GACU4qANzDRTSeiYj6O0fgA8i5VPx7UAXmAz2CpSvWoAhAF9RAegB8JqK8wl7CcAAeNExSACYanOhiUiTk1LSwmiAANCCsuNBsyKCcTCwA7gAKpQhFKJxi5ZzERbkARkycYADWkgDKnBRwADKKcMioDWxw7Z09-VRdigDmyDBM6DMg0xQ4axtbkVRwTDhDsA0AKidQpThwdZNi07lsKxIAiugQ8BNTWwArNgRPrvOBfH7jJBPF4gACO33glRY7GQIE4bAAtFA4HB4rEciB1pwcGIVmkKJw0Q0xIS3lBlhIAIIwdY4NoqOCVE6jHF-Z5bAAWMAoYgA6oKcPA2IswHA+rUpTgAG5S4hosBsVogZWbACSUHisD6YFOVBgTMNfRgxAk-NhMmmYs6VDRzAeJ2V41yimmMWRnGWlPtW0WTD9aJtxzYppw5sJzEUMDFOFiMEFyAAHAAGXJ6BE4PQBoNU6H-XIwThtFNpjNIABMuXQ00uVce5ZAcAobTx+OG3GW6EDcAAYhAmJTWStqSoICAvF4gA
+      if (ref.includes('.')) return '';
       const typeParameter = (options.typescript && json['refs'][ref]?.typeParameter) || '';
       return `let ${ref}${typeParameter ? ': ' + typeParameter : ''};`;
     })
