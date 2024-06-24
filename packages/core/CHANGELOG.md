@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.7
+
+### Patch Changes
+
+- 413cdc2: fix: fix ref issue when transforming mitosis code into solid.js code
+
 ## 0.3.6
 
 ### Patch Changes
