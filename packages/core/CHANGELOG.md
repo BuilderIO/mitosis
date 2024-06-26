@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.8
+
+### Patch Changes
+
+- 495a937: add `fetchpriority` to `img` attributes in `jsx-runtime.d.ts`
+
 ## 0.3.7
 
 ### Patch Changes
