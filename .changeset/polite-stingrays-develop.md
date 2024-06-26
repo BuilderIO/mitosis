@@ -2,4 +2,4 @@
 "@builder.io/mitosis": patch
 ---
 
-Update jsx-runtime.d.ts
+add `fetchpriority` to `img` attributes in `jsx-runtime.d.ts`
