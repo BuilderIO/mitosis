@@ -446,6 +446,7 @@ export declare namespace JSX {
 
   interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
     loading?: string;
+    fetchpriority?: string;
     role?: string;
     alt?: string;
     crossorigin?: HTMLCrossorigin;
