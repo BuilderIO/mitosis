@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-fix: remove deprecated dependencies in core package
+Fix: remove deprecated dependencies: `vue` and `@babel/plugin-proposal-class-properties`
