@@ -10,7 +10,7 @@ import { collectClassString } from './helpers/styles';
 import { ToSolidOptions } from './types';
 
 const ATTTRIBUTE_MAPPERS = {
-  for: 'htmlFor',
+  // for: 'htmlFor',
 };
 
 const transformAttributeName = (name: string) => {
