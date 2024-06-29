@@ -247,7 +247,6 @@ export const blockToReact = (
       continue; // Skip further processing for 'src' in Image
     }
 
-    // Handle special cases for TouchableOpacity
     if (json.name === 'TouchableOpacity') {
       if (key === 'href') {
         const hrefValue = processBinding(value, options);
@@ -258,7 +257,7 @@ export const blockToReact = (
           continue; // Skip further processing for 'href' in TouchableOpacity
         }
       } else if (key === 'target') {
-        // Remove 'target' prop handling
+        // Remove 'target' prop handling for TouchableOpacity
         continue;
       }
     }
@@ -299,29 +298,6 @@ export const blockToReact = (
           str += ` ${key}={${useBindingValue}} `;
         }
       }
-    }
-    if (options.type === 'native' && json.name === 'TouchableOpacity') {
-      let onPress;
-
-      if (json.bindings.link) {
-        onPress = `() => Linking.openURL('${json.bindings.link}')`;
-      } else if (json.bindings.onClick) {
-        onPress = `() => ${json.bindings.onClick}`;
-      } else {
-        onPress = `() => {}`;
-      }
-      let childrenNodes = '';
-      if (json.children) {
-        childrenNodes = json.children
-          .map((item) => blockToReact(item, options, component, true, needsToRenderSlots))
-          .join('');
-      }
-      if (childrenNodes) {
-        return `<TouchableOpacity onPress={${onPress}}>
-        ${childrenNodes}
-      </TouchableOpacity>`;
-      }
-      return `<TouchableOpacity onPress={${onPress}}/> `;
     }
   }
 
