@@ -628,7 +628,10 @@ function Button(props) {
   return (
     <View>
       {props.link ? (
-        <TouchableOpacity onPress={() => Linking.openURL(props.link)}>
+        <TouchableOpacity
+          {...props.attributes}
+          onPress={() => Linking.openURL(props.link)}
+        >
           <Text>{props.text}</Text>
         </TouchableOpacity>
       ) : null}
@@ -1303,7 +1306,15 @@ function Image(props) {
     <View>
       <View ref={pictureRef}>
         {!useLazyLoading() || load ? (
-          <Image source={{ uri: props.image }} />
+          <Image
+            alt={props.altText}
+            aria-role={props.altText ? \\"presentation\\" : undefined}
+            source={{ uri: props.image }}
+            onLoad={(event) => setLoaded()}
+            srcset={props.srcset}
+            sizes={props.sizes}
+            style={styles.image1}
+          />
         ) : null}
         <View srcset={props.srcset} />
       </View>
@@ -1351,7 +1362,7 @@ function ImgStateComponent(props) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <Image source={{ uri: item }} />
+        <Image source={{ uri: item }} key={itemIndex} />
       ))}
     </View>
   );
@@ -1380,7 +1391,18 @@ import {
 import { Builder } from \\"@builder.io/sdk\\";
 
 function ImgComponent(props) {
-  return <Image source={{ uri: props.imgSrc }} />;
+  return (
+    <Image
+      style={{
+        objectFit: props.backgroundSize || \\"cover\\",
+        objectPosition: props.backgroundPosition || \\"center\\",
+      }}
+      {...props.attributes}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      source={{ uri: props.imgSrc }}
+    />
+  );
 }
 
 export default ImgComponent;
@@ -1773,7 +1795,7 @@ function SmileReviews(props) {
       ) : null}
       {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
-          <Image source={{ uri: review.avatar }} />
+          <Image source={{ uri: review.avatar }} style={styles.image1} />
           <View>
             <View>
               <Text>N: </Text>
@@ -2518,7 +2540,10 @@ function Button(props) {
   return (
     <View>
       {props.link ? (
-        <TouchableOpacity onPress={() => Linking.openURL(props.link)}>
+        <TouchableOpacity
+          {...props.attributes}
+          onPress={() => Linking.openURL(props.link)}
+        >
           <Text>{props.text}</Text>
         </TouchableOpacity>
       ) : null}
@@ -2569,7 +2594,10 @@ function Button(props) {
   return (
     <View>
       {props.link ? (
-        <TouchableOpacity onPress={() => Linking.openURL(props.link)}>
+        <TouchableOpacity
+          {...props.attributes}
+          onPress={() => Linking.openURL(props.link)}
+        >
           <Text>{props.text}</Text>
         </TouchableOpacity>
       ) : null}
@@ -3843,7 +3871,10 @@ function Button(props) {
   return (
     <>
       {props.link ? (
-        <TouchableOpacity onPress={() => Linking.openURL(props.link)}>
+        <TouchableOpacity
+          {...props.attributes}
+          onPress={() => Linking.openURL(props.link)}
+        >
           <Text>{props.text}</Text>
         </TouchableOpacity>
       ) : null}
@@ -5421,7 +5452,10 @@ function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
-        <TouchableOpacity onPress={() => Linking.openURL(props.link)}>
+        <TouchableOpacity
+          {...props.attributes}
+          onPress={() => Linking.openURL(props.link)}
+        >
           <Text>{props.text}</Text>
         </TouchableOpacity>
       ) : null}
@@ -6182,7 +6216,15 @@ function Image(props: ImageProps) {
     <View>
       <View ref={pictureRef}>
         {!useLazyLoading() || load ? (
-          <Image source={{ uri: props.image }} />
+          <Image
+            alt={props.altText}
+            aria-role={props.altText ? \\"presentation\\" : undefined}
+            source={{ uri: props.image }}
+            onLoad={(event) => setLoaded()}
+            srcset={props.srcset}
+            sizes={props.sizes}
+            style={styles.image1}
+          />
         ) : null}
         <View srcset={props.srcset} />
       </View>
@@ -6230,7 +6272,7 @@ function ImgStateComponent(props: any) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <Image source={{ uri: item }} />
+        <Image source={{ uri: item }} key={itemIndex} />
       ))}
     </View>
   );
@@ -6277,7 +6319,18 @@ export interface ImgProps {
 import { Builder } from \\"@builder.io/sdk\\";
 
 function ImgComponent(props: ImgProps) {
-  return <Image source={{ uri: props.imgSrc }} />;
+  return (
+    <Image
+      style={{
+        objectFit: props.backgroundSize || \\"cover\\",
+        objectPosition: props.backgroundPosition || \\"center\\",
+      }}
+      {...props.attributes}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      source={{ uri: props.imgSrc }}
+    />
+  );
 }
 
 export default ImgComponent;
@@ -6726,7 +6779,7 @@ function SmileReviews(props: SmileReviewsProps) {
       ) : null}
       {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
-          <Image source={{ uri: review.avatar }} />
+          <Image source={{ uri: review.avatar }} style={styles.image1} />
           <View>
             <View>
               <Text>N: </Text>
@@ -7555,7 +7608,10 @@ function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
-        <TouchableOpacity onPress={() => Linking.openURL(props.link)}>
+        <TouchableOpacity
+          {...props.attributes}
+          onPress={() => Linking.openURL(props.link)}
+        >
           <Text>{props.text}</Text>
         </TouchableOpacity>
       ) : null}
@@ -7614,7 +7670,10 @@ function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
-        <TouchableOpacity onPress={() => Linking.openURL(props.link)}>
+        <TouchableOpacity
+          {...props.attributes}
+          onPress={() => Linking.openURL(props.link)}
+        >
           <Text>{props.text}</Text>
         </TouchableOpacity>
       ) : null}
@@ -8982,7 +9041,10 @@ function Button(props: ButtonProps) {
   return (
     <>
       {props.link ? (
-        <TouchableOpacity onPress={() => Linking.openURL(props.link)}>
+        <TouchableOpacity
+          {...props.attributes}
+          onPress={() => Linking.openURL(props.link)}
+        >
           <Text>{props.text}</Text>
         </TouchableOpacity>
       ) : null}

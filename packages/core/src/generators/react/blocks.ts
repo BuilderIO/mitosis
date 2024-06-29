@@ -236,60 +236,31 @@ export const blockToReact = (
 
     const useBindingValue = processBinding(value, options);
 
-    if (options.type === 'native' && json.name === 'Image') {
+    // Handle src for Image
+    if (json.name === 'Image' && key === 'src') {
       let src;
-      const imageSource = processBinding(String(json.bindings['src']?.code), options);
-      if (json.properties.src) {
-        const isUrl = json.properties.src
-          ? /^(http|https):\/\/[^ "]+$/.test(json.properties.src)
-          : false;
-        let source;
-        if (isUrl) {
-          source = `{ uri: '${json.properties.src}' }`;
-        } else {
-          source = `require('${json.properties.src}')`;
-        }
-        return `<Image  source={${source}} />`;
-      }
+      const imageSource = processBinding(value, options);
       if (imageSource) {
         src = `{ uri: ${imageSource} }`;
+        str += `source = {${src}}`;
       }
-      return `<Image source={${src}} />`;
+      continue; // Skip further processing for 'src' in Image
     }
 
-    if (options.type === 'native' && json.name === 'TouchableOpacity') {
-      let onPress;
-      const hrefValue =
-        processBinding(String(json.bindings['href']?.code), options) || json.properties.href;
-      const onClick =
-        processBinding(String(json.bindings['onClick']?.code), options) || json.properties.onClick;
-
-      if (hrefValue) {
-        if (json.properties.href) {
-          onPress = `() => Linking.openURL('${hrefValue}')`; // Treat as a string
-        } else {
-          onPress = `() => Linking.openURL(${hrefValue})`; // Treat as a reference
+    // Handle special cases for TouchableOpacity
+    if (json.name === 'TouchableOpacity') {
+      if (key === 'href') {
+        const hrefValue = processBinding(value, options);
+        let onPress;
+        if (hrefValue) {
+          onPress = `() => Linking.openURL(${hrefValue})`;
+          str += ` onPress={${onPress}} `;
+          continue; // Skip further processing for 'href' in TouchableOpacity
         }
-      } else if (onClick) {
-        onPress = `() => ${onClick}`; // Treat as a reference
-      } else {
-        onPress = `() => {}`; // Default empty function
+      } else if (key === 'target') {
+        // Remove 'target' prop handling
+        continue;
       }
-
-      let childrenNodes = '';
-      if (json.children) {
-        childrenNodes = json.children
-          .map((item) => blockToReact(item, options, component, true, needsToRenderSlots))
-          .join('');
-      }
-
-      if (childrenNodes) {
-        return `<TouchableOpacity onPress={${onPress}}>
-        ${childrenNodes}
-      </TouchableOpacity>`;
-      }
-
-      return `<TouchableOpacity onPress={${onPress}}/>`;
     }
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${value})} `;
