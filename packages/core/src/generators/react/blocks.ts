@@ -240,19 +240,33 @@ export const blockToReact = (
     if (json.name === 'Image' && key === 'src') {
       let src;
       const imageSource = processBinding(value, options);
-      if (imageSource) {
-        src = `{ uri: ${imageSource} }`;
+      const imgSrc = json.properties.src ?? imageSource;
+      const shouldUseSrcFromProp = Boolean(imgSrc);
+      if (shouldUseSrcFromProp) {
+        const isUrl = json.properties.src
+          ? /^(http|https):\/\/[^ "]+$/.test(json.properties.src)
+          : false;
+        if (isUrl) {
+          src = `{ uri: '${json.properties.src}' }`;
+        } else {
+          src = `require('${json.properties.src}')`;
+        }
+        if (imageSource) {
+          src = `{ uri: ${imageSource} }`;
+        }
         str += `source = {${src}}`;
+        continue; // Skip further processing for 'src' in Image
       }
-      continue; // Skip further processing for 'src' in Image
     }
 
     if (json.name === 'TouchableOpacity') {
       if (key === 'href') {
         const hrefValue = processBinding(value, options);
+        const hrefValueProperties = json.properties.href;
+        const href = hrefValueProperties ?? hrefValue;
         let onPress;
         if (hrefValue) {
-          onPress = `() => Linking.openURL(${hrefValue})`;
+          onPress = `() => Linking.openURL(${href})`;
           str += ` onPress={${onPress}} `;
           continue; // Skip further processing for 'href' in TouchableOpacity
         }
