@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.9
+
+### Patch Changes
+
+- 9705329: Fix: remove deprecated dependencies: `vue` and `@babel/plugin-proposal-class-properties`
+
 ## 0.3.8
 
 ### Patch Changes
