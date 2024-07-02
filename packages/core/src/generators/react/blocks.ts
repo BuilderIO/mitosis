@@ -172,6 +172,8 @@ export const blockToReact = (
   insideJsx: boolean,
   parentSlots: any[] = [],
 ) => {
+  const needsToRenderSlots: any[] = [];
+
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options, component, insideJsx, parentSlots);
   }
@@ -183,6 +185,7 @@ export const blockToReact = (
     }
     return text;
   }
+
   if (json.bindings._text?.code) {
     const processed = processBinding(json.bindings._text.code, options);
     if (
@@ -233,6 +236,45 @@ export const blockToReact = (
 
     const useBindingValue = processBinding(value, options);
 
+    // Handle src for Image
+    if (json.name === 'Image' && key === 'src') {
+      let src;
+      const imageSource = processBinding(value, options);
+      const imgSrc = json.properties.src ?? imageSource;
+      const shouldUseSrcFromProp = Boolean(imgSrc);
+      if (shouldUseSrcFromProp) {
+        const isUrl = json.properties.src
+          ? /^(http|https):\/\/[^ "]+$/.test(json.properties.src)
+          : false;
+        if (isUrl) {
+          src = `{ uri: '${json.properties.src}' }`;
+        } else {
+          src = `require('${json.properties.src}')`;
+        }
+        if (imageSource) {
+          src = `{ uri: ${imageSource} }`;
+        }
+        str += `source = {${src}}`;
+        continue; // Skip further processing for 'src' in Image
+      }
+    }
+
+    if (json.name === 'TouchableOpacity') {
+      if (key === 'href') {
+        const hrefValue = processBinding(value, options);
+        const hrefValueProperties = json.properties.href;
+        const href = hrefValueProperties ?? hrefValue;
+        let onPress;
+        if (hrefValue) {
+          onPress = `() => Linking.openURL(${href})`;
+          str += ` onPress={${onPress}} `;
+          continue; // Skip further processing for 'href' in TouchableOpacity
+        }
+      } else if (key === 'target') {
+        // Remove 'target' prop handling for TouchableOpacity
+        continue;
+      }
+    }
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${value})} `;
     } else if (key.startsWith('on')) {
@@ -297,7 +339,6 @@ export const blockToReact = (
   }
 
   // TODO: update MitosisNode for simple code
-  const needsToRenderSlots: any[] = [];
   let childrenNodes = '';
   if (json.children) {
     childrenNodes = json.children
