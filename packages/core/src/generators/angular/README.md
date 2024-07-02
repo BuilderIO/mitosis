@@ -7,6 +7,7 @@ Add the options to `options.angular` inside [MitosisConfig](https://github.com/B
 ```ts
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
+  selector?: string;
   preserveImports?: boolean;
   preserveFileExtensions?: boolean;
   importMapper?: Function;

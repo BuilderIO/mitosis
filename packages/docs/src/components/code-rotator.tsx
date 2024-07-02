@@ -74,7 +74,7 @@ const angularOutput = `
 import { Component } from "@angular/core";
 
 @Component({
-  selector: "my-component, MyComponent",
+  selector: "my-component",
   template: \`
     <div>
       <input
