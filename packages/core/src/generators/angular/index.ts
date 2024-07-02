@@ -905,7 +905,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
       options?.experimental?.inject ? 'Inject, forwardRef,' : ''
     } Component ${domRefs.size || dynamicComponents.size ? ', ViewChild, ElementRef' : ''}${
-      props.size ? ', Input' : ''
+      props.size ? `, ${props.size && options.state !== 'signals' ? 'Input' : 'input'}` : ''
     } ${dynamicComponents.size ? ', ViewContainerRef, TemplateRef' : ''} } from '@angular/core';
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
@@ -934,10 +934,23 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .filter((item) => !isSlotProperty(item) && item !== 'children')
         .map((item) => {
           const propType = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
-          let propDeclaration = `@Input() ${item}${options.typescript ? `!: ${propType}` : ''}`;
-          if (json.defaultProps && json.defaultProps.hasOwnProperty(item)) {
-            propDeclaration += ` = defaultProps["${item}"]`;
+          let propDeclaration = '';
+          if (options.state !== 'signals') {
+            propDeclaration = `@Input() ${item}${options.typescript ? `!: ${propType}` : ''}${
+              json.defaultProps && json.defaultProps.hasOwnProperty(item)
+                ? ` = defaultProps["${item}"]`
+                : ''
+            }`;
+          } else {
+            propDeclaration = `${item} = input<${options.typescript ? propType : ''}>(
+              ${
+                json.defaultProps && json.defaultProps.hasOwnProperty(item)
+                  ? `defaultProps["${item}"]`
+                  : ''
+              }
+            )`;
           }
+
           return propDeclaration;
         })
         .join('\n')}
