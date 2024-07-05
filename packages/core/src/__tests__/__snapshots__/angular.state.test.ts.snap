@@ -5361,6 +5361,82 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > useObjectWrapper 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <CustomComponent [tooltipPlacementOptions]=\\"node_0_CustomComponent\\">
+        test
+      </CustomComponent>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  node_0_CustomComponent = null;
+
+  ngOnInit() {
+    this.node_0_CustomComponent = {
+      positions: [\\"left\\", \\"bottom\\", \\"bottom-left\\"],
+      offsets: {
+        left: {
+          topOffset: 0,
+          leftOffset: -24,
+        },
+        bottom: {
+          topOffset: 24,
+          leftOffset: 0,
+        },
+        \\"bottom-left\\": {
+          topOffset: 24,
+          leftOffset: 0,
+        },
+      },
+    };
+  }
+
+  ngOnChanges() {
+    this.node_0_CustomComponent = {
+      positions: [\\"left\\", \\"bottom\\", \\"bottom-left\\"],
+      offsets: {
+        left: {
+          topOffset: 0,
+          leftOffset: -24,
+        },
+        bottom: {
+          topOffset: 24,
+          leftOffset: 0,
+        },
+        \\"bottom-left\\": {
+          topOffset: 24,
+          leftOffset: 0,
+        },
+      },
+    };
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CustomComponentModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > useTarget 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11251,6 +11327,82 @@ export default class MyComponent {}
 @NgModule({
   declarations: [MyComponent],
   imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > useObjectWrapper 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <CustomComponent [tooltipPlacementOptions]=\\"node_0_CustomComponent\\">
+        test
+      </CustomComponent>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  node_0_CustomComponent = null;
+
+  ngOnInit() {
+    this.node_0_CustomComponent = {
+      positions: [\\"left\\", \\"bottom\\", \\"bottom-left\\"],
+      offsets: {
+        left: {
+          topOffset: 0,
+          leftOffset: -24,
+        },
+        bottom: {
+          topOffset: 24,
+          leftOffset: 0,
+        },
+        \\"bottom-left\\": {
+          topOffset: 24,
+          leftOffset: 0,
+        },
+      },
+    };
+  }
+
+  ngOnChanges() {
+    this.node_0_CustomComponent = {
+      positions: [\\"left\\", \\"bottom\\", \\"bottom-left\\"],
+      offsets: {
+        left: {
+          topOffset: 0,
+          leftOffset: -24,
+        },
+        bottom: {
+          topOffset: 24,
+          leftOffset: 0,
+        },
+        \\"bottom-left\\": {
+          topOffset: 24,
+          leftOffset: 0,
+        },
+      },
+    };
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CustomComponentModule],
   exports: [MyComponent],
 })
 export class MyComponentModule {}

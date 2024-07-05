@@ -285,6 +285,7 @@ const ANGULAR_TESTS: Tests = {
   dynamicComponentWithEventArg: getRawFile(
     './data/angular/dynamic-component-with-event-args.raw.tsx',
   ),
+  useObjectWrapper: getRawFile('./data/angular/use-object-wrapper.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {

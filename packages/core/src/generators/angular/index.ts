@@ -124,29 +124,10 @@ const handleObjectBindings = (code: string) => {
   let objectCode = code.replace(/^{/, '').replace(/}$/, '');
   objectCode = objectCode.replace(/\/\/.*\n/g, '');
 
-  const spreadOutObjects = objectCode
-    .split(',')
-    .filter((item) => item.includes('...'))
-    .map((item) => item.replace('...', '').trim());
-
-  const objectKeys = objectCode
-    .split(',')
-    .filter((item) => !item.includes('...'))
-    .map((item) => item.trim());
-
-  const otherObjs = objectKeys.map((item) => {
-    return `{ ${item} }`;
-  });
-
-  let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
-
-  if (temp.endsWith(', ')) {
-    temp = temp.slice(0, -2);
-  }
-
-  if (temp.startsWith(', ')) {
-    temp = temp.slice(2);
-  }
+  let temp = objectCode.replace(/\.\.\./g, '');
+  temp = temp.replace(/\{(\w+)}/g, '$1');
+  temp = temp.replace(/\{{2,}/g, '{');
+  temp = temp.replace(/}{2,}/g, '}');
 
   // handle template strings
   if (temp.includes('`')) {
@@ -166,7 +147,7 @@ const handleObjectBindings = (code: string) => {
 
 const processCodeBlockInTemplate = (code: string) => {
   // contains helper calls as Angular doesn't support JS expressions in templates
-  if (code.startsWith('{')) {
+  if (code.startsWith('{') && code.includes('...')) {
     // Objects cannot be spread out directly in Angular so we need to use `useObjectWrapper`
     return `useObjectWrapper(${handleObjectBindings(code)})`;
   } else if (code.startsWith('Object.values')) {
