@@ -15,4 +15,13 @@ describe('React Native', () => {
 
     expect(output).toMatchSnapshot();
   });
+
+  test('native-wind style', () => {
+    const component = parseJsx(twrncStyledComponentRN);
+    const output = componentToReactNative({
+      stylesType: 'native-wind',
+    })({ component });
+
+    expect(output).toMatchSnapshot();
+  });
 });

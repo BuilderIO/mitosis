@@ -16,7 +16,7 @@ import { componentToReact } from '../react';
 import { sanitizeReactNativeBlockStyles } from './sanitize-react-native-block-styles';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
-  stylesType: 'emotion' | 'react-native' | 'twrnc';
+  stylesType: 'emotion' | 'react-native' | 'twrnc' | 'native-wind';
   stateType: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
 }
 
@@ -203,6 +203,45 @@ const TWRNC_STYLES_PLUGIN: Plugin = () => ({
   },
 });
 
+/**
+ * Converts class and className properties to native-wind style syntax
+ * Note: We only support the "with babel" setup: https://www.nativewind.dev/guides/babel
+ */
+const NATIVE_WIND_STYLES_PLUGIN: Plugin = () => ({
+  json: {
+    post: (json: MitosisComponent) => {
+      traverse(json).forEach(function (node) {
+        if (isMitosisNode(node)) {
+          let combinedClasses = [
+            node.properties.class,
+            node.properties.className,
+            node.bindings.class,
+            node.bindings.className
+          ].filter(Boolean).join(' ');
+
+
+          if (node.properties.class) {
+            delete node.properties.class;
+          }
+          if (node.properties.className) {
+            delete node.properties.className;
+          }
+          if (node.bindings.class) {
+            delete node.bindings.class;
+          }
+          if (node.bindings.className) {
+            delete node.bindings.className;
+          }
+
+          if (combinedClasses) {
+            node.properties.className = combinedClasses;
+          }
+        }
+      });
+    },
+  },
+});
+
 const DEFAULT_OPTIONS: ToReactNativeOptions = {
   stateType: 'useState',
   stylesType: 'react-native',
@@ -218,6 +257,8 @@ export const componentToReactNative: TranspilerGenerator<Partial<ToReactNativeOp
 
       if (options.stylesType === 'twrnc') {
         options.plugins.push(TWRNC_STYLES_PLUGIN);
+      } else if (options.stylesType === 'native-wind') {
+        options.plugins.push(NATIVE_WIND_STYLES_PLUGIN);
       } else {
         options.plugins.push(REMOVE_REACT_NATIVE_CLASSES_PLUGIN);
       }
