@@ -16,7 +16,7 @@ import { componentToReact } from '../react';
 import { sanitizeReactNativeBlockStyles } from './sanitize-react-native-block-styles';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
-  stylesType: 'emotion' | 'react-native';
+  stylesType: 'emotion' | 'react-native' | 'twrnc';
   stateType: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
 }
 
@@ -70,7 +70,7 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
 
         item.bindings.style!.code = json5.stringify(styleValue);
       }
-    } catch (e) {}
+    } catch (e) { }
 
     if (!size(cssValue)) {
       return;
@@ -111,7 +111,6 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
 /**
  * Plugin that handles necessary transformations from React to React Native:
  * - Converts DOM tags to <View /> and <Text />
- * - Removes redundant `class`/`className` attributes
  */
 const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
   json: {
@@ -135,6 +134,57 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           ) {
             node.name = 'Text';
           }
+        }
+      });
+    },
+  },
+});
+
+/**
+ * Removes React Native className and class properties from the JSON 
+ */
+const REMOVE_REACT_NATIVE_CLASSES_PLUGIN: Plugin = () => ({
+  json: {
+    pre: (json: MitosisComponent) => {
+      traverse(json).forEach(function (node) {
+        if (isMitosisNode(node)) {
+          if (node.properties.class) {
+            delete node.properties.class;
+          }
+          if (node.properties.className) {
+            delete node.properties.className;
+          }
+          if (node.bindings.class) {
+            delete node.bindings.class;
+          }
+          if (node.bindings.className) {
+            delete node.bindings.className;
+          }
+        }
+      });
+    },
+  },
+});
+
+/**
+ * Converts class and className properties to twrnc style syntax
+ */
+const TWRNC_STYLES_PLUGIN: Plugin = () => ({
+  json: {
+    post: (json: MitosisComponent) => {
+      traverse(json).forEach(function (node) {
+        if (isMitosisNode(node)) {
+          let combinedClasses = [
+            node.properties.class,
+            node.properties.className,
+            node.bindings.class,
+            node.bindings.className
+          ].filter(Boolean).join(' ');
+
+          if (combinedClasses) {
+            node.properties.style = `tw\`${combinedClasses}\``;
+          }
+
           if (node.properties.class) {
             delete node.properties.class;
           }
@@ -161,10 +211,16 @@ const DEFAULT_OPTIONS: ToReactNativeOptions = {
 
 export const componentToReactNative: TranspilerGenerator<Partial<ToReactNativeOptions>> =
   (_options = {}) =>
-  ({ component, path }) => {
-    const json = fastClone(component);
+    ({ component, path }) => {
+      const json = fastClone(component);
 
-    const options = mergeOptions(DEFAULT_OPTIONS, _options);
+      const options = mergeOptions(DEFAULT_OPTIONS, _options);
 
-    return componentToReact({ ...options, type: 'native' })({ component: json, path });
-  };
+      if (options.stylesType === 'twrnc') {
+        options.plugins.push(TWRNC_STYLES_PLUGIN);
+      } else {
+        options.plugins.push(REMOVE_REACT_NATIVE_CLASSES_PLUGIN);
+      }
+
+      return componentToReact({ ...options, type: 'native' })({ component: json, path });
+    };
