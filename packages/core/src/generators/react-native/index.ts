@@ -182,7 +182,7 @@ const TWRNC_STYLES_PLUGIN: Plugin = () => ({
           ].filter(Boolean).join(' ');
 
           if (combinedClasses) {
-            node.properties.style = `tw\`${combinedClasses}\``;
+            node.properties.style = `{tw\`${combinedClasses}\`}`;
           }
 
           if (node.properties.class) {
