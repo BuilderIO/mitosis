@@ -1,7 +1,14 @@
 import { BaseTranspilerOptions } from '@/types/transpiler';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
-  stylesType: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native' | 'style-tag' | 'twrnc' | 'native-wind';
+  stylesType:
+    | 'emotion'
+    | 'styled-components'
+    | 'styled-jsx'
+    | 'react-native'
+    | 'style-tag'
+    | 'twrnc'
+    | 'native-wind';
   stateType: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder' | 'variables';
   format?: 'lite' | 'safe';
   type: 'dom' | 'native' | 'taro';
