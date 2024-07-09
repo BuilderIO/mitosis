@@ -541,6 +541,7 @@ const _componentToReact = (
         }'`
       : ''
   }
+  ${options.stylesType === 'twrnc' ? `import tw from 'twrnc';\n` : ''}
   ${
     componentHasStyles && options.stylesType === 'emotion' && options.format !== 'lite'
       ? `/** @jsx jsx */
