@@ -94,7 +94,7 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
 
 const DEFAULT_OPTIONS: ToSolidOptions = {
   state: 'signals',
-  stylesType: 'styled-components',
+  stylesType: 'style-tag',
 };
 
 export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
@@ -245,8 +245,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
           .join('\n')}
         ${
           options.stylesType === 'style-tag' && css && css.trim().length > 4
-            ? // We add the jsx attribute so prettier formats this nicely
-              `<style jsx>{\`${css}\`}</style>`
+            ? `<style>{\`${css}\`}</style>`
             : ''
         }
         ${shouldInjectCustomStyles ? `<style>{\`${json.style}\`}</style>` : ''}

@@ -3,8 +3,6 @@
 exports[`Solid > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { Show, on, createEffect, createMemo, createSignal } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
-
 function MyBasicRefComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
@@ -33,30 +31,34 @@ function MyBasicRefComponent(props) {
   );
 
   return (
-    <div>
-      <Show when={props.showInput}>
-        <>
-          <input
-            class={css({
-              color: \\"red\\",
-            })}
-            ref={inputRef}
-            value={name()}
-            onBlur={(event) => onBlur()}
-            onInput={(event) => setName(event.target.value)}
-          />
-          <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
-            Choose a car:
-          </label>
-          <select name=\\"cars\\" id=\\"cars\\">
-            <option value=\\"supra\\">GR Supra</option>
-            <option value=\\"86\\">GR 86</option>
-          </select>
-        </>
-      </Show>
-      Hello
-      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
-    </div>
+    <>
+      <div>
+        <Show when={props.showInput}>
+          <>
+            <input
+              class=\\"input-8359a966\\"
+              ref={inputRef}
+              value={name()}
+              onBlur={(event) => onBlur()}
+              onInput={(event) => setName(event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        </Show>
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style>{\`.input-8359a966 {
+  color: red;
+}\`}</style>
+    </>
   );
 }
 
@@ -119,11 +121,9 @@ function MyBasicRefComponent(props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style jsx>{\`
-        .input-8359a966 {
-          color: red;
-        }
-      \`}</style>
+      <style>{\`.input-8359a966 {
+  color: red;
+}\`}</style>
     </>
   );
 }
@@ -134,8 +134,6 @@ export default MyBasicRefComponent;
 
 exports[`Solid > jsx > Javascript Test > Basic 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
-
-import { css } from \\"solid-styled-components\\";
 
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
@@ -153,20 +151,18 @@ function MyBasicComponent(props) {
   }
 
   return (
-    <div
-      class={
-        \\"test \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-    >
-      <input
-        value={DEFAULT_VALUES.name || name()}
-        onInput={(myEvent) => setName(myEvent.target.value)}
-      />
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div class=\\"test div-6bae243e\\">
+        <input
+          value={DEFAULT_VALUES.name || name()}
+          onInput={(myEvent) => setName(myEvent.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style>{\`.div-6bae243e {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -183,26 +179,28 @@ function MyBasicForShowComponent(props) {
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
 
   return (
-    <div>
-      <For each={names()}>
-        {(person, _index) => {
-          const index = _index();
-          return (
-            <Show when={person === name()}>
-              <input
-                value={name()}
-                onInput={(event) => {
-                  setName(event.target.value + \\" and \\" + person);
-                }}
-              />
-              Hello
-              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
-              Liquid!
-            </Show>
-          );
-        }}
-      </For>
-    </div>
+    <>
+      <div>
+        <For each={names()}>
+          {(person, _index) => {
+            const index = _index();
+            return (
+              <Show when={person === name()}>
+                <input
+                  value={name()}
+                  onInput={(event) => {
+                    setName(event.target.value + \\" and \\" + person);
+                  }}
+                />
+                Hello
+                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+                or Liquid!
+              </Show>
+            );
+          }}
+        </For>
+      </div>
+    </>
   );
 }
 
@@ -237,11 +235,9 @@ function MyBasicComponent(props) {
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-      <style jsx>{\`
-        .div-6bae243e {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-6bae243e {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -309,13 +305,15 @@ function MyBasicComponent(props) {
   });
 
   return (
-    <Injector.Provider value={createInjector()}>
-      <div>
-        {myService.method(\\"hello\\") + name()}
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onInput={(event) => onChange} />
-      </div>
-    </Injector.Provider>
+    <>
+      <Injector.Provider value={createInjector()}>
+        <div>
+          {myService.method(\\"hello\\") + name()}
+          Hello! I can run in React, Vue, Solid, or Liquid!
+          <input onInput={(event) => onChange} />
+        </div>
+      </Injector.Provider>
+    </>
   );
 }
 
@@ -373,10 +371,12 @@ function MyBasicOnMountUpdateComponent(props) {
   });
 
   return (
-    <div>
-      Hello
-      {name()}
-    </div>
+    <>
+      <div>
+        Hello
+        {name()}
+      </div>
+    </>
   );
 }
 
@@ -421,7 +421,11 @@ function MyBasicOutputsComponent(props) {
     props.onEvent(props.message);
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MyBasicOutputsComponent;
@@ -461,7 +465,11 @@ function MyBasicOutputsComponent(props) {
     props.onEvent(props.message);
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MyBasicOutputsComponent;
@@ -492,7 +500,11 @@ export default MyBasicOutputsComponent;
 
 exports[`Solid > jsx > Javascript Test > BasicAttribute 1`] = `
 "function MyComponent(props) {
-  return <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />;
+  return (
+    <>
+      <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />
+    </>
+  );
 }
 
 export default MyComponent;
@@ -519,15 +531,21 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 
 function MyBooleanAttribute(props) {
   return (
-    <div>
-      <Show when={props.children}>
-        {props.children}
-        {props.type}
-      </Show>
-      <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
-      <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
-      <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
-    </div>
+    <>
+      <div>
+        <Show when={props.children}>
+          {props.children}
+          {props.type}
+        </Show>
+        <MyBooleanAttributeComponent
+          toggle={true}
+        ></MyBooleanAttributeComponent>
+        <MyBooleanAttributeComponent
+          toggle={true}
+        ></MyBooleanAttributeComponent>
+        <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
+      </div>
+    </>
   );
 }
 
@@ -576,15 +594,17 @@ function MyBasicChildComponent(props) {
   const [dev, setDev] = createSignal(\\"PatrickJS\\");
 
   return (
-    <div>
-      <MyBasicComponent id={dev()}></MyBasicComponent>
+    <>
       <div>
-        <MyBasicOnMountUpdateComponent
-          hi={name()}
-          bye={dev()}
-        ></MyBasicOnMountUpdateComponent>
+        <MyBasicComponent id={dev()}></MyBasicComponent>
+        <div>
+          <MyBasicOnMountUpdateComponent
+            hi={name()}
+            bye={dev()}
+          ></MyBasicOnMountUpdateComponent>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -635,26 +655,28 @@ function MyBasicForComponent(props) {
   });
 
   return (
-    <div>
-      <For each={names()}>
-        {(person, _index) => {
-          const index = _index();
-          return (
-            <>
-              <input
-                value={name()}
-                onInput={(event) => {
-                  setName(event.target.value + \\" and \\" + person);
-                }}
-              />
-              Hello
-              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
-              Liquid!
-            </>
-          );
-        }}
-      </For>
-    </div>
+    <>
+      <div>
+        <For each={names()}>
+          {(person, _index) => {
+            const index = _index();
+            return (
+              <>
+                <input
+                  value={name()}
+                  onInput={(event) => {
+                    setName(event.target.value + \\" and \\" + person);
+                  }}
+                />
+                Hello
+                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+                or Liquid!
+              </>
+            );
+          }}
+        </For>
+      </div>
+    </>
   );
 }
 
@@ -707,8 +729,6 @@ export default MyBasicForComponent;
 exports[`Solid > jsx > Javascript Test > BasicRef 1`] = `
 "import { Show, createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
-
 function MyBasicRefComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
@@ -725,30 +745,34 @@ function MyBasicRefComponent(props) {
   let inputNoArgRef;
 
   return (
-    <div>
-      <Show when={props.showInput}>
-        <>
-          <input
-            class={css({
-              color: \\"red\\",
-            })}
-            ref={inputRef}
-            value={name()}
-            onBlur={(event) => onBlur()}
-            onInput={(event) => setName(event.target.value)}
-          />
-          <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
-            Choose a car:
-          </label>
-          <select name=\\"cars\\" id=\\"cars\\">
-            <option value=\\"supra\\">GR Supra</option>
-            <option value=\\"86\\">GR 86</option>
-          </select>
-        </>
-      </Show>
-      Hello
-      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
-    </div>
+    <>
+      <div>
+        <Show when={props.showInput}>
+          <>
+            <input
+              class=\\"input-1360a7e4\\"
+              ref={inputRef}
+              value={name()}
+              onBlur={(event) => onBlur()}
+              onInput={(event) => setName(event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        </Show>
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style>{\`.input-1360a7e4 {
+  color: red;
+}\`}</style>
+    </>
   );
 }
 
@@ -799,11 +823,9 @@ function MyBasicRefComponent(props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style jsx>{\`
-        .input-1360a7e4 {
-          color: red;
-        }
-      \`}</style>
+      <style>{\`.input-1360a7e4 {
+  color: red;
+}\`}</style>
     </>
   );
 }
@@ -823,9 +845,11 @@ function MyBasicRefAssignmentComponent(props) {
   }
 
   return (
-    <div>
-      <button onClick={(evt) => handlerClick(evt)}>Click</button>
-    </div>
+    <>
+      <div>
+        <button onClick={(evt) => handlerClick(evt)}>Click</button>
+      </div>
+    </>
   );
 }
 
@@ -882,14 +906,16 @@ function MyPreviousComponent(props) {
   createEffect(on(() => [onUpdateFn_0_count__()], onUpdateFn_0));
 
   return (
-    <div>
-      <h1>
-        Now:
-        {count()}, before:
-        {prevCount}
-      </h1>
-      <button onClick={(event) => setCount(1)}>Increment</button>
-    </div>
+    <>
+      <div>
+        <h1>
+          Now:
+          {count()}, before:
+          {prevCount}
+        </h1>
+        <button onClick={(event) => setCount(1)}>Increment</button>
+      </div>
+    </>
   );
 }
 
@@ -945,22 +971,24 @@ exports[`Solid > jsx > Javascript Test > Button 1`] = `
 
 function Button(props) {
   return (
-    <div>
-      <Show when={props.link}>
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
-      </Show>
-      <Show when={!props.link}>
-        <button type=\\"button\\" {...props.attributes}>
-          {props.text}
-        </button>
-      </Show>
-    </div>
+    <>
+      <div>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -1001,8 +1029,6 @@ export default Button;
 exports[`Solid > jsx > Javascript Test > Columns 1`] = `
 "import { For, createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
-
 function Column(props) {
   function getColumns() {
     return props.columns || [];
@@ -1025,42 +1051,29 @@ function Column(props) {
   }
 
   return (
-    <div
-      class={
-        \\"builder-columns \\" +
-        css({
-          display: \\"flex\\",
-          flexDirection: \\"column\\",
-          alignItems: \\"stretch\\",
-          lineHeight: \\"normal\\",
-          \\"@media (max-width: 999px)\\": {
-            flexDirection: \\"row\\",
-          },
-          \\"@media (max-width: 639px)\\": {
-            flexDirection: \\"row-reverse\\",
-          },
-        })
-      }
-    >
-      <For each={props.columns}>
-        {(column, _index) => {
-          const index = _index();
-          return (
-            <div
-              class={
-                \\"builder-column \\" +
-                css({
-                  flexGrow: \\"1\\",
-                })
-              }
-            >
-              {column.content}
-              {index}
-            </div>
-          );
-        }}
-      </For>
-    </div>
+    <>
+      <div class=\\"builder-columns div-8ebf4416\\">
+        <For each={props.columns}>
+          {(column, _index) => {
+            const index = _index();
+            return (
+              <div class=\\"builder-column div-8ebf4416-2\\">
+                {column.content}
+                {index}
+              </div>
+            );
+          }}
+        </For>
+      </div>
+      <style>{\`.div-8ebf4416 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
+}@media (max-width: 999px) { .div-8ebf4416 {   flex-direction: row; } }@media (max-width: 639px) { .div-8ebf4416 {   flex-direction: row-reverse; } }.div-8ebf4416-2 {
+  flex-grow: 1;
+}\`}</style>
+    </>
   );
 }
 
@@ -1107,27 +1120,14 @@ function Column(props) {
           }}
         </For>
       </div>
-      <style jsx>{\`
-        .div-8ebf4416 {
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
-          line-height: normal;
-        }
-        @media (max-width: 999px) {
-          .div-8ebf4416 {
-            flex-direction: row;
-          }
-        }
-        @media (max-width: 639px) {
-          .div-8ebf4416 {
-            flex-direction: row-reverse;
-          }
-        }
-        .div-8ebf4416-2 {
-          flex-grow: 1;
-        }
-      \`}</style>
+      <style>{\`.div-8ebf4416 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
+}@media (max-width: 999px) { .div-8ebf4416 {   flex-direction: row; } }@media (max-width: 639px) { .div-8ebf4416 {   flex-direction: row-reverse; } }.div-8ebf4416-2 {
+  flex-grow: 1;
+}\`}</style>
     </>
   );
 }
@@ -1139,15 +1139,17 @@ export default Column;
 exports[`Solid > jsx > Javascript Test > ContentSlotHtml 1`] = `
 "function ContentSlotCode(props) {
   return (
-    <div>
-      <Slot name={props.slotTesting}></Slot>
+    <>
       <div>
-        <hr />
+        <Slot name={props.slotTesting}></Slot>
+        <div>
+          <hr />
+        </div>
+        <div>
+          <Slot></Slot>
+        </div>
       </div>
-      <div>
-        <Slot></Slot>
-      </div>
-    </div>
+    </>
   );
 }
 
@@ -1193,23 +1195,25 @@ function ContentSlotJsxCode(props) {
   }
 
   return (
-    <Show when={props.slotReference}>
-      <div
-        class={cls()}
-        name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-        title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-        {...props.attributes}
-        onClick={(event) => show()}
-      >
-        <Show when={showContent() && props.slotContent}>
-          <Slot name=\\"content\\">{props.content}</Slot>
-        </Show>
-        <div>
-          <hr />
+    <>
+      <Show when={props.slotReference}>
+        <div
+          class={cls()}
+          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+          {...props.attributes}
+          onClick={(event) => show()}
+        >
+          <Show when={showContent() && props.slotContent}>
+            <Slot name=\\"content\\">{props.content}</Slot>
+          </Show>
+          <div>
+            <hr />
+          </div>
+          <div>{props.children}</div>
         </div>
-        <div>{props.children}</div>
-      </div>
-    </Show>
+      </Show>
+    </>
   );
 }
 
@@ -1317,13 +1321,15 @@ function CustomCode(props) {
   });
 
   return (
-    <div
-      class={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      ref={elem}
-      innerHTML={props.code}
-    ></div>
+    <>
+      <div
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        ref={elem}
+        innerHTML={props.code}
+      ></div>
+    </>
   );
 }
 
@@ -1461,13 +1467,15 @@ function CustomCode(props) {
   });
 
   return (
-    <div
-      class={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      ref={elem}
-      innerHTML={props.code}
-    ></div>
+    <>
+      <div
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        ref={elem}
+        innerHTML={props.code}
+      ></div>
+    </>
   );
 }
 
@@ -1550,8 +1558,6 @@ export default CustomCode;
 
 exports[`Solid > jsx > Javascript Test > Form 1`] = `
 "import { Show, For, createSignal, createMemo } from \\"solid-js\\";
-
-import { css } from \\"solid-styled-components\\";
 
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import {
@@ -1789,62 +1795,60 @@ function FormComponent(props) {
   let formRef;
 
   return (
-    <form
-      validate={props.validate}
-      ref={formRef}
-      action={!props.sendWithJs && props.action}
-      method={props.method}
-      name={props.name}
-      onSubmit={(event) => onSubmit(event)}
-      {...props.attributes}
-    >
-      <Show when={props.builderBlock && props.builderBlock.children}>
-        <For each={props.builderBlock?.children}>
-          {(block, _index) => {
-            const index = _index();
-            return (
-              <BuilderBlockComponent
-                key={block.id}
-                block={block}
-                index={index}
-              ></BuilderBlockComponent>
-            );
-          }}
-        </For>
-      </Show>
-      <Show when={submissionState() === \\"error\\"}>
-        <BuilderBlocks
-          dataPath=\\"errorMessage\\"
-          blocks={props.errorMessage}
-        ></BuilderBlocks>
-      </Show>
-      <Show when={submissionState() === \\"sending\\"}>
-        <BuilderBlocks
-          dataPath=\\"sendingMessage\\"
-          blocks={props.sendingMessage}
-        ></BuilderBlocks>
-      </Show>
-      <Show when={submissionState() === \\"error\\" && responseData()}>
-        <pre
-          class={
-            \\"builder-form-error-text \\" +
-            css({
-              padding: \\"10px\\",
-              color: \\"red\\",
-              textAlign: \\"center\\",
-            })
-          }
-        >
-          {JSON.stringify(responseData(), null, 2)}
-        </pre>
-      </Show>
-      <Show when={submissionState() === \\"success\\"}>
-        <BuilderBlocks
-          dataPath=\\"successMessage\\"
-          blocks={props.successMessage}
-        ></BuilderBlocks>
-      </Show>
-    </form>
+    <>
+      <form
+        validate={props.validate}
+        ref={formRef}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => onSubmit(event)}
+        {...props.attributes}
+      >
+        <Show when={props.builderBlock && props.builderBlock.children}>
+          <For each={props.builderBlock?.children}>
+            {(block, _index) => {
+              const index = _index();
+              return (
+                <BuilderBlockComponent
+                  key={block.id}
+                  block={block}
+                  index={index}
+                ></BuilderBlockComponent>
+              );
+            }}
+          </For>
+        </Show>
+        <Show when={submissionState() === \\"error\\"}>
+          <BuilderBlocks
+            dataPath=\\"errorMessage\\"
+            blocks={props.errorMessage}
+          ></BuilderBlocks>
+        </Show>
+        <Show when={submissionState() === \\"sending\\"}>
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          ></BuilderBlocks>
+        </Show>
+        <Show when={submissionState() === \\"error\\" && responseData()}>
+          <pre class=\\"builder-form-error-text pre-3a429f9e\\">
+            {JSON.stringify(responseData(), null, 2)}
+          </pre>
+        </Show>
+        <Show when={submissionState() === \\"success\\"}>
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          ></BuilderBlocks>
+        </Show>
+      </form>
+      <style>{\`.pre-3a429f9e {
+  padding: 10px;
+  color: red;
+  text-align: center;
+}\`}</style>
+    </>
   );
 }
 
@@ -2139,13 +2143,11 @@ function FormComponent(props) {
           ></BuilderBlocks>
         </Show>
       </form>
-      <style jsx>{\`
-        .pre-3a429f9e {
-          padding: 10px;
-          color: red;
-          text-align: center;
-        }
-      \`}</style>
+      <style>{\`.pre-3a429f9e {
+  padding: 10px;
+  color: red;
+  text-align: center;
+}\`}</style>
     </>
   );
 }
@@ -2156,8 +2158,6 @@ export default FormComponent;
 
 exports[`Solid > jsx > Javascript Test > Image 1`] = `
 "import { Show, onMount, createSignal, createMemo } from \\"solid-js\\";
-
-import { css } from \\"solid-styled-components\\";
 
 function Image(props) {
   const [scrollListener, setScrollListener] = createSignal(null);
@@ -2209,33 +2209,35 @@ function Image(props) {
   });
 
   return (
-    <div>
-      <picture ref={pictureRef}>
-        <Show when={!useLazyLoading() || load()}>
-          <img
-            class={
-              \\"builder-image\\" +
-              (props._class ? \\" \\" + props._class : \\"\\") +
-              \\" \\" +
-              css({
-                opacity: \\"1\\",
-                transition: \\"opacity 0.2s ease-in-out\\",
-                objectFit: \\"cover\\",
-                objectPosition: \\"center\\",
-              })
-            }
-            alt={props.altText}
-            aria-role={props.altText ? \\"presentation\\" : undefined}
-            src={props.image}
-            onLoad={(event) => setLoaded()}
-            srcset={props.srcset}
-            sizes={props.sizes}
-          />
-        </Show>
-        <source srcset={props.srcset} />
-      </picture>
-      {props.children}
-    </div>
+    <>
+      <div>
+        <picture ref={pictureRef}>
+          <Show when={!useLazyLoading() || load()}>
+            <img
+              class={
+                \\"builder-image\\" +
+                (props._class ? \\" \\" + props._class : \\"\\") +
+                \\" img-668cedfa\\"
+              }
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              src={props.image}
+              onLoad={(event) => setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+            />
+          </Show>
+          <source srcset={props.srcset} />
+        </picture>
+        {props.children}
+      </div>
+      <style>{\`.img-668cedfa {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
+}\`}</style>
+    </>
   );
 }
 
@@ -2318,14 +2320,12 @@ function Image(props) {
         </picture>
         {props.children}
       </div>
-      <style jsx>{\`
-        .img-668cedfa {
-          opacity: 1;
-          transition: opacity 0.2s ease-in-out;
-          object-fit: cover;
-          object-position: center;
-        }
-      \`}</style>
+      <style>{\`.img-668cedfa {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
+}\`}</style>
     </>
   );
 }
@@ -2343,18 +2343,20 @@ function ImgStateComponent(props) {
   const [images, setImages] = createSignal([\\"http://example.com/qwik.png\\"]);
 
   return (
-    <div>
-      <For each={images()}>
-        {(item, _index) => {
-          const itemIndex = _index();
-          return (
-            <>
-              <img class=\\"custom-class\\" src={item} key={itemIndex} />
-            </>
-          );
-        }}
-      </For>
-    </div>
+    <>
+      <div>
+        <For each={images()}>
+          {(item, _index) => {
+            const itemIndex = _index();
+            return (
+              <>
+                <img class=\\"custom-class\\" src={item} key={itemIndex} />
+              </>
+            );
+          }}
+        </For>
+      </div>
+    </>
   );
 }
 
@@ -2397,16 +2399,18 @@ exports[`Solid > jsx > Javascript Test > Img 1`] = `
 
 function ImgComponent(props) {
   return (
-    <img
-      style={{
-        \\"object-fit\\": props.backgroundSize || \\"cover\\",
-        \\"object-position\\": props.backgroundPosition || \\"center\\",
-      }}
-      {...props.attributes}
-      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
-      alt={props.altText}
-      src={props.imgSrc}
-    />
+    <>
+      <img
+        style={{
+          \\"object-fit\\": props.backgroundSize || \\"cover\\",
+          \\"object-position\\": props.backgroundPosition || \\"center\\",
+        }}
+        {...props.attributes}
+        key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+        alt={props.altText}
+        src={props.imgSrc}
+      />
+    </>
   );
 }
 
@@ -2443,21 +2447,23 @@ exports[`Solid > jsx > Javascript Test > Input 1`] = `
 
 function FormInputComponent(props) {
   return (
-    <input
-      {...props.attributes}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      placeholder={props.placeholder}
-      type={props.type}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-      required={props.required}
-      onInput={(event) => props.onChange?.(event.target.value)}
-    />
+    <>
+      <input
+        {...props.attributes}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        placeholder={props.placeholder}
+        type={props.type}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+        required={props.required}
+        onInput={(event) => props.onChange?.(event.target.value)}
+      />
+    </>
   );
 }
 
@@ -2505,11 +2511,13 @@ function Stepper(props) {
   }
 
   return (
-    <FormInputComponent
-      name=\\"kingzez\\"
-      type=\\"text\\"
-      onChange={(value) => handleChange(value)}
-    ></FormInputComponent>
+    <>
+      <FormInputComponent
+        name=\\"kingzez\\"
+        type=\\"text\\"
+        onChange={(value) => handleChange(value)}
+      ></FormInputComponent>
+    </>
   );
 }
 
@@ -2545,10 +2553,12 @@ export default Stepper;
 exports[`Solid > jsx > Javascript Test > RawText 1`] = `
 "function RawText(props) {
   return (
-    <span
-      class={props.attributes?.class || props.attributes?.className}
-      innerHTML={props.text || \\"\\"}
-    ></span>
+    <>
+      <span
+        class={props.attributes?.class || props.attributes?.className}
+        innerHTML={props.text || \\"\\"}
+      ></span>
+    </>
   );
 }
 
@@ -2575,18 +2585,20 @@ export default RawText;
 exports[`Solid > jsx > Javascript Test > Section 1`] = `
 "function SectionComponent(props) {
   return (
-    <section
-      {...props.attributes}
-      style={
-        props.maxWidth && typeof props.maxWidth === \\"number\\"
-          ? {
-              \\"max-width\\": props.maxWidth,
-            }
-          : undefined
-      }
-    >
-      {props.children}
-    </section>
+    <>
+      <section
+        {...props.attributes}
+        style={
+          props.maxWidth && typeof props.maxWidth === \\"number\\"
+            ? {
+                \\"max-width\\": props.maxWidth,
+              }
+            : undefined
+        }
+      >
+        {props.children}
+      </section>
+    </>
   );
 }
 
@@ -2603,23 +2615,25 @@ function SectionStateComponent(props) {
   const [items, setItems] = createSignal([42]);
 
   return (
-    <Show when={max()}>
-      <For each={items()}>
-        {(item, _index) => {
-          const index = _index();
-          return (
-            <section
-              {...props.attributes}
-              style={{
-                \\"max-width\\": item + max(),
-              }}
-            >
-              {props.children}
-            </section>
-          );
-        }}
-      </For>
-    </Show>
+    <>
+      <Show when={max()}>
+        <For each={items()}>
+          {(item, _index) => {
+            const index = _index();
+            return (
+              <section
+                {...props.attributes}
+                style={{
+                  \\"max-width\\": item + max(),
+                }}
+              >
+                {props.children}
+              </section>
+            );
+          }}
+        </For>
+      </Show>
+    </>
   );
 }
 
@@ -2693,28 +2707,30 @@ import { Builder } from \\"@builder.io/sdk\\";
 
 function SelectComponent(props) {
   return (
-    <select
-      {...props.attributes}
-      value={props.value}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      defaultValue={props.defaultValue}
-      name={props.name}
-    >
-      <For each={props.options}>
-        {(option, _index) => {
-          const index = _index();
-          return (
-            <option value={option.value} data-index={index}>
-              {option.name || option.value}
-            </option>
-          );
-        }}
-      </For>
-    </select>
+    <>
+      <select
+        {...props.attributes}
+        value={props.value}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        defaultValue={props.defaultValue}
+        name={props.name}
+      >
+        <For each={props.options}>
+          {(option, _index) => {
+            const index = _index();
+            return (
+              <option value={option.value} data-index={index}>
+                {option.name || option.value}
+              </option>
+            );
+          }}
+        </For>
+      </select>
+    </>
   );
 }
 
@@ -2763,11 +2779,13 @@ export default SelectComponent;
 exports[`Solid > jsx > Javascript Test > SlotDefault 1`] = `
 "function SlotCode(props) {
   return (
-    <div>
-      <Slot>
-        <div class=\\"default-slot\\">Default content</div>
-      </Slot>
-    </div>
+    <>
+      <div>
+        <Slot>
+          <div class=\\"default-slot\\">Default content</div>
+        </Slot>
+      </div>
+    </>
   );
 }
 
@@ -2797,11 +2815,13 @@ exports[`Solid > jsx > Javascript Test > SlotHtml 1`] = `
 
 function SlotCode(props) {
   return (
-    <div>
-      <ContentSlotCode>
-        <Slot testing={<div>Hello</div>}></Slot>
-      </ContentSlotCode>
-    </div>
+    <>
+      <div>
+        <ContentSlotCode>
+          <Slot testing={<div>Hello</div>}></Slot>
+        </ContentSlotCode>
+      </div>
+    </>
   );
 }
 
@@ -2833,9 +2853,11 @@ exports[`Solid > jsx > Javascript Test > SlotJsx 1`] = `
 
 function SlotCode(props) {
   return (
-    <div>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
-    </div>
+    <>
+      <div>
+        <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      </div>
+    </>
   );
 }
 
@@ -2863,12 +2885,14 @@ export default SlotCode;
 exports[`Solid > jsx > Javascript Test > SlotNamed 1`] = `
 "function SlotCode(props) {
   return (
-    <div>
-      <Slot name=\\"myAwesomeSlot\\"></Slot>
-      <Slot name=\\"top\\"></Slot>
-      <Slot name=\\"left\\">Default left</Slot>
-      <Slot>Default Child</Slot>
-    </div>
+    <>
+      <div>
+        <Slot name=\\"myAwesomeSlot\\"></Slot>
+        <Slot name=\\"top\\"></Slot>
+        <Slot name=\\"left\\">Default left</Slot>
+        <Slot>Default Child</Slot>
+      </div>
+    </>
   );
 }
 
@@ -2896,8 +2920,6 @@ export default SlotCode;
 
 exports[`Solid > jsx > Javascript Test > Stamped.io 1`] = `
 "import { Show, For, onMount, createSignal, createMemo } from \\"solid-js\\";
-
-import { css } from \\"solid-styled-components\\";
 
 import { kebabCase, snakeCase } from \\"lodash\\";
 
@@ -2929,73 +2951,67 @@ function SmileReviews(props) {
   });
 
   return (
-    <div data-user={name()}>
-      <button onClick={(event) => setShowReviewPrompt(true)}>
-        Write a review
-      </button>
-      <Show when={showReviewPrompt() || \\"asdf\\"}>
-        <input placeholder=\\"Email\\" />
-        <input
-          class={css({
-            display: \\"block\\",
-          })}
-          placeholder=\\"Title\\"
-        />
-        <textarea
-          class={css({
-            display: \\"block\\",
-          })}
-          placeholder=\\"How was your experience?\\"
-        ></textarea>
-        <button
-          class={css({
-            display: \\"block\\",
-          })}
-          onClick={(event) => {
-            event.preventDefault();
-            setShowReviewPrompt(false);
-          }}
-        >
-          Submit
+    <>
+      <div data-user={name()}>
+        <button onClick={(event) => setShowReviewPrompt(true)}>
+          Write a review
         </button>
-      </Show>
-      <For each={reviews()}>
-        {(review, _index) => {
-          const index = _index();
-          return (
-            <div
-              class={css({
-                margin: \\"10px\\",
-                padding: \\"10px\\",
-                background: \\"white\\",
-                display: \\"flex\\",
-                borderRadius: \\"5px\\",
-                boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
-                WebkitFontSmoothing: \\"antialiased\\",
-              })}
-              key={review.id}
-            >
-              <img
-                class={css({
-                  height: \\"30px\\",
-                  width: \\"30px\\",
-                  marginRight: \\"10px\\",
-                })}
-                src={review.avatar}
-              />
-              <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-                <div>
-                  N:
-                  {index}
+        <Show when={showReviewPrompt() || \\"asdf\\"}>
+          <input placeholder=\\"Email\\" />
+          <input class=\\"input-2163cbd4\\" placeholder=\\"Title\\" />
+          <textarea
+            class=\\"textarea-2163cbd4\\"
+            placeholder=\\"How was your experience?\\"
+          ></textarea>
+          <button
+            class=\\"button-2163cbd4\\"
+            onClick={(event) => {
+              event.preventDefault();
+              setShowReviewPrompt(false);
+            }}
+          >
+            Submit
+          </button>
+        </Show>
+        <For each={reviews()}>
+          {(review, _index) => {
+            const index = _index();
+            return (
+              <div class=\\"div-2163cbd4\\" key={review.id}>
+                <img class=\\"img-2163cbd4\\" src={review.avatar} />
+                <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+                  <div>
+                    N:
+                    {index}
+                  </div>
+                  <div>{review.author}</div>
+                  <div>{review.reviewMessage}</div>
                 </div>
-                <div>{review.author}</div>
-                <div>{review.reviewMessage}</div>
               </div>
-            </div>
-          );
-        }}
-      </For>
-    </div>
+            );
+          }}
+        </For>
+      </div>
+      <style>{\`.input-2163cbd4 {
+  display: block;
+}.textarea-2163cbd4 {
+  display: block;
+}.button-2163cbd4 {
+  display: block;
+}.div-2163cbd4 {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  -webkit-font-smoothing: antialiased;
+}.img-2163cbd4 {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -3077,31 +3093,25 @@ function SmileReviews(props) {
           }}
         </For>
       </div>
-      <style jsx>{\`
-        .input-2163cbd4 {
-          display: block;
-        }
-        .textarea-2163cbd4 {
-          display: block;
-        }
-        .button-2163cbd4 {
-          display: block;
-        }
-        .div-2163cbd4 {
-          margin: 10px;
-          padding: 10px;
-          background: white;
-          display: flex;
-          border-radius: 5px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-          -webkit-font-smoothing: antialiased;
-        }
-        .img-2163cbd4 {
-          height: 30px;
-          width: 30px;
-          margin-right: 10px;
-        }
-      \`}</style>
+      <style>{\`.input-2163cbd4 {
+  display: block;
+}.textarea-2163cbd4 {
+  display: block;
+}.button-2163cbd4 {
+  display: block;
+}.div-2163cbd4 {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  -webkit-font-smoothing: antialiased;
+}.img-2163cbd4 {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+}\`}</style>
     </>
   );
 }
@@ -3113,9 +3123,11 @@ export default SmileReviews;
 exports[`Solid > jsx > Javascript Test > Submit 1`] = `
 "function SubmitButton(props) {
   return (
-    <button type=\\"submit\\" {...props.attributes}>
-      {props.text}
-    </button>
+    <>
+      <button type=\\"submit\\" {...props.attributes}>
+        {props.text}
+      </button>
+    </>
   );
 }
 
@@ -3147,18 +3159,20 @@ function Text(props) {
   const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
-    <div
-      contentEditable={allowEditingText || undefined}
-      data-name={{
-        test: name() || \\"any name\\",
-      }}
-      innerHTML={
-        props.text ||
-        props.content ||
-        name() ||
-        '<p class=\\"text-lg\\">my name</p>'
-      }
-    ></div>
+    <>
+      <div
+        contentEditable={allowEditingText || undefined}
+        data-name={{
+          test: name() || \\"any name\\",
+        }}
+        innerHTML={
+          props.text ||
+          props.content ||
+          name() ||
+          '<p class=\\"text-lg\\">my name</p>'
+        }
+      ></div>
+    </>
   );
 }
 
@@ -3199,13 +3213,15 @@ export default Text;
 exports[`Solid > jsx > Javascript Test > Textarea 1`] = `
 "function Textarea(props) {
   return (
-    <textarea
-      {...props.attributes}
-      placeholder={props.placeholder}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-    ></textarea>
+    <>
+      <textarea
+        {...props.attributes}
+        placeholder={props.placeholder}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+      ></textarea>
+    </>
   );
 }
 
@@ -3235,26 +3251,28 @@ export default Textarea;
 exports[`Solid > jsx > Javascript Test > Video 1`] = `
 "function Video(props) {
   return (
-    <video
-      preload=\\"none\\"
-      {...props.attributes}
-      style={{
-        width: \\"100%\\",
-        height: \\"100%\\",
-        ...props.attributes?.style,
-        \\"object-fit\\": props.fit,
-        \\"object-position\\": props.position,
-        // Hack to get object fit to work as expected and
-        // not have the video overflow
-        \\"border-radius\\": 1,
-      }}
-      key={props.video || \\"no-src\\"}
-      poster={props.posterImage}
-      autoplay={props.autoPlay}
-      muted={props.muted}
-      controls={props.controls}
-      loop={props.loop}
-    ></video>
+    <>
+      <video
+        preload=\\"none\\"
+        {...props.attributes}
+        style={{
+          width: \\"100%\\",
+          height: \\"100%\\",
+          ...props.attributes?.style,
+          \\"object-fit\\": props.fit,
+          \\"object-position\\": props.position,
+          // Hack to get object fit to work as expected and
+          // not have the video overflow
+          \\"border-radius\\": 1,
+        }}
+        key={props.video || \\"no-src\\"}
+        poster={props.posterImage}
+        autoplay={props.autoPlay}
+        muted={props.muted}
+        controls={props.controls}
+        loop={props.loop}
+      ></video>
+    </>
   );
 }
 
@@ -3309,10 +3327,12 @@ function MyComponent(props) {
   }
 
   return (
-    <div>
-      Hello
-      {name()}
-    </div>
+    <>
+      <div>
+        Hello
+        {name()}
+      </div>
+    </>
   );
 }
 
@@ -3364,21 +3384,23 @@ function MyBasicForNoTagRefComponent(props) {
   });
 
   return (
-    <Dynamic component={TagNameGetter()}>
-      Hello
-      <Dynamic component={tag()}>{name()}</Dynamic>
-      <For each={props.actions}>
-        {(action, _index) => {
-          const index = _index();
-          return (
-            <Dynamic component={TagName()}>
-              <Dynamic component={action.icon}></Dynamic>
-              <span>{action.text}</span>
-            </Dynamic>
-          );
-        }}
-      </For>
-    </Dynamic>
+    <>
+      <Dynamic component={TagNameGetter()}>
+        Hello
+        <Dynamic component={tag()}>{name()}</Dynamic>
+        <For each={props.actions}>
+          {(action, _index) => {
+            const index = _index();
+            return (
+              <Dynamic component={TagName()}>
+                <Dynamic component={action.icon}></Dynamic>
+                <span>{action.text}</span>
+              </Dynamic>
+            );
+          }}
+        </For>
+      </Dynamic>
+    </>
   );
 }
 
@@ -3429,22 +3451,23 @@ export default MyBasicForNoTagRefComponent;
 exports[`Solid > jsx > Javascript Test > basicForwardRef 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
-
 function MyBasicForwardRefComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   return (
-    <div>
-      <input
-        class={css({
-          color: \\"red\\",
-        })}
-        ref={props.inputRef}
-        value={name()}
-        onInput={(event) => setName(event.target.value)}
-      />
-    </div>
+    <>
+      <div>
+        <input
+          class=\\"input-8f561752\\"
+          ref={props.inputRef}
+          value={name()}
+          onInput={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style>{\`.input-8f561752 {
+  color: red;
+}\`}</style>
+    </>
   );
 }
 
@@ -3468,11 +3491,9 @@ function MyBasicForwardRefComponent(props) {
           onInput={(event) => setName(event.target.value)}
         />
       </div>
-      <style jsx>{\`
-        .input-8f561752 {
-          color: red;
-        }
-      \`}</style>
+      <style>{\`.input-8f561752 {
+  color: red;
+}\`}</style>
     </>
   );
 }
@@ -3484,22 +3505,23 @@ export default MyBasicForwardRefComponent;
 exports[`Solid > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
-
 function MyBasicForwardRefComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   return (
-    <div>
-      <input
-        class={css({
-          color: \\"red\\",
-        })}
-        ref={props.inputRef}
-        value={name()}
-        onInput={(event) => setName(event.target.value)}
-      />
-    </div>
+    <>
+      <div>
+        <input
+          class=\\"input-2597b0e5\\"
+          ref={props.inputRef}
+          value={name()}
+          onInput={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style>{\`.input-2597b0e5 {
+  color: red;
+}\`}</style>
+    </>
   );
 }
 
@@ -3523,11 +3545,9 @@ function MyBasicForwardRefComponent(props) {
           onInput={(event) => setName(event.target.value)}
         />
       </div>
-      <style jsx>{\`
-        .input-2597b0e5 {
-          color: red;
-        }
-      \`}</style>
+      <style>{\`.input-2597b0e5 {
+  color: red;
+}\`}</style>
     </>
   );
 }
@@ -3562,10 +3582,12 @@ function MyBasicOnUpdateReturnComponent(props) {
   createEffect(on(() => [onUpdateFn_0_name__()], onUpdateFn_0));
 
   return (
-    <div>
-      Hello!
-      {name()}
-    </div>
+    <>
+      <div>
+        Hello!
+        {name()}
+      </div>
+    </>
   );
 }
 
@@ -3613,20 +3635,16 @@ export default MyBasicOnUpdateReturnComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > class + ClassName + css 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyBasicComponent(props) {
+"function MyBasicComponent(props) {
   return (
-    <div
-      class={
-        \\"test2 test \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-    >
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div class=\\"test2 test div-6b6c27cc\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style>{\`.div-6b6c27cc {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -3641,11 +3659,9 @@ exports[`Solid > jsx > Javascript Test > class + ClassName + css 2`] = `
       <div class=\\"test2 test div-6b6c27cc\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-      <style jsx>{\`
-        .div-6b6c27cc {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-6b6c27cc {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -3655,20 +3671,16 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > class + css 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyBasicComponent(props) {
+"function MyBasicComponent(props) {
   return (
-    <div
-      class={
-        \\"test \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-    >
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div class=\\"test div-fb8d32e6\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style>{\`.div-fb8d32e6 {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -3683,11 +3695,9 @@ exports[`Solid > jsx > Javascript Test > class + css 2`] = `
       <div class=\\"test div-fb8d32e6\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-      <style jsx>{\`
-        .div-fb8d32e6 {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-fb8d32e6 {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -3697,20 +3707,16 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > className + css 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyBasicComponent(props) {
+"function MyBasicComponent(props) {
   return (
-    <div
-      class={
-        \\"test \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-    >
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div class=\\"test div-fb8d32e6\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style>{\`.div-fb8d32e6 {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -3725,11 +3731,9 @@ exports[`Solid > jsx > Javascript Test > className + css 2`] = `
       <div class=\\"test div-fb8d32e6\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-      <style jsx>{\`
-        .div-fb8d32e6 {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-fb8d32e6 {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -3745,10 +3749,12 @@ function ClassNameCode(props) {
   const [bindings, setBindings] = createSignal(\\"a binding\\");
 
   return (
-    <div>
-      <div class=\\"no binding\\">Without Binding</div>
-      <div class={bindings()}>With binding</div>
-    </div>
+    <>
+      <div>
+        <div class=\\"no binding\\">Without Binding</div>
+        <div class={bindings()}>With binding</div>
+      </div>
+    </>
   );
 }
 
@@ -3779,8 +3785,6 @@ export default ClassNameCode;
 exports[`Solid > jsx > Javascript Test > classState 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
-
 function MyBasicComponent(props) {
   const [classState, setClassState] = createSignal(\\"testClassName\\");
 
@@ -3789,18 +3793,14 @@ function MyBasicComponent(props) {
   });
 
   return (
-    <div
-      class={
-        classState() +
-        \\" \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-      style={styleState()}
-    >
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div class={classState() + \\" div-70b306de\\"} style={styleState()}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style>{\`.div-70b306de {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -3823,11 +3823,9 @@ function MyBasicComponent(props) {
       <div class={classState() + \\" div-70b306de\\"} style={styleState()}>
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-      <style jsx>{\`
-        .div-70b306de {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-70b306de {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -3846,25 +3844,27 @@ function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
-      <Context1.Provider
+    <>
+      <Context2.Provider
         value={{
-          foo: \\"bar\\",
-
-          content() {
-            return props.content;
-          },
+          bar: \\"baz\\",
         }}
       >
-        <>
-          <>{foo.value}</>
-        </>
-      </Context1.Provider>
-    </Context2.Provider>
+        <Context1.Provider
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+        >
+          <>
+            <>{foo.value}</>
+          </>
+        </Context1.Provider>
+      </Context2.Provider>
+    </>
   );
 }
 
@@ -3920,26 +3920,28 @@ function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
-      <Context1.Provider
+    <>
+      <Context2.Provider
         value={{
-          foo: \\"bar\\",
-
-          content() {
-            return props.content;
-          },
+          bar: \\"baz\\",
         }}
       >
-        <>
-          <>{foo.value}</>
-          <div>other</div>
-        </>
-      </Context1.Provider>
-    </Context2.Provider>
+        <Context1.Provider
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+        >
+          <>
+            <>{foo.value}</>
+            <div>other</div>
+          </>
+        </Context1.Provider>
+      </Context2.Provider>
+    </>
   );
 }
 
@@ -3991,14 +3993,16 @@ exports[`Solid > jsx > Javascript Test > contentState 1`] = `
 
 function RenderContent(props) {
   return (
-    <BuilderContext.Provider
-      value={{
-        content: props.content,
-        registeredComponents: props.customComponents,
-      }}
-    >
-      <div>setting context</div>
-    </BuilderContext.Provider>
+    <>
+      <BuilderContext.Provider
+        value={{
+          content: props.content,
+          registeredComponents: props.customComponents,
+        }}
+      >
+        <div>setting context</div>
+      </BuilderContext.Provider>
+    </>
   );
 }
 
@@ -4033,26 +4037,28 @@ exports[`Solid > jsx > Javascript Test > defaultProps 1`] = `
 
 function Button(props) {
   return (
-    <div>
-      <Show when={props.link}>
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
-      </Show>
-      <Show when={!props.link}>
-        <button
-          type=\\"button\\"
-          {...props.attributes}
-          onClick={(event) => props.onClick(event)}
-        >
-          {props.buttonText}
-        </button>
-      </Show>
-    </div>
+    <>
+      <div>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
+            {props.buttonText}
+          </button>
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -4099,26 +4105,28 @@ exports[`Solid > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 
 function Button(props) {
   return (
-    <div>
-      <Show when={props.link}>
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
-      </Show>
-      <Show when={!props.link}>
-        <button
-          type=\\"button\\"
-          {...props.attributes}
-          onClick={(event) => props.onClick(event)}
-        >
-          {props.text}
-        </button>
-      </Show>
-    </div>
+    <>
+      <div>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
+            {props.text}
+          </button>
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -4167,11 +4175,13 @@ exports[`Solid > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 
 function ComponentWithTypes(props) {
   return (
-    <div>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </div>
+    <>
+      <div>
+        {\\" \\"}
+        Hello
+        {props.name || DEFAULT_VALUES.name}
+      </div>
+    </>
   );
 }
 
@@ -4208,7 +4218,11 @@ function MyComponent(props) {
     !(props.componentRef instanceof Function) ? props.componentRef : null
   );
 
-  return <div>{refToUse()}</div>;
+  return (
+    <>
+      <div>{refToUse()}</div>
+    </>
+  );
 }
 
 export default MyComponent;
@@ -4251,11 +4265,13 @@ function Button(props) {
   }
 
   return (
-    <div>
-      <p>{foo2()}</p>
-      <p>{bar()}</p>
-      <p>{baz(1)}</p>
-    </div>
+    <>
+      <div>
+        <p>{foo2()}</p>
+        <p>{bar()}</p>
+        <p>{baz(1)}</p>
+      </div>
+    </>
   );
 }
 
@@ -4308,9 +4324,11 @@ function RenderContent(props) {
   }
 
   return (
-    <RenderBlock
-      {...getRenderContentProps(props.renderContentProps.block, 0)}
-    ></RenderBlock>
+    <>
+      <RenderBlock
+        {...getRenderContentProps(props.renderContentProps.block, 0)}
+      ></RenderBlock>
+    </>
   );
 }
 
@@ -4348,7 +4366,11 @@ exports[`Solid > jsx > Javascript Test > multipleOnUpdate 1`] = `
 "import { on, createEffect, createMemo } from \\"solid-js\\";
 
 function MultipleOnUpdate(props) {
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MultipleOnUpdate;
@@ -4408,7 +4430,11 @@ function MultipleOnUpdateWithDeps(props) {
     on(() => [onUpdateFn_1_c__(), onUpdateFn_1_d__()], onUpdateFn_1)
   );
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MultipleOnUpdateWithDeps;
@@ -4472,7 +4498,11 @@ function MyBasicComponent(props) {
     hello: \\"world\\",
   });
 
-  return <input {...attrs()} {...props} />;
+  return (
+    <>
+      <input {...attrs()} {...props} />
+    </>
+  );
 }
 
 export default MyBasicComponent;
@@ -4503,11 +4533,13 @@ exports[`Solid > jsx > Javascript Test > nestedShow 1`] = `
 
 function NestedShow(props) {
   return (
-    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
-      <Show fallback={<div>else-condition-B</div>} when={!props.conditionB}>
-        <div>if condition A and condition B</div>
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        <Show fallback={<div>else-condition-B</div>} when={!props.conditionB}>
+          <div>if condition A and condition B</div>
+        </Show>
       </Show>
-    </Show>
+    </>
   );
 }
 
@@ -4535,37 +4567,26 @@ export default NestedShow;
 `;
 
 exports[`Solid > jsx > Javascript Test > nestedStyles 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function NestedStyles(props) {
+"function NestedStyles(props) {
   return (
-    <div
-      class={css({
-        display: \\"flex\\",
-        \\"--bar\\": \\"red\\",
-        color: \\"var(--bar)\\",
-        \\"@media (max-width: env(--mobile))\\": {
-          display: \\"block\\",
-        },
-        \\"&:hover\\": {
-          display: \\"flex\\",
-        },
-        \\":active\\": {
-          display: \\"inline\\",
-        },
-        \\".nested-selector\\": {
-          display: \\"grid\\",
-        },
-        \\".nested-selector:hover\\": {
-          display: \\"block\\",
-        },
-        \\"&.nested-selector:active\\": {
-          display: \\"inline-block\\",
-        },
-      })}
-    >
-      Hello world
-    </div>
+    <>
+      <div class=\\"div-7ff9918d\\">Hello world</div>
+      <style>{\`.div-7ff9918d {
+  display: flex;
+  --bar: red;
+  color: var(--bar);
+}@media (max-width: env(--mobile)) { .div-7ff9918d {   display: block; } }.div-7ff9918d:hover {
+  display: flex;
+}.div-7ff9918d:active {
+  display: inline;
+}.div-7ff9918d .nested-selector {
+  display: grid;
+}.div-7ff9918d .nested-selector:hover {
+  display: block;
+}.div-7ff9918d.nested-selector:active {
+  display: inline-block;
+}\`}</style>
+    </>
   );
 }
 
@@ -4578,33 +4599,21 @@ exports[`Solid > jsx > Javascript Test > nestedStyles 2`] = `
   return (
     <>
       <div class=\\"div-7ff9918d\\">Hello world</div>
-      <style jsx>{\`
-        .div-7ff9918d {
-          display: flex;
-          --bar: red;
-          color: var(--bar);
-        }
-        @media (max-width: env(--mobile)) {
-          .div-7ff9918d {
-            display: block;
-          }
-        }
-        .div-7ff9918d:hover {
-          display: flex;
-        }
-        .div-7ff9918d:active {
-          display: inline;
-        }
-        .div-7ff9918d .nested-selector {
-          display: grid;
-        }
-        .div-7ff9918d .nested-selector:hover {
-          display: block;
-        }
-        .div-7ff9918d.nested-selector:active {
-          display: inline-block;
-        }
-      \`}</style>
+      <style>{\`.div-7ff9918d {
+  display: flex;
+  --bar: red;
+  color: var(--bar);
+}@media (max-width: env(--mobile)) { .div-7ff9918d {   display: block; } }.div-7ff9918d:hover {
+  display: flex;
+}.div-7ff9918d:active {
+  display: inline;
+}.div-7ff9918d .nested-selector {
+  display: grid;
+}.div-7ff9918d .nested-selector:hover {
+  display: block;
+}.div-7ff9918d.nested-selector:active {
+  display: inline-block;
+}\`}</style>
     </>
   );
 }
@@ -4633,13 +4642,15 @@ function Embed(props) {
   });
 
   return (
-    <div
-      class=\\"builder-embed\\"
-      ref={elem}
-      onInitEditingBldr={(event) => elem_onInitEditingBldr(event)}
-    >
-      <div>Test</div>
-    </div>
+    <>
+      <div
+        class=\\"builder-embed\\"
+        ref={elem}
+        onInitEditingBldr={(event) => elem_onInitEditingBldr(event)}
+      >
+        <div>Test</div>
+      </div>
+    </>
   );
 }
 
@@ -4691,7 +4702,11 @@ function OnInit(props) {
     console.log(\\"onMount\\");
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default OnInit;
@@ -4728,10 +4743,12 @@ function OnInit(props) {
   const [name, setName] = createSignal(\\"\\");
 
   return (
-    <div>
-      Default name defined by parent
-      {name()}
-    </div>
+    <>
+      <div>
+        Default name defined by parent
+        {name()}
+      </div>
+    </>
   );
 }
 
@@ -4771,7 +4788,11 @@ function Comp(props) {
     console.log(\\"Runs on mount\\");
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default Comp;
@@ -4811,7 +4832,11 @@ function Comp(props) {
     console.log(\\"SSR runs on Mount\\");
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default Comp;
@@ -4847,7 +4872,11 @@ exports[`Solid > jsx > Javascript Test > onUpdate 1`] = `
 "import { on, createEffect, createMemo } from \\"solid-js\\";
 
 function OnUpdate(props) {
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default OnUpdate;
@@ -4890,7 +4919,11 @@ function OnUpdateWithDeps(props) {
     )
   );
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default OnUpdateWithDeps;
@@ -4937,7 +4970,11 @@ export const bar = () => {};
 export function run(value) {}
 
 function MyBasicComponent(props) {
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MyBasicComponent;
@@ -4966,10 +5003,12 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Javascript Test > preserveTyping 1`] = `
 "function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
   );
 }
 
@@ -5000,11 +5039,13 @@ function MyBasicComponent(props) {
   const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
-    <div>
-      {props.children}
-      {props.type}
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div>
+        {props.children}
+        {props.type}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </>
   );
 }
 
@@ -5036,10 +5077,12 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Javascript Test > propsInterface 1`] = `
 "function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
   );
 }
 
@@ -5066,10 +5109,12 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Javascript Test > propsType 1`] = `
 "function MyBasicComponent(props) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
   );
 }
 
@@ -5107,7 +5152,11 @@ function OnUpdate(props) {
     };
   }
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default OnUpdate;
@@ -5345,65 +5394,67 @@ function RenderBlock(props) {
   });
 
   return (
-    <Show
-      fallback={
-        <Dynamic
-          {...renderComponentProps()}
-          component={renderComponentTag()}
-        ></Dynamic>
-      }
-      when={shouldWrap()}
-    >
-      <Show when={isEmptyHtmlElement(tag())}>
-        <Dynamic {...attributes()} {...actions()} component={tag()}></Dynamic>
-      </Show>
-      <Show when={!isEmptyHtmlElement(tag()) && repeatItemData()}>
-        <For each={repeatItemData()}>
-          {(data, _index) => {
-            const index = _index();
-            return (
-              <RenderRepeatedBlock
-                key={index}
-                repeatContext={data.context}
-                block={data.block}
-              ></RenderRepeatedBlock>
-            );
-          }}
-        </For>
-      </Show>
-      <Show when={!isEmptyHtmlElement(tag()) && !repeatItemData()}>
-        <Dynamic {...attributes()} {...actions()} component={tag()}>
+    <>
+      <Show
+        fallback={
           <Dynamic
             {...renderComponentProps()}
             component={renderComponentTag()}
           ></Dynamic>
-          <For each={childrenWithoutParentComponent()}>
-            {(child, _index) => {
+        }
+        when={shouldWrap()}
+      >
+        <Show when={isEmptyHtmlElement(tag())}>
+          <Dynamic {...attributes()} {...actions()} component={tag()}></Dynamic>
+        </Show>
+        <Show when={!isEmptyHtmlElement(tag()) && repeatItemData()}>
+          <For each={repeatItemData()}>
+            {(data, _index) => {
               const index = _index();
               return (
-                <RenderBlock
-                  key={\\"render-block-\\" + child.id}
-                  block={child}
-                  context={childrenContext()}
-                ></RenderBlock>
+                <RenderRepeatedBlock
+                  key={index}
+                  repeatContext={data.context}
+                  block={data.block}
+                ></RenderRepeatedBlock>
               );
             }}
           </For>
-          <For each={childrenWithoutParentComponent()}>
-            {(child, _index) => {
-              const index = _index();
-              return (
-                <BlockStyles
-                  key={\\"block-style-\\" + child.id}
-                  block={child}
-                  context={childrenContext()}
-                ></BlockStyles>
-              );
-            }}
-          </For>
-        </Dynamic>
+        </Show>
+        <Show when={!isEmptyHtmlElement(tag()) && !repeatItemData()}>
+          <Dynamic {...attributes()} {...actions()} component={tag()}>
+            <Dynamic
+              {...renderComponentProps()}
+              component={renderComponentTag()}
+            ></Dynamic>
+            <For each={childrenWithoutParentComponent()}>
+              {(child, _index) => {
+                const index = _index();
+                return (
+                  <RenderBlock
+                    key={\\"render-block-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  ></RenderBlock>
+                );
+              }}
+            </For>
+            <For each={childrenWithoutParentComponent()}>
+              {(child, _index) => {
+                const index = _index();
+                return (
+                  <BlockStyles
+                    key={\\"block-style-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  ></BlockStyles>
+                );
+              }}
+            </For>
+          </Dynamic>
+        </Show>
       </Show>
-    </Show>
+    </>
   );
 }
 
@@ -5688,8 +5739,6 @@ export default RenderBlock;
 exports[`Solid > jsx > Javascript Test > renderContentExample 1`] = `
 "import { onMount, on, createEffect, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
-
 import BuilderContext from \\"@dummy/context.js\\";
 import {
   dispatchNewContentToVisualEditor,
@@ -5710,27 +5759,30 @@ function RenderContent(props) {
   createEffect(on(() => [onUpdateFn_0_props_content()], onUpdateFn_0));
 
   return (
-    <BuilderContext.Provider
-      value={{
-        get content() {
-          return 3;
-        },
+    <>
+      <BuilderContext.Provider
+        value={{
+          get content() {
+            return 3;
+          },
 
-        get registeredComponents() {
-          return 4;
-        },
-      }}
-    >
-      <div
-        class={css({
-          display: \\"flex\\",
-          flexDirection: \\"columns\\",
-        })}
-        onClick={(event) => trackClick(props.content.id)}
+          get registeredComponents() {
+            return 4;
+          },
+        }}
       >
-        <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
-      </div>
-    </BuilderContext.Provider>
+        <div
+          class=\\"div-89da777c\\"
+          onClick={(event) => trackClick(props.content.id)}
+        >
+          <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
+        </div>
+      </BuilderContext.Provider>
+      <style>{\`.div-89da777c {
+  display: flex;
+  flex-direction: columns;
+}\`}</style>
+    </>
   );
 }
 
@@ -5780,12 +5832,10 @@ function RenderContent(props) {
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
       </BuilderContext.Provider>
-      <style jsx>{\`
-        .div-89da777c {
-          display: flex;
-          flex-direction: columns;
-        }
-      \`}</style>
+      <style>{\`.div-89da777c {
+  display: flex;
+  flex-direction: columns;
+}\`}</style>
     </>
   );
 }
@@ -5800,20 +5850,22 @@ exports[`Solid > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
 function Button(props) {
   return (
     <>
-      <Show when={props.link}>
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
-      </Show>
-      <Show when={!props.link}>
-        <button type=\\"button\\" {...props.attributes}>
-          {props.text}
-        </button>
-      </Show>
+      <>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Show>
+      </>
     </>
   );
 }
@@ -5857,9 +5909,11 @@ exports[`Solid > jsx > Javascript Test > rootShow 1`] = `
 
 function RenderStyles(props) {
   return (
-    <Show fallback={<div>Foo</div>} when={props.foo === \\"bar\\"}>
-      <div>Bar</div>
-    </Show>
+    <>
+      <Show fallback={<div>Foo</div>} when={props.foo === \\"bar\\"}>
+        <div>Bar</div>
+      </Show>
+    </>
   );
 }
 
@@ -5889,12 +5943,14 @@ exports[`Solid > jsx > Javascript Test > self-referencing component 1`] = `
 
 function MyComponent(props) {
   return (
-    <div>
-      {props.name}
-      <Show when={props.name === \\"Batman\\"}>
-        <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
-      </Show>
-    </div>
+    <>
+      <div>
+        {props.name}
+        <Show when={props.name === \\"Batman\\"}>
+          <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -5927,15 +5983,17 @@ exports[`Solid > jsx > Javascript Test > self-referencing component with childre
 
 function MyComponent(props) {
   return (
-    <div>
-      {props.name}
-      {props.children}
-      <Show when={props.name === \\"Batman\\"}>
-        <MyComponent name=\\"Bruce\\">
-          <div>Wayne</div>
-        </MyComponent>
-      </Show>
-    </div>
+    <>
+      <div>
+        {props.name}
+        {props.children}
+        <Show when={props.name === \\"Batman\\"}>
+          <MyComponent name=\\"Bruce\\">
+            <div>Wayne</div>
+          </MyComponent>
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -5993,14 +6051,16 @@ exports[`Solid > jsx > Javascript Test > showWithFor 1`] = `
 
 function NestedShow(props) {
   return (
-    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
-      <For each={props.items}>
-        {(item, _index) => {
-          const idx = _index();
-          return <div key={idx}>{item}</div>;
-        }}
-      </For>
-    </Show>
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        <For each={props.items}>
+          {(item, _index) => {
+            const idx = _index();
+            return <div key={idx}>{item}</div>;
+          }}
+        </For>
+      </Show>
+    </>
   );
 }
 
@@ -6035,20 +6095,22 @@ exports[`Solid > jsx > Javascript Test > showWithOtherValues 1`] = `
 
 function ShowWithOtherValues(props) {
   return (
-    <div>
-      <Show when={props.conditionA}>ContentA</Show>
-      <Show fallback={{ undefined }} when={props.conditionA}>
-        ContentB
-      </Show>
-      <Show when={props.conditionA}>ContentC</Show>
-      <Show when={props.conditionA}>ContentD</Show>
-      <Show fallback={hello} when={props.conditionA}>
-        ContentE
-      </Show>
-      <Show fallback={123} when={props.conditionA}>
-        ContentF
-      </Show>
-    </div>
+    <>
+      <div>
+        <Show when={props.conditionA}>ContentA</Show>
+        <Show fallback={{ undefined }} when={props.conditionA}>
+          ContentB
+        </Show>
+        <Show when={props.conditionA}>ContentC</Show>
+        <Show when={props.conditionA}>ContentD</Show>
+        <Show fallback={hello} when={props.conditionA}>
+          ContentE
+        </Show>
+        <Show fallback={123} when={props.conditionA}>
+          ContentF
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -6089,9 +6151,11 @@ exports[`Solid > jsx > Javascript Test > showWithRootText 1`] = `
 
 function ShowRootText(props) {
   return (
-    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
-      ContentA
-    </Show>
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        ContentA
+      </Show>
+    </>
   );
 }
 
@@ -6119,8 +6183,6 @@ export default ShowRootText;
 exports[`Solid > jsx > Javascript Test > signalsOnUpdate 1`] = `
 "import { on, createEffect, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
-
 function MyBasicComponent(props) {
   const onUpdateFn_0_props_id = createMemo(() => props.id);
   const onUpdateFn_0_props_foo_value_bar_baz = createMemo(
@@ -6138,17 +6200,15 @@ function MyBasicComponent(props) {
   );
 
   return (
-    <div
-      class={
-        \\"test \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-    >
-      {props.id}
-      {props.foo.value.bar.baz}
-    </div>
+    <>
+      <div class=\\"test div-120e4d4e\\">
+        {props.id}
+        {props.foo.value.bar.baz}
+      </div>
+      <style>{\`.div-120e4d4e {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -6181,11 +6241,9 @@ function MyBasicComponent(props) {
         {props.id}
         {props.foo.value.bar.baz}
       </div>
-      <style jsx>{\`
-        .div-120e4d4e {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-120e4d4e {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -6196,7 +6254,11 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Javascript Test > spreadAttrs 1`] = `
 "function MyBasicComponent(props) {
-  return <input {...attrs} />;
+  return (
+    <>
+      <input {...attrs} />
+    </>
+  );
 }
 
 export default MyBasicComponent;
@@ -6218,7 +6280,11 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Javascript Test > spreadNestedProps 1`] = `
 "function MyBasicComponent(props) {
-  return <input {...props.nested} />;
+  return (
+    <>
+      <input {...props.nested} />
+    </>
+  );
 }
 
 export default MyBasicComponent;
@@ -6240,7 +6306,11 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Javascript Test > spreadProps 1`] = `
 "function MyBasicComponent(props) {
-  return <input {...props} />;
+  return (
+    <>
+      <input {...props} />
+    </>
+  );
 }
 
 export default MyBasicComponent;
@@ -6261,23 +6331,21 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > styleClassAndCss 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props) {
+"function MyComponent(props) {
   return (
-    <div
-      class={
-        \\"builder-column \\" +
-        css({
-          display: \\"flex\\",
-          flexDirection: \\"column\\",
-          alignItems: \\"stretch\\",
-        })
-      }
-      style={{
-        width: \\"100%\\",
-      }}
-    ></div>
+    <>
+      <div
+        class=\\"builder-column div-53ff897e\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      ></div>
+      <style>{\`.div-53ff897e {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
+    </>
   );
 }
 
@@ -6295,13 +6363,11 @@ exports[`Solid > jsx > Javascript Test > styleClassAndCss 2`] = `
           width: \\"100%\\",
         }}
       ></div>
-      <style jsx>{\`
-        .div-53ff897e {
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
-        }
-      \`}</style>
+      <style>{\`.div-53ff897e {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
     </>
   );
 }
@@ -6311,22 +6377,19 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > stylePropClassAndCss 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function StylePropClassAndCss(props) {
+"function StylePropClassAndCss(props) {
   return (
-    <div
-      class={
-        props.attributes.class +
-        \\" \\" +
-        css({
-          display: \\"flex\\",
-          flexDirection: \\"column\\",
-          alignItems: \\"stretch\\",
-        })
-      }
-      style={props.attributes.style}
-    ></div>
+    <>
+      <div
+        class={props.attributes.class + \\" div-40d76e28\\"}
+        style={props.attributes.style}
+      ></div>
+      <style>{\`.div-40d76e28 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
+    </>
   );
 }
 
@@ -6342,13 +6405,11 @@ exports[`Solid > jsx > Javascript Test > stylePropClassAndCss 2`] = `
         class={props.attributes.class + \\" div-40d76e28\\"}
         style={props.attributes.style}
       ></div>
-      <style jsx>{\`
-        .div-40d76e28 {
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
-        }
-      \`}</style>
+      <style>{\`.div-40d76e28 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
     </>
   );
 }
@@ -6361,7 +6422,11 @@ exports[`Solid > jsx > Javascript Test > subComponent 1`] = `
 "import Foo from \\"./foo-sub-component\\";
 
 function SubComponent(props) {
-  return <Foo></Foo>;
+  return (
+    <>
+      <Foo></Foo>
+    </>
+  );
 }
 
 export default SubComponent;
@@ -6386,28 +6451,30 @@ export default SubComponent;
 exports[`Solid > jsx > Javascript Test > svgComponent 1`] = `
 "function SvgComponent(props) {
   return (
-    <svg
-      fill=\\"none\\"
-      role=\\"img\\"
-      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
-      width={42}
-      height={42}
-    >
-      <defs>
-        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
-          <feFlood result=\\"BackgroundImageFix\\"></feFlood>
-          <feBlend
-            in=\\"SourceGraphic\\"
-            in2=\\"BackgroundImageFix\\"
-            result=\\"shape\\"
-          ></feBlend>
-          <feGaussianBlur
-            result=\\"effect1_foregroundBlur\\"
-            stdDeviation={7}
-          ></feGaussianBlur>
-        </filter>
-      </defs>
-    </svg>
+    <>
+      <svg
+        fill=\\"none\\"
+        role=\\"img\\"
+        viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+        width={42}
+        height={42}
+      >
+        <defs>
+          <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+            <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+            <feBlend
+              in=\\"SourceGraphic\\"
+              in2=\\"BackgroundImageFix\\"
+              result=\\"shape\\"
+            ></feBlend>
+            <feGaussianBlur
+              result=\\"effect1_foregroundBlur\\"
+              stdDeviation={7}
+            ></feGaussianBlur>
+          </filter>
+        </defs>
+      </svg>
+    </>
   );
 }
 
@@ -6451,7 +6518,11 @@ export default SvgComponent;
 
 exports[`Solid > jsx > Javascript Test > typeDependency 1`] = `
 "function TypeDependency(props) {
-  return <div>{props.foo}</div>;
+  return (
+    <>
+      <div>{props.foo}</div>
+    </>
+  );
 }
 
 export default TypeDependency;
@@ -6472,13 +6543,10 @@ export default TypeDependency;
 `;
 
 exports[`Solid > jsx > Javascript Test > use-style 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props) {
+"function MyComponent(props) {
   return (
     <>
       <button type=\\"button\\">Button</button>
-
       <style>{\`
         button {
             background: blue;
@@ -6486,7 +6554,8 @@ function MyComponent(props) {
             font-size: 12px;
             outline: 1px solid black;
         }
-    \`}</style>
+
+\`}</style>
     </>
   );
 }
@@ -6500,14 +6569,15 @@ exports[`Solid > jsx > Javascript Test > use-style 2`] = `
   return (
     <>
       <button type=\\"button\\">Button</button>
-      <style jsx>{\`
+      <style>{\`
         button {
-          background: blue;
-          color: white;
-          font-size: 12px;
-          outline: 1px solid black;
+            background: blue;
+            color: white;
+            font-size: 12px;
+            outline: 1px solid black;
         }
-      \`}</style>
+
+\`}</style>
     </>
   );
 }
@@ -6517,27 +6587,22 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > use-style-and-css 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props) {
+"function MyComponent(props) {
   return (
     <>
-      <button
-        class={css({
-          background: \\"blue\\",
-          color: \\"white\\",
-        })}
-        type=\\"button\\"
-      >
+      <button class=\\"button-11144e0c\\" type=\\"button\\">
         Button
       </button>
-
       <style>{\`
         button {
             font-size: 12px;
             outline: 1px solid black;
         }
-    \`}</style>
+
+.button-11144e0c {
+  background: blue;
+  color: white;
+}\`}</style>
     </>
   );
 }
@@ -6553,17 +6618,16 @@ exports[`Solid > jsx > Javascript Test > use-style-and-css 2`] = `
       <button class=\\"button-11144e0c\\" type=\\"button\\">
         Button
       </button>
-      <style jsx>{\`
+      <style>{\`
         button {
-          font-size: 12px;
-          outline: 1px solid black;
+            font-size: 12px;
+            outline: 1px solid black;
         }
 
-        .button-11144e0c {
-          background: blue;
-          color: white;
-        }
-      \`}</style>
+.button-11144e0c {
+  background: blue;
+  color: white;
+}\`}</style>
     </>
   );
 }
@@ -6573,13 +6637,10 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > use-style-outside-component 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props) {
+"function MyComponent(props) {
   return (
     <>
       <button type=\\"button\\">Button</button>
-
       <style>{\`
   button {
       background: blue;
@@ -6587,6 +6648,7 @@ function MyComponent(props) {
       font-size: 12px;
       outline: 1px solid black;
   }
+
 \`}</style>
     </>
   );
@@ -6601,14 +6663,15 @@ exports[`Solid > jsx > Javascript Test > use-style-outside-component 2`] = `
   return (
     <>
       <button type=\\"button\\">Button</button>
-      <style jsx>{\`
-        button {
-          background: blue;
-          color: white;
-          font-size: 12px;
-          outline: 1px solid black;
-        }
-      \`}</style>
+      <style>{\`
+  button {
+      background: blue;
+      color: white;
+      font-size: 12px;
+      outline: 1px solid black;
+  }
+
+\`}</style>
     </>
   );
 }
@@ -6630,7 +6693,11 @@ function UseTargetComponent(props) {
 
   onMount(() => {});
 
-  return <div>{name()}</div>;
+  return (
+    <>
+      <div>{name()}</div>
+    </>
+  );
 }
 
 export default UseTargetComponent;
@@ -6666,11 +6733,13 @@ exports[`Solid > jsx > Javascript Test > webComponent 1`] = `
 
 function MyBasicWebComponent(props) {
   return (
-    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
-      <swiper-slide>Slide 1</swiper-slide>
-      <swiper-slide>Slide 2</swiper-slide>
-      <swiper-slide>Slide 3</swiper-slide>
-    </swiper-container>
+    <>
+      <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+        <swiper-slide>Slide 1</swiper-slide>
+        <swiper-slide>Slide 2</swiper-slide>
+        <swiper-slide>Slide 3</swiper-slide>
+      </swiper-container>
+    </>
   );
 }
 
@@ -6704,10 +6773,12 @@ function MyBasicComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   return (
-    <div>
-      Hello
-      {name()}! I can run in React, Qwik, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div>
+        Hello
+        {name()}! I can run in React, Qwik, Vue, Solid, or Liquid!
+      </div>
+    </>
   );
 }
 
@@ -6738,7 +6809,6 @@ export default MyBasicComponent;
 exports[`Solid > jsx > Typescript Test > AdvancedRef 1`] = `
 "import { Show, on, createEffect, createMemo, createSignal } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
 export interface Props {
   showInput: boolean;
 }
@@ -6771,30 +6841,34 @@ function MyBasicRefComponent(props: Props) {
   );
 
   return (
-    <div>
-      <Show when={props.showInput}>
-        <>
-          <input
-            class={css({
-              color: \\"red\\",
-            })}
-            ref={inputRef!}
-            value={name()}
-            onBlur={(event) => onBlur()}
-            onInput={(event) => setName(event.target.value)}
-          />
-          <label htmlFor=\\"cars\\" ref={inputNoArgRef!}>
-            Choose a car:
-          </label>
-          <select name=\\"cars\\" id=\\"cars\\">
-            <option value=\\"supra\\">GR Supra</option>
-            <option value=\\"86\\">GR 86</option>
-          </select>
-        </>
-      </Show>
-      Hello
-      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
-    </div>
+    <>
+      <div>
+        <Show when={props.showInput}>
+          <>
+            <input
+              class=\\"input-60618642\\"
+              ref={inputRef!}
+              value={name()}
+              onBlur={(event) => onBlur()}
+              onInput={(event) => setName(event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef!}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        </Show>
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style>{\`.input-60618642 {
+  color: red;
+}\`}</style>
+    </>
   );
 }
 
@@ -6861,11 +6935,9 @@ function MyBasicRefComponent(props: Props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style jsx>{\`
-        .input-60618642 {
-          color: red;
-        }
-      \`}</style>
+      <style>{\`.input-60618642 {
+  color: red;
+}\`}</style>
     </>
   );
 }
@@ -6877,7 +6949,6 @@ export default MyBasicRefComponent;
 exports[`Solid > jsx > Typescript Test > Basic 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
 export interface MyBasicComponentProps {
   id: string;
 }
@@ -6898,20 +6969,18 @@ function MyBasicComponent(props: MyBasicComponentProps) {
   }
 
   return (
-    <div
-      class={
-        \\"test \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-    >
-      <input
-        value={DEFAULT_VALUES.name || name()}
-        onInput={(myEvent) => setName(myEvent.target.value)}
-      />
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div class=\\"test div-13f579ae\\">
+        <input
+          value={DEFAULT_VALUES.name || name()}
+          onInput={(myEvent) => setName(myEvent.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style>{\`.div-13f579ae {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -6928,26 +6997,28 @@ function MyBasicForShowComponent(props: any) {
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
 
   return (
-    <div>
-      <For each={names()}>
-        {(person, _index) => {
-          const index = _index();
-          return (
-            <Show when={person === name()}>
-              <input
-                value={name()}
-                onInput={(event) => {
-                  setName(event.target.value + \\" and \\" + person);
-                }}
-              />
-              Hello
-              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
-              Liquid!
-            </Show>
-          );
-        }}
-      </For>
-    </div>
+    <>
+      <div>
+        <For each={names()}>
+          {(person, _index) => {
+            const index = _index();
+            return (
+              <Show when={person === name()}>
+                <input
+                  value={name()}
+                  onInput={(event) => {
+                    setName(event.target.value + \\" and \\" + person);
+                  }}
+                />
+                Hello
+                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+                or Liquid!
+              </Show>
+            );
+          }}
+        </For>
+      </div>
+    </>
   );
 }
 
@@ -6986,11 +7057,9 @@ function MyBasicComponent(props: MyBasicComponentProps) {
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-      <style jsx>{\`
-        .div-13f579ae {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-13f579ae {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -7058,13 +7127,15 @@ function MyBasicComponent(props: any) {
   });
 
   return (
-    <Injector.Provider value={createInjector()}>
-      <div>
-        {myService.method(\\"hello\\") + name()}
-        Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onInput={(event) => onChange} />
-      </div>
-    </Injector.Provider>
+    <>
+      <Injector.Provider value={createInjector()}>
+        <div>
+          {myService.method(\\"hello\\") + name()}
+          Hello! I can run in React, Vue, Solid, or Liquid!
+          <input onInput={(event) => onChange} />
+        </div>
+      </Injector.Provider>
+    </>
   );
 }
 
@@ -7127,10 +7198,12 @@ function MyBasicOnMountUpdateComponent(props: Props) {
   });
 
   return (
-    <div>
-      Hello
-      {name()}
-    </div>
+    <>
+      <div>
+        Hello
+        {name()}
+      </div>
+    </>
   );
 }
 
@@ -7180,7 +7253,11 @@ function MyBasicOutputsComponent(props: any) {
     props.onEvent(props.message);
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MyBasicOutputsComponent;
@@ -7220,7 +7297,11 @@ function MyBasicOutputsComponent(props: any) {
     props.onEvent(props.message);
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MyBasicOutputsComponent;
@@ -7251,7 +7332,11 @@ export default MyBasicOutputsComponent;
 
 exports[`Solid > jsx > Typescript Test > BasicAttribute 1`] = `
 "function MyComponent(props: any) {
-  return <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />;
+  return (
+    <>
+      <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />
+    </>
+  );
 }
 
 export default MyComponent;
@@ -7283,15 +7368,21 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 
 function MyBooleanAttribute(props: Props) {
   return (
-    <div>
-      <Show when={props.children}>
-        {props.children}
-        {props.type}
-      </Show>
-      <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
-      <MyBooleanAttributeComponent toggle={true}></MyBooleanAttributeComponent>
-      <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
-    </div>
+    <>
+      <div>
+        <Show when={props.children}>
+          {props.children}
+          {props.type}
+        </Show>
+        <MyBooleanAttributeComponent
+          toggle={true}
+        ></MyBooleanAttributeComponent>
+        <MyBooleanAttributeComponent
+          toggle={true}
+        ></MyBooleanAttributeComponent>
+        <MyBooleanAttributeComponent list={null}></MyBooleanAttributeComponent>
+      </div>
+    </>
   );
 }
 
@@ -7345,15 +7436,17 @@ function MyBasicChildComponent(props: any) {
   const [dev, setDev] = createSignal(\\"PatrickJS\\");
 
   return (
-    <div>
-      <MyBasicComponent id={dev()}></MyBasicComponent>
+    <>
       <div>
-        <MyBasicOnMountUpdateComponent
-          hi={name()}
-          bye={dev()}
-        ></MyBasicOnMountUpdateComponent>
+        <MyBasicComponent id={dev()}></MyBasicComponent>
+        <div>
+          <MyBasicOnMountUpdateComponent
+            hi={name()}
+            bye={dev()}
+          ></MyBasicOnMountUpdateComponent>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -7404,26 +7497,28 @@ function MyBasicForComponent(props: any) {
   });
 
   return (
-    <div>
-      <For each={names()}>
-        {(person, _index) => {
-          const index = _index();
-          return (
-            <>
-              <input
-                value={name()}
-                onInput={(event) => {
-                  setName(event.target.value + \\" and \\" + person);
-                }}
-              />
-              Hello
-              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
-              Liquid!
-            </>
-          );
-        }}
-      </For>
-    </div>
+    <>
+      <div>
+        <For each={names()}>
+          {(person, _index) => {
+            const index = _index();
+            return (
+              <>
+                <input
+                  value={name()}
+                  onInput={(event) => {
+                    setName(event.target.value + \\" and \\" + person);
+                  }}
+                />
+                Hello
+                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+                or Liquid!
+              </>
+            );
+          }}
+        </For>
+      </div>
+    </>
   );
 }
 
@@ -7476,7 +7571,6 @@ export default MyBasicForComponent;
 exports[`Solid > jsx > Typescript Test > BasicRef 1`] = `
 "import { Show, createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
 export interface Props {
   showInput: boolean;
 }
@@ -7497,30 +7591,34 @@ function MyBasicRefComponent(props: Props) {
   let inputNoArgRef: HTMLLabelElement;
 
   return (
-    <div>
-      <Show when={props.showInput}>
-        <>
-          <input
-            class={css({
-              color: \\"red\\",
-            })}
-            ref={inputRef!}
-            value={name()}
-            onBlur={(event) => onBlur()}
-            onInput={(event) => setName(event.target.value)}
-          />
-          <label htmlFor=\\"cars\\" ref={inputNoArgRef!}>
-            Choose a car:
-          </label>
-          <select name=\\"cars\\" id=\\"cars\\">
-            <option value=\\"supra\\">GR Supra</option>
-            <option value=\\"86\\">GR 86</option>
-          </select>
-        </>
-      </Show>
-      Hello
-      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
-    </div>
+    <>
+      <div>
+        <Show when={props.showInput}>
+          <>
+            <input
+              class=\\"input-1dafdd72\\"
+              ref={inputRef!}
+              value={name()}
+              onBlur={(event) => onBlur()}
+              onInput={(event) => setName(event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef!}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        </Show>
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style>{\`.input-1dafdd72 {
+  color: red;
+}\`}</style>
+    </>
   );
 }
 
@@ -7575,11 +7673,9 @@ function MyBasicRefComponent(props: Props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style jsx>{\`
-        .input-1dafdd72 {
-          color: red;
-        }
-      \`}</style>
+      <style>{\`.input-1dafdd72 {
+  color: red;
+}\`}</style>
     </>
   );
 }
@@ -7603,9 +7699,11 @@ function MyBasicRefAssignmentComponent(props: Props) {
   }
 
   return (
-    <div>
-      <button onClick={(evt) => handlerClick(evt)}>Click</button>
-    </div>
+    <>
+      <div>
+        <button onClick={(evt) => handlerClick(evt)}>Click</button>
+      </div>
+    </>
   );
 }
 
@@ -7670,14 +7768,16 @@ function MyPreviousComponent(props: Props) {
   createEffect(on(() => [onUpdateFn_0_count__()], onUpdateFn_0));
 
   return (
-    <div>
-      <h1>
-        Now:
-        {count()}, before:
-        {prevCount}
-      </h1>
-      <button onClick={(event) => setCount(1)}>Increment</button>
-    </div>
+    <>
+      <div>
+        <h1>
+          Now:
+          {count()}, before:
+          {prevCount}
+        </h1>
+        <button onClick={(event) => setCount(1)}>Increment</button>
+      </div>
+    </>
   );
 }
 
@@ -7744,22 +7844,24 @@ export interface ButtonProps {
 
 function Button(props: ButtonProps) {
   return (
-    <div>
-      <Show when={props.link}>
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
-      </Show>
-      <Show when={!props.link}>
-        <button type=\\"button\\" {...props.attributes}>
-          {props.text}
-        </button>
-      </Show>
-    </div>
+    <>
+      <div>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -7807,7 +7909,6 @@ export default Button;
 exports[`Solid > jsx > Typescript Test > Columns 1`] = `
 "import { For, createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
 type Column = {
   content: any; // TODO: Implement this when support for dynamic CSS lands
 
@@ -7845,42 +7946,29 @@ function Column(props: ColumnProps) {
   }
 
   return (
-    <div
-      class={
-        \\"builder-columns \\" +
-        css({
-          display: \\"flex\\",
-          flexDirection: \\"column\\",
-          alignItems: \\"stretch\\",
-          lineHeight: \\"normal\\",
-          \\"@media (max-width: 999px)\\": {
-            flexDirection: \\"row\\",
-          },
-          \\"@media (max-width: 639px)\\": {
-            flexDirection: \\"row-reverse\\",
-          },
-        })
-      }
-    >
-      <For each={props.columns}>
-        {(column, _index) => {
-          const index = _index();
-          return (
-            <div
-              class={
-                \\"builder-column \\" +
-                css({
-                  flexGrow: \\"1\\",
-                })
-              }
-            >
-              {column.content}
-              {index}
-            </div>
-          );
-        }}
-      </For>
-    </div>
+    <>
+      <div class=\\"builder-columns div-589a139a\\">
+        <For each={props.columns}>
+          {(column, _index) => {
+            const index = _index();
+            return (
+              <div class=\\"builder-column div-589a139a-2\\">
+                {column.content}
+                {index}
+              </div>
+            );
+          }}
+        </For>
+      </div>
+      <style>{\`.div-589a139a {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
+}@media (max-width: 999px) { .div-589a139a {   flex-direction: row; } }@media (max-width: 639px) { .div-589a139a {   flex-direction: row-reverse; } }.div-589a139a-2 {
+  flex-grow: 1;
+}\`}</style>
+    </>
   );
 }
 
@@ -7942,27 +8030,14 @@ function Column(props: ColumnProps) {
           }}
         </For>
       </div>
-      <style jsx>{\`
-        .div-589a139a {
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
-          line-height: normal;
-        }
-        @media (max-width: 999px) {
-          .div-589a139a {
-            flex-direction: row;
-          }
-        }
-        @media (max-width: 639px) {
-          .div-589a139a {
-            flex-direction: row-reverse;
-          }
-        }
-        .div-589a139a-2 {
-          flex-grow: 1;
-        }
-      \`}</style>
+      <style>{\`.div-589a139a {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
+}@media (max-width: 999px) { .div-589a139a {   flex-direction: row; } }@media (max-width: 639px) { .div-589a139a {   flex-direction: row-reverse; } }.div-589a139a-2 {
+  flex-grow: 1;
+}\`}</style>
     </>
   );
 }
@@ -7981,15 +8056,17 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotCode(props: Props) {
   return (
-    <div>
-      <Slot name={props.slotTesting}></Slot>
+    <>
       <div>
-        <hr />
+        <Slot name={props.slotTesting}></Slot>
+        <div>
+          <hr />
+        </div>
+        <div>
+          <Slot></Slot>
+        </div>
       </div>
-      <div>
-        <Slot></Slot>
-      </div>
-    </div>
+    </>
   );
 }
 
@@ -8048,23 +8125,25 @@ function ContentSlotJsxCode(props: Props) {
   }
 
   return (
-    <Show when={props.slotReference}>
-      <div
-        class={cls()}
-        name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-        title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-        {...props.attributes}
-        onClick={(event) => show()}
-      >
-        <Show when={showContent() && props.slotContent}>
-          <Slot name=\\"content\\">{props.content}</Slot>
-        </Show>
-        <div>
-          <hr />
+    <>
+      <Show when={props.slotReference}>
+        <div
+          class={cls()}
+          name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+          title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+          {...props.attributes}
+          onClick={(event) => show()}
+        >
+          <Show when={showContent() && props.slotContent}>
+            <Slot name=\\"content\\">{props.content}</Slot>
+          </Show>
+          <div>
+            <hr />
+          </div>
+          <div>{props.children}</div>
         </div>
-        <div>{props.children}</div>
-      </div>
-    </Show>
+      </Show>
+    </>
   );
 }
 
@@ -8183,13 +8262,15 @@ function CustomCode(props: CustomCodeProps) {
   });
 
   return (
-    <div
-      class={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      ref={elem!}
-      innerHTML={props.code}
-    ></div>
+    <>
+      <div
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        ref={elem!}
+        innerHTML={props.code}
+      ></div>
+    </>
   );
 }
 
@@ -8337,13 +8418,15 @@ function CustomCode(props: CustomCodeProps) {
   });
 
   return (
-    <div
-      class={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      ref={elem!}
-      innerHTML={props.code}
-    ></div>
+    <>
+      <div
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        ref={elem!}
+        innerHTML={props.code}
+      ></div>
+    </>
   );
 }
 
@@ -8432,7 +8515,6 @@ export default CustomCode;
 exports[`Solid > jsx > Typescript Test > Form 1`] = `
 "import { Show, For, createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
 export interface FormProps {
   attributes?: any;
   name?: string;
@@ -8700,62 +8782,60 @@ function FormComponent(props: FormProps) {
   let formRef: HTMLFormElement;
 
   return (
-    <form
-      validate={props.validate}
-      ref={formRef!}
-      action={!props.sendWithJs && props.action}
-      method={props.method}
-      name={props.name}
-      onSubmit={(event) => onSubmit(event)}
-      {...props.attributes}
-    >
-      <Show when={props.builderBlock && props.builderBlock.children}>
-        <For each={props.builderBlock?.children}>
-          {(block, _index) => {
-            const index = _index();
-            return (
-              <BuilderBlockComponent
-                key={block.id}
-                block={block}
-                index={index}
-              ></BuilderBlockComponent>
-            );
-          }}
-        </For>
-      </Show>
-      <Show when={submissionState() === \\"error\\"}>
-        <BuilderBlocks
-          dataPath=\\"errorMessage\\"
-          blocks={props.errorMessage!}
-        ></BuilderBlocks>
-      </Show>
-      <Show when={submissionState() === \\"sending\\"}>
-        <BuilderBlocks
-          dataPath=\\"sendingMessage\\"
-          blocks={props.sendingMessage!}
-        ></BuilderBlocks>
-      </Show>
-      <Show when={submissionState() === \\"error\\" && responseData()}>
-        <pre
-          class={
-            \\"builder-form-error-text \\" +
-            css({
-              padding: \\"10px\\",
-              color: \\"red\\",
-              textAlign: \\"center\\",
-            })
-          }
-        >
-          {JSON.stringify(responseData(), null, 2)}
-        </pre>
-      </Show>
-      <Show when={submissionState() === \\"success\\"}>
-        <BuilderBlocks
-          dataPath=\\"successMessage\\"
-          blocks={props.successMessage!}
-        ></BuilderBlocks>
-      </Show>
-    </form>
+    <>
+      <form
+        validate={props.validate}
+        ref={formRef!}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => onSubmit(event)}
+        {...props.attributes}
+      >
+        <Show when={props.builderBlock && props.builderBlock.children}>
+          <For each={props.builderBlock?.children}>
+            {(block, _index) => {
+              const index = _index();
+              return (
+                <BuilderBlockComponent
+                  key={block.id}
+                  block={block}
+                  index={index}
+                ></BuilderBlockComponent>
+              );
+            }}
+          </For>
+        </Show>
+        <Show when={submissionState() === \\"error\\"}>
+          <BuilderBlocks
+            dataPath=\\"errorMessage\\"
+            blocks={props.errorMessage!}
+          ></BuilderBlocks>
+        </Show>
+        <Show when={submissionState() === \\"sending\\"}>
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage!}
+          ></BuilderBlocks>
+        </Show>
+        <Show when={submissionState() === \\"error\\" && responseData()}>
+          <pre class=\\"builder-form-error-text pre-4bf0b036\\">
+            {JSON.stringify(responseData(), null, 2)}
+          </pre>
+        </Show>
+        <Show when={submissionState() === \\"success\\"}>
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage!}
+          ></BuilderBlocks>
+        </Show>
+      </form>
+      <style>{\`.pre-4bf0b036 {
+  padding: 10px;
+  color: red;
+  text-align: center;
+}\`}</style>
+    </>
   );
 }
 
@@ -9081,13 +9161,11 @@ function FormComponent(props: FormProps) {
           ></BuilderBlocks>
         </Show>
       </form>
-      <style jsx>{\`
-        .pre-4bf0b036 {
-          padding: 10px;
-          color: red;
-          text-align: center;
-        }
-      \`}</style>
+      <style>{\`.pre-4bf0b036 {
+  padding: 10px;
+  color: red;
+  text-align: center;
+}\`}</style>
     </>
   );
 }
@@ -9099,7 +9177,6 @@ export default FormComponent;
 exports[`Solid > jsx > Typescript Test > Image 1`] = `
 "import { Show, onMount, createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
 // TODO: AMP Support?
 export interface ImageProps {
   _class?: string;
@@ -9169,33 +9246,35 @@ function Image(props: ImageProps) {
   });
 
   return (
-    <div>
-      <picture ref={pictureRef!}>
-        <Show when={!useLazyLoading() || load()}>
-          <img
-            class={
-              \\"builder-image\\" +
-              (props._class ? \\" \\" + props._class : \\"\\") +
-              \\" \\" +
-              css({
-                opacity: \\"1\\",
-                transition: \\"opacity 0.2s ease-in-out\\",
-                objectFit: \\"cover\\",
-                objectPosition: \\"center\\",
-              })
-            }
-            alt={props.altText}
-            aria-role={props.altText ? \\"presentation\\" : undefined}
-            src={props.image}
-            onLoad={(event) => setLoaded()}
-            srcset={props.srcset}
-            sizes={props.sizes}
-          />
-        </Show>
-        <source srcset={props.srcset} />
-      </picture>
-      {props.children}
-    </div>
+    <>
+      <div>
+        <picture ref={pictureRef!}>
+          <Show when={!useLazyLoading() || load()}>
+            <img
+              class={
+                \\"builder-image\\" +
+                (props._class ? \\" \\" + props._class : \\"\\") +
+                \\" img-88889f3c\\"
+              }
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              src={props.image}
+              onLoad={(event) => setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+            />
+          </Show>
+          <source srcset={props.srcset} />
+        </picture>
+        {props.children}
+      </div>
+      <style>{\`.img-88889f3c {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
+}\`}</style>
+    </>
   );
 }
 
@@ -9297,14 +9376,12 @@ function Image(props: ImageProps) {
         </picture>
         {props.children}
       </div>
-      <style jsx>{\`
-        .img-88889f3c {
-          opacity: 1;
-          transition: opacity 0.2s ease-in-out;
-          object-fit: cover;
-          object-position: center;
-        }
-      \`}</style>
+      <style>{\`.img-88889f3c {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
+}\`}</style>
     </>
   );
 }
@@ -9322,18 +9399,20 @@ function ImgStateComponent(props: any) {
   const [images, setImages] = createSignal([\\"http://example.com/qwik.png\\"]);
 
   return (
-    <div>
-      <For each={images()}>
-        {(item, _index) => {
-          const itemIndex = _index();
-          return (
-            <>
-              <img class=\\"custom-class\\" src={item} key={itemIndex} />
-            </>
-          );
-        }}
-      </For>
-    </div>
+    <>
+      <div>
+        <For each={images()}>
+          {(item, _index) => {
+            const itemIndex = _index();
+            return (
+              <>
+                <img class=\\"custom-class\\" src={item} key={itemIndex} />
+              </>
+            );
+          }}
+        </For>
+      </div>
+    </>
   );
 }
 
@@ -9393,16 +9472,18 @@ import { Builder } from \\"@builder.io/sdk\\";
 
 function ImgComponent(props: ImgProps) {
   return (
-    <img
-      style={{
-        \\"object-fit\\": props.backgroundSize || \\"cover\\",
-        \\"object-position\\": props.backgroundPosition || \\"center\\",
-      }}
-      {...props.attributes}
-      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
-      alt={props.altText}
-      src={props.imgSrc}
-    />
+    <>
+      <img
+        style={{
+          \\"object-fit\\": props.backgroundSize || \\"cover\\",
+          \\"object-position\\": props.backgroundPosition || \\"center\\",
+        }}
+        {...props.attributes}
+        key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+        alt={props.altText}
+        src={props.imgSrc}
+      />
+    </>
   );
 }
 
@@ -9467,21 +9548,23 @@ import { Builder } from \\"@builder.io/sdk\\";
 
 function FormInputComponent(props: FormInputProps) {
   return (
-    <input
-      {...props.attributes}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      placeholder={props.placeholder}
-      type={props.type}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-      required={props.required}
-      onInput={(event) => props.onChange?.(event.target.value)}
-    />
+    <>
+      <input
+        {...props.attributes}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        placeholder={props.placeholder}
+        type={props.type}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+        required={props.required}
+        onInput={(event) => props.onChange?.(event.target.value)}
+      />
+    </>
   );
 }
 
@@ -9540,11 +9623,13 @@ function Stepper(props: any) {
   }
 
   return (
-    <FormInputComponent
-      name=\\"kingzez\\"
-      type=\\"text\\"
-      onChange={(value) => handleChange(value)}
-    ></FormInputComponent>
+    <>
+      <FormInputComponent
+        name=\\"kingzez\\"
+        type=\\"text\\"
+        onChange={(value) => handleChange(value)}
+      ></FormInputComponent>
+    </>
   );
 }
 
@@ -9585,10 +9670,12 @@ exports[`Solid > jsx > Typescript Test > RawText 1`] = `
 
 function RawText(props: RawTextProps) {
   return (
-    <span
-      class={props.attributes?.class || props.attributes?.className}
-      innerHTML={props.text || \\"\\"}
-    ></span>
+    <>
+      <span
+        class={props.attributes?.class || props.attributes?.className}
+        innerHTML={props.text || \\"\\"}
+      ></span>
+    </>
   );
 }
 
@@ -9626,18 +9713,20 @@ exports[`Solid > jsx > Typescript Test > Section 1`] = `
 
 function SectionComponent(props: SectionProps) {
   return (
-    <section
-      {...props.attributes}
-      style={
-        props.maxWidth && typeof props.maxWidth === \\"number\\"
-          ? {
-              \\"max-width\\": props.maxWidth,
-            }
-          : undefined
-      }
-    >
-      {props.children}
-    </section>
+    <>
+      <section
+        {...props.attributes}
+        style={
+          props.maxWidth && typeof props.maxWidth === \\"number\\"
+            ? {
+                \\"max-width\\": props.maxWidth,
+              }
+            : undefined
+        }
+      >
+        {props.children}
+      </section>
+    </>
   );
 }
 
@@ -9660,23 +9749,25 @@ function SectionStateComponent(props: SectionProps) {
   const [items, setItems] = createSignal([42]);
 
   return (
-    <Show when={max()}>
-      <For each={items()}>
-        {(item, _index) => {
-          const index = _index();
-          return (
-            <section
-              {...props.attributes}
-              style={{
-                \\"max-width\\": item + max(),
-              }}
-            >
-              {props.children}
-            </section>
-          );
-        }}
-      </For>
-    </Show>
+    <>
+      <Show when={max()}>
+        <For each={items()}>
+          {(item, _index) => {
+            const index = _index();
+            return (
+              <section
+                {...props.attributes}
+                style={{
+                  \\"max-width\\": item + max(),
+                }}
+              >
+                {props.children}
+              </section>
+            );
+          }}
+        </For>
+      </Show>
+    </>
   );
 }
 
@@ -9773,28 +9864,30 @@ import { Builder } from \\"@builder.io/sdk\\";
 
 function SelectComponent(props: FormSelectProps) {
   return (
-    <select
-      {...props.attributes}
-      value={props.value}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      defaultValue={props.defaultValue}
-      name={props.name}
-    >
-      <For each={props.options}>
-        {(option, _index) => {
-          const index = _index();
-          return (
-            <option value={option.value} data-index={index}>
-              {option.name || option.value}
-            </option>
-          );
-        }}
-      </For>
-    </select>
+    <>
+      <select
+        {...props.attributes}
+        value={props.value}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        defaultValue={props.defaultValue}
+        name={props.name}
+      >
+        <For each={props.options}>
+          {(option, _index) => {
+            const index = _index();
+            return (
+              <option value={option.value} data-index={index}>
+                {option.name || option.value}
+              </option>
+            );
+          }}
+        </For>
+      </select>
+    </>
   );
 }
 
@@ -9858,11 +9951,13 @@ exports[`Solid > jsx > Typescript Test > SlotDefault 1`] = `
 
 function SlotCode(props: Props) {
   return (
-    <div>
-      <Slot>
-        <div class=\\"default-slot\\">Default content</div>
-      </Slot>
-    </div>
+    <>
+      <div>
+        <Slot>
+          <div class=\\"default-slot\\">Default content</div>
+        </Slot>
+      </div>
+    </>
   );
 }
 
@@ -9900,11 +9995,13 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 function SlotCode(props: Props) {
   return (
-    <div>
-      <ContentSlotCode>
-        <Slot testing={<div>Hello</div>}></Slot>
-      </ContentSlotCode>
-    </div>
+    <>
+      <div>
+        <ContentSlotCode>
+          <Slot testing={<div>Hello</div>}></Slot>
+        </ContentSlotCode>
+      </div>
+    </>
   );
 }
 
@@ -9944,9 +10041,11 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 function SlotCode(props: Props) {
   return (
-    <div>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
-    </div>
+    <>
+      <div>
+        <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      </div>
+    </>
   );
 }
 
@@ -9982,12 +10081,14 @@ exports[`Solid > jsx > Typescript Test > SlotNamed 1`] = `
 
 function SlotCode(props: Props) {
   return (
-    <div>
-      <Slot name=\\"myAwesomeSlot\\"></Slot>
-      <Slot name=\\"top\\"></Slot>
-      <Slot name=\\"left\\">Default left</Slot>
-      <Slot>Default Child</Slot>
-    </div>
+    <>
+      <div>
+        <Slot name=\\"myAwesomeSlot\\"></Slot>
+        <Slot name=\\"top\\"></Slot>
+        <Slot name=\\"left\\">Default left</Slot>
+        <Slot>Default Child</Slot>
+      </div>
+    </>
   );
 }
 
@@ -10020,7 +10121,6 @@ export default SlotCode;
 exports[`Solid > jsx > Typescript Test > Stamped.io 1`] = `
 "import { Show, For, onMount, createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
 type SmileReviewsProps = {
   productId: string;
   apiKey: string;
@@ -10056,73 +10156,67 @@ function SmileReviews(props: SmileReviewsProps) {
   });
 
   return (
-    <div data-user={name()}>
-      <button onClick={(event) => setShowReviewPrompt(true)}>
-        Write a review
-      </button>
-      <Show when={showReviewPrompt() || \\"asdf\\"}>
-        <input placeholder=\\"Email\\" />
-        <input
-          class={css({
-            display: \\"block\\",
-          })}
-          placeholder=\\"Title\\"
-        />
-        <textarea
-          class={css({
-            display: \\"block\\",
-          })}
-          placeholder=\\"How was your experience?\\"
-        ></textarea>
-        <button
-          class={css({
-            display: \\"block\\",
-          })}
-          onClick={(event) => {
-            event.preventDefault();
-            setShowReviewPrompt(false);
-          }}
-        >
-          Submit
+    <>
+      <div data-user={name()}>
+        <button onClick={(event) => setShowReviewPrompt(true)}>
+          Write a review
         </button>
-      </Show>
-      <For each={reviews()}>
-        {(review, _index) => {
-          const index = _index();
-          return (
-            <div
-              class={css({
-                margin: \\"10px\\",
-                padding: \\"10px\\",
-                background: \\"white\\",
-                display: \\"flex\\",
-                borderRadius: \\"5px\\",
-                boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
-                WebkitFontSmoothing: \\"antialiased\\",
-              })}
-              key={review.id}
-            >
-              <img
-                class={css({
-                  height: \\"30px\\",
-                  width: \\"30px\\",
-                  marginRight: \\"10px\\",
-                })}
-                src={review.avatar}
-              />
-              <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-                <div>
-                  N:
-                  {index}
+        <Show when={showReviewPrompt() || \\"asdf\\"}>
+          <input placeholder=\\"Email\\" />
+          <input class=\\"input-4a97341e\\" placeholder=\\"Title\\" />
+          <textarea
+            class=\\"textarea-4a97341e\\"
+            placeholder=\\"How was your experience?\\"
+          ></textarea>
+          <button
+            class=\\"button-4a97341e\\"
+            onClick={(event) => {
+              event.preventDefault();
+              setShowReviewPrompt(false);
+            }}
+          >
+            Submit
+          </button>
+        </Show>
+        <For each={reviews()}>
+          {(review, _index) => {
+            const index = _index();
+            return (
+              <div class=\\"div-4a97341e\\" key={review.id}>
+                <img class=\\"img-4a97341e\\" src={review.avatar} />
+                <div class={showReviewPrompt() ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+                  <div>
+                    N:
+                    {index}
+                  </div>
+                  <div>{review.author}</div>
+                  <div>{review.reviewMessage}</div>
                 </div>
-                <div>{review.author}</div>
-                <div>{review.reviewMessage}</div>
               </div>
-            </div>
-          );
-        }}
-      </For>
-    </div>
+            );
+          }}
+        </For>
+      </div>
+      <style>{\`.input-4a97341e {
+  display: block;
+}.textarea-4a97341e {
+  display: block;
+}.button-4a97341e {
+  display: block;
+}.div-4a97341e {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  -webkit-font-smoothing: antialiased;
+}.img-4a97341e {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -10209,31 +10303,25 @@ function SmileReviews(props: SmileReviewsProps) {
           }}
         </For>
       </div>
-      <style jsx>{\`
-        .input-4a97341e {
-          display: block;
-        }
-        .textarea-4a97341e {
-          display: block;
-        }
-        .button-4a97341e {
-          display: block;
-        }
-        .div-4a97341e {
-          margin: 10px;
-          padding: 10px;
-          background: white;
-          display: flex;
-          border-radius: 5px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-          -webkit-font-smoothing: antialiased;
-        }
-        .img-4a97341e {
-          height: 30px;
-          width: 30px;
-          margin-right: 10px;
-        }
-      \`}</style>
+      <style>{\`.input-4a97341e {
+  display: block;
+}.textarea-4a97341e {
+  display: block;
+}.button-4a97341e {
+  display: block;
+}.div-4a97341e {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  -webkit-font-smoothing: antialiased;
+}.img-4a97341e {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+}\`}</style>
     </>
   );
 }
@@ -10250,9 +10338,11 @@ exports[`Solid > jsx > Typescript Test > Submit 1`] = `
 
 function SubmitButton(props: ButtonProps) {
   return (
-    <button type=\\"submit\\" {...props.attributes}>
-      {props.text}
-    </button>
+    <>
+      <button type=\\"submit\\" {...props.attributes}>
+        {props.text}
+      </button>
+    </>
   );
 }
 
@@ -10297,18 +10387,20 @@ function Text(props: TextProps) {
   const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
-    <div
-      contentEditable={allowEditingText || undefined}
-      data-name={{
-        test: name() || \\"any name\\",
-      }}
-      innerHTML={
-        props.text ||
-        props.content ||
-        name() ||
-        '<p class=\\"text-lg\\">my name</p>'
-      }
-    ></div>
+    <>
+      <div
+        contentEditable={allowEditingText || undefined}
+        data-name={{
+          test: name() || \\"any name\\",
+        }}
+        innerHTML={
+          props.text ||
+          props.content ||
+          name() ||
+          '<p class=\\"text-lg\\">my name</p>'
+        }
+      ></div>
+    </>
   );
 }
 
@@ -10365,13 +10457,15 @@ exports[`Solid > jsx > Typescript Test > Textarea 1`] = `
 
 function Textarea(props: TextareaProps) {
   return (
-    <textarea
-      {...props.attributes}
-      placeholder={props.placeholder}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-    ></textarea>
+    <>
+      <textarea
+        {...props.attributes}
+        placeholder={props.placeholder}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+      ></textarea>
+    </>
   );
 }
 
@@ -10435,26 +10529,28 @@ exports[`Solid > jsx > Typescript Test > Video 1`] = `
 
 function Video(props: VideoProps) {
   return (
-    <video
-      preload=\\"none\\"
-      {...props.attributes}
-      style={{
-        width: \\"100%\\",
-        height: \\"100%\\",
-        ...props.attributes?.style,
-        \\"object-fit\\": props.fit,
-        \\"object-position\\": props.position,
-        // Hack to get object fit to work as expected and
-        // not have the video overflow
-        \\"border-radius\\": 1,
-      }}
-      key={props.video || \\"no-src\\"}
-      poster={props.posterImage}
-      autoplay={props.autoPlay}
-      muted={props.muted}
-      controls={props.controls}
-      loop={props.loop}
-    ></video>
+    <>
+      <video
+        preload=\\"none\\"
+        {...props.attributes}
+        style={{
+          width: \\"100%\\",
+          height: \\"100%\\",
+          ...props.attributes?.style,
+          \\"object-fit\\": props.fit,
+          \\"object-position\\": props.position,
+          // Hack to get object fit to work as expected and
+          // not have the video overflow
+          \\"border-radius\\": 1,
+        }}
+        key={props.video || \\"no-src\\"}
+        poster={props.posterImage}
+        autoplay={props.autoPlay}
+        muted={props.muted}
+        controls={props.controls}
+        loop={props.loop}
+      ></video>
+    </>
   );
 }
 
@@ -10535,10 +10631,12 @@ function MyComponent(props: any) {
   }
 
   return (
-    <div>
-      Hello
-      {name()}
-    </div>
+    <>
+      <div>
+        Hello
+        {name()}
+      </div>
+    </>
   );
 }
 
@@ -10590,21 +10688,23 @@ function MyBasicForNoTagRefComponent(props: any) {
   });
 
   return (
-    <Dynamic component={TagNameGetter()}>
-      Hello
-      <Dynamic component={tag()}>{name()}</Dynamic>
-      <For each={props.actions}>
-        {(action, _index) => {
-          const index = _index();
-          return (
-            <Dynamic component={TagName()}>
-              <Dynamic component={action.icon}></Dynamic>
-              <span>{action.text}</span>
-            </Dynamic>
-          );
-        }}
-      </For>
-    </Dynamic>
+    <>
+      <Dynamic component={TagNameGetter()}>
+        Hello
+        <Dynamic component={tag()}>{name()}</Dynamic>
+        <For each={props.actions}>
+          {(action, _index) => {
+            const index = _index();
+            return (
+              <Dynamic component={TagName()}>
+                <Dynamic component={action.icon}></Dynamic>
+                <span>{action.text}</span>
+              </Dynamic>
+            );
+          }}
+        </For>
+      </Dynamic>
+    </>
   );
 }
 
@@ -10655,7 +10755,6 @@ export default MyBasicForNoTagRefComponent;
 exports[`Solid > jsx > Typescript Test > basicForwardRef 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
@@ -10665,16 +10764,19 @@ function MyBasicForwardRefComponent(props: Props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   return (
-    <div>
-      <input
-        class={css({
-          color: \\"red\\",
-        })}
-        ref={props.inputRef!}
-        value={name()}
-        onInput={(event) => setName(event.target.value)}
-      />
-    </div>
+    <>
+      <div>
+        <input
+          class=\\"input-b78c7450\\"
+          ref={props.inputRef!}
+          value={name()}
+          onInput={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style>{\`.input-b78c7450 {
+  color: red;
+}\`}</style>
+    </>
   );
 }
 
@@ -10703,11 +10805,9 @@ function MyBasicForwardRefComponent(props: Props) {
           onInput={(event) => setName(event.target.value)}
         />
       </div>
-      <style jsx>{\`
-        .input-b78c7450 {
-          color: red;
-        }
-      \`}</style>
+      <style>{\`.input-b78c7450 {
+  color: red;
+}\`}</style>
     </>
   );
 }
@@ -10719,7 +10819,6 @@ export default MyBasicForwardRefComponent;
 exports[`Solid > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
@@ -10729,16 +10828,19 @@ function MyBasicForwardRefComponent(props: Props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   return (
-    <div>
-      <input
-        class={css({
-          color: \\"red\\",
-        })}
-        ref={props.inputRef!}
-        value={name()}
-        onInput={(event) => setName(event.target.value)}
-      />
-    </div>
+    <>
+      <div>
+        <input
+          class=\\"input-551faa42\\"
+          ref={props.inputRef!}
+          value={name()}
+          onInput={(event) => setName(event.target.value)}
+        />
+      </div>
+      <style>{\`.input-551faa42 {
+  color: red;
+}\`}</style>
+    </>
   );
 }
 
@@ -10767,11 +10869,9 @@ function MyBasicForwardRefComponent(props: Props) {
           onInput={(event) => setName(event.target.value)}
         />
       </div>
-      <style jsx>{\`
-        .input-551faa42 {
-          color: red;
-        }
-      \`}</style>
+      <style>{\`.input-551faa42 {
+  color: red;
+}\`}</style>
     </>
   );
 }
@@ -10806,10 +10906,12 @@ function MyBasicOnUpdateReturnComponent(props: any) {
   createEffect(on(() => [onUpdateFn_0_name__()], onUpdateFn_0));
 
   return (
-    <div>
-      Hello!
-      {name()}
-    </div>
+    <>
+      <div>
+        Hello!
+        {name()}
+      </div>
+    </>
   );
 }
 
@@ -10857,20 +10959,16 @@ export default MyBasicOnUpdateReturnComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > class + ClassName + css 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyBasicComponent(props: any) {
+"function MyBasicComponent(props: any) {
   return (
-    <div
-      class={
-        \\"test2 test \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-    >
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div class=\\"test2 test div-6b6c27cc\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style>{\`.div-6b6c27cc {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -10885,11 +10983,9 @@ exports[`Solid > jsx > Typescript Test > class + ClassName + css 2`] = `
       <div class=\\"test2 test div-6b6c27cc\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-      <style jsx>{\`
-        .div-6b6c27cc {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-6b6c27cc {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -10899,20 +10995,16 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > class + css 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyBasicComponent(props: any) {
+"function MyBasicComponent(props: any) {
   return (
-    <div
-      class={
-        \\"test \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-    >
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div class=\\"test div-fb8d32e6\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style>{\`.div-fb8d32e6 {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -10927,11 +11019,9 @@ exports[`Solid > jsx > Typescript Test > class + css 2`] = `
       <div class=\\"test div-fb8d32e6\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-      <style jsx>{\`
-        .div-fb8d32e6 {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-fb8d32e6 {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -10941,20 +11031,16 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > className + css 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyBasicComponent(props: any) {
+"function MyBasicComponent(props: any) {
   return (
-    <div
-      class={
-        \\"test \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-    >
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div class=\\"test div-fb8d32e6\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style>{\`.div-fb8d32e6 {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -10969,11 +11055,9 @@ exports[`Solid > jsx > Typescript Test > className + css 2`] = `
       <div class=\\"test div-fb8d32e6\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-      <style jsx>{\`
-        .div-fb8d32e6 {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-fb8d32e6 {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -10996,10 +11080,12 @@ function ClassNameCode(props: Props) {
   const [bindings, setBindings] = createSignal(\\"a binding\\");
 
   return (
-    <div>
-      <div class=\\"no binding\\">Without Binding</div>
-      <div class={bindings()}>With binding</div>
-    </div>
+    <>
+      <div>
+        <div class=\\"no binding\\">Without Binding</div>
+        <div class={bindings()}>With binding</div>
+      </div>
+    </>
   );
 }
 
@@ -11037,8 +11123,6 @@ export default ClassNameCode;
 exports[`Solid > jsx > Typescript Test > classState 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
-
 function MyBasicComponent(props: any) {
   const [classState, setClassState] = createSignal(\\"testClassName\\");
 
@@ -11047,18 +11131,14 @@ function MyBasicComponent(props: any) {
   });
 
   return (
-    <div
-      class={
-        classState() +
-        \\" \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-      style={styleState()}
-    >
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div class={classState() + \\" div-70b306de\\"} style={styleState()}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style>{\`.div-70b306de {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -11081,11 +11161,9 @@ function MyBasicComponent(props: any) {
       <div class={classState() + \\" div-70b306de\\"} style={styleState()}>
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-      <style jsx>{\`
-        .div-70b306de {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-70b306de {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -11108,25 +11186,27 @@ function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
-      <Context1.Provider
+    <>
+      <Context2.Provider
         value={{
-          foo: \\"bar\\",
-
-          content() {
-            return props.content;
-          },
+          bar: \\"baz\\",
         }}
       >
-        <>
-          <>{foo.value}</>
-        </>
-      </Context1.Provider>
-    </Context2.Provider>
+        <Context1.Provider
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+        >
+          <>
+            <>{foo.value}</>
+          </>
+        </Context1.Provider>
+      </Context2.Provider>
+    </>
   );
 }
 
@@ -11190,26 +11270,28 @@ function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
-      <Context1.Provider
+    <>
+      <Context2.Provider
         value={{
-          foo: \\"bar\\",
-
-          content() {
-            return props.content;
-          },
+          bar: \\"baz\\",
         }}
       >
-        <>
-          <>{foo.value}</>
-          <div>other</div>
-        </>
-      </Context1.Provider>
-    </Context2.Provider>
+        <Context1.Provider
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+        >
+          <>
+            <>{foo.value}</>
+            <div>other</div>
+          </>
+        </Context1.Provider>
+      </Context2.Provider>
+    </>
   );
 }
 
@@ -11265,14 +11347,16 @@ exports[`Solid > jsx > Typescript Test > contentState 1`] = `
 
 function RenderContent(props: any) {
   return (
-    <BuilderContext.Provider
-      value={{
-        content: props.content,
-        registeredComponents: props.customComponents,
-      }}
-    >
-      <div>setting context</div>
-    </BuilderContext.Provider>
+    <>
+      <BuilderContext.Provider
+        value={{
+          content: props.content,
+          registeredComponents: props.customComponents,
+        }}
+      >
+        <div>setting context</div>
+      </BuilderContext.Provider>
+    </>
   );
 }
 
@@ -11317,26 +11401,28 @@ export interface ButtonProps {
 
 function Button(props: ButtonProps) {
   return (
-    <div>
-      <Show when={props.link}>
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
-      </Show>
-      <Show when={!props.link}>
-        <button
-          type=\\"button\\"
-          {...props.attributes}
-          onClick={(event) => props.onClick(event)}
-        >
-          {props.buttonText}
-        </button>
-      </Show>
-    </div>
+    <>
+      <div>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
+            {props.buttonText}
+          </button>
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -11401,26 +11487,28 @@ export interface ButtonProps {
 
 function Button(props: ButtonProps) {
   return (
-    <div>
-      <Show when={props.link}>
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
-      </Show>
-      <Show when={!props.link}>
-        <button
-          type=\\"button\\"
-          {...props.attributes}
-          onClick={(event) => props.onClick(event)}
-        >
-          {props.text}
-        </button>
-      </Show>
-    </div>
+    <>
+      <div>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button
+            type=\\"button\\"
+            {...props.attributes}
+            onClick={(event) => props.onClick(event)}
+          >
+            {props.text}
+          </button>
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -11481,11 +11569,13 @@ const DEFAULT_VALUES: Props = {
 
 function ComponentWithTypes(props: Props) {
   return (
-    <div>
-      {\\" \\"}
-      Hello
-      {props.name || DEFAULT_VALUES.name}
-    </div>
+    <>
+      <div>
+        {\\" \\"}
+        Hello
+        {props.name || DEFAULT_VALUES.name}
+      </div>
+    </>
   );
 }
 
@@ -11526,7 +11616,11 @@ function MyComponent(props: any) {
     !(props.componentRef instanceof Function) ? props.componentRef : null
   );
 
-  return <div>{refToUse()}</div>;
+  return (
+    <>
+      <div>{refToUse()}</div>
+    </>
+  );
 }
 
 export default MyComponent;
@@ -11573,11 +11667,13 @@ function Button(props: ButtonProps) {
   }
 
   return (
-    <div>
-      <p>{foo2()}</p>
-      <p>{bar()}</p>
-      <p>{baz(1)}</p>
-    </div>
+    <>
+      <div>
+        <p>{foo2()}</p>
+        <p>{bar()}</p>
+        <p>{baz(1)}</p>
+      </div>
+    </>
   );
 }
 
@@ -11641,9 +11737,11 @@ function RenderContent(props: RenderContentProps) {
   }
 
   return (
-    <RenderBlock
-      {...getRenderContentProps(props.renderContentProps.block, 0)}
-    ></RenderBlock>
+    <>
+      <RenderBlock
+        {...getRenderContentProps(props.renderContentProps.block, 0)}
+      ></RenderBlock>
+    </>
   );
 }
 
@@ -11688,7 +11786,11 @@ exports[`Solid > jsx > Typescript Test > multipleOnUpdate 1`] = `
 "import { on, createEffect, createMemo } from \\"solid-js\\";
 
 function MultipleOnUpdate(props: any) {
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MultipleOnUpdate;
@@ -11748,7 +11850,11 @@ function MultipleOnUpdateWithDeps(props: any) {
     on(() => [onUpdateFn_1_c__(), onUpdateFn_1_d__()], onUpdateFn_1)
   );
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MultipleOnUpdateWithDeps;
@@ -11812,7 +11918,11 @@ function MyBasicComponent(props: any) {
     hello: \\"world\\",
   });
 
-  return <input {...attrs()} {...props} />;
+  return (
+    <>
+      <input {...attrs()} {...props} />
+    </>
+  );
 }
 
 export default MyBasicComponent;
@@ -11848,11 +11958,13 @@ interface Props {
 
 function NestedShow(props: Props) {
   return (
-    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
-      <Show fallback={<div>else-condition-B</div>} when={!props.conditionB}>
-        <div>if condition A and condition B</div>
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        <Show fallback={<div>else-condition-B</div>} when={!props.conditionB}>
+          <div>if condition A and condition B</div>
+        </Show>
       </Show>
-    </Show>
+    </>
   );
 }
 
@@ -11885,37 +11997,26 @@ export default NestedShow;
 `;
 
 exports[`Solid > jsx > Typescript Test > nestedStyles 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function NestedStyles(props: any) {
+"function NestedStyles(props: any) {
   return (
-    <div
-      class={css({
-        display: \\"flex\\",
-        \\"--bar\\": \\"red\\",
-        color: \\"var(--bar)\\",
-        \\"@media (max-width: env(--mobile))\\": {
-          display: \\"block\\",
-        },
-        \\"&:hover\\": {
-          display: \\"flex\\",
-        },
-        \\":active\\": {
-          display: \\"inline\\",
-        },
-        \\".nested-selector\\": {
-          display: \\"grid\\",
-        },
-        \\".nested-selector:hover\\": {
-          display: \\"block\\",
-        },
-        \\"&.nested-selector:active\\": {
-          display: \\"inline-block\\",
-        },
-      })}
-    >
-      Hello world
-    </div>
+    <>
+      <div class=\\"div-7ff9918d\\">Hello world</div>
+      <style>{\`.div-7ff9918d {
+  display: flex;
+  --bar: red;
+  color: var(--bar);
+}@media (max-width: env(--mobile)) { .div-7ff9918d {   display: block; } }.div-7ff9918d:hover {
+  display: flex;
+}.div-7ff9918d:active {
+  display: inline;
+}.div-7ff9918d .nested-selector {
+  display: grid;
+}.div-7ff9918d .nested-selector:hover {
+  display: block;
+}.div-7ff9918d.nested-selector:active {
+  display: inline-block;
+}\`}</style>
+    </>
   );
 }
 
@@ -11928,33 +12029,21 @@ exports[`Solid > jsx > Typescript Test > nestedStyles 2`] = `
   return (
     <>
       <div class=\\"div-7ff9918d\\">Hello world</div>
-      <style jsx>{\`
-        .div-7ff9918d {
-          display: flex;
-          --bar: red;
-          color: var(--bar);
-        }
-        @media (max-width: env(--mobile)) {
-          .div-7ff9918d {
-            display: block;
-          }
-        }
-        .div-7ff9918d:hover {
-          display: flex;
-        }
-        .div-7ff9918d:active {
-          display: inline;
-        }
-        .div-7ff9918d .nested-selector {
-          display: grid;
-        }
-        .div-7ff9918d .nested-selector:hover {
-          display: block;
-        }
-        .div-7ff9918d.nested-selector:active {
-          display: inline-block;
-        }
-      \`}</style>
+      <style>{\`.div-7ff9918d {
+  display: flex;
+  --bar: red;
+  color: var(--bar);
+}@media (max-width: env(--mobile)) { .div-7ff9918d {   display: block; } }.div-7ff9918d:hover {
+  display: flex;
+}.div-7ff9918d:active {
+  display: inline;
+}.div-7ff9918d .nested-selector {
+  display: grid;
+}.div-7ff9918d .nested-selector:hover {
+  display: block;
+}.div-7ff9918d.nested-selector:active {
+  display: inline-block;
+}\`}</style>
     </>
   );
 }
@@ -11983,13 +12072,15 @@ function Embed(props: any) {
   });
 
   return (
-    <div
-      class=\\"builder-embed\\"
-      ref={elem!}
-      onInitEditingBldr={(event) => elem_onInitEditingBldr(event)}
-    >
-      <div>Test</div>
-    </div>
+    <>
+      <div
+        class=\\"builder-embed\\"
+        ref={elem!}
+        onInitEditingBldr={(event) => elem_onInitEditingBldr(event)}
+      >
+        <div>Test</div>
+      </div>
+    </>
   );
 }
 
@@ -12041,7 +12132,11 @@ function OnInit(props: any) {
     console.log(\\"onMount\\");
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default OnInit;
@@ -12082,10 +12177,12 @@ function OnInit(props: Props) {
   const [name, setName] = createSignal(\\"\\");
 
   return (
-    <div>
-      Default name defined by parent
-      {name()}
-    </div>
+    <>
+      <div>
+        Default name defined by parent
+        {name()}
+      </div>
+    </>
   );
 }
 
@@ -12129,7 +12226,11 @@ function Comp(props: any) {
     console.log(\\"Runs on mount\\");
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default Comp;
@@ -12169,7 +12270,11 @@ function Comp(props: any) {
     console.log(\\"SSR runs on Mount\\");
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default Comp;
@@ -12205,7 +12310,11 @@ exports[`Solid > jsx > Typescript Test > onUpdate 1`] = `
 "import { on, createEffect, createMemo } from \\"solid-js\\";
 
 function OnUpdate(props: any) {
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default OnUpdate;
@@ -12252,7 +12361,11 @@ function OnUpdateWithDeps(props: Props) {
     )
   );
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default OnUpdateWithDeps;
@@ -12313,7 +12426,11 @@ export const bar = () => {};
 export function run<T>(value: T) {}
 
 function MyBasicComponent(props: MyBasicComponentProps) {
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MyBasicComponent;
@@ -12365,10 +12482,12 @@ export interface MyBasicComponentProps {
 
 function MyBasicComponent(props: MyBasicComponentProps) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
   );
 }
 
@@ -12417,11 +12536,13 @@ function MyBasicComponent(props: Props) {
   const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
-    <div>
-      {props.children}
-      {props.type}
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div>
+        {props.children}
+        {props.type}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </>
   );
 }
 
@@ -12463,10 +12584,12 @@ exports[`Solid > jsx > Typescript Test > propsInterface 1`] = `
 
 function MyBasicComponent(props: Person | never) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
   );
 }
 
@@ -12503,10 +12626,12 @@ exports[`Solid > jsx > Typescript Test > propsType 1`] = `
 
 function MyBasicComponent(props: Person) {
   return (
-    <div>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-      {props.name}
-    </div>
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
   );
 }
 
@@ -12549,7 +12674,11 @@ function OnUpdate(props: any) {
     };
   }
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default OnUpdate;
@@ -12800,65 +12929,67 @@ function RenderBlock(props: RenderBlockProps) {
   });
 
   return (
-    <Show
-      fallback={
-        <Dynamic
-          {...renderComponentProps()}
-          component={renderComponentTag()}
-        ></Dynamic>
-      }
-      when={shouldWrap()}
-    >
-      <Show when={isEmptyHtmlElement(tag())}>
-        <Dynamic {...attributes()} {...actions()} component={tag()}></Dynamic>
-      </Show>
-      <Show when={!isEmptyHtmlElement(tag()) && repeatItemData()}>
-        <For each={repeatItemData()}>
-          {(data, _index) => {
-            const index = _index();
-            return (
-              <RenderRepeatedBlock
-                key={index}
-                repeatContext={data.context}
-                block={data.block}
-              ></RenderRepeatedBlock>
-            );
-          }}
-        </For>
-      </Show>
-      <Show when={!isEmptyHtmlElement(tag()) && !repeatItemData()}>
-        <Dynamic {...attributes()} {...actions()} component={tag()}>
+    <>
+      <Show
+        fallback={
           <Dynamic
             {...renderComponentProps()}
             component={renderComponentTag()}
           ></Dynamic>
-          <For each={childrenWithoutParentComponent()}>
-            {(child, _index) => {
+        }
+        when={shouldWrap()}
+      >
+        <Show when={isEmptyHtmlElement(tag())}>
+          <Dynamic {...attributes()} {...actions()} component={tag()}></Dynamic>
+        </Show>
+        <Show when={!isEmptyHtmlElement(tag()) && repeatItemData()}>
+          <For each={repeatItemData()}>
+            {(data, _index) => {
               const index = _index();
               return (
-                <RenderBlock
-                  key={\\"render-block-\\" + child.id}
-                  block={child}
-                  context={childrenContext()}
-                ></RenderBlock>
+                <RenderRepeatedBlock
+                  key={index}
+                  repeatContext={data.context}
+                  block={data.block}
+                ></RenderRepeatedBlock>
               );
             }}
           </For>
-          <For each={childrenWithoutParentComponent()}>
-            {(child, _index) => {
-              const index = _index();
-              return (
-                <BlockStyles
-                  key={\\"block-style-\\" + child.id}
-                  block={child}
-                  context={childrenContext()}
-                ></BlockStyles>
-              );
-            }}
-          </For>
-        </Dynamic>
+        </Show>
+        <Show when={!isEmptyHtmlElement(tag()) && !repeatItemData()}>
+          <Dynamic {...attributes()} {...actions()} component={tag()}>
+            <Dynamic
+              {...renderComponentProps()}
+              component={renderComponentTag()}
+            ></Dynamic>
+            <For each={childrenWithoutParentComponent()}>
+              {(child, _index) => {
+                const index = _index();
+                return (
+                  <RenderBlock
+                    key={\\"render-block-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  ></RenderBlock>
+                );
+              }}
+            </For>
+            <For each={childrenWithoutParentComponent()}>
+              {(child, _index) => {
+                const index = _index();
+                return (
+                  <BlockStyles
+                    key={\\"block-style-\\" + child.id}
+                    block={child}
+                    context={childrenContext()}
+                  ></BlockStyles>
+                );
+              }}
+            </For>
+          </Dynamic>
+        </Show>
       </Show>
-    </Show>
+    </>
   );
 }
 
@@ -13156,7 +13287,6 @@ export default RenderBlock;
 exports[`Solid > jsx > Typescript Test > renderContentExample 1`] = `
 "import { onMount, on, createEffect, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
 type Props = {
   customComponents: string[];
   content: {
@@ -13185,27 +13315,30 @@ function RenderContent(props: Props) {
   createEffect(on(() => [onUpdateFn_0_props_content()], onUpdateFn_0));
 
   return (
-    <BuilderContext.Provider
-      value={{
-        get content() {
-          return 3;
-        },
+    <>
+      <BuilderContext.Provider
+        value={{
+          get content() {
+            return 3;
+          },
 
-        get registeredComponents() {
-          return 4;
-        },
-      }}
-    >
-      <div
-        class={css({
-          display: \\"flex\\",
-          flexDirection: \\"columns\\",
-        })}
-        onClick={(event) => trackClick(props.content.id)}
+          get registeredComponents() {
+            return 4;
+          },
+        }}
       >
-        <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
-      </div>
-    </BuilderContext.Provider>
+        <div
+          class=\\"div-67b8c6a0\\"
+          onClick={(event) => trackClick(props.content.id)}
+        >
+          <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
+        </div>
+      </BuilderContext.Provider>
+      <style>{\`.div-67b8c6a0 {
+  display: flex;
+  flex-direction: columns;
+}\`}</style>
+    </>
   );
 }
 
@@ -13263,12 +13396,10 @@ function RenderContent(props: Props) {
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
       </BuilderContext.Provider>
-      <style jsx>{\`
-        .div-67b8c6a0 {
-          display: flex;
-          flex-direction: columns;
-        }
-      \`}</style>
+      <style>{\`.div-67b8c6a0 {
+  display: flex;
+  flex-direction: columns;
+}\`}</style>
     </>
   );
 }
@@ -13290,20 +13421,22 @@ export interface ButtonProps {
 function Button(props: ButtonProps) {
   return (
     <>
-      <Show when={props.link}>
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
-      </Show>
-      <Show when={!props.link}>
-        <button type=\\"button\\" {...props.attributes}>
-          {props.text}
-        </button>
-      </Show>
+      <>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Show>
+      </>
     </>
   );
 }
@@ -13358,9 +13491,11 @@ export interface RenderStylesProps {
 
 function RenderStyles(props: RenderStylesProps) {
   return (
-    <Show fallback={<div>Foo</div>} when={props.foo === \\"bar\\"}>
-      <div>Bar</div>
-    </Show>
+    <>
+      <Show fallback={<div>Foo</div>} when={props.foo === \\"bar\\"}>
+        <div>Bar</div>
+      </Show>
+    </>
   );
 }
 
@@ -13394,12 +13529,14 @@ exports[`Solid > jsx > Typescript Test > self-referencing component 1`] = `
 
 function MyComponent(props: any) {
   return (
-    <div>
-      {props.name}
-      <Show when={props.name === \\"Batman\\"}>
-        <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
-      </Show>
-    </div>
+    <>
+      <div>
+        {props.name}
+        <Show when={props.name === \\"Batman\\"}>
+          <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -13432,15 +13569,17 @@ exports[`Solid > jsx > Typescript Test > self-referencing component with childre
 
 function MyComponent(props: any) {
   return (
-    <div>
-      {props.name}
-      {props.children}
-      <Show when={props.name === \\"Batman\\"}>
-        <MyComponent name=\\"Bruce\\">
-          <div>Wayne</div>
-        </MyComponent>
-      </Show>
-    </div>
+    <>
+      <div>
+        {props.name}
+        {props.children}
+        <Show when={props.name === \\"Batman\\"}>
+          <MyComponent name=\\"Bruce\\">
+            <div>Wayne</div>
+          </MyComponent>
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -13503,14 +13642,16 @@ interface Props {
 
 function NestedShow(props: Props) {
   return (
-    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
-      <For each={props.items}>
-        {(item, _index) => {
-          const idx = _index();
-          return <div key={idx}>{item}</div>;
-        }}
-      </For>
-    </Show>
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        <For each={props.items}>
+          {(item, _index) => {
+            const idx = _index();
+            return <div key={idx}>{item}</div>;
+          }}
+        </For>
+      </Show>
+    </>
   );
 }
 
@@ -13554,20 +13695,22 @@ interface Props {
 
 function ShowWithOtherValues(props: Props) {
   return (
-    <div>
-      <Show when={props.conditionA}>ContentA</Show>
-      <Show fallback={{ undefined }} when={props.conditionA}>
-        ContentB
-      </Show>
-      <Show when={props.conditionA}>ContentC</Show>
-      <Show when={props.conditionA}>ContentD</Show>
-      <Show fallback={hello} when={props.conditionA}>
-        ContentE
-      </Show>
-      <Show fallback={123} when={props.conditionA}>
-        ContentF
-      </Show>
-    </div>
+    <>
+      <div>
+        <Show when={props.conditionA}>ContentA</Show>
+        <Show fallback={{ undefined }} when={props.conditionA}>
+          ContentB
+        </Show>
+        <Show when={props.conditionA}>ContentC</Show>
+        <Show when={props.conditionA}>ContentD</Show>
+        <Show fallback={hello} when={props.conditionA}>
+          ContentE
+        </Show>
+        <Show fallback={123} when={props.conditionA}>
+          ContentF
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -13616,9 +13759,11 @@ interface Props {
 
 function ShowRootText(props: Props) {
   return (
-    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
-      ContentA
-    </Show>
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        ContentA
+      </Show>
+    </>
   );
 }
 
@@ -13650,7 +13795,6 @@ export default ShowRootText;
 exports[`Solid > jsx > Typescript Test > signalsOnUpdate 1`] = `
 "import { on, createEffect, createMemo } from \\"solid-js\\";
 
-import { css } from \\"solid-styled-components\\";
 type Props = {
   id: string;
   foo: {
@@ -13675,17 +13819,15 @@ function MyBasicComponent(props: Props) {
   );
 
   return (
-    <div
-      class={
-        \\"test \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-    >
-      {props.id}
-      {props.foo.bar.baz}
-    </div>
+    <>
+      <div class=\\"test div-52492278\\">
+        {props.id}
+        {props.foo.bar.baz}
+      </div>
+      <style>{\`.div-52492278 {
+  padding: 10px;
+}\`}</style>
+    </>
   );
 }
 
@@ -13725,11 +13867,9 @@ function MyBasicComponent(props: Props) {
         {props.id}
         {props.foo.bar.baz}
       </div>
-      <style jsx>{\`
-        .div-52492278 {
-          padding: 10px;
-        }
-      \`}</style>
+      <style>{\`.div-52492278 {
+  padding: 10px;
+}\`}</style>
     </>
   );
 }
@@ -13740,7 +13880,11 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Typescript Test > spreadAttrs 1`] = `
 "function MyBasicComponent(props: any) {
-  return <input {...attrs} />;
+  return (
+    <>
+      <input {...attrs} />
+    </>
+  );
 }
 
 export default MyBasicComponent;
@@ -13762,7 +13906,11 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Typescript Test > spreadNestedProps 1`] = `
 "function MyBasicComponent(props: any) {
-  return <input {...props.nested} />;
+  return (
+    <>
+      <input {...props.nested} />
+    </>
+  );
 }
 
 export default MyBasicComponent;
@@ -13784,7 +13932,11 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Typescript Test > spreadProps 1`] = `
 "function MyBasicComponent(props: any) {
-  return <input {...props} />;
+  return (
+    <>
+      <input {...props} />
+    </>
+  );
 }
 
 export default MyBasicComponent;
@@ -13805,23 +13957,21 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > styleClassAndCss 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props: any) {
+"function MyComponent(props: any) {
   return (
-    <div
-      class={
-        \\"builder-column \\" +
-        css({
-          display: \\"flex\\",
-          flexDirection: \\"column\\",
-          alignItems: \\"stretch\\",
-        })
-      }
-      style={{
-        width: \\"100%\\",
-      }}
-    ></div>
+    <>
+      <div
+        class=\\"builder-column div-53ff897e\\"
+        style={{
+          width: \\"100%\\",
+        }}
+      ></div>
+      <style>{\`.div-53ff897e {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
+    </>
   );
 }
 
@@ -13839,13 +13989,11 @@ exports[`Solid > jsx > Typescript Test > styleClassAndCss 2`] = `
           width: \\"100%\\",
         }}
       ></div>
-      <style jsx>{\`
-        .div-53ff897e {
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
-        }
-      \`}</style>
+      <style>{\`.div-53ff897e {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
     </>
   );
 }
@@ -13855,22 +14003,19 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > stylePropClassAndCss 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function StylePropClassAndCss(props: any) {
+"function StylePropClassAndCss(props: any) {
   return (
-    <div
-      class={
-        props.attributes.class +
-        \\" \\" +
-        css({
-          display: \\"flex\\",
-          flexDirection: \\"column\\",
-          alignItems: \\"stretch\\",
-        })
-      }
-      style={props.attributes.style}
-    ></div>
+    <>
+      <div
+        class={props.attributes.class + \\" div-40d76e28\\"}
+        style={props.attributes.style}
+      ></div>
+      <style>{\`.div-40d76e28 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
+    </>
   );
 }
 
@@ -13886,13 +14031,11 @@ exports[`Solid > jsx > Typescript Test > stylePropClassAndCss 2`] = `
         class={props.attributes.class + \\" div-40d76e28\\"}
         style={props.attributes.style}
       ></div>
-      <style jsx>{\`
-        .div-40d76e28 {
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
-        }
-      \`}</style>
+      <style>{\`.div-40d76e28 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}\`}</style>
     </>
   );
 }
@@ -13905,7 +14048,11 @@ exports[`Solid > jsx > Typescript Test > subComponent 1`] = `
 "import Foo from \\"./foo-sub-component\\";
 
 function SubComponent(props: any) {
-  return <Foo></Foo>;
+  return (
+    <>
+      <Foo></Foo>
+    </>
+  );
 }
 
 export default SubComponent;
@@ -13930,28 +14077,30 @@ export default SubComponent;
 exports[`Solid > jsx > Typescript Test > svgComponent 1`] = `
 "function SvgComponent(props: any) {
   return (
-    <svg
-      fill=\\"none\\"
-      role=\\"img\\"
-      viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
-      width={42}
-      height={42}
-    >
-      <defs>
-        <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
-          <feFlood result=\\"BackgroundImageFix\\"></feFlood>
-          <feBlend
-            in=\\"SourceGraphic\\"
-            in2=\\"BackgroundImageFix\\"
-            result=\\"shape\\"
-          ></feBlend>
-          <feGaussianBlur
-            result=\\"effect1_foregroundBlur\\"
-            stdDeviation={7}
-          ></feGaussianBlur>
-        </filter>
-      </defs>
-    </svg>
+    <>
+      <svg
+        fill=\\"none\\"
+        role=\\"img\\"
+        viewBox={\\"0 0 \\" + 42 + \\" \\" + 42}
+        width={42}
+        height={42}
+      >
+        <defs>
+          <filter id=\\"prefix__filter0_f\\" filterUnits=\\"userSpaceOnUse\\">
+            <feFlood result=\\"BackgroundImageFix\\"></feFlood>
+            <feBlend
+              in=\\"SourceGraphic\\"
+              in2=\\"BackgroundImageFix\\"
+              result=\\"shape\\"
+            ></feBlend>
+            <feGaussianBlur
+              result=\\"effect1_foregroundBlur\\"
+              stdDeviation={7}
+            ></feGaussianBlur>
+          </filter>
+        </defs>
+      </svg>
+    </>
   );
 }
 
@@ -14003,7 +14152,11 @@ import type { Foo } from \\"./foo-type\\";
 import type { Foo as Foo2 } from \\"./type-export\\";
 
 function TypeDependency(props: TypeDependencyProps) {
-  return <div>{props.foo}</div>;
+  return (
+    <>
+      <div>{props.foo}</div>
+    </>
+  );
 }
 
 export default TypeDependency;
@@ -14032,13 +14185,10 @@ export default TypeDependency;
 `;
 
 exports[`Solid > jsx > Typescript Test > use-style 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props: any) {
+"function MyComponent(props: any) {
   return (
     <>
       <button type=\\"button\\">Button</button>
-
       <style>{\`
         button {
             background: blue;
@@ -14046,7 +14196,8 @@ function MyComponent(props: any) {
             font-size: 12px;
             outline: 1px solid black;
         }
-    \`}</style>
+
+\`}</style>
     </>
   );
 }
@@ -14060,14 +14211,15 @@ exports[`Solid > jsx > Typescript Test > use-style 2`] = `
   return (
     <>
       <button type=\\"button\\">Button</button>
-      <style jsx>{\`
+      <style>{\`
         button {
-          background: blue;
-          color: white;
-          font-size: 12px;
-          outline: 1px solid black;
+            background: blue;
+            color: white;
+            font-size: 12px;
+            outline: 1px solid black;
         }
-      \`}</style>
+
+\`}</style>
     </>
   );
 }
@@ -14077,27 +14229,22 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > use-style-and-css 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props: any) {
+"function MyComponent(props: any) {
   return (
     <>
-      <button
-        class={css({
-          background: \\"blue\\",
-          color: \\"white\\",
-        })}
-        type=\\"button\\"
-      >
+      <button class=\\"button-11144e0c\\" type=\\"button\\">
         Button
       </button>
-
       <style>{\`
         button {
             font-size: 12px;
             outline: 1px solid black;
         }
-    \`}</style>
+
+.button-11144e0c {
+  background: blue;
+  color: white;
+}\`}</style>
     </>
   );
 }
@@ -14113,17 +14260,16 @@ exports[`Solid > jsx > Typescript Test > use-style-and-css 2`] = `
       <button class=\\"button-11144e0c\\" type=\\"button\\">
         Button
       </button>
-      <style jsx>{\`
+      <style>{\`
         button {
-          font-size: 12px;
-          outline: 1px solid black;
+            font-size: 12px;
+            outline: 1px solid black;
         }
 
-        .button-11144e0c {
-          background: blue;
-          color: white;
-        }
-      \`}</style>
+.button-11144e0c {
+  background: blue;
+  color: white;
+}\`}</style>
     </>
   );
 }
@@ -14133,13 +14279,10 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > use-style-outside-component 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props: any) {
+"function MyComponent(props: any) {
   return (
     <>
       <button type=\\"button\\">Button</button>
-
       <style>{\`
   button {
       background: blue;
@@ -14147,6 +14290,7 @@ function MyComponent(props: any) {
       font-size: 12px;
       outline: 1px solid black;
   }
+
 \`}</style>
     </>
   );
@@ -14161,14 +14305,15 @@ exports[`Solid > jsx > Typescript Test > use-style-outside-component 2`] = `
   return (
     <>
       <button type=\\"button\\">Button</button>
-      <style jsx>{\`
-        button {
-          background: blue;
-          color: white;
-          font-size: 12px;
-          outline: 1px solid black;
-        }
-      \`}</style>
+      <style>{\`
+  button {
+      background: blue;
+      color: white;
+      font-size: 12px;
+      outline: 1px solid black;
+  }
+
+\`}</style>
     </>
   );
 }
@@ -14190,7 +14335,11 @@ function UseTargetComponent(props: any) {
 
   onMount(() => {});
 
-  return <div>{name()}</div>;
+  return (
+    <>
+      <div>{name()}</div>
+    </>
+  );
 }
 
 export default UseTargetComponent;
@@ -14226,11 +14375,13 @@ exports[`Solid > jsx > Typescript Test > webComponent 1`] = `
 
 function MyBasicWebComponent(props: any) {
   return (
-    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
-      <swiper-slide>Slide 1</swiper-slide>
-      <swiper-slide>Slide 2</swiper-slide>
-      <swiper-slide>Slide 3</swiper-slide>
-    </swiper-container>
+    <>
+      <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
+        <swiper-slide>Slide 1</swiper-slide>
+        <swiper-slide>Slide 2</swiper-slide>
+        <swiper-slide>Slide 3</swiper-slide>
+      </swiper-container>
+    </>
   );
 }
 
@@ -14264,10 +14415,15 @@ function MyComponent(props) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   return (
-    <div>
-      <input onInput={(event) => setName(event.target.value)} value={name()} />
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div>
+        <input
+          onInput={(event) => setName(event.target.value)}
+          value={name()}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </>
   );
 }
 
@@ -14307,60 +14463,62 @@ function MyComponent(props) {
   const [fillings, setFillings] = createSignal([]);
 
   return (
-    <div>
-      <input
-        type=\\"radio\\"
-        value=\\"Plain\\"
-        checked={tortilla() === \\"Plain\\"}
-        onInput={(event) => setTortilla(event.target.value)}
-      />
-      <input
-        type=\\"radio\\"
-        value=\\"Whole wheat\\"
-        checked={tortilla() === \\"Whole wheat\\"}
-        onInput={(event) => setTortilla(event.target.value)}
-      />
-      <input
-        type=\\"radio\\"
-        value=\\"Spinach\\"
-        checked={tortilla() === \\"Spinach\\"}
-        onInput={(event) => setTortilla(event.target.value)}
-      />
-      <br />
-      <br />
-      <input
-        type=\\"checkbox\\"
-        value=\\"Rice\\"
-        checked={fillings() === \\"Rice\\"}
-        onInput={(event) => setFillings(event.target.value)}
-      />
-      <input
-        type=\\"checkbox\\"
-        value=\\"Beans\\"
-        checked={fillings() === \\"Beans\\"}
-        onInput={(event) => setFillings(event.target.value)}
-      />
-      <input
-        type=\\"checkbox\\"
-        value=\\"Cheese\\"
-        checked={fillings() === \\"Cheese\\"}
-        onInput={(event) => setFillings(event.target.value)}
-      />
-      <input
-        type=\\"checkbox\\"
-        value=\\"Guac (extra)\\"
-        checked={fillings() === \\"Guac (extra)\\"}
-        onInput={(event) => setFillings(event.target.value)}
-      />
-      <p>
-        Tortilla:
-        {tortilla()}
-      </p>
-      <p>
-        Fillings:
-        {fillings()}
-      </p>
-    </div>
+    <>
+      <div>
+        <input
+          type=\\"radio\\"
+          value=\\"Plain\\"
+          checked={tortilla() === \\"Plain\\"}
+          onInput={(event) => setTortilla(event.target.value)}
+        />
+        <input
+          type=\\"radio\\"
+          value=\\"Whole wheat\\"
+          checked={tortilla() === \\"Whole wheat\\"}
+          onInput={(event) => setTortilla(event.target.value)}
+        />
+        <input
+          type=\\"radio\\"
+          value=\\"Spinach\\"
+          checked={tortilla() === \\"Spinach\\"}
+          onInput={(event) => setTortilla(event.target.value)}
+        />
+        <br />
+        <br />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Rice\\"
+          checked={fillings() === \\"Rice\\"}
+          onInput={(event) => setFillings(event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Beans\\"
+          checked={fillings() === \\"Beans\\"}
+          onInput={(event) => setFillings(event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Cheese\\"
+          checked={fillings() === \\"Cheese\\"}
+          onInput={(event) => setFillings(event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Guac (extra)\\"
+          checked={fillings() === \\"Guac (extra)\\"}
+          onInput={(event) => setFillings(event.target.value)}
+        />
+        <p>
+          Tortilla:
+          {tortilla()}
+        </p>
+        <p>
+          Fillings:
+          {fillings()}
+        </p>
+      </div>
+    </>
   );
 }
 
@@ -14446,7 +14604,11 @@ exports[`Solid > svelte > Javascript Test > bindProperty 1`] = `
 function MyComponent(props) {
   const [value, setValue] = createSignal(\\"hello\\");
 
-  return <input value={value()} />;
+  return (
+    <>
+      <input value={value()} />
+    </>
+  );
 }
 
 export default MyComponent;
@@ -14477,11 +14639,13 @@ function MyComponent(props) {
   const [focus, setFocus] = createSignal(true);
 
   return (
-    <input
-      class={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
-        focus() ? \\"focus\\" : \\"\\"
-      }\`}
-    />
+    <>
+      <input
+        class={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+          focus() ? \\"focus\\" : \\"\\"
+        }\`}
+      />
+    </>
   );
 }
 
@@ -14511,14 +14675,14 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Javascript Test > context 1`] = `
-"'>' expected. (28:19)
+"Identifier expected. (28:8)
   26 |
-  27 |     return (
+  27 |     return (<>
 > 28 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
-     |                   ^
+     |        ^
   29 |
   30 |
-  31 |       )"
+  31 |       </>)"
 `;
 
 exports[`Solid > svelte > Javascript Test > context 2`] = `
@@ -14539,14 +14703,16 @@ function MyComponent(props) {
   const [numbers, setNumbers] = createSignal([\\"one\\", \\"two\\", \\"three\\"]);
 
   return (
-    <ul>
-      <For each={numbers()}>
-        {(num, _index) => {
-          const index = _index();
-          return <li>{num}</li>;
-        }}
-      </For>
-    </ul>
+    <>
+      <ul>
+        <For each={numbers()}>
+          {(num, _index) => {
+            const index = _index();
+            return <li>{num}</li>;
+          }}
+        </For>
+      </ul>
+    </>
   );
 }
 
@@ -14587,11 +14753,13 @@ function MyComponent(props) {
   }
 
   return (
-    <div>
-      <button onClick={(a) => log(\\"hi\\")}>Log</button>
-      <button onClick={(event) => log(event)}>Log</button>
-      <button onClick={(event) => log(event)}>Log</button>
-    </div>
+    <>
+      <div>
+        <button onClick={(a) => log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+      </div>
+    </>
   );
 }
 
@@ -14628,7 +14796,11 @@ exports[`Solid > svelte > Javascript Test > html 1`] = `
 function MyComponent(props) {
   const [html, setHtml] = createSignal(\\"<b>bold</b>\\");
 
-  return <div innerHTML={html()}></div>;
+  return (
+    <>
+      <div innerHTML={html()}></div>
+    </>
+  );
 }
 
 export default MyComponent;
@@ -14663,12 +14835,14 @@ function MyComponent(props) {
   }
 
   return (
-    <Show
-      fallback={<button onClick={(event) => toggle(event)}> Show </button>}
-      when={show()}
-    >
-      <button onClick={(event) => toggle(event)}> Hide </button>
-    </Show>
+    <>
+      <Show
+        fallback={<button onClick={(event) => toggle(event)}> Show </button>}
+        when={show()}
+      >
+        <button onClick={(event) => toggle(event)}> Hide </button>
+      </Show>
+    </>
   );
 }
 
@@ -14711,11 +14885,13 @@ function MyComponent(props) {
   const [disabled, setDisabled] = createSignal(false);
 
   return (
-    <div>
-      <Button type=\\"button\\" disabled={disabled()}>
-        <Slot></Slot>
-      </Button>
-    </div>
+    <>
+      <div>
+        <Button type=\\"button\\" disabled={disabled()}>
+          <Slot></Slot>
+        </Button>
+      </div>
+    </>
   );
 }
 
@@ -14754,7 +14930,11 @@ function MyComponent(props) {
     console.log(\\"onMount\\");
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MyComponent;
@@ -14791,11 +14971,13 @@ function MyComponent(props) {
   });
 
   return (
-    <div>
-      <input value={name()} />
-      Lowercase:
-      {lowercaseName()}
-    </div>
+    <>
+      <div>
+        <input value={name()} />
+        Lowercase:
+        {lowercaseName()}
+      </div>
+    </>
   );
 }
 
@@ -14852,20 +15034,22 @@ function MyComponent(props) {
   );
 
   return (
-    <div>
-      <input
-        type=\\"number\\"
-        onInput={(event) => setA(event.target.value)}
-        value={a()}
-      />
-      <input
-        type=\\"number\\"
-        onInput={(event) => setB(event.target.value)}
-        value={b()}
-      />
-      Result:
-      {result()}
-    </div>
+    <>
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => setA(event.target.value)}
+          value={a()}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => setB(event.target.value)}
+          value={b()}
+        />
+        Result:
+        {result()}
+      </div>
+    </>
   );
 }
 
@@ -14923,12 +15107,14 @@ export default MyComponent;
 exports[`Solid > svelte > Javascript Test > slots 1`] = `
 "function MyComponent(props) {
   return (
-    <div>
-      <Slot>default</Slot>
-      <Slot name=\\"Test\\">
-        <div>default</div>
-      </Slot>
-    </div>
+    <>
+      <div>
+        <Slot>default</Slot>
+        <Slot name=\\"Test\\">
+          <div>default</div>
+        </Slot>
+      </div>
+    </>
   );
 }
 
@@ -14955,13 +15141,10 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Javascript Test > style 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props) {
+"function MyComponent(props) {
   return (
     <>
       <input class=\\"form-input\\" />
-
       <style>{\`
   input {
     color: red;
@@ -14971,6 +15154,7 @@ function MyComponent(props) {
   .form-input:focus {
     outline: 1px solid blue;
   }
+
 \`}</style>
     </>
   );
@@ -14985,16 +15169,17 @@ exports[`Solid > svelte > Javascript Test > style 2`] = `
   return (
     <>
       <input class=\\"form-input\\" />
-      <style jsx>{\`
-        input {
-          color: red;
-          font-size: 12px;
-        }
+      <style>{\`
+  input {
+    color: red;
+    font-size: 12px;
+  }
 
-        .form-input:focus {
-          outline: 1px solid blue;
-        }
-      \`}</style>
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
+
+\`}</style>
     </>
   );
 }
@@ -15012,13 +15197,15 @@ function MyComponent(props) {
   const [b, setB] = createSignal(12);
 
   return (
-    <div>
-      normal:
-      {a() + b()}
-      <br />
-      conditional
-      {a() > 2 ? \\"hello\\" : \\"bye\\"}
-    </div>
+    <>
+      <div>
+        normal:
+        {a() + b()}
+        <br />
+        conditional
+        {a() > 2 ? \\"hello\\" : \\"bye\\"}
+      </div>
+    </>
   );
 }
 
@@ -15058,10 +15245,15 @@ function MyComponent(props: any) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   return (
-    <div>
-      <input onInput={(event) => setName(event.target.value)} value={name()} />
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div>
+        <input
+          onInput={(event) => setName(event.target.value)}
+          value={name()}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </>
   );
 }
 
@@ -15101,60 +15293,62 @@ function MyComponent(props: any) {
   const [fillings, setFillings] = createSignal([]);
 
   return (
-    <div>
-      <input
-        type=\\"radio\\"
-        value=\\"Plain\\"
-        checked={tortilla() === \\"Plain\\"}
-        onInput={(event) => setTortilla(event.target.value)}
-      />
-      <input
-        type=\\"radio\\"
-        value=\\"Whole wheat\\"
-        checked={tortilla() === \\"Whole wheat\\"}
-        onInput={(event) => setTortilla(event.target.value)}
-      />
-      <input
-        type=\\"radio\\"
-        value=\\"Spinach\\"
-        checked={tortilla() === \\"Spinach\\"}
-        onInput={(event) => setTortilla(event.target.value)}
-      />
-      <br />
-      <br />
-      <input
-        type=\\"checkbox\\"
-        value=\\"Rice\\"
-        checked={fillings() === \\"Rice\\"}
-        onInput={(event) => setFillings(event.target.value)}
-      />
-      <input
-        type=\\"checkbox\\"
-        value=\\"Beans\\"
-        checked={fillings() === \\"Beans\\"}
-        onInput={(event) => setFillings(event.target.value)}
-      />
-      <input
-        type=\\"checkbox\\"
-        value=\\"Cheese\\"
-        checked={fillings() === \\"Cheese\\"}
-        onInput={(event) => setFillings(event.target.value)}
-      />
-      <input
-        type=\\"checkbox\\"
-        value=\\"Guac (extra)\\"
-        checked={fillings() === \\"Guac (extra)\\"}
-        onInput={(event) => setFillings(event.target.value)}
-      />
-      <p>
-        Tortilla:
-        {tortilla()}
-      </p>
-      <p>
-        Fillings:
-        {fillings()}
-      </p>
-    </div>
+    <>
+      <div>
+        <input
+          type=\\"radio\\"
+          value=\\"Plain\\"
+          checked={tortilla() === \\"Plain\\"}
+          onInput={(event) => setTortilla(event.target.value)}
+        />
+        <input
+          type=\\"radio\\"
+          value=\\"Whole wheat\\"
+          checked={tortilla() === \\"Whole wheat\\"}
+          onInput={(event) => setTortilla(event.target.value)}
+        />
+        <input
+          type=\\"radio\\"
+          value=\\"Spinach\\"
+          checked={tortilla() === \\"Spinach\\"}
+          onInput={(event) => setTortilla(event.target.value)}
+        />
+        <br />
+        <br />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Rice\\"
+          checked={fillings() === \\"Rice\\"}
+          onInput={(event) => setFillings(event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Beans\\"
+          checked={fillings() === \\"Beans\\"}
+          onInput={(event) => setFillings(event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Cheese\\"
+          checked={fillings() === \\"Cheese\\"}
+          onInput={(event) => setFillings(event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Guac (extra)\\"
+          checked={fillings() === \\"Guac (extra)\\"}
+          onInput={(event) => setFillings(event.target.value)}
+        />
+        <p>
+          Tortilla:
+          {tortilla()}
+        </p>
+        <p>
+          Fillings:
+          {fillings()}
+        </p>
+      </div>
+    </>
   );
 }
 
@@ -15240,7 +15434,11 @@ exports[`Solid > svelte > Typescript Test > bindProperty 1`] = `
 function MyComponent(props: any) {
   const [value, setValue] = createSignal(\\"hello\\");
 
-  return <input value={value()} />;
+  return (
+    <>
+      <input value={value()} />
+    </>
+  );
 }
 
 export default MyComponent;
@@ -15271,11 +15469,13 @@ function MyComponent(props: any) {
   const [focus, setFocus] = createSignal(true);
 
   return (
-    <input
-      class={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
-        focus() ? \\"focus\\" : \\"\\"
-      }\`}
-    />
+    <>
+      <input
+        class={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+          focus() ? \\"focus\\" : \\"\\"
+        }\`}
+      />
+    </>
   );
 }
 
@@ -15305,14 +15505,14 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Typescript Test > context 1`] = `
-"'>' expected. (28:19)
+"Identifier expected. (28:8)
   26 |
-  27 |     return (
+  27 |     return (<>
 > 28 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
-     |                   ^
+     |        ^
   29 |
   30 |
-  31 |       )"
+  31 |       </>)"
 `;
 
 exports[`Solid > svelte > Typescript Test > context 2`] = `
@@ -15333,14 +15533,16 @@ function MyComponent(props: any) {
   const [numbers, setNumbers] = createSignal([\\"one\\", \\"two\\", \\"three\\"]);
 
   return (
-    <ul>
-      <For each={numbers()}>
-        {(num, _index) => {
-          const index = _index();
-          return <li>{num}</li>;
-        }}
-      </For>
-    </ul>
+    <>
+      <ul>
+        <For each={numbers()}>
+          {(num, _index) => {
+            const index = _index();
+            return <li>{num}</li>;
+          }}
+        </For>
+      </ul>
+    </>
   );
 }
 
@@ -15381,11 +15583,13 @@ function MyComponent(props: any) {
   }
 
   return (
-    <div>
-      <button onClick={(a) => log(\\"hi\\")}>Log</button>
-      <button onClick={(event) => log(event)}>Log</button>
-      <button onClick={(event) => log(event)}>Log</button>
-    </div>
+    <>
+      <div>
+        <button onClick={(a) => log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+      </div>
+    </>
   );
 }
 
@@ -15422,7 +15626,11 @@ exports[`Solid > svelte > Typescript Test > html 1`] = `
 function MyComponent(props: any) {
   const [html, setHtml] = createSignal(\\"<b>bold</b>\\");
 
-  return <div innerHTML={html()}></div>;
+  return (
+    <>
+      <div innerHTML={html()}></div>
+    </>
+  );
 }
 
 export default MyComponent;
@@ -15457,12 +15665,14 @@ function MyComponent(props: any) {
   }
 
   return (
-    <Show
-      fallback={<button onClick={(event) => toggle(event)}> Show </button>}
-      when={show()}
-    >
-      <button onClick={(event) => toggle(event)}> Hide </button>
-    </Show>
+    <>
+      <Show
+        fallback={<button onClick={(event) => toggle(event)}> Show </button>}
+        when={show()}
+      >
+        <button onClick={(event) => toggle(event)}> Hide </button>
+      </Show>
+    </>
   );
 }
 
@@ -15505,11 +15715,13 @@ function MyComponent(props: any) {
   const [disabled, setDisabled] = createSignal(false);
 
   return (
-    <div>
-      <Button type=\\"button\\" disabled={disabled()}>
-        <Slot></Slot>
-      </Button>
-    </div>
+    <>
+      <div>
+        <Button type=\\"button\\" disabled={disabled()}>
+          <Slot></Slot>
+        </Button>
+      </div>
+    </>
   );
 }
 
@@ -15548,7 +15760,11 @@ function MyComponent(props: any) {
     console.log(\\"onMount\\");
   });
 
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MyComponent;
@@ -15585,11 +15801,13 @@ function MyComponent(props: any) {
   });
 
   return (
-    <div>
-      <input value={name()} />
-      Lowercase:
-      {lowercaseName()}
-    </div>
+    <>
+      <div>
+        <input value={name()} />
+        Lowercase:
+        {lowercaseName()}
+      </div>
+    </>
   );
 }
 
@@ -15646,20 +15864,22 @@ function MyComponent(props: any) {
   );
 
   return (
-    <div>
-      <input
-        type=\\"number\\"
-        onInput={(event) => setA(event.target.value)}
-        value={a()}
-      />
-      <input
-        type=\\"number\\"
-        onInput={(event) => setB(event.target.value)}
-        value={b()}
-      />
-      Result:
-      {result()}
-    </div>
+    <>
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => setA(event.target.value)}
+          value={a()}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => setB(event.target.value)}
+          value={b()}
+        />
+        Result:
+        {result()}
+      </div>
+    </>
   );
 }
 
@@ -15717,12 +15937,14 @@ export default MyComponent;
 exports[`Solid > svelte > Typescript Test > slots 1`] = `
 "function MyComponent(props: any) {
   return (
-    <div>
-      <Slot>default</Slot>
-      <Slot name=\\"Test\\">
-        <div>default</div>
-      </Slot>
-    </div>
+    <>
+      <div>
+        <Slot>default</Slot>
+        <Slot name=\\"Test\\">
+          <div>default</div>
+        </Slot>
+      </div>
+    </>
   );
 }
 
@@ -15749,13 +15971,10 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Typescript Test > style 1`] = `
-"import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props: any) {
+"function MyComponent(props: any) {
   return (
     <>
       <input class=\\"form-input\\" />
-
       <style>{\`
   input {
     color: red;
@@ -15765,6 +15984,7 @@ function MyComponent(props: any) {
   .form-input:focus {
     outline: 1px solid blue;
   }
+
 \`}</style>
     </>
   );
@@ -15779,16 +15999,17 @@ exports[`Solid > svelte > Typescript Test > style 2`] = `
   return (
     <>
       <input class=\\"form-input\\" />
-      <style jsx>{\`
-        input {
-          color: red;
-          font-size: 12px;
-        }
+      <style>{\`
+  input {
+    color: red;
+    font-size: 12px;
+  }
 
-        .form-input:focus {
-          outline: 1px solid blue;
-        }
-      \`}</style>
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
+
+\`}</style>
     </>
   );
 }
@@ -15806,13 +16027,15 @@ function MyComponent(props: any) {
   const [b, setB] = createSignal(12);
 
   return (
-    <div>
-      normal:
-      {a() + b()}
-      <br />
-      conditional
-      {a() > 2 ? \\"hello\\" : \\"bye\\"}
-    </div>
+    <>
+      <div>
+        normal:
+        {a() + b()}
+        <br />
+        conditional
+        {a() > 2 ? \\"hello\\" : \\"bye\\"}
+      </div>
+    </>
   );
 }
 
