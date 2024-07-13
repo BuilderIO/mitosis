@@ -168,12 +168,12 @@ const DEFAULT_OPTIONS: Partial<ToTaroOptions> = {
 
 export const componentToTaro: TranspilerGenerator<Partial<ToTaroOptions>> =
   (_options = {}) =>
-    ({ component, path }) => {
-      const json = fastClone(component);
+  ({ component, path }) => {
+    const json = fastClone(component);
 
-      const options = mergeOptions(DEFAULT_OPTIONS, _options, {
-        type: 'taro',
-      });
+    const options = mergeOptions(DEFAULT_OPTIONS, _options, {
+      type: 'taro',
+    });
 
-      return componentToReact(options)({ component: json, path });
-    };
+    return componentToReact(options)({ component: json, path });
+  };

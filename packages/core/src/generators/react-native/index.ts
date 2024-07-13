@@ -70,7 +70,7 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
 
         item.bindings.style!.code = json5.stringify(styleValue);
       }
-    } catch (e) { }
+    } catch (e) {}
 
     if (!size(cssValue)) {
       return;
@@ -253,18 +253,18 @@ const DEFAULT_OPTIONS: ToReactNativeOptions = {
 
 export const componentToReactNative: TranspilerGenerator<Partial<ToReactNativeOptions>> =
   (_options = {}) =>
-    ({ component, path }) => {
-      const json = fastClone(component);
+  ({ component, path }) => {
+    const json = fastClone(component);
 
-      const options = mergeOptions(DEFAULT_OPTIONS, _options);
+    const options = mergeOptions(DEFAULT_OPTIONS, _options);
 
-      if (options.stylesType === 'twrnc') {
-        options.plugins.push(TWRNC_STYLES_PLUGIN);
-      } else if (options.stylesType === 'native-wind') {
-        options.plugins.push(NATIVE_WIND_STYLES_PLUGIN);
-      } else {
-        options.plugins.push(REMOVE_REACT_NATIVE_CLASSES_PLUGIN);
-      }
+    if (options.stylesType === 'twrnc') {
+      options.plugins.push(TWRNC_STYLES_PLUGIN);
+    } else if (options.stylesType === 'native-wind') {
+      options.plugins.push(NATIVE_WIND_STYLES_PLUGIN);
+    } else {
+      options.plugins.push(REMOVE_REACT_NATIVE_CLASSES_PLUGIN);
+    }
 
-      return componentToReact({ ...options, type: 'native' })({ component: json, path });
-    };
+    return componentToReact({ ...options, type: 'native' })({ component: json, path });
+  };

@@ -32,13 +32,14 @@ export const collectStyledComponents = (json: MitosisComponent): string => {
         const componentName = normalizedNameProperty
           ? normalizedNameProperty
           : /^h\d$/.test(item.name || '')
-            ? item.name
-            : capitalize(camelCase(item.name || 'div'));
+          ? item.name
+          : capitalize(camelCase(item.name || 'div'));
 
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
-        const className = `${componentName}${componentName !== item.name && index === 1 ? '' : index
-          }`;
+        const className = `${componentName}${
+          componentName !== item.name && index === 1 ? '' : index
+        }`;
 
         let str = '';
         const styles = getStylesOnly(value);

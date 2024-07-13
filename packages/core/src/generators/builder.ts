@@ -50,33 +50,33 @@ const componentMappers: {
   ...(!symbolBlocksAsChildren
     ? {}
     : {
-      Symbol(node, options) {
-        const child = node.children[0];
-        const symbolOptions =
-          (node.bindings.symbol && json5.parse(node.bindings.symbol.code)) || {};
+        Symbol(node, options) {
+          const child = node.children[0];
+          const symbolOptions =
+            (node.bindings.symbol && json5.parse(node.bindings.symbol.code)) || {};
 
-        if (child) {
-          set(
-            symbolOptions,
-            'content.data.blocks',
-            child.children.map((item) => blockToBuilder(item, options)),
-          );
-        }
+          if (child) {
+            set(
+              symbolOptions,
+              'content.data.blocks',
+              child.children.map((item) => blockToBuilder(item, options)),
+            );
+          }
 
-        return el(
-          {
-            component: {
-              name: 'Symbol',
-              options: {
-                // TODO: forward other symbol options
-                symbol: symbolOptions,
+          return el(
+            {
+              component: {
+                name: 'Symbol',
+                options: {
+                  // TODO: forward other symbol options
+                  symbol: symbolOptions,
+                },
               },
             },
-          },
-          options,
-        );
-      },
-    }),
+            options,
+          );
+        },
+      }),
   Columns(node, options) {
     const block = blockToBuilder(node, options, { skipMapper: true });
 
@@ -174,9 +174,9 @@ export const blockToBuilder = (
         bindings: {
           ...(json.bindings._text?.code
             ? {
-              'component.options.text': json.bindings._text.code,
-              'json.bindings._text.code': undefined as any,
-            }
+                'component.options.text': json.bindings._text.code,
+                'json.bindings._text.code': undefined as any,
+              }
             : {}),
         },
         component: {
@@ -285,9 +285,9 @@ export const blockToBuilder = (
       bindings: thisIsComponent
         ? builderBindings
         : omit(
-          mapValues(bindings, (value) => value?.code!),
-          'css',
-        ),
+            mapValues(bindings, (value) => value?.code!),
+            'css',
+          ),
       actions,
       children: json.children
         .filter(filterEmptyTextNodes)
@@ -299,54 +299,55 @@ export const blockToBuilder = (
 
 export const componentToBuilder =
   (options: ToBuilderOptions = {}) =>
-    ({ component }: TranspilerArgs): BuilderContent => {
-      const hasState = checkHasState(component);
+  ({ component }: TranspilerArgs): BuilderContent => {
+    const hasState = checkHasState(component);
 
-      const result: BuilderContent = fastClone({
-        data: {
-          httpRequests: component?.meta?.useMetadata?.httpRequests,
-          jsCode: tryFormat(dedent`
+    const result: BuilderContent = fastClone({
+      data: {
+        httpRequests: component?.meta?.useMetadata?.httpRequests,
+        jsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
 
         ${!hasState ? '' : `Object.assign(state, ${getStateObjectStringFromComponent(component)});`}
         
         ${stringifySingleScopeOnMount(component)}
       `),
-          tsCode: tryFormat(dedent`
+        tsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
 
         ${!hasState ? '' : `useState(${getStateObjectStringFromComponent(component)});`}
 
-        ${!component.hooks.onMount.length
-              ? ''
-              : `onMount(() => {
+        ${
+          !component.hooks.onMount.length
+            ? ''
+            : `onMount(() => {
                 ${stringifySingleScopeOnMount(component)}
               })`
-            }
-      `),
-          blocks: component.children
-            .filter(filterEmptyTextNodes)
-            .map((child) => blockToBuilder(child, options)),
-        },
-      });
-
-      const subComponentMap: Record<string, BuilderContent> = {};
-
-      for (const subComponent of component.subComponents) {
-        const name = subComponent.name;
-        subComponentMap[name] = componentToBuilder(options)({
-          component: subComponent,
-        });
-      }
-
-      traverse([result, subComponentMap]).forEach(function (el) {
-        if (isBuilderElement(el)) {
-          const value = subComponentMap[el.component?.name!];
-          if (value) {
-            set(el, 'component.options.symbol.content', value);
-          }
         }
-      });
+      `),
+        blocks: component.children
+          .filter(filterEmptyTextNodes)
+          .map((child) => blockToBuilder(child, options)),
+      },
+    });
 
-      return result;
-    };
+    const subComponentMap: Record<string, BuilderContent> = {};
+
+    for (const subComponent of component.subComponents) {
+      const name = subComponent.name;
+      subComponentMap[name] = componentToBuilder(options)({
+        component: subComponent,
+      });
+    }
+
+    traverse([result, subComponentMap]).forEach(function (el) {
+      if (isBuilderElement(el)) {
+        const value = subComponentMap[el.component?.name!];
+        if (value) {
+          set(el, 'component.options.symbol.content', value);
+        }
+      }
+    });
+
+    return result;
+  };

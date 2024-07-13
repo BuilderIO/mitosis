@@ -28,8 +28,8 @@ export function extractContextComponents(json: MitosisComponent) {
           name,
           value: value
             ? parseStateObjectToMitosisState(
-              expressionToNode(value) as babel.types.ObjectExpression,
-            )
+                expressionToNode(value) as babel.types.ObjectExpression,
+              )
             : undefined,
         };
 
