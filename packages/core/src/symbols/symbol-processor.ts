@@ -1,5 +1,5 @@
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
-import { forEach } from 'traverse';
+import { forEach } from 'neotraverse/legacy';
 import { minify } from '../generators/minify';
 import {
   builderContentToMitosisComponent,
