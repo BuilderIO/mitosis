@@ -121,8 +121,8 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
       styleString += ` ${key}: ${(options.includeBuilderExtras
         ? wrapBinding(styleBindings[key])
         : styleBindings[key]
-          .replace(/var _virtual_index\s*=\s*/g, '')
-          .replace(/;*\s*return _virtual_index;*/, '')
+            .replace(/var _virtual_index\s*=\s*/g, '')
+            .replace(/;*\s*return _virtual_index;*/, '')
       ).replace(/;$/, '')},`;
     });
     styleString += ' }';
@@ -284,48 +284,48 @@ const componentMappers: {
   ...(!symbolBlocksAsChildren
     ? {}
     : {
-      Symbol(block, options) {
-        let css = getCssFromBlock(block);
-        const styleString = getStyleStringFromBlock(block, options);
-        const actionBindings = getActionBindingsFromBlock(block, options);
+        Symbol(block, options) {
+          let css = getCssFromBlock(block);
+          const styleString = getStyleStringFromBlock(block, options);
+          const actionBindings = getActionBindingsFromBlock(block, options);
 
-        const content = block.component?.options.symbol.content;
-        const blocks = content?.data?.blocks;
-        if (blocks) {
-          content.data.blocks = null;
-        }
+          const content = block.component?.options.symbol.content;
+          const blocks = content?.data?.blocks;
+          if (blocks) {
+            content.data.blocks = null;
+          }
 
-        return createMitosisNode({
-          name: 'Symbol',
-          bindings: {
-            // TODO: this doesn't use all attrs
-            symbol: createSingleBinding({
-              code: JSON.stringify({
-                data: block.component?.options.symbol.content.data,
-                content: content, // TODO: convert to <SymbolInternal>...</SymbolInternal> so can be parsed
+          return createMitosisNode({
+            name: 'Symbol',
+            bindings: {
+              // TODO: this doesn't use all attrs
+              symbol: createSingleBinding({
+                code: JSON.stringify({
+                  data: block.component?.options.symbol.content.data,
+                  content: content, // TODO: convert to <SymbolInternal>...</SymbolInternal> so can be parsed
+                }),
               }),
-            }),
-            ...actionBindings,
-            ...(styleString && {
-              style: createSingleBinding({ code: styleString }),
-            }),
-            ...(Object.keys(css).length && {
-              css: createSingleBinding({ code: JSON.stringify(css) }),
-            }),
-          },
-          meta: getMetaFromBlock(block, options),
-          children: !blocks
-            ? []
-            : [
-              createMitosisNode({
-                // TODO: the Builder generator side of this converting to blocks
-                name: 'BuilderSymbolContents',
-                children: blocks.map((item: any) => builderElementToMitosisNode(item, options)),
+              ...actionBindings,
+              ...(styleString && {
+                style: createSingleBinding({ code: styleString }),
               }),
-            ],
-        });
-      },
-    }),
+              ...(Object.keys(css).length && {
+                css: createSingleBinding({ code: JSON.stringify(css) }),
+              }),
+            },
+            meta: getMetaFromBlock(block, options),
+            children: !blocks
+              ? []
+              : [
+                  createMitosisNode({
+                    // TODO: the Builder generator side of this converting to blocks
+                    name: 'BuilderSymbolContents',
+                    children: blocks.map((item: any) => builderElementToMitosisNode(item, options)),
+                  }),
+                ],
+          });
+        },
+      }),
   Columns(block, options) {
     const node = builderElementToMitosisNode(block, options, {
       skipMapper: true,
@@ -443,8 +443,8 @@ const componentMappers: {
     const finalProperties = {
       ...(assumeLink
         ? {
-          href: '...',
-        }
+            href: '...',
+          }
         : {}),
       ...properties,
     };
@@ -700,8 +700,8 @@ export const builderElementToMitosisNode = (
       }),
       ...(css &&
         Object.keys(css).length && {
-        css: createSingleBinding({ code: JSON.stringify(css) }),
-      }),
+          css: createSingleBinding({ code: JSON.stringify(css) }),
+        }),
     },
     slots: {
       ...slots,
@@ -765,9 +765,9 @@ export const getMetaFromBlock = (block: BuilderElement, options: BuilderToMitosi
   const { includeMeta = false } = options;
   return includeMeta
     ? {
-      'builder-id': block.id,
-      ...block.meta,
-    }
+        'builder-id': block.id,
+        ...block.meta,
+      }
     : {};
 };
 
@@ -777,10 +777,10 @@ const getHooks = (content: BuilderContent) => {
     return parseJsx(`
     export default function TemporaryComponent() {
       ${
-      // Mitosis parser looks for useState to be a variable assignment,
-      // but in Builder that's not how it works. For now do a replace to
-      // easily resuse the same parsing code as this is the only difference
-      code.replace(`useState(`, `var state = useState(`)
+        // Mitosis parser looks for useState to be a variable assignment,
+        // but in Builder that's not how it works. For now do a replace to
+        // easily resuse the same parsing code as this is the only difference
+        code.replace(`useState(`, `var state = useState(`)
       }
     }`);
   } catch (err) {
@@ -976,9 +976,9 @@ const builderContentPartToMitosisComponent = (
     Object.keys(parsedState).length > 0
       ? parsedState
       : {
-        ...state,
-        ...mapBuilderContentStateToMitosisState(builderContent.data?.state || {}),
-      };
+          ...state,
+          ...mapBuilderContentStateToMitosisState(builderContent.data?.state || {}),
+        };
 
   const componentJson = createMitosisComponent({
     meta: {
@@ -997,8 +997,8 @@ const builderContentPartToMitosisComponent = (
         ...(parsed?.hooks.onMount.length
           ? parsed?.hooks.onMount
           : customCode
-            ? [{ code: customCode }]
-            : []),
+          ? [{ code: customCode }]
+          : []),
       ],
     },
     children: (builderContent.data?.blocks || [])

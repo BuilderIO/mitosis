@@ -29,7 +29,8 @@ const mappers: {
   link: () => '',
   Image: (json, options) => {
     return (
-      `Image(${processBinding(json.bindings.image?.code as string, options) || `"${json.properties.image}"`
+      `Image(${
+        processBinding(json.bindings.image?.code as string, options) || `"${json.properties.image}"`
       })` +
       getStyleString(json, options) +
       getActionsString(json, options)
@@ -38,9 +39,10 @@ const mappers: {
   input: (json, options) => {
     const name = json.properties.$name;
     let str =
-      `TextField(${json.bindings.placeholder
-        ? processBinding(json.bindings.placeholder?.code as string, options)
-        : json.properties.placeholder
+      `TextField(${
+        json.bindings.placeholder
+          ? processBinding(json.bindings.placeholder?.code as string, options)
+          : json.properties.placeholder
           ? JSON.stringify(json.bindings.placeholder!.code)
           : '""'
       }, text: $${name})` +
@@ -51,12 +53,12 @@ const mappers: {
       str += `
         .onChange(of: ${name}) { ${name} in 
           ${processBinding(
-        wrapAction(
-          `var event = { target: { value: "\\(${name})" } };
+            wrapAction(
+              `var event = { target: { value: "\\(${name})" } };
               ${json.bindings.onChange?.code}`,
-        ),
-        options,
-      )} 
+            ),
+            options,
+          )} 
         }`;
     }
 
@@ -98,14 +100,14 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
     json.name === 'input'
       ? 'TextField'
       : json.name === 'img'
-        ? 'Image'
-        : json.name[0].toLowerCase() === json.name[0]
-          ? scrolls(json)
-            ? 'ScrollView'
-            : style?.display === 'flex' && style.flexDirection !== 'column'
-              ? 'HStack'
-              : 'VStack'
-          : json.name;
+      ? 'Image'
+      : json.name[0].toLowerCase() === json.name[0]
+      ? scrolls(json)
+        ? 'ScrollView'
+        : style?.display === 'flex' && style.flexDirection !== 'column'
+        ? 'HStack'
+        : 'VStack'
+      : json.name;
 
   if (name === 'TextField') {
     const placeholder = json.properties.placeholder;
@@ -288,21 +290,22 @@ function getInputBindings(json: MitosisComponent, options: ToSwiftOptions) {
 }
 export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
   (options = {}) =>
-    ({ component }) => {
-      const json = fastClone(component);
-      mapDataForSwiftCompatability(json);
+  ({ component }) => {
+    const json = fastClone(component);
+    mapDataForSwiftCompatability(json);
 
-      const hasDyanmicData = componentHasDynamicData(json);
+    const hasDyanmicData = componentHasDynamicData(json);
 
-      let children = json.children.map((item) => blockToSwift(item, options)).join('\n');
+    let children = json.children.map((item) => blockToSwift(item, options)).join('\n');
 
-      const hasInputNames = Object.keys(json.meta.inputNames || {}).length > 0;
+    const hasInputNames = Object.keys(json.meta.inputNames || {}).length > 0;
 
-      let str = dedent`
+    let str = dedent`
     import SwiftUI
-    ${!hasDyanmicData
-          ? ''
-          : `import JavaScriptCore
+    ${
+      !hasDyanmicData
+        ? ''
+        : `import JavaScriptCore
     
     final class UpdateTracker: ObservableObject {
         @Published var value = 0;
@@ -312,10 +315,11 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
         }
     }
     `
-        }
+    }
 
     struct ${component.name}: View {
-      ${!hasDyanmicData
+      ${
+        !hasDyanmicData
           ? ''
           : `
         @ObservedObject var updateTracker = UpdateTracker()
@@ -326,20 +330,21 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
           return jsContext?.evaluateScript(code)
         }
 
-        ${!hasInputNames
-              ? ''
-              : `
+        ${
+          !hasInputNames
+            ? ''
+            : `
         func setComputedState() {
           ${Object.keys(json.meta.inputNames || {})
-                .map((item) => {
-                  return `${item} = ${processBinding(
-                    (json.meta.inputNames as Record<string, string>)[item],
-                    options,
-                  )}.toString()!`;
-                })
-                .join('\n')}
+            .map((item) => {
+              return `${item} = ${processBinding(
+                (json.meta.inputNames as Record<string, string>)[item],
+                options,
+              )}.toString()!`;
+            })
+            .join('\n')}
         }`
-            }
+        }
 
         init() {
           let jsSource = """
@@ -356,14 +361,15 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
           jsContext?.evaluateScript(jsSource)
         }
       `.trim()
-        }
+      }
 
       var body: some View {
         VStack {
           ${children}
-        }${!hasInputNames
-          ? ''
-          : `
+        }${
+          !hasInputNames
+            ? ''
+            : `
         .onAppear {
           setComputedState()
         }
@@ -373,9 +379,9 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
     }
   `;
 
-      if (options.prettier !== false) {
-        str = format(str);
-      }
+    if (options.prettier !== false) {
+      str = format(str);
+    }
 
-      return str;
-    };
+    return str;
+  };

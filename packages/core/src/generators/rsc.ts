@@ -61,28 +61,28 @@ const RscOptions: Partial<ToRscOptions> = {
 
 export const componentToRsc: TranspilerGenerator<Partial<ToRscOptions>> =
   (_options = {}) =>
-    ({ component, path }) => {
-      if (
-        !checkIsDefined(component.meta.useMetadata?.rsc?.componentType) &&
-        !checkIfIsClientComponent(component)
-      ) {
-        component.meta.useMetadata = {
-          ...component.meta.useMetadata,
-          rsc: {
-            ...component.meta.useMetadata?.rsc,
-            componentType: 'server',
-          },
-        };
-      }
-      const isRSC = component.meta.useMetadata?.rsc?.componentType === 'server';
-
-      const options = mergeOptions<Partial<ToRscOptions>>(
-        {
-          rsc: true,
-          ...(isRSC ? RscOptions : {}),
+  ({ component, path }) => {
+    if (
+      !checkIsDefined(component.meta.useMetadata?.rsc?.componentType) &&
+      !checkIfIsClientComponent(component)
+    ) {
+      component.meta.useMetadata = {
+        ...component.meta.useMetadata,
+        rsc: {
+          ...component.meta.useMetadata?.rsc,
+          componentType: 'server',
         },
-        _options,
-      );
+      };
+    }
+    const isRSC = component.meta.useMetadata?.rsc?.componentType === 'server';
 
-      return componentToReact(options)({ component, path });
-    };
+    const options = mergeOptions<Partial<ToRscOptions>>(
+      {
+        rsc: true,
+        ...(isRSC ? RscOptions : {}),
+      },
+      _options,
+    );
+
+    return componentToReact(options)({ component, path });
+  };

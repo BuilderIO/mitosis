@@ -235,8 +235,9 @@ export const components: CompileAwayComponentsMap = {
               alignSelf: 'stretch',
               flexGrow: '1',
               boxSizing: 'border-box',
-              maxWidth: `${(node.bindings.maxWidth?.code && Number(node.bindings.maxWidth.code)) || 1200
-                }px`,
+              maxWidth: `${
+                (node.bindings.maxWidth?.code && Number(node.bindings.maxWidth.code)) || 1200
+              }px`,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'stretch',
@@ -279,16 +280,16 @@ export const components: CompileAwayComponentsMap = {
               ...(properties.stackColumnsAt === 'never'
                 ? {}
                 : {
-                  [`@media (max-width: ${properties.stackColumnsAt === 'mobile' ? 640 : 991}px)`]:
-                  {
-                    flexDirection:
-                      properties.reverseColumnsWhenStacked === 'true'
-                        ? 'column-reverse'
-                        : 'column',
-                    alignItems: 'stretch',
-                    gap: `0px`,
-                  },
-                }),
+                    [`@media (max-width: ${properties.stackColumnsAt === 'mobile' ? 640 : 991}px)`]:
+                      {
+                        flexDirection:
+                          properties.reverseColumnsWhenStacked === 'true'
+                            ? 'column-reverse'
+                            : 'column',
+                        alignItems: 'stretch',
+                        gap: `0px`,
+                      },
+                  }),
             }),
           }),
         },
@@ -311,12 +312,13 @@ export const components: CompileAwayComponentsMap = {
                   ...(properties.stackColumnsAt === 'never'
                     ? {}
                     : {
-                      [`@media (max-width: ${properties.stackColumnsAt === 'mobile' ? 640 : 991
+                        [`@media (max-width: ${
+                          properties.stackColumnsAt === 'mobile' ? 640 : 991
                         }px)`]: {
-                        width: '100%',
-                        marginLeft: 0,
-                      },
-                    }),
+                          width: '100%',
+                          marginLeft: 0,
+                        },
+                      }),
                 }),
               }),
             },
@@ -353,11 +355,11 @@ export const components: CompileAwayComponentsMap = {
         // also don't need srcset, just a src is better
         ...(noWebp
           ? {
-            src: image,
-          }
+              src: image,
+            }
           : {
-            srcSet: srcSet || null,
-          }),
+              srcSet: srcSet || null,
+            }),
       }),
       bindings: noUndefined({
         src: node.bindings.image?.code && { code: node.bindings.image?.code },
@@ -612,9 +614,9 @@ function generateBuilderIoSrcSet(image: string): string {
   const isBuilderIo = !!(image || '').match(/builder\.io/);
   return isBuilderIo
     ? [100, 200, 400, 800, 1200, 1600, 2000]
-      .map((size) => `${updateQueryParam(image, 'width', String(size))} ${size}w`)
-      .concat([image])
-      .join(', ')
+        .map((size) => `${updateQueryParam(image, 'width', String(size))} ${size}w`)
+        .concat([image])
+        .join(', ')
     : '';
 }
 

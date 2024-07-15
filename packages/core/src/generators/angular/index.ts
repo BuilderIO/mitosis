@@ -70,12 +70,12 @@ const mappers: {
         }
       })
       .join('\n')}>${Object.entries(json.bindings)
-        .map(([binding, value]) => {
-          if (value && binding !== 'name') {
-            return value.code;
-          }
-        })
-        .join('\n')}${renderChildren()}</ng-content>`;
+      .map(([binding, value]) => {
+        if (value && binding !== 'name') {
+          return value.code;
+        }
+      })
+      .join('\n')}${renderChildren()}</ng-content>`;
   },
 };
 
@@ -105,8 +105,9 @@ ${content}
 
 @NgModule({
   declarations: [${name}],
-  imports: [CommonModule${componentsUsed.length ? ', ' + componentsUsed.map((comp) => `${comp}Module`).join(', ') : ''
-    }],
+  imports: [CommonModule${
+    componentsUsed.length ? ', ' + componentsUsed.map((comp) => `${comp}Module`).join(', ') : ''
+  }],
   exports: [${name}],
   ${bootstrapMapper ? bootstrapMapper(name, componentsUsed, component) : ''}
 })
@@ -206,37 +207,37 @@ const processEventBinding = (key: string, code: string, nodeName: string, custom
 
 const stringifyBinding =
   (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
-    ([key, binding]: [string, Binding | undefined]) => {
-      if (options.state === 'inline-with-wrappers' && binding?.type === 'spread') {
-        return;
-      }
-      if (key.startsWith('$') || key.startsWith('"') || key === 'key') {
-        return;
-      }
-      const keyToUse = BINDINGS_MAPPER[key] || key;
-      const { code, arguments: cusArgs = ['event'] } = binding!;
-      // TODO: proper babel transform to replace. Util for this
+  ([key, binding]: [string, Binding | undefined]) => {
+    if (options.state === 'inline-with-wrappers' && binding?.type === 'spread') {
+      return;
+    }
+    if (key.startsWith('$') || key.startsWith('"') || key === 'key') {
+      return;
+    }
+    const keyToUse = BINDINGS_MAPPER[key] || key;
+    const { code, arguments: cusArgs = ['event'] } = binding!;
+    // TODO: proper babel transform to replace. Util for this
 
-      if (keyToUse.startsWith('on')) {
-        const { event, value } = processEventBinding(keyToUse, code, node.name, cusArgs[0]);
-        return ` (${event})="${value}"`;
-      } else if (keyToUse === 'class') {
-        return ` [class]="${code}" `;
-      } else if (keyToUse === 'ref') {
-        return ` #${code} `;
-      } else if (
-        (VALID_HTML_TAGS.includes(node.name.trim()) || keyToUse.includes('-')) &&
-        !blockOptions.nativeAttributes.includes(keyToUse) &&
-        !Object.values(BINDINGS_MAPPER).includes(keyToUse)
-      ) {
-        // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
-        return ` [attr.${keyToUse}]="${code}" `;
-      } else {
-        const codeToUse =
-          options.state === 'inline-with-wrappers' ? processCodeBlockInTemplate(code) : code;
-        return `[${keyToUse}]="${codeToUse}"`;
-      }
-    };
+    if (keyToUse.startsWith('on')) {
+      const { event, value } = processEventBinding(keyToUse, code, node.name, cusArgs[0]);
+      return ` (${event})="${value}"`;
+    } else if (keyToUse === 'class') {
+      return ` [class]="${code}" `;
+    } else if (keyToUse === 'ref') {
+      return ` #${code} `;
+    } else if (
+      (VALID_HTML_TAGS.includes(node.name.trim()) || keyToUse.includes('-')) &&
+      !blockOptions.nativeAttributes.includes(keyToUse) &&
+      !Object.values(BINDINGS_MAPPER).includes(keyToUse)
+    ) {
+      // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
+      return ` [attr.${keyToUse}]="${code}" `;
+    } else {
+      const codeToUse =
+        options.state === 'inline-with-wrappers' ? processCodeBlockInTemplate(code) : code;
+      return `[${keyToUse}]="${codeToUse}"`;
+    }
+  };
 
 const handleNgOutletBindings = (node: MitosisNode, options: ToAngularOptions) => {
   let allProps = '';
@@ -339,8 +340,9 @@ export const blockToAngular = ({
 
   if (checkIsForNode(json)) {
     const indexName = json.scope.indexName;
-    str += `<ng-container *ngFor="let ${json.scope.forName} of ${json.bindings.each?.code}${indexName ? `; let ${indexName} = index` : ''
-      }">`;
+    str += `<ng-container *ngFor="let ${json.scope.forName} of ${json.bindings.each?.code}${
+      indexName ? `; let ${indexName} = index` : ''
+    }">`;
     str += json.children
       .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
       .join('\n');
@@ -463,8 +465,9 @@ const traverseToGetAllDynamicComponents = (
       const children = item.children
         .map((child) => blockToAngular({ root: json, json: child, options, blockOptions }))
         .join('\n');
-      dynamicTemplate = `<ng-template #${item.name.split('.')[1].toLowerCase() + 'Template'
-        }>${children}</ng-template>`;
+      dynamicTemplate = `<ng-template #${
+        item.name.split('.')[1].toLowerCase() + 'Template'
+      }>${children}</ng-template>`;
       components.add(item.name);
     }
   });
@@ -488,16 +491,16 @@ const processAngularCode =
     stateVars?: string[];
     replaceWith?: string;
   }) =>
-    (code: string) =>
-      pipe(
-        DO_NOT_USE_VARS_TRANSFORMS(code, {
-          contextVars,
-          domRefs,
-          outputVars,
-          stateVars,
-        }),
-        (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
-      );
+  (code: string) =>
+    pipe(
+      DO_NOT_USE_VARS_TRANSFORMS(code, {
+        contextVars,
+        domRefs,
+        outputVars,
+        stateVars,
+      }),
+      (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
+    );
 
 const isASimpleProperty = (code: string) => {
   const expressions = ['==', '===', '!=', '!==', '<', '>', '<=', '>='];
@@ -539,8 +542,9 @@ const handleBindings = (
           item.bindings[key]?.code.trim().startsWith('{') &&
           item.bindings[key]?.code.trim().endsWith('}')
         ) {
-          const forAndIndex = `${forName ? `, ${forName}` : ''}${indexName ? `, ${indexName}` : ''
-            }`;
+          const forAndIndex = `${forName ? `, ${forName}` : ''}${
+            indexName ? `, ${indexName}` : ''
+          }`;
           const eventArgs = `${cusArgs.join(', ')}${forAndIndex}`;
           json.state[eventBindingName] = {
             code: `(${eventArgs}) => ${item.bindings[key]!.code}`,
@@ -558,8 +562,9 @@ const handleBindings = (
           code: `(${forName}${indexName ? `, ${indexName}` : ''}) => (${item.bindings[key]!.code})`,
           type: 'function',
         };
-        item.bindings[key]!.code = `state.${newBindingName}(${forName}${indexName ? `, ${indexName}` : ''
-          })`;
+        item.bindings[key]!.code = `state.${newBindingName}(${forName}${
+          indexName ? `, ${indexName}` : ''
+        })`;
       }
     } else if (item.bindings[key]?.code) {
       if (item.bindings[key]?.type !== 'spread' && !key.startsWith('on')) {
@@ -663,297 +668,299 @@ const classPropertiesPlugin = () => ({
 
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
-    ({ component: _component }) => {
-      // Make a copy we can safely mutate, similar to babel's toolchain
-      let json = fastClone(_component);
+  ({ component: _component }) => {
+    // Make a copy we can safely mutate, similar to babel's toolchain
+    let json = fastClone(_component);
 
-      const useMetadata = json.meta?.useMetadata;
+    const useMetadata = json.meta?.useMetadata;
 
-      const contextVars = Object.keys(json?.context?.get || {});
-      // TODO: Why is 'outputs' used here and shouldn't it be typed in packages/core/src/types/metadata.ts
-      const metaOutputVars: string[] = (useMetadata?.outputs as string[]) || [];
+    const contextVars = Object.keys(json?.context?.get || {});
+    // TODO: Why is 'outputs' used here and shouldn't it be typed in packages/core/src/types/metadata.ts
+    const metaOutputVars: string[] = (useMetadata?.outputs as string[]) || [];
 
-      const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
-      const stateVars = Object.keys(json?.state || {});
+    const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
+    const stateVars = Object.keys(json?.state || {});
 
-      const options = initializeOptions({
-        target: 'angular',
-        component: _component,
-        defaults: DEFAULT_ANGULAR_OPTIONS,
-        userOptions: userOptions,
-      });
-      options.plugins = [
-        ...(options.plugins || []),
-        CODE_PROCESSOR_PLUGIN((codeType) => {
-          switch (codeType) {
-            case 'hooks':
-              return flow(
-                processAngularCode({
-                  replaceWith: 'this',
-                  contextVars,
-                  outputVars,
-                  domRefs: Array.from(getRefs(json)),
-                  stateVars,
-                }),
-                (code) => {
-                  const allMethodNames = Object.entries(json.state)
-                    .filter(([_, value]) => value?.type === 'function' || value?.type === 'method')
-                    .map(([key]) => key);
+    const options = initializeOptions({
+      target: 'angular',
+      component: _component,
+      defaults: DEFAULT_ANGULAR_OPTIONS,
+      userOptions: userOptions,
+    });
+    options.plugins = [
+      ...(options.plugins || []),
+      CODE_PROCESSOR_PLUGIN((codeType) => {
+        switch (codeType) {
+          case 'hooks':
+            return flow(
+              processAngularCode({
+                replaceWith: 'this',
+                contextVars,
+                outputVars,
+                domRefs: Array.from(getRefs(json)),
+                stateVars,
+              }),
+              (code) => {
+                const allMethodNames = Object.entries(json.state)
+                  .filter(([_, value]) => value?.type === 'function' || value?.type === 'method')
+                  .map(([key]) => key);
 
-                  return replaceIdentifiers({
-                    code,
-                    from: allMethodNames,
-                    to: (name) => `this.${name}`,
-                  });
-                },
-              );
-
-            case 'bindings':
-              return (code) => {
-                const newLocal = processAngularCode({
-                  contextVars: [],
-                  outputVars,
-                  domRefs: [], // the template doesn't need the this keyword.
-                })(code);
-                return newLocal.replace(/"/g, '&quot;');
-              };
-            case 'hooks-deps':
-            case 'state':
-            case 'context-set':
-            case 'properties':
-            case 'dynamic-jsx-elements':
-            case 'types':
-              return (x) => x;
-          }
-        }),
-      ];
-
-      if (options.state === 'class-properties') {
-        options.plugins.push(classPropertiesPlugin);
-      }
-
-      if (options.plugins) {
-        json = runPreJsonPlugins({ json, plugins: options.plugins });
-      }
-
-      const [forwardProp, hasPropRef] = getPropsRef(json, true);
-      const childComponents: string[] = [];
-      const propsTypeRef = json.propsTypeRef !== 'any' ? json.propsTypeRef : undefined;
-
-      json.imports.forEach(({ imports }) => {
-        Object.keys(imports).forEach((key) => {
-          if (imports[key] === 'default') {
-            childComponents.push(key);
-          }
-        });
-      });
-
-      const customImports = getCustomImports(json);
-
-      const { exports: localExports = {} } = json;
-      const localExportVars = Object.keys(localExports)
-        .filter((key) => localExports[key].usedInLocal)
-        .map((key) => `${key} = ${key};`);
-
-      const injectables: string[] = contextVars.map((variableName) => {
-        const variableType = json?.context?.get[variableName].name;
-        if (options?.experimental?.injectables) {
-          return options?.experimental?.injectables(variableName, variableType);
-        }
-        if (options?.experimental?.inject) {
-          return `@Inject(forwardRef(() => ${variableType})) public ${variableName}: ${variableType}`;
-        }
-        return `public ${variableName} : ${variableType}`;
-      });
-      const hasConstructor = Boolean(injectables.length || json.hooks?.onInit);
-
-      const props = getProps(json);
-      // prevent jsx props from showing up as @Input
-      if (hasPropRef) {
-        props.delete(forwardProp);
-      }
-      props.delete('children');
-
-      // remove props for outputs
-      outputVars.forEach((variableName) => {
-        props.delete(variableName);
-      });
-
-      const outputs = outputVars.map((variableName) => {
-        if (options?.experimental?.outputs) {
-          return options?.experimental?.outputs(json, variableName);
-        }
-        return `@Output() ${variableName} = new EventEmitter()`;
-      });
-
-      const domRefs = getRefs(json);
-      const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
-      const componentsUsed = Array.from(getComponentsUsed(json)).filter((item) => {
-        return item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item);
-      });
-
-      mapRefs(json, (refName) => {
-        const isDomRef = domRefs.has(refName);
-        return `this.${isDomRef ? '' : '_'}${refName}${isDomRef ? '.nativeElement' : ''}`;
-      });
-
-      if (options.plugins) {
-        json = runPostJsonPlugins({ json, plugins: options.plugins });
-      }
-
-      preprocessCssAsJson(json);
-      let css = collectCss(json);
-      if (options.prettier !== false) {
-        css = tryFormat(css, 'css');
-      }
-
-      const helperFunctions = new Set<string>();
-
-      let template = json.children
-        .map((item) => {
-          const tmpl = blockToAngular({
-            root: json,
-            json: item,
-            options,
-            blockOptions: {
-              childComponents,
-              nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
-            },
-          });
-          if (options.state === 'inline-with-wrappers') {
-            getAppropriateTemplateFunctionKeys(tmpl).forEach((key) =>
-              helperFunctions.add(HELPER_FUNCTIONS(options.typescript)[key]),
+                return replaceIdentifiers({
+                  code,
+                  from: allMethodNames,
+                  to: (name) => `this.${name}`,
+                });
+              },
             );
-          }
-          return tmpl;
-        })
-        .join('\n');
 
-      if (options.prettier !== false) {
-        template = tryFormat(template, 'html');
-      }
+          case 'bindings':
+            return (code) => {
+              const newLocal = processAngularCode({
+                contextVars: [],
+                outputVars,
+                domRefs: [], // the template doesn't need the this keyword.
+              })(code);
+              return newLocal.replace(/"/g, '&quot;');
+            };
+          case 'hooks-deps':
+          case 'state':
+          case 'context-set':
+          case 'properties':
+          case 'dynamic-jsx-elements':
+          case 'types':
+            return (x) => x;
+        }
+      }),
+    ];
 
-      stripMetaProperties(json);
+    if (options.state === 'class-properties') {
+      options.plugins.push(classPropertiesPlugin);
+    }
 
-      const dataString = getStateObjectStringFromComponent(json, {
-        format: 'class',
-        valueMapper: processAngularCode({
-          replaceWith: 'this',
-          contextVars,
-          outputVars,
-          domRefs: Array.from(domRefs),
-          stateVars,
-        }),
+    if (options.plugins) {
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
+    }
+
+    const [forwardProp, hasPropRef] = getPropsRef(json, true);
+    const childComponents: string[] = [];
+    const propsTypeRef = json.propsTypeRef !== 'any' ? json.propsTypeRef : undefined;
+
+    json.imports.forEach(({ imports }) => {
+      Object.keys(imports).forEach((key) => {
+        if (imports[key] === 'default') {
+          childComponents.push(key);
+        }
       });
+    });
 
-      const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
-        json,
-        options,
-        {
-          childComponents,
-          nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
-        },
-      );
+    const customImports = getCustomImports(json);
 
-      const hostDisplayCss = options.visuallyIgnoreHostElement ? ':host { display: contents; }' : '';
-      const styles = css.length ? [hostDisplayCss, css].join('\n') : hostDisplayCss;
+    const { exports: localExports = {} } = json;
+    const localExportVars = Object.keys(localExports)
+      .filter((key) => localExports[key].usedInLocal)
+      .map((key) => `${key} = ${key};`);
 
-      // Preparing built in component metadata parameters
-      const componentMetadata: Record<string, any> = {
-        selector: `'${kebabCase(json.name || 'my-component')}, ${json.name}'`,
-        template: `\`
+    const injectables: string[] = contextVars.map((variableName) => {
+      const variableType = json?.context?.get[variableName].name;
+      if (options?.experimental?.injectables) {
+        return options?.experimental?.injectables(variableName, variableType);
+      }
+      if (options?.experimental?.inject) {
+        return `@Inject(forwardRef(() => ${variableType})) public ${variableName}: ${variableType}`;
+      }
+      return `public ${variableName} : ${variableType}`;
+    });
+    const hasConstructor = Boolean(injectables.length || json.hooks?.onInit);
+
+    const props = getProps(json);
+    // prevent jsx props from showing up as @Input
+    if (hasPropRef) {
+      props.delete(forwardProp);
+    }
+    props.delete('children');
+
+    // remove props for outputs
+    outputVars.forEach((variableName) => {
+      props.delete(variableName);
+    });
+
+    const outputs = outputVars.map((variableName) => {
+      if (options?.experimental?.outputs) {
+        return options?.experimental?.outputs(json, variableName);
+      }
+      return `@Output() ${variableName} = new EventEmitter()`;
+    });
+
+    const domRefs = getRefs(json);
+    const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
+    const componentsUsed = Array.from(getComponentsUsed(json)).filter((item) => {
+      return item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item);
+    });
+
+    mapRefs(json, (refName) => {
+      const isDomRef = domRefs.has(refName);
+      return `this.${isDomRef ? '' : '_'}${refName}${isDomRef ? '.nativeElement' : ''}`;
+    });
+
+    if (options.plugins) {
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
+    }
+
+    preprocessCssAsJson(json);
+    let css = collectCss(json);
+    if (options.prettier !== false) {
+      css = tryFormat(css, 'css');
+    }
+
+    const helperFunctions = new Set<string>();
+
+    let template = json.children
+      .map((item) => {
+        const tmpl = blockToAngular({
+          root: json,
+          json: item,
+          options,
+          blockOptions: {
+            childComponents,
+            nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
+          },
+        });
+        if (options.state === 'inline-with-wrappers') {
+          getAppropriateTemplateFunctionKeys(tmpl).forEach((key) =>
+            helperFunctions.add(HELPER_FUNCTIONS(options.typescript)[key]),
+          );
+        }
+        return tmpl;
+      })
+      .join('\n');
+
+    if (options.prettier !== false) {
+      template = tryFormat(template, 'html');
+    }
+
+    stripMetaProperties(json);
+
+    const dataString = getStateObjectStringFromComponent(json, {
+      format: 'class',
+      valueMapper: processAngularCode({
+        replaceWith: 'this',
+        contextVars,
+        outputVars,
+        domRefs: Array.from(domRefs),
+        stateVars,
+      }),
+    });
+
+    const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
+      json,
+      options,
+      {
+        childComponents,
+        nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
+      },
+    );
+
+    const hostDisplayCss = options.visuallyIgnoreHostElement ? ':host { display: contents; }' : '';
+    const styles = css.length ? [hostDisplayCss, css].join('\n') : hostDisplayCss;
+
+    // Preparing built in component metadata parameters
+    const componentMetadata: Record<string, any> = {
+      selector: `'${kebabCase(json.name || 'my-component')}, ${json.name}'`,
+      template: `\`
         ${indent(dynamicTemplate, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
         ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
         \``,
-        ...(styles
-          ? {
+      ...(styles
+        ? {
             styles: `[\`${indent(styles, 8)}\`]`,
           }
-          : {}),
-        ...(options.standalone
-          ? // TODO: also add child component imports here as well
+        : {}),
+      ...(options.standalone
+        ? // TODO: also add child component imports here as well
           {
             standalone: 'true',
             imports: `[${['CommonModule', ...componentsUsed].join(', ')}]`,
           }
-          : {}),
-      };
-      // Taking into consideration what user has passed in options and allowing them to override the default generated metadata
-      Object.entries(json.meta.angularConfig || {}).forEach(([key, value]) => {
-        componentMetadata[key] = value;
-      });
+        : {}),
+    };
+    // Taking into consideration what user has passed in options and allowing them to override the default generated metadata
+    Object.entries(json.meta.angularConfig || {}).forEach(([key, value]) => {
+      componentMetadata[key] = value;
+    });
 
-      const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
-        if (!json.defaultProps) return '';
-        const defalutPropsString = Object.keys(json.defaultProps)
-          .map((prop) => {
-            const value = json.defaultProps!.hasOwnProperty(prop)
-              ? json.defaultProps![prop]?.code
-              : 'undefined';
-            return `${prop}: ${value}`;
-          })
-          .join(',');
-        return `const defaultProps = {${defalutPropsString}};\n`;
-      };
+    const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
+      if (!json.defaultProps) return '';
+      const defalutPropsString = Object.keys(json.defaultProps)
+        .map((prop) => {
+          const value = json.defaultProps!.hasOwnProperty(prop)
+            ? json.defaultProps![prop]?.code
+            : 'undefined';
+          return `${prop}: ${value}`;
+        })
+        .join(',');
+      return `const defaultProps = {${defalutPropsString}};\n`;
+    };
 
-      let str = dedent`
-    import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${options?.experimental?.inject ? 'Inject, forwardRef,' : ''
-        } Component ${domRefs.size || dynamicComponents.size ? ', ViewChild, ElementRef' : ''}${props.size ? ', Input' : ''
-        } ${dynamicComponents.size ? ', ViewContainerRef, TemplateRef' : ''} } from '@angular/core';
+    let str = dedent`
+    import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
+      options?.experimental?.inject ? 'Inject, forwardRef,' : ''
+    } Component ${domRefs.size || dynamicComponents.size ? ', ViewChild, ElementRef' : ''}${
+      props.size ? ', Input' : ''
+    } ${dynamicComponents.size ? ', ViewContainerRef, TemplateRef' : ''} } from '@angular/core';
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
     ${getPropsDefinition({ json })}
     ${renderPreComponent({
-          explicitImportFileExtension: options.explicitImportFileExtension,
-          component: json,
-          target: 'angular',
-          excludeMitosisComponents: !options.standalone && !options.preserveImports,
-          preserveFileExtensions: options.preserveFileExtensions,
-          componentsUsed,
-          importMapper: options?.importMapper,
-        })}
+      explicitImportFileExtension: options.explicitImportFileExtension,
+      component: json,
+      target: 'angular',
+      excludeMitosisComponents: !options.standalone && !options.preserveImports,
+      preserveFileExtensions: options.preserveFileExtensions,
+      componentsUsed,
+      importMapper: options?.importMapper,
+    })}
 
     @Component({
       ${Object.entries(componentMetadata)
-          .map(([k, v]) => `${k}: ${v}`)
-          .join(',')}
+        .map(([k, v]) => `${k}: ${v}`)
+        .join(',')}
     })
     export default class ${json.name} {
       ${localExportVars.join('\n')}
       ${customImports.map((name) => `${name} = ${name}`).join('\n')}
 
       ${Array.from(props)
-          .filter((item) => !isSlotProperty(item) && item !== 'children')
-          .map((item) => {
-            const propType = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
-            let propDeclaration = `@Input() ${item}${options.typescript ? `!: ${propType}` : ''}`;
-            if (json.defaultProps && json.defaultProps.hasOwnProperty(item)) {
-              propDeclaration += ` = defaultProps["${item}"]`;
-            }
-            return propDeclaration;
-          })
-          .join('\n')}
+        .filter((item) => !isSlotProperty(item) && item !== 'children')
+        .map((item) => {
+          const propType = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
+          let propDeclaration = `@Input() ${item}${options.typescript ? `!: ${propType}` : ''}`;
+          if (json.defaultProps && json.defaultProps.hasOwnProperty(item)) {
+            propDeclaration += ` = defaultProps["${item}"]`;
+          }
+          return propDeclaration;
+        })
+        .join('\n')}
 
       ${outputs.join('\n')}
 
       ${Array.from(domRefs)
-          .map(
-            (refName) =>
-              `@ViewChild('${refName}') ${refName}${options.typescript ? '!: ElementRef' : ''}`,
-          )
-          .join('\n')}
+        .map(
+          (refName) =>
+            `@ViewChild('${refName}') ${refName}${options.typescript ? '!: ElementRef' : ''}`,
+        )
+        .join('\n')}
       
       ${Array.from(dynamicComponents)
-          .map(
-            (component) =>
-              `@ViewChild('${component
-                .split('.')[1]
-                .toLowerCase()}Template', { static: true }) ${component
-                  .split('.')[1]
-                  .toLowerCase()}TemplateRef${options.typescript ? '!: TemplateRef<any>' : ''}`,
-          )
-          .join('\n')}
+        .map(
+          (component) =>
+            `@ViewChild('${component
+              .split('.')[1]
+              .toLowerCase()}Template', { static: true }) ${component
+              .split('.')[1]
+              .toLowerCase()}TemplateRef${options.typescript ? '!: TemplateRef<any>' : ''}`,
+        )
+        .join('\n')}
 
       ${dynamicComponents.size ? `myContent${options.typescript ? '?: any[][];' : ''}` : ''}
 
@@ -962,92 +969,100 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${helperFunctions.size ? Array.from(helperFunctions).join('\n') : ''}
 
       ${jsRefs
-          .map((ref) => {
-            const argument = json.refs[ref].argument;
-            const typeParameter = json.refs[ref].typeParameter;
-            return `private _${ref}${typeParameter ? `: ${typeParameter}` : ''}${argument
-                ? ` = ${processAngularCode({
+        .map((ref) => {
+          const argument = json.refs[ref].argument;
+          const typeParameter = json.refs[ref].typeParameter;
+          return `private _${ref}${typeParameter ? `: ${typeParameter}` : ''}${
+            argument
+              ? ` = ${processAngularCode({
                   replaceWith: 'this.',
                   contextVars,
                   outputVars,
                   domRefs: Array.from(domRefs),
                   stateVars,
                 })(argument)}`
-                : ''
-              };`;
-          })
-          .join('\n')}
+              : ''
+          };`;
+        })
+        .join('\n')}
 
-      ${!hasConstructor && !dynamicComponents.size
+      ${
+        !hasConstructor && !dynamicComponents.size
           ? ''
-          : `constructor(\n${injectables.join(',\n')}${dynamicComponents.size
-            ? `\nprivate vcRef${options.typescript ? ': ViewContainerRef' : ''},\n`
-            : ''
-          }) {
-            ${!json.hooks?.onInit
-            ? ''
-            : `
+          : `constructor(\n${injectables.join(',\n')}${
+              dynamicComponents.size
+                ? `\nprivate vcRef${options.typescript ? ': ViewContainerRef' : ''},\n`
+                : ''
+            }) {
+            ${
+              !json.hooks?.onInit
+                ? ''
+                : `
               ${json.hooks.onInit?.code}
               `
-          }
+            }
           }
           `
-        }
-      ${!json.hooks.onMount.length && !dynamicComponents.size
+      }
+      ${
+        !json.hooks.onMount.length && !dynamicComponents.size
           ? ''
           : `ngOnInit() {
               ${stringifySingleScopeOnMount(json)}
-              ${dynamicComponents.size
-            ? `
+              ${
+                dynamicComponents.size
+                  ? `
               this.myContent = [${Array.from(dynamicComponents)
-              .map(
-                (component) =>
-                  `this.vcRef.createEmbeddedView(this.${component
-                    .split('.')[1]
-                    .toLowerCase()}TemplateRef).rootNodes`,
-              )
-              .join(', ')}];
+                .map(
+                  (component) =>
+                    `this.vcRef.createEmbeddedView(this.${component
+                      .split('.')[1]
+                      .toLowerCase()}TemplateRef).rootNodes`,
+                )
+                .join(', ')}];
               `
-            : ''
-          }
+                  : ''
+              }
             }`
-        }
+      }
 
-      ${!json.hooks.onUpdate?.length
+      ${
+        !json.hooks.onUpdate?.length
           ? ''
           : `ngOnChanges() {
               ${json.hooks.onUpdate.reduce((code, hook) => {
-            code += hook.code;
-            return code + '\n';
-          }, '')}
+                code += hook.code;
+                return code + '\n';
+              }, '')}
             }`
-        }
+      }
 
-      ${!json.hooks.onUnMount
+      ${
+        !json.hooks.onUnMount
           ? ''
           : `ngOnDestroy() {
               ${json.hooks.onUnMount.code}
             }`
-        }
+      }
 
     }
   `;
 
-      if (options.standalone !== true) {
-        str = generateNgModule(str, json.name, componentsUsed, json, options.bootstrapMapper);
-      }
-      if (options.plugins) {
-        str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
-      }
-      if (options.prettier !== false) {
-        str = tryFormat(str, 'typescript');
-      }
-      if (options.plugins) {
-        str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
-      }
+    if (options.standalone !== true) {
+      str = generateNgModule(str, json.name, componentsUsed, json, options.bootstrapMapper);
+    }
+    if (options.plugins) {
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
+    }
+    if (options.prettier !== false) {
+      str = tryFormat(str, 'typescript');
+    }
+    if (options.plugins) {
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
+    }
 
-      return str;
-    };
+    return str;
+  };
 
 const tryFormat = (str: string, parser: string) => {
   try {
