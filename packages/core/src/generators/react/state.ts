@@ -5,7 +5,7 @@ import { transformStateSetters } from '@/helpers/transform-state-setters';
 import { MitosisComponent, StateValue } from '@/types/mitosis-component';
 import { types } from '@babel/core';
 import { pipe } from 'fp-ts/lib/function';
-import traverse from 'neotraverse/legacy';
+import traverse from 'neotraverse';
 import { processBinding } from './helpers';
 import { ToReactOptions } from './types';
 

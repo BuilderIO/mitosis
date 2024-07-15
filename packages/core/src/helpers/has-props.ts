@@ -1,4 +1,4 @@
-import traverse from 'neotraverse/legacy';
+import traverse from 'neotraverse';
 import { MitosisComponent } from '../types/mitosis-component';
 
 export const hasProps = (json: MitosisComponent) => {

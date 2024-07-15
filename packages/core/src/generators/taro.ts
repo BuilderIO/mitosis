@@ -1,6 +1,6 @@
 import json5 from 'json5';
 import { camelCase, size } from 'lodash';
-import traverse from 'neotraverse/legacy';
+import traverse from 'neotraverse';
 import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
 import { fastClone } from '../helpers/fast-clone';
@@ -168,12 +168,12 @@ const DEFAULT_OPTIONS: Partial<ToTaroOptions> = {
 
 export const componentToTaro: TranspilerGenerator<Partial<ToTaroOptions>> =
   (_options = {}) =>
-  ({ component, path }) => {
-    const json = fastClone(component);
+    ({ component, path }) => {
+      const json = fastClone(component);
 
-    const options = mergeOptions(DEFAULT_OPTIONS, _options, {
-      type: 'taro',
-    });
+      const options = mergeOptions(DEFAULT_OPTIONS, _options, {
+        type: 'taro',
+      });
 
-    return componentToReact(options)({ component: json, path });
-  };
+      return componentToReact(options)({ component: json, path });
+    };

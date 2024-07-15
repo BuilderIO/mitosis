@@ -1,5 +1,5 @@
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
-import { forEach } from 'neotraverse/legacy';
+import traverse from 'neotraverse';
 import { minify } from '../generators/minify';
 import {
   builderContentToMitosisComponent,
@@ -27,7 +27,7 @@ const enum Path {
 export function ensureAllSymbolsHaveIds(content: BuilderContent): void {
   let counter = 0;
   const ids = new Set<string>();
-  forEach(content, function (this, el: any) {
+  traverse(content).forEach(function (this, el: any) {
     if (this.key === 'jsCode' && isString(el) && el.endsWith('return _virtual_index')) {
       // Sometimes rollup adds a final `return _virtual_index` but that causes VM evaluation to fail.
       // Instead of a return on the last line, it needs a plain expression on the last line. Luckily
@@ -86,7 +86,7 @@ export function convertBuilderContentToSymbolHierarchy(
     depthFirstSymbols: [],
     [content.id!]: [],
   };
-  forEach(content, function (this, el: any) {
+  traverse(content).forEach(function (this, el: any) {
     let cssCode = el?.cssCode;
     if (cssCode) {
       collectComponentStyles && collectComponentStyles.push(minify`${cssCode}`);

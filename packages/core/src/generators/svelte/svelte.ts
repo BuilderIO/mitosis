@@ -21,7 +21,7 @@ import { hasStyle } from '@/helpers/styles/helpers';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { flow, pipe } from 'fp-ts/lib/function';
-import traverse from 'neotraverse/legacy';
+import traverse from 'neotraverse';
 import * as prettierPluginSvelte from 'prettier-plugin-svelte';
 import prettierParserBabel from 'prettier/parser-babel';
 import prettierParserHtml from 'prettier/parser-html';
@@ -78,8 +78,8 @@ const setContextCode = ({
       const valueStr = value
         ? processCode(stringifyContextValue(value))
         : ref
-        ? processCode(ref)
-        : 'undefined';
+          ? processCode(ref)
+          : 'undefined';
 
       const contextType = getContextType({ component: json, context });
 
@@ -139,204 +139,203 @@ const DEFAULT_OPTIONS: ToSvelteOptions = {
 
 export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
   (userProvidedOptions) =>
-  ({ component }) => {
-    const options = initializeOptions({
-      target: 'svelte',
-      component,
-      defaults: DEFAULT_OPTIONS,
-      userOptions: userProvidedOptions,
-    });
+    ({ component }) => {
+      const options = initializeOptions({
+        target: 'svelte',
+        component,
+        defaults: DEFAULT_OPTIONS,
+        userOptions: userProvidedOptions,
+      });
 
-    options.plugins = [
-      ...(options.plugins || []),
-      processOnEventHooksPlugin(),
-      FUNCTION_HACK_PLUGIN,
-      // Strip types from any JS code that ends up in the template, because Svelte does not support TS code in templates.
-      CODE_PROCESSOR_PLUGIN((codeType) => {
-        switch (codeType) {
-          case 'bindings':
-          case 'properties':
-            return convertTypeScriptToJS;
-          case 'hooks':
-          case 'hooks-deps':
-          case 'state':
-          case 'context-set':
-          case 'dynamic-jsx-elements':
-          case 'types':
-            return (x) => x;
-        }
-      }),
-      CODE_PROCESSOR_PLUGIN((codeType) => {
-        switch (codeType) {
-          case 'hooks':
-            return flow(stripStateAndProps({ json, options }), babelTransformCode);
-          case 'bindings':
-          case 'hooks-deps':
-          case 'state':
-            return flow(stripStateAndProps({ json, options }), stripGetter);
-          case 'properties':
-          case 'context-set':
-            return flow(stripStateAndProps({ json, options }));
-          case 'dynamic-jsx-elements':
-          case 'types':
-            return (x) => x;
-        }
-      }),
-    ];
-
-    // Make a copy we can safely mutate, similar to babel's toolchain
-    let json = fastClone(component);
-    json = runPreJsonPlugins({ json, plugins: options.plugins });
-
-    useBindValue(json, options);
-
-    gettersToFunctions(json);
-
-    const filteredProps = Array.from(getProps(json))
-      .filter((prop) => !isSlotProperty(prop))
-      // map $prop to prop for reactive state
-      .map((x) => (x.startsWith('$') ? x.slice(1) : x));
-
-    // this helps make sure we don't have duplicate props
-    const props = Array.from(new Set(filteredProps));
-
-    const refs = Array.from(getRefs(json))
-      .map(stripStateAndProps({ json, options }))
-      .filter((x) => !props.includes(x));
-
-    json = runPostJsonPlugins({ json, plugins: options.plugins });
-
-    const css = collectCss(json);
-    stripMetaProperties(json);
-
-    let usesWritable = false;
-
-    const dataString = pipe(
-      getStateObjectStringFromComponent(json, {
-        data: true,
-        functions: false,
-        getters: false,
-        format: options.stateType === 'proxies' ? 'object' : 'variables',
-        keyPrefix: options.stateType === 'variables' ? 'let ' : '',
-        valueMapper: (code, _t, _p, key) => {
-          if (json.state[key!]?.propertyType === 'reactive') {
-            usesWritable = true;
-            return `writable(${code})`;
+      options.plugins = [
+        ...(options.plugins || []),
+        processOnEventHooksPlugin(),
+        FUNCTION_HACK_PLUGIN,
+        // Strip types from any JS code that ends up in the template, because Svelte does not support TS code in templates.
+        CODE_PROCESSOR_PLUGIN((codeType) => {
+          switch (codeType) {
+            case 'bindings':
+            case 'properties':
+              return convertTypeScriptToJS;
+            case 'hooks':
+            case 'hooks-deps':
+            case 'state':
+            case 'context-set':
+            case 'dynamic-jsx-elements':
+            case 'types':
+              return (x) => x;
           }
-          return code;
-        },
-      }),
-      babelTransformCode,
-    );
+        }),
+        CODE_PROCESSOR_PLUGIN((codeType) => {
+          switch (codeType) {
+            case 'hooks':
+              return flow(stripStateAndProps({ json, options }), babelTransformCode);
+            case 'bindings':
+            case 'hooks-deps':
+            case 'state':
+              return flow(stripStateAndProps({ json, options }), stripGetter);
+            case 'properties':
+            case 'context-set':
+              return flow(stripStateAndProps({ json, options }));
+            case 'dynamic-jsx-elements':
+            case 'types':
+              return (x) => x;
+          }
+        }),
+      ];
 
-    const getterString = pipe(
-      getStateObjectStringFromComponent(json, {
-        data: false,
-        getters: true,
-        functions: false,
-        format: 'variables',
-        keyPrefix: '$: ',
-        valueMapper: (code) => {
-          return code
-            .trim()
-            .replace(/^([a-zA-Z_\$0-9]+)/, '$1 = ')
-            .replace(/\)/, ') => ');
-        },
-      }),
-      babelTransformCode,
-    );
+      // Make a copy we can safely mutate, similar to babel's toolchain
+      let json = fastClone(component);
+      json = runPreJsonPlugins({ json, plugins: options.plugins });
 
-    const functionsString = pipe(
-      getStateObjectStringFromComponent(json, {
-        data: false,
-        getters: false,
-        functions: true,
-        format: 'variables',
-      }),
-      babelTransformCode,
-    );
+      useBindValue(json, options);
 
-    const hasData = dataString.length > 4;
+      gettersToFunctions(json);
 
-    let str = '';
+      const filteredProps = Array.from(getProps(json))
+        .filter((prop) => !isSlotProperty(prop))
+        // map $prop to prop for reactive state
+        .map((x) => (x.startsWith('$') ? x.slice(1) : x));
 
-    const tsLangAttribute = options.typescript ? `lang='ts'` : '';
+      // this helps make sure we don't have duplicate props
+      const props = Array.from(new Set(filteredProps));
 
-    if (options.typescript && json.types?.length) {
-      str += dedent`
+      const refs = Array.from(getRefs(json))
+        .map(stripStateAndProps({ json, options }))
+        .filter((x) => !props.includes(x));
+
+      json = runPostJsonPlugins({ json, plugins: options.plugins });
+
+      const css = collectCss(json);
+      stripMetaProperties(json);
+
+      let usesWritable = false;
+
+      const dataString = pipe(
+        getStateObjectStringFromComponent(json, {
+          data: true,
+          functions: false,
+          getters: false,
+          format: options.stateType === 'proxies' ? 'object' : 'variables',
+          keyPrefix: options.stateType === 'variables' ? 'let ' : '',
+          valueMapper: (code, _t, _p, key) => {
+            if (json.state[key!]?.propertyType === 'reactive') {
+              usesWritable = true;
+              return `writable(${code})`;
+            }
+            return code;
+          },
+        }),
+        babelTransformCode,
+      );
+
+      const getterString = pipe(
+        getStateObjectStringFromComponent(json, {
+          data: false,
+          getters: true,
+          functions: false,
+          format: 'variables',
+          keyPrefix: '$: ',
+          valueMapper: (code) => {
+            return code
+              .trim()
+              .replace(/^([a-zA-Z_\$0-9]+)/, '$1 = ')
+              .replace(/\)/, ') => ');
+          },
+        }),
+        babelTransformCode,
+      );
+
+      const functionsString = pipe(
+        getStateObjectStringFromComponent(json, {
+          data: false,
+          getters: false,
+          functions: true,
+          format: 'variables',
+        }),
+        babelTransformCode,
+      );
+
+      const hasData = dataString.length > 4;
+
+      let str = '';
+
+      const tsLangAttribute = options.typescript ? `lang='ts'` : '';
+
+      if (options.typescript && json.types?.length) {
+        str += dedent`
       <script context='module' ${tsLangAttribute}>
         ${json.types ? json.types.join('\n\n') + '\n' : ''}
       </script>
       \n
       \n
       `;
-    }
-
-    // prepare svelte imports
-    let svelteImports: string[] = [];
-    let svelteStoreImports: string[] = [];
-
-    if (json.hooks.onMount.length) {
-      svelteImports.push('onMount');
-    }
-    if (json.hooks.onUpdate?.filter((x) => !x.deps)?.length) {
-      svelteImports.push('afterUpdate');
-    }
-    if (json.hooks.onUnMount?.code?.length) {
-      svelteImports.push('onDestroy');
-    }
-    if (hasGetContext(component)) {
-      svelteImports.push('getContext');
-    }
-    if (hasSetContext(component)) {
-      svelteImports.push('setContext');
-    }
-
-    if (usesWritable) {
-      svelteStoreImports.push('writable');
-    }
-
-    str += dedent`
-      <script ${tsLangAttribute}>
-      ${!svelteImports.length ? '' : `import { ${svelteImports.sort().join(', ')} } from 'svelte'`}
-      ${
-        !svelteStoreImports.length
-          ? ''
-          : `import { ${svelteStoreImports.sort().join(', ')} } from 'svelte/store'`
       }
 
+      // prepare svelte imports
+      let svelteImports: string[] = [];
+      let svelteStoreImports: string[] = [];
+
+      if (json.hooks.onMount.length) {
+        svelteImports.push('onMount');
+      }
+      if (json.hooks.onUpdate?.filter((x) => !x.deps)?.length) {
+        svelteImports.push('afterUpdate');
+      }
+      if (json.hooks.onUnMount?.code?.length) {
+        svelteImports.push('onDestroy');
+      }
+      if (hasGetContext(component)) {
+        svelteImports.push('getContext');
+      }
+      if (hasSetContext(component)) {
+        svelteImports.push('setContext');
+      }
+
+      if (usesWritable) {
+        svelteStoreImports.push('writable');
+      }
+
+      str += dedent`
+      <script ${tsLangAttribute}>
+      ${!svelteImports.length ? '' : `import { ${svelteImports.sort().join(', ')} } from 'svelte'`}
+      ${!svelteStoreImports.length
+          ? ''
+          : `import { ${svelteStoreImports.sort().join(', ')} } from 'svelte/store'`
+        }
+
       ${renderPreComponent({
-        explicitImportFileExtension: options.explicitImportFileExtension,
-        component: json,
-        target: 'svelte',
-      })}
+          explicitImportFileExtension: options.explicitImportFileExtension,
+          component: json,
+          target: 'svelte',
+        })}
 
       ${!hasData || options.stateType === 'variables' ? '' : `import onChange from 'on-change'`}
       ${props
-        .map((name) => {
-          if (name === 'children') {
-            return '';
-          }
+          .map((name) => {
+            if (name === 'children') {
+              return '';
+            }
 
-          let propDeclaration = `export let ${name}`;
+            let propDeclaration = `export let ${name}`;
 
-          if (options.typescript && json.propsTypeRef && json.propsTypeRef !== 'any') {
-            propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
-          }
+            if (options.typescript && json.propsTypeRef && json.propsTypeRef !== 'any') {
+              propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
+            }
 
-          if (json.props?.[name]?.optional) {
-            propDeclaration += `= undefined`;
-          }
+            if (json.props?.[name]?.optional) {
+              propDeclaration += `= undefined`;
+            }
 
-          if (json.defaultProps && json.defaultProps.hasOwnProperty(name)) {
-            propDeclaration += `=${json.defaultProps[name]?.code}`;
-          }
+            if (json.defaultProps && json.defaultProps.hasOwnProperty(name)) {
+              propDeclaration += `=${json.defaultProps[name]?.code}`;
+            }
 
-          propDeclaration += ';';
+            propDeclaration += ';';
 
-          return propDeclaration;
-        })
-        .join('\n')}
+            return propDeclaration;
+          })
+          .join('\n')}
       ${
         // https://github.com/sveltejs/svelte/issues/7311
         hasStyle(json)
@@ -353,7 +352,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           }
       `
           : ''
-      }
+        }
       ${getContextCode(json)}
 
       ${functionsString.length < 4 ? '' : functionsString}
@@ -361,19 +360,17 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
       ${refs.map((ref) => `let ${ref}`).join('\n')}
 
-      ${
-        options.stateType === 'proxies'
+      ${options.stateType === 'proxies'
           ? dataString.length < 4
             ? ''
             : `let state = onChange(${dataString}, () => state = state)`
           : dataString
-      }
+        }
       ${json.hooks.onInit?.code ?? ''}
 
       ${json.hooks.onMount.map((hook) => `onMount(() => { ${hook.code} });`).join('\n')}
 
-      ${
-        json.hooks.onUpdate
+      ${json.hooks.onUpdate
           ?.map(({ code, deps }, index) => {
             if (!deps) {
               return `afterUpdate(() => { ${code} });`;
@@ -414,59 +411,58 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             `;
           })
           .join('\n') || ''
-      }
+        }
 
       ${
         // make sure this is after all other state/code is initialized
         setContextCode({ json, options })
-      }
+        }
 
       ${!json.hooks.onUnMount?.code ? '' : `onDestroy(() => { ${json.hooks.onUnMount.code} });`}
     </script>
 
     ${json.children
-      .map((item) =>
-        blockToSvelte({
-          json: item,
-          options: options,
-          parentComponent: json,
-        }),
-      )
-      .join('\n')}
+          .map((item) =>
+            blockToSvelte({
+              json: item,
+              options: options,
+              parentComponent: json,
+            }),
+          )
+          .join('\n')}
 
-    ${
-      !css.trim().length
-        ? ''
-        : `<style>
+    ${!css.trim().length
+          ? ''
+          : `<style>
       ${css}
     </style>`
-    }
+        }
   `;
 
-    str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
+      str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
 
-    if (options.prettier !== false) {
-      try {
-        str = format(str, {
-          parser: 'svelte',
-          plugins: [
-            // To support running in browsers
-            prettierParserHtml,
-            prettierParserPostcss,
-            prettierParserBabel,
-            prettierParserTypescript,
-            prettierPluginSvelte,
-          ],
-        });
-      } catch (err) {
-        console.warn('Could not prettify');
-        console.warn(str, err);
+      if (options.prettier !== false) {
+        try {
+          str = format(str, {
+            parser: 'svelte',
+            plugins: [
+              // To support running in browsers
+              prettierParserHtml,
+              prettierParserPostcss,
+              prettierParserBabel,
+              prettierParserTypescript,
+              prettierPluginSvelte,
+            ],
+          });
+        } catch (err) {
+          console.warn('Could not prettify');
+          console.warn(str, err);
+        }
       }
-    }
 
-    str = str.replace(/<script>\n<\/script>/g, '').trim();
+      str = str.replace(/<script>\n<\/script>/g, '').trim();
 
-    str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
+      str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
 
-    return str;
-  };
+      return str;
+    };

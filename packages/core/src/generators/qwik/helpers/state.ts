@@ -1,4 +1,4 @@
-import traverse from 'neotraverse/legacy';
+import traverse from 'neotraverse';
 import { convertTypeScriptToJS } from '../../../helpers/babel-transform';
 import { ComponentMetadata } from '../../../types/metadata';
 import { MitosisComponent } from '../../../types/mitosis-component';

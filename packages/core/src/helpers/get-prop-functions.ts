@@ -1,4 +1,4 @@
-import traverse from 'neotraverse/legacy';
+import traverse from 'neotraverse';
 import { MitosisComponent } from '../types/mitosis-component';
 
 const propsRegex = /props\s*\.\s*([a-zA-Z0-9_\4]+)\(/;

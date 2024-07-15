@@ -1,5 +1,5 @@
 import { mapValues } from 'lodash';
-import traverse, { TraverseContext } from 'neotraverse/legacy';
+import traverse, { TraverseContext } from 'neotraverse';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';

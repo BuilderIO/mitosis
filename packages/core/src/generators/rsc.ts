@@ -1,4 +1,4 @@
-import traverse from 'neotraverse/legacy';
+import traverse from 'neotraverse';
 import { Plugin } from '..';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { mergeOptions } from '../helpers/merge-options';
@@ -61,28 +61,28 @@ const RscOptions: Partial<ToRscOptions> = {
 
 export const componentToRsc: TranspilerGenerator<Partial<ToRscOptions>> =
   (_options = {}) =>
-  ({ component, path }) => {
-    if (
-      !checkIsDefined(component.meta.useMetadata?.rsc?.componentType) &&
-      !checkIfIsClientComponent(component)
-    ) {
-      component.meta.useMetadata = {
-        ...component.meta.useMetadata,
-        rsc: {
-          ...component.meta.useMetadata?.rsc,
-          componentType: 'server',
+    ({ component, path }) => {
+      if (
+        !checkIsDefined(component.meta.useMetadata?.rsc?.componentType) &&
+        !checkIfIsClientComponent(component)
+      ) {
+        component.meta.useMetadata = {
+          ...component.meta.useMetadata,
+          rsc: {
+            ...component.meta.useMetadata?.rsc,
+            componentType: 'server',
+          },
+        };
+      }
+      const isRSC = component.meta.useMetadata?.rsc?.componentType === 'server';
+
+      const options = mergeOptions<Partial<ToRscOptions>>(
+        {
+          rsc: true,
+          ...(isRSC ? RscOptions : {}),
         },
-      };
-    }
-    const isRSC = component.meta.useMetadata?.rsc?.componentType === 'server';
+        _options,
+      );
 
-    const options = mergeOptions<Partial<ToRscOptions>>(
-      {
-        rsc: true,
-        ...(isRSC ? RscOptions : {}),
-      },
-      _options,
-    );
-
-    return componentToReact(options)({ component, path });
-  };
+      return componentToReact(options)({ component, path });
+    };

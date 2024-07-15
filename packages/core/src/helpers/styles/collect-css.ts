@@ -1,4 +1,4 @@
-import traverse from 'neotraverse/legacy';
+import traverse from 'neotraverse';
 import hash from 'object-hash';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
@@ -46,8 +46,8 @@ const collectStyles = (
         const componentName = item.properties.$name
           ? dashCase(item.properties.$name)
           : /^h\d$/.test(item.name || '') // don't dashcase h1 into h-1
-          ? item.name
-          : dashCase(item.name || 'div');
+            ? item.name
+            : dashCase(item.name || 'div');
 
         const classNameWPrefix = `${componentName}${options.prefix ? `-${options.prefix}` : ''}`;
 
