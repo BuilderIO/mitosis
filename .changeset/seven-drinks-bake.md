@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-Replaces the traverse dep for neotraverse to avoid unnecessary deps
+Replaces `traverse` dependency with the smaller `neotraverse`
