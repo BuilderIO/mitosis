@@ -80,11 +80,11 @@ If the initial state value is a computed value (whether based on `props` or the 
 ```tsx
 export default function MyComponent(props) {
   const state = useStore({
-    _name: props.name || 'Steve',
+    _name: '',
     get name() {
       // Use the state value if set, otherwise the prop value if set,
       // otherwise the default value of 'Steve'
-      return state._name || ;
+      return state._name || props.name || 'Steve';
     },
     setName(name: string) {
       state._name = name;
