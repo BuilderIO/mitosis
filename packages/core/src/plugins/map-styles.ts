@@ -1,4 +1,4 @@
-import { TraverseContext } from 'traverse';
+import { TraverseContext } from 'neotraverse/legacy';
 import { getStyles, setStyles } from '../helpers/get-styles';
 import { traverseNodes } from '../helpers/traverse-nodes';
 import { MitosisComponent } from '../types/mitosis-component';

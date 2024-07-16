@@ -2,7 +2,7 @@ import * as babel from '@babel/core';
 // import generate from '@babel/generator';
 import { MitosisNode } from '@builder.io/mitosis';
 import { pipe } from 'fp-ts/lib/function';
-import traverse from 'traverse';
+import traverse from 'neotraverse/legacy';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';

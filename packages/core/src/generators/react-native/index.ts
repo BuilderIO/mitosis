@@ -9,7 +9,7 @@ import { MitosisComponent } from '@/types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
 import json5 from 'json5';
 import { camelCase, size } from 'lodash';
-import traverse from 'traverse';
+import traverse from 'neotraverse/legacy';
 import { MitosisNode, Plugin } from '../..';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { componentToReact } from '../react';

@@ -1,5 +1,5 @@
+import traverse from 'neotraverse/legacy';
 import hash from 'object-hash';
-import traverse from 'traverse';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { dashCase } from '../dash-case';

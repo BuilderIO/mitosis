@@ -21,8 +21,8 @@ import { TranspilerGenerator } from '@/types/transpiler';
 import { uniq } from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
 import hash from 'hash-sum';
+import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
-import traverse from 'traverse';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
