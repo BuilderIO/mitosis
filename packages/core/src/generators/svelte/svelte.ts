@@ -21,13 +21,13 @@ import { hasStyle } from '@/helpers/styles/helpers';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { flow, pipe } from 'fp-ts/lib/function';
+import traverse from 'neotraverse/legacy';
 import * as prettierPluginSvelte from 'prettier-plugin-svelte';
 import prettierParserBabel from 'prettier/parser-babel';
 import prettierParserHtml from 'prettier/parser-html';
 import prettierParserPostcss from 'prettier/parser-postcss';
 import prettierParserTypescript from 'prettier/parser-typescript';
 import { format } from 'prettier/standalone';
-import traverse from 'traverse';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
