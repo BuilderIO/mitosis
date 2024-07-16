@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.11
+
+### Patch Changes
+
+- 59a92da: Replaces `traverse` dependency with the smaller `neotraverse`
+
 ## 0.3.10
 
 ### Patch Changes
