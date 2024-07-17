@@ -993,8 +993,14 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
                     ${json.hooks.onInit?.code}
                     `
               }
-              if (typeof window !== 'undefined') {
-                ${stringifySingleScopeOnMount(json)}
+              ${
+                json.hooks.onMount.length > 0
+                  ? `
+                    if (typeof window !== 'undefined') {
+                      ${stringifySingleScopeOnMount(json)}
+                    }
+                    `
+                  : ''
               }
               ${
                 dynamicComponents.size
