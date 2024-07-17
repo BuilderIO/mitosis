@@ -1,6 +1,6 @@
 import type { NodePath } from '@babel/core';
 import { types } from '@babel/core';
-import traverse from 'traverse';
+import traverse from 'neotraverse/legacy';
 
 import { MitosisComponent } from '../types/mitosis-component';
 import { babelTransformExpression } from './babel-transform';

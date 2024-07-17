@@ -1,5 +1,31 @@
 # Change Log
 
+## 0.3.11
+
+### Patch Changes
+
+- 59a92da: Replaces `traverse` dependency with the smaller `neotraverse`
+
+## 0.3.10
+
+### Patch Changes
+
+- 8548feb: - Fix: [Solid] change style default to `style-tag` instead of `solid-styled-components`.
+  - Fix: [Solid] remove `jsx` attribute from `<style>` tags in `style-tag`.
+- f83b8f4: Adds two new styling options for the react-native generator: twrnc and native-wind
+
+## 0.3.9
+
+### Patch Changes
+
+- 9705329: Fix: remove deprecated dependencies: `vue` and `@babel/plugin-proposal-class-properties`
+
+## 0.3.8
+
+### Patch Changes
+
+- 495a937: add `fetchpriority` to `img` attributes in `jsx-runtime.d.ts`
+
 ## 0.3.7
 
 ### Patch Changes

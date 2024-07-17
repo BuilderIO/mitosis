@@ -1,6 +1,6 @@
 import { camelCase } from 'lodash';
+import traverse from 'neotraverse/legacy';
 import hash from 'object-hash';
-import traverse from 'traverse';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { capitalize } from '../capitalize';
 import { isMitosisNode } from '../is-mitosis-node';

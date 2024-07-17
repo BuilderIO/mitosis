@@ -6,10 +6,9 @@ import { checkIsComponentImport } from '@/helpers/render-imports';
 import { BaseHook, MitosisComponent } from '@/types/mitosis-component';
 import json5 from 'json5';
 import { kebabCase, size, uniq } from 'lodash';
-import type { DefaultProps, PropsDefinition } from 'vue/types/options';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { encodeQuotes, getContextKey, getContextValue, getOnUpdateHookName } from './helpers';
-import { ToVueOptions } from './types';
+import { DefaultProps, PropsDefinition, ToVueOptions } from './types';
 
 const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) => {
   return `{

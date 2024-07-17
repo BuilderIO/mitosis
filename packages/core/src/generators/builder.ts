@@ -1,8 +1,8 @@
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { attempt, mapValues, omit, omitBy, set } from 'lodash';
+import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
-import traverse from 'traverse';
 import { mediaQueryRegex, sizes } from '../constants/media-sizes';
 import { dedent } from '../helpers/dedent';
 import { fastClone } from '../helpers/fast-clone';
