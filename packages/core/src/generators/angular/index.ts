@@ -380,9 +380,6 @@ export const blockToAngular = ({
         root.hooks.onInit = { code: '' };
       }
       root.hooks.onInit.code += `\nthis.${inputsPropsStateName} = {${allProps}};\n`;
-      root.hooks.onUpdate?.push({
-        code: `this.${inputsPropsStateName} = {${allProps}}`,
-      });
       allProps = `${inputsPropsStateName}`;
     } else {
       allProps = `{ ${allProps} }`;
@@ -557,10 +554,6 @@ const handleBindings = (
           json.hooks['onInit'] = { code: '' };
         }
         json.hooks['onInit'].code += `state.${newBindingName} = ${item.bindings[key]!.code};\n`;
-        json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
-        json.hooks['onUpdate'].push({
-          code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
-        });
         item.bindings[key]!.code = `state.${newBindingName}`;
       } else if (key.startsWith('on')) {
         const { arguments: cusArgs = ['event'] } = item.bindings[key]!;
@@ -582,10 +575,6 @@ const handleBindings = (
         json.hooks['onInit'].code += `state.${newBindingName} = {...(${
           item.bindings[key]!.code
         })};\n`;
-        json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
-        json.hooks['onUpdate'].push({
-          code: `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
-        });
         item.bindings[newBindingName] = item.bindings[key];
         item.bindings[key]!.code = `state.${newBindingName}`;
         delete item.bindings[key];
