@@ -379,21 +379,10 @@ export const blockToAngular = ({
       if (!root.hooks.onInit?.code) {
         root.hooks.onInit = { code: '' };
       }
-      // if (root.hooks.onInit?.code && !root.hooks.onInit?.code.includes(inputsPropsStateName)) {
       root.hooks.onInit.code += `\nthis.${inputsPropsStateName} = {${allProps}};\n`;
-      // }
-      // if (
-      //   root.hooks.onUpdate &&
-      //   root.hooks.onUpdate.length > 0 &&
-      //   !root.hooks.onUpdate
-      //     .map((hook) => hook.code)
-      //     .join('')
-      //     .includes(inputsPropsStateName)
-      // ) {
       root.hooks.onUpdate?.push({
         code: `this.${inputsPropsStateName} = {${allProps}}`,
       });
-      // }
       allProps = `${inputsPropsStateName}`;
     } else {
       allProps = `{ ${allProps} }`;
