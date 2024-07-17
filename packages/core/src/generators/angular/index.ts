@@ -553,7 +553,7 @@ const handleBindings = (
     } else if (item.bindings[key]?.code) {
       if (item.bindings[key]?.type !== 'spread' && !key.startsWith('on')) {
         json.state[newBindingName] = { code: 'null', type: 'property' };
-        if (!json.hooks['onInit']) {
+        if (!json.hooks['onInit']?.code) {
           json.hooks['onInit'] = { code: '' };
         }
         json.hooks['onInit'].code += `state.${newBindingName} = ${item.bindings[key]!.code};\n`;
@@ -576,7 +576,7 @@ const handleBindings = (
         }
       } else {
         json.state[newBindingName] = { code: `null`, type: 'property' };
-        if (!json.hooks['onInit']) {
+        if (!json.hooks['onInit']?.code) {
           json.hooks['onInit'] = { code: '' };
         }
         json.hooks['onInit'].code += `state.${newBindingName} = {...(${
