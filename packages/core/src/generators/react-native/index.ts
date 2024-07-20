@@ -70,7 +70,7 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
 
         item.bindings.style!.code = json5.stringify(styleValue);
       }
-    } catch (e) {}
+    } catch (e) { }
 
     if (!size(cssValue)) {
       return;
@@ -174,31 +174,53 @@ const TWRNC_STYLES_PLUGIN: Plugin = () => ({
     post: (json: MitosisComponent) => {
       traverse(json).forEach(function (node) {
         if (isMitosisNode(node)) {
-          let combinedClasses = [
+          let staticClasses = [
             node.properties.class,
-            node.properties.className,
+            node.properties.className
+          ].filter(Boolean).join(' ');
+
+          let dynamicClasses = [
             node.bindings.class,
-            node.bindings.className,
-          ]
-            .filter(Boolean)
-            .join(' ');
+            node.bindings.className
+          ].filter(Boolean);
 
-          if (combinedClasses) {
-            node.properties.style = `{tw\`${combinedClasses}\`}`;
+          if (staticClasses || dynamicClasses.length) {
+            let styleCode = '';
+
+            if (staticClasses) {
+              styleCode = `tw\`${staticClasses}\``;
+            }
+
+            if (dynamicClasses.length) {
+              let dynamicCode = dynamicClasses
+                .map(dc => dc && dc.code ? dc.code : null)
+                .filter(Boolean)
+                .join(', ');
+
+              if (dynamicCode) {
+                if (styleCode) {
+                  // If we have both static and dynamic classes
+                  styleCode = `tw.style(${styleCode}, ${dynamicCode})`;
+                } else if (dynamicClasses.length > 1) {
+                  // If we have multiple dynamic classes
+                  styleCode = `tw.style([${dynamicCode}])`;
+                } else {
+                  // If we have a single dynamic class
+                  styleCode = `tw.style(${dynamicCode})`;
+                }
+              }
+            }
+
+            if (styleCode) {
+              node.bindings.style = createSingleBinding({ code: styleCode });
+            }
           }
 
-          if (node.properties.class) {
-            delete node.properties.class;
-          }
-          if (node.properties.className) {
-            delete node.properties.className;
-          }
-          if (node.bindings.class) {
-            delete node.bindings.class;
-          }
-          if (node.bindings.className) {
-            delete node.bindings.className;
-          }
+          // Clean up original class and className properties/bindings
+          delete node.properties.class;
+          delete node.properties.className;
+          delete node.bindings.class;
+          delete node.bindings.className;
         }
       });
     },
@@ -253,18 +275,18 @@ const DEFAULT_OPTIONS: ToReactNativeOptions = {
 
 export const componentToReactNative: TranspilerGenerator<Partial<ToReactNativeOptions>> =
   (_options = {}) =>
-  ({ component, path }) => {
-    const json = fastClone(component);
+    ({ component, path }) => {
+      const json = fastClone(component);
 
-    const options = mergeOptions(DEFAULT_OPTIONS, _options);
+      const options = mergeOptions(DEFAULT_OPTIONS, _options);
 
-    if (options.stylesType === 'twrnc') {
-      options.plugins.push(TWRNC_STYLES_PLUGIN);
-    } else if (options.stylesType === 'native-wind') {
-      options.plugins.push(NATIVE_WIND_STYLES_PLUGIN);
-    } else {
-      options.plugins.push(REMOVE_REACT_NATIVE_CLASSES_PLUGIN);
-    }
+      if (options.stylesType === 'twrnc') {
+        options.plugins.push(TWRNC_STYLES_PLUGIN);
+      } else if (options.stylesType === 'native-wind') {
+        options.plugins.push(NATIVE_WIND_STYLES_PLUGIN);
+      } else {
+        options.plugins.push(REMOVE_REACT_NATIVE_CLASSES_PLUGIN);
+      }
 
-    return componentToReact({ ...options, type: 'native' })({ component: json, path });
-  };
+      return componentToReact({ ...options, type: 'native' })({ component: json, path });
+    };
