@@ -70,7 +70,7 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
 
         item.bindings.style!.code = json5.stringify(styleValue);
       }
-    } catch (e) { }
+    } catch (e) {}
 
     if (!size(cssValue)) {
       return;
@@ -174,15 +174,11 @@ const TWRNC_STYLES_PLUGIN: Plugin = () => ({
     post: (json: MitosisComponent) => {
       traverse(json).forEach(function (node) {
         if (isMitosisNode(node)) {
-          let staticClasses = [
-            node.properties.class,
-            node.properties.className
-          ].filter(Boolean).join(' ');
+          let staticClasses = [node.properties.class, node.properties.className]
+            .filter(Boolean)
+            .join(' ');
 
-          let dynamicClasses = [
-            node.bindings.class,
-            node.bindings.className
-          ].filter(Boolean);
+          let dynamicClasses = [node.bindings.class, node.bindings.className].filter(Boolean);
 
           if (staticClasses || dynamicClasses.length) {
             let styleCode = '';
@@ -193,7 +189,7 @@ const TWRNC_STYLES_PLUGIN: Plugin = () => ({
 
             if (dynamicClasses.length) {
               let dynamicCode = dynamicClasses
-                .map(dc => dc && dc.code ? dc.code : null)
+                .map((dc) => (dc && dc.code ? dc.code : null))
                 .filter(Boolean)
                 .join(', ');
 
@@ -275,18 +271,18 @@ const DEFAULT_OPTIONS: ToReactNativeOptions = {
 
 export const componentToReactNative: TranspilerGenerator<Partial<ToReactNativeOptions>> =
   (_options = {}) =>
-    ({ component, path }) => {
-      const json = fastClone(component);
+  ({ component, path }) => {
+    const json = fastClone(component);
 
-      const options = mergeOptions(DEFAULT_OPTIONS, _options);
+    const options = mergeOptions(DEFAULT_OPTIONS, _options);
 
-      if (options.stylesType === 'twrnc') {
-        options.plugins.push(TWRNC_STYLES_PLUGIN);
-      } else if (options.stylesType === 'native-wind') {
-        options.plugins.push(NATIVE_WIND_STYLES_PLUGIN);
-      } else {
-        options.plugins.push(REMOVE_REACT_NATIVE_CLASSES_PLUGIN);
-      }
+    if (options.stylesType === 'twrnc') {
+      options.plugins.push(TWRNC_STYLES_PLUGIN);
+    } else if (options.stylesType === 'native-wind') {
+      options.plugins.push(NATIVE_WIND_STYLES_PLUGIN);
+    } else {
+      options.plugins.push(REMOVE_REACT_NATIVE_CLASSES_PLUGIN);
+    }
 
-      return componentToReact({ ...options, type: 'native' })({ component: json, path });
-    };
+    return componentToReact({ ...options, type: 'native' })({ component: json, path });
+  };
