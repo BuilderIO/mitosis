@@ -1,8 +1,8 @@
 import { NodePath, types } from '@babel/core';
 import { pipe } from 'fp-ts/lib/function';
 import { camelCase, kebabCase } from 'lodash';
+import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
-import traverse from 'traverse';
 import { SELF_CLOSING_HTML_TAGS } from '../constants/html_tags';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { dashCase } from '../helpers/dash-case';
