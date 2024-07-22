@@ -179,12 +179,65 @@ export class MyBasicForShowComponentModule {}
 `;
 
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > Basic Context 1`] = `
-"unknown: Unexpected token (1:8)
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m[31m[1m>[22m[39m[90m 1 |[39m [36mlet[39m _ [33m=[39m [36mconst[39m hi [33m=[39m myService[33m.[39mmethod([32m'hi'[39m)[33m;[39m[0m
-[0m [90m   |[39m         [31m[1m^[22m[39m[0m
-[0m [90m 2 |[39m console[33m.[39mlog(hi)state[33m.[39mnode_0_div [33m=[39m myService[33m.[39mmethod([32m'hello'[39m) [33m+[39m state[33m.[39mname[33m;[39m[0m
-[0m [90m 3 |[39m[0m"
+import { Component } from \\"@angular/core\\";
+
+import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <div>
+      {{node_0_div}} Hello! I can run in React, Vue, Solid, or Liquid!
+
+      <input (input)=\\"onChange\\" />
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {
+  name = \\"PatrickJS\\";
+  onChange = function onChange() {
+    const change = this.myService.method(\\"change\\");
+    console.log(change);
+  };
+  node_0_div = null;
+
+  constructor(public myService: MyService) {}
+
+  ngOnInit() {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+    this.node_0_div = this.myService.method(\\"hello\\") + this.name;
+
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = this.myService.method(\\"hello\\") + this.name;
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+})
+export class MyBasicComponentModule {}
+"
 `;
 
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > Basic OnMount Update 1`] = `
@@ -5652,12 +5705,65 @@ export class MyBasicForShowComponentModule {}
 `;
 
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > Basic Context 1`] = `
-"unknown: Unexpected token (1:8)
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m[31m[1m>[22m[39m[90m 1 |[39m [36mlet[39m _ [33m=[39m [36mconst[39m hi [33m=[39m myService[33m.[39mmethod([32m'hi'[39m)[33m;[39m[0m
-[0m [90m   |[39m         [31m[1m^[22m[39m[0m
-[0m [90m 2 |[39m console[33m.[39mlog(hi)state[33m.[39mnode_0_div [33m=[39m myService[33m.[39mmethod([32m'hello'[39m) [33m+[39m state[33m.[39mname[33m;[39m[0m
-[0m [90m 3 |[39m[0m"
+import { Component } from \\"@angular/core\\";
+
+import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <div>
+      {{node_0_div}} Hello! I can run in React, Vue, Solid, or Liquid!
+
+      <input (input)=\\"onChange\\" />
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {
+  name = \\"PatrickJS\\";
+  onChange = function onChange() {
+    const change = this.myService.method(\\"change\\");
+    console.log(change);
+  };
+  node_0_div = null;
+
+  constructor(public myService: MyService) {}
+
+  ngOnInit() {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+    this.node_0_div = this.myService.method(\\"hello\\") + this.name;
+
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = this.myService.method(\\"hello\\") + this.name;
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+})
+export class MyBasicComponentModule {}
+"
 `;
 
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > Basic OnMount Update 1`] = `

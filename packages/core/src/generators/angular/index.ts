@@ -565,7 +565,7 @@ const handleBindings = (
         if (!json.hooks['onInit']?.code) {
           json.hooks['onInit'] = { code: '' };
         }
-        json.hooks['onInit'].code += `state.${newBindingName} = ${item.bindings[key]!.code};\n`;
+        json.hooks['onInit'].code += `\nstate.${newBindingName} = ${item.bindings[key]!.code};\n`;
         json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
         json.hooks['onUpdate'].push({
           code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
@@ -588,7 +588,7 @@ const handleBindings = (
         if (!json.hooks['onInit']?.code) {
           json.hooks['onInit'] = { code: '' };
         }
-        json.hooks['onInit'].code += `state.${newBindingName} = {...(${
+        json.hooks['onInit'].code += `\nstate.${newBindingName} = {...(${
           item.bindings[key]!.code
         })};\n`;
         json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
