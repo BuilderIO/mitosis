@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.12
+
+### Patch Changes
+
+- 3a04558: bump `neotraverse` to fix webpack compat issues
+
 ## 0.3.11
 
 ### Patch Changes
