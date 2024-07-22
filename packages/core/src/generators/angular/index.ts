@@ -376,10 +376,12 @@ export const blockToAngular = ({
         code: 'null',
         type: 'property',
       };
-      if (!root.hooks.onInit?.code) {
-        root.hooks.onInit = { code: '' };
+      if (!root.hooks.onInit?.code.includes(inputsPropsStateName)) {
+        if (!root.hooks.onInit) {
+          root.hooks.onInit = { code: '' };
+        }
+        root.hooks.onInit.code += `\nthis.${inputsPropsStateName} = {${allProps}};\n`;
       }
-      root.hooks.onInit.code += `\nthis.${inputsPropsStateName} = {${allProps}};\n`;
       if (
         root.hooks.onUpdate &&
         root.hooks.onUpdate.length > 0 &&
