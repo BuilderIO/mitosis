@@ -65,6 +65,7 @@ export default class MyBasicRefComponent {
   ngOnChanges() {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Received an update\\");
+      this.node_1_div = this.lowerCaseName();
     }
   }
 }
@@ -557,6 +558,12 @@ export default class MyBasicRefComponent {
   ngOnInit() {
     this.node_1_div = this.lowerCaseName();
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_1_div = this.lowerCaseName();
+    }
+  }
 }
 
 @NgModule({
@@ -959,6 +966,13 @@ export default class CustomCode {
       this.findAndRunScripts();
     }
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div =
+        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+    }
+  }
 }
 
 @NgModule({
@@ -1046,6 +1060,13 @@ export default class CustomCode {
 
     if (typeof window !== \\"undefined\\") {
       this.findAndRunScripts();
+    }
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div =
+        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
     }
   }
 }
@@ -1379,6 +1400,12 @@ export default class FormComponent {
   ngOnInit() {
     this.node_1_div = JSON.stringify(this.responseData, null, 2);
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_1_div = JSON.stringify(this.responseData, null, 2);
+    }
+  }
 }
 
 @NgModule({
@@ -1489,6 +1516,14 @@ export default class Image {
     }
   }
 
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Show = !this.useLazyLoading() || this.load;
+      this.node_1_img =
+        \\"builder-image\\" + (this._class ? \\" \\" + this._class : \\"\\");
+    }
+  }
+
   ngOnDestroy() {
     if (this.scrollListener) {
       window.removeEventListener(\\"scroll\\", this.scrollListener);
@@ -1584,6 +1619,15 @@ export default class ImgComponent {
       objectFit: this.backgroundSize || \\"cover\\",
       objectPosition: this.backgroundPosition || \\"center\\",
     };
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_img = {
+        objectFit: this.backgroundSize || \\"cover\\",
+        objectPosition: this.backgroundPosition || \\"center\\",
+      };
+    }
   }
 }
 
@@ -1756,6 +1800,17 @@ export default class SectionComponent {
             maxWidth: this.maxWidth,
           }
         : undefined;
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_section =
+        this.maxWidth && typeof this.maxWidth === \\"number\\"
+          ? {
+              maxWidth: this.maxWidth,
+            }
+          : undefined;
+    }
   }
 }
 
@@ -2178,6 +2233,14 @@ export default class Text {
       test: this.name || \\"any name\\",
     };
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = {
+        test: this.name || \\"any name\\",
+      };
+    }
+  }
 }
 
 @NgModule({
@@ -2283,6 +2346,21 @@ export default class Video {
       // not have the video overflow
       borderRadius: 1,
     };
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_video = {
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...this.attributes?.style,
+        objectFit: this.fit,
+        objectPosition: this.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      };
+    }
   }
 }
 
@@ -3212,6 +3290,12 @@ export default class Button {
   ngOnInit() {
     this.node_0_div = this.baz(1);
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = this.baz(1);
+    }
+  }
 }
 
 @NgModule({
@@ -3259,6 +3343,14 @@ export default class RenderContent {
     this.node_0_RenderBlock = {
       ...this.getRenderContentProps(this.renderContentProps.block, 0),
     };
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_RenderBlock = {
+        ...this.getRenderContentProps(this.renderContentProps.block, 0),
+      };
+    }
   }
 }
 
@@ -4386,6 +4478,16 @@ export default class RenderBlock {
       this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes,
     ];
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Show = isEmptyHtmlElement(this.tag);
+      this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
+      this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
+      this.mergedInputs_3ka5tf = { ...this.attributes, ...this.actions };
+      this.mergedInputs_r2fkt2 = { ...this.renderComponentProps };
+    }
+  }
 }
 
 @NgModule({
@@ -4970,6 +5072,14 @@ export default class MyComponent {
       width: \\"100%\\",
     };
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = {
+        width: \\"100%\\",
+      };
+    }
+  }
 }
 
 @NgModule({
@@ -5424,6 +5534,7 @@ export default class MyBasicRefComponent {
   ngOnChanges() {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Received an update\\");
+      this.node_1_div = this.lowerCaseName();
     }
   }
 }
@@ -5934,6 +6045,12 @@ export default class MyBasicRefComponent {
   ngOnInit() {
     this.node_1_div = this.lowerCaseName();
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_1_div = this.lowerCaseName();
+    }
+  }
 }
 
 @NgModule({
@@ -6383,6 +6500,13 @@ export default class CustomCode {
       this.findAndRunScripts();
     }
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div =
+        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+    }
+  }
 }
 
 @NgModule({
@@ -6475,6 +6599,13 @@ export default class CustomCode {
 
     if (typeof window !== \\"undefined\\") {
       this.findAndRunScripts();
+    }
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div =
+        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
     }
   }
 }
@@ -6839,6 +6970,12 @@ export default class FormComponent {
   ngOnInit() {
     this.node_1_div = JSON.stringify(this.responseData, null, 2);
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_1_div = JSON.stringify(this.responseData, null, 2);
+    }
+  }
 }
 
 @NgModule({
@@ -6968,6 +7105,14 @@ export default class Image {
     }
   }
 
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Show = !this.useLazyLoading() || this.load;
+      this.node_1_img =
+        \\"builder-image\\" + (this._class ? \\" \\" + this._class : \\"\\");
+    }
+  }
+
   ngOnDestroy() {
     if (this.scrollListener) {
       window.removeEventListener(\\"scroll\\", this.scrollListener);
@@ -7080,6 +7225,15 @@ export default class ImgComponent {
       objectFit: this.backgroundSize || \\"cover\\",
       objectPosition: this.backgroundPosition || \\"center\\",
     };
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_img = {
+        objectFit: this.backgroundSize || \\"cover\\",
+        objectPosition: this.backgroundPosition || \\"center\\",
+      };
+    }
   }
 }
 
@@ -7274,6 +7428,17 @@ export default class SectionComponent {
             maxWidth: this.maxWidth,
           }
         : undefined;
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_section =
+        this.maxWidth && typeof this.maxWidth === \\"number\\"
+          ? {
+              maxWidth: this.maxWidth,
+            }
+          : undefined;
+    }
   }
 }
 
@@ -7747,6 +7912,14 @@ export default class Text {
       test: this.name || \\"any name\\",
     };
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = {
+        test: this.name || \\"any name\\",
+      };
+    }
+  }
 }
 
 @NgModule({
@@ -7886,6 +8059,21 @@ export default class Video {
       // not have the video overflow
       borderRadius: 1,
     };
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_video = {
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...this.attributes?.style,
+        objectFit: this.fit,
+        objectPosition: this.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      };
+    }
   }
 }
 
@@ -8869,6 +9057,12 @@ export default class Button {
   ngOnInit() {
     this.node_0_div = this.baz(1);
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = this.baz(1);
+    }
+  }
 }
 
 @NgModule({
@@ -8923,6 +9117,14 @@ export default class RenderContent {
     this.node_0_RenderBlock = {
       ...this.getRenderContentProps(this.renderContentProps.block, 0),
     };
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_RenderBlock = {
+        ...this.getRenderContentProps(this.renderContentProps.block, 0),
+      };
+    }
   }
 }
 
@@ -10113,6 +10315,16 @@ export default class RenderBlock {
       this.vcRef.createEmbeddedView(this.tagTemplateRef).rootNodes,
     ];
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Show = isEmptyHtmlElement(this.tag);
+      this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
+      this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
+      this.mergedInputs_3ka5tf = { ...this.attributes, ...this.actions };
+      this.mergedInputs_r2fkt2 = { ...this.renderComponentProps };
+    }
+  }
 }
 
 @NgModule({
@@ -10743,6 +10955,14 @@ export default class MyComponent {
       width: \\"100%\\",
     };
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = {
+        width: \\"100%\\",
+      };
+    }
+  }
 }
 
 @NgModule({
@@ -11214,6 +11434,12 @@ export default class MyComponent {
   ngOnInit() {
     this.node_0_input = this.fillings === \\"Guac (extra)\\";
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_input = this.fillings === \\"Guac (extra)\\";
+    }
+  }
 }
 
 @NgModule({
@@ -11288,6 +11514,14 @@ export default class MyComponent {
     this.node_0_input = \`form-input \${this.disabled ? \\"disabled\\" : \\"\\"} \${
       this.focus ? \\"focus\\" : \\"\\"
     }\`;
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_input = \`form-input \${this.disabled ? \\"disabled\\" : \\"\\"} \${
+        this.focus ? \\"focus\\" : \\"\\"
+      }\`;
+    }
   }
 }
 
@@ -11869,6 +12103,12 @@ export default class MyComponent {
   ngOnInit() {
     this.node_0_input = this.fillings === \\"Guac (extra)\\";
   }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_input = this.fillings === \\"Guac (extra)\\";
+    }
+  }
 }
 
 @NgModule({
@@ -11943,6 +12183,14 @@ export default class MyComponent {
     this.node_0_input = \`form-input \${this.disabled ? \\"disabled\\" : \\"\\"} \${
       this.focus ? \\"focus\\" : \\"\\"
     }\`;
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_input = \`form-input \${this.disabled ? \\"disabled\\" : \\"\\"} \${
+        this.focus ? \\"focus\\" : \\"\\"
+      }\`;
+    }
   }
 }
 
