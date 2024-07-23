@@ -127,7 +127,7 @@ import {
   Pressable,
   TextInput,
 } from \\"react-native\\";
-import { useState, useContext, useEffect } from \\"react\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
@@ -140,10 +140,12 @@ function MyBasicComponent(props) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -177,16 +179,18 @@ import {
   Pressable,
   TextInput,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 function MyBasicOnMountUpdateComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -2862,12 +2866,14 @@ import {
   Pressable,
   TextInput,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function OnInit(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -2892,7 +2898,7 @@ import {
   Pressable,
   TextInput,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef } from \\"react\\";
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
@@ -2901,10 +2907,12 @@ export const defaultValues = {
 function OnInit(props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <View>
@@ -4330,13 +4338,15 @@ import {
   Pressable,
   TextInput,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -4522,7 +4532,7 @@ import {
   Pressable,
   TextInput,
 } from \\"react-native\\";
-import { useState, useContext, useEffect } from \\"react\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props: any) {
@@ -4535,10 +4545,12 @@ function MyBasicComponent(props: any) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -4572,7 +4584,7 @@ import {
   Pressable,
   TextInput,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 export interface Props {
   hi: string;
@@ -4584,9 +4596,11 @@ function MyBasicOnMountUpdateComponent(props: Props) {
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -7558,12 +7572,14 @@ import {
   Pressable,
   TextInput,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function OnInit(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -7588,7 +7604,7 @@ import {
   Pressable,
   TextInput,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef } from \\"react\\";
 
 type Props = {
   name: string;
@@ -7601,10 +7617,12 @@ export const defaultValues = {
 function OnInit(props: Props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <View>
@@ -9138,13 +9156,15 @@ import {
   Pressable,
   TextInput,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
