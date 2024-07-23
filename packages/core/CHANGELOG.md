@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.13
+
+### Patch Changes
+
+- f86e2ec: Fix: Angular generator to run `onMount` and `onUpdate` hooks on the client side only and use `onInit` hook to run both on CSR and SSR
+
 ## 0.3.12
 
 ### Patch Changes
