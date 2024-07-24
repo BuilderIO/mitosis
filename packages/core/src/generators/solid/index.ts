@@ -196,6 +196,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
 
       ${getRefsString(json, options)}
       ${getContextString(json, options)}
+      ${json.hooks.onInit?.code ?? ''}
 
       ${json.hooks.onMount.map((hook) => `onMount(() => { ${hook.code} })`).join('\n')}
       ${
