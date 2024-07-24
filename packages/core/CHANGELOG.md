@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.14
+
+### Patch Changes
+
+- 9a1d59b: Feat: Implement `onInit` hook for React and Solid, React now uses `useRef` calling `onInit` inline so we run the code before mount
+
 ## 0.3.13
 
 ### Patch Changes
