@@ -340,9 +340,36 @@ export const blockToAngular = ({
 
   if (checkIsForNode(json)) {
     const indexName = json.scope.indexName;
-    str += `<ng-container *ngFor="let ${json.scope.forName} of ${json.bindings.each?.code}${
-      indexName ? `; let ${indexName} = index` : ''
-    }">`;
+    const forName = json.scope.forName;
+
+    // Check if "key" is present for the first child of the for loop
+    if (json.children[0].bindings && json.children[0].bindings.key?.code) {
+      const trackByFnName = `trackBy${
+        forName ? forName.charAt(0).toUpperCase() + forName.slice(1) : ''
+      }`;
+      let code = json.children[0].bindings.key?.code;
+
+      // If code is a function call, check if it's present in the state and append "this."
+      if (code.includes('(') && code.includes(')')) {
+        const fnName = code.slice(0, code.indexOf('('));
+        if (root.state[fnName]) {
+          code = `this.${code}`;
+        }
+      }
+
+      root.state[trackByFnName] = {
+        code: `${trackByFnName}(${indexName}, ${forName}) { return ${code}; }`,
+        type: 'method',
+      };
+
+      str += `<ng-container *ngFor="let ${forName} of ${json.bindings.each?.code}${
+        indexName ? `; let ${indexName} = index` : ''
+      }; trackBy: ${trackByFnName}">`;
+    } else {
+      str += `<ng-container *ngFor="let ${forName} of ${json.bindings.each?.code}${
+        indexName ? `; let ${indexName} = index` : ''
+      }">`;
+    }
     str += json.children
       .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
       .join('\n');

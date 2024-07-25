@@ -1140,7 +1140,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -1426,6 +1426,9 @@ export default class FormComponent {
         }
       );
     }
+  }
+  trackByBlock(index, block) {
+    return block.id;
   }
 }
 
@@ -2079,7 +2082,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
           Submit
         </button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -2134,6 +2139,9 @@ export default class SmileReviews {
   }
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
+  }
+  trackByReview(index, review) {
+    return review.id;
   }
 
   ngOnInit() {
@@ -4185,7 +4193,9 @@ import RenderRepeatedBlockModule from \\"./render-repeated-block.lite/angular\\"
         ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
-        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+        <ng-container
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData\\"
+        >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
@@ -4403,6 +4413,9 @@ export default class RenderBlock {
     } else {
       return RenderComponent;
     }
+  }
+  trackByData(index, data) {
+    return index;
   }
 
   constructor(private vcRef) {}
@@ -4730,7 +4743,9 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"nested-show, NestedShow\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items; let idx = index\\">
+      <ng-container
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem\\"
+      >
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
@@ -4749,6 +4764,10 @@ import { Component, Input } from \\"@angular/core\\";
 export default class NestedShow {
   @Input() conditionA;
   @Input() items;
+
+  trackByItem(idx, item) {
+    return idx;
+  }
 }
 
 @NgModule({
@@ -6650,7 +6669,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -6943,6 +6962,9 @@ export default class FormComponent {
         }
       );
     }
+  }
+  trackByBlock(index, block) {
+    return block.id;
   }
 }
 
@@ -7692,7 +7714,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
           Submit
         </button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -7747,6 +7771,9 @@ export default class SmileReviews {
   }
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
+  }
+  trackByReview(index, review) {
+    return review.id;
   }
 
   ngOnInit() {
@@ -9972,7 +9999,9 @@ import { RepeatData } from \\"./types.js\\";
         ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
-        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+        <ng-container
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData\\"
+        >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
@@ -10190,6 +10219,9 @@ export default class RenderBlock {
     } else {
       return RenderComponent;
     }
+  }
+  trackByData(index, data) {
+    return index;
   }
 
   constructor(private vcRef: ViewContainerRef) {}
@@ -10546,7 +10578,9 @@ interface Props {
   selector: \\"nested-show, NestedShow\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items; let idx = index\\">
+      <ng-container
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem\\"
+      >
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
@@ -10565,6 +10599,10 @@ interface Props {
 export default class NestedShow {
   @Input() conditionA!: Props[\\"conditionA\\"];
   @Input() items!: Props[\\"items\\"];
+
+  trackByItem(idx, item) {
+    return idx;
+  }
 }
 
 @NgModule({
