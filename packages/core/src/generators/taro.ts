@@ -1,6 +1,6 @@
 import json5 from 'json5';
 import { camelCase, size } from 'lodash';
-import traverse from 'traverse';
+import traverse from 'neotraverse/legacy';
 import { Plugin } from '..';
 import { createSingleBinding } from '../helpers/bindings';
 import { fastClone } from '../helpers/fast-clone';

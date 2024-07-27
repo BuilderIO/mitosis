@@ -5,7 +5,7 @@ import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, merge, omit, omitBy, sortBy, upperFirst } from 'lodash';
-import traverse from 'traverse';
+import traverse from 'neotraverse/legacy';
 import { Size, sizeNames, sizes } from '../../constants/media-sizes';
 import { createSingleBinding } from '../../helpers/bindings';
 import { capitalize } from '../../helpers/capitalize';

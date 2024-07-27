@@ -107,7 +107,7 @@ export default MyBasicComponent;
 exports[`Taro > jsx > Javascript Test > Basic Context 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useContext, useEffect } from \\"react\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 import { View, Text, Input } from \\"@tarojs/components\\";
 
@@ -121,10 +121,12 @@ function MyBasicComponent(props) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -149,7 +151,7 @@ export default MyBasicComponent;
 exports[`Taro > jsx > Javascript Test > Basic OnMount Update 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicOnMountUpdateComponent(props) {
@@ -157,9 +159,11 @@ function MyBasicOnMountUpdateComponent(props) {
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -2278,13 +2282,15 @@ export default Embed;
 exports[`Taro > jsx > Javascript Test > onInit & onMount 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 import { View } from \\"@tarojs/components\\";
 
 function OnInit(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -2300,7 +2306,7 @@ export default OnInit;
 exports[`Taro > jsx > Javascript Test > onInit 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 export const defaultValues = {
   name: \\"PatrickJS\\",
@@ -2309,10 +2315,12 @@ export const defaultValues = {
 function OnInit(props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return <View>Default name defined by parent {name}</View>;
 }
@@ -3299,14 +3307,16 @@ export default UseTargetComponent;
 
 exports[`Taro > jsx > Javascript Test > webComponent 1`] = `
 "import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
+import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicWebComponent(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <View slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -3456,7 +3466,7 @@ export default MyBasicComponent;
 exports[`Taro > jsx > Typescript Test > Basic Context 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useContext, useEffect } from \\"react\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 import { View, Text, Input } from \\"@tarojs/components\\";
 
@@ -3470,10 +3480,12 @@ function MyBasicComponent(props: any) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -3498,7 +3510,7 @@ export default MyBasicComponent;
 exports[`Taro > jsx > Typescript Test > Basic OnMount Update 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 export interface Props {
   hi: string;
@@ -3512,9 +3524,11 @@ function MyBasicOnMountUpdateComponent(props: Props) {
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -5948,13 +5962,15 @@ export default Embed;
 exports[`Taro > jsx > Typescript Test > onInit & onMount 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 import { View } from \\"@tarojs/components\\";
 
 function OnInit(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -5970,7 +5986,7 @@ export default OnInit;
 exports[`Taro > jsx > Typescript Test > onInit 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef } from \\"react\\";
 
 type Props = {
   name: string;
@@ -5983,10 +5999,12 @@ export const defaultValues = {
 function OnInit(props: Props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return <View>Default name defined by parent {name}</View>;
 }
@@ -7090,14 +7108,16 @@ export default UseTargetComponent;
 
 exports[`Taro > jsx > Typescript Test > webComponent 1`] = `
 "import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
+import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicWebComponent(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <View slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -7235,14 +7255,14 @@ export default MyComponent;
 `;
 
 exports[`Taro > svelte > Javascript Test > context 1`] = `
-"'>' expected. (36:13)
-  34 | return (
-  35 |
-> 36 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
+"'>' expected. (37:13)
+  35 | return (
+  36 |
+> 37 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
      |             ^
-  37 |
   38 |
-  39 |"
+  39 |
+  40 |"
 `;
 
 exports[`Taro > svelte > Javascript Test > each 1`] = `
@@ -7645,14 +7665,14 @@ export default MyComponent;
 `;
 
 exports[`Taro > svelte > Typescript Test > context 1`] = `
-"'>' expected. (36:13)
-  34 | return (
-  35 |
-> 36 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
+"'>' expected. (37:13)
+  35 | return (
+  36 |
+> 37 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
      |             ^
-  37 |
   38 |
-  39 |"
+  39 |
+  40 |"
 `;
 
 exports[`Taro > svelte > Typescript Test > each 1`] = `

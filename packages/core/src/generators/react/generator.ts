@@ -371,18 +371,13 @@ const _componentToReact = (
   if (hasContext(json) && options.contextType !== 'prop-drill') {
     reactLibImports.add('useContext');
   }
-  if (allRefs.length) {
+  if (allRefs.length || json.hooks.onInit?.code) {
     reactLibImports.add('useRef');
   }
   if (!options.preact && hasPropRef) {
     reactLibImports.add('forwardRef');
   }
-  if (
-    json.hooks.onMount.length ||
-    json.hooks.onUnMount?.code ||
-    json.hooks.onUpdate?.length ||
-    json.hooks.onInit?.code
-  ) {
+  if (json.hooks.onMount.length || json.hooks.onUnMount?.code || json.hooks.onUpdate?.length) {
     reactLibImports.add('useEffect');
   }
 
@@ -451,12 +446,14 @@ const _componentToReact = (
     ${
       json.hooks.onInit?.code
         ? `
-        useEffect(() => {
+        const hasInitialized = useRef(false);
+        if (!hasInitialized.current) {
           ${processHookCode({
             str: json.hooks.onInit.code,
             options,
           })}
-        }, [])
+          hasInitialized.current = true;
+        }
         `
         : ''
     }
@@ -541,6 +538,7 @@ const _componentToReact = (
         }'`
       : ''
   }
+  ${options.stylesType === 'twrnc' ? `import tw from 'twrnc';\n` : ''}
   ${
     componentHasStyles && options.stylesType === 'emotion' && options.format !== 'lite'
       ? `/** @jsx jsx */

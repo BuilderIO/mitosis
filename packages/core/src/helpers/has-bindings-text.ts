@@ -1,4 +1,4 @@
-import traverse from 'traverse';
+import traverse from 'neotraverse/legacy';
 import { MitosisComponent } from '../types/mitosis-component';
 import isChildren from './is-children';
 import { isMitosisNode } from './is-mitosis-node';

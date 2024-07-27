@@ -1,4 +1,4 @@
-import traverse from 'traverse';
+import traverse from 'neotraverse/legacy';
 import { MitosisComponent } from '../types/mitosis-component';
 
 const stateAccessRegex = /state\s*\.\s*([a-zA-Z0-9_\$]+)/;

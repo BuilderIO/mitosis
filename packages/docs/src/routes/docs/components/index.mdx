@@ -86,7 +86,7 @@ export default function MyComponent(props) {
       // otherwise the default value of 'Steve'
       return state._name || props.name || 'Steve';
     },
-    set name(name: string) {
+    setName(name: string) {
       state._name = name;
     },
   });
@@ -94,7 +94,7 @@ export default function MyComponent(props) {
   return (
     <div>
       <h2>Hello, {state.name}</h2>
-      <input onInput={(event) => (state.name = event.target.value)} value={state.name} />
+      <input onInput={(event) => state.setName(event.target.value)} value={state.name} />
     </div>
   );
 }

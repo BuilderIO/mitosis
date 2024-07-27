@@ -18,8 +18,8 @@ import { MitosisComponent } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { flow } from 'fp-ts/lib/function';
 import { pickBy, size, uniq } from 'lodash';
+import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
-import traverse from 'traverse';
 import {
   Plugin,
   runPostCodePlugins,

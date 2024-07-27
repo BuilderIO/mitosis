@@ -1,5 +1,37 @@
 # Change Log
 
+## 0.3.14
+
+### Patch Changes
+
+- 9a1d59b: Feat: Implement `onInit` hook for React and Solid, React now uses `useRef` calling `onInit` inline so we run the code before mount
+
+## 0.3.13
+
+### Patch Changes
+
+- f86e2ec: Fix: Angular generator to run `onMount` and `onUpdate` hooks on the client side only and use `onInit` hook to run both on CSR and SSR
+
+## 0.3.12
+
+### Patch Changes
+
+- 3a04558: bump `neotraverse` to fix webpack compat issues
+
+## 0.3.11
+
+### Patch Changes
+
+- 59a92da: Replaces `traverse` dependency with the smaller `neotraverse`
+
+## 0.3.10
+
+### Patch Changes
+
+- 8548feb: - Fix: [Solid] change style default to `style-tag` instead of `solid-styled-components`.
+  - Fix: [Solid] remove `jsx` attribute from `<style>` tags in `style-tag`.
+- f83b8f4: Adds two new styling options for the react-native generator: twrnc and native-wind
+
 ## 0.3.9
 
 ### Patch Changes

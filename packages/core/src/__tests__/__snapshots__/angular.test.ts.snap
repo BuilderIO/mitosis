@@ -58,7 +58,9 @@ export default class MyBasicRefComponent {
   };
 
   ngOnChanges() {
-    console.log(\\"Received an update\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Received an update\\");
+    }
   }
 }
 
@@ -129,7 +131,9 @@ export default class MyBasicRefComponent {
   };
 
   ngOnChanges() {
-    console.log(\\"Received an update\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Received an update\\");
+    }
   }
 }
 "
@@ -354,14 +358,16 @@ export default class MyBasicComponent {
     console.log(change);
   };
 
-  constructor(public myService: MyService) {
-    const hi = this.myService.method(\\"hi\\");
-    console.log(hi);
-  }
+  constructor(public myService: MyService) {}
 
   ngOnInit() {
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
   }
 }
 
@@ -407,14 +413,16 @@ export default class MyBasicComponent {
     console.log(change);
   };
 
-  constructor(public myService: MyService) {
-    const hi = this.myService.method(\\"hi\\");
-    console.log(hi);
-  }
+  constructor(public myService: MyService) {}
 
   ngOnInit() {
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
   }
 }
 "
@@ -446,12 +454,12 @@ export default class MyBasicOnMountUpdateComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {
-    this.name = \\"PatrickJS onInit\\" + this.hi;
-  }
-
   ngOnInit() {
-    this.name = \\"PatrickJS onMount\\" + this.bye;
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+
+    if (typeof window !== \\"undefined\\") {
+      this.name = \\"PatrickJS onMount\\" + this.bye;
+    }
   }
 }
 
@@ -490,12 +498,12 @@ export default class MyBasicOnMountUpdateComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {
-    this.name = \\"PatrickJS onInit\\" + this.hi;
-  }
-
   ngOnInit() {
-    this.name = \\"PatrickJS onMount\\" + this.bye;
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+
+    if (typeof window !== \\"undefined\\") {
+      this.name = \\"PatrickJS onMount\\" + this.bye;
+    }
   }
 }
 "
@@ -529,8 +537,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -571,8 +581,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 "
@@ -606,8 +618,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -648,8 +662,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 "
@@ -920,7 +936,9 @@ export default class MyBasicForComponent {
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
   ngOnInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 
@@ -971,7 +989,9 @@ export default class MyBasicForComponent {
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
   ngOnInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 "
@@ -1214,7 +1234,9 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngOnChanges() {
-    this._prevCount = this.count;
+    if (typeof window !== \\"undefined\\") {
+      this._prevCount = this.count;
+    }
   }
 }
 
@@ -1268,7 +1290,9 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngOnChanges() {
-    this._prevCount = this.count;
+    if (typeof window !== \\"undefined\\") {
+      this._prevCount = this.count;
+    }
   }
 }
 "
@@ -1750,7 +1774,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 
@@ -1837,7 +1863,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -1917,7 +1945,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 
@@ -2004,7 +2034,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -2721,27 +2753,29 @@ export default class Image {
   load = false;
 
   ngOnInit() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.pictureRef.nativeElement) {
-          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+    if (typeof window !== \\"undefined\\") {
+      if (this.useLazyLoading()) {
+        // throttled scroll capture listener
+        const listener = () => {
+          if (this.pictureRef.nativeElement) {
+            const rect = this.pictureRef.nativeElement.getBoundingClientRect();
+            const buffer = window.innerHeight / 2;
 
-          if (rect.top < window.innerHeight + buffer) {
-            this.load = true;
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
+            if (rect.top < window.innerHeight + buffer) {
+              this.load = true;
+              this.scrollListener = null;
+              window.removeEventListener(\\"scroll\\", listener);
+            }
           }
-        }
-      };
+        };
 
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+        this.scrollListener = listener;
+        window.addEventListener(\\"scroll\\", listener, {
+          capture: true,
+          passive: true,
+        });
+        listener();
+      }
     }
   }
 
@@ -2829,27 +2863,29 @@ export default class Image {
   load = false;
 
   ngOnInit() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.pictureRef.nativeElement) {
-          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+    if (typeof window !== \\"undefined\\") {
+      if (this.useLazyLoading()) {
+        // throttled scroll capture listener
+        const listener = () => {
+          if (this.pictureRef.nativeElement) {
+            const rect = this.pictureRef.nativeElement.getBoundingClientRect();
+            const buffer = window.innerHeight / 2;
 
-          if (rect.top < window.innerHeight + buffer) {
-            this.load = true;
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
+            if (rect.top < window.innerHeight + buffer) {
+              this.load = true;
+              this.scrollListener = null;
+              window.removeEventListener(\\"scroll\\", listener);
+            }
           }
-        }
-      };
+        };
 
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+        this.scrollListener = listener;
+        window.addEventListener(\\"scroll\\", listener, {
+          capture: true,
+          passive: true,
+        });
+        listener();
+      }
     }
   }
 
@@ -3840,15 +3876,17 @@ export default class SmileReviews {
   }
 
   ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews = data.data;
+        });
+    }
   }
 }
 
@@ -3949,15 +3987,17 @@ export default class SmileReviews {
   }
 
   ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews = data.data;
+        });
+    }
   }
 }
 "
@@ -4661,20 +4701,22 @@ export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
   ngOnChanges() {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetch(\\"https://patrickjs.com/api/resource.json\\", {
-      signal,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.name = data.name;
-      });
-    return () => {
-      if (!signal.aborted) {
-        controller.abort();
-      }
-    };
+    if (typeof window !== \\"undefined\\") {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    }
   }
 }
 
@@ -4711,20 +4753,22 @@ export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
   ngOnChanges() {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetch(\\"https://patrickjs.com/api/resource.json\\", {
-      signal,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.name = data.name;
-      });
-    return () => {
-      if (!signal.aborted) {
-        controller.abort();
-      }
-    };
+    if (typeof window !== \\"undefined\\") {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    }
   }
 }
 "
@@ -6060,8 +6104,10 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MultipleOnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
-    console.log(\\"Runs on every update/rerender as well\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+      console.log(\\"Runs on every update/rerender as well\\");
+    }
   }
 }
 
@@ -6095,8 +6141,10 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class MultipleOnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
-    console.log(\\"Runs on every update/rerender as well\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+      console.log(\\"Runs on every update/rerender as well\\");
+    }
   }
 }
 "
@@ -6128,15 +6176,17 @@ export default class MultipleOnUpdateWithDeps {
   d = \\"d\\";
 
   ngOnChanges() {
-    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     }
   }
 }
@@ -6176,15 +6226,17 @@ export default class MultipleOnUpdateWithDeps {
   d = \\"d\\";
 
   ngOnChanges() {
-    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     }
   }
 }
@@ -6528,7 +6580,9 @@ export default class Embed {
   }
 
   ngOnInit() {
-    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    if (typeof window !== \\"undefined\\") {
+      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    }
   }
 }
 
@@ -6568,7 +6622,9 @@ export default class Embed {
   }
 
   ngOnInit() {
-    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    if (typeof window !== \\"undefined\\") {
+      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    }
   }
 }
 "
@@ -6594,12 +6650,12 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class OnInit {
-  constructor() {
-    console.log(\\"onInit\\");
-  }
-
   ngOnInit() {
-    console.log(\\"onMount\\");
+    console.log(\\"onInit\\");
+
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 
@@ -6632,12 +6688,12 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class OnInit {
-  constructor() {
-    console.log(\\"onInit\\");
-  }
-
   ngOnInit() {
-    console.log(\\"onMount\\");
+    console.log(\\"onInit\\");
+
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 "
@@ -6671,7 +6727,7 @@ export default class OnInit {
 
   name = \\"\\";
 
-  constructor() {
+  ngOnInit() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   }
@@ -6714,7 +6770,7 @@ export default class OnInit {
 
   name = \\"\\";
 
-  constructor() {
+  ngOnInit() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   }
@@ -6743,7 +6799,9 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -6781,7 +6839,9 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class Comp {
   ngOnInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -6812,18 +6872,20 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 
@@ -6857,18 +6919,20 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class Comp {
   ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 "
@@ -6895,7 +6959,9 @@ import { Component } from \\"@angular/core\\";
 })
 export default class OnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+    }
   }
 }
 
@@ -6929,7 +6995,9 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class OnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+    }
   }
 }
 "
@@ -6961,12 +7029,14 @@ export default class OnUpdateWithDeps {
   b = \\"b\\";
 
   ngOnChanges() {
-    console.log(
-      \\"Runs when this.a, this.b or size changes\\",
-      this.a,
-      this.b,
-      this.size
-    );
+    if (typeof window !== \\"undefined\\") {
+      console.log(
+        \\"Runs when this.a, this.b or size changes\\",
+        this.a,
+        this.b,
+        this.size
+      );
+    }
   }
 }
 
@@ -7005,12 +7075,14 @@ export default class OnUpdateWithDeps {
   b = \\"b\\";
 
   ngOnChanges() {
-    console.log(
-      \\"Runs when this.a, this.b or size changes\\",
-      this.a,
-      this.b,
-      this.size
-    );
+    if (typeof window !== \\"undefined\\") {
+      console.log(
+        \\"Runs when this.a, this.b or size changes\\",
+        this.a,
+        this.b,
+        this.size
+      );
+    }
   }
 }
 "
@@ -7421,9 +7493,11 @@ export default class OnUpdate {
   };
 
   ngOnChanges() {
-    this.foo({
-      someOption: this.bar,
-    });
+    if (typeof window !== \\"undefined\\") {
+      this.foo({
+        someOption: this.bar,
+      });
+    }
   }
 }
 
@@ -7465,9 +7539,11 @@ export default class OnUpdate {
   };
 
   ngOnChanges() {
-    this.foo({
-      someOption: this.bar,
-    });
+    if (typeof window !== \\"undefined\\") {
+      this.foo({
+        someOption: this.bar,
+      });
+    }
   }
 }
 "
@@ -8071,11 +8147,15 @@ export default class RenderContent {
   @Input() content;
 
   ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents);
+    }
   }
 
   ngOnChanges() {
-    dispatchNewContentToVisualEditor(this.content);
+    if (typeof window !== \\"undefined\\") {
+      dispatchNewContentToVisualEditor(this.content);
+    }
   }
 }
 
@@ -8128,11 +8208,15 @@ export default class RenderContent {
   @Input() content;
 
   ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents);
+    }
   }
 
   ngOnChanges() {
-    dispatchNewContentToVisualEditor(this.content);
+    if (typeof window !== \\"undefined\\") {
+      dispatchNewContentToVisualEditor(this.content);
+    }
   }
 }
 "
@@ -8787,8 +8871,10 @@ export default class MyBasicComponent {
   @Input() foo;
 
   ngOnChanges() {
-    console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"props.id changed\\", this.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+    }
   }
 }
 
@@ -8828,8 +8914,10 @@ export default class MyBasicComponent {
   @Input() foo;
 
   ngOnChanges() {
-    console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"props.id changed\\", this.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+    }
   }
 }
 "
@@ -9584,7 +9672,10 @@ export default class UseTargetComponent {
   }
   lastName = \\"bar\\";
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+    }
+  }
 }
 
 @NgModule({
@@ -9622,7 +9713,10 @@ export default class UseTargetComponent {
   }
   lastName = \\"bar\\";
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+    }
+  }
 }
 "
 `;
@@ -9653,7 +9747,7 @@ import { register } from \\"swiper/element/bundle\\";
   ],
 })
 export default class MyBasicWebComponent {
-  constructor() {
+  ngOnInit() {
     register();
   }
 }
@@ -9693,7 +9787,7 @@ import { register } from \\"swiper/element/bundle\\";
   imports: [CommonModule],
 })
 export default class MyBasicWebComponent {
-  constructor() {
+  ngOnInit() {
     register();
   }
 }
@@ -9819,7 +9913,9 @@ export default class MyBasicRefComponent {
   };
 
   ngOnChanges() {
-    console.log(\\"Received an update\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Received an update\\");
+    }
   }
 }
 
@@ -9894,7 +9990,9 @@ export default class MyBasicRefComponent {
   };
 
   ngOnChanges() {
-    console.log(\\"Received an update\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Received an update\\");
+    }
   }
 }
 "
@@ -10127,14 +10225,16 @@ export default class MyBasicComponent {
     console.log(change);
   };
 
-  constructor(public myService: MyService) {
-    const hi = this.myService.method(\\"hi\\");
-    console.log(hi);
-  }
+  constructor(public myService: MyService) {}
 
   ngOnInit() {
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
   }
 }
 
@@ -10180,14 +10280,16 @@ export default class MyBasicComponent {
     console.log(change);
   };
 
-  constructor(public myService: MyService) {
-    const hi = this.myService.method(\\"hi\\");
-    console.log(hi);
-  }
+  constructor(public myService: MyService) {}
 
   ngOnInit() {
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
   }
 }
 "
@@ -10224,12 +10326,12 @@ export default class MyBasicOnMountUpdateComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {
-    this.name = \\"PatrickJS onInit\\" + this.hi;
-  }
-
   ngOnInit() {
-    this.name = \\"PatrickJS onMount\\" + this.bye;
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+
+    if (typeof window !== \\"undefined\\") {
+      this.name = \\"PatrickJS onMount\\" + this.bye;
+    }
   }
 }
 
@@ -10273,12 +10375,12 @@ export default class MyBasicOnMountUpdateComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {
-    this.name = \\"PatrickJS onInit\\" + this.hi;
-  }
-
   ngOnInit() {
-    this.name = \\"PatrickJS onMount\\" + this.bye;
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+
+    if (typeof window !== \\"undefined\\") {
+      this.name = \\"PatrickJS onMount\\" + this.bye;
+    }
   }
 }
 "
@@ -10312,8 +10414,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -10354,8 +10458,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 "
@@ -10389,8 +10495,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -10431,8 +10539,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 "
@@ -10713,7 +10823,9 @@ export default class MyBasicForComponent {
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
   ngOnInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 
@@ -10764,7 +10876,9 @@ export default class MyBasicForComponent {
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
   ngOnInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 "
@@ -11027,7 +11141,9 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngOnChanges() {
-    this._prevCount = this.count;
+    if (typeof window !== \\"undefined\\") {
+      this._prevCount = this.count;
+    }
   }
 }
 
@@ -11085,7 +11201,9 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngOnChanges() {
-    this._prevCount = this.count;
+    if (typeof window !== \\"undefined\\") {
+      this._prevCount = this.count;
+    }
   }
 }
 "
@@ -11640,7 +11758,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 
@@ -11732,7 +11852,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -11817,7 +11939,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 
@@ -11909,7 +12033,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -12707,27 +12833,29 @@ export default class Image {
   load = false;
 
   ngOnInit() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.pictureRef.nativeElement) {
-          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+    if (typeof window !== \\"undefined\\") {
+      if (this.useLazyLoading()) {
+        // throttled scroll capture listener
+        const listener = () => {
+          if (this.pictureRef.nativeElement) {
+            const rect = this.pictureRef.nativeElement.getBoundingClientRect();
+            const buffer = window.innerHeight / 2;
 
-          if (rect.top < window.innerHeight + buffer) {
-            this.load = true;
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
+            if (rect.top < window.innerHeight + buffer) {
+              this.load = true;
+              this.scrollListener = null;
+              window.removeEventListener(\\"scroll\\", listener);
+            }
           }
-        }
-      };
+        };
 
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+        this.scrollListener = listener;
+        window.addEventListener(\\"scroll\\", listener, {
+          capture: true,
+          passive: true,
+        });
+        listener();
+      }
     }
   }
 
@@ -12834,27 +12962,29 @@ export default class Image {
   load = false;
 
   ngOnInit() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.pictureRef.nativeElement) {
-          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+    if (typeof window !== \\"undefined\\") {
+      if (this.useLazyLoading()) {
+        // throttled scroll capture listener
+        const listener = () => {
+          if (this.pictureRef.nativeElement) {
+            const rect = this.pictureRef.nativeElement.getBoundingClientRect();
+            const buffer = window.innerHeight / 2;
 
-          if (rect.top < window.innerHeight + buffer) {
-            this.load = true;
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
+            if (rect.top < window.innerHeight + buffer) {
+              this.load = true;
+              this.scrollListener = null;
+              window.removeEventListener(\\"scroll\\", listener);
+            }
           }
-        }
-      };
+        };
 
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+        this.scrollListener = listener;
+        window.addEventListener(\\"scroll\\", listener, {
+          capture: true,
+          passive: true,
+        });
+        listener();
+      }
     }
   }
 
@@ -13994,15 +14124,17 @@ export default class SmileReviews {
   }
 
   ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews = data.data;
+        });
+    }
   }
 }
 
@@ -14108,15 +14240,17 @@ export default class SmileReviews {
   }
 
   ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews = data.data;
+        });
+    }
   }
 }
 "
@@ -14938,20 +15072,22 @@ export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
   ngOnChanges() {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetch(\\"https://patrickjs.com/api/resource.json\\", {
-      signal,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.name = data.name;
-      });
-    return () => {
-      if (!signal.aborted) {
-        controller.abort();
-      }
-    };
+    if (typeof window !== \\"undefined\\") {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    }
   }
 }
 
@@ -14988,20 +15124,22 @@ export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
   ngOnChanges() {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetch(\\"https://patrickjs.com/api/resource.json\\", {
-      signal,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.name = data.name;
-      });
-    return () => {
-      if (!signal.aborted) {
-        controller.abort();
-      }
-    };
+    if (typeof window !== \\"undefined\\") {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    }
   }
 }
 "
@@ -16435,8 +16573,10 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MultipleOnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
-    console.log(\\"Runs on every update/rerender as well\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+      console.log(\\"Runs on every update/rerender as well\\");
+    }
   }
 }
 
@@ -16470,8 +16610,10 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class MultipleOnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
-    console.log(\\"Runs on every update/rerender as well\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+      console.log(\\"Runs on every update/rerender as well\\");
+    }
   }
 }
 "
@@ -16503,15 +16645,17 @@ export default class MultipleOnUpdateWithDeps {
   d = \\"d\\";
 
   ngOnChanges() {
-    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     }
   }
 }
@@ -16551,15 +16695,17 @@ export default class MultipleOnUpdateWithDeps {
   d = \\"d\\";
 
   ngOnChanges() {
-    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     }
   }
 }
@@ -16913,7 +17059,9 @@ export default class Embed {
   }
 
   ngOnInit() {
-    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    if (typeof window !== \\"undefined\\") {
+      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    }
   }
 }
 
@@ -16953,7 +17101,9 @@ export default class Embed {
   }
 
   ngOnInit() {
-    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    if (typeof window !== \\"undefined\\") {
+      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    }
   }
 }
 "
@@ -16979,12 +17129,12 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class OnInit {
-  constructor() {
-    console.log(\\"onInit\\");
-  }
-
   ngOnInit() {
-    console.log(\\"onMount\\");
+    console.log(\\"onInit\\");
+
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 
@@ -17017,12 +17167,12 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class OnInit {
-  constructor() {
-    console.log(\\"onInit\\");
-  }
-
   ngOnInit() {
-    console.log(\\"onMount\\");
+    console.log(\\"onInit\\");
+
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 "
@@ -17060,7 +17210,7 @@ export default class OnInit {
 
   name = \\"\\";
 
-  constructor() {
+  ngOnInit() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   }
@@ -17107,7 +17257,7 @@ export default class OnInit {
 
   name = \\"\\";
 
-  constructor() {
+  ngOnInit() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   }
@@ -17136,7 +17286,9 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -17174,7 +17326,9 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class Comp {
   ngOnInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -17205,18 +17359,20 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 
@@ -17250,18 +17406,20 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class Comp {
   ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 "
@@ -17288,7 +17446,9 @@ import { Component } from \\"@angular/core\\";
 })
 export default class OnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+    }
   }
 }
 
@@ -17322,7 +17482,9 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class OnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+    }
   }
 }
 "
@@ -17358,12 +17520,14 @@ export default class OnUpdateWithDeps {
   b = \\"b\\";
 
   ngOnChanges() {
-    console.log(
-      \\"Runs when this.a, this.b or size changes\\",
-      this.a,
-      this.b,
-      this.size
-    );
+    if (typeof window !== \\"undefined\\") {
+      console.log(
+        \\"Runs when this.a, this.b or size changes\\",
+        this.a,
+        this.b,
+        this.size
+      );
+    }
   }
 }
 
@@ -17406,12 +17570,14 @@ export default class OnUpdateWithDeps {
   b = \\"b\\";
 
   ngOnChanges() {
-    console.log(
-      \\"Runs when this.a, this.b or size changes\\",
-      this.a,
-      this.b,
-      this.size
-    );
+    if (typeof window !== \\"undefined\\") {
+      console.log(
+        \\"Runs when this.a, this.b or size changes\\",
+        this.a,
+        this.b,
+        this.size
+      );
+    }
   }
 }
 "
@@ -17898,9 +18064,11 @@ export default class OnUpdate {
   };
 
   ngOnChanges() {
-    this.foo({
-      someOption: this.bar,
-    });
+    if (typeof window !== \\"undefined\\") {
+      this.foo({
+        someOption: this.bar,
+      });
+    }
   }
 }
 
@@ -17942,9 +18110,11 @@ export default class OnUpdate {
   };
 
   ngOnChanges() {
-    this.foo({
-      someOption: this.bar,
-    });
+    if (typeof window !== \\"undefined\\") {
+      this.foo({
+        someOption: this.bar,
+      });
+    }
   }
 }
 "
@@ -18581,11 +18751,15 @@ export default class RenderContent {
   @Input() content!: Props[\\"content\\"];
 
   ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents);
+    }
   }
 
   ngOnChanges() {
-    dispatchNewContentToVisualEditor(this.content);
+    if (typeof window !== \\"undefined\\") {
+      dispatchNewContentToVisualEditor(this.content);
+    }
   }
 }
 
@@ -18646,11 +18820,15 @@ export default class RenderContent {
   @Input() content!: Props[\\"content\\"];
 
   ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents);
+    }
   }
 
   ngOnChanges() {
-    dispatchNewContentToVisualEditor(this.content);
+    if (typeof window !== \\"undefined\\") {
+      dispatchNewContentToVisualEditor(this.content);
+    }
   }
 }
 "
@@ -19372,8 +19550,10 @@ export default class MyBasicComponent {
   @Input() foo!: Props[\\"foo\\"];
 
   ngOnChanges() {
-    console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"props.id changed\\", this.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    }
   }
 }
 
@@ -19422,8 +19602,10 @@ export default class MyBasicComponent {
   @Input() foo!: Props[\\"foo\\"];
 
   ngOnChanges() {
-    console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"props.id changed\\", this.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    }
   }
 }
 "
@@ -20193,7 +20375,10 @@ export default class UseTargetComponent {
   }
   lastName = \\"bar\\";
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+    }
+  }
 }
 
 @NgModule({
@@ -20231,7 +20416,10 @@ export default class UseTargetComponent {
   }
   lastName = \\"bar\\";
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+    }
+  }
 }
 "
 `;
@@ -20262,7 +20450,7 @@ import { register } from \\"swiper/element/bundle\\";
   ],
 })
 export default class MyBasicWebComponent {
-  constructor() {
+  ngOnInit() {
     register();
   }
 }
@@ -20302,7 +20490,7 @@ import { register } from \\"swiper/element/bundle\\";
   imports: [CommonModule],
 })
 export default class MyBasicWebComponent {
-  constructor() {
+  ngOnInit() {
     register();
   }
 }
@@ -21066,11 +21254,15 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   ngOnInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
   ngOnChanges() {
-    console.log(\\"onAfterUpdate\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onAfterUpdate\\");
+    }
   }
 
   ngOnDestroy() {
@@ -21108,11 +21300,15 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class MyComponent {
   ngOnInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
   ngOnChanges() {
-    console.log(\\"onAfterUpdate\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onAfterUpdate\\");
+    }
   }
 
   ngOnDestroy() {
@@ -21226,7 +21422,9 @@ export default class MyComponent {
   };
 
   ngOnChanges() {
-    this.calculateResult(this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      this.calculateResult(this.a, this.b);
+    }
   }
 }
 
@@ -21272,7 +21470,9 @@ export default class MyComponent {
   };
 
   ngOnChanges() {
-    this.calculateResult(this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      this.calculateResult(this.a, this.b);
+    }
   }
 }
 "
@@ -22232,11 +22432,15 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   ngOnInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
   ngOnChanges() {
-    console.log(\\"onAfterUpdate\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onAfterUpdate\\");
+    }
   }
 
   ngOnDestroy() {
@@ -22274,11 +22478,15 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class MyComponent {
   ngOnInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
   ngOnChanges() {
-    console.log(\\"onAfterUpdate\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onAfterUpdate\\");
+    }
   }
 
   ngOnDestroy() {
@@ -22392,7 +22600,9 @@ export default class MyComponent {
   };
 
   ngOnChanges() {
-    this.calculateResult(this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      this.calculateResult(this.a, this.b);
+    }
   }
 }
 
@@ -22438,7 +22648,9 @@ export default class MyComponent {
   };
 
   ngOnChanges() {
-    this.calculateResult(this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      this.calculateResult(this.a, this.b);
+    }
   }
 }
 "

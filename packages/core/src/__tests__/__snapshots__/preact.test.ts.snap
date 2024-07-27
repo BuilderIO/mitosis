@@ -106,7 +106,7 @@ export default MyBasicComponent;
 exports[`Preact > jsx > Javascript Test > Basic Context 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, useContext, useEffect } from \\"preact/hooks\\";
+import { useState, useContext, useRef, useEffect } from \\"preact/hooks\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
@@ -119,10 +119,12 @@ function MyBasicComponent(props) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -147,16 +149,18 @@ export default MyBasicComponent;
 exports[`Preact > jsx > Javascript Test > Basic OnMount Update 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 function MyBasicOnMountUpdateComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -2273,12 +2277,14 @@ export default Embed;
 exports[`Preact > jsx > Javascript Test > onInit & onMount 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+import { useRef, useEffect } from \\"preact/hooks\\";
 
 function OnInit(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -2294,7 +2300,7 @@ export default OnInit;
 exports[`Preact > jsx > Javascript Test > onInit 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+import { useState, useRef } from \\"preact/hooks\\";
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
@@ -2303,10 +2309,12 @@ export const defaultValues = {
 function OnInit(props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return <div>Default name defined by parent {name}</div>;
 }
@@ -3338,13 +3346,15 @@ export default UseTargetComponent;
 exports[`Preact > jsx > Javascript Test > webComponent 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+import { useRef } from \\"preact/hooks\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -3490,7 +3500,7 @@ export default MyBasicComponent;
 exports[`Preact > jsx > Typescript Test > Basic Context 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, useContext, useEffect } from \\"preact/hooks\\";
+import { useState, useContext, useRef, useEffect } from \\"preact/hooks\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props: any) {
@@ -3503,10 +3513,12 @@ function MyBasicComponent(props: any) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -3531,7 +3543,7 @@ export default MyBasicComponent;
 exports[`Preact > jsx > Typescript Test > Basic OnMount Update 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 export interface Props {
   hi: string;
@@ -3543,9 +3555,11 @@ function MyBasicOnMountUpdateComponent(props: Props) {
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -5958,12 +5972,14 @@ export default Embed;
 exports[`Preact > jsx > Typescript Test > onInit & onMount 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+import { useRef, useEffect } from \\"preact/hooks\\";
 
 function OnInit(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -5979,7 +5995,7 @@ export default OnInit;
 exports[`Preact > jsx > Typescript Test > onInit 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useState, useEffect } from \\"preact/hooks\\";
+import { useState, useRef } from \\"preact/hooks\\";
 
 type Props = {
   name: string;
@@ -5992,10 +6008,12 @@ export const defaultValues = {
 function OnInit(props: Props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return <div>Default name defined by parent {name}</div>;
 }
@@ -7135,13 +7153,15 @@ export default UseTargetComponent;
 exports[`Preact > jsx > Typescript Test > webComponent 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useEffect } from \\"preact/hooks\\";
+import { useRef } from \\"preact/hooks\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -7281,14 +7301,14 @@ export default MyComponent;
 `;
 
 exports[`Preact > svelte > Javascript Test > context 1`] = `
-"'>' expected. (35:13)
-  33 | return (
-  34 |
-> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (36:13)
+  34 | return (
+  35 |
+> 36 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  36 |
   37 |
-  38 |"
+  38 |
+  39 |"
 `;
 
 exports[`Preact > svelte > Javascript Test > each 1`] = `
@@ -7685,14 +7705,14 @@ export default MyComponent;
 `;
 
 exports[`Preact > svelte > Typescript Test > context 1`] = `
-"'>' expected. (35:13)
-  33 | return (
-  34 |
-> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (36:13)
+  34 | return (
+  35 |
+> 36 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  36 |
   37 |
-  38 |"
+  38 |
+  39 |"
 `;
 
 exports[`Preact > svelte > Typescript Test > each 1`] = `

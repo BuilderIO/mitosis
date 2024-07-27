@@ -1,4 +1,4 @@
-import traverse from 'traverse';
+import traverse from 'neotraverse/legacy';
 import { Plugin } from '..';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { mergeOptions } from '../helpers/merge-options';

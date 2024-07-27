@@ -139,7 +139,7 @@ import {
   Linking,
   Pressable,
 } from \\"react-native\\";
-import { useState, useContext, useEffect } from \\"react\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
@@ -152,10 +152,12 @@ function MyBasicComponent(props) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -193,16 +195,18 @@ import {
   Linking,
   Pressable,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 function MyBasicOnMountUpdateComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -3119,12 +3123,14 @@ import {
   Linking,
   Pressable,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function OnInit(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -3153,7 +3159,7 @@ import {
   Linking,
   Pressable,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef } from \\"react\\";
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
@@ -3162,10 +3168,12 @@ export const defaultValues = {
 function OnInit(props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <View>
@@ -4726,13 +4734,15 @@ import {
   Linking,
   Pressable,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -4934,7 +4944,7 @@ import {
   Linking,
   Pressable,
 } from \\"react-native\\";
-import { useState, useContext, useEffect } from \\"react\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props: any) {
@@ -4947,10 +4957,12 @@ function MyBasicComponent(props: any) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -4988,7 +5000,7 @@ import {
   Linking,
   Pressable,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 export interface Props {
   hi: string;
@@ -5000,9 +5012,11 @@ function MyBasicOnMountUpdateComponent(props: Props) {
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -8215,12 +8229,14 @@ import {
   Linking,
   Pressable,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function OnInit(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -8249,7 +8265,7 @@ import {
   Linking,
   Pressable,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef } from \\"react\\";
 
 type Props = {
   name: string;
@@ -8262,10 +8278,12 @@ export const defaultValues = {
 function OnInit(props: Props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <View>
@@ -9934,13 +9952,15 @@ import {
   Linking,
   Pressable,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -9958,6 +9978,33 @@ function MyBasicWebComponent(props: any) {
 }
 
 export default MyBasicWebComponent;
+"
+`;
+
+exports[`React Native > native-wind style 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+} from \\"react-native\\";
+
+function MyComponent(props) {
+  return (
+    <View className=\\"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded\\">
+      <Pressable onPress={(e) => console.log(\\"event\\")}>
+        <Text>Hello</Text>
+      </Pressable>
+    </View>
+  );
+}
+
+export default MyComponent;
 "
 `;
 
@@ -10141,14 +10188,14 @@ export default MyComponent;
 `;
 
 exports[`React Native > svelte > Javascript Test > context 1`] = `
-"'>' expected. (35:13)
-  33 | return (
-  34 |
-> 35 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+"'>' expected. (36:13)
+  34 | return (
+  35 |
+> 36 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
      |             ^
-  36 |
   37 |
-  38 |"
+  38 |
+  39 |"
 `;
 
 exports[`React Native > svelte > Javascript Test > each 1`] = `
@@ -10751,14 +10798,14 @@ export default MyComponent;
 `;
 
 exports[`React Native > svelte > Typescript Test > context 1`] = `
-"'>' expected. (35:13)
-  33 | return (
-  34 |
-> 35 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+"'>' expected. (36:13)
+  34 | return (
+  35 |
+> 36 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
      |             ^
-  36 |
   37 |
-  38 |"
+  38 |
+  39 |"
 `;
 
 exports[`React Native > svelte > Typescript Test > each 1`] = `
@@ -11173,6 +11220,34 @@ function MyComponent(props: any) {
       <View />
       <Text>conditional</Text>
       <Text>{a > 2 ? \\"hello\\" : \\"bye\\"}</Text>
+    </View>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React Native > twrnc style 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+} from \\"react-native\\";
+import tw from \\"twrnc\\";
+
+function MyComponent(props) {
+  return (
+    <View style=\\"{tw\`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded\`}\\">
+      <Pressable onPress={(e) => console.log(\\"event\\")}>
+        <Text>Hello</Text>
+      </Pressable>
     </View>
   );
 }

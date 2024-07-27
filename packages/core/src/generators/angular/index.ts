@@ -38,8 +38,8 @@ import { Binding, MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { isString, kebabCase, uniq } from 'lodash';
+import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
-import traverse from 'traverse';
 import isChildren from '../../helpers/is-children';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { HELPER_FUNCTIONS, getAppropriateTemplateFunctionKeys } from './helpers';
@@ -376,16 +376,11 @@ export const blockToAngular = ({
         code: 'null',
         type: 'property',
       };
-      if (
-        !root.hooks.onMount
-          .map((hook) => hook.code)
-          .join('')
-          .includes(inputsPropsStateName)
-      ) {
-        root.hooks.onMount.push({
-          code: `this.${inputsPropsStateName} = {${allProps}}`,
-          onSSR: false,
-        });
+      if (!root.hooks.onInit?.code.includes(inputsPropsStateName)) {
+        if (!root.hooks.onInit) {
+          root.hooks.onInit = { code: '' };
+        }
+        root.hooks.onInit.code += `\nthis.${inputsPropsStateName} = {${allProps}};\n`;
       }
       if (
         root.hooks.onUpdate &&
@@ -569,10 +564,10 @@ const handleBindings = (
     } else if (item.bindings[key]?.code) {
       if (item.bindings[key]?.type !== 'spread' && !key.startsWith('on')) {
         json.state[newBindingName] = { code: 'null', type: 'property' };
-        json.hooks['onMount'].push({
-          code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
-          onSSR: false,
-        });
+        if (!json.hooks['onInit']?.code) {
+          json.hooks['onInit'] = { code: '' };
+        }
+        json.hooks['onInit'].code += `\nstate.${newBindingName} = ${item.bindings[key]!.code};\n`;
         json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
         json.hooks['onUpdate'].push({
           code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
@@ -592,10 +587,12 @@ const handleBindings = (
         }
       } else {
         json.state[newBindingName] = { code: `null`, type: 'property' };
-        json.hooks['onMount'].push({
-          code: `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
-          onSSR: false,
-        });
+        if (!json.hooks['onInit']?.code) {
+          json.hooks['onInit'] = { code: '' };
+        }
+        json.hooks['onInit'].code += `\nstate.${newBindingName} = {...(${
+          item.bindings[key]!.code
+        })};\n`;
         json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
         json.hooks['onUpdate'].push({
           code: `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
@@ -770,7 +767,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }
       return `public ${variableName} : ${variableType}`;
     });
-    const hasConstructor = Boolean(injectables.length || json.hooks?.onInit);
+    const hasConstructor = Boolean(injectables.length);
 
     const props = getProps(json);
     // prevent jsx props from showing up as @Input
@@ -993,22 +990,29 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
               dynamicComponents.size
                 ? `\nprivate vcRef${options.typescript ? ': ViewContainerRef' : ''},\n`
                 : ''
-            }) {
-            ${
-              !json.hooks?.onInit
-                ? ''
-                : `
-              ${json.hooks.onInit?.code}
-              `
-            }
-          }
+            }) {}
           `
       }
       ${
-        !json.hooks.onMount.length && !dynamicComponents.size
+        !json.hooks.onMount.length && !dynamicComponents.size && !json.hooks.onInit?.code
           ? ''
           : `ngOnInit() {
-              ${stringifySingleScopeOnMount(json)}
+              ${
+                !json.hooks?.onInit
+                  ? ''
+                  : `
+                    ${json.hooks.onInit?.code}
+                    `
+              }
+              ${
+                json.hooks.onMount.length > 0
+                  ? `
+                    if (typeof window !== 'undefined') {
+                      ${stringifySingleScopeOnMount(json)}
+                    }
+                    `
+                  : ''
+              }
               ${
                 dynamicComponents.size
                   ? `
@@ -1030,11 +1034,14 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         !json.hooks.onUpdate?.length
           ? ''
           : `ngOnChanges() {
-              ${json.hooks.onUpdate.reduce((code, hook) => {
-                code += hook.code;
-                return code + '\n';
-              }, '')}
-            }`
+              if (typeof window !== 'undefined') {
+                ${json.hooks.onUpdate?.reduce((code, hook) => {
+                  code += hook.code;
+                  return code + '\n';
+                }, '')}
+              }
+            }
+                `
       }
 
       ${

@@ -21,8 +21,8 @@ import { TranspilerGenerator } from '@/types/transpiler';
 import { uniq } from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
 import hash from 'hash-sum';
+import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
-import traverse from 'traverse';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -94,7 +94,7 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
 
 const DEFAULT_OPTIONS: ToSolidOptions = {
   state: 'signals',
-  stylesType: 'styled-components',
+  stylesType: 'style-tag',
 };
 
 export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
@@ -196,6 +196,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
 
       ${getRefsString(json, options)}
       ${getContextString(json, options)}
+      ${json.hooks.onInit?.code ?? ''}
 
       ${json.hooks.onMount.map((hook) => `onMount(() => { ${hook.code} })`).join('\n')}
       ${
@@ -245,8 +246,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
           .join('\n')}
         ${
           options.stylesType === 'style-tag' && css && css.trim().length > 4
-            ? // We add the jsx attribute so prettier formats this nicely
-              `<style jsx>{\`${css}\`}</style>`
+            ? `<style>{\`${css}\`}</style>`
             : ''
         }
         ${shouldInjectCustomStyles ? `<style>{\`${json.style}\`}</style>` : ''}
