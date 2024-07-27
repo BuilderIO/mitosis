@@ -205,6 +205,36 @@ export const blockToReact = (
   for (const key in json.properties) {
     const value = (json.properties[key] || '').replace(/"/g, '&quot;').replace(/\n/g, '\\n');
 
+        // Handle src for Image
+  // Handle src for Image
+  if (json.name === 'Image' && key === 'src') {
+    let src;
+    const imageSource = json.properties.src;
+    if (imageSource) {
+      const isUrl = /^(http|https):\/\/[^ "]+$/.test(imageSource);
+      src = isUrl ? `{ uri: '${imageSource}' }` : `require('${imageSource}')`;
+      str += `source={${src}} `;
+      continue; // Skip further processing for 'src' in Image
+    }
+  }
+
+    // Handle href for TouchableOpacity
+  if (json.name === 'TouchableOpacity' && key === 'href') {
+    const hrefValue = processBinding(value, options);
+    if (hrefValue) {
+      const onPress = `() => Linking.openURL(${JSON.stringify(hrefValue)})`;
+      str += ` onPress={${onPress}} `;
+    }
+    continue; // Skip further processing for 'href' in TouchableOpacity
+  }
+
+  // Ignore target for TouchableOpacity
+  if (json.name === 'TouchableOpacity' && key === 'target') {
+    continue; // Skip further processing for 'target' in TouchableOpacity
+  }
+
+
+
     if (key === 'class') {
       str = `${str.trim()} className="${value}" `;
     } else if (BINDING_MAPPERS[key]) {
@@ -236,45 +266,30 @@ export const blockToReact = (
 
     const useBindingValue = processBinding(value, options);
 
-    // Handle src for Image
-    if (json.name === 'Image' && key === 'src') {
-      let src;
-      const imageSource = processBinding(value, options);
-      const imgSrc = json.properties.src ?? imageSource;
-      const shouldUseSrcFromProp = Boolean(imgSrc);
-      if (shouldUseSrcFromProp) {
-        const isUrl = json.properties.src
-          ? /^(http|https):\/\/[^ "]+$/.test(json.properties.src)
-          : false;
-        if (isUrl) {
-          src = `{ uri: '${json.properties.src}' }`;
-        } else {
-          src = `require('${json.properties.src}')`;
-        }
-        if (imageSource) {
-          src = `{ uri: ${imageSource} }`;
-        }
-        str += `source = {${src}}`;
-        continue; // Skip further processing for 'src' in Image
-      }
-    }
 
-    if (json.name === 'TouchableOpacity') {
-      if (key === 'href') {
-        const hrefValue = processBinding(value, options);
-        const hrefValueProperties = json.properties.href;
-        const href = hrefValueProperties ?? hrefValue;
-        let onPress;
-        if (hrefValue) {
-          onPress = `() => Linking.openURL(${href})`;
-          str += ` onPress={${onPress}} `;
-          continue; // Skip further processing for 'href' in TouchableOpacity
-        }
-      } else if (key === 'target') {
-        // Remove 'target' prop handling for TouchableOpacity
-        continue;
-      }
+  if (json.name === 'Image' && key === 'src') {
+    let src;
+    const imageSource = processBinding(value, options);
+    if (imageSource) {
+      src = `{ uri: ${imageSource} }`;
+      str += `source={${src}} `;
+      continue; // Skip further processing for 'src' in Image
     }
+  }
+  // Handle href for TouchableOpacity
+  if (json.name === 'TouchableOpacity' && key === 'href') {
+    const hrefValue = processBinding(value, options);
+    if (hrefValue) {
+      const onPress = `() => Linking.openURL(${hrefValue})`;
+      str += ` onPress={${onPress}} `;
+      continue; // Skip further processing for 'href' in TouchableOpacity
+    }
+  }
+
+  // Ignore target for TouchableOpacity
+  if (json.name === 'TouchableOpacity' && key === 'target') {
+    continue; // Skip further processing for 'target' in TouchableOpacity
+  }
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${value})} `;
     } else if (key.startsWith('on')) {
