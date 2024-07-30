@@ -351,14 +351,6 @@ export const blockToAngular = ({
       root.meta._trackByForIndex = fnIndex + 1;
       let code = json.children[0].bindings.key?.code;
 
-      // If code is a function call, check if it's present in the state and append "this."
-      if (code.includes('(') && code.includes(')')) {
-        const fnName = code.slice(0, code.indexOf('('));
-        if (root.state[fnName]) {
-          code = `this.${code}`;
-        }
-      }
-
       root.state[trackByFnName] = {
         code: `${trackByFnName}(${indexName ?? '_'}, ${forName}) { return ${code}; }`,
         type: 'method',
@@ -558,6 +550,7 @@ const handleBindings = (
 
     if (forName) {
       if (item.name === 'For') continue;
+      if (key === 'key') continue;
 
       if (key.startsWith('on')) {
         const { arguments: cusArgs = ['event'] } = item.bindings[key]!;
