@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.15
+
+### Patch Changes
+
+- 383f69f: feat: support more complex RN styling with twrnc
+
 ## 0.3.14
 
 ### Patch Changes

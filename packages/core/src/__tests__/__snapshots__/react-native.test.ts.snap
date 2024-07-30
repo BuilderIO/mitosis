@@ -11232,6 +11232,72 @@ export default MyComponent;
 "
 `;
 
+exports[`React Native > twrnc state complex style 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+} from \\"react-native\\";
+import tw from \\"twrnc\\";
+import { clsx } from \\"clsx\\";
+
+function Button(props) {
+  function buttonClasses() {
+    return clsx(\\"px-4 py-2 rounded transition-colors\\", {
+      \\"bg-blue-500 hover:bg-blue-600 text-white\\": props.type === \\"primary\\",
+      \\"bg-gray-300 hover:bg-gray-400 text-black\\": props.type === \\"secondary\\",
+    });
+  }
+
+  return (
+    <Pressable
+      onPress={(event) => props.onClick}
+      style={tw.style(buttonClasses())}
+    >
+      {props.children}
+    </Pressable>
+  );
+}
+
+export default Button;
+"
+`;
+
+exports[`React Native > twrnc state style 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+import tw from \\"twrnc\\";
+
+function MyBasicComponent(props) {
+  const [classState, setClassState] = useState(() => \\"testClassName\\");
+
+  return (
+    <View style={tw.style(classState)}>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    </View>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`React Native > twrnc style 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -11252,7 +11318,9 @@ import tw from \\"twrnc\\";
 
 function MyComponent(props) {
   return (
-    <View style=\\"{tw\`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded\`}\\">
+    <View
+      style={tw\`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded\`}
+    >
       <Button onPress={(e) => console.log(\\"event\\")}>
         <Text>Hello</Text>
       </Button>
