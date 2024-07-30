@@ -344,9 +344,11 @@ export const blockToAngular = ({
 
     // Check if "key" is present for the first child of the for loop
     if (json.children[0].bindings && json.children[0].bindings.key?.code) {
+      const fnIndex = (root.meta?._trackByForIndex as number) || 0;
       const trackByFnName = `trackBy${
         forName ? forName.charAt(0).toUpperCase() + forName.slice(1) : ''
-      }`;
+      }${fnIndex}`;
+      root.meta._trackByForIndex = fnIndex + 1;
       let code = json.children[0].bindings.key?.code;
 
       // If code is a function call, check if it's present in the state and append "this."
@@ -358,7 +360,7 @@ export const blockToAngular = ({
       }
 
       root.state[trackByFnName] = {
-        code: `${trackByFnName}(${indexName}, ${forName}) { return ${code}; }`,
+        code: `${trackByFnName}(${indexName ?? '_'}, ${forName}) { return ${code}; }`,
         type: 'method',
       };
 

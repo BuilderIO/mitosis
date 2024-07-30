@@ -996,7 +996,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -1280,7 +1280,7 @@ export default class FormComponent {
       );
     }
   }
-  trackByBlock(index, block) {
+  trackByBlock0(index, block) {
     return block.id;
   }
 }
@@ -1835,7 +1835,7 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
       <ng-container
-        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview\\"
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
       >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
@@ -1889,7 +1889,7 @@ export default class SmileReviews {
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
-  trackByReview(index, review) {
+  trackByReview0(index, review) {
     return review.id;
   }
 
@@ -3596,7 +3596,7 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
         <ng-container
-          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData\\"
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
         >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
@@ -3809,7 +3809,7 @@ export default class RenderBlock {
       return RenderComponent;
     }
   }
-  trackByData(index, data) {
+  trackByData0(index, data) {
     return index;
   }
 
@@ -4092,7 +4092,7 @@ import { Component, Input } from \\"@angular/core\\";
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container
-        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem\\"
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
       >
         <div>{{item}}</div>
       </ng-container>
@@ -4106,7 +4106,7 @@ export default class NestedShow {
   @Input() conditionA;
   @Input() items;
 
-  trackByItem(idx, item) {
+  trackByItem0(idx, item) {
     return idx;
   }
 }
@@ -4435,6 +4435,44 @@ export default class SvgComponent {}
   exports: [SvgComponent],
 })
 export class SvgComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > twoForsTrackBy 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
+        <div>{{item}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
+        <div>{{item}}</div>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class MyComponent {
+  items = [1, 2, 3];
+  trackByItem0(_, item) {
+    return item;
+  }
+  trackByItem1(_, item) {
+    return item;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -5751,7 +5789,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -6042,7 +6080,7 @@ export default class FormComponent {
       );
     }
   }
-  trackByBlock(index, block) {
+  trackByBlock0(index, block) {
     return block.id;
   }
 }
@@ -6693,7 +6731,7 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
       <ng-container
-        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview\\"
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
       >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
@@ -6747,7 +6785,7 @@ export default class SmileReviews {
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
-  trackByReview(index, review) {
+  trackByReview0(index, review) {
     return review.id;
   }
 
@@ -8625,7 +8663,7 @@ import type { RepeatData } from \\"./types.js\\";
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
         <ng-container
-          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData\\"
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
         >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
@@ -8838,7 +8876,7 @@ export default class RenderBlock {
       return RenderComponent;
     }
   }
-  trackByData(index, data) {
+  trackByData0(index, data) {
     return index;
   }
 
@@ -9150,7 +9188,7 @@ interface Props {
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container
-        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem\\"
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
       >
         <div>{{item}}</div>
       </ng-container>
@@ -9164,7 +9202,7 @@ export default class NestedShow {
   @Input() conditionA!: Props[\\"conditionA\\"];
   @Input() items!: Props[\\"items\\"];
 
-  trackByItem(idx, item) {
+  trackByItem0(idx, item) {
     return idx;
   }
 }
@@ -9510,6 +9548,44 @@ export default class SvgComponent {}
   exports: [SvgComponent],
 })
 export class SvgComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > twoForsTrackBy 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
+        <div>{{item}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
+        <div>{{item}}</div>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class MyComponent {
+  items = [1, 2, 3];
+  trackByItem0(_, item) {
+    return item;
+  }
+  trackByItem1(_, item) {
+    return item;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
