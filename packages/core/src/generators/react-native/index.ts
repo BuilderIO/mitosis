@@ -174,31 +174,49 @@ const TWRNC_STYLES_PLUGIN: Plugin = () => ({
     post: (json: MitosisComponent) => {
       traverse(json).forEach(function (node) {
         if (isMitosisNode(node)) {
-          let combinedClasses = [
-            node.properties.class,
-            node.properties.className,
-            node.bindings.class,
-            node.bindings.className,
-          ]
+          let staticClasses = [node.properties.class, node.properties.className]
             .filter(Boolean)
             .join(' ');
 
-          if (combinedClasses) {
-            node.properties.style = `{tw\`${combinedClasses}\`}`;
+          let dynamicClasses = [node.bindings.class, node.bindings.className].filter(Boolean);
+
+          if (staticClasses || dynamicClasses.length) {
+            let styleCode = '';
+
+            if (staticClasses) {
+              styleCode = `tw\`${staticClasses}\``;
+            }
+
+            if (dynamicClasses.length) {
+              let dynamicCode = dynamicClasses
+                .map((dc) => (dc && dc.code ? dc.code : null))
+                .filter(Boolean)
+                .join(', ');
+
+              if (dynamicCode) {
+                if (styleCode) {
+                  // If we have both static and dynamic classes
+                  styleCode = `tw.style(${styleCode}, ${dynamicCode})`;
+                } else if (dynamicClasses.length > 1) {
+                  // If we have multiple dynamic classes
+                  styleCode = `tw.style([${dynamicCode}])`;
+                } else {
+                  // If we have a single dynamic class
+                  styleCode = `tw.style(${dynamicCode})`;
+                }
+              }
+            }
+
+            if (styleCode) {
+              node.bindings.style = createSingleBinding({ code: styleCode });
+            }
           }
 
-          if (node.properties.class) {
-            delete node.properties.class;
-          }
-          if (node.properties.className) {
-            delete node.properties.className;
-          }
-          if (node.bindings.class) {
-            delete node.bindings.class;
-          }
-          if (node.bindings.className) {
-            delete node.bindings.className;
-          }
+          // Clean up original class and className properties/bindings
+          delete node.properties.class;
+          delete node.properties.className;
+          delete node.bindings.class;
+          delete node.bindings.className;
         }
       });
     },
