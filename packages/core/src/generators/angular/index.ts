@@ -866,6 +866,15 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     stripMetaProperties(json);
 
+    const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
+      json,
+      options,
+      {
+        childComponents,
+        nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
+      },
+    );
+
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'class',
       valueMapper: processAngularCode({
@@ -876,15 +885,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         stateVars,
       }),
     });
-
-    const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
-      json,
-      options,
-      {
-        childComponents,
-        nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
-      },
-    );
 
     const hostDisplayCss = options.visuallyIgnoreHostElement ? ':host { display: contents; }' : '';
     const styles = css.length ? [hostDisplayCss, css].join('\n') : hostDisplayCss;
