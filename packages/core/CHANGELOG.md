@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.18
+
+### Patch Changes
+
+- 952b3f5: - React Native generator: add support for generating React Native components (`Image`, `TouchableOpacity`, `Button`)
+
 ## 0.3.17
 
 ### Patch Changes
