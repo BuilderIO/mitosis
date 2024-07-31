@@ -1161,7 +1161,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -1449,6 +1449,9 @@ export default class FormComponent {
     }
   }
   node_1_div = null;
+  trackByBlock0(index, block) {
+    return block.id;
+  }
 
   ngOnInit() {
     this.node_1_div = JSON.stringify(this.responseData, null, 2);
@@ -2131,7 +2134,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         ></textarea>
         <button class=\\"button\\" (click)=\\"node_0_button($event)\\">Submit</button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -2191,6 +2196,9 @@ export default class SmileReviews {
     event.preventDefault();
     this.showReviewPrompt = false;
   };
+  trackByReview0(index, review) {
+    return review.id;
+  }
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -3283,9 +3291,13 @@ import { Component, Input } from \\"@angular/core\\";
 export default class MyComponent {
   @Input() componentRef;
 
-  refToUse = !(this.componentRef instanceof Function)
-    ? this.componentRef
-    : null;
+  refToUse = null;
+
+  ngOnInit() {
+    this.refToUse = !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null;
+  }
 }
 
 @NgModule({
@@ -4282,7 +4294,9 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
         ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"node_1_Show\\">
-        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+        <ng-container
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+        >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
@@ -4503,7 +4517,16 @@ export default class RenderBlock {
   node_1_Show = null;
   node_2_Show = null;
   mergedInputs_3ka5tf = null;
+  trackByData0(index, data) {
+    return index;
+  }
   mergedInputs_r2fkt2 = null;
+  trackByChild1(_, child) {
+    return \\"render-block-\\" + child.id;
+  }
+  trackByChild2(_, child) {
+    return \\"block-style-\\" + child.id;
+  }
 
   constructor(private vcRef) {}
 
@@ -4841,7 +4864,9 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"nested-show, NestedShow\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items; let idx = index\\">
+      <ng-container
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+      >
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
@@ -4860,6 +4885,10 @@ import { Component, Input } from \\"@angular/core\\";
 export default class NestedShow {
   @Input() conditionA;
   @Input() items;
+
+  trackByItem0(idx, item) {
+    return idx;
+  }
 }
 
 @NgModule({
@@ -5083,6 +5112,62 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > stateInit 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <div>{{asfas}}</div>
+      <div>{{someCompute}}</div>
+      <div>{{someOtherVal}}</div>
+      <div>{{sf}}</div>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() val;
+
+  add = function add(a, b) {
+    return a + b;
+  };
+  asfas = \\"asga\\";
+  subtract() {
+    return this.someCompute - this.someOtherVal;
+  }
+  someCompute = null;
+  someOtherVal = null;
+  sf = null;
+
+  ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
+    this.someOtherVal = this.val;
+
+    this.sf = this.add(this.val, 34);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -5249,6 +5334,51 @@ export default class SvgComponent {}
   exports: [SvgComponent],
 })
 export class SvgComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > twoForsTrackBy 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
+        <div>{{item}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
+        <div>{{item}}</div>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  items = [1, 2, 3];
+  trackByItem0(_, item) {
+    return item;
+  }
+  trackByItem1(_, item) {
+    return item;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -6767,7 +6897,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -7062,6 +7192,9 @@ export default class FormComponent {
     }
   }
   node_1_div = null;
+  trackByBlock0(index, block) {
+    return block.id;
+  }
 
   ngOnInit() {
     this.node_1_div = JSON.stringify(this.responseData, null, 2);
@@ -7840,7 +7973,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         ></textarea>
         <button class=\\"button\\" (click)=\\"node_0_button($event)\\">Submit</button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -7900,6 +8035,9 @@ export default class SmileReviews {
     event.preventDefault();
     this.showReviewPrompt = false;
   };
+  trackByReview0(index, review) {
+    return review.id;
+  }
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -9089,9 +9227,13 @@ import { Component, Input } from \\"@angular/core\\";
 export default class MyComponent {
   @Input() componentRef!: any;
 
-  refToUse = !(this.componentRef instanceof Function)
-    ? this.componentRef
-    : null;
+  refToUse = null;
+
+  ngOnInit() {
+    this.refToUse = !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null;
+  }
 }
 
 @NgModule({
@@ -10162,7 +10304,9 @@ import type { RepeatData } from \\"./types.js\\";
         ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"node_1_Show\\">
-        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+        <ng-container
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+        >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
@@ -10383,7 +10527,16 @@ export default class RenderBlock {
   node_1_Show = null;
   node_2_Show = null;
   mergedInputs_3ka5tf = null;
+  trackByData0(index, data) {
+    return index;
+  }
   mergedInputs_r2fkt2 = null;
+  trackByChild1(_, child) {
+    return \\"render-block-\\" + child.id;
+  }
+  trackByChild2(_, child) {
+    return \\"block-style-\\" + child.id;
+  }
 
   constructor(private vcRef: ViewContainerRef) {}
 
@@ -10750,7 +10903,9 @@ interface Props {
   selector: \\"nested-show, NestedShow\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items; let idx = index\\">
+      <ng-container
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+      >
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
@@ -10769,6 +10924,10 @@ interface Props {
 export default class NestedShow {
   @Input() conditionA!: Props[\\"conditionA\\"];
   @Input() items!: Props[\\"items\\"];
+
+  trackByItem0(idx, item) {
+    return idx;
+  }
 }
 
 @NgModule({
@@ -11009,6 +11168,62 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > stateInit 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <div>{{asfas}}</div>
+      <div>{{someCompute}}</div>
+      <div>{{someOtherVal}}</div>
+      <div>{{sf}}</div>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() val!: any;
+
+  add = function add(a, b) {
+    return a + b;
+  };
+  asfas = \\"asga\\";
+  subtract() {
+    return this.someCompute - this.someOtherVal;
+  }
+  someCompute = null;
+  someOtherVal = null;
+  sf = null;
+
+  ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
+    this.someOtherVal = this.val;
+
+    this.sf = this.add(this.val, 34);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11175,6 +11390,51 @@ export default class SvgComponent {}
   exports: [SvgComponent],
 })
 export class SvgComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > twoForsTrackBy 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
+        <div>{{item}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
+        <div>{{item}}</div>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  items = [1, 2, 3];
+  trackByItem0(_, item) {
+    return item;
+  }
+  trackByItem1(_, item) {
+    return item;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 

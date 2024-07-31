@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.3.17
+
+### Patch Changes
+
+- 48f5481: fix: angular state initialization referencing other states or props
+
+## 0.3.16
+
+### Patch Changes
+
+- 9abf0ac: Feat: `trackBy` for angular (can be used when the child used inside <For> has a `key` attribute in mitosis)
+
 ## 0.3.15
 
 ### Patch Changes
