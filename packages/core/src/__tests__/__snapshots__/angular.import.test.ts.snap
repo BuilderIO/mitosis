@@ -3135,9 +3135,13 @@ import { Component, Input } from \\"@angular/core\\";
 export default class MyComponent {
   @Input() componentRef;
 
-  refToUse = !(this.componentRef instanceof Function)
-    ? this.componentRef
-    : null;
+  refToUse = null;
+
+  ngOnInit() {
+    this.refToUse = !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null;
+  }
 }
 
 @NgModule({
@@ -4906,6 +4910,62 @@ export default class MyBasicComponent {}
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > stateInit 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <div>{{asfas}}</div>
+      <div>{{someCompute}}</div>
+      <div>{{someOtherVal}}</div>
+      <div>{{sf}}</div>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() val;
+
+  add = function add(a, b) {
+    return a + b;
+  };
+  asfas = \\"asga\\";
+  subtract() {
+    return this.someCompute - this.someOtherVal;
+  }
+  someCompute = null;
+  someOtherVal = null;
+  sf = null;
+
+  ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
+    this.someOtherVal = this.val;
+
+    this.sf = this.add(this.val, 34);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -8809,9 +8869,13 @@ import { Component, Input } from \\"@angular/core\\";
 export default class MyComponent {
   @Input() componentRef!: any;
 
-  refToUse = !(this.componentRef instanceof Function)
-    ? this.componentRef
-    : null;
+  refToUse = null;
+
+  ngOnInit() {
+    this.refToUse = !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null;
+  }
 }
 
 @NgModule({
@@ -10701,6 +10765,62 @@ export default class MyBasicComponent {}
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > stateInit 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <div>{{asfas}}</div>
+      <div>{{someCompute}}</div>
+      <div>{{someOtherVal}}</div>
+      <div>{{sf}}</div>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() val!: any;
+
+  add = function add(a, b) {
+    return a + b;
+  };
+  asfas = \\"asga\\";
+  subtract() {
+    return this.someCompute - this.someOtherVal;
+  }
+  someCompute = null;
+  someOtherVal = null;
+  sf = null;
+
+  ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
+    this.someOtherVal = this.val;
+
+    this.sf = this.add(this.val, 34);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
