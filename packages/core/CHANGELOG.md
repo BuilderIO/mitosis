@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.16
+
+### Patch Changes
+
+- 9abf0ac: Feat: `trackBy` for angular (can be used when the child used inside <For> has a `key` attribute in mitosis)
+
 ## 0.3.15
 
 ### Patch Changes
