@@ -123,7 +123,15 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           } else if (node.name.toLowerCase() === node.name && VALID_HTML_TAGS.includes(node.name)) {
             if (node.name === 'input') {
               node.name = 'TextInput';
-            } else if (node.bindings.onClick) {
+            } else if (node.name === 'img') {
+              node.name = 'Image';
+            } else if (node.name === 'a') {
+              node.name = 'TouchableOpacity';
+            } else if (node.name === 'button') {
+              node.name = 'Button';
+            }
+            // if node is not button or a and still has onClick it needs to pressable
+            else if (node.bindings.onClick) {
               node.name = 'Pressable';
             } else {
               node.name = 'View';

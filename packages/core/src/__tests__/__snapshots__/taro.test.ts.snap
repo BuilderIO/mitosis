@@ -1077,7 +1077,7 @@ function Image(props) {
               className=\\"image\\"
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
-              src={props.image}
+              source={{ uri: props.image }}
               onLoad={(event) => setLoaded()}
               srcset={props.srcset}
               sizes={props.sizes}
@@ -1117,7 +1117,7 @@ function ImgStateComponent(props) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <Image src={item} key={itemIndex} />
+        <Image source={{ uri: item }} key={itemIndex} />
       ))}
     </View>
   );
@@ -1142,7 +1142,7 @@ function ImgComponent(props) {
       {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
-      src={props.imgSrc}
+      source={{ uri: props.imgSrc }}
     />
   );
 }
@@ -1401,7 +1401,7 @@ function SmileReviews(props) {
         ) : null}
         {reviews?.map((review, index) => (
           <View className=\\"review\\" key={review.id}>
-            <Image className=\\"image\\" src={review.avatar} />
+            <Image className=\\"image\\" source={{ uri: review.avatar }} />
             <View>
               <View>N: {index}</View>
               <View>{review.author}</View>
@@ -4560,7 +4560,7 @@ function Image(props: ImageProps) {
               className=\\"image\\"
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
-              src={props.image}
+              source={{ uri: props.image }}
               onLoad={(event) => setLoaded()}
               srcset={props.srcset}
               sizes={props.sizes}
@@ -4600,7 +4600,7 @@ function ImgStateComponent(props: any) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <Image src={item} key={itemIndex} />
+        <Image source={{ uri: item }} key={itemIndex} />
       ))}
     </View>
   );
@@ -4643,7 +4643,7 @@ function ImgComponent(props: ImgProps) {
       {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
-      src={props.imgSrc}
+      source={{ uri: props.imgSrc }}
     />
   );
 }
@@ -4960,7 +4960,7 @@ function SmileReviews(props: SmileReviewsProps) {
         ) : null}
         {reviews?.map((review, index) => (
           <View className=\\"review\\" key={review.id}>
-            <Image className=\\"image\\" src={review.avatar} />
+            <Image className=\\"image\\" source={{ uri: review.avatar }} />
             <View>
               <View>N: {index}</View>
               <View>{review.author}</View>
