@@ -285,6 +285,7 @@ const ANGULAR_TESTS: Tests = {
   dynamicComponentWithEventArg: getRawFile(
     './data/angular/dynamic-component-with-event-args.raw.tsx',
   ),
+  twoForsTrackBy: getRawFile('./data/angular/two-fors.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {
