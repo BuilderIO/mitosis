@@ -1642,13 +1642,12 @@ exports[`Parse JSX > Javascript > BasicRefPrevious 1`] = `
       "code": "export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null); // Store current value in ref
-
+  let ref = useRef(null);
+  // Store current value in ref
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
-
   return ref;
 }",
       "isFunction": true,
@@ -2303,15 +2302,12 @@ exports[`Parse JSX > Javascript > CustomCode 1`] = `
   if (elem && typeof window !== 'undefined') {
     /** @type {HTMLScriptElement[]} */
     const scripts = elem.getElementsByTagName('script');
-
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
-
       if (script.src) {
         if (state.scriptsInserted.includes(script.src)) {
           continue;
         }
-
         state.scriptsInserted.push(script.src);
         const newScript = document.createElement('script');
         newScript.async = true;
@@ -2321,7 +2317,6 @@ exports[`Parse JSX > Javascript > CustomCode 1`] = `
         if (state.scriptsRun.includes(script.innerText)) {
           continue;
         }
-
         try {
           state.scriptsRun.push(script.innerText);
           new Function(script.innerText)();
@@ -2406,15 +2401,12 @@ exports[`Parse JSX > Javascript > Embed 1`] = `
   if (elem && typeof window !== 'undefined') {
     /** @type {HTMLScriptElement[]} */
     const scripts = elem.getElementsByTagName('script');
-
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
-
       if (script.src) {
         if (state.scriptsInserted.includes(script.src)) {
           continue;
         }
-
         state.scriptsInserted.push(script.src);
         const newScript = document.createElement('script');
         newScript.async = true;
@@ -2424,7 +2416,6 @@ exports[`Parse JSX > Javascript > Embed 1`] = `
         if (state.scriptsRun.includes(script.innerText)) {
           continue;
         }
-
         try {
           state.scriptsRun.push(script.innerText);
           new Function(script.innerText)();
@@ -2749,7 +2740,6 @@ exports[`Parse JSX > Javascript > Form 1`] = `
     "onSubmit": {
       "code": "onSubmit(event) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === 'email';
-
   if (props.sendSubmissionsTo === 'zapier') {
     event.preventDefault();
   } else if (sendWithJs) {
@@ -2757,17 +2747,16 @@ exports[`Parse JSX > Javascript > Form 1`] = `
       event.preventDefault();
       return;
     }
-
     event.preventDefault();
     const el = event.currentTarget;
     const headers = props.customHeaders || {};
     let body;
-    const formData = new FormData(el); // TODO: maybe support null
+    const formData = new FormData(el);
 
+    // TODO: maybe support null
     const formPairs = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!el.name).map(el => {
       let value;
       const key = el.name;
-
       if (el instanceof HTMLInputElement) {
         if (el.type === 'radio') {
           if (el.checked) {
@@ -2781,7 +2770,6 @@ exports[`Parse JSX > Javascript > Form 1`] = `
           value = el.checked;
         } else if (el.type === 'number' || el.type === 'range') {
           const num = el.valueAsNumber;
-
           if (!isNaN(num)) {
             value = num;
           }
@@ -2794,28 +2782,26 @@ exports[`Parse JSX > Javascript > Form 1`] = `
       } else {
         value = el.value;
       }
-
       return {
         key,
         value
       };
     });
     let contentType = props.contentType;
-
     if (props.sendSubmissionsTo === 'email') {
       contentType = 'multipart/form-data';
     }
-
     Array.from(formPairs).forEach(({
       value
     }) => {
       if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
         contentType = 'multipart/form-data';
       }
-    }); // TODO: send as urlEncoded or multipart by default
+    });
+
+    // TODO: send as urlEncoded or multipart by default
     // because of ease of use and reliability in browser API
     // for encoding the form?
-
     if (contentType !== 'application/json') {
       body = formData;
     } else {
@@ -2829,65 +2815,51 @@ exports[`Parse JSX > Javascript > Form 1`] = `
       });
       body = JSON.stringify(json);
     }
-
     if (contentType && contentType !== 'multipart/form-data') {
-      if (
-      /* Zapier doesn't allow content-type header to be sent from browsers */
+      if ( /* Zapier doesn't allow content-type header to be sent from browsers */
       !(sendWithJs && props.action?.includes('zapier.com'))) {
         headers['content-type'] = contentType;
       }
     }
-
     const presubmitEvent = new CustomEvent('presubmit', {
       detail: {
         body
       }
     });
-
     if (formRef) {
       formRef.dispatchEvent(presubmitEvent);
-
       if (presubmitEvent.defaultPrevented) {
         return;
       }
     }
-
     state.formState = 'sending';
     const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`;
-    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action
-    /* TODO: throw error if no action URL */
-    , {
+    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action /* TODO: throw error if no action URL */, {
       body,
       headers,
       method: props.method || 'post'
     }).then(async res => {
       let body;
       const contentType = res.headers.get('content-type');
-
       if (contentType && contentType.indexOf('application/json') !== -1) {
         body = await res.json();
       } else {
         body = await res.text();
       }
-
       if (!res.ok && props.errorMessagePath) {
         /* TODO: allow supplying an error formatter function */
         let message = get(body, props.errorMessagePath);
-
         if (message) {
           if (typeof message !== 'string') {
             /* TODO: ideally convert json to yaml so it woul dbe like
              error: - email has been taken */
             message = JSON.stringify(message);
           }
-
           state.formErrorMessage = message;
         }
       }
-
       state.responseData = body;
       state.formState = res.ok ? 'success' : 'error';
-
       if (res.ok) {
         const submitSuccessEvent = new CustomEvent('submit:success', {
           detail: {
@@ -2895,23 +2867,18 @@ exports[`Parse JSX > Javascript > Form 1`] = `
             body
           }
         });
-
         if (formRef) {
           formRef.dispatchEvent(submitSuccessEvent);
-
           if (submitSuccessEvent.defaultPrevented) {
             return;
           }
           /* TODO: option to turn this on/off? */
-
-
           if (props.resetFormOnSubmit !== false) {
             formRef.reset();
           }
         }
+
         /* TODO: client side route event first that can be preventDefaulted */
-
-
         if (props.successUrl) {
           if (formRef) {
             const event = new CustomEvent('route', {
@@ -2920,7 +2887,6 @@ exports[`Parse JSX > Javascript > Form 1`] = `
               }
             });
             formRef.dispatchEvent(event);
-
             if (!event.defaultPrevented) {
               location.href = props.successUrl;
             }
@@ -2935,15 +2901,12 @@ exports[`Parse JSX > Javascript > Form 1`] = `
           error: err
         }
       });
-
       if (formRef) {
         formRef.dispatchEvent(submitErrorEvent);
-
         if (submitErrorEvent.defaultPrevented) {
           return;
         }
       }
-
       state.responseData = err;
       state.formState = 'error';
     });
@@ -3102,7 +3065,6 @@ exports[`Parse JSX > Javascript > Image 1`] = `
     if (pictureRef) {
       const rect = pictureRef.getBoundingClientRect();
       const buffer = window.innerHeight / 2;
-
       if (rect.top < window.innerHeight + buffer) {
         state.load = true;
         state.scrollListener = null;
@@ -3110,7 +3072,6 @@ exports[`Parse JSX > Javascript > Image 1`] = `
       }
     }
   };
-
   state.scrollListener = listener;
   window.addEventListener('scroll', listener, {
     capture: true,
@@ -6550,7 +6511,6 @@ exports[`Parse JSX > Javascript > multipleOnUpdateWithDeps 1`] = `
     "onUpdate": [
       {
         "code": "console.log('Runs when a or b changes', state.a, state.b);
-
 if (state.a === 'a') {
   state.a = 'b';
 }",
@@ -6558,7 +6518,6 @@ if (state.a === 'a') {
       },
       {
         "code": "console.log('Runs when c or d changes', state.c, state.d);
-
 if (state.a === 'a') {
   state.a = 'b';
 }",
@@ -7981,7 +7940,8 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
     "attributes": {
       "code": "get attributes() {
   const blockProperties = getBlockProperties(state.useBlock);
-  return { ...blockProperties,
+  return {
+    ...blockProperties,
     ...(TARGET === 'reactNative' ? {
       style: getReactNativeBlockStyles({
         block: state.useBlock,
@@ -8027,13 +7987,10 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
     context: props.context.context,
     shouldEvaluateBindings: false
   }).component?.name;
-
   if (!componentName) {
     return null;
   }
-
   const ref = props.context.registeredComponents[componentName];
-
   if (!ref) {
     // TODO: Public doc page with more info about this message
     console.warn(\`
@@ -8051,7 +8008,6 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
   if (TARGET !== 'reactNative') {
     return {};
   }
-
   const styles = getReactNativeBlockStyles({
     block: state.useBlock,
     context: props.context,
@@ -8066,14 +8022,15 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
   return {
     blockChildren: state.useChildren,
     componentRef: state.component?.component,
-    componentOptions: { ...getBlockComponentOptions(state.useBlock),
-
+    componentOptions: {
+      ...getBlockComponentOptions(state.useBlock),
       /**
        * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
        * they are provided to the component itself directly.
        */
       ...(state.shouldWrap ? {} : {
-        attributes: { ...state.attributes,
+        attributes: {
+          ...state.attributes,
           ...state.actions
         }
       }),
@@ -8107,26 +8064,24 @@ exports[`Parse JSX > Javascript > renderBlock 1`] = `
     repeat,
     ...blockWithoutRepeat
   } = props.block;
-
   if (!repeat?.collection) {
     return undefined;
   }
-
   const itemsArray = evaluate({
     code: repeat.collection,
     state: props.context.state,
     context: props.context.context
   });
-
   if (!Array.isArray(itemsArray)) {
     return undefined;
   }
-
   const collectionName = repeat.collection.split('.').pop();
   const itemNameToUse = repeat.itemName || (collectionName ? collectionName + 'Item' : 'item');
   const repeatArray = itemsArray.map((item, index) => ({
-    context: { ...props.context,
-      state: { ...props.context.state,
+    context: {
+      ...props.context,
+      state: {
+        ...props.context.state,
         $index: index,
         $item: item,
         [itemNameToUse]: item,
@@ -12425,13 +12380,12 @@ exports[`Parse JSX > Typescript > BasicRefPrevious 1`] = `
       "code": "export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
-
+  let ref = useRef<T>(null);
+  // Store current value in ref
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
-
   return ref;
 }",
       "isFunction": true,
@@ -12763,17 +12717,18 @@ exports[`Parse JSX > Typescript > Columns 1`] = `
   "subComponents": [],
   "types": [
     "type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
-
+  content: any;
+  // TODO: Implement this when support for dynamic CSS lands
   width?: number;
 }",
     "export interface ColumnProps {
-  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+  columns?: Column[];
 
-  space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-  stackColumnsAt?: 'tablet' | 'mobile' | 'never'; // TODO: Implement this when support for dynamic CSS lands
-
+  // TODO: Implement this when support for dynamic CSS lands
+  space?: number;
+  // TODO: Implement this when support for dynamic CSS lands
+  stackColumnsAt?: 'tablet' | 'mobile' | 'never';
+  // TODO: Implement this when support for dynamic CSS lands
   reverseColumnsWhenStacked?: boolean;
 }",
   ],
@@ -13149,15 +13104,12 @@ exports[`Parse JSX > Typescript > CustomCode 1`] = `
   if (elem && typeof window !== 'undefined') {
     /** @type {HTMLScriptElement[]} */
     const scripts = elem.getElementsByTagName('script');
-
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
-
       if (script.src) {
         if (state.scriptsInserted.includes(script.src)) {
           continue;
         }
-
         state.scriptsInserted.push(script.src);
         const newScript = document.createElement('script');
         newScript.async = true;
@@ -13167,7 +13119,6 @@ exports[`Parse JSX > Typescript > CustomCode 1`] = `
         if (state.scriptsRun.includes(script.innerText)) {
           continue;
         }
-
         try {
           state.scriptsRun.push(script.innerText);
           new Function(script.innerText)();
@@ -13260,15 +13211,12 @@ exports[`Parse JSX > Typescript > Embed 1`] = `
   if (elem && typeof window !== 'undefined') {
     /** @type {HTMLScriptElement[]} */
     const scripts = elem.getElementsByTagName('script');
-
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
-
       if (script.src) {
         if (state.scriptsInserted.includes(script.src)) {
           continue;
         }
-
         state.scriptsInserted.push(script.src);
         const newScript = document.createElement('script');
         newScript.async = true;
@@ -13278,7 +13226,6 @@ exports[`Parse JSX > Typescript > Embed 1`] = `
         if (state.scriptsRun.includes(script.innerText)) {
           continue;
         }
-
         try {
           state.scriptsRun.push(script.innerText);
           new Function(script.innerText)();
@@ -13614,7 +13561,6 @@ exports[`Parse JSX > Typescript > Form 1`] = `
   currentTarget: HTMLFormElement;
 }) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === 'email';
-
   if (props.sendSubmissionsTo === 'zapier') {
     event.preventDefault();
   } else if (sendWithJs) {
@@ -13622,20 +13568,19 @@ exports[`Parse JSX > Typescript > Form 1`] = `
       event.preventDefault();
       return;
     }
-
     event.preventDefault();
     const el = event.currentTarget;
     const headers = props.customHeaders || {};
     let body: any;
-    const formData = new FormData(el); // TODO: maybe support null
+    const formData = new FormData(el);
 
+    // TODO: maybe support null
     const formPairs: {
       key: string;
       value: File | boolean | number | string | FileList;
     }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!(el as HTMLInputElement).name).map(el => {
       let value: any;
       const key = (el as HTMLImageElement).name;
-
       if (el instanceof HTMLInputElement) {
         if (el.type === 'radio') {
           if (el.checked) {
@@ -13649,7 +13594,6 @@ exports[`Parse JSX > Typescript > Form 1`] = `
           value = el.checked;
         } else if (el.type === 'number' || el.type === 'range') {
           const num = el.valueAsNumber;
-
           if (!isNaN(num)) {
             value = num;
           }
@@ -13662,28 +13606,26 @@ exports[`Parse JSX > Typescript > Form 1`] = `
       } else {
         value = (el as HTMLInputElement).value;
       }
-
       return {
         key,
         value
       };
     });
     let contentType = props.contentType;
-
     if (props.sendSubmissionsTo === 'email') {
       contentType = 'multipart/form-data';
     }
-
     Array.from(formPairs).forEach(({
       value
     }) => {
       if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
         contentType = 'multipart/form-data';
       }
-    }); // TODO: send as urlEncoded or multipart by default
+    });
+
+    // TODO: send as urlEncoded or multipart by default
     // because of ease of use and reliability in browser API
     // for encoding the form?
-
     if (contentType !== 'application/json') {
       body = formData;
     } else {
@@ -13697,65 +13639,51 @@ exports[`Parse JSX > Typescript > Form 1`] = `
       });
       body = JSON.stringify(json);
     }
-
     if (contentType && contentType !== 'multipart/form-data') {
-      if (
-      /* Zapier doesn't allow content-type header to be sent from browsers */
+      if ( /* Zapier doesn't allow content-type header to be sent from browsers */
       !(sendWithJs && props.action?.includes('zapier.com'))) {
         headers['content-type'] = contentType;
       }
     }
-
     const presubmitEvent = new CustomEvent('presubmit', {
       detail: {
         body
       }
     });
-
     if (formRef) {
       formRef.dispatchEvent(presubmitEvent);
-
       if (presubmitEvent.defaultPrevented) {
         return;
       }
     }
-
     state.formState = 'sending';
     const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`;
-    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action!
-    /* TODO: throw error if no action URL */
-    , {
+    fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action! /* TODO: throw error if no action URL */, {
       body,
       headers,
       method: props.method || 'post'
     }).then(async res => {
       let body;
       const contentType = res.headers.get('content-type');
-
       if (contentType && contentType.indexOf('application/json') !== -1) {
         body = await res.json();
       } else {
         body = await res.text();
       }
-
       if (!res.ok && props.errorMessagePath) {
         /* TODO: allow supplying an error formatter function */
         let message = get(body, props.errorMessagePath);
-
         if (message) {
           if (typeof message !== 'string') {
             /* TODO: ideally convert json to yaml so it woul dbe like
              error: - email has been taken */
             message = JSON.stringify(message);
           }
-
           state.formErrorMessage = message;
         }
       }
-
       state.responseData = body;
       state.formState = res.ok ? 'success' : 'error';
-
       if (res.ok) {
         const submitSuccessEvent = new CustomEvent('submit:success', {
           detail: {
@@ -13763,23 +13691,18 @@ exports[`Parse JSX > Typescript > Form 1`] = `
             body
           }
         });
-
         if (formRef) {
           formRef.dispatchEvent(submitSuccessEvent);
-
           if (submitSuccessEvent.defaultPrevented) {
             return;
           }
           /* TODO: option to turn this on/off? */
-
-
           if (props.resetFormOnSubmit !== false) {
             formRef.reset();
           }
         }
+
         /* TODO: client side route event first that can be preventDefaulted */
-
-
         if (props.successUrl) {
           if (formRef) {
             const event = new CustomEvent('route', {
@@ -13788,7 +13711,6 @@ exports[`Parse JSX > Typescript > Form 1`] = `
               }
             });
             formRef.dispatchEvent(event);
-
             if (!event.defaultPrevented) {
               location.href = props.successUrl;
             }
@@ -13803,15 +13725,12 @@ exports[`Parse JSX > Typescript > Form 1`] = `
           error: err
         }
       });
-
       if (formRef) {
         formRef.dispatchEvent(submitErrorEvent);
-
         if (submitErrorEvent.defaultPrevented) {
           return;
         }
       }
-
       state.responseData = err;
       state.formState = 'error';
     });
@@ -13995,7 +13914,6 @@ exports[`Parse JSX > Typescript > Image 1`] = `
     if (pictureRef) {
       const rect = pictureRef.getBoundingClientRect();
       const buffer = window.innerHeight / 2;
-
       if (rect.top < window.innerHeight + buffer) {
         state.load = true;
         state.scrollListener = null;
@@ -14003,7 +13921,6 @@ exports[`Parse JSX > Typescript > Image 1`] = `
       }
     }
   };
-
   state.scrollListener = listener;
   window.addEventListener('scroll', listener, {
     capture: true,
@@ -14070,6 +13987,7 @@ exports[`Parse JSX > Typescript > Image 1`] = `
   "subComponents": [],
   "types": [
     "// TODO: AMP Support?
+
 export interface ImageProps {
   _class?: string;
   image: string;
@@ -14079,12 +13997,12 @@ export interface ImageProps {
   width?: number;
   altText?: string;
   backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-
-  srcset?: string; // TODO: Implement support for custom aspect ratios
-
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
-
+  backgroundPosition?: string;
+  // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+  srcset?: string;
+  // TODO: Implement support for custom aspect ratios
+  aspectRatio?: number;
+  // TODO: This might not work as expected in terms of positioning
   children?: any;
 }",
   ],
@@ -14457,8 +14375,8 @@ exports[`Parse JSX > Typescript > RawText 1`] = `
   "types": [
     "export interface RawTextProps {
   attributes?: any;
-  text?: string; // builderBlock?: any;
-
+  text?: string;
+  // builderBlock?: any;
 }",
   ],
 }
@@ -17113,7 +17031,6 @@ exports[`Parse JSX > Typescript > defaultProps 1`] = `
   attributes?: any;
   text?: string;
   buttonText?: string; // no default value
-
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -17694,7 +17611,6 @@ exports[`Parse JSX > Typescript > multipleOnUpdateWithDeps 1`] = `
     "onUpdate": [
       {
         "code": "console.log('Runs when a or b changes', state.a, state.b);
-
 if (state.a === 'a') {
   state.a = 'b';
 }",
@@ -17702,7 +17618,6 @@ if (state.a === 'a') {
       },
       {
         "code": "console.log('Runs when c or d changes', state.c, state.d);
-
 if (state.a === 'a') {
   state.a = 'b';
 }",
@@ -19231,7 +19146,8 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
     "attributes": {
       "code": "get attributes() {
   const blockProperties = getBlockProperties(state.useBlock);
-  return { ...blockProperties,
+  return {
+    ...blockProperties,
     ...(TARGET === 'reactNative' ? {
       style: getReactNativeBlockStyles({
         block: state.useBlock,
@@ -19277,13 +19193,10 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
     context: props.context.context,
     shouldEvaluateBindings: false
   }).component?.name;
-
   if (!componentName) {
     return null;
   }
-
   const ref = props.context.registeredComponents[componentName];
-
   if (!ref) {
     // TODO: Public doc page with more info about this message
     console.warn(\`
@@ -19301,7 +19214,6 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
   if (TARGET !== 'reactNative') {
     return {};
   }
-
   const styles = getReactNativeBlockStyles({
     block: state.useBlock,
     context: props.context,
@@ -19316,14 +19228,15 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
   return {
     blockChildren: state.useChildren,
     componentRef: state.component?.component,
-    componentOptions: { ...getBlockComponentOptions(state.useBlock),
-
+    componentOptions: {
+      ...getBlockComponentOptions(state.useBlock),
       /**
        * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
        * they are provided to the component itself directly.
        */
       ...(state.shouldWrap ? {} : {
-        attributes: { ...state.attributes,
+        attributes: {
+          ...state.attributes,
           ...state.actions
         }
       }),
@@ -19357,26 +19270,24 @@ exports[`Parse JSX > Typescript > renderBlock 1`] = `
     repeat,
     ...blockWithoutRepeat
   } = props.block;
-
   if (!repeat?.collection) {
     return undefined;
   }
-
   const itemsArray = evaluate({
     code: repeat.collection,
     state: props.context.state,
     context: props.context.context
   });
-
   if (!Array.isArray(itemsArray)) {
     return undefined;
   }
-
   const collectionName = repeat.collection.split('.').pop();
   const itemNameToUse = repeat.itemName || (collectionName ? collectionName + 'Item' : 'item');
   const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
-    context: { ...props.context,
-      state: { ...props.context.state,
+    context: {
+      ...props.context,
+      state: {
+        ...props.context.state,
         $index: index,
         $item: item,
         [itemNameToUse]: item,
@@ -22278,15 +22189,17 @@ exports[`Parse JSX > parseStateObject 1`] = `
 {
   "allRegisteredComponents": {
     "code": "get allRegisteredComponents() {
-  const allComponentsArray = [...getDefaultRegisteredComponents(), // While this \`components\` object is deprecated, we must maintain support for it.
+  const allComponentsArray = [...getDefaultRegisteredComponents(),
+  // While this \`components\` object is deprecated, we must maintain support for it.
   // Since users are able to override our default components, we need to make sure that we do not break such
   // existing usage.
   // This is why we spread \`components\` after the default Builder.io components, but before the \`props.customComponents\`,
   // which is the new standard way of providing custom components, and must therefore take precedence.
   ...components, ...(props.customComponents || [])];
-  const allComponents = allComponentsArray.reduce((acc, curr) => ({ ...acc,
+  const allComponents = allComponentsArray.reduce((acc, curr) => ({
+    ...acc,
     [curr.name]: curr
-  }), ({} as RegisteredComponents));
+  }), {} as RegisteredComponents);
   return allComponents;
 }",
     "type": "getter",
@@ -22299,7 +22212,8 @@ exports[`Parse JSX > parseStateObject 1`] = `
   },
   "contentState": {
     "code": "get contentState() {
-  return { ...props.content?.data?.state,
+  return {
+    ...props.content?.data?.state,
     ...props.data,
     ...state.overrideState
   };
@@ -22341,7 +22255,6 @@ exports[`Parse JSX > parseStateObject 1`] = `
     "code": "evaluateJsCode() {
   // run any dynamic JS code attached to content
   const jsCode = state.useContent?.data?.jsCode;
-
   if (jsCode) {
     evaluate({
       code: jsCode,
@@ -22369,12 +22282,12 @@ exports[`Parse JSX > parseStateObject 1`] = `
     const fetch = await getFetch();
     const response = await fetch(url);
     const json = await response.json();
-    const newOverrideState = { ...state.overrideState,
+    const newOverrideState = {
+      ...state.overrideState,
       [key]: json
     };
     state.overrideState = newOverrideState;
   };
-
   fetchAndSetState();
 }",
     "type": "method",
@@ -22413,7 +22326,6 @@ exports[`Parse JSX > parseStateObject 1`] = `
   const {
     data
   } = event;
-
   if (data) {
     switch (data.type) {
       case 'builder.contentUpdate':
@@ -22421,14 +22333,11 @@ exports[`Parse JSX > parseStateObject 1`] = `
           const messageContent = data.data;
           const key = messageContent.key || messageContent.alias || messageContent.entry || messageContent.modelName;
           const contentData = messageContent.data;
-
           if (key === props.model) {
             state.overrideContent = contentData;
           }
-
           break;
         }
-
       case 'builder.patchUpdates':
         {
           // TODO
@@ -22467,9 +22376,11 @@ exports[`Parse JSX > parseStateObject 1`] = `
   },
   "useContent": {
     "code": "get useContent() {
-  const mergedContent: BuilderContent = { ...props.content,
+  const mergedContent: BuilderContent = {
+    ...props.content,
     ...state.overrideContent,
-    data: { ...props.content?.data,
+    data: {
+      ...props.content?.data,
       ...props.data,
       ...state.overrideContent?.data
     }

@@ -468,13 +468,12 @@ import { defineComponent } from \\"vue\\";
 export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null); // Store current value in ref
-
+  let ref = useRef(null);
+  // Store current value in ref
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
-
   return ref;
 }
 
@@ -694,15 +693,12 @@ export default defineComponent({
       if (this.$refs.elem && typeof window !== \\"undefined\\") {
         /** @type {HTMLScriptElement[]} */
         const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
-
         for (let i = 0; i < scripts.length; i++) {
           const script = scripts[i];
-
           if (script.src) {
             if (this.scriptsInserted.includes(script.src)) {
               continue;
             }
-
             this.scriptsInserted.push(script.src);
             const newScript = document.createElement(\\"script\\");
             newScript.async = true;
@@ -719,7 +715,6 @@ export default defineComponent({
             if (this.scriptsRun.includes(script.innerText)) {
               continue;
             }
-
             try {
               this.scriptsRun.push(script.innerText);
               new Function(script.innerText)();
@@ -766,15 +761,12 @@ export default defineComponent({
       if (this.$refs.elem && typeof window !== \\"undefined\\") {
         /** @type {HTMLScriptElement[]} */
         const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
-
         for (let i = 0; i < scripts.length; i++) {
           const script = scripts[i];
-
           if (script.src) {
             if (this.scriptsInserted.includes(script.src)) {
               continue;
             }
-
             this.scriptsInserted.push(script.src);
             const newScript = document.createElement(\\"script\\");
             newScript.async = true;
@@ -791,7 +783,6 @@ export default defineComponent({
             if (this.scriptsRun.includes(script.innerText)) {
               continue;
             }
-
             try {
               this.scriptsRun.push(script.innerText);
               new Function(script.innerText)();
@@ -915,7 +906,6 @@ export default defineComponent({
   methods: {
     onSubmit(event) {
       const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
-
       if (this.sendSubmissionsTo === \\"zapier\\") {
         event.preventDefault();
       } else if (sendWithJs) {
@@ -923,13 +913,13 @@ export default defineComponent({
           event.preventDefault();
           return;
         }
-
         event.preventDefault();
         const el = event.currentTarget;
         const headers = this.customHeaders || {};
         let body;
-        const formData = new FormData(el); // TODO: maybe support null
+        const formData = new FormData(el);
 
+        // TODO: maybe support null
         const formPairs = Array.from(
           event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
         )
@@ -937,7 +927,6 @@ export default defineComponent({
           .map((el) => {
             let value;
             const key = el.name;
-
             if (el instanceof HTMLInputElement) {
               if (el.type === \\"radio\\") {
                 if (el.checked) {
@@ -951,7 +940,6 @@ export default defineComponent({
                 value = el.checked;
               } else if (el.type === \\"number\\" || el.type === \\"range\\") {
                 const num = el.valueAsNumber;
-
                 if (!isNaN(num)) {
                   value = num;
                 }
@@ -964,18 +952,15 @@ export default defineComponent({
             } else {
               value = el.value;
             }
-
             return {
               key,
               value,
             };
           });
         let contentType = this.contentType;
-
         if (this.sendSubmissionsTo === \\"email\\") {
           contentType = \\"multipart/form-data\\";
         }
-
         Array.from(formPairs).forEach(({ value }) => {
           if (
             value instanceof File ||
@@ -984,10 +969,11 @@ export default defineComponent({
           ) {
             contentType = \\"multipart/form-data\\";
           }
-        }); // TODO: send as urlEncoded or multipart by default
+        });
+
+        // TODO: send as urlEncoded or multipart by default
         // because of ease of use and reliability in browser API
         // for encoding the form?
-
         if (contentType !== \\"application/json\\") {
           body = formData;
         } else {
@@ -998,7 +984,6 @@ export default defineComponent({
           });
           body = JSON.stringify(json);
         }
-
         if (contentType && contentType !== \\"multipart/form-data\\") {
           if (
             /* Zapier doesn't allow content-type header to be sent from browsers */
@@ -1007,21 +992,17 @@ export default defineComponent({
             headers[\\"content-type\\"] = contentType;
           }
         }
-
         const presubmitEvent = new CustomEvent(\\"presubmit\\", {
           detail: {
             body,
           },
         });
-
         if (this.$refs.formRef) {
           this.$refs.formRef.dispatchEvent(presubmitEvent);
-
           if (presubmitEvent.defaultPrevented) {
             return;
           }
         }
-
         this.formState = \\"sending\\";
         const formUrl = \`\${
           builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -1029,8 +1010,9 @@ export default defineComponent({
           this.sendSubmissionsToEmail || \\"\\"
         )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
         fetch(
-          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
-          /* TODO: throw error if no action URL */
+          this.sendSubmissionsTo === \\"email\\"
+            ? formUrl
+            : this.action /* TODO: throw error if no action URL */,
           {
             body,
             headers,
@@ -1040,31 +1022,25 @@ export default defineComponent({
           async (res) => {
             let body;
             const contentType = res.headers.get(\\"content-type\\");
-
             if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
               body = await res.json();
             } else {
               body = await res.text();
             }
-
             if (!res.ok && this.errorMessagePath) {
               /* TODO: allow supplying an error formatter function */
               let message = get(body, this.errorMessagePath);
-
               if (message) {
                 if (typeof message !== \\"string\\") {
                   /* TODO: ideally convert json to yaml so it woul dbe like
            error: - email has been taken */
                   message = JSON.stringify(message);
                 }
-
                 this.formErrorMessage = message;
               }
             }
-
             this.responseData = body;
             this.formState = res.ok ? \\"success\\" : \\"error\\";
-
             if (res.ok) {
               const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
                 detail: {
@@ -1072,21 +1048,18 @@ export default defineComponent({
                   body,
                 },
               });
-
               if (this.$refs.formRef) {
                 this.$refs.formRef.dispatchEvent(submitSuccessEvent);
-
                 if (submitSuccessEvent.defaultPrevented) {
                   return;
                 }
                 /* TODO: option to turn this on/off? */
-
                 if (this.resetFormOnSubmit !== false) {
                   this.$refs.formRef.reset();
                 }
               }
-              /* TODO: client side route event first that can be preventDefaulted */
 
+              /* TODO: client side route event first that can be preventDefaulted */
               if (this.successUrl) {
                 if (this.$refs.formRef) {
                   const event = new CustomEvent(\\"route\\", {
@@ -1095,7 +1068,6 @@ export default defineComponent({
                     },
                   });
                   this.$refs.formRef.dispatchEvent(event);
-
                   if (!event.defaultPrevented) {
                     location.href = this.successUrl;
                   }
@@ -1111,15 +1083,12 @@ export default defineComponent({
                 error: err,
               },
             });
-
             if (this.$refs.formRef) {
               this.$refs.formRef.dispatchEvent(submitErrorEvent);
-
               if (submitErrorEvent.defaultPrevented) {
                 return;
               }
             }
-
             this.responseData = err;
             this.formState = \\"error\\";
           }
@@ -1179,7 +1148,6 @@ export default defineComponent({
         if (this.$refs.pictureRef) {
           const rect = this.$refs.pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
-
           if (rect.top < window.innerHeight + buffer) {
             this.load = true;
             this.scrollListener = null;
@@ -1187,7 +1155,6 @@ export default defineComponent({
           }
         }
       };
-
       this.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -2357,7 +2324,6 @@ export default defineComponent({
     onUpdateHook0: {
       handler() {
         console.log(\\"Runs when a or b changes\\", this.a, this.b);
-
         if (this.a === \\"a\\") {
           this.a = \\"b\\";
         }
@@ -2367,7 +2333,6 @@ export default defineComponent({
     onUpdateHook1: {
       handler() {
         console.log(\\"Runs when c or d changes\\", this.c, this.d);
-
         if (this.a === \\"a\\") {
           this.a = \\"b\\";
         }
@@ -2893,13 +2858,10 @@ export default defineComponent({
         context: this.context.context,
         shouldEvaluateBindings: false,
       }).component?.name;
-
       if (!componentName) {
         return null;
       }
-
       const ref = this.context.registeredComponents[componentName];
-
       if (!ref) {
         // TODO: Public doc page with more info about this message
         console.warn(\`
@@ -2954,7 +2916,6 @@ export default defineComponent({
         componentRef: this.component?.component,
         componentOptions: {
           ...getBlockComponentOptions(this.useBlock),
-
           /**
            * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
            * they are provided to the component itself directly.
@@ -2962,7 +2923,10 @@ export default defineComponent({
           ...(this.shouldWrap
             ? {}
             : {
-                attributes: { ...this.attributes, ...this.actions },
+                attributes: {
+                  ...this.attributes,
+                  ...this.actions,
+                },
               }),
           customBreakpoints: this.childrenContext?.content?.meta?.breakpoints,
         },
@@ -2993,21 +2957,17 @@ export default defineComponent({
        * which will not work if there is a repeat.
        */
       const { repeat, ...blockWithoutRepeat } = this.block;
-
       if (!repeat?.collection) {
         return undefined;
       }
-
       const itemsArray = evaluate({
         code: repeat.collection,
         state: this.context.state,
         context: this.context.context,
       });
-
       if (!Array.isArray(itemsArray)) {
         return undefined;
       }
-
       const collectionName = repeat.collection.split(\\".\\").pop();
       const itemNameToUse =
         repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
@@ -3030,7 +2990,6 @@ export default defineComponent({
       if (TARGET !== \\"reactNative\\") {
         return {};
       }
-
       const styles = getReactNativeBlockStyles({
         block: this.useBlock,
         context: this.context,
@@ -4226,13 +4185,12 @@ import { defineComponent } from \\"vue\\";
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
-
+  let ref = useRef<T>(null);
+  // Store current value in ref
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
-
   return ref;
 }
 
@@ -4316,17 +4274,18 @@ exports[`Vue > jsx > Typescript Test > Columns 1`] = `
 import { defineComponent } from \\"vue\\";
 
 type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
-
+  content: any;
+  // TODO: Implement this when support for dynamic CSS lands
   width?: number;
 };
 export interface ColumnProps {
-  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+  columns?: Column[];
 
-  space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
-
+  // TODO: Implement this when support for dynamic CSS lands
+  space?: number;
+  // TODO: Implement this when support for dynamic CSS lands
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\";
+  // TODO: Implement this when support for dynamic CSS lands
   reverseColumnsWhenStacked?: boolean;
 }
 
@@ -4496,15 +4455,12 @@ export default defineComponent({
       if (this.$refs.elem && typeof window !== \\"undefined\\") {
         /** @type {HTMLScriptElement[]} */
         const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
-
         for (let i = 0; i < scripts.length; i++) {
           const script = scripts[i];
-
           if (script.src) {
             if (this.scriptsInserted.includes(script.src)) {
               continue;
             }
-
             this.scriptsInserted.push(script.src);
             const newScript = document.createElement(\\"script\\");
             newScript.async = true;
@@ -4521,7 +4477,6 @@ export default defineComponent({
             if (this.scriptsRun.includes(script.innerText)) {
               continue;
             }
-
             try {
               this.scriptsRun.push(script.innerText);
               new Function(script.innerText)();
@@ -4573,15 +4528,12 @@ export default defineComponent({
       if (this.$refs.elem && typeof window !== \\"undefined\\") {
         /** @type {HTMLScriptElement[]} */
         const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
-
         for (let i = 0; i < scripts.length; i++) {
           const script = scripts[i];
-
           if (script.src) {
             if (this.scriptsInserted.includes(script.src)) {
               continue;
             }
-
             this.scriptsInserted.push(script.src);
             const newScript = document.createElement(\\"script\\");
             newScript.async = true;
@@ -4598,7 +4550,6 @@ export default defineComponent({
             if (this.scriptsRun.includes(script.innerText)) {
               continue;
             }
-
             try {
               this.scriptsRun.push(script.innerText);
               new Function(script.innerText)();
@@ -4750,7 +4701,6 @@ export default defineComponent({
       }
     ) {
       const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
-
       if (this.sendSubmissionsTo === \\"zapier\\") {
         event.preventDefault();
       } else if (sendWithJs) {
@@ -4758,13 +4708,13 @@ export default defineComponent({
           event.preventDefault();
           return;
         }
-
         event.preventDefault();
         const el = event.currentTarget;
         const headers = this.customHeaders || {};
         let body: any;
-        const formData = new FormData(el); // TODO: maybe support null
+        const formData = new FormData(el);
 
+        // TODO: maybe support null
         const formPairs: {
           key: string;
           value: File | boolean | number | string | FileList;
@@ -4775,7 +4725,6 @@ export default defineComponent({
           .map((el) => {
             let value: any;
             const key = (el as HTMLImageElement).name;
-
             if (el instanceof HTMLInputElement) {
               if (el.type === \\"radio\\") {
                 if (el.checked) {
@@ -4789,7 +4738,6 @@ export default defineComponent({
                 value = el.checked;
               } else if (el.type === \\"number\\" || el.type === \\"range\\") {
                 const num = el.valueAsNumber;
-
                 if (!isNaN(num)) {
                   value = num;
                 }
@@ -4802,18 +4750,15 @@ export default defineComponent({
             } else {
               value = (el as HTMLInputElement).value;
             }
-
             return {
               key,
               value,
             };
           });
         let contentType = this.contentType;
-
         if (this.sendSubmissionsTo === \\"email\\") {
           contentType = \\"multipart/form-data\\";
         }
-
         Array.from(formPairs).forEach(({ value }) => {
           if (
             value instanceof File ||
@@ -4822,10 +4767,11 @@ export default defineComponent({
           ) {
             contentType = \\"multipart/form-data\\";
           }
-        }); // TODO: send as urlEncoded or multipart by default
+        });
+
+        // TODO: send as urlEncoded or multipart by default
         // because of ease of use and reliability in browser API
         // for encoding the form?
-
         if (contentType !== \\"application/json\\") {
           body = formData;
         } else {
@@ -4836,7 +4782,6 @@ export default defineComponent({
           });
           body = JSON.stringify(json);
         }
-
         if (contentType && contentType !== \\"multipart/form-data\\") {
           if (
             /* Zapier doesn't allow content-type header to be sent from browsers */
@@ -4845,21 +4790,17 @@ export default defineComponent({
             headers[\\"content-type\\"] = contentType;
           }
         }
-
         const presubmitEvent = new CustomEvent(\\"presubmit\\", {
           detail: {
             body,
           },
         });
-
         if (this.$refs.formRef) {
           this.$refs.formRef.dispatchEvent(presubmitEvent);
-
           if (presubmitEvent.defaultPrevented) {
             return;
           }
         }
-
         this.formState = \\"sending\\";
         const formUrl = \`\${
           builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -4867,8 +4808,9 @@ export default defineComponent({
           this.sendSubmissionsToEmail || \\"\\"
         )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
         fetch(
-          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
-          /* TODO: throw error if no action URL */
+          this.sendSubmissionsTo === \\"email\\"
+            ? formUrl
+            : this.action! /* TODO: throw error if no action URL */,
           {
             body,
             headers,
@@ -4878,31 +4820,25 @@ export default defineComponent({
           async (res) => {
             let body;
             const contentType = res.headers.get(\\"content-type\\");
-
             if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
               body = await res.json();
             } else {
               body = await res.text();
             }
-
             if (!res.ok && this.errorMessagePath) {
               /* TODO: allow supplying an error formatter function */
               let message = get(body, this.errorMessagePath);
-
               if (message) {
                 if (typeof message !== \\"string\\") {
                   /* TODO: ideally convert json to yaml so it woul dbe like
            error: - email has been taken */
                   message = JSON.stringify(message);
                 }
-
                 this.formErrorMessage = message;
               }
             }
-
             this.responseData = body;
             this.formState = res.ok ? \\"success\\" : \\"error\\";
-
             if (res.ok) {
               const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
                 detail: {
@@ -4910,21 +4846,18 @@ export default defineComponent({
                   body,
                 },
               });
-
               if (this.$refs.formRef) {
                 this.$refs.formRef.dispatchEvent(submitSuccessEvent);
-
                 if (submitSuccessEvent.defaultPrevented) {
                   return;
                 }
                 /* TODO: option to turn this on/off? */
-
                 if (this.resetFormOnSubmit !== false) {
                   this.$refs.formRef.reset();
                 }
               }
-              /* TODO: client side route event first that can be preventDefaulted */
 
+              /* TODO: client side route event first that can be preventDefaulted */
               if (this.successUrl) {
                 if (this.$refs.formRef) {
                   const event = new CustomEvent(\\"route\\", {
@@ -4933,7 +4866,6 @@ export default defineComponent({
                     },
                   });
                   this.$refs.formRef.dispatchEvent(event);
-
                   if (!event.defaultPrevented) {
                     location.href = this.successUrl;
                   }
@@ -4949,15 +4881,12 @@ export default defineComponent({
                 error: err,
               },
             });
-
             if (this.$refs.formRef) {
               this.$refs.formRef.dispatchEvent(submitErrorEvent);
-
               if (submitErrorEvent.defaultPrevented) {
                 return;
               }
             }
-
             this.responseData = err;
             this.formState = \\"error\\";
           }
@@ -5002,6 +4931,7 @@ exports[`Vue > jsx > Typescript Test > Image 1`] = `
 import { defineComponent } from \\"vue\\";
 
 // TODO: AMP Support?
+
 export interface ImageProps {
   _class?: string;
   image: string;
@@ -5011,12 +4941,12 @@ export interface ImageProps {
   width?: number;
   altText?: string;
   backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-
-  srcset?: string; // TODO: Implement support for custom aspect ratios
-
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
-
+  backgroundPosition?: string;
+  // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+  srcset?: string;
+  // TODO: Implement support for custom aspect ratios
+  aspectRatio?: number;
+  // TODO: This might not work as expected in terms of positioning
   children?: any;
 }
 
@@ -5036,7 +4966,6 @@ export default defineComponent({
         if (this.$refs.pictureRef) {
           const rect = this.$refs.pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
-
           if (rect.top < window.innerHeight + buffer) {
             this.load = true;
             this.scrollListener = null;
@@ -5044,7 +4973,6 @@ export default defineComponent({
           }
         }
       };
-
       this.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -5248,7 +5176,8 @@ import { defineComponent } from \\"vue\\";
 
 export interface RawTextProps {
   attributes?: any;
-  text?: string; // builderBlock?: any;
+  text?: string;
+  // builderBlock?: any;
 }
 
 export default defineComponent({
@@ -6161,7 +6090,6 @@ export interface ButtonProps {
   attributes?: any;
   text?: string;
   buttonText?: string; // no default value
-
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -6396,7 +6324,6 @@ export default defineComponent({
     onUpdateHook0: {
       handler() {
         console.log(\\"Runs when a or b changes\\", this.a, this.b);
-
         if (this.a === \\"a\\") {
           this.a = \\"b\\";
         }
@@ -6406,7 +6333,6 @@ export default defineComponent({
     onUpdateHook1: {
       handler() {
         console.log(\\"Runs when c or d changes\\", this.c, this.d);
-
         if (this.a === \\"a\\") {
           this.a = \\"b\\";
         }
@@ -6996,13 +6922,10 @@ export default defineComponent({
         context: this.context.context,
         shouldEvaluateBindings: false,
       }).component?.name;
-
       if (!componentName) {
         return null;
       }
-
       const ref = this.context.registeredComponents[componentName];
-
       if (!ref) {
         // TODO: Public doc page with more info about this message
         console.warn(\`
@@ -7057,7 +6980,6 @@ export default defineComponent({
         componentRef: this.component?.component,
         componentOptions: {
           ...getBlockComponentOptions(this.useBlock),
-
           /**
            * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
            * they are provided to the component itself directly.
@@ -7065,7 +6987,10 @@ export default defineComponent({
           ...(this.shouldWrap
             ? {}
             : {
-                attributes: { ...this.attributes, ...this.actions },
+                attributes: {
+                  ...this.attributes,
+                  ...this.actions,
+                },
               }),
           customBreakpoints: this.childrenContext?.content?.meta?.breakpoints,
         },
@@ -7096,21 +7021,17 @@ export default defineComponent({
        * which will not work if there is a repeat.
        */
       const { repeat, ...blockWithoutRepeat } = this.block;
-
       if (!repeat?.collection) {
         return undefined;
       }
-
       const itemsArray = evaluate({
         code: repeat.collection,
         state: this.context.state,
         context: this.context.context,
       });
-
       if (!Array.isArray(itemsArray)) {
         return undefined;
       }
-
       const collectionName = repeat.collection.split(\\".\\").pop();
       const itemNameToUse =
         repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
@@ -7133,7 +7054,6 @@ export default defineComponent({
       if (TARGET !== \\"reactNative\\") {
         return {};
       }
-
       const styles = getReactNativeBlockStyles({
         block: this.useBlock,
         context: this.context,
