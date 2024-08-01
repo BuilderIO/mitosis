@@ -106,7 +106,7 @@ export default MyBasicComponent;
 exports[`RSC > jsx > Javascript Test > Basic Context 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useContext, useEffect } from \\"react\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
@@ -119,10 +119,12 @@ function MyBasicComponent(props) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -147,16 +149,18 @@ export default MyBasicComponent;
 exports[`RSC > jsx > Javascript Test > Basic OnMount Update 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 function MyBasicOnMountUpdateComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -2247,12 +2251,14 @@ export default Embed;
 exports[`RSC > jsx > Javascript Test > onInit & onMount 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function OnInit(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -2268,7 +2274,7 @@ export default OnInit;
 exports[`RSC > jsx > Javascript Test > onInit 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef } from \\"react\\";
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
@@ -2277,10 +2283,12 @@ export const defaultValues = {
 function OnInit(props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return <div>Default name defined by parent {name}</div>;
 }
@@ -2480,14 +2488,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Javascript Test > renderBlock 1`] = `
-"Identifier expected. (212:8)
-  210 |    {shouldWrap() ? (
-  211 |    <>{isEmptyHtmlElement(tag()) ? (
-> 212 |    <tag()  {...(attributes())}  {...(actions())}  />
+"Identifier expected. (213:8)
+  211 |    {shouldWrap() ? (
+  212 |    <>{isEmptyHtmlElement(tag()) ? (
+> 213 |    <tag()  {...(attributes())}  {...(actions())}  />
       |        ^
-  213 |  ) : null}
-  214 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-  215 |    <>{repeatItemData()?.map((data, index) => ("
+  214 |  ) : null}
+  215 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  216 |    <>{repeatItemData()?.map((data, index) => ("
 `;
 
 exports[`RSC > jsx > Javascript Test > renderContentExample 1`] = `
@@ -2628,6 +2636,45 @@ export default MyComponent;
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > showExpressions 1`] = `
+"import * as React from \\"react\\";
+
+function ShowWithOtherValues(props) {
+  return (
+    <div>
+      {props.conditionA ? <>Content0</> : <>ContentA</>}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <></> : <>ContentA</>}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>{undefined}</> : <>ContentB</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <></> : <>ContentC</>}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <></> : <>ContentD</>}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>hello</> : <>ContentE</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+      {props.conditionA ? <>123</> : <>ContentF</>}
+      {props.conditionA === \\"Default\\" ? (
+        <>4mb</>
+      ) : props.conditionB === \\"Complete\\" ? (
+        <>20mb</>
+      ) : (
+        <>9mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <>20mb</> : <>9mb</>}</>
+      ) : (
+        <>4mb</>
+      )}
+    </div>
+  );
+}
+
+export default ShowWithOtherValues;
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > showWithFor 1`] = `
 "import * as React from \\"react\\";
 
@@ -2648,6 +2695,26 @@ function NestedShow(props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`RSC > jsx > Javascript Test > showWithOtherValues 1`] = `
+"import * as React from \\"react\\";
+
+function ShowWithOtherValues(props) {
+  return (
+    <div>
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+    </div>
+  );
+}
+
+export default ShowWithOtherValues;
 "
 `;
 
@@ -2925,13 +2992,15 @@ export default UseTargetComponent;
 
 exports[`RSC > jsx > Javascript Test > webComponent 1`] = `
 "import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
+import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -3077,7 +3146,7 @@ export default MyBasicComponent;
 exports[`RSC > jsx > Typescript Test > Basic Context 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useContext, useEffect } from \\"react\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props: any) {
@@ -3090,10 +3159,12 @@ function MyBasicComponent(props: any) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -3118,7 +3189,7 @@ export default MyBasicComponent;
 exports[`RSC > jsx > Typescript Test > Basic OnMount Update 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 export interface Props {
   hi: string;
@@ -3130,9 +3201,11 @@ function MyBasicOnMountUpdateComponent(props: Props) {
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -5519,12 +5592,14 @@ export default Embed;
 exports[`RSC > jsx > Typescript Test > onInit & onMount 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function OnInit(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -5540,7 +5615,7 @@ export default OnInit;
 exports[`RSC > jsx > Typescript Test > onInit 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef } from \\"react\\";
 
 type Props = {
   name: string;
@@ -5553,10 +5628,12 @@ export const defaultValues = {
 function OnInit(props: Props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return <div>Default name defined by parent {name}</div>;
 }
@@ -5798,14 +5875,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Typescript Test > renderBlock 1`] = `
-"Identifier expected. (220:8)
-  218 |    {shouldWrap() ? (
-  219 |    <>{isEmptyHtmlElement(tag()) ? (
-> 220 |    <tag()  {...(attributes())}  {...(actions())}  />
+"Identifier expected. (221:8)
+  219 |    {shouldWrap() ? (
+  220 |    <>{isEmptyHtmlElement(tag()) ? (
+> 221 |    <tag()  {...(attributes())}  {...(actions())}  />
       |        ^
-  221 |  ) : null}
-  222 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-  223 |    <>{repeatItemData()?.map((data, index) => ("
+  222 |  ) : null}
+  223 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  224 |    <>{repeatItemData()?.map((data, index) => ("
 `;
 
 exports[`RSC > jsx > Typescript Test > renderContentExample 1`] = `
@@ -5965,6 +6042,50 @@ export default MyComponent;
 "
 `;
 
+exports[`RSC > jsx > Typescript Test > showExpressions 1`] = `
+"import * as React from \\"react\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+function ShowWithOtherValues(props: Props) {
+  return (
+    <div>
+      {props.conditionA ? <>Content0</> : <>ContentA</>}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <></> : <>ContentA</>}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>{undefined}</> : <>ContentB</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <></> : <>ContentC</>}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <></> : <>ContentD</>}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>hello</> : <>ContentE</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+      {props.conditionA ? <>123</> : <>ContentF</>}
+      {props.conditionA === \\"Default\\" ? (
+        <>4mb</>
+      ) : props.conditionB === \\"Complete\\" ? (
+        <>20mb</>
+      ) : (
+        <>9mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <>20mb</> : <>9mb</>}</>
+      ) : (
+        <>4mb</>
+      )}
+    </div>
+  );
+}
+
+export default ShowWithOtherValues;
+"
+`;
+
 exports[`RSC > jsx > Typescript Test > showWithFor 1`] = `
 "import * as React from \\"react\\";
 
@@ -5990,6 +6111,30 @@ function NestedShow(props: Props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > showWithOtherValues 1`] = `
+"import * as React from \\"react\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+function ShowWithOtherValues(props: Props) {
+  return (
+    <div>
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+    </div>
+  );
+}
+
+export default ShowWithOtherValues;
 "
 `;
 
@@ -6287,13 +6432,15 @@ export default UseTargetComponent;
 
 exports[`RSC > jsx > Typescript Test > webComponent 1`] = `
 "import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
+import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -6433,14 +6580,14 @@ export default MyComponent;
 `;
 
 exports[`RSC > svelte > Javascript Test > context 1`] = `
-"'>' expected. (34:13)
-  32 | return (
-  33 |
-> 34 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (35:13)
+  33 | return (
+  34 |
+> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  35 |
   36 |
-  37 |"
+  37 |
+  38 |"
 `;
 
 exports[`RSC > svelte > Javascript Test > each 1`] = `
@@ -6835,14 +6982,14 @@ export default MyComponent;
 `;
 
 exports[`RSC > svelte > Typescript Test > context 1`] = `
-"'>' expected. (34:13)
-  32 | return (
-  33 |
-> 34 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (35:13)
+  33 | return (
+  34 |
+> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  35 |
   36 |
-  37 |"
+  37 |
+  38 |"
 `;
 
 exports[`RSC > svelte > Typescript Test > each 1`] = `

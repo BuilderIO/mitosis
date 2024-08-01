@@ -26,12 +26,7 @@ const getForArguments = (params: any[]): ForNode['scope'] => {
  * Parses a JSX element into a MitosisNode.
  */
 export const jsxElementToJson = (
-  node:
-    | babel.types.JSXElement
-    | babel.types.JSXText
-    | babel.types.JSXFragment
-    | babel.types.JSXExpressionContainer
-    | babel.types.JSXSpreadChild,
+  node: babel.types.Expression | babel.types.JSX,
 ): MitosisNode | null => {
   if (types.isJSXText(node)) {
     return createMitosisNode({
@@ -40,83 +35,89 @@ export const jsxElementToJson = (
       },
     });
   }
-  if (types.isJSXExpressionContainer(node)) {
-    if (types.isJSXEmptyExpression(node.expression)) {
-      return null;
-    }
-    // foo.map -> <For each={foo}>...</For>
-    if (
-      types.isCallExpression(node.expression) ||
-      types.isOptionalCallExpression(node.expression)
-    ) {
-      const callback = node.expression.arguments[0];
-      if (types.isArrowFunctionExpression(callback)) {
-        if (types.isIdentifier(callback.params[0])) {
-          const forArguments = getForArguments(callback.params);
-          return createMitosisNode({
-            name: 'For',
-            bindings: {
-              each: createSingleBinding({
-                code: generate(node.expression.callee)
-                  .code // Remove .map or potentially ?.map
-                  .replace(/\??\.map$/, ''),
-              }),
-            },
-            scope: forArguments,
-            children: [jsxElementToJson(callback.body as any)!],
-          });
-        }
-      }
-    }
 
-    // {foo && <div />} -> <Show when={foo}>...</Show>
-    if (types.isLogicalExpression(node.expression)) {
-      if (node.expression.operator === '&&') {
-        return createMitosisNode({
-          name: 'Show',
-          bindings: {
-            when: createSingleBinding({ code: generate(node.expression.left).code! }),
-          },
-          children: [jsxElementToJson(node.expression.right as any)!],
-        });
-      } else {
-        // TODO: good warning system for unsupported operators
-      }
-    }
-
-    // {foo ? <div /> : <span />} -> <Show when={foo} else={<span />}>...</Show>
-    if (types.isConditionalExpression(node.expression)) {
-      return createMitosisNode({
-        name: 'Show',
-        meta: {
-          else: jsxElementToJson(node.expression.alternate as any)!,
-        },
-        bindings: {
-          when: createSingleBinding({ code: generate(node.expression.test).code }),
-        },
-        children: [jsxElementToJson(node.expression.consequent as any)!],
-      });
-    }
-
-    // TODO: support {foo ? bar : baz}
-
-    return createMitosisNode({
-      bindings: {
-        _text: createSingleBinding({ code: generate(node.expression).code }),
-      },
-    });
+  if (types.isJSXEmptyExpression(node)) {
+    return null;
   }
 
-  if (types.isJSXFragment(node)) {
+  if (types.isJSXExpressionContainer(node)) {
+    return jsxElementToJson(node.expression as any);
+  }
+
+  if (types.isCallExpression(node) || types.isOptionalCallExpression(node)) {
+    const callback = node.arguments[0];
+    if (types.isArrowFunctionExpression(callback)) {
+      if (types.isIdentifier(callback.params[0])) {
+        const forArguments = getForArguments(callback.params);
+        return createMitosisNode({
+          name: 'For',
+          bindings: {
+            each: createSingleBinding({
+              code: generate(node.callee)
+                .code // Remove .map or potentially ?.map
+                .replace(/\??\.map$/, ''),
+            }),
+          },
+          scope: forArguments,
+          children: [jsxElementToJson(callback.body as any)!],
+        });
+      }
+    }
+  } else if (types.isLogicalExpression(node)) {
+    // {foo && <div />} -> <Show when={foo}>...</Show>
+    if (node.operator === '&&') {
+      return createMitosisNode({
+        name: 'Show',
+        bindings: {
+          when: createSingleBinding({ code: generate(node.left).code! }),
+        },
+        children: [jsxElementToJson(node.right as any)!],
+      });
+    } else {
+      // TODO: good warning system for unsupported operators
+    }
+  } else if (types.isConditionalExpression(node)) {
+    // {foo ? <div /> : <span />} -> <Show when={foo} else={<span />}>...</Show>
+    const child = jsxElementToJson(node.consequent as any);
+    return createMitosisNode({
+      name: 'Show',
+      meta: {
+        else: jsxElementToJson(node.alternate as any),
+      },
+      bindings: {
+        when: createSingleBinding({ code: generate(node.test).code }),
+      },
+      children: child === null ? [] : [child],
+    });
+  } else if (types.isJSXFragment(node)) {
     return createMitosisNode({
       name: 'Fragment',
       children: node.children.map(jsxElementToJson).filter(checkIsDefined),
     });
-  }
-
-  // TODO: support spread attributes
-  if (types.isJSXSpreadChild(node)) {
+  } else if (types.isJSXSpreadChild(node)) {
+    // TODO: support spread attributes
     return null;
+  } else if (types.isNullLiteral(node) || types.isBooleanLiteral(node)) {
+    return null;
+  } else if (types.isNumericLiteral(node)) {
+    return createMitosisNode({
+      properties: {
+        _text: String(node.value),
+      },
+    });
+  } else if (types.isStringLiteral(node)) {
+    return createMitosisNode({
+      properties: {
+        _text: node.value,
+      },
+    });
+  }
+  if (!types.isJSXElement(node)) {
+    return createMitosisNode({
+      bindings: {
+        _text: createSingleBinding({ code: generate(node).code }),
+      },
+    });
   }
 
   const nodeName = generate(node.openingElement.name).code;

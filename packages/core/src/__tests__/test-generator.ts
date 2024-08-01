@@ -3,7 +3,6 @@ import { MitosisComponent, createTypescriptProject, parseSvelte } from '..';
 import { parseJsx } from '../parsers/jsx';
 import { Target } from '../types/config';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-
 const getRawFile = async (filePath: string) => {
   const code = await import(`${filePath}?raw`).then((x) => x.default as string);
   return { code, filePath: ['src', '__tests__', filePath].join('/') };
@@ -262,6 +261,8 @@ const SHOW_TESTS: Tests = {
   nestedShow: getRawFile('./data/show/nested-show.raw.tsx'),
   showWithFor: getRawFile('./data/show/show-with-for.raw.tsx'),
   showWithRootText: getRawFile('./data/show/show-with-root-text.raw.tsx'),
+  showWithOtherValues: getRawFile('./data/show/show-with-other-values.raw.tsx'),
+  showExpressions: getRawFile('./data/show/show-expressions.raw.tsx'),
 };
 
 const ADVANCED_REF: Tests = {
@@ -284,6 +285,8 @@ const ANGULAR_TESTS: Tests = {
   dynamicComponentWithEventArg: getRawFile(
     './data/angular/dynamic-component-with-event-args.raw.tsx',
   ),
+  twoForsTrackBy: getRawFile('./data/angular/two-fors.raw.tsx'),
+  stateInit: getRawFile('./data/angular/state-init.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {
@@ -444,7 +447,7 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
-    // FORWARD_REF_TESTS,
+    FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
     FOR_SHOW_TESTS,

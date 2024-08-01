@@ -16,9 +16,8 @@
     "ci:build:release": "nx run-many --skip-nx-cache --target build -p @builder.io/mitosis @builder.io/mitosis-cli @builder.io/eslint-plugin-mitosis @builder.io/create-mitosis",
     "ci:build": "nx run-many --target build --exclude \"@builder.io/e2e-alpine\"",
     "ci:lint": "yarn run lint:prettier && yarn run lint:eslint",
-    "ci:test": "yarn workspaces foreach run test",
-    "ci:e2e-prep": "yarn workspace @builder.io/e2e-app run install:playwright",
-    "ci:e2e": "yarn workspace @builder.io/e2e-app run e2e",
+    "ci:test": "nx run-many --target test",
+    "ci:e2e": "nx e2e @builder.io/e2e-app",
     "test:update": "nx run-many -t test:update",
     "fmt": "run-s 'fmt:*'",
     "fmt:eslint": "yarn lint:eslint --fix",
@@ -33,7 +32,6 @@
     "url": "https://github.com/BuilderIO/mitosis"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.6.0",
     "@changesets/cli": "^2.27.1",
     "@nrwl/nx-cloud": "15.0.2",
     "@typescript-eslint/eslint-plugin": "^6.13.1",

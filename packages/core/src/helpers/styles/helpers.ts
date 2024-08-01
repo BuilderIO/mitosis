@@ -1,7 +1,7 @@
 import * as CSS from 'csstype';
 import json5 from 'json5';
 import { pickBy } from 'lodash';
-import traverse from 'traverse';
+import traverse from 'neotraverse/legacy';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { dashCase } from '../dash-case';
