@@ -228,7 +228,7 @@ const stringifyBinding =
       return ` #${code} `;
     } else if (
       (VALID_HTML_TAGS.includes(node.name.trim()) || keyToUse.includes('-')) &&
-      !blockOptions.nativeAttributes.includes(keyToUse) &&
+      !blockOptions.nativeAttributes?.includes(keyToUse) &&
       !Object.values(BINDINGS_MAPPER).includes(keyToUse)
     ) {
       // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
@@ -637,8 +637,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
-      selector: options.selector
-        ? `'${options.selector}'`
+      selector: useMetadata?.angular?.selector
+        ? `'${useMetadata?.angular?.selector}'`
         : `'${kebabCase(json.name || 'my-component')}'`,
       template: `\`
       ${indent(dynamicTemplate, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}

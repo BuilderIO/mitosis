@@ -4,7 +4,6 @@ export const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
-  selector?: string;
   preserveImports?: boolean;
   preserveFileExtensions?: boolean;
   importMapper?: Function;
@@ -20,5 +19,6 @@ export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
 
 export interface AngularBlockOptions {
   childComponents?: string[];
-  nativeAttributes: string[]; // set by useMetadata (packages/core/src/types/metadata.ts)
+  nativeAttributes?: string[]; // set by useMetadata (packages/core/src/types/metadata.ts)
+  selector?: string; // set by useMetadata (packages/core/src/types/metadata.ts)
 }
