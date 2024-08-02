@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.3.19
+
+### Patch Changes
+
+- 3f5fff1: Solid: stop mapping `for` to `htmlFor`
+- 4c662df: Angular: Fix: state initialization sequence. Initialize states in `ngOnInit` first, followed by bindings that depend upon them.
+
 ## 0.3.18
 
 ### Patch Changes
