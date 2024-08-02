@@ -5432,33 +5432,39 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > useObjectWra
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
   template: \`
     <div>
-      <CustomComponent
-        [tooltipPlacementOptions]='{
-          \\"positions\\": [\\"left\\", \\"bottom\\", \\"bottom-left\\"],
-          \\"offsets\\": {
-            \\"left\\": {
-              \\"topOffset\\": 0,
-              \\"leftOffset\\": -24
-            },
-            \\"bottom\\": {
-              \\"topOffset\\": 24,
-              \\"leftOffset\\": 0
-            },
-            \\"bottom-left\\": {
-              \\"topOffset\\": 24,
-              \\"leftOffset\\": 0
-            }
-          }
-        }'
-      >
-        test
-      </CustomComponent>
+      <Comp
+        [val1]=\\"useObjectWrapper( attributes2
+        )\\"
+        [val2]=\\"useObjectWrapper( attributes,
+          attributes2
+        )\\"
+        [val3]=\\"useObjectWrapper( something,
+          anything: 'hello',
+          hello: 'world'
+        )\\"
+        [val4]=\\"useObjectWrapper( attributes,
+          something,
+          anything: [1, 2, 3],
+          hello: 'hello',
+          attributes2
+        )\\"
+        [val5]=\\"useObjectWrapper( attributes,
+          something,
+          anything: [1, 2, 3],
+          anythingString: ['a', 'b', 'c'],
+          hello: 'hello',
+          spreadAttrs
+        )\\"
+        [val6]=\\"{
+          anything: [1, 2, 3]
+        }\\"
+      ></Comp>
     </div>
   \`,
   styles: [
@@ -5469,11 +5475,31 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export default class MyComponent {}
+export default class MyComponent {
+  @Input() spreadAttrs;
+
+  attributes = {
+    id: 1,
+  };
+  attributes2 = {
+    id2: 1,
+  };
+  something = {
+    id3: 1,
+  };
+
+  useObjectWrapper(...args) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+}
 
 @NgModule({
   declarations: [MyComponent],
-  imports: [CommonModule, CustomComponentModule],
+  imports: [CommonModule, CompModule],
   exports: [MyComponent],
   bootstrap: [SomeOtherComponent],
 })
@@ -11458,33 +11484,39 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > useObjectWra
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
   template: \`
     <div>
-      <CustomComponent
-        [tooltipPlacementOptions]='{
-          \\"positions\\": [\\"left\\", \\"bottom\\", \\"bottom-left\\"],
-          \\"offsets\\": {
-            \\"left\\": {
-              \\"topOffset\\": 0,
-              \\"leftOffset\\": -24
-            },
-            \\"bottom\\": {
-              \\"topOffset\\": 24,
-              \\"leftOffset\\": 0
-            },
-            \\"bottom-left\\": {
-              \\"topOffset\\": 24,
-              \\"leftOffset\\": 0
-            }
-          }
-        }'
-      >
-        test
-      </CustomComponent>
+      <Comp
+        [val1]=\\"useObjectWrapper( attributes2
+        )\\"
+        [val2]=\\"useObjectWrapper( attributes,
+          attributes2
+        )\\"
+        [val3]=\\"useObjectWrapper( something,
+          anything: 'hello',
+          hello: 'world'
+        )\\"
+        [val4]=\\"useObjectWrapper( attributes,
+          something,
+          anything: [1, 2, 3],
+          hello: 'hello',
+          attributes2
+        )\\"
+        [val5]=\\"useObjectWrapper( attributes,
+          something,
+          anything: [1, 2, 3],
+          anythingString: ['a', 'b', 'c'],
+          hello: 'hello',
+          spreadAttrs
+        )\\"
+        [val6]=\\"{
+          anything: [1, 2, 3]
+        }\\"
+      ></Comp>
     </div>
   \`,
   styles: [
@@ -11495,11 +11527,31 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export default class MyComponent {}
+export default class MyComponent {
+  @Input() spreadAttrs!: any;
+
+  attributes = {
+    id: 1,
+  };
+  attributes2 = {
+    id2: 1,
+  };
+  something = {
+    id3: 1,
+  };
+
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+}
 
 @NgModule({
   declarations: [MyComponent],
-  imports: [CommonModule, CustomComponentModule],
+  imports: [CommonModule, CompModule],
   exports: [MyComponent],
   bootstrap: [SomeOtherComponent],
 })
