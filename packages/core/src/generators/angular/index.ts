@@ -688,18 +688,20 @@ const classPropertiesPlugin = () => ({
 // if any state "property" is trying to access state.* or props.*
 // then we need to move them to onInit where they can be accessed
 const transformState = (json: MitosisComponent) => {
-  Object.entries(json.state).forEach(([key, value]) => {
-    if (value?.type === 'property') {
-      if (value.code && (value.code.includes('state.') || value.code.includes('props.'))) {
-        const code = stripStateAndPropsRefs(value.code, { replaceWith: 'this' });
-        json.state[key]!.code = 'null';
-        if (!json.hooks.onInit?.code) {
-          json.hooks.onInit = { code: '' };
+  Object.entries(json.state)
+    .reverse()
+    .forEach(([key, value]) => {
+      if (value?.type === 'property') {
+        if (value.code && (value.code.includes('state.') || value.code.includes('props.'))) {
+          const code = stripStateAndPropsRefs(value.code, { replaceWith: 'this' });
+          json.state[key]!.code = 'null';
+          if (!json.hooks.onInit?.code) {
+            json.hooks.onInit = { code: '' };
+          }
+          json.hooks.onInit.code = `\nthis.${key} = ${code};\n${json.hooks.onInit.code}`;
         }
-        json.hooks.onInit.code += `\nthis.${key} = ${code};\n`;
       }
-    }
-  });
+    });
 };
 
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =

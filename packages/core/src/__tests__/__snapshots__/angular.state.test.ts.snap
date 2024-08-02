@@ -5168,6 +5168,52 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > stateInitSequence 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <Comp [val]=\\"node_0_Comp\\">{{val}}</Comp>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() value;
+
+  val = null;
+  node_0_Comp = null;
+
+  ngOnInit() {
+    this.val = this.value;
+    this.node_0_Comp = { ...this.val };
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Comp = { ...this.val };
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11218,6 +11264,52 @@ export default class MyComponent {
 @NgModule({
   declarations: [MyComponent],
   imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > stateInitSequence 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <Comp [val]=\\"node_0_Comp\\">{{val}}</Comp>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() value!: any;
+
+  val = null;
+  node_0_Comp = null;
+
+  ngOnInit() {
+    this.val = this.value;
+    this.node_0_Comp = { ...this.val };
+  }
+
+  ngOnChanges() {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Comp = { ...this.val };
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
   exports: [MyComponent],
 })
 export class MyComponentModule {}

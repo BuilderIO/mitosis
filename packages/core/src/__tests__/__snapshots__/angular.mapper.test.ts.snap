@@ -5065,6 +5065,53 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > stateInitSequence 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <Comp [val]=\\"useObjectWrapper(val)\\">{{val}}</Comp>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() value;
+
+  val = null;
+
+  useObjectWrapper(...args) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+
+  ngOnInit() {
+    this.val = this.value;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11023,6 +11070,53 @@ export default class MyComponent {
 @NgModule({
   declarations: [MyComponent],
   imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > stateInitSequence 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <Comp [val]=\\"useObjectWrapper(val)\\">{{val}}</Comp>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() value!: any;
+
+  val = null;
+
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+
+  ngOnInit() {
+    this.val = this.value;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
   exports: [MyComponent],
   bootstrap: [SomeOtherComponent],
 })
