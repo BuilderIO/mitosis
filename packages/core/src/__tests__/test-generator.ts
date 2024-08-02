@@ -3,7 +3,6 @@ import { MitosisComponent, createTypescriptProject, parseSvelte } from '..';
 import { parseJsx } from '../parsers/jsx';
 import { Target } from '../types/config';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-
 const getRawFile = async (filePath: string) => {
   const code = await import(`${filePath}?raw`).then((x) => x.default as string);
   return { code, filePath: ['src', '__tests__', filePath].join('/') };
@@ -285,6 +284,8 @@ const ANGULAR_TESTS: Tests = {
   dynamicComponentWithEventArg: getRawFile(
     './data/angular/dynamic-component-with-event-args.raw.tsx',
   ),
+  twoForsTrackBy: getRawFile('./data/angular/two-fors.raw.tsx'),
+  stateInit: getRawFile('./data/angular/state-init.raw.tsx'),
   useObjectWrapper: getRawFile('./data/angular/use-object-wrapper.raw.tsx'),
 };
 

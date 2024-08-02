@@ -123,7 +123,15 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           } else if (node.name.toLowerCase() === node.name && VALID_HTML_TAGS.includes(node.name)) {
             if (node.name === 'input') {
               node.name = 'TextInput';
-            } else if (node.bindings.onClick) {
+            } else if (node.name === 'img') {
+              node.name = 'Image';
+            } else if (node.name === 'a') {
+              node.name = 'TouchableOpacity';
+            } else if (node.name === 'button') {
+              node.name = 'Button';
+            }
+            // if node is not button or a and still has onClick it needs to pressable
+            else if (node.bindings.onClick) {
               node.name = 'Pressable';
             } else {
               node.name = 'View';
@@ -174,31 +182,49 @@ const TWRNC_STYLES_PLUGIN: Plugin = () => ({
     post: (json: MitosisComponent) => {
       traverse(json).forEach(function (node) {
         if (isMitosisNode(node)) {
-          let combinedClasses = [
-            node.properties.class,
-            node.properties.className,
-            node.bindings.class,
-            node.bindings.className,
-          ]
+          let staticClasses = [node.properties.class, node.properties.className]
             .filter(Boolean)
             .join(' ');
 
-          if (combinedClasses) {
-            node.properties.style = `{tw\`${combinedClasses}\`}`;
+          let dynamicClasses = [node.bindings.class, node.bindings.className].filter(Boolean);
+
+          if (staticClasses || dynamicClasses.length) {
+            let styleCode = '';
+
+            if (staticClasses) {
+              styleCode = `tw\`${staticClasses}\``;
+            }
+
+            if (dynamicClasses.length) {
+              let dynamicCode = dynamicClasses
+                .map((dc) => (dc && dc.code ? dc.code : null))
+                .filter(Boolean)
+                .join(', ');
+
+              if (dynamicCode) {
+                if (styleCode) {
+                  // If we have both static and dynamic classes
+                  styleCode = `tw.style(${styleCode}, ${dynamicCode})`;
+                } else if (dynamicClasses.length > 1) {
+                  // If we have multiple dynamic classes
+                  styleCode = `tw.style([${dynamicCode}])`;
+                } else {
+                  // If we have a single dynamic class
+                  styleCode = `tw.style(${dynamicCode})`;
+                }
+              }
+            }
+
+            if (styleCode) {
+              node.bindings.style = createSingleBinding({ code: styleCode });
+            }
           }
 
-          if (node.properties.class) {
-            delete node.properties.class;
-          }
-          if (node.properties.className) {
-            delete node.properties.className;
-          }
-          if (node.bindings.class) {
-            delete node.bindings.class;
-          }
-          if (node.bindings.className) {
-            delete node.bindings.className;
-          }
+          // Clean up original class and className properties/bindings
+          delete node.properties.class;
+          delete node.properties.className;
+          delete node.bindings.class;
+          delete node.bindings.className;
         }
       });
     },

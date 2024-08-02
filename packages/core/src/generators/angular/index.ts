@@ -321,9 +321,30 @@ export const blockToAngular = ({
 
   if (checkIsForNode(json)) {
     const indexName = json.scope.indexName;
-    str += `<ng-container *ngFor="let ${json.scope.forName} of ${json.bindings.each?.code}${
-      indexName ? `; let ${indexName} = index` : ''
-    }">`;
+    const forName = json.scope.forName;
+
+    // Check if "key" is present for the first child of the for loop
+    if (json.children[0].bindings && json.children[0].bindings.key?.code) {
+      const fnIndex = (root.meta?._trackByForIndex as number) || 0;
+      const trackByFnName = `trackBy${
+        forName ? forName.charAt(0).toUpperCase() + forName.slice(1) : ''
+      }${fnIndex}`;
+      root.meta._trackByForIndex = fnIndex + 1;
+      let code = json.children[0].bindings.key?.code;
+
+      root.state[trackByFnName] = {
+        code: `${trackByFnName}(${indexName ?? '_'}, ${forName}) { return ${code}; }`,
+        type: 'method',
+      };
+
+      str += `<ng-container *ngFor="let ${forName} of ${json.bindings.each?.code}${
+        indexName ? `; let ${indexName} = index` : ''
+      }; trackBy: ${trackByFnName}">`;
+    } else {
+      str += `<ng-container *ngFor="let ${forName} of ${json.bindings.each?.code}${
+        indexName ? `; let ${indexName} = index` : ''
+      }">`;
+    }
     str += json.children
       .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
       .join('\n');
@@ -357,16 +378,11 @@ export const blockToAngular = ({
         code: 'null',
         type: 'property',
       };
-      if (
-        !root.hooks.onMount
-          .map((hook) => hook.code)
-          .join('')
-          .includes(inputsPropsStateName)
-      ) {
-        root.hooks.onMount.push({
-          code: `this.${inputsPropsStateName} = {${allProps}}`,
-          onSSR: false,
-        });
+      if (!root.hooks.onInit?.code.includes(inputsPropsStateName)) {
+        if (!root.hooks.onInit) {
+          root.hooks.onInit = { code: '' };
+        }
+        root.hooks.onInit.code += `\nthis.${inputsPropsStateName} = {${allProps}};\n`;
       }
       if (
         root.hooks.onUpdate &&
@@ -515,6 +531,7 @@ const handleBindings = (
 
     if (forName) {
       if (item.name === 'For') continue;
+      if (key === 'key') continue;
 
       if (key.startsWith('on')) {
         const { arguments: cusArgs = ['event'] } = item.bindings[key]!;
@@ -550,10 +567,10 @@ const handleBindings = (
     } else if (item.bindings[key]?.code) {
       if (item.bindings[key]?.type !== 'spread' && !key.startsWith('on')) {
         json.state[newBindingName] = { code: 'null', type: 'property' };
-        json.hooks['onMount'].push({
-          code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
-          onSSR: false,
-        });
+        if (!json.hooks['onInit']?.code) {
+          json.hooks['onInit'] = { code: '' };
+        }
+        json.hooks['onInit'].code += `\nstate.${newBindingName} = ${item.bindings[key]!.code};\n`;
         json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
         json.hooks['onUpdate'].push({
           code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
@@ -573,10 +590,12 @@ const handleBindings = (
         }
       } else {
         json.state[newBindingName] = { code: `null`, type: 'property' };
-        json.hooks['onMount'].push({
-          code: `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
-          onSSR: false,
-        });
+        if (!json.hooks['onInit']?.code) {
+          json.hooks['onInit'] = { code: '' };
+        }
+        json.hooks['onInit'].code += `\nstate.${newBindingName} = {...(${
+          item.bindings[key]!.code
+        })};\n`;
         json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
         json.hooks['onUpdate'].push({
           code: `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
@@ -646,6 +665,23 @@ const classPropertiesPlugin = () => ({
     },
   },
 });
+
+// if any state "property" is trying to access state.* or props.*
+// then we need to move them to onInit where they can be accessed
+const transformState = (json: MitosisComponent) => {
+  Object.entries(json.state).forEach(([key, value]) => {
+    if (value?.type === 'property') {
+      if (value.code && (value.code.includes('state.') || value.code.includes('props.'))) {
+        const code = stripStateAndPropsRefs(value.code, { replaceWith: 'this' });
+        json.state[key]!.code = 'null';
+        if (!json.hooks.onInit?.code) {
+          json.hooks.onInit = { code: '' };
+        }
+        json.hooks.onInit.code += `\nthis.${key} = ${code};\n`;
+      }
+    }
+  });
+};
 
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
@@ -751,7 +787,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }
       return `public ${variableName} : ${variableType}`;
     });
-    const hasConstructor = Boolean(injectables.length || json.hooks?.onInit);
+    const hasConstructor = Boolean(injectables.length);
 
     const props = getProps(json);
     // prevent jsx props from showing up as @Input
@@ -821,6 +857,17 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     stripMetaProperties(json);
 
+    const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
+      json,
+      options,
+      {
+        childComponents,
+        nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
+      },
+    );
+
+    transformState(json);
+
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'class',
       valueMapper: processAngularCode({
@@ -831,15 +878,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         stateVars,
       }),
     });
-
-    const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
-      json,
-      options,
-      {
-        childComponents,
-        nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
-      },
-    );
 
     const hostDisplayCss = options.visuallyIgnoreHostElement ? ':host { display: contents; }' : '';
     const styles = css.length ? [hostDisplayCss, css].join('\n') : hostDisplayCss;
@@ -974,22 +1012,29 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
               dynamicComponents.size
                 ? `\nprivate vcRef${options.typescript ? ': ViewContainerRef' : ''},\n`
                 : ''
-            }) {
-            ${
-              !json.hooks?.onInit
-                ? ''
-                : `
-              ${json.hooks.onInit?.code}
-              `
-            }
-          }
+            }) {}
           `
       }
       ${
-        !json.hooks.onMount.length && !dynamicComponents.size
+        !json.hooks.onMount.length && !dynamicComponents.size && !json.hooks.onInit?.code
           ? ''
           : `ngOnInit() {
-              ${stringifySingleScopeOnMount(json)}
+              ${
+                !json.hooks?.onInit
+                  ? ''
+                  : `
+                    ${json.hooks.onInit?.code}
+                    `
+              }
+              ${
+                json.hooks.onMount.length > 0
+                  ? `
+                    if (typeof window !== 'undefined') {
+                      ${stringifySingleScopeOnMount(json)}
+                    }
+                    `
+                  : ''
+              }
               ${
                 dynamicComponents.size
                   ? `
@@ -1011,11 +1056,14 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         !json.hooks.onUpdate?.length
           ? ''
           : `ngOnChanges() {
-              ${json.hooks.onUpdate.reduce((code, hook) => {
-                code += hook.code;
-                return code + '\n';
-              }, '')}
-            }`
+              if (typeof window !== 'undefined') {
+                ${json.hooks.onUpdate?.reduce((code, hook) => {
+                  code += hook.code;
+                  return code + '\n';
+                }, '')}
+              }
+            }
+                `
       }
 
       ${

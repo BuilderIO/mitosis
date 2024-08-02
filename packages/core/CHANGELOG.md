@@ -1,5 +1,47 @@
 # Change Log
 
+## 0.3.18
+
+### Patch Changes
+
+- 952b3f5: - React Native generator: add support for generating React Native components (`Image`, `TouchableOpacity`, `Button`)
+
+## 0.3.17
+
+### Patch Changes
+
+- 48f5481: fix: angular state initialization referencing other states or props
+
+## 0.3.16
+
+### Patch Changes
+
+- 9abf0ac: Feat: `trackBy` for angular (can be used when the child used inside <For> has a `key` attribute in mitosis)
+
+## 0.3.15
+
+### Patch Changes
+
+- 383f69f: feat: support more complex RN styling with twrnc
+
+## 0.3.14
+
+### Patch Changes
+
+- 9a1d59b: Feat: Implement `onInit` hook for React and Solid, React now uses `useRef` calling `onInit` inline so we run the code before mount
+
+## 0.3.13
+
+### Patch Changes
+
+- f86e2ec: Fix: Angular generator to run `onMount` and `onUpdate` hooks on the client side only and use `onInit` hook to run both on CSR and SSR
+
+## 0.3.12
+
+### Patch Changes
+
+- 3a04558: bump `neotraverse` to fix webpack compat issues
+
 ## 0.3.11
 
 ### Patch Changes

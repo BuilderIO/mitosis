@@ -172,6 +172,8 @@ export const blockToReact = (
   insideJsx: boolean,
   parentSlots: any[] = [],
 ) => {
+  const needsToRenderSlots: any[] = [];
+
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options, component, insideJsx, parentSlots);
   }
@@ -183,6 +185,7 @@ export const blockToReact = (
     }
     return text;
   }
+
   if (json.bindings._text?.code) {
     const processed = processBinding(json.bindings._text.code, options);
     if (
@@ -201,6 +204,34 @@ export const blockToReact = (
 
   for (const key in json.properties) {
     const value = (json.properties[key] || '').replace(/"/g, '&quot;').replace(/\n/g, '\\n');
+
+    // Handle src for Image
+    // Handle src for Image
+    if (json.name === 'Image' && key === 'src') {
+      let src;
+      const imageSource = json.properties.src;
+      if (imageSource) {
+        const isUrl = /^(http|https):\/\/[^ "]+$/.test(imageSource);
+        src = isUrl ? `{ uri: '${imageSource}' }` : `require('${imageSource}')`;
+        str += `source={${src}} `;
+        continue; // Skip further processing for 'src' in Image
+      }
+    }
+
+    // Handle href for TouchableOpacity
+    if (json.name === 'TouchableOpacity' && key === 'href') {
+      const hrefValue = processBinding(value, options);
+      if (hrefValue) {
+        const onPress = `() => Linking.openURL(${JSON.stringify(hrefValue)})`;
+        str += ` onPress={${onPress}} `;
+      }
+      continue; // Skip further processing for 'href' in TouchableOpacity
+    }
+
+    // Ignore target for TouchableOpacity
+    if (json.name === 'TouchableOpacity' && key === 'target') {
+      continue; // Skip further processing for 'target' in TouchableOpacity
+    }
 
     if (key === 'class') {
       str = `${str.trim()} className="${value}" `;
@@ -233,6 +264,29 @@ export const blockToReact = (
 
     const useBindingValue = processBinding(value, options);
 
+    if (json.name === 'Image' && key === 'src') {
+      let src;
+      const imageSource = processBinding(value, options);
+      if (imageSource) {
+        src = `{ uri: ${imageSource} }`;
+        str += `source={${src}} `;
+        continue; // Skip further processing for 'src' in Image
+      }
+    }
+    // Handle href for TouchableOpacity
+    if (json.name === 'TouchableOpacity' && key === 'href') {
+      const hrefValue = processBinding(value, options);
+      if (hrefValue) {
+        const onPress = `() => Linking.openURL(${hrefValue})`;
+        str += ` onPress={${onPress}} `;
+        continue; // Skip further processing for 'href' in TouchableOpacity
+      }
+    }
+
+    // Ignore target for TouchableOpacity
+    if (json.name === 'TouchableOpacity' && key === 'target') {
+      continue; // Skip further processing for 'target' in TouchableOpacity
+    }
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${value})} `;
     } else if (key.startsWith('on')) {
@@ -297,7 +351,6 @@ export const blockToReact = (
   }
 
   // TODO: update MitosisNode for simple code
-  const needsToRenderSlots: any[] = [];
   let childrenNodes = '';
   if (json.children) {
     childrenNodes = json.children

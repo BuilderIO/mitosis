@@ -63,8 +63,10 @@ export default class MyBasicRefComponent {
   }
 
   ngOnChanges() {
-    console.log(\\"Received an update\\");
-    this.node_1_div = this.lowerCaseName();
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Received an update\\");
+      this.node_1_div = this.lowerCaseName();
+    }
   }
 }
 
@@ -209,25 +211,23 @@ export default class MyBasicComponent {
   };
   node_0_div = null;
 
-  constructor(public myService: MyService) {
-    const hi = this.myService.method(\\"hi\\");
-    console.log(hi);
-  }
+  constructor(public myService: MyService) {}
 
   ngOnInit() {
-    const onMountHook_0 = () => {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+    this.node_0_div = this.myService.method(\\"hello\\") + this.name;
+
+    if (typeof window !== \\"undefined\\") {
       const bye = this.myService.method(\\"hi\\");
       console.log(bye);
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      this.node_0_div = this.myService.method(\\"hello\\") + this.name;
-    };
-    onMountHook_1();
+    }
   }
 
   ngOnChanges() {
-    this.node_0_div = this.myService.method(\\"hello\\") + this.name;
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = this.myService.method(\\"hello\\") + this.name;
+    }
   }
 }
 
@@ -266,12 +266,12 @@ export default class MyBasicOnMountUpdateComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {
-    this.name = \\"PatrickJS onInit\\" + this.hi;
-  }
-
   ngOnInit() {
-    this.name = \\"PatrickJS onMount\\" + this.bye;
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+
+    if (typeof window !== \\"undefined\\") {
+      this.name = \\"PatrickJS onMount\\" + this.bye;
+    }
   }
 }
 
@@ -312,8 +312,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -354,8 +356,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -531,7 +535,9 @@ export default class MyBasicForComponent {
   node_0_input = (event, person) => this.node_0_input_event(event, person);
 
   ngOnInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 
@@ -607,7 +613,9 @@ export default class MyBasicRefComponent {
   }
 
   ngOnChanges() {
-    this.node_1_div = this.lowerCaseName();
+    if (typeof window !== \\"undefined\\") {
+      this.node_1_div = this.lowerCaseName();
+    }
   }
 }
 
@@ -699,7 +707,9 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngOnChanges() {
-    this._prevCount = this.count;
+    if (typeof window !== \\"undefined\\") {
+      this._prevCount = this.count;
+    }
   }
 }
 
@@ -1002,20 +1012,19 @@ export default class CustomCode {
   node_0_div = null;
 
   ngOnInit() {
-    const onMountHook_0 = () => {
+    this.node_0_div =
+      \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+
+    if (typeof window !== \\"undefined\\") {
       this.findAndRunScripts();
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      this.node_0_div =
-        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
-    };
-    onMountHook_1();
+    }
   }
 
   ngOnChanges() {
-    this.node_0_div =
-      \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div =
+        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+    }
   }
 }
 
@@ -1099,20 +1108,19 @@ export default class CustomCode {
   node_0_div = null;
 
   ngOnInit() {
-    const onMountHook_0 = () => {
+    this.node_0_div =
+      \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+
+    if (typeof window !== \\"undefined\\") {
       this.findAndRunScripts();
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      this.node_0_div =
-        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
-    };
-    onMountHook_1();
+    }
   }
 
   ngOnChanges() {
-    this.node_0_div =
-      \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div =
+        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+    }
   }
 }
 
@@ -1153,7 +1161,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -1441,13 +1449,18 @@ export default class FormComponent {
     }
   }
   node_1_div = null;
+  trackByBlock0(index, block) {
+    return block.id;
+  }
 
   ngOnInit() {
     this.node_1_div = JSON.stringify(this.responseData, null, 2);
   }
 
   ngOnChanges() {
-    this.node_1_div = JSON.stringify(this.responseData, null, 2);
+    if (typeof window !== \\"undefined\\") {
+      this.node_1_div = JSON.stringify(this.responseData, null, 2);
+    }
   }
 }
 
@@ -1530,7 +1543,10 @@ export default class Image {
   node_1_img = null;
 
   ngOnInit() {
-    const onMountHook_0 = () => {
+    this.node_0_Show = !this.useLazyLoading() || this.load;
+    this.node_1_img = \\"builder-image\\" + (this._class ? \\" \\" + this._class : \\"\\");
+
+    if (typeof window !== \\"undefined\\") {
       if (this.useLazyLoading()) {
         // throttled scroll capture listener
         const listener = () => {
@@ -1553,22 +1569,15 @@ export default class Image {
         });
         listener();
       }
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      this.node_0_Show = !this.useLazyLoading() || this.load;
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      this.node_1_img =
-        \\"builder-image\\" + (this._class ? \\" \\" + this._class : \\"\\");
-    };
-    onMountHook_2();
+    }
   }
 
   ngOnChanges() {
-    this.node_0_Show = !this.useLazyLoading() || this.load;
-    this.node_1_img = \\"builder-image\\" + (this._class ? \\" \\" + this._class : \\"\\");
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Show = !this.useLazyLoading() || this.load;
+      this.node_1_img =
+        \\"builder-image\\" + (this._class ? \\" \\" + this._class : \\"\\");
+    }
   }
 
   ngOnDestroy() {
@@ -1669,10 +1678,12 @@ export default class ImgComponent {
   }
 
   ngOnChanges() {
-    this.node_0_img = {
-      objectFit: this.backgroundSize || \\"cover\\",
-      objectPosition: this.backgroundPosition || \\"center\\",
-    };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_img = {
+        objectFit: this.backgroundSize || \\"cover\\",
+        objectPosition: this.backgroundPosition || \\"center\\",
+      };
+    }
   }
 }
 
@@ -1848,12 +1859,14 @@ export default class SectionComponent {
   }
 
   ngOnChanges() {
-    this.node_0_section =
-      this.maxWidth && typeof this.maxWidth === \\"number\\"
-        ? {
-            maxWidth: this.maxWidth,
-          }
-        : undefined;
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_section =
+        this.maxWidth && typeof this.maxWidth === \\"number\\"
+          ? {
+              maxWidth: this.maxWidth,
+            }
+          : undefined;
+    }
   }
 }
 
@@ -2121,7 +2134,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         ></textarea>
         <button class=\\"button\\" (click)=\\"node_0_button($event)\\">Submit</button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -2181,17 +2196,22 @@ export default class SmileReviews {
     event.preventDefault();
     this.showReviewPrompt = false;
   };
+  trackByReview0(index, review) {
+    return review.id;
+  }
 
   ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews = data.data;
+        });
+    }
   }
 }
 
@@ -2276,9 +2296,11 @@ export default class Text {
   }
 
   ngOnChanges() {
-    this.node_0_div = {
-      test: this.name || \\"any name\\",
-    };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = {
+        test: this.name || \\"any name\\",
+      };
+    }
   }
 }
 
@@ -2388,16 +2410,18 @@ export default class Video {
   }
 
   ngOnChanges() {
-    this.node_0_video = {
-      width: \\"100%\\",
-      height: \\"100%\\",
-      ...this.attributes?.style,
-      objectFit: this.fit,
-      objectPosition: this.position,
-      // Hack to get object fit to work as expected and
-      // not have the video overflow
-      borderRadius: 1,
-    };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_video = {
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...this.attributes?.style,
+        objectFit: this.fit,
+        objectPosition: this.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      };
+    }
   }
 }
 
@@ -2629,20 +2653,22 @@ export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
   ngOnChanges() {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetch(\\"https://patrickjs.com/api/resource.json\\", {
-      signal,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.name = data.name;
-      });
-    return () => {
-      if (!signal.aborted) {
-        controller.abort();
-      }
-    };
+    if (typeof window !== \\"undefined\\") {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    }
   }
 }
 
@@ -3265,9 +3291,13 @@ import { Component, Input } from \\"@angular/core\\";
 export default class MyComponent {
   @Input() componentRef;
 
-  refToUse = !(this.componentRef instanceof Function)
-    ? this.componentRef
-    : null;
+  refToUse = null;
+
+  ngOnInit() {
+    this.refToUse = !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null;
+  }
 }
 
 @NgModule({
@@ -3321,7 +3351,9 @@ export default class Button {
   }
 
   ngOnChanges() {
-    this.node_0_div = this.baz(1);
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = this.baz(1);
+    }
   }
 }
 
@@ -3373,9 +3405,11 @@ export default class RenderContent {
   }
 
   ngOnChanges() {
-    this.node_0_RenderBlock = {
-      ...this.getRenderContentProps(this.renderContentProps.block, 0),
-    };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_RenderBlock = {
+        ...this.getRenderContentProps(this.renderContentProps.block, 0),
+      };
+    }
   }
 }
 
@@ -3439,8 +3473,10 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MultipleOnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
-    console.log(\\"Runs on every update/rerender as well\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+      console.log(\\"Runs on every update/rerender as well\\");
+    }
   }
 }
 
@@ -3479,15 +3515,17 @@ export default class MultipleOnUpdateWithDeps {
   d = \\"d\\";
 
   ngOnChanges() {
-    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     }
   }
 }
@@ -3697,7 +3735,9 @@ export default class Embed {
   }
 
   ngOnInit() {
-    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    if (typeof window !== \\"undefined\\") {
+      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    }
   }
 }
 
@@ -3730,12 +3770,12 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class OnInit {
-  constructor() {
-    console.log(\\"onInit\\");
-  }
-
   ngOnInit() {
-    console.log(\\"onMount\\");
+    console.log(\\"onInit\\");
+
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 
@@ -3776,7 +3816,7 @@ export default class OnInit {
 
   name = \\"\\";
 
-  constructor() {
+  ngOnInit() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   }
@@ -3812,7 +3852,9 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -3850,18 +3892,20 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 
@@ -3895,7 +3939,9 @@ import { Component } from \\"@angular/core\\";
 })
 export default class OnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+    }
   }
 }
 
@@ -3934,12 +3980,14 @@ export default class OnUpdateWithDeps {
   b = \\"b\\";
 
   ngOnChanges() {
-    console.log(
-      \\"Runs when this.a, this.b or size changes\\",
-      this.a,
-      this.b,
-      this.size
-    );
+    if (typeof window !== \\"undefined\\") {
+      console.log(
+        \\"Runs when this.a, this.b or size changes\\",
+        this.a,
+        this.b,
+        this.size
+      );
+    }
   }
 }
 
@@ -4190,9 +4238,11 @@ export default class OnUpdate {
   };
 
   ngOnChanges() {
-    this.foo({
-      someOption: this.bar,
-    });
+    if (typeof window !== \\"undefined\\") {
+      this.foo({
+        someOption: this.bar,
+      });
+    }
   }
 }
 
@@ -4244,7 +4294,9 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
         ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"node_1_Show\\">
-        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+        <ng-container
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+        >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
@@ -4465,31 +4517,26 @@ export default class RenderBlock {
   node_1_Show = null;
   node_2_Show = null;
   mergedInputs_3ka5tf = null;
+  trackByData0(index, data) {
+    return index;
+  }
   mergedInputs_r2fkt2 = null;
+  trackByChild1(_, child) {
+    return \\"render-block-\\" + child.id;
+  }
+  trackByChild2(_, child) {
+    return \\"block-style-\\" + child.id;
+  }
 
   constructor(private vcRef) {}
 
   ngOnInit() {
-    const onMountHook_0 = () => {
-      this.node_0_Show = isEmptyHtmlElement(this.tag);
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
-    };
-    onMountHook_2();
-    const onMountHook_3 = () => {
-      this.mergedInputs_3ka5tf = { ...this.attributes, ...this.actions };
-    };
-    onMountHook_3();
-    const onMountHook_4 = () => {
-      this.mergedInputs_r2fkt2 = { ...this.renderComponentProps };
-    };
-    onMountHook_4();
+    this.node_0_Show = isEmptyHtmlElement(this.tag);
+    this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
+    this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
+    this.mergedInputs_3ka5tf = { ...this.attributes, ...this.actions };
+
+    this.mergedInputs_r2fkt2 = { ...this.renderComponentProps };
 
     this.myContent = [
       this.vcRef.createEmbeddedView(this.rendercomponenttagTemplateRef)
@@ -4499,11 +4546,13 @@ export default class RenderBlock {
   }
 
   ngOnChanges() {
-    this.node_0_Show = isEmptyHtmlElement(this.tag);
-    this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
-    this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
-    this.mergedInputs_3ka5tf = { ...this.attributes, ...this.actions };
-    this.mergedInputs_r2fkt2 = { ...this.renderComponentProps };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Show = isEmptyHtmlElement(this.tag);
+      this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
+      this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
+      this.mergedInputs_3ka5tf = { ...this.attributes, ...this.actions };
+      this.mergedInputs_r2fkt2 = { ...this.renderComponentProps };
+    }
   }
 }
 
@@ -4559,11 +4608,15 @@ export default class RenderContent {
   @Input() content;
 
   ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents);
+    }
   }
 
   ngOnChanges() {
-    dispatchNewContentToVisualEditor(this.content);
+    if (typeof window !== \\"undefined\\") {
+      dispatchNewContentToVisualEditor(this.content);
+    }
   }
 }
 
@@ -4811,7 +4864,9 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"nested-show, NestedShow\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items; let idx = index\\">
+      <ng-container
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+      >
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
@@ -4830,6 +4885,10 @@ import { Component, Input } from \\"@angular/core\\";
 export default class NestedShow {
   @Input() conditionA;
   @Input() items;
+
+  trackByItem0(idx, item) {
+    return idx;
+  }
 }
 
 @NgModule({
@@ -4945,8 +5004,10 @@ export default class MyBasicComponent {
   @Input() foo;
 
   ngOnChanges() {
-    console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"props.id changed\\", this.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+    }
   }
 }
 
@@ -5051,6 +5112,62 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > stateInit 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <div>{{asfas}}</div>
+      <div>{{someCompute}}</div>
+      <div>{{someOtherVal}}</div>
+      <div>{{sf}}</div>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() val;
+
+  add = function add(a, b) {
+    return a + b;
+  };
+  asfas = \\"asga\\";
+  subtract() {
+    return this.someCompute - this.someOtherVal;
+  }
+  someCompute = null;
+  someOtherVal = null;
+  sf = null;
+
+  ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
+    this.someOtherVal = this.val;
+
+    this.sf = this.add(this.val, 34);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -5085,9 +5202,11 @@ export default class MyComponent {
   }
 
   ngOnChanges() {
-    this.node_0_div = {
-      width: \\"100%\\",
-    };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = {
+        width: \\"100%\\",
+      };
+    }
   }
 }
 
@@ -5215,6 +5334,51 @@ export default class SvgComponent {}
   exports: [SvgComponent],
 })
 export class SvgComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > twoForsTrackBy 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
+        <div>{{item}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
+        <div>{{item}}</div>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  items = [1, 2, 3];
+  trackByItem0(_, item) {
+    return item;
+  }
+  trackByItem1(_, item) {
+    return item;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -5463,7 +5627,10 @@ export default class UseTargetComponent {
   }
   lastName = \\"bar\\";
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+    }
+  }
 }
 
 @NgModule({
@@ -5501,7 +5668,7 @@ import { register } from \\"swiper/element/bundle\\";
   ],
 })
 export default class MyBasicWebComponent {
-  constructor() {
+  ngOnInit() {
     register();
   }
 }
@@ -5614,8 +5781,10 @@ export default class MyBasicRefComponent {
   }
 
   ngOnChanges() {
-    console.log(\\"Received an update\\");
-    this.node_1_div = this.lowerCaseName();
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Received an update\\");
+      this.node_1_div = this.lowerCaseName();
+    }
   }
 }
 
@@ -5764,25 +5933,23 @@ export default class MyBasicComponent {
   };
   node_0_div = null;
 
-  constructor(public myService: MyService) {
-    const hi = this.myService.method(\\"hi\\");
-    console.log(hi);
-  }
+  constructor(public myService: MyService) {}
 
   ngOnInit() {
-    const onMountHook_0 = () => {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+    this.node_0_div = this.myService.method(\\"hello\\") + this.name;
+
+    if (typeof window !== \\"undefined\\") {
       const bye = this.myService.method(\\"hi\\");
       console.log(bye);
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      this.node_0_div = this.myService.method(\\"hello\\") + this.name;
-    };
-    onMountHook_1();
+    }
   }
 
   ngOnChanges() {
-    this.node_0_div = this.myService.method(\\"hello\\") + this.name;
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = this.myService.method(\\"hello\\") + this.name;
+    }
   }
 }
 
@@ -5826,12 +5993,12 @@ export default class MyBasicOnMountUpdateComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {
-    this.name = \\"PatrickJS onInit\\" + this.hi;
-  }
-
   ngOnInit() {
-    this.name = \\"PatrickJS onMount\\" + this.bye;
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+
+    if (typeof window !== \\"undefined\\") {
+      this.name = \\"PatrickJS onMount\\" + this.bye;
+    }
   }
 }
 
@@ -5872,8 +6039,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -5914,8 +6083,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -6096,7 +6267,9 @@ export default class MyBasicForComponent {
   node_0_input = (event, person) => this.node_0_input_event(event, person);
 
   ngOnInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 
@@ -6176,7 +6349,9 @@ export default class MyBasicRefComponent {
   }
 
   ngOnChanges() {
-    this.node_1_div = this.lowerCaseName();
+    if (typeof window !== \\"undefined\\") {
+      this.node_1_div = this.lowerCaseName();
+    }
   }
 }
 
@@ -6276,7 +6451,9 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngOnChanges() {
-    this._prevCount = this.count;
+    if (typeof window !== \\"undefined\\") {
+      this._prevCount = this.count;
+    }
   }
 }
 
@@ -6618,20 +6795,19 @@ export default class CustomCode {
   node_0_div = null;
 
   ngOnInit() {
-    const onMountHook_0 = () => {
+    this.node_0_div =
+      \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+
+    if (typeof window !== \\"undefined\\") {
       this.findAndRunScripts();
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      this.node_0_div =
-        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
-    };
-    onMountHook_1();
+    }
   }
 
   ngOnChanges() {
-    this.node_0_div =
-      \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div =
+        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+    }
   }
 }
 
@@ -6720,20 +6896,19 @@ export default class CustomCode {
   node_0_div = null;
 
   ngOnInit() {
-    const onMountHook_0 = () => {
+    this.node_0_div =
+      \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+
+    if (typeof window !== \\"undefined\\") {
       this.findAndRunScripts();
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      this.node_0_div =
-        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
-    };
-    onMountHook_1();
+    }
   }
 
   ngOnChanges() {
-    this.node_0_div =
-      \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div =
+        \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+    }
   }
 }
 
@@ -6798,7 +6973,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -7093,13 +7268,18 @@ export default class FormComponent {
     }
   }
   node_1_div = null;
+  trackByBlock0(index, block) {
+    return block.id;
+  }
 
   ngOnInit() {
     this.node_1_div = JSON.stringify(this.responseData, null, 2);
   }
 
   ngOnChanges() {
-    this.node_1_div = JSON.stringify(this.responseData, null, 2);
+    if (typeof window !== \\"undefined\\") {
+      this.node_1_div = JSON.stringify(this.responseData, null, 2);
+    }
   }
 }
 
@@ -7201,7 +7381,10 @@ export default class Image {
   node_1_img = null;
 
   ngOnInit() {
-    const onMountHook_0 = () => {
+    this.node_0_Show = !this.useLazyLoading() || this.load;
+    this.node_1_img = \\"builder-image\\" + (this._class ? \\" \\" + this._class : \\"\\");
+
+    if (typeof window !== \\"undefined\\") {
       if (this.useLazyLoading()) {
         // throttled scroll capture listener
         const listener = () => {
@@ -7224,22 +7407,15 @@ export default class Image {
         });
         listener();
       }
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      this.node_0_Show = !this.useLazyLoading() || this.load;
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      this.node_1_img =
-        \\"builder-image\\" + (this._class ? \\" \\" + this._class : \\"\\");
-    };
-    onMountHook_2();
+    }
   }
 
   ngOnChanges() {
-    this.node_0_Show = !this.useLazyLoading() || this.load;
-    this.node_1_img = \\"builder-image\\" + (this._class ? \\" \\" + this._class : \\"\\");
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Show = !this.useLazyLoading() || this.load;
+      this.node_1_img =
+        \\"builder-image\\" + (this._class ? \\" \\" + this._class : \\"\\");
+    }
   }
 
   ngOnDestroy() {
@@ -7357,10 +7533,12 @@ export default class ImgComponent {
   }
 
   ngOnChanges() {
-    this.node_0_img = {
-      objectFit: this.backgroundSize || \\"cover\\",
-      objectPosition: this.backgroundPosition || \\"center\\",
-    };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_img = {
+        objectFit: this.backgroundSize || \\"cover\\",
+        objectPosition: this.backgroundPosition || \\"center\\",
+      };
+    }
   }
 }
 
@@ -7558,12 +7736,14 @@ export default class SectionComponent {
   }
 
   ngOnChanges() {
-    this.node_0_section =
-      this.maxWidth && typeof this.maxWidth === \\"number\\"
-        ? {
-            maxWidth: this.maxWidth,
-          }
-        : undefined;
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_section =
+        this.maxWidth && typeof this.maxWidth === \\"number\\"
+          ? {
+              maxWidth: this.maxWidth,
+            }
+          : undefined;
+    }
   }
 }
 
@@ -7869,7 +8049,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         ></textarea>
         <button class=\\"button\\" (click)=\\"node_0_button($event)\\">Submit</button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -7929,17 +8111,22 @@ export default class SmileReviews {
     event.preventDefault();
     this.showReviewPrompt = false;
   };
+  trackByReview0(index, review) {
+    return review.id;
+  }
 
   ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews = data.data;
+        });
+    }
   }
 }
 
@@ -8037,9 +8224,11 @@ export default class Text {
   }
 
   ngOnChanges() {
-    this.node_0_div = {
-      test: this.name || \\"any name\\",
-    };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = {
+        test: this.name || \\"any name\\",
+      };
+    }
   }
 }
 
@@ -8183,16 +8372,18 @@ export default class Video {
   }
 
   ngOnChanges() {
-    this.node_0_video = {
-      width: \\"100%\\",
-      height: \\"100%\\",
-      ...this.attributes?.style,
-      objectFit: this.fit,
-      objectPosition: this.position,
-      // Hack to get object fit to work as expected and
-      // not have the video overflow
-      borderRadius: 1,
-    };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_video = {
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...this.attributes?.style,
+        objectFit: this.fit,
+        objectPosition: this.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      };
+    }
   }
 }
 
@@ -8436,20 +8627,22 @@ export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
   ngOnChanges() {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetch(\\"https://patrickjs.com/api/resource.json\\", {
-      signal,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.name = data.name;
-      });
-    return () => {
-      if (!signal.aborted) {
-        controller.abort();
-      }
-    };
+    if (typeof window !== \\"undefined\\") {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    }
   }
 }
 
@@ -9110,9 +9303,13 @@ import { Component, Input } from \\"@angular/core\\";
 export default class MyComponent {
   @Input() componentRef!: any;
 
-  refToUse = !(this.componentRef instanceof Function)
-    ? this.componentRef
-    : null;
+  refToUse = null;
+
+  ngOnInit() {
+    this.refToUse = !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null;
+  }
 }
 
 @NgModule({
@@ -9170,7 +9367,9 @@ export default class Button {
   }
 
   ngOnChanges() {
-    this.node_0_div = this.baz(1);
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = this.baz(1);
+    }
   }
 }
 
@@ -9229,9 +9428,11 @@ export default class RenderContent {
   }
 
   ngOnChanges() {
-    this.node_0_RenderBlock = {
-      ...this.getRenderContentProps(this.renderContentProps.block, 0),
-    };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_RenderBlock = {
+        ...this.getRenderContentProps(this.renderContentProps.block, 0),
+      };
+    }
   }
 }
 
@@ -9295,8 +9496,10 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MultipleOnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
-    console.log(\\"Runs on every update/rerender as well\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+      console.log(\\"Runs on every update/rerender as well\\");
+    }
   }
 }
 
@@ -9335,15 +9538,17 @@ export default class MultipleOnUpdateWithDeps {
   d = \\"d\\";
 
   ngOnChanges() {
-    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     }
   }
 }
@@ -9558,7 +9763,9 @@ export default class Embed {
   }
 
   ngOnInit() {
-    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    if (typeof window !== \\"undefined\\") {
+      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    }
   }
 }
 
@@ -9591,12 +9798,12 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class OnInit {
-  constructor() {
-    console.log(\\"onInit\\");
-  }
-
   ngOnInit() {
-    console.log(\\"onMount\\");
+    console.log(\\"onInit\\");
+
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 
@@ -9641,7 +9848,7 @@ export default class OnInit {
 
   name = \\"\\";
 
-  constructor() {
+  ngOnInit() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   }
@@ -9677,7 +9884,9 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -9715,18 +9924,20 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 
@@ -9760,7 +9971,9 @@ import { Component } from \\"@angular/core\\";
 })
 export default class OnUpdate {
   ngOnChanges() {
-    console.log(\\"Runs on every update/rerender\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+    }
   }
 }
 
@@ -9803,12 +10016,14 @@ export default class OnUpdateWithDeps {
   b = \\"b\\";
 
   ngOnChanges() {
-    console.log(
-      \\"Runs when this.a, this.b or size changes\\",
-      this.a,
-      this.b,
-      this.size
-    );
+    if (typeof window !== \\"undefined\\") {
+      console.log(
+        \\"Runs when this.a, this.b or size changes\\",
+        this.a,
+        this.b,
+        this.size
+      );
+    }
   }
 }
 
@@ -10097,9 +10312,11 @@ export default class OnUpdate {
   };
 
   ngOnChanges() {
-    this.foo({
-      someOption: this.bar,
-    });
+    if (typeof window !== \\"undefined\\") {
+      this.foo({
+        someOption: this.bar,
+      });
+    }
   }
 }
 
@@ -10163,7 +10380,9 @@ import type { RepeatData } from \\"./types.js\\";
         ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"node_1_Show\\">
-        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+        <ng-container
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+        >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
@@ -10384,31 +10603,26 @@ export default class RenderBlock {
   node_1_Show = null;
   node_2_Show = null;
   mergedInputs_3ka5tf = null;
+  trackByData0(index, data) {
+    return index;
+  }
   mergedInputs_r2fkt2 = null;
+  trackByChild1(_, child) {
+    return \\"render-block-\\" + child.id;
+  }
+  trackByChild2(_, child) {
+    return \\"block-style-\\" + child.id;
+  }
 
   constructor(private vcRef: ViewContainerRef) {}
 
   ngOnInit() {
-    const onMountHook_0 = () => {
-      this.node_0_Show = isEmptyHtmlElement(this.tag);
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
-    };
-    onMountHook_2();
-    const onMountHook_3 = () => {
-      this.mergedInputs_3ka5tf = { ...this.attributes, ...this.actions };
-    };
-    onMountHook_3();
-    const onMountHook_4 = () => {
-      this.mergedInputs_r2fkt2 = { ...this.renderComponentProps };
-    };
-    onMountHook_4();
+    this.node_0_Show = isEmptyHtmlElement(this.tag);
+    this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
+    this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
+    this.mergedInputs_3ka5tf = { ...this.attributes, ...this.actions };
+
+    this.mergedInputs_r2fkt2 = { ...this.renderComponentProps };
 
     this.myContent = [
       this.vcRef.createEmbeddedView(this.rendercomponenttagTemplateRef)
@@ -10418,11 +10632,13 @@ export default class RenderBlock {
   }
 
   ngOnChanges() {
-    this.node_0_Show = isEmptyHtmlElement(this.tag);
-    this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
-    this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
-    this.mergedInputs_3ka5tf = { ...this.attributes, ...this.actions };
-    this.mergedInputs_r2fkt2 = { ...this.renderComponentProps };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Show = isEmptyHtmlElement(this.tag);
+      this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
+      this.node_2_Show = !isEmptyHtmlElement(this.tag) && !this.repeatItemData;
+      this.mergedInputs_3ka5tf = { ...this.attributes, ...this.actions };
+      this.mergedInputs_r2fkt2 = { ...this.renderComponentProps };
+    }
   }
 }
 
@@ -10486,11 +10702,15 @@ export default class RenderContent {
   @Input() content!: Props[\\"content\\"];
 
   ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents);
+    }
   }
 
   ngOnChanges() {
-    dispatchNewContentToVisualEditor(this.content);
+    if (typeof window !== \\"undefined\\") {
+      dispatchNewContentToVisualEditor(this.content);
+    }
   }
 }
 
@@ -10759,7 +10979,9 @@ interface Props {
   selector: \\"nested-show, NestedShow\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items; let idx = index\\">
+      <ng-container
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+      >
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
@@ -10778,6 +11000,10 @@ interface Props {
 export default class NestedShow {
   @Input() conditionA!: Props[\\"conditionA\\"];
   @Input() items!: Props[\\"items\\"];
+
+  trackByItem0(idx, item) {
+    return idx;
+  }
 }
 
 @NgModule({
@@ -10910,8 +11136,10 @@ export default class MyBasicComponent {
   @Input() foo!: Props[\\"foo\\"];
 
   ngOnChanges() {
-    console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"props.id changed\\", this.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    }
   }
 }
 
@@ -11016,6 +11244,62 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > stateInit 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <div>{{asfas}}</div>
+      <div>{{someCompute}}</div>
+      <div>{{someOtherVal}}</div>
+      <div>{{sf}}</div>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() val!: any;
+
+  add = function add(a, b) {
+    return a + b;
+  };
+  asfas = \\"asga\\";
+  subtract() {
+    return this.someCompute - this.someOtherVal;
+  }
+  someCompute = null;
+  someOtherVal = null;
+  sf = null;
+
+  ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
+    this.someOtherVal = this.val;
+
+    this.sf = this.add(this.val, 34);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11050,9 +11334,11 @@ export default class MyComponent {
   }
 
   ngOnChanges() {
-    this.node_0_div = {
-      width: \\"100%\\",
-    };
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = {
+        width: \\"100%\\",
+      };
+    }
   }
 }
 
@@ -11180,6 +11466,51 @@ export default class SvgComponent {}
   exports: [SvgComponent],
 })
 export class SvgComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > twoForsTrackBy 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
+        <div>{{item}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
+        <div>{{item}}</div>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  items = [1, 2, 3];
+  trackByItem0(_, item) {
+    return item;
+  }
+  trackByItem1(_, item) {
+    return item;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -11435,7 +11766,10 @@ export default class UseTargetComponent {
   }
   lastName = \\"bar\\";
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+    }
+  }
 }
 
 @NgModule({
@@ -11473,7 +11807,7 @@ import { register } from \\"swiper/element/bundle\\";
   ],
 })
 export default class MyBasicWebComponent {
-  constructor() {
+  ngOnInit() {
     register();
   }
 }
@@ -11600,7 +11934,9 @@ export default class MyComponent {
   }
 
   ngOnChanges() {
-    this.node_0_input = this.fillings === \\"Guac (extra)\\";
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_input = this.fillings === \\"Guac (extra)\\";
+    }
   }
 }
 
@@ -11679,9 +12015,11 @@ export default class MyComponent {
   }
 
   ngOnChanges() {
-    this.node_0_input = \`form-input \${this.disabled ? \\"disabled\\" : \\"\\"} \${
-      this.focus ? \\"focus\\" : \\"\\"
-    }\`;
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_input = \`form-input \${this.disabled ? \\"disabled\\" : \\"\\"} \${
+        this.focus ? \\"focus\\" : \\"\\"
+      }\`;
+    }
   }
 }
 
@@ -11931,11 +12269,15 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   ngOnInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
   ngOnChanges() {
-    console.log(\\"onAfterUpdate\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onAfterUpdate\\");
+    }
   }
 
   ngOnDestroy() {
@@ -12024,7 +12366,9 @@ export default class MyComponent {
   };
 
   ngOnChanges() {
-    this.calculateResult(this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      this.calculateResult(this.a, this.b);
+    }
   }
 }
 
@@ -12259,7 +12603,9 @@ export default class MyComponent {
   }
 
   ngOnChanges() {
-    this.node_0_input = this.fillings === \\"Guac (extra)\\";
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_input = this.fillings === \\"Guac (extra)\\";
+    }
   }
 }
 
@@ -12338,9 +12684,11 @@ export default class MyComponent {
   }
 
   ngOnChanges() {
-    this.node_0_input = \`form-input \${this.disabled ? \\"disabled\\" : \\"\\"} \${
-      this.focus ? \\"focus\\" : \\"\\"
-    }\`;
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_input = \`form-input \${this.disabled ? \\"disabled\\" : \\"\\"} \${
+        this.focus ? \\"focus\\" : \\"\\"
+      }\`;
+    }
   }
 }
 
@@ -12590,11 +12938,15 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   ngOnInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
   ngOnChanges() {
-    console.log(\\"onAfterUpdate\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onAfterUpdate\\");
+    }
   }
 
   ngOnDestroy() {
@@ -12683,7 +13035,9 @@ export default class MyComponent {
   };
 
   ngOnChanges() {
-    this.calculateResult(this.a, this.b);
+    if (typeof window !== \\"undefined\\") {
+      this.calculateResult(this.a, this.b);
+    }
   }
 }
 

@@ -264,7 +264,7 @@ const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): stri
   if (type === 'native') {
     return `
     import * as React from 'react';
-    import { FlatList, ScrollView, View, StyleSheet, Image, Text, Pressable, TextInput } from 'react-native';
+    import { FlatList, ScrollView, View, StyleSheet, Image, Text, Pressable, TextInput, TouchableOpacity, Button, Linking, Pressable } from 'react-native';
     `;
   }
   if (type === 'taro') {
@@ -371,18 +371,13 @@ const _componentToReact = (
   if (hasContext(json) && options.contextType !== 'prop-drill') {
     reactLibImports.add('useContext');
   }
-  if (allRefs.length) {
+  if (allRefs.length || json.hooks.onInit?.code) {
     reactLibImports.add('useRef');
   }
   if (!options.preact && hasPropRef) {
     reactLibImports.add('forwardRef');
   }
-  if (
-    json.hooks.onMount.length ||
-    json.hooks.onUnMount?.code ||
-    json.hooks.onUpdate?.length ||
-    json.hooks.onInit?.code
-  ) {
+  if (json.hooks.onMount.length || json.hooks.onUnMount?.code || json.hooks.onUpdate?.length) {
     reactLibImports.add('useEffect');
   }
 
@@ -451,12 +446,14 @@ const _componentToReact = (
     ${
       json.hooks.onInit?.code
         ? `
-        useEffect(() => {
+        const hasInitialized = useRef(false);
+        if (!hasInitialized.current) {
           ${processHookCode({
             str: json.hooks.onInit.code,
             options,
           })}
-        }, [])
+          hasInitialized.current = true;
+        }
         `
         : ''
     }

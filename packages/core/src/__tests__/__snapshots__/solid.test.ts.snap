@@ -299,6 +299,9 @@ function MyBasicComponent(props) {
 
   const myService = useContext(MyService);
 
+  const hi = myService.method(\\"hi\\");
+  console.log(hi);
+
   onMount(() => {
     const bye = myService.method(\\"hi\\");
     console.log(bye);
@@ -336,6 +339,9 @@ function MyBasicComponent(props) {
 
   const myService = useContext(MyService);
 
+  const hi = myService.method(\\"hi\\");
+  console.log(hi);
+
   onMount(() => {
     const bye = myService.method(\\"hi\\");
     console.log(bye);
@@ -366,6 +372,8 @@ function MyBasicOnMountUpdateComponent(props) {
 
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
 
+  setName(\\"PatrickJS onInit\\" + props.hi);
+
   onMount(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
   });
@@ -391,6 +399,8 @@ function MyBasicOnMountUpdateComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  setName(\\"PatrickJS onInit\\" + props.hi);
 
   onMount(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -4698,6 +4708,8 @@ exports[`Solid > jsx > Javascript Test > onInit & onMount 1`] = `
 "import { onMount } from \\"solid-js\\";
 
 function OnInit(props) {
+  console.log(\\"onInit\\");
+
   onMount(() => {
     console.log(\\"onMount\\");
   });
@@ -4717,6 +4729,8 @@ exports[`Solid > jsx > Javascript Test > onInit & onMount 2`] = `
 "import { onMount } from \\"solid-js\\";
 
 function OnInit(props) {
+  console.log(\\"onInit\\");
+
   onMount(() => {
     console.log(\\"onMount\\");
   });
@@ -4742,6 +4756,9 @@ export const defaultValues = {
 function OnInit(props) {
   const [name, setName] = createSignal(\\"\\");
 
+  setName(defaultValues.name || props.name);
+  console.log(\\"set defaults with props\\");
+
   return (
     <>
       <div>
@@ -4765,6 +4782,9 @@ export const defaultValues = {
 
 function OnInit(props) {
   const [name, setName] = createSignal(\\"\\");
+
+  setName(defaultValues.name || props.name);
+  console.log(\\"set defaults with props\\");
 
   return (
     <>
@@ -6025,25 +6045,25 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > showExpressions 1`] = `
-"An identifier or keyword cannot immediately follow a numeric literal. (35:34)
-  33 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
-  34 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
-> 35 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
+"An identifier or keyword cannot immediately follow a numeric literal. (36:34)
+  34 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
+  35 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
+> 36 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
      |                                  ^
-  36 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
-  37 |
-  38 |"
+  37 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
+  38 |
+  39 |"
 `;
 
 exports[`Solid > jsx > Javascript Test > showExpressions 2`] = `
-"An identifier or keyword cannot immediately follow a numeric literal. (35:34)
-  33 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
-  34 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
-> 35 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
+"An identifier or keyword cannot immediately follow a numeric literal. (36:34)
+  34 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
+  35 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
+> 36 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
      |                                  ^
-  36 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
-  37 |
-  38 |"
+  37 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
+  38 |
+  39 |"
 `;
 
 exports[`Solid > jsx > Javascript Test > showWithFor 1`] = `
@@ -6732,6 +6752,8 @@ exports[`Solid > jsx > Javascript Test > webComponent 1`] = `
 "import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props) {
+  register();
+
   return (
     <>
       <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -6751,6 +6773,8 @@ exports[`Solid > jsx > Javascript Test > webComponent 2`] = `
 "import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props) {
+  register();
+
   return (
     <>
       <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -7121,6 +7145,9 @@ function MyBasicComponent(props: any) {
 
   const myService = useContext(MyService);
 
+  const hi = myService.method(\\"hi\\");
+  console.log(hi);
+
   onMount(() => {
     const bye = myService.method(\\"hi\\");
     console.log(bye);
@@ -7158,6 +7185,9 @@ function MyBasicComponent(props: any) {
 
   const myService = useContext(MyService);
 
+  const hi = myService.method(\\"hi\\");
+  console.log(hi);
+
   onMount(() => {
     const bye = myService.method(\\"hi\\");
     console.log(bye);
@@ -7193,6 +7223,8 @@ function MyBasicOnMountUpdateComponent(props: Props) {
 
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
 
+  setName(\\"PatrickJS onInit\\" + props.hi);
+
   onMount(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
   });
@@ -7223,6 +7255,8 @@ function MyBasicOnMountUpdateComponent(props: Props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  setName(\\"PatrickJS onInit\\" + props.hi);
 
   onMount(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -12128,6 +12162,8 @@ exports[`Solid > jsx > Typescript Test > onInit & onMount 1`] = `
 "import { onMount } from \\"solid-js\\";
 
 function OnInit(props: any) {
+  console.log(\\"onInit\\");
+
   onMount(() => {
     console.log(\\"onMount\\");
   });
@@ -12147,6 +12183,8 @@ exports[`Solid > jsx > Typescript Test > onInit & onMount 2`] = `
 "import { onMount } from \\"solid-js\\";
 
 function OnInit(props: any) {
+  console.log(\\"onInit\\");
+
   onMount(() => {
     console.log(\\"onMount\\");
   });
@@ -12176,6 +12214,9 @@ export const defaultValues = {
 function OnInit(props: Props) {
   const [name, setName] = createSignal(\\"\\");
 
+  setName(defaultValues.name || props.name);
+  console.log(\\"set defaults with props\\");
+
   return (
     <>
       <div>
@@ -12203,6 +12244,9 @@ export const defaultValues = {
 
 function OnInit(props: Props) {
   const [name, setName] = createSignal(\\"\\");
+
+  setName(defaultValues.name || props.name);
+  console.log(\\"set defaults with props\\");
 
   return (
     <>
@@ -13611,25 +13655,25 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > showExpressions 1`] = `
-"An identifier or keyword cannot immediately follow a numeric literal. (38:34)
-  36 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
-  37 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
-> 38 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
+"An identifier or keyword cannot immediately follow a numeric literal. (39:34)
+  37 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
+  38 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
+> 39 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
      |                                  ^
-  39 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
-  40 |
-  41 |"
+  40 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
+  41 |
+  42 |"
 `;
 
 exports[`Solid > jsx > Typescript Test > showExpressions 2`] = `
-"An identifier or keyword cannot immediately follow a numeric literal. (38:34)
-  36 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
-  37 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
-> 38 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
+"An identifier or keyword cannot immediately follow a numeric literal. (39:34)
+  37 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
+  38 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
+> 39 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
      |                                  ^
-  39 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
-  40 |
-  41 |"
+  40 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
+  41 |
+  42 |"
 `;
 
 exports[`Solid > jsx > Typescript Test > showWithFor 1`] = `
@@ -14374,6 +14418,8 @@ exports[`Solid > jsx > Typescript Test > webComponent 1`] = `
 "import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props: any) {
+  register();
+
   return (
     <>
       <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -14393,6 +14439,8 @@ exports[`Solid > jsx > Typescript Test > webComponent 2`] = `
 "import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props: any) {
+  register();
+
   return (
     <>
       <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -14675,25 +14723,25 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Javascript Test > context 1`] = `
-"Identifier expected. (28:8)
-  26 |
-  27 |     return (<>
-> 28 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
+"Identifier expected. (29:8)
+  27 |
+  28 |     return (<>
+> 29 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
      |        ^
-  29 |
   30 |
-  31 |       </>)"
+  31 |
+  32 |       </>)"
 `;
 
 exports[`Solid > svelte > Javascript Test > context 2`] = `
-"Identifier expected. (28:8)
-  26 |
-  27 |     return (<>
-> 28 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
+"Identifier expected. (29:8)
+  27 |
+  28 |     return (<>
+> 29 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
      |        ^
-  29 |
   30 |
-  31 |       </>)"
+  31 |
+  32 |       </>)"
 `;
 
 exports[`Solid > svelte > Javascript Test > each 1`] = `
@@ -15505,25 +15553,25 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Typescript Test > context 1`] = `
-"Identifier expected. (28:8)
-  26 |
-  27 |     return (<>
-> 28 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
+"Identifier expected. (29:8)
+  27 |
+  28 |     return (<>
+> 29 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
      |        ^
-  29 |
   30 |
-  31 |       </>)"
+  31 |
+  32 |       </>)"
 `;
 
 exports[`Solid > svelte > Typescript Test > context 2`] = `
-"Identifier expected. (28:8)
-  26 |
-  27 |     return (<>
-> 28 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
+"Identifier expected. (29:8)
+  27 |
+  28 |     return (<>
+> 29 |       <'activeTab'.Provider  value={activeTab()} ><div >{activeTab()}</div></'activeTab'.Provider>
      |        ^
-  29 |
   30 |
-  31 |       </>)"
+  31 |
+  32 |       </>)"
 `;
 
 exports[`Solid > svelte > Typescript Test > each 1`] = `

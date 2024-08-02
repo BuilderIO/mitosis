@@ -11,6 +11,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -80,6 +84,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -126,8 +134,12 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
-import { useState, useContext, useEffect } from \\"react\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
@@ -140,10 +152,12 @@ function MyBasicComponent(props) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -176,17 +190,23 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 function MyBasicOnMountUpdateComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -215,6 +235,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -244,6 +268,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -273,6 +301,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
@@ -294,6 +326,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
@@ -328,6 +364,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
@@ -363,6 +403,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -411,6 +455,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef } from \\"react\\";
 
@@ -476,6 +524,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useRef } from \\"react\\";
 
@@ -489,9 +541,9 @@ function MyBasicRefAssignmentComponent(props) {
 
   return (
     <View>
-      <Pressable onPress={(evt) => handlerClick(evt)}>
+      <Button onPress={(evt) => handlerClick(evt)}>
         <Text>Click</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -511,6 +563,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -544,9 +600,9 @@ function MyPreviousComponent(props) {
         <Text>, before: </Text>
         <Text>{prevCount.current}</Text>
       </View>
-      <Pressable onPress={(event) => setCount(1)}>
+      <Button onPress={(event) => setCount(1)}>
         <Text>Increment</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -566,24 +622,27 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function Button(props) {
   return (
     <View>
       {props.link ? (
-        <View
+        <TouchableOpacity
           {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          onPress={() => Linking.openURL(props.link)}
         >
           <Text>{props.text}</Text>
-        </View>
+        </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <View type=\\"button\\" {...props.attributes}>
+        <Button type=\\"button\\" {...props.attributes}>
           <Text>{props.text}</Text>
-        </View>
+        </Button>
       ) : null}
     </View>
   );
@@ -604,6 +663,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function Column(props) {
@@ -659,6 +722,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function ContentSlotCode(props) {
@@ -690,6 +757,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -751,6 +822,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -824,6 +899,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -897,6 +976,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef } from \\"react\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
@@ -1160,6 +1243,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -1223,14 +1310,14 @@ function Image(props) {
     <View>
       <View ref={pictureRef}>
         {!useLazyLoading() || load ? (
-          <View
+          <Image
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
-            src={props.image}
+            source={{ uri: props.image }}
             onLoad={(event) => setLoaded()}
             srcset={props.srcset}
             sizes={props.sizes}
-            style={styles.view1}
+            style={styles.image1}
           />
         ) : null}
         <View srcset={props.srcset} />
@@ -1241,7 +1328,7 @@ function Image(props) {
 }
 
 const styles = StyleSheet.create({
-  view1: {
+  image1: {
     opacity: \\"1\\",
     transition: \\"opacity 0.2s ease-in-out\\",
     objectFit: \\"cover\\",
@@ -1264,6 +1351,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -1275,7 +1366,7 @@ function ImgStateComponent(props) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <View src={item} key={itemIndex} />
+        <Image source={{ uri: item }} key={itemIndex} />
       ))}
     </View>
   );
@@ -1296,12 +1387,16 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
 function ImgComponent(props) {
   return (
-    <View
+    <Image
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
@@ -1309,7 +1404,7 @@ function ImgComponent(props) {
       {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
-      src={props.imgSrc}
+      source={{ uri: props.imgSrc }}
     />
   );
 }
@@ -1329,6 +1424,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1367,6 +1466,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import FormInputComponent from \\"./input.raw\\";
 
@@ -1399,6 +1502,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function RawText(props) {
@@ -1420,6 +1527,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function SectionComponent(props) {
@@ -1454,6 +1565,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1494,6 +1609,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function SlotCode(props) {
@@ -1525,6 +1644,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -1551,6 +1674,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -1583,6 +1710,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function SlotCode(props) {
@@ -1611,6 +1742,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 import { kebabCase, snakeCase } from \\"lodash\\";
@@ -1644,27 +1779,27 @@ function SmileReviews(props) {
 
   return (
     <View data-user={name}>
-      <Pressable onPress={(event) => setShowReviewPrompt(true)}>
+      <Button onPress={(event) => setShowReviewPrompt(true)}>
         <Text>Write a review</Text>
-      </Pressable>
+      </Button>
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <TextInput placeholder=\\"Email\\" />
           <TextInput placeholder=\\"Title\\" />
           <View placeholder=\\"How was your experience?\\" />
-          <Pressable
+          <Button
             onPress={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
             }}
           >
             <Text>Submit</Text>
-          </Pressable>
+          </Button>
         </>
       ) : null}
       {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
-          <View src={review.avatar} style={styles.view2} />
+          <Image source={{ uri: review.avatar }} style={styles.image1} />
           <View>
             <View>
               <Text>N: </Text>
@@ -1693,7 +1828,7 @@ const styles = StyleSheet.create({
     boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
     WebkitFontSmoothing: \\"antialiased\\",
   },
-  view2: { height: 30, width: 30, marginRight: 10 },
+  image1: { height: 30, width: 30, marginRight: 10 },
 });
 
 export default SmileReviews;
@@ -1711,13 +1846,17 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function SubmitButton(props) {
   return (
-    <View type=\\"submit\\" {...props.attributes}>
+    <Button type=\\"submit\\" {...props.attributes}>
       <Text>{props.text}</Text>
-    </View>
+    </Button>
   );
 }
 
@@ -1736,6 +1875,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
@@ -1775,6 +1918,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function Textarea(props) {
@@ -1804,6 +1951,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function Video(props) {
@@ -1846,6 +1997,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -1883,6 +2038,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -1932,6 +2091,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, forwardRef } from \\"react\\";
 
@@ -1969,6 +2132,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, forwardRef } from \\"react\\";
 
@@ -2006,6 +2173,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -2052,6 +2223,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props) {
@@ -2079,6 +2254,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props) {
@@ -2106,6 +2285,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props) {
@@ -2133,6 +2316,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -2166,6 +2353,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -2200,6 +2391,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
@@ -2246,6 +2441,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
@@ -2297,6 +2496,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useContext } from \\"react\\";
 import BuilderContext from \\"@dummy/context.js\\";
@@ -2331,28 +2534,31 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function Button(props) {
   return (
     <View>
       {props.link ? (
-        <View
+        <TouchableOpacity
           {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          onPress={() => Linking.openURL(props.link)}
         >
           <Text>{props.text}</Text>
-        </View>
+        </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <Pressable
+        <Button
           type=\\"button\\"
           {...props.attributes}
           onPress={(event) => props.onClick(event)}
         >
           <Text>{props.buttonText}</Text>
-        </Pressable>
+        </Button>
       ) : null}
     </View>
   );
@@ -2382,28 +2588,31 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function Button(props) {
   return (
     <View>
       {props.link ? (
-        <View
+        <TouchableOpacity
           {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          onPress={() => Linking.openURL(props.link)}
         >
           <Text>{props.text}</Text>
-        </View>
+        </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <Pressable
+        <Button
           type=\\"button\\"
           {...props.attributes}
           onPress={(event) => props.onClick(event)}
         >
           <Text>{props.text}</Text>
-        </Pressable>
+        </Button>
       ) : null}
     </View>
   );
@@ -2431,6 +2640,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 const DEFAULT_VALUES = {
@@ -2461,6 +2674,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -2491,6 +2708,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function Button(props) {
@@ -2536,6 +2757,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import RenderBlock from \\"./builder-render-block.raw\\";
 
@@ -2569,6 +2794,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -2604,6 +2833,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -2633,6 +2866,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -2678,6 +2915,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -2704,6 +2945,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function NestedShow(props) {
@@ -2745,6 +2990,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function NestedStyles(props) {
@@ -2783,14 +3032,18 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
   return (
     <View>
-      <Pressable onPress={(e) => console.log(\\"event\\")}>
+      <Button onPress={(e) => console.log(\\"event\\")}>
         <Text>Hello</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -2810,6 +3063,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useRef, useEffect } from \\"react\\";
 
@@ -2861,13 +3118,19 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function OnInit(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -2891,8 +3154,12 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef } from \\"react\\";
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
@@ -2901,10 +3168,12 @@ export const defaultValues = {
 function OnInit(props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <View>
@@ -2929,6 +3198,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -2961,6 +3234,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -2993,6 +3270,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -3019,6 +3300,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -3049,6 +3334,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 const b = 3;
@@ -3076,6 +3365,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props) {
@@ -3102,6 +3395,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -3132,6 +3429,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props) {
@@ -3158,6 +3459,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props) {
@@ -3184,6 +3489,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -3222,6 +3531,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 import { TARGET } from \\"../../constants/target.js\\";
@@ -3492,6 +3805,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useContext, useEffect } from \\"react\\";
 import BuilderContext from \\"@dummy/context.js\\";
@@ -3552,24 +3869,27 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function Button(props) {
   return (
     <>
       {props.link ? (
-        <View
+        <TouchableOpacity
           {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          onPress={() => Linking.openURL(props.link)}
         >
           <Text>{props.text}</Text>
-        </View>
+        </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <View type=\\"button\\" {...props.attributes}>
+        <Button type=\\"button\\" {...props.attributes}>
           <Text>{props.text}</Text>
-        </View>
+        </Button>
       ) : null}
     </>
   );
@@ -3590,6 +3910,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function RenderStyles(props) {
@@ -3625,6 +3949,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
@@ -3651,6 +3979,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
@@ -3684,6 +4016,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function ShowWithOtherValues(props) {
@@ -3837,6 +4173,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function NestedShow(props) {
@@ -3874,6 +4214,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function ShowWithOtherValues(props) {
@@ -3940,6 +4284,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function ShowRootText(props) {
@@ -3973,6 +4321,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -4007,6 +4359,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props) {
@@ -4028,6 +4384,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props) {
@@ -4049,6 +4409,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props) {
@@ -4070,6 +4434,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
@@ -4102,6 +4470,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function StylePropClassAndCss(props) {
@@ -4127,6 +4499,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import Foo from \\"./foo-sub-component\\";
 
@@ -4149,6 +4525,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function SvgComponent(props) {
@@ -4186,6 +4566,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function TypeDependency(props) {
@@ -4211,13 +4595,17 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
   return (
-    <View type=\\"button\\">
+    <Button type=\\"button\\">
       <Text>Button</Text>
-    </View>
+    </Button>
   );
 }
 
@@ -4238,18 +4626,22 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
   return (
-    <View type=\\"button\\" style={styles.view1}>
+    <Button type=\\"button\\" style={styles.button1}>
       <Text>Button</Text>
-    </View>
+    </Button>
   );
 }
 
 const styles = StyleSheet.create({
-  view1: { background: \\"blue\\", color: \\"white\\" },
+  button1: { background: \\"blue\\", color: \\"white\\" },
 });
 
 export default MyComponent;
@@ -4267,13 +4659,17 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
   return (
-    <View type=\\"button\\">
+    <Button type=\\"button\\">
       <Text>Button</Text>
-    </View>
+    </Button>
   );
 }
 
@@ -4294,6 +4690,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -4329,14 +4729,20 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -4368,6 +4774,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -4398,6 +4808,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -4471,6 +4885,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -4521,8 +4939,12 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
-import { useState, useContext, useEffect } from \\"react\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props: any) {
@@ -4535,10 +4957,12 @@ function MyBasicComponent(props: any) {
 
   const myService = useContext(MyService);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     const hi = myService.method(\\"hi\\");
     console.log(hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     const bye = myService.method(\\"hi\\");
@@ -4571,8 +4995,12 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef, useEffect } from \\"react\\";
 
 export interface Props {
   hi: string;
@@ -4584,9 +5012,11 @@ function MyBasicOnMountUpdateComponent(props: Props) {
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(\\"PatrickJS onInit\\" + props.hi);
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -4615,6 +5045,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -4644,6 +5078,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -4673,6 +5111,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
@@ -4694,6 +5136,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 type Props = {
@@ -4733,6 +5179,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
@@ -4768,6 +5218,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -4816,6 +5270,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef } from \\"react\\";
 
@@ -4885,6 +5343,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useRef } from \\"react\\";
 
@@ -4902,9 +5364,9 @@ function MyBasicRefAssignmentComponent(props: Props) {
 
   return (
     <View>
-      <Pressable onPress={(evt) => handlerClick(evt)}>
+      <Button onPress={(evt) => handlerClick(evt)}>
         <Text>Click</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -4924,6 +5386,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -4961,9 +5427,9 @@ function MyPreviousComponent(props: Props) {
         <Text>, before: </Text>
         <Text>{prevCount.current}</Text>
       </View>
-      <Pressable onPress={(event) => setCount(1)}>
+      <Button onPress={(event) => setCount(1)}>
         <Text>Increment</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -4983,6 +5449,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface ButtonProps {
@@ -4996,18 +5466,17 @@ function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
-        <View
+        <TouchableOpacity
           {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          onPress={() => Linking.openURL(props.link)}
         >
           <Text>{props.text}</Text>
-        </View>
+        </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <View type=\\"button\\" {...props.attributes}>
+        <Button type=\\"button\\" {...props.attributes}>
           <Text>{props.text}</Text>
-        </View>
+        </Button>
       ) : null}
     </View>
   );
@@ -5028,6 +5497,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 type Column = {
@@ -5098,6 +5571,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 type Props = {
@@ -5135,6 +5612,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -5201,6 +5682,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -5279,6 +5764,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -5357,6 +5846,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef } from \\"react\\";
 
@@ -5651,6 +6144,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
@@ -5733,14 +6230,14 @@ function Image(props: ImageProps) {
     <View>
       <View ref={pictureRef}>
         {!useLazyLoading() || load ? (
-          <View
+          <Image
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
-            src={props.image}
+            source={{ uri: props.image }}
             onLoad={(event) => setLoaded()}
             srcset={props.srcset}
             sizes={props.sizes}
-            style={styles.view1}
+            style={styles.image1}
           />
         ) : null}
         <View srcset={props.srcset} />
@@ -5751,7 +6248,7 @@ function Image(props: ImageProps) {
 }
 
 const styles = StyleSheet.create({
-  view1: {
+  image1: {
     opacity: \\"1\\",
     transition: \\"opacity 0.2s ease-in-out\\",
     objectFit: \\"cover\\",
@@ -5774,6 +6271,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -5785,7 +6286,7 @@ function ImgStateComponent(props: any) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <View src={item} key={itemIndex} />
+        <Image source={{ uri: item }} key={itemIndex} />
       ))}
     </View>
   );
@@ -5806,6 +6307,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface ImgProps {
@@ -5829,7 +6334,7 @@ import { Builder } from \\"@builder.io/sdk\\";
 
 function ImgComponent(props: ImgProps) {
   return (
-    <View
+    <Image
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
@@ -5837,7 +6342,7 @@ function ImgComponent(props: ImgProps) {
       {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
-      src={props.imgSrc}
+      source={{ uri: props.imgSrc }}
     />
   );
 }
@@ -5857,6 +6362,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface FormInputProps {
@@ -5907,6 +6416,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import FormInputComponent from \\"./input.raw\\";
 
@@ -5939,6 +6452,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface RawTextProps {
@@ -5965,6 +6482,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface SectionProps {
@@ -6005,6 +6526,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface FormSelectProps {
@@ -6057,6 +6582,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 type Props = {
@@ -6092,6 +6621,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 type Props = {
@@ -6122,6 +6655,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 type Props = {
@@ -6158,6 +6695,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 type Props = {
@@ -6190,6 +6731,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -6228,27 +6773,27 @@ function SmileReviews(props: SmileReviewsProps) {
 
   return (
     <View data-user={name}>
-      <Pressable onPress={(event) => setShowReviewPrompt(true)}>
+      <Button onPress={(event) => setShowReviewPrompt(true)}>
         <Text>Write a review</Text>
-      </Pressable>
+      </Button>
       {showReviewPrompt || \\"asdf\\" ? (
         <>
           <TextInput placeholder=\\"Email\\" />
           <TextInput placeholder=\\"Title\\" />
           <View placeholder=\\"How was your experience?\\" />
-          <Pressable
+          <Button
             onPress={(event) => {
               event.preventDefault();
               setShowReviewPrompt(false);
             }}
           >
             <Text>Submit</Text>
-          </Pressable>
+          </Button>
         </>
       ) : null}
       {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view1}>
-          <View src={review.avatar} style={styles.view2} />
+          <Image source={{ uri: review.avatar }} style={styles.image1} />
           <View>
             <View>
               <Text>N: </Text>
@@ -6277,7 +6822,7 @@ const styles = StyleSheet.create({
     boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
     WebkitFontSmoothing: \\"antialiased\\",
   },
-  view2: { height: 30, width: 30, marginRight: 10 },
+  image1: { height: 30, width: 30, marginRight: 10 },
 });
 
 export default SmileReviews;
@@ -6295,6 +6840,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface ButtonProps {
@@ -6304,9 +6853,9 @@ export interface ButtonProps {
 
 function SubmitButton(props: ButtonProps) {
   return (
-    <View type=\\"submit\\" {...props.attributes}>
+    <Button type=\\"submit\\" {...props.attributes}>
       <Text>{props.text}</Text>
-    </View>
+    </Button>
   );
 }
 
@@ -6325,6 +6874,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -6373,6 +6926,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface TextareaProps {
@@ -6410,6 +6967,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface VideoProps {
@@ -6478,6 +7039,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -6515,6 +7080,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -6564,6 +7133,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, forwardRef } from \\"react\\";
 
@@ -6606,6 +7179,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, forwardRef } from \\"react\\";
 
@@ -6648,6 +7225,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -6694,6 +7275,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props: any) {
@@ -6721,6 +7306,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props: any) {
@@ -6748,6 +7337,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props: any) {
@@ -6775,6 +7368,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -6814,6 +7411,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -6848,6 +7449,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useContext } from \\"react\\";
 
@@ -6899,6 +7504,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useContext } from \\"react\\";
 
@@ -6955,6 +7564,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useContext } from \\"react\\";
 import BuilderContext from \\"@dummy/context.js\\";
@@ -6989,6 +7602,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface ButtonProps {
@@ -7005,22 +7622,21 @@ function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
-        <View
+        <TouchableOpacity
           {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          onPress={() => Linking.openURL(props.link)}
         >
           <Text>{props.text}</Text>
-        </View>
+        </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <Pressable
+        <Button
           type=\\"button\\"
           {...props.attributes}
           onPress={(event) => props.onClick(event)}
         >
           <Text>{props.buttonText}</Text>
-        </Pressable>
+        </Button>
       ) : null}
     </View>
   );
@@ -7050,6 +7666,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface ButtonProps {
@@ -7064,22 +7684,21 @@ function Button(props: ButtonProps) {
   return (
     <View>
       {props.link ? (
-        <View
+        <TouchableOpacity
           {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          onPress={() => Linking.openURL(props.link)}
         >
           <Text>{props.text}</Text>
-        </View>
+        </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <Pressable
+        <Button
           type=\\"button\\"
           {...props.attributes}
           onPress={(event) => props.onClick(event)}
         >
           <Text>{props.text}</Text>
-        </Pressable>
+        </Button>
       ) : null}
     </View>
   );
@@ -7107,6 +7726,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 type Props = {
@@ -7141,6 +7764,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -7171,6 +7798,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface ButtonProps {
@@ -7220,6 +7851,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 type RenderContentProps = {
@@ -7260,6 +7895,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -7295,6 +7934,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -7324,6 +7967,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -7369,6 +8016,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -7395,6 +8046,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 interface Props {
@@ -7441,6 +8096,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function NestedStyles(props: any) {
@@ -7479,14 +8138,18 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
   return (
     <View>
-      <Pressable onPress={(e) => console.log(\\"event\\")}>
+      <Button onPress={(e) => console.log(\\"event\\")}>
         <Text>Hello</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -7506,6 +8169,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useRef, useEffect } from \\"react\\";
 
@@ -7557,13 +8224,19 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function OnInit(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     console.log(\\"onInit\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   useEffect(() => {
     console.log(\\"onMount\\");
@@ -7587,8 +8260,12 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useRef } from \\"react\\";
 
 type Props = {
   name: string;
@@ -7601,10 +8278,12 @@ export const defaultValues = {
 function OnInit(props: Props) {
   const [name, setName] = useState(() => \\"\\");
 
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     setName(defaultValues.name || props.name);
     console.log(\\"set defaults with props\\");
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <View>
@@ -7629,6 +8308,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -7661,6 +8344,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -7693,6 +8380,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -7719,6 +8410,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -7753,6 +8448,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 type Types = {
@@ -7790,6 +8489,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export type A = \\"test\\";
@@ -7829,6 +8532,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -7864,6 +8571,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 interface Person {
@@ -7895,6 +8606,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 type Person = {
@@ -7926,6 +8641,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -7964,6 +8683,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -8247,6 +8970,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useContext, useEffect } from \\"react\\";
 
@@ -8315,6 +9042,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface ButtonProps {
@@ -8328,18 +9059,17 @@ function Button(props: ButtonProps) {
   return (
     <>
       {props.link ? (
-        <View
+        <TouchableOpacity
           {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          onPress={() => Linking.openURL(props.link)}
         >
           <Text>{props.text}</Text>
-        </View>
+        </TouchableOpacity>
       ) : null}
       {!props.link ? (
-        <View type=\\"button\\" {...props.attributes}>
+        <Button type=\\"button\\" {...props.attributes}>
           <Text>{props.text}</Text>
-        </View>
+        </Button>
       ) : null}
     </>
   );
@@ -8360,6 +9090,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export interface RenderStylesProps {
@@ -8399,6 +9133,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
@@ -8425,6 +9163,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
@@ -8458,6 +9200,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 interface Props {
@@ -8616,6 +9362,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 interface Props {
@@ -8658,6 +9408,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 interface Props {
@@ -8728,6 +9482,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 interface Props {
@@ -8765,6 +9523,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -8808,6 +9570,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props: any) {
@@ -8829,6 +9595,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props: any) {
@@ -8850,6 +9620,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyBasicComponent(props: any) {
@@ -8871,6 +9645,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
@@ -8903,6 +9681,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function StylePropClassAndCss(props: any) {
@@ -8928,6 +9710,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import Foo from \\"./foo-sub-component\\";
 
@@ -8950,6 +9736,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function SvgComponent(props: any) {
@@ -8987,6 +9777,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 export type TypeDependencyProps = {
@@ -9019,13 +9813,17 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
   return (
-    <View type=\\"button\\">
+    <Button type=\\"button\\">
       <Text>Button</Text>
-    </View>
+    </Button>
   );
 }
 
@@ -9046,18 +9844,22 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
   return (
-    <View type=\\"button\\" style={styles.view1}>
+    <Button type=\\"button\\" style={styles.button1}>
       <Text>Button</Text>
-    </View>
+    </Button>
   );
 }
 
 const styles = StyleSheet.create({
-  view1: { background: \\"blue\\", color: \\"white\\" },
+  button1: { background: \\"blue\\", color: \\"white\\" },
 });
 
 export default MyComponent;
@@ -9075,13 +9877,17 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
   return (
-    <View type=\\"button\\">
+    <Button type=\\"button\\">
       <Text>Button</Text>
-    </View>
+    </Button>
   );
 }
 
@@ -9102,6 +9908,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -9137,14 +9947,20 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props: any) {
-  useEffect(() => {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
     register();
-  }, []);
+    hasInitialized.current = true;
+  }
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -9176,14 +9992,18 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
   return (
     <View className=\\"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded\\">
-      <Pressable onPress={(e) => console.log(\\"event\\")}>
+      <Button onPress={(e) => console.log(\\"event\\")}>
         <Text>Hello</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -9203,6 +10023,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9235,6 +10059,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9316,6 +10144,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9340,6 +10172,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9377,6 +10213,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9409,6 +10249,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
@@ -9418,15 +10262,15 @@ function MyComponent(props) {
 
   return (
     <View>
-      <Pressable onPress={(a) => log(\\"hi\\")}>
+      <Button onPress={(a) => log(\\"hi\\")}>
         <Text>Log</Text>
-      </Pressable>
-      <Pressable onPress={(event) => log(event)}>
+      </Button>
+      <Button onPress={(event) => log(event)}>
         <Text>Log</Text>
-      </Pressable>
-      <Pressable onPress={(event) => log(event)}>
+      </Button>
+      <Button onPress={(event) => log(event)}>
         <Text>Log</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -9446,6 +10290,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9470,6 +10318,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9484,14 +10336,14 @@ function MyComponent(props) {
     <>
       {show ? (
         <>
-          <Pressable onPress={(event) => toggle(event)}>
+          <Button onPress={(event) => toggle(event)}>
             <Text> Hide </Text>
-          </Pressable>
+          </Button>
         </>
       ) : (
-        <Pressable onPress={(event) => toggle(event)}>
+        <Button onPress={(event) => toggle(event)}>
           <Text> Show </Text>
-        </Pressable>
+        </Button>
       )}
     </>
   );
@@ -9512,6 +10364,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 import Button from \\"./Button\\";
@@ -9543,6 +10399,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -9579,6 +10439,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9613,6 +10477,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -9664,6 +10532,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
@@ -9696,6 +10568,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props) {
@@ -9719,6 +10595,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9753,6 +10633,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9785,6 +10669,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9866,6 +10754,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9890,6 +10782,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9927,6 +10823,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -9959,6 +10859,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
@@ -9968,15 +10872,15 @@ function MyComponent(props: any) {
 
   return (
     <View>
-      <Pressable onPress={(a) => log(\\"hi\\")}>
+      <Button onPress={(a) => log(\\"hi\\")}>
         <Text>Log</Text>
-      </Pressable>
-      <Pressable onPress={(event) => log(event)}>
+      </Button>
+      <Button onPress={(event) => log(event)}>
         <Text>Log</Text>
-      </Pressable>
-      <Pressable onPress={(event) => log(event)}>
+      </Button>
+      <Button onPress={(event) => log(event)}>
         <Text>Log</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
@@ -9996,6 +10900,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -10020,6 +10928,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -10034,14 +10946,14 @@ function MyComponent(props: any) {
     <>
       {show ? (
         <>
-          <Pressable onPress={(event) => toggle(event)}>
+          <Button onPress={(event) => toggle(event)}>
             <Text> Hide </Text>
-          </Pressable>
+          </Button>
         </>
       ) : (
-        <Pressable onPress={(event) => toggle(event)}>
+        <Button onPress={(event) => toggle(event)}>
           <Text> Show </Text>
-        </Pressable>
+        </Button>
       )}
     </>
   );
@@ -10062,6 +10974,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 import Button from \\"./Button\\";
@@ -10093,6 +11009,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
@@ -10129,6 +11049,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -10163,6 +11087,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
 
@@ -10214,6 +11142,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
@@ -10246,6 +11178,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 
 function MyComponent(props: any) {
@@ -10269,6 +11205,10 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
@@ -10292,6 +11232,80 @@ export default MyComponent;
 "
 `;
 
+exports[`React Native > twrnc state complex style 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
+} from \\"react-native\\";
+import tw from \\"twrnc\\";
+import { clsx } from \\"clsx\\";
+
+function Button(props) {
+  function buttonClasses() {
+    return clsx(\\"px-4 py-2 rounded transition-colors\\", {
+      \\"bg-blue-500 hover:bg-blue-600 text-white\\": props.type === \\"primary\\",
+      \\"bg-gray-300 hover:bg-gray-400 text-black\\": props.type === \\"secondary\\",
+    });
+  }
+
+  return (
+    <Button
+      onPress={(event) => props.onClick}
+      style={tw.style(buttonClasses())}
+    >
+      {props.children}
+    </Button>
+  );
+}
+
+export default Button;
+"
+`;
+
+exports[`React Native > twrnc state style 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+import tw from \\"twrnc\\";
+
+function MyBasicComponent(props) {
+  const [classState, setClassState] = useState(() => \\"testClassName\\");
+
+  return (
+    <View style={tw.style(classState)}>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    </View>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`React Native > twrnc style 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -10303,15 +11317,21 @@ import {
   Text,
   Pressable,
   TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+  Pressable,
 } from \\"react-native\\";
 import tw from \\"twrnc\\";
 
 function MyComponent(props) {
   return (
-    <View style=\\"{tw\`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded\`}\\">
-      <Pressable onPress={(e) => console.log(\\"event\\")}>
+    <View
+      style={tw\`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded\`}
+    >
+      <Button onPress={(e) => console.log(\\"event\\")}>
         <Text>Hello</Text>
-      </Pressable>
+      </Button>
     </View>
   );
 }
