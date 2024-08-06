@@ -394,7 +394,7 @@ export const blockToAngular = ({
     if (options.state === 'class-properties') {
       const inputsPropsStateName = `mergedInputs_${hashCodeAsString(allProps)}`;
       root.state[inputsPropsStateName] = {
-        code: 'null',
+        code: '{}' + (options.typescript ? ' as any' : ''),
         type: 'property',
       };
       if (!root.hooks.onInit?.code.includes(inputsPropsStateName)) {
