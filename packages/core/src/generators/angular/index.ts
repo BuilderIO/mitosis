@@ -208,12 +208,16 @@ const processEventBinding = (key: string, code: string, nodeName: string, custom
 const stringifyBinding =
   (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
-    if (options.state === 'inline-with-wrappers' && binding?.type === 'spread') {
+    if (options.state === 'inline-with-wrappers') {
       return;
     }
     if (key.startsWith('$') || key.startsWith('"') || key === 'key') {
       return;
     }
+    if (binding?.type === 'spread') {
+      return;
+    }
+
     const keyToUse = BINDINGS_MAPPER[key] || key;
     const { code, arguments: cusArgs = ['event'] } = binding!;
     // TODO: proper babel transform to replace. Util for this
@@ -234,6 +238,7 @@ const stringifyBinding =
       return ` [attr.${keyToUse}]="${code}" `;
     } else {
       const codeToUse =
+        // @ts-ignore
         options.state === 'inline-with-wrappers' ? processCodeBlockInTemplate(code) : code;
       return `[${keyToUse}]="${codeToUse}"`;
     }
@@ -434,19 +439,33 @@ export const blockToAngular = ({
       : json.name;
     str += `<${elSelector} `;
 
-    // TODO: spread support for angular
-    // if (json.bindings._spread) {
-    //   str += `v-bind="${stripStateAndPropsRefs(
-    //     json.bindings._spread as string,
-    //   )}"`;
-    // }
-
     for (const key in json.properties) {
       if (key.startsWith('$')) {
         continue;
       }
       const value = json.properties[key];
       str += ` ${key}="${value}" `;
+    }
+
+    for (const key in json.bindings) {
+      if (json.bindings[key]?.type === 'spread') {
+        // TODO: index it as there can be multiple
+        const refName = 'elRef';
+        json.bindings['ref'] = { code: refName, type: 'single' };
+        root.refs[refName] = { argument: '' };
+        root.hooks.onInit = root.hooks.onInit || { code: '' };
+        root.hooks.onInit.code += `\nthis.setAttributes(this.${refName}El?.nativeElement, this.${json.bindings[key]?.code});`;
+        root.hooks.onUpdate = root.hooks.onUpdate || [];
+        root.hooks.onUpdate.push({
+          code: `this.setAttributes(this.${refName}El?.nativeElement, this.${json.bindings[key]?.code});`,
+        });
+        if (!root.state['setAttributes']) {
+          root.state['setAttributes'] = {
+            code: HELPER_FUNCTIONS(options?.typescript).setAttributes as string,
+            type: 'method',
+          };
+        }
+      }
     }
 
     const stringifiedBindings = Object.entries(json.bindings)
@@ -830,7 +849,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       return `@Output() ${variableName} = new EventEmitter()`;
     });
 
-    const domRefs = getRefs(json);
+    let domRefs = getRefs(json);
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
     const componentsUsed = Array.from(getComponentsUsed(json)).filter((item) => {
       return item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item);
@@ -876,6 +895,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
     }
+
+    domRefs = getRefs(json);
 
     stripMetaProperties(json);
 
@@ -1034,12 +1055,14 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .join('\n')}
 
       ${
-        !hasConstructor && !dynamicComponents.size
+        !hasConstructor && !dynamicComponents.size && !domRefs.size
           ? ''
           : `constructor(\n${injectables.join(',\n')}${
               dynamicComponents.size
                 ? `\nprivate vcRef${options.typescript ? ': ViewContainerRef' : ''},\n`
                 : ''
+            }${
+              domRefs.size ? `\nprivate renderer${options.typescript ? ': Renderer2' : ''},\n` : ''
             }) {}
           `
       }

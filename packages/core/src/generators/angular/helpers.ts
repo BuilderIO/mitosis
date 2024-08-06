@@ -19,6 +19,24 @@ export const HELPER_FUNCTIONS = (
   useJsonStringify: `useJsonStringify(...args${isTs ? ': any' : ''})${isTs ? ': string' : ''}) {
     return JSON.stringify(...args);
   }`,
+  setAttributes: `
+    setAttributes(el${isTs ? ': HTMLElement' : ''}, value${isTs ? ': any' : ''}) {
+      if (!el) {
+        return;
+      }
+      Object.keys(value).forEach((key) => {
+        if (key.startsWith('on')) {
+          this.renderer.listen(
+            el,
+            key.replace('on', '').toLowerCase(),
+            value[key]
+          );
+        } else {
+          this.renderer.setAttribute(el, key, value[key] ?? '');
+        }
+      });
+    }
+`,
 });
 
 export const getAppropriateTemplateFunctionKeys = (code: string) =>
