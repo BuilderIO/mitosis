@@ -394,7 +394,7 @@ export const blockToAngular = ({
     if (options.state === 'class-properties') {
       const inputsPropsStateName = `mergedInputs_${hashCodeAsString(allProps)}`;
       root.state[inputsPropsStateName] = {
-        code: 'null',
+        code: '{}' + (options.typescript ? ' as any' : ''),
         type: 'property',
       };
       if (!root.hooks.onInit?.code.includes(inputsPropsStateName)) {
@@ -942,12 +942,18 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       return `const defaultProps = {${defalutPropsString}};\n`;
     };
 
+    const angularCoreImports = [
+      ...(outputs.length ? ['Output', 'EventEmitter'] : []),
+      ...(options?.experimental?.inject ? ['Inject', 'forwardRef'] : []),
+      'Component',
+      ...(domRefs.size || dynamicComponents.size ? ['ViewChild', 'ElementRef'] : []),
+      ...(props.size ? ['Input'] : []),
+      ...(dynamicComponents.size ? ['ViewChild', 'TemplateRef'] : []),
+      ...(json.hooks.onUpdate?.length && options.typescript ? ['SimpleChanges'] : []),
+    ].join(', ');
+
     let str = dedent`
-    import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
-      options?.experimental?.inject ? 'Inject, forwardRef,' : ''
-    } Component ${domRefs.size || dynamicComponents.size ? ', ViewChild, ElementRef' : ''}${
-      props.size ? ', Input' : ''
-    } ${dynamicComponents.size ? ', ViewContainerRef, TemplateRef' : ''} } from '@angular/core';
+    import { ${angularCoreImports} } from '@angular/core';
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
@@ -1077,7 +1083,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${
         !json.hooks.onUpdate?.length
           ? ''
-          : `ngOnChanges() {
+          : `ngOnChanges(changes${options.typescript ? ': SimpleChanges' : ''}) {
               if (typeof window !== 'undefined') {
                 ${json.hooks.onUpdate?.reduce((code, hook) => {
                   code += hook.code;
