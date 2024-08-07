@@ -949,7 +949,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ...(domRefs.size || dynamicComponents.size ? ['ViewChild', 'ElementRef'] : []),
       ...(props.size ? ['Input'] : []),
       ...(dynamicComponents.size ? ['ViewChild', 'TemplateRef'] : []),
-      ...(json.hooks.onUpdate?.length ? ['SimpleChanges'] : []),
+      ...(json.hooks.onUpdate?.length && options.typescript ? ['SimpleChanges'] : []),
     ].join(', ');
 
     let str = dedent`
@@ -1083,7 +1083,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${
         !json.hooks.onUpdate?.length
           ? ''
-          : `ngOnChanges(changes: SimpleChanges) {
+          : `ngOnChanges(changes${options.typescript ? ': SimpleChanges' : ''}) {
               if (typeof window !== 'undefined') {
                 ${json.hooks.onUpdate?.reduce((code, hook) => {
                   code += hook.code;

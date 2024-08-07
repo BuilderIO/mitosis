@@ -4,13 +4,7 @@ exports[`Angular > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  Input,
-  SimpleChanges,
-} from \\"@angular/core\\";
+import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-ref-component, MyBasicRefComponent\\",
@@ -63,7 +57,7 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Received an update\\");
     }
@@ -80,13 +74,7 @@ export class MyBasicRefComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > AdvancedRef 2`] = `
-"import {
-  Component,
-  ViewChild,
-  ElementRef,
-  Input,
-  SimpleChanges,
-} from \\"@angular/core\\";
+"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -142,7 +130,7 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Received an update\\");
     }
@@ -1209,7 +1197,7 @@ exports[`Angular > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, SimpleChanges } from \\"@angular/core\\";
+import { Component } from \\"@angular/core\\";
 
 export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
@@ -1245,7 +1233,7 @@ export default class MyPreviousComponent {
 
   private _prevCount = this.count;
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this._prevCount = this.count;
     }
@@ -1262,7 +1250,7 @@ export class MyPreviousComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > BasicRefPrevious 2`] = `
-"import { Component, SimpleChanges } from \\"@angular/core\\";
+"import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export function usePrevious(value) {
@@ -1301,7 +1289,7 @@ export default class MyPreviousComponent {
 
   private _prevCount = this.count;
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this._prevCount = this.count;
     }
@@ -4709,7 +4697,7 @@ exports[`Angular > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, SimpleChanges } from \\"@angular/core\\";
+import { Component } from \\"@angular/core\\";
 
 @Component({
   selector:
@@ -4728,7 +4716,7 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
 export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       const controller = new AbortController();
       const signal = controller.signal;
@@ -4758,7 +4746,7 @@ export class MyBasicOnUpdateReturnComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > basicOnUpdateReturn 2`] = `
-"import { Component, SimpleChanges } from \\"@angular/core\\";
+"import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4780,7 +4768,7 @@ import { CommonModule } from \\"@angular/common\\";
 export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       const controller = new AbortController();
       const signal = controller.signal;
@@ -6123,7 +6111,7 @@ exports[`Angular > jsx > Javascript Test > multipleOnUpdate 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, SimpleChanges } from \\"@angular/core\\";
+import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"multiple-on-update, MultipleOnUpdate\\",
@@ -6139,7 +6127,7 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
   ],
 })
 export default class MultipleOnUpdate {
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs on every update/rerender\\");
       console.log(\\"Runs on every update/rerender as well\\");
@@ -6157,7 +6145,7 @@ export class MultipleOnUpdateModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > multipleOnUpdate 2`] = `
-"import { Component, SimpleChanges } from \\"@angular/core\\";
+"import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6176,7 +6164,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MultipleOnUpdate {
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs on every update/rerender\\");
       console.log(\\"Runs on every update/rerender as well\\");
@@ -6190,7 +6178,7 @@ exports[`Angular > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, SimpleChanges } from \\"@angular/core\\";
+import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"multiple-on-update-with-deps, MultipleOnUpdateWithDeps\\",
@@ -6211,7 +6199,7 @@ export default class MultipleOnUpdateWithDeps {
   c = \\"c\\";
   d = \\"d\\";
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
@@ -6237,7 +6225,7 @@ export class MultipleOnUpdateWithDepsModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > multipleOnUpdateWithDeps 2`] = `
-"import { Component, SimpleChanges } from \\"@angular/core\\";
+"import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6261,7 +6249,7 @@ export default class MultipleOnUpdateWithDeps {
   c = \\"c\\";
   d = \\"d\\";
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
@@ -6978,7 +6966,7 @@ exports[`Angular > jsx > Javascript Test > onUpdate 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, SimpleChanges } from \\"@angular/core\\";
+import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update, OnUpdate\\",
@@ -6994,7 +6982,7 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
   ],
 })
 export default class OnUpdate {
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs on every update/rerender\\");
     }
@@ -7011,7 +6999,7 @@ export class OnUpdateModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > onUpdate 2`] = `
-"import { Component, SimpleChanges } from \\"@angular/core\\";
+"import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7030,7 +7018,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class OnUpdate {
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs on every update/rerender\\");
     }
@@ -7043,7 +7031,7 @@ exports[`Angular > jsx > Javascript Test > onUpdateWithDeps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update-with-deps, OnUpdateWithDeps\\",
@@ -7064,7 +7052,7 @@ export default class OnUpdateWithDeps {
   a = \\"a\\";
   b = \\"b\\";
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(
         \\"Runs when this.a, this.b or size changes\\",
@@ -7086,7 +7074,7 @@ export class OnUpdateWithDepsModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > onUpdateWithDeps 2`] = `
-"import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+"import { Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7110,7 +7098,7 @@ export default class OnUpdateWithDeps {
   a = \\"a\\";
   b = \\"b\\";
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(
         \\"Runs when this.a, this.b or size changes\\",
@@ -7504,7 +7492,7 @@ exports[`Angular > jsx > Javascript Test > referencingFunInsideHook 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, SimpleChanges } from \\"@angular/core\\";
+import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update, OnUpdate\\",
@@ -7528,7 +7516,7 @@ export default class OnUpdate {
     };
   };
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.foo({
         someOption: this.bar,
@@ -7547,7 +7535,7 @@ export class OnUpdateModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > referencingFunInsideHook 2`] = `
-"import { Component, SimpleChanges } from \\"@angular/core\\";
+"import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7574,7 +7562,7 @@ export default class OnUpdate {
     };
   };
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.foo({
         someOption: this.bar,
@@ -8171,7 +8159,7 @@ exports[`Angular > jsx > Javascript Test > renderContentExample 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+import { Component, Input } from \\"@angular/core\\";
 
 import {
   dispatchNewContentToVisualEditor,
@@ -8210,7 +8198,7 @@ export default class RenderContent {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       dispatchNewContentToVisualEditor(this.content);
     }
@@ -8227,7 +8215,7 @@ export class RenderContentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > renderContentExample 2`] = `
-"import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+"import { Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import BuilderContext from \\"@dummy/context.js\\";
@@ -8271,7 +8259,7 @@ export default class RenderContent {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       dispatchNewContentToVisualEditor(this.content);
     }
@@ -8918,7 +8906,7 @@ exports[`Angular > jsx > Javascript Test > signalsOnUpdate 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
@@ -8940,7 +8928,7 @@ export default class MyBasicComponent {
   @Input() id;
   @Input() foo;
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"props.id changed\\", this.id);
       console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
@@ -8958,7 +8946,7 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > signalsOnUpdate 2`] = `
-"import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+"import { Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -8983,7 +8971,7 @@ export default class MyBasicComponent {
   @Input() id;
   @Input() foo;
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"props.id changed\\", this.id);
       console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
@@ -21923,7 +21911,7 @@ exports[`Angular > svelte > Javascript Test > lifecycleHooks 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, SimpleChanges } from \\"@angular/core\\";
+import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -21945,7 +21933,7 @@ export default class MyComponent {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"onAfterUpdate\\");
     }
@@ -21966,7 +21954,7 @@ export class MyComponentModule {}
 `;
 
 exports[`Angular > svelte > Javascript Test > lifecycleHooks 2`] = `
-"import { Component, SimpleChanges } from \\"@angular/core\\";
+"import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -21991,7 +21979,7 @@ export default class MyComponent {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"onAfterUpdate\\");
     }
@@ -22079,7 +22067,7 @@ exports[`Angular > svelte > Javascript Test > reactiveWithFn 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, SimpleChanges } from \\"@angular/core\\";
+import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -22107,7 +22095,7 @@ export default class MyComponent {
     this.result = a_ * b_;
   };
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.calculateResult(this.a, this.b);
     }
@@ -22124,7 +22112,7 @@ export class MyComponentModule {}
 `;
 
 exports[`Angular > svelte > Javascript Test > reactiveWithFn 2`] = `
-"import { Component, SimpleChanges } from \\"@angular/core\\";
+"import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22155,7 +22143,7 @@ export default class MyComponent {
     this.result = a_ * b_;
   };
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.calculateResult(this.a, this.b);
     }
