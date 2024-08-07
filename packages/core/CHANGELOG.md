@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.3.21
+
+### Patch Changes
+
+- 45de754: Angular: fix: add typed argument `changes: SimpleChanges` to `ngOnChanges` lifecycle hook
+- 03f1f58: Angular: Fix: reactivity of `mergedInputs` (used in Dynamic components)
+- 45de754: Angular: Fix: set initial value of `inputs` for `*ngComponentOutlet`to`{}`instead of`null`.
+
 ## 0.3.20
 
 ### Patch Changes
