@@ -404,13 +404,14 @@ export const blockToAngular = ({
         root.hooks.onInit.code += `\nthis.${inputsPropsStateName} = {${allProps}};\n`;
       }
       if (
-        root.hooks.onUpdate &&
-        root.hooks.onUpdate.length > 0 &&
         !root.hooks.onUpdate
-          .map((hook) => hook.code)
+          ?.map((hook) => hook.code)
           .join('')
           .includes(inputsPropsStateName)
       ) {
+        if (!root.hooks.onUpdate) {
+          root.hooks.onUpdate = [];
+        }
         root.hooks.onUpdate.push({
           code: `this.${inputsPropsStateName} = {${allProps}}`,
         });
