@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.20
+
+### Patch Changes
+
+- 34bbd34: Fix: remove duplicated `Pressable` import in React Native
+
 ## 0.3.19
 
 ### Patch Changes
