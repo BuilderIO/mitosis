@@ -948,7 +948,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ...(domRefs.size || dynamicComponents.size ? ['ViewChild', 'ElementRef'] : []),
       ...(props.size ? ['Input'] : []),
       ...(dynamicComponents.size ? ['ViewChild', 'TemplateRef'] : []),
-      ...(!json.hooks.onUpdate?.length ? ['SimpleChanges'] : []),
+      ...(json.hooks.onUpdate?.length ? ['SimpleChanges'] : []),
     ].join(', ');
 
     let str = dedent`
