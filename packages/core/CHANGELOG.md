@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.22
+
+### Patch Changes
+
+- f19a00f: Angular: Fix: `ViewContainerRef` import when importing for dynamic components
+
 ## 0.3.21
 
 ### Patch Changes
