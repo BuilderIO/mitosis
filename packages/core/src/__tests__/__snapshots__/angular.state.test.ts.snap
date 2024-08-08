@@ -62,7 +62,7 @@ export default class MyBasicRefComponent {
     this.node_1_div = this.lowerCaseName();
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Received an update\\");
       this.node_1_div = this.lowerCaseName();
@@ -224,7 +224,7 @@ export default class MyBasicComponent {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div = this.myService.method(\\"hello\\") + this.name;
     }
@@ -612,7 +612,7 @@ export default class MyBasicRefComponent {
     this.node_1_div = this.lowerCaseName();
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_1_div = this.lowerCaseName();
     }
@@ -706,7 +706,7 @@ export default class MyPreviousComponent {
 
   private _prevCount = this.count;
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this._prevCount = this.count;
     }
@@ -1020,7 +1020,7 @@ export default class CustomCode {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div =
         \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
@@ -1116,7 +1116,7 @@ export default class CustomCode {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div =
         \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
@@ -1457,7 +1457,7 @@ export default class FormComponent {
     this.node_1_div = JSON.stringify(this.responseData, null, 2);
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_1_div = JSON.stringify(this.responseData, null, 2);
     }
@@ -1572,7 +1572,7 @@ export default class Image {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_Show = !this.useLazyLoading() || this.load;
       this.node_1_img =
@@ -1677,7 +1677,7 @@ export default class ImgComponent {
     };
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_img = {
         objectFit: this.backgroundSize || \\"cover\\",
@@ -1858,7 +1858,7 @@ export default class SectionComponent {
         : undefined;
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_section =
         this.maxWidth && typeof this.maxWidth === \\"number\\"
@@ -2295,7 +2295,7 @@ export default class Text {
     };
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div = {
         test: this.name || \\"any name\\",
@@ -2409,7 +2409,7 @@ export default class Video {
     };
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_video = {
         width: \\"100%\\",
@@ -2481,7 +2481,7 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 
@@ -2522,7 +2522,7 @@ export default class MyBasicForNoTagRefComponent {
   get TagNameGetter() {
     return \\"span\\";
   }
-  mergedInputs_0 = null;
+  mergedInputs_0 = {};
 
   constructor(private vcRef) {}
 
@@ -2535,6 +2535,12 @@ export default class MyBasicForNoTagRefComponent {
       this.vcRef.createEmbeddedView(this.tagnameTemplateRef).rootNodes,
       this.vcRef.createEmbeddedView(this.iconTemplateRef).rootNodes,
     ];
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.mergedInputs_0 = {};
+    }
   }
 }
 
@@ -2652,7 +2658,7 @@ import { Component } from \\"@angular/core\\";
 export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       const controller = new AbortController();
       const signal = controller.signal;
@@ -3176,7 +3182,7 @@ export default class MyComponent {
   onClick = function onClick() {
     console.log(\\"hello\\");
   };
-  mergedInputs_mlw9p4 = null;
+  mergedInputs_mlw9p4 = {};
 
   ngOnInit() {
     this.mergedInputs_mlw9p4 = {
@@ -3185,6 +3191,17 @@ export default class MyComponent {
       ...this.attributes,
       ...this.something,
     };
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.mergedInputs_mlw9p4 = {
+        hello: \\"world\\",
+        onClick: this.onClick.bind(this),
+        ...this.attributes,
+        ...this.something,
+      };
+    }
   }
 }
 
@@ -3206,7 +3223,7 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 
@@ -3242,7 +3259,7 @@ export default class MyComponent {
   onClick = function onClick(event) {
     console.log(\\"hello\\", event);
   };
-  mergedInputs_mlw9p4 = null;
+  mergedInputs_mlw9p4 = {};
 
   constructor(private vcRef) {}
 
@@ -3257,6 +3274,17 @@ export default class MyComponent {
     this.myContent = [
       this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
     ];
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.mergedInputs_mlw9p4 = {
+        hello: \\"world\\",
+        onClick: this.onClick.bind(this),
+        ...this.attributes,
+        ...this.something,
+      };
+    }
   }
 }
 
@@ -3350,7 +3378,7 @@ export default class Button {
     this.node_0_div = this.baz(1);
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div = this.baz(1);
     }
@@ -3404,7 +3432,7 @@ export default class RenderContent {
     };
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_RenderBlock = {
         ...this.getRenderContentProps(this.renderContentProps.block, 0),
@@ -3472,7 +3500,7 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class MultipleOnUpdate {
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs on every update/rerender\\");
       console.log(\\"Runs on every update/rerender as well\\");
@@ -3514,7 +3542,7 @@ export default class MultipleOnUpdateWithDeps {
   c = \\"c\\";
   d = \\"d\\";
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
@@ -3938,7 +3966,7 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class OnUpdate {
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs on every update/rerender\\");
     }
@@ -3979,7 +4007,7 @@ export default class OnUpdateWithDeps {
   a = \\"a\\";
   b = \\"b\\";
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(
         \\"Runs when this.a, this.b or size changes\\",
@@ -4237,7 +4265,7 @@ export default class OnUpdate {
     };
   };
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.foo({
         someOption: this.bar,
@@ -4264,7 +4292,7 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 
@@ -4516,11 +4544,11 @@ export default class RenderBlock {
   node_0_Show = null;
   node_1_Show = null;
   node_2_Show = null;
-  mergedInputs_3ka5tf = null;
+  mergedInputs_3ka5tf = {};
   trackByData0(index, data) {
     return index;
   }
-  mergedInputs_r2fkt2 = null;
+  mergedInputs_r2fkt2 = {};
   trackByChild1(_, child) {
     return \\"render-block-\\" + child.id;
   }
@@ -4545,7 +4573,7 @@ export default class RenderBlock {
     ];
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_Show = isEmptyHtmlElement(this.tag);
       this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
@@ -4613,7 +4641,7 @@ export default class RenderContent {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       dispatchNewContentToVisualEditor(this.content);
     }
@@ -5003,7 +5031,7 @@ export default class MyBasicComponent {
   @Input() id;
   @Input() foo;
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"props.id changed\\", this.id);
       console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
@@ -5168,6 +5196,52 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > stateInitSequence 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <Comp [val]=\\"node_0_Comp\\">{{val}}</Comp>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() value;
+
+  val = null;
+  node_0_Comp = null;
+
+  ngOnInit() {
+    this.val = this.value;
+    this.node_0_Comp = { ...this.val };
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Comp = { ...this.val };
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -5201,7 +5275,7 @@ export default class MyComponent {
     };
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div = {
         width: \\"100%\\",
@@ -5753,7 +5827,13 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface Props {
   showInput: boolean;
@@ -5815,7 +5895,7 @@ export default class MyBasicRefComponent {
     this.node_1_div = this.lowerCaseName();
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Received an update\\");
       this.node_1_div = this.lowerCaseName();
@@ -5939,7 +6019,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
@@ -5981,7 +6061,7 @@ export default class MyBasicComponent {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div = this.myService.method(\\"hello\\") + this.name;
     }
@@ -6321,7 +6401,13 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface Props {
   showInput: boolean;
@@ -6383,7 +6469,7 @@ export default class MyBasicRefComponent {
     this.node_1_div = this.lowerCaseName();
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_1_div = this.lowerCaseName();
     }
@@ -6445,7 +6531,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 export interface Props {
   showInput: boolean;
@@ -6485,7 +6571,7 @@ export default class MyPreviousComponent {
 
   private _prevCount = this.count;
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this._prevCount = this.count;
     }
@@ -6758,7 +6844,13 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -6838,7 +6930,7 @@ export default class CustomCode {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div =
         \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
@@ -6859,7 +6951,13 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -6939,7 +7037,7 @@ export default class CustomCode {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div =
         \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\");
@@ -6960,7 +7058,13 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface FormProps {
   attributes?: any;
@@ -7311,7 +7415,7 @@ export default class FormComponent {
     this.node_1_div = JSON.stringify(this.responseData, null, 2);
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_1_div = JSON.stringify(this.responseData, null, 2);
     }
@@ -7331,7 +7435,13 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 // TODO: AMP Support?
 export interface ImageProps {
@@ -7445,7 +7555,7 @@ export default class Image {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_Show = !this.useLazyLoading() || this.load;
       this.node_1_img =
@@ -7512,7 +7622,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 export interface ImgProps {
   attributes?: any;
@@ -7567,7 +7677,7 @@ export default class ImgComponent {
     };
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_img = {
         objectFit: this.backgroundSize || \\"cover\\",
@@ -7732,7 +7842,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -7770,7 +7880,7 @@ export default class SectionComponent {
         : undefined;
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_section =
         this.maxWidth && typeof this.maxWidth === \\"number\\"
@@ -8216,7 +8326,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 export interface TextProps {
   attributes?: any;
@@ -8258,7 +8368,7 @@ export default class Text {
     };
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div = {
         test: this.name || \\"any name\\",
@@ -8330,7 +8440,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 export interface VideoProps {
   attributes?: any;
@@ -8406,7 +8516,7 @@ export default class Video {
     };
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_video = {
         width: \\"100%\\",
@@ -8478,8 +8588,9 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
+  SimpleChanges,
 } from \\"@angular/core\\";
 
 @Component({
@@ -8521,7 +8632,7 @@ export default class MyBasicForNoTagRefComponent {
   get TagNameGetter() {
     return \\"span\\";
   }
-  mergedInputs_0 = null;
+  mergedInputs_0 = {} as any;
 
   constructor(private vcRef: ViewContainerRef) {}
 
@@ -8534,6 +8645,12 @@ export default class MyBasicForNoTagRefComponent {
       this.vcRef.createEmbeddedView(this.tagnameTemplateRef).rootNodes,
       this.vcRef.createEmbeddedView(this.iconTemplateRef).rootNodes,
     ];
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.mergedInputs_0 = {};
+    }
   }
 }
 
@@ -8642,7 +8759,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector:
@@ -8661,7 +8778,7 @@ import { Component } from \\"@angular/core\\";
 export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       const controller = new AbortController();
       const signal = controller.signal;
@@ -9190,7 +9307,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -9222,7 +9339,7 @@ export default class MyComponent {
   onClick = function onClick() {
     console.log(\\"hello\\");
   };
-  mergedInputs_mlw9p4 = null;
+  mergedInputs_mlw9p4 = {} as any;
 
   ngOnInit() {
     this.mergedInputs_mlw9p4 = {
@@ -9231,6 +9348,17 @@ export default class MyComponent {
       ...this.attributes,
       ...this.something,
     };
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.mergedInputs_mlw9p4 = {
+        hello: \\"world\\",
+        onClick: this.onClick.bind(this),
+        ...this.attributes,
+        ...this.something,
+      };
+    }
   }
 }
 
@@ -9252,8 +9380,9 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
+  SimpleChanges,
 } from \\"@angular/core\\";
 
 @Component({
@@ -9289,7 +9418,7 @@ export default class MyComponent {
   onClick = function onClick(event: any) {
     console.log(\\"hello\\", event);
   };
-  mergedInputs_mlw9p4 = null;
+  mergedInputs_mlw9p4 = {} as any;
 
   constructor(private vcRef: ViewContainerRef) {}
 
@@ -9304,6 +9433,17 @@ export default class MyComponent {
     this.myContent = [
       this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
     ];
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.mergedInputs_mlw9p4 = {
+        hello: \\"world\\",
+        onClick: this.onClick.bind(this),
+        ...this.attributes,
+        ...this.something,
+      };
+    }
   }
 }
 
@@ -9360,7 +9500,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 export interface ButtonProps {
   foo: string;
@@ -9401,7 +9541,7 @@ export default class Button {
     this.node_0_div = this.baz(1);
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div = this.baz(1);
     }
@@ -9421,7 +9561,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 type RenderContentProps = {
   options?: GetContentOptions;
@@ -9462,7 +9602,7 @@ export default class RenderContent {
     };
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_RenderBlock = {
         ...this.getRenderContentProps(this.renderContentProps.block, 0),
@@ -9514,7 +9654,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"multiple-on-update, MultipleOnUpdate\\",
@@ -9530,7 +9670,7 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class MultipleOnUpdate {
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs on every update/rerender\\");
       console.log(\\"Runs on every update/rerender as well\\");
@@ -9551,7 +9691,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"multiple-on-update-with-deps, MultipleOnUpdateWithDeps\\",
@@ -9572,7 +9712,7 @@ export default class MultipleOnUpdateWithDeps {
   c = \\"c\\";
   d = \\"d\\";
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
@@ -9989,7 +10129,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update, OnUpdate\\",
@@ -10005,7 +10145,7 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class OnUpdate {
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Runs on every update/rerender\\");
     }
@@ -10025,7 +10165,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 type Props = {
   size: string;
@@ -10050,7 +10190,7 @@ export default class OnUpdateWithDeps {
   a = \\"a\\";
   b = \\"b\\";
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(
         \\"Runs when this.a, this.b or size changes\\",
@@ -10322,7 +10462,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update, OnUpdate\\",
@@ -10346,7 +10486,7 @@ export default class OnUpdate {
     };
   };
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.foo({
         someOption: this.bar,
@@ -10373,8 +10513,9 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
+  SimpleChanges,
 } from \\"@angular/core\\";
 
 export type RenderBlockProps = {
@@ -10637,11 +10778,11 @@ export default class RenderBlock {
   node_0_Show = null;
   node_1_Show = null;
   node_2_Show = null;
-  mergedInputs_3ka5tf = null;
+  mergedInputs_3ka5tf = {} as any;
   trackByData0(index, data) {
     return index;
   }
-  mergedInputs_r2fkt2 = null;
+  mergedInputs_r2fkt2 = {} as any;
   trackByChild1(_, child) {
     return \\"render-block-\\" + child.id;
   }
@@ -10666,7 +10807,7 @@ export default class RenderBlock {
     ];
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_Show = isEmptyHtmlElement(this.tag);
       this.node_1_Show = !isEmptyHtmlElement(this.tag) && this.repeatItemData;
@@ -10695,7 +10836,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 type Props = {
   customComponents: string[];
@@ -10742,7 +10883,7 @@ export default class RenderContent {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       dispatchNewContentToVisualEditor(this.content);
     }
@@ -11139,7 +11280,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 type Props = {
   id: string;
@@ -11170,7 +11311,7 @@ export default class MyBasicComponent {
   @Input() id!: Props[\\"id\\"];
   @Input() foo!: Props[\\"foo\\"];
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"props.id changed\\", this.id);
       console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
@@ -11335,11 +11476,57 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > stateInitSequence 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <Comp [val]=\\"node_0_Comp\\">{{val}}</Comp>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() value!: any;
+
+  val = null;
+  node_0_Comp = null;
+
+  ngOnInit() {
+    this.val = this.value;
+    this.node_0_Comp = { ...this.val };
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Comp = { ...this.val };
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -11368,7 +11555,7 @@ export default class MyComponent {
     };
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_div = {
         width: \\"100%\\",
@@ -12003,7 +12190,7 @@ export default class MyComponent {
     this.node_0_input = this.fillings === \\"Guac (extra)\\";
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_input = this.fillings === \\"Guac (extra)\\";
     }
@@ -12084,7 +12271,7 @@ export default class MyComponent {
     }\`;
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_input = \`form-input \${this.disabled ? \\"disabled\\" : \\"\\"} \${
         this.focus ? \\"focus\\" : \\"\\"
@@ -12344,7 +12531,7 @@ export default class MyComponent {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"onAfterUpdate\\");
     }
@@ -12435,7 +12622,7 @@ export default class MyComponent {
     this.result = a_ * b_;
   };
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.calculateResult(this.a, this.b);
     }
@@ -12600,7 +12787,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -12672,7 +12859,7 @@ export default class MyComponent {
     this.node_0_input = this.fillings === \\"Guac (extra)\\";
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_input = this.fillings === \\"Guac (extra)\\";
     }
@@ -12724,7 +12911,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 const defaultProps = {};
 
@@ -12753,7 +12940,7 @@ export default class MyComponent {
     }\`;
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_0_input = \`form-input \${this.disabled ? \\"disabled\\" : \\"\\"} \${
         this.focus ? \\"focus\\" : \\"\\"
@@ -12991,7 +13178,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -13013,7 +13200,7 @@ export default class MyComponent {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"onAfterUpdate\\");
     }
@@ -13076,7 +13263,7 @@ exports[`Angular with manually creating and handling class properties as binding
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -13104,7 +13291,7 @@ export default class MyComponent {
     this.result = a_ * b_;
   };
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.calculateResult(this.a, this.b);
     }

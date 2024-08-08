@@ -1,5 +1,26 @@
 # Change Log
 
+## 0.3.21
+
+### Patch Changes
+
+- 45de754: Angular: fix: add typed argument `changes: SimpleChanges` to `ngOnChanges` lifecycle hook
+- 03f1f58: Angular: Fix: reactivity of `mergedInputs` (used in Dynamic components)
+- 45de754: Angular: Fix: set initial value of `inputs` for `*ngComponentOutlet`to`{}`instead of`null`.
+
+## 0.3.20
+
+### Patch Changes
+
+- 34bbd34: Fix: remove duplicated `Pressable` import in React Native
+
+## 0.3.19
+
+### Patch Changes
+
+- 3f5fff1: Solid: stop mapping `for` to `htmlFor`
+- 4c662df: Angular: Fix: state initialization sequence. Initialize states in `ngOnInit` first, followed by bindings that depend upon them.
+
 ## 0.3.18
 
 ### Patch Changes
