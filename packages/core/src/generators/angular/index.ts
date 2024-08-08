@@ -394,7 +394,7 @@ export const blockToAngular = ({
     if (options.state === 'class-properties') {
       const inputsPropsStateName = `mergedInputs_${hashCodeAsString(allProps)}`;
       root.state[inputsPropsStateName] = {
-        code: 'null',
+        code: '{}' + (options.typescript ? ' as any' : ''),
         type: 'property',
       };
       if (!root.hooks.onInit?.code.includes(inputsPropsStateName)) {
@@ -404,13 +404,14 @@ export const blockToAngular = ({
         root.hooks.onInit.code += `\nthis.${inputsPropsStateName} = {${allProps}};\n`;
       }
       if (
-        root.hooks.onUpdate &&
-        root.hooks.onUpdate.length > 0 &&
         !root.hooks.onUpdate
-          .map((hook) => hook.code)
+          ?.map((hook) => hook.code)
           .join('')
           .includes(inputsPropsStateName)
       ) {
+        if (!root.hooks.onUpdate) {
+          root.hooks.onUpdate = [];
+        }
         root.hooks.onUpdate.push({
           code: `this.${inputsPropsStateName} = {${allProps}}`,
         });
@@ -688,18 +689,20 @@ const classPropertiesPlugin = () => ({
 // if any state "property" is trying to access state.* or props.*
 // then we need to move them to onInit where they can be accessed
 const transformState = (json: MitosisComponent) => {
-  Object.entries(json.state).forEach(([key, value]) => {
-    if (value?.type === 'property') {
-      if (value.code && (value.code.includes('state.') || value.code.includes('props.'))) {
-        const code = stripStateAndPropsRefs(value.code, { replaceWith: 'this' });
-        json.state[key]!.code = 'null';
-        if (!json.hooks.onInit?.code) {
-          json.hooks.onInit = { code: '' };
+  Object.entries(json.state)
+    .reverse()
+    .forEach(([key, value]) => {
+      if (value?.type === 'property') {
+        if (value.code && (value.code.includes('state.') || value.code.includes('props.'))) {
+          const code = stripStateAndPropsRefs(value.code, { replaceWith: 'this' });
+          json.state[key]!.code = 'null';
+          if (!json.hooks.onInit?.code) {
+            json.hooks.onInit = { code: '' };
+          }
+          json.hooks.onInit.code = `\nthis.${key} = ${code};\n${json.hooks.onInit.code}`;
         }
-        json.hooks.onInit.code += `\nthis.${key} = ${code};\n`;
       }
-    }
-  });
+    });
 };
 
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
@@ -939,12 +942,18 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       return `const defaultProps = {${defalutPropsString}};\n`;
     };
 
+    const angularCoreImports = [
+      ...(outputs.length ? ['Output', 'EventEmitter'] : []),
+      ...(options?.experimental?.inject ? ['Inject', 'forwardRef'] : []),
+      'Component',
+      ...(domRefs.size || dynamicComponents.size ? ['ViewChild', 'ElementRef'] : []),
+      ...(props.size ? ['Input'] : []),
+      ...(dynamicComponents.size ? ['ViewChild', 'TemplateRef'] : []),
+      ...(json.hooks.onUpdate?.length && options.typescript ? ['SimpleChanges'] : []),
+    ].join(', ');
+
     let str = dedent`
-    import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
-      options?.experimental?.inject ? 'Inject, forwardRef,' : ''
-    } Component ${domRefs.size || dynamicComponents.size ? ', ViewChild, ElementRef' : ''}${
-      props.size ? ', Input' : ''
-    } ${dynamicComponents.size ? ', ViewContainerRef, TemplateRef' : ''} } from '@angular/core';
+    import { ${angularCoreImports} } from '@angular/core';
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
@@ -1074,7 +1083,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${
         !json.hooks.onUpdate?.length
           ? ''
-          : `ngOnChanges() {
+          : `ngOnChanges(changes${options.typescript ? ': SimpleChanges' : ''}) {
               if (typeof window !== 'undefined') {
                 ${json.hooks.onUpdate?.reduce((code, hook) => {
                   code += hook.code;
