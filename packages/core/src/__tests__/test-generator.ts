@@ -1,8 +1,8 @@
+import { describe, test } from 'vitest';
 import { MitosisComponent, createTypescriptProject, parseSvelte } from '..';
 import { parseJsx } from '../parsers/jsx';
 import { Target } from '../types/config';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-
 const getRawFile = async (filePath: string) => {
   const code = await import(`${filePath}?raw`).then((x) => x.default as string);
   return { code, filePath: ['src', '__tests__', filePath].join('/') };
@@ -120,6 +120,7 @@ const builderRenderContent = getRawFile('./data/blocks/builder-render-content.ra
 const rootFragmentMultiNode = getRawFile('./data/blocks/root-fragment-multi-node.raw.tsx');
 const renderContentExample = getRawFile('./data/render-content.raw.tsx');
 const onClickToPressable = getRawFile('./data/react-native/onclick-to-pressable.raw.tsx');
+const inputToTextInputRN = getRawFile('./data/react-native/text-input.raw.tsx');
 
 type Tests = { [index: string]: RawFile };
 
@@ -144,6 +145,7 @@ const SVELTE_SYNTAX_TESTS: Tests = {
 
 const REACT_NATIVE_TESTS: Tests = {
   onClickToPressable,
+  inputToTextInputRN,
 };
 
 const BASIC_TESTS: Tests = {
@@ -259,6 +261,8 @@ const SHOW_TESTS: Tests = {
   nestedShow: getRawFile('./data/show/nested-show.raw.tsx'),
   showWithFor: getRawFile('./data/show/show-with-for.raw.tsx'),
   showWithRootText: getRawFile('./data/show/show-with-root-text.raw.tsx'),
+  showWithOtherValues: getRawFile('./data/show/show-with-other-values.raw.tsx'),
+  showExpressions: getRawFile('./data/show/show-expressions.raw.tsx'),
 };
 
 const ADVANCED_REF: Tests = {
@@ -280,6 +284,9 @@ const ANGULAR_TESTS: Tests = {
   dynamicComponentWithEventArg: getRawFile(
     './data/angular/dynamic-component-with-event-args.raw.tsx',
   ),
+  twoForsTrackBy: getRawFile('./data/angular/two-fors.raw.tsx'),
+  stateInit: getRawFile('./data/angular/state-init.raw.tsx'),
+  stateInitSequence: getRawFile('./data/angular/state-init-sequence.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {
@@ -440,7 +447,7 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
-    // FORWARD_REF_TESTS,
+    FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
     FOR_SHOW_TESTS,

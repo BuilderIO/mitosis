@@ -9,14 +9,14 @@ import { MitosisComponent } from '@/types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
 import json5 from 'json5';
 import { camelCase, size } from 'lodash';
-import traverse from 'traverse';
+import traverse from 'neotraverse/legacy';
 import { MitosisNode, Plugin } from '../..';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { componentToReact } from '../react';
 import { sanitizeReactNativeBlockStyles } from './sanitize-react-native-block-styles';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
-  stylesType: 'emotion' | 'react-native';
+  stylesType: 'emotion' | 'react-native' | 'twrnc' | 'native-wind';
   stateType: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
 }
 
@@ -111,7 +111,6 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
 /**
  * Plugin that handles necessary transformations from React to React Native:
  * - Converts DOM tags to <View /> and <Text />
- * - Removes redundant `class`/`className` attributes
  */
 const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
   json: {
@@ -122,9 +121,20 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           if (isChildren({ node })) {
             node.name = '';
           } else if (node.name.toLowerCase() === node.name && VALID_HTML_TAGS.includes(node.name)) {
-            node.name = 'View';
-            if (node.bindings.onClick) {
+            if (node.name === 'input') {
+              node.name = 'TextInput';
+            } else if (node.name === 'img') {
+              node.name = 'Image';
+            } else if (node.name === 'a') {
+              node.name = 'TouchableOpacity';
+            } else if (node.name === 'button') {
+              node.name = 'Button';
+            }
+            // if node is not button or a and still has onClick it needs to pressable
+            else if (node.bindings.onClick) {
               node.name = 'Pressable';
+            } else {
+              node.name = 'View';
             }
           } else if (
             node.properties._text?.trim().length ||
@@ -132,6 +142,112 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           ) {
             node.name = 'Text';
           }
+        }
+      });
+    },
+  },
+});
+
+/**
+ * Removes React Native className and class properties from the JSON
+ */
+const REMOVE_REACT_NATIVE_CLASSES_PLUGIN: Plugin = () => ({
+  json: {
+    pre: (json: MitosisComponent) => {
+      traverse(json).forEach(function (node) {
+        if (isMitosisNode(node)) {
+          if (node.properties.class) {
+            delete node.properties.class;
+          }
+          if (node.properties.className) {
+            delete node.properties.className;
+          }
+          if (node.bindings.class) {
+            delete node.bindings.class;
+          }
+          if (node.bindings.className) {
+            delete node.bindings.className;
+          }
+        }
+      });
+    },
+  },
+});
+
+/**
+ * Converts class and className properties to twrnc style syntax
+ */
+const TWRNC_STYLES_PLUGIN: Plugin = () => ({
+  json: {
+    post: (json: MitosisComponent) => {
+      traverse(json).forEach(function (node) {
+        if (isMitosisNode(node)) {
+          let staticClasses = [node.properties.class, node.properties.className]
+            .filter(Boolean)
+            .join(' ');
+
+          let dynamicClasses = [node.bindings.class, node.bindings.className].filter(Boolean);
+
+          if (staticClasses || dynamicClasses.length) {
+            let styleCode = '';
+
+            if (staticClasses) {
+              styleCode = `tw\`${staticClasses}\``;
+            }
+
+            if (dynamicClasses.length) {
+              let dynamicCode = dynamicClasses
+                .map((dc) => (dc && dc.code ? dc.code : null))
+                .filter(Boolean)
+                .join(', ');
+
+              if (dynamicCode) {
+                if (styleCode) {
+                  // If we have both static and dynamic classes
+                  styleCode = `tw.style(${styleCode}, ${dynamicCode})`;
+                } else if (dynamicClasses.length > 1) {
+                  // If we have multiple dynamic classes
+                  styleCode = `tw.style([${dynamicCode}])`;
+                } else {
+                  // If we have a single dynamic class
+                  styleCode = `tw.style(${dynamicCode})`;
+                }
+              }
+            }
+
+            if (styleCode) {
+              node.bindings.style = createSingleBinding({ code: styleCode });
+            }
+          }
+
+          // Clean up original class and className properties/bindings
+          delete node.properties.class;
+          delete node.properties.className;
+          delete node.bindings.class;
+          delete node.bindings.className;
+        }
+      });
+    },
+  },
+});
+
+/**
+ * Converts class and className properties to native-wind style syntax
+ * Note: We only support the "with babel" setup: https://www.nativewind.dev/guides/babel
+ */
+const NATIVE_WIND_STYLES_PLUGIN: Plugin = () => ({
+  json: {
+    post: (json: MitosisComponent) => {
+      traverse(json).forEach(function (node) {
+        if (isMitosisNode(node)) {
+          let combinedClasses = [
+            node.properties.class,
+            node.properties.className,
+            node.bindings.class,
+            node.bindings.className,
+          ]
+            .filter(Boolean)
+            .join(' ');
 
           if (node.properties.class) {
             delete node.properties.class;
@@ -144,6 +260,10 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
           }
           if (node.bindings.className) {
             delete node.bindings.className;
+          }
+
+          if (combinedClasses) {
+            node.properties.className = combinedClasses;
           }
         }
       });
@@ -163,6 +283,14 @@ export const componentToReactNative: TranspilerGenerator<Partial<ToReactNativeOp
     const json = fastClone(component);
 
     const options = mergeOptions(DEFAULT_OPTIONS, _options);
+
+    if (options.stylesType === 'twrnc') {
+      options.plugins.push(TWRNC_STYLES_PLUGIN);
+    } else if (options.stylesType === 'native-wind') {
+      options.plugins.push(NATIVE_WIND_STYLES_PLUGIN);
+    } else {
+      options.plugins.push(REMOVE_REACT_NATIVE_CLASSES_PLUGIN);
+    }
 
     return componentToReact({ ...options, type: 'native' })({ component: json, path });
   };

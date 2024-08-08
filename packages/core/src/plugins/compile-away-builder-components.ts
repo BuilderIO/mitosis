@@ -2,7 +2,7 @@ import { type Plugin } from '@builder.io/mitosis';
 import { Builder, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { omit, pick, round } from 'lodash';
-import traverse, { TraverseContext } from 'traverse';
+import traverse, { TraverseContext } from 'neotraverse/legacy';
 import { createSingleBinding } from '../helpers/bindings';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
@@ -390,7 +390,7 @@ export const components: CompileAwayComponentsMap = {
       bindings: noUndefined({
         css: createSingleBinding({
           code: JSON.stringify({
-            disply: 'flex',
+            display: 'flex',
             flexDirection: 'column',
             ...css,
             position: 'relative',

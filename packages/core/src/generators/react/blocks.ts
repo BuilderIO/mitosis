@@ -16,17 +16,18 @@ const NODE_MAPPERS: {
     json: MitosisNode,
     options: ToReactOptions,
     component: MitosisComponent,
+    insideJsx: boolean,
     parentSlots: any[],
   ) => string;
 } = {
-  Slot(json, options, component, parentSlots) {
+  Slot(json, options, component, _insideJsx, parentSlots) {
     const slotName = json.bindings.name?.code || json.properties.name;
 
     const hasChildren = json.children.length;
 
     const renderChildren = () => {
       const childrenStr = json.children
-        ?.map((item) => blockToReact(item, options, component))
+        ?.map((item) => blockToReact(item, options, component, true))
         .join('\n')
         .trim();
       /**
@@ -69,24 +70,29 @@ const NODE_MAPPERS: {
   Fragment(json, options, component) {
     const wrap = wrapInFragment(json) || isRootTextNode(json);
     return `${wrap ? getFragment('open', options) : ''}${json.children
-      .map((item) => blockToReact(item, options, component))
+      .map((item) => blockToReact(item, options, component, wrap))
       .join('\n')}${wrap ? getFragment('close', options) : ''}`;
   },
-  For(_json, options, component) {
+  For(_json, options, component, insideJsx) {
     const json = _json as ForNode;
     const wrap = wrapInFragment(json);
     const forArguments = getForArguments(json).join(', ');
-    return `{${processBinding(
+    const expression = `${processBinding(
       json.bindings.each?.code as string,
       options,
     )}?.map((${forArguments}) => (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options, component))
+      .map((item) => blockToReact(item, options, component, wrap))
       .join('\n')}${wrap ? closeFrag(options) : ''}
-    ))}`;
+    ))`;
+    if (insideJsx) {
+      return `{${expression}}`;
+    } else {
+      return expression;
+    }
   },
-  Show(json, options, component) {
+  Show(json, options, component, insideJsx) {
     const wrap =
       wrapInFragment(json) ||
       isRootTextNode(json) ||
@@ -95,22 +101,28 @@ const NODE_MAPPERS: {
       // since it's a `.map()` call
       (json.children.length === 1 && ['For', 'Show'].includes(json.children[0].name));
 
-    const wrapElse =
+    const wrapElse = !!(
       json.meta.else &&
-      (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any));
+      (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any))
+    );
 
-    return `{${processBinding(json.bindings.when?.code as string, options)} ? (
+    const expression = `${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
-      .map((item) => blockToReact(item, options, component))
+      .map((item) => blockToReact(item, options, component, wrap))
       .join('\n')}${wrap ? closeFrag(options) : ''}
     ) : ${
       !json.meta.else
         ? 'null'
         : (wrapElse ? openFrag(options) : '') +
-          blockToReact(json.meta.else as any, options, component) +
+          blockToReact(json.meta.else as any, options, component, wrapElse) +
           (wrapElse ? closeFrag(options) : '')
-    }}`;
+    }`;
+    if (insideJsx) {
+      return `{${expression}}`;
+    } else {
+      return expression;
+    }
   },
 };
 
@@ -157,10 +169,13 @@ export const blockToReact = (
   json: MitosisNode,
   options: ToReactOptions,
   component: MitosisComponent,
+  insideJsx: boolean,
   parentSlots: any[] = [],
 ) => {
+  const needsToRenderSlots: any[] = [];
+
   if (NODE_MAPPERS[json.name]) {
-    return NODE_MAPPERS[json.name](json, options, component, parentSlots);
+    return NODE_MAPPERS[json.name](json, options, component, insideJsx, parentSlots);
   }
 
   if (json.properties._text) {
@@ -170,6 +185,7 @@ export const blockToReact = (
     }
     return text;
   }
+
   if (json.bindings._text?.code) {
     const processed = processBinding(json.bindings._text.code, options);
     if (
@@ -189,6 +205,34 @@ export const blockToReact = (
   for (const key in json.properties) {
     const value = (json.properties[key] || '').replace(/"/g, '&quot;').replace(/\n/g, '\\n');
 
+    // Handle src for Image
+    // Handle src for Image
+    if (json.name === 'Image' && key === 'src') {
+      let src;
+      const imageSource = json.properties.src;
+      if (imageSource) {
+        const isUrl = /^(http|https):\/\/[^ "]+$/.test(imageSource);
+        src = isUrl ? `{ uri: '${imageSource}' }` : `require('${imageSource}')`;
+        str += `source={${src}} `;
+        continue; // Skip further processing for 'src' in Image
+      }
+    }
+
+    // Handle href for TouchableOpacity
+    if (json.name === 'TouchableOpacity' && key === 'href') {
+      const hrefValue = processBinding(value, options);
+      if (hrefValue) {
+        const onPress = `() => Linking.openURL(${JSON.stringify(hrefValue)})`;
+        str += ` onPress={${onPress}} `;
+      }
+      continue; // Skip further processing for 'href' in TouchableOpacity
+    }
+
+    // Ignore target for TouchableOpacity
+    if (json.name === 'TouchableOpacity' && key === 'target') {
+      continue; // Skip further processing for 'target' in TouchableOpacity
+    }
+
     if (key === 'class') {
       str = `${str.trim()} className="${value}" `;
     } else if (BINDING_MAPPERS[key]) {
@@ -207,6 +251,11 @@ export const blockToReact = (
   }
 
   for (const key in json.bindings) {
+    // ignore duplicate slot attribute
+    if (json.slots?.[key]) {
+      continue;
+    }
+
     const value = String(json.bindings[key]?.code);
 
     if (key === 'css' && value.trim() === '{}') {
@@ -215,6 +264,29 @@ export const blockToReact = (
 
     const useBindingValue = processBinding(value, options);
 
+    if (json.name === 'Image' && key === 'src') {
+      let src;
+      const imageSource = processBinding(value, options);
+      if (imageSource) {
+        src = `{ uri: ${imageSource} }`;
+        str += `source={${src}} `;
+        continue; // Skip further processing for 'src' in Image
+      }
+    }
+    // Handle href for TouchableOpacity
+    if (json.name === 'TouchableOpacity' && key === 'href') {
+      const hrefValue = processBinding(value, options);
+      if (hrefValue) {
+        const onPress = `() => Linking.openURL(${hrefValue})`;
+        str += ` onPress={${onPress}} `;
+        continue; // Skip further processing for 'href' in TouchableOpacity
+      }
+    }
+
+    // Ignore target for TouchableOpacity
+    if (json.name === 'TouchableOpacity' && key === 'target') {
+      continue; // Skip further processing for 'target' in TouchableOpacity
+    }
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${value})} `;
     } else if (key.startsWith('on')) {
@@ -261,7 +333,7 @@ export const blockToReact = (
       if (!value?.length) {
         continue;
       }
-      const reactComponents = value.map((node) => blockToReact(node, options, component));
+      const reactComponents = value.map((node) => blockToReact(node, options, component, true));
       const slotStringValue =
         reactComponents.length === 1 ? reactComponents[0] : `<>${reactComponents.join('\n')}</>`;
       str += ` ${key}={${slotStringValue}} `;
@@ -279,11 +351,10 @@ export const blockToReact = (
   }
 
   // TODO: update MitosisNode for simple code
-  const needsToRenderSlots: any[] = [];
   let childrenNodes = '';
   if (json.children) {
     childrenNodes = json.children
-      .map((item) => blockToReact(item, options, component, needsToRenderSlots))
+      .map((item) => blockToReact(item, options, component, true, needsToRenderSlots))
       .join('');
   }
   if (needsToRenderSlots.length) {

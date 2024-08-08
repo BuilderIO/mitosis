@@ -3580,6 +3580,53 @@ export default class MyComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > showExpressions 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"show-with-other-values\\")
+export default class ShowWithOtherValues extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() conditionA: any;
+  @property() conditionB: any;
+
+  render() {
+    return html\`
+
+          <div>
+          \${this.conditionA ? html\`Content0\` : html\`ContentA\`} \${
+      this.conditionA ? html\`ContentA\` : null
+    } \${this.conditionA ? html\`\` : html\`ContentA\`}
+          \${this.conditionA ? html\`ContentB\` : html\`\${undefined}\`} \${
+      this.conditionA ? html\`\${undefined}\` : html\`ContentB\`
+    } \${this.conditionA ? html\`ContentC\` : null} \${
+      this.conditionA ? html\`\` : html\`ContentC\`
+    } \${this.conditionA ? html\`ContentD\` : null} \${
+      this.conditionA ? html\`\` : html\`ContentD\`
+    }
+          \${this.conditionA ? html\`ContentE\` : html\`hello\`} \${
+      this.conditionA ? html\`hello\` : html\`ContentE\`
+    } \${this.conditionA ? html\`ContentF\` : html\`123\`}
+          \${this.conditionA ? html\`123\` : html\`ContentF\`} \${
+      this.conditionA === \\"Default\\"
+        ? html\`4mb\`
+        : html\`\${this.conditionB === \\"Complete\\" ? html\`20mb\` : html\`9mb\`}\`
+    } \${
+      this.conditionA === \\"Default\\"
+        ? html\`\${this.conditionB === \\"Complete\\" ? html\`20mb\` : html\`9mb\`}\`
+        : html\`4mb\`
+    }
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > showWithFor 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -3607,6 +3654,42 @@ export default class NestedShow extends LitElement {
     <div>else-condition-A</div>
     \`
           }
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > showWithOtherValues 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"show-with-other-values\\")
+export default class ShowWithOtherValues extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() conditionA: any;
+
+  render() {
+    return html\`
+
+          <div>
+          \${this.conditionA ? html\` ContentA \` : null} \${
+      this.conditionA
+        ? html\`
+      ContentB \`
+        : html\`\${undefined}\`
+    } \${this.conditionA ? html\` ContentC \` : null}
+          \${this.conditionA ? html\` ContentD \` : null} \${
+      this.conditionA
+        ? html\`
+      ContentE \`
+        : html\`hello\`
+    } \${this.conditionA ? html\` ContentF \` : html\`123\`}
+        </div>
 
         \`;
   }
@@ -8025,6 +8108,58 @@ export default class MyComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Typescript Test > showExpressions 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+@customElement(\\"show-with-other-values\\")
+export default class ShowWithOtherValues extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() conditionA: any;
+  @property() conditionB: any;
+
+  render() {
+    return html\`
+
+          <div>
+          \${this.conditionA ? html\`Content0\` : html\`ContentA\`} \${
+      this.conditionA ? html\`ContentA\` : null
+    } \${this.conditionA ? html\`\` : html\`ContentA\`}
+          \${this.conditionA ? html\`ContentB\` : html\`\${undefined}\`} \${
+      this.conditionA ? html\`\${undefined}\` : html\`ContentB\`
+    } \${this.conditionA ? html\`ContentC\` : null} \${
+      this.conditionA ? html\`\` : html\`ContentC\`
+    } \${this.conditionA ? html\`ContentD\` : null} \${
+      this.conditionA ? html\`\` : html\`ContentD\`
+    }
+          \${this.conditionA ? html\`ContentE\` : html\`hello\`} \${
+      this.conditionA ? html\`hello\` : html\`ContentE\`
+    } \${this.conditionA ? html\`ContentF\` : html\`123\`}
+          \${this.conditionA ? html\`123\` : html\`ContentF\`} \${
+      this.conditionA === \\"Default\\"
+        ? html\`4mb\`
+        : html\`\${this.conditionB === \\"Complete\\" ? html\`20mb\` : html\`9mb\`}\`
+    } \${
+      this.conditionA === \\"Default\\"
+        ? html\`\${this.conditionB === \\"Complete\\" ? html\`20mb\` : html\`9mb\`}\`
+        : html\`4mb\`
+    }
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Typescript Test > showWithFor 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -8057,6 +8192,46 @@ export default class NestedShow extends LitElement {
       <div>else-condition-A</div>
       \`
           }
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > showWithOtherValues 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+@customElement(\\"show-with-other-values\\")
+export default class ShowWithOtherValues extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() conditionA: any;
+
+  render() {
+    return html\`
+
+          <div>
+          \${this.conditionA ? html\` ContentA \` : null} \${
+      this.conditionA
+        ? html\`
+        ContentB \`
+        : html\`\${undefined}\`
+    } \${this.conditionA ? html\` ContentC \` : null}
+          \${this.conditionA ? html\` ContentD \` : null} \${
+      this.conditionA
+        ? html\`
+        ContentE \`
+        : html\`hello\`
+    } \${this.conditionA ? html\` ContentF \` : html\`123\`}
+        </div>
 
         \`;
   }

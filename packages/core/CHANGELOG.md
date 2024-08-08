@@ -1,5 +1,136 @@
 # Change Log
 
+## 0.3.21
+
+### Patch Changes
+
+- 45de754: Angular: fix: add typed argument `changes: SimpleChanges` to `ngOnChanges` lifecycle hook
+- 03f1f58: Angular: Fix: reactivity of `mergedInputs` (used in Dynamic components)
+- 45de754: Angular: Fix: set initial value of `inputs` for `*ngComponentOutlet`to`{}`instead of`null`.
+
+## 0.3.20
+
+### Patch Changes
+
+- 34bbd34: Fix: remove duplicated `Pressable` import in React Native
+
+## 0.3.19
+
+### Patch Changes
+
+- 3f5fff1: Solid: stop mapping `for` to `htmlFor`
+- 4c662df: Angular: Fix: state initialization sequence. Initialize states in `ngOnInit` first, followed by bindings that depend upon them.
+
+## 0.3.18
+
+### Patch Changes
+
+- 952b3f5: - React Native generator: add support for generating React Native components (`Image`, `TouchableOpacity`, `Button`)
+
+## 0.3.17
+
+### Patch Changes
+
+- 48f5481: fix: angular state initialization referencing other states or props
+
+## 0.3.16
+
+### Patch Changes
+
+- 9abf0ac: Feat: `trackBy` for angular (can be used when the child used inside <For> has a `key` attribute in mitosis)
+
+## 0.3.15
+
+### Patch Changes
+
+- 383f69f: feat: support more complex RN styling with twrnc
+
+## 0.3.14
+
+### Patch Changes
+
+- 9a1d59b: Feat: Implement `onInit` hook for React and Solid, React now uses `useRef` calling `onInit` inline so we run the code before mount
+
+## 0.3.13
+
+### Patch Changes
+
+- f86e2ec: Fix: Angular generator to run `onMount` and `onUpdate` hooks on the client side only and use `onInit` hook to run both on CSR and SSR
+
+## 0.3.12
+
+### Patch Changes
+
+- 3a04558: bump `neotraverse` to fix webpack compat issues
+
+## 0.3.11
+
+### Patch Changes
+
+- 59a92da: Replaces `traverse` dependency with the smaller `neotraverse`
+
+## 0.3.10
+
+### Patch Changes
+
+- 8548feb: - Fix: [Solid] change style default to `style-tag` instead of `solid-styled-components`.
+  - Fix: [Solid] remove `jsx` attribute from `<style>` tags in `style-tag`.
+- f83b8f4: Adds two new styling options for the react-native generator: twrnc and native-wind
+
+## 0.3.9
+
+### Patch Changes
+
+- 9705329: Fix: remove deprecated dependencies: `vue` and `@babel/plugin-proposal-class-properties`
+
+## 0.3.8
+
+### Patch Changes
+
+- 495a937: add `fetchpriority` to `img` attributes in `jsx-runtime.d.ts`
+
+## 0.3.7
+
+### Patch Changes
+
+- 413cdc2: fix: fix ref issue when transforming mitosis code into solid.js code
+
+## 0.3.6
+
+### Patch Changes
+
+- 2c1b162: Support complex conditional cases
+
+## 0.3.5
+
+### Patch Changes
+
+- 14a9a90: Feat: Angular generator: add `state` config with options `'class-properties'` (new, puts all template code in class properties) and `'inline-with-wrappers'` (existing default, wraps problematic JS expressions within template)
+
+## 0.3.4
+
+### Patch Changes
+
+- 42287fe: chore: Fix typo in CSS property name of Builder compiled-away `Image` component.
+
+## 0.3.3
+
+### Patch Changes
+
+- 027e9cc: Feature: Add metadata to component mappers in Builder generator
+
+## 0.3.2
+
+### Patch Changes
+
+- 78f6a64: Misc: remove unused dependencies.
+
+## 0.3.1
+
+### Patch Changes
+
+- c8b7883: Fix: parse slots into `MitosisNode` `slots` property.
+
 ## 0.3.0
 
 ### Minor Changes

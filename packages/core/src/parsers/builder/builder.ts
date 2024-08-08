@@ -5,7 +5,7 @@ import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, merge, omit, omitBy, sortBy, upperFirst } from 'lodash';
-import traverse from 'traverse';
+import traverse from 'neotraverse/legacy';
 import { Size, sizeNames, sizes } from '../../constants/media-sizes';
 import { createSingleBinding } from '../../helpers/bindings';
 import { capitalize } from '../../helpers/capitalize';
@@ -278,6 +278,7 @@ const componentMappers: {
     return createMitosisNode({
       name: 'Symbol',
       bindings: bindings,
+      meta: getMetaFromBlock(block, options),
     });
   },
   ...(!symbolBlocksAsChildren
@@ -312,6 +313,7 @@ const componentMappers: {
                 css: createSingleBinding({ code: JSON.stringify(css) }),
               }),
             },
+            meta: getMetaFromBlock(block, options),
             children: !blocks
               ? []
               : [
@@ -344,6 +346,7 @@ const componentMappers: {
               link: col.link,
             },
           }),
+          meta: getMetaFromBlock(block, options),
           children: col.blocks.map((col: any) => builderElementToMitosisNode(col, options)),
         }),
       ) || [];
@@ -362,6 +365,7 @@ const componentMappers: {
         forName: block.component!.options!.repeat!.itemName,
         indexName: '$index',
       },
+      meta: getMetaFromBlock(block, options),
       children: (block.children || []).map((child) => builderElementToMitosisNode(child, options)),
     });
   },
@@ -420,6 +424,7 @@ const componentMappers: {
         name: block.tagName || 'div',
         bindings,
         properties,
+        meta: getMetaFromBlock(block, options),
         children: [
           createMitosisNode({
             bindings: innerBindings,
@@ -456,6 +461,7 @@ const componentMappers: {
         name: finalTagname,
         bindings,
         properties: finalProperties,
+        meta: getMetaFromBlock(block, options),
         children: [
           createMitosisNode({
             bindings: innerBindings,
@@ -476,6 +482,7 @@ const componentMappers: {
         ...bindings,
         ...innerBindings,
       },
+      meta: getMetaFromBlock(block, options),
     });
   },
 };
@@ -493,7 +500,7 @@ export const builderElementToMitosisNode = (
   options: BuilderToMitosisOptions,
   _internalOptions: InternalOptions = {},
 ): MitosisNode => {
-  const { includeSpecialBindings = true, includeMeta = false } = options;
+  const { includeSpecialBindings = true } = options;
 
   if (block.component?.name === 'Core:Fragment') {
     block.component.name = 'Fragment';
@@ -514,6 +521,7 @@ export const builderElementToMitosisNode = (
           forName: block.repeat?.itemName || 'item',
           indexName: '$index',
         },
+        meta: getMetaFromBlock(block, options),
         children: block.children?.map((child) => builderElementToMitosisNode(child, options)) || [],
       });
     } else {
@@ -532,6 +540,7 @@ export const builderElementToMitosisNode = (
           forName: block.repeat?.itemName || 'item',
           indexName: '$index',
         },
+        meta: getMetaFromBlock(block, options),
         children: [builderElementToMitosisNode(omit(useBlock, 'repeat'), options)],
       });
     }
@@ -552,12 +561,14 @@ export const builderElementToMitosisNode = (
       return createMitosisNode({
         name: 'Show',
         bindings: { when: createSingleBinding({ code }) },
+        meta: getMetaFromBlock(block, options),
         children: block.children?.map((child) => builderElementToMitosisNode(child, options)) || [],
       });
     } else {
       return createMitosisNode({
         name: 'Show',
         bindings: { when: createSingleBinding({ code }) },
+        meta: getMetaFromBlock(block, options),
         children: [
           builderElementToMitosisNode(
             {
@@ -695,12 +706,7 @@ export const builderElementToMitosisNode = (
     slots: {
       ...slots,
     },
-    meta: includeMeta
-      ? {
-          'builder-id': block.id,
-          ...block.meta,
-        }
-      : {},
+    meta: getMetaFromBlock(block, options),
   });
 
   // Has single text node child
@@ -753,6 +759,16 @@ const getBuilderPropsForSymbol = (
     }
   }
   return undefined;
+};
+
+export const getMetaFromBlock = (block: BuilderElement, options: BuilderToMitosisOptions) => {
+  const { includeMeta = false } = options;
+  return includeMeta
+    ? {
+        'builder-id': block.id,
+        ...block.meta,
+      }
+    : {};
 };
 
 const getHooks = (content: BuilderContent) => {

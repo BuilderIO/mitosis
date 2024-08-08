@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@builder.io/mitosis",
+  "targets": {
+    "test:watch": {
+      /**
+      We need to build the core before running tests because some of the tests 
+      (like the Signal ones) rely on the core being built.
+      */
+      "dependsOn": ["build"]
+    }
+  }
+}

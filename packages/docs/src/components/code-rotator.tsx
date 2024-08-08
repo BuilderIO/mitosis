@@ -36,8 +36,7 @@ const vueOutput = `
 <template>
   <div>
     <input class="input" :value="name" @change="name = $event.target.value" />
-    Hello! I can run natively in React, Vue, Svelte, Qwik, and many more
-    frameworks!
+    Hello! I can run natively in React, Vue, Svelte, Qwik, and many more frameworks!
   </div>
 </template>
 
@@ -84,8 +83,7 @@ import { Component } from "@angular/core";
         (input)="name = $event.target.value"
       />
 
-      Hello! I can run natively in React, Vue, Svelte, Qwik, and many more
-      frameworks!
+      Hello! I can run natively in React, Vue, Svelte, Qwik, and many more frameworks!
     </div>
   \`,
   styles: [
@@ -102,11 +100,7 @@ export default class MyComponent {
 `.trim();
 
 const qwikOutput = `
-import {
-  component$,
-  useStore,
-  useStylesScoped$,
-} from "@builder.io/qwik";
+import { component$, useStore, useStylesScoped$ } from "@builder.io/qwik";
 
 export const MyComponent = component$((props) => {
   useStylesScoped$(\`
@@ -123,8 +117,7 @@ export const MyComponent = component$((props) => {
         value={state.name}
         onChange$={(event) => (state.name = event.target.value)}
       />
-      Hello! I can run natively in React, Vue, Svelte, Qwik, and many more
-      frameworks!
+      Hello! I can run natively in React, Vue, Svelte, Qwik, and many more frameworks!
     </div>
   );
 });

@@ -43,10 +43,10 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicRefComponent {
-  @Input() showInput!: any;
+  @Input() showInput;
 
-  @ViewChild(\\"inputRef\\") inputRef!: ElementRef;
-  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef!: ElementRef;
+  @ViewChild(\\"inputRef\\") inputRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef;
 
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
@@ -57,8 +57,10 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  ngAfterContentChecked() {
-    console.log(\\"Received an update\\");
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Received an update\\");
+    }
   }
 }
 
@@ -114,10 +116,10 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicRefComponent {
-  @Input() showInput!: any;
+  @Input() showInput;
 
-  @ViewChild(\\"inputRef\\") inputRef!: ElementRef;
-  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef!: ElementRef;
+  @ViewChild(\\"inputRef\\") inputRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef;
 
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
@@ -128,8 +130,10 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  ngAfterContentChecked() {
-    console.log(\\"Received an update\\");
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Received an update\\");
+    }
   }
 }
 "
@@ -354,14 +358,16 @@ export default class MyBasicComponent {
     console.log(change);
   };
 
-  constructor(public myService: MyService) {
-    const hi = this.myService.method(\\"hi\\");
-    console.log(hi);
-  }
+  constructor(public myService: MyService) {}
 
   ngOnInit() {
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
   }
 }
 
@@ -407,14 +413,16 @@ export default class MyBasicComponent {
     console.log(change);
   };
 
-  constructor(public myService: MyService) {
-    const hi = this.myService.method(\\"hi\\");
-    console.log(hi);
-  }
+  constructor(public myService: MyService) {}
 
   ngOnInit() {
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
   }
 }
 "
@@ -440,18 +448,18 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicOnMountUpdateComponent {
-  @Input() bye!: any;
-  @Input() hi!: any;
+  @Input() bye;
+  @Input() hi;
 
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {
-    this.name = \\"PatrickJS onInit\\" + this.hi;
-  }
-
   ngOnInit() {
-    this.name = \\"PatrickJS onMount\\" + this.bye;
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+
+    if (typeof window !== \\"undefined\\") {
+      this.name = \\"PatrickJS onMount\\" + this.bye;
+    }
   }
 }
 
@@ -484,18 +492,18 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicOnMountUpdateComponent {
-  @Input() bye!: any;
-  @Input() hi!: any;
+  @Input() bye;
+  @Input() hi;
 
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {
-    this.name = \\"PatrickJS onInit\\" + this.hi;
-  }
-
   ngOnInit() {
-    this.name = \\"PatrickJS onMount\\" + this.bye;
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+
+    if (typeof window !== \\"undefined\\") {
+      this.name = \\"PatrickJS onMount\\" + this.bye;
+    }
   }
 }
 "
@@ -521,7 +529,7 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicOutputsComponent {
-  @Input() message!: any;
+  @Input() message;
 
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
@@ -529,8 +537,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -563,7 +573,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicOutputsComponent {
-  @Input() message!: any;
+  @Input() message;
 
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
@@ -571,8 +581,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 "
@@ -598,7 +610,7 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicOutputsComponent {
-  @Input() message!: any;
+  @Input() message;
 
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
@@ -606,8 +618,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -640,7 +654,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicOutputsComponent {
-  @Input() message!: any;
+  @Input() message;
 
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
@@ -648,8 +662,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 "
@@ -744,7 +760,7 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   ],
 })
 export default class MyBooleanAttribute {
-  @Input() type!: any;
+  @Input() type;
 }
 
 @NgModule({
@@ -792,7 +808,7 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   imports: [CommonModule, MyBooleanAttributeComponent],
 })
 export default class MyBooleanAttribute {
-  @Input() type!: any;
+  @Input() type;
 }
 "
 `;
@@ -920,7 +936,9 @@ export default class MyBasicForComponent {
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
   ngOnInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 
@@ -971,7 +989,9 @@ export default class MyBasicForComponent {
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
   ngOnInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 "
@@ -1020,10 +1040,10 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicRefComponent {
-  @Input() showInput!: any;
+  @Input() showInput;
 
-  @ViewChild(\\"inputRef\\") inputRef!: ElementRef;
-  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef!: ElementRef;
+  @ViewChild(\\"inputRef\\") inputRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef;
 
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
@@ -1087,10 +1107,10 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicRefComponent {
-  @Input() showInput!: any;
+  @Input() showInput;
 
-  @ViewChild(\\"inputRef\\") inputRef!: ElementRef;
-  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef!: ElementRef;
+  @ViewChild(\\"inputRef\\") inputRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef;
 
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
@@ -1213,8 +1233,10 @@ export default class MyPreviousComponent {
 
   private _prevCount = this.count;
 
-  ngAfterContentChecked() {
-    this._prevCount = this.count;
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this._prevCount = this.count;
+    }
   }
 }
 
@@ -1267,8 +1289,10 @@ export default class MyPreviousComponent {
 
   private _prevCount = this.count;
 
-  ngAfterContentChecked() {
-    this._prevCount = this.count;
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this._prevCount = this.count;
+    }
   }
 }
 "
@@ -1306,10 +1330,10 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class Button {
-  @Input() link!: any;
-  @Input() attributes!: any;
-  @Input() openLinkInNewTab!: any;
-  @Input() text!: any;
+  @Input() link;
+  @Input() attributes;
+  @Input() openLinkInNewTab;
+  @Input() text;
 }
 
 @NgModule({
@@ -1353,10 +1377,10 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class Button {
-  @Input() link!: any;
-  @Input() attributes!: any;
-  @Input() openLinkInNewTab!: any;
-  @Input() text!: any;
+  @Input() link;
+  @Input() attributes;
+  @Input() openLinkInNewTab;
+  @Input() text;
 }
 "
 `;
@@ -1404,8 +1428,8 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class Column {
-  @Input() columns!: any;
-  @Input() space!: any;
+  @Input() columns;
+  @Input() space;
 
   getColumns() {
     return this.columns || [];
@@ -1477,8 +1501,8 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class Column {
-  @Input() columns!: any;
-  @Input() space!: any;
+  @Input() columns;
+  @Input() space;
 
   getColumns() {
     return this.columns || [];
@@ -1600,8 +1624,8 @@ const defaultProps = {
   ],
 })
 export default class ContentSlotJsxCode {
-  @Input() attributes!: any;
-  @Input() content!: any = defaultProps[\\"content\\"];
+  @Input() attributes;
+  @Input() content = defaultProps[\\"content\\"];
 
   name = \\"king\\";
   showContent = false;
@@ -1661,8 +1685,8 @@ const defaultProps = {
   imports: [CommonModule],
 })
 export default class ContentSlotJsxCode {
-  @Input() attributes!: any;
-  @Input() content!: any = defaultProps[\\"content\\"];
+  @Input() attributes;
+  @Input() content = defaultProps[\\"content\\"];
 
   name = \\"king\\";
   showContent = false;
@@ -1700,10 +1724,10 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
   ],
 })
 export default class CustomCode {
-  @Input() replaceNodes!: any;
-  @Input() code!: any;
+  @Input() replaceNodes;
+  @Input() code;
 
-  @ViewChild(\\"elem\\") elem!: ElementRef;
+  @ViewChild(\\"elem\\") elem;
 
   scriptsInserted = [];
   scriptsRun = [];
@@ -1750,7 +1774,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 
@@ -1787,10 +1813,10 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class CustomCode {
-  @Input() replaceNodes!: any;
-  @Input() code!: any;
+  @Input() replaceNodes;
+  @Input() code;
 
-  @ViewChild(\\"elem\\") elem!: ElementRef;
+  @ViewChild(\\"elem\\") elem;
 
   scriptsInserted = [];
   scriptsRun = [];
@@ -1837,7 +1863,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -1867,10 +1895,10 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
   ],
 })
 export default class CustomCode {
-  @Input() replaceNodes!: any;
-  @Input() code!: any;
+  @Input() replaceNodes;
+  @Input() code;
 
-  @ViewChild(\\"elem\\") elem!: ElementRef;
+  @ViewChild(\\"elem\\") elem;
 
   scriptsInserted = [];
   scriptsRun = [];
@@ -1917,7 +1945,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 
@@ -1954,10 +1984,10 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class CustomCode {
-  @Input() replaceNodes!: any;
-  @Input() code!: any;
+  @Input() replaceNodes;
+  @Input() code;
 
-  @ViewChild(\\"elem\\") elem!: ElementRef;
+  @ViewChild(\\"elem\\") elem;
 
   scriptsInserted = [];
   scriptsRun = [];
@@ -2004,7 +2034,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -2037,7 +2069,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -2058,7 +2090,7 @@ import {
         ></BuilderBlocks>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'error' && responseData\\">
-        <pre class=\\"builder-form-error-text pre\\">{{useJsonStringify}}</pre>
+        <pre class=\\"builder-form-error-text pre\\">{{responseData | json}}</pre>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'success'\\">
         <BuilderBlocks
@@ -2084,26 +2116,26 @@ import {
 export default class FormComponent {
   builder = builder;
 
-  @Input() previewState!: any;
-  @Input() sendWithJs!: any;
-  @Input() sendSubmissionsTo!: any;
-  @Input() action!: any;
-  @Input() customHeaders!: any;
-  @Input() contentType!: any;
-  @Input() sendSubmissionsToEmail!: any;
-  @Input() name!: any;
-  @Input() method!: any;
-  @Input() errorMessagePath!: any;
-  @Input() resetFormOnSubmit!: any;
-  @Input() successUrl!: any;
-  @Input() validate!: any;
-  @Input() attributes!: any;
-  @Input() builderBlock!: any;
-  @Input() errorMessage!: any;
-  @Input() sendingMessage!: any;
-  @Input() successMessage!: any;
+  @Input() previewState;
+  @Input() sendWithJs;
+  @Input() sendSubmissionsTo;
+  @Input() action;
+  @Input() customHeaders;
+  @Input() contentType;
+  @Input() sendSubmissionsToEmail;
+  @Input() name;
+  @Input() method;
+  @Input() errorMessagePath;
+  @Input() resetFormOnSubmit;
+  @Input() successUrl;
+  @Input() validate;
+  @Input() attributes;
+  @Input() builderBlock;
+  @Input() errorMessage;
+  @Input() sendingMessage;
+  @Input() successMessage;
 
-  @ViewChild(\\"formRef\\") formRef!: ElementRef;
+  @ViewChild(\\"formRef\\") formRef;
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -2324,9 +2356,8 @@ export default class FormComponent {
       );
     }
   }
-
-  useJsonStringify(obj: any): string {
-    return JSON.stringify(obj);
+  trackByBlock0(index, block) {
+    return block.id;
   }
 }
 
@@ -2364,7 +2395,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -2385,7 +2416,7 @@ import {
         ></BuilderBlocks>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'error' && responseData\\">
-        <pre class=\\"builder-form-error-text pre\\">{{useJsonStringify}}</pre>
+        <pre class=\\"builder-form-error-text pre\\">{{responseData | json}}</pre>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'success'\\">
         <BuilderBlocks
@@ -2413,26 +2444,26 @@ import {
 export default class FormComponent {
   builder = builder;
 
-  @Input() previewState!: any;
-  @Input() sendWithJs!: any;
-  @Input() sendSubmissionsTo!: any;
-  @Input() action!: any;
-  @Input() customHeaders!: any;
-  @Input() contentType!: any;
-  @Input() sendSubmissionsToEmail!: any;
-  @Input() name!: any;
-  @Input() method!: any;
-  @Input() errorMessagePath!: any;
-  @Input() resetFormOnSubmit!: any;
-  @Input() successUrl!: any;
-  @Input() validate!: any;
-  @Input() attributes!: any;
-  @Input() builderBlock!: any;
-  @Input() errorMessage!: any;
-  @Input() sendingMessage!: any;
-  @Input() successMessage!: any;
+  @Input() previewState;
+  @Input() sendWithJs;
+  @Input() sendSubmissionsTo;
+  @Input() action;
+  @Input() customHeaders;
+  @Input() contentType;
+  @Input() sendSubmissionsToEmail;
+  @Input() name;
+  @Input() method;
+  @Input() errorMessagePath;
+  @Input() resetFormOnSubmit;
+  @Input() successUrl;
+  @Input() validate;
+  @Input() attributes;
+  @Input() builderBlock;
+  @Input() errorMessage;
+  @Input() sendingMessage;
+  @Input() successMessage;
 
-  @ViewChild(\\"formRef\\") formRef!: ElementRef;
+  @ViewChild(\\"formRef\\") formRef;
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -2653,9 +2684,8 @@ export default class FormComponent {
       );
     }
   }
-
-  useJsonStringify(obj: any): string {
-    return JSON.stringify(obj);
+  trackByBlock0(index, block) {
+    return block.id;
   }
 }
 "
@@ -2703,14 +2733,14 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
   ],
 })
 export default class Image {
-  @Input() lazy!: any;
-  @Input() altText!: any;
-  @Input() _class!: any;
-  @Input() image!: any;
-  @Input() srcset!: any;
-  @Input() sizes!: any;
+  @Input() lazy;
+  @Input() altText;
+  @Input() _class;
+  @Input() image;
+  @Input() srcset;
+  @Input() sizes;
 
-  @ViewChild(\\"pictureRef\\") pictureRef!: ElementRef;
+  @ViewChild(\\"pictureRef\\") pictureRef;
 
   scrollListener = null;
   imageLoaded = false;
@@ -2729,27 +2759,29 @@ export default class Image {
   load = false;
 
   ngOnInit() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.pictureRef.nativeElement) {
-          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+    if (typeof window !== \\"undefined\\") {
+      if (this.useLazyLoading()) {
+        // throttled scroll capture listener
+        const listener = () => {
+          if (this.pictureRef.nativeElement) {
+            const rect = this.pictureRef.nativeElement.getBoundingClientRect();
+            const buffer = window.innerHeight / 2;
 
-          if (rect.top < window.innerHeight + buffer) {
-            this.load = true;
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
+            if (rect.top < window.innerHeight + buffer) {
+              this.load = true;
+              this.scrollListener = null;
+              window.removeEventListener(\\"scroll\\", listener);
+            }
           }
-        }
-      };
+        };
 
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+        this.scrollListener = listener;
+        window.addEventListener(\\"scroll\\", listener, {
+          capture: true,
+          passive: true,
+        });
+        listener();
+      }
     }
   }
 
@@ -2811,14 +2843,14 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class Image {
-  @Input() lazy!: any;
-  @Input() altText!: any;
-  @Input() _class!: any;
-  @Input() image!: any;
-  @Input() srcset!: any;
-  @Input() sizes!: any;
+  @Input() lazy;
+  @Input() altText;
+  @Input() _class;
+  @Input() image;
+  @Input() srcset;
+  @Input() sizes;
 
-  @ViewChild(\\"pictureRef\\") pictureRef!: ElementRef;
+  @ViewChild(\\"pictureRef\\") pictureRef;
 
   scrollListener = null;
   imageLoaded = false;
@@ -2837,27 +2869,29 @@ export default class Image {
   load = false;
 
   ngOnInit() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.pictureRef.nativeElement) {
-          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+    if (typeof window !== \\"undefined\\") {
+      if (this.useLazyLoading()) {
+        // throttled scroll capture listener
+        const listener = () => {
+          if (this.pictureRef.nativeElement) {
+            const rect = this.pictureRef.nativeElement.getBoundingClientRect();
+            const buffer = window.innerHeight / 2;
 
-          if (rect.top < window.innerHeight + buffer) {
-            this.load = true;
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
+            if (rect.top < window.innerHeight + buffer) {
+              this.load = true;
+              this.scrollListener = null;
+              window.removeEventListener(\\"scroll\\", listener);
+            }
           }
-        }
-      };
+        };
 
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+        this.scrollListener = listener;
+        window.addEventListener(\\"scroll\\", listener, {
+          capture: true,
+          passive: true,
+        });
+        listener();
+      }
     }
   }
 
@@ -2967,13 +3001,13 @@ import { Builder } from \\"@builder.io/sdk\\";
   ],
 })
 export default class ImgComponent {
-  @Input() backgroundSize!: any;
-  @Input() backgroundPosition!: any;
-  @Input() attributes!: any;
-  @Input() imgSrc!: any;
-  @Input() altText!: any;
+  @Input() backgroundSize;
+  @Input() backgroundPosition;
+  @Input() attributes;
+  @Input() imgSrc;
+  @Input() altText;
 
-  useObjectWrapper(...args: any[]) {
+  useObjectWrapper(...args) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
@@ -3017,13 +3051,13 @@ import { Builder } from \\"@builder.io/sdk\\";
   imports: [CommonModule],
 })
 export default class ImgComponent {
-  @Input() backgroundSize!: any;
-  @Input() backgroundPosition!: any;
-  @Input() attributes!: any;
-  @Input() imgSrc!: any;
-  @Input() altText!: any;
+  @Input() backgroundSize;
+  @Input() backgroundPosition;
+  @Input() attributes;
+  @Input() imgSrc;
+  @Input() altText;
 
-  useObjectWrapper(...args: any[]) {
+  useObjectWrapper(...args) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
@@ -3064,14 +3098,14 @@ import { Builder } from \\"@builder.io/sdk\\";
   ],
 })
 export default class FormInputComponent {
-  @Input() attributes!: any;
-  @Input() defaultValue!: any;
-  @Input() placeholder!: any;
-  @Input() type!: any;
-  @Input() name!: any;
-  @Input() value!: any;
-  @Input() required!: any;
-  @Input() onChange!: any;
+  @Input() attributes;
+  @Input() defaultValue;
+  @Input() placeholder;
+  @Input() type;
+  @Input() name;
+  @Input() value;
+  @Input() required;
+  @Input() onChange;
 }
 
 @NgModule({
@@ -3113,14 +3147,14 @@ import { Builder } from \\"@builder.io/sdk\\";
   imports: [CommonModule],
 })
 export default class FormInputComponent {
-  @Input() attributes!: any;
-  @Input() defaultValue!: any;
-  @Input() placeholder!: any;
-  @Input() type!: any;
-  @Input() name!: any;
-  @Input() value!: any;
-  @Input() required!: any;
-  @Input() onChange!: any;
+  @Input() attributes;
+  @Input() defaultValue;
+  @Input() placeholder;
+  @Input() type;
+  @Input() name;
+  @Input() value;
+  @Input() required;
+  @Input() onChange;
 }
 "
 `;
@@ -3221,8 +3255,8 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class RawText {
-  @Input() attributes!: any;
-  @Input() text!: any;
+  @Input() attributes;
+  @Input() text;
 }
 
 @NgModule({
@@ -3257,8 +3291,8 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class RawText {
-  @Input() attributes!: any;
-  @Input() text!: any;
+  @Input() attributes;
+  @Input() text;
 }
 "
 `;
@@ -3289,8 +3323,8 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class SectionComponent {
-  @Input() attributes!: any;
-  @Input() maxWidth!: any;
+  @Input() attributes;
+  @Input() maxWidth;
 }
 
 @NgModule({
@@ -3328,12 +3362,12 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class SectionStateComponent {
-  @Input() attributes!: any;
+  @Input() attributes;
 
   max = 42;
   items = [42];
 
-  useObjectWrapper(...args: any[]) {
+  useObjectWrapper(...args) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
@@ -3377,8 +3411,8 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class SectionComponent {
-  @Input() attributes!: any;
-  @Input() maxWidth!: any;
+  @Input() attributes;
+  @Input() maxWidth;
 }
 "
 `;
@@ -3409,12 +3443,12 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class SectionStateComponent {
-  @Input() attributes!: any;
+  @Input() attributes;
 
   max = 42;
   items = [42];
 
-  useObjectWrapper(...args: any[]) {
+  useObjectWrapper(...args) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
@@ -3457,11 +3491,11 @@ import { Builder } from \\"@builder.io/sdk\\";
   ],
 })
 export default class SelectComponent {
-  @Input() attributes!: any;
-  @Input() value!: any;
-  @Input() defaultValue!: any;
-  @Input() name!: any;
-  @Input() options!: any;
+  @Input() attributes;
+  @Input() value;
+  @Input() defaultValue;
+  @Input() name;
+  @Input() options;
 }
 
 @NgModule({
@@ -3505,11 +3539,11 @@ import { Builder } from \\"@builder.io/sdk\\";
   imports: [CommonModule],
 })
 export default class SelectComponent {
-  @Input() attributes!: any;
-  @Input() value!: any;
-  @Input() defaultValue!: any;
-  @Input() name!: any;
-  @Input() options!: any;
+  @Input() attributes;
+  @Input() value;
+  @Input() defaultValue;
+  @Input() name;
+  @Input() options;
 }
 "
 `;
@@ -3790,7 +3824,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
           Submit
         </button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -3834,8 +3870,8 @@ import { kebabCase, snakeCase } from \\"lodash\\";
   ],
 })
 export default class SmileReviews {
-  @Input() apiKey!: any;
-  @Input() productId!: any;
+  @Input() apiKey;
+  @Input() productId;
 
   reviews = [];
   name = \\"test\\";
@@ -3846,17 +3882,22 @@ export default class SmileReviews {
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
+  trackByReview0(index, review) {
+    return review.id;
+  }
 
   ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews = data.data;
+        });
+    }
   }
 }
 
@@ -3897,7 +3938,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
           Submit
         </button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -3943,8 +3986,8 @@ import { kebabCase, snakeCase } from \\"lodash\\";
   imports: [CommonModule],
 })
 export default class SmileReviews {
-  @Input() apiKey!: any;
-  @Input() productId!: any;
+  @Input() apiKey;
+  @Input() productId;
 
   reviews = [];
   name = \\"test\\";
@@ -3955,17 +3998,22 @@ export default class SmileReviews {
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
+  trackByReview0(index, review) {
+    return review.id;
+  }
 
   ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews = data.data;
+        });
+    }
   }
 }
 "
@@ -3991,8 +4039,8 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class SubmitButton {
-  @Input() attributes!: any;
-  @Input() text!: any;
+  @Input() attributes;
+  @Input() text;
 }
 
 @NgModule({
@@ -4024,8 +4072,8 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class SubmitButton {
-  @Input() attributes!: any;
-  @Input() text!: any;
+  @Input() attributes;
+  @Input() text;
 }
 "
 `;
@@ -4058,8 +4106,8 @@ import { Builder } from \\"@builder.io/sdk\\";
   ],
 })
 export default class Text {
-  @Input() text!: any;
-  @Input() content!: any;
+  @Input() text;
+  @Input() content;
 
   name = \\"Decadef20\\";
 }
@@ -4101,8 +4149,8 @@ import { Builder } from \\"@builder.io/sdk\\";
   imports: [CommonModule],
 })
 export default class Text {
-  @Input() text!: any;
-  @Input() content!: any;
+  @Input() text;
+  @Input() content;
 
   name = \\"Decadef20\\";
 }
@@ -4134,11 +4182,11 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class Textarea {
-  @Input() attributes!: any;
-  @Input() placeholder!: any;
-  @Input() name!: any;
-  @Input() value!: any;
-  @Input() defaultValue!: any;
+  @Input() attributes;
+  @Input() placeholder;
+  @Input() name;
+  @Input() value;
+  @Input() defaultValue;
 }
 
 @NgModule({
@@ -4175,11 +4223,11 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class Textarea {
-  @Input() attributes!: any;
-  @Input() placeholder!: any;
-  @Input() name!: any;
-  @Input() value!: any;
-  @Input() defaultValue!: any;
+  @Input() attributes;
+  @Input() placeholder;
+  @Input() name;
+  @Input() value;
+  @Input() defaultValue;
 }
 "
 `;
@@ -4212,17 +4260,17 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class Video {
-  @Input() attributes!: any;
-  @Input() fit!: any;
-  @Input() position!: any;
-  @Input() video!: any;
-  @Input() posterImage!: any;
-  @Input() autoPlay!: any;
-  @Input() muted!: any;
-  @Input() controls!: any;
-  @Input() loop!: any;
+  @Input() attributes;
+  @Input() fit;
+  @Input() position;
+  @Input() video;
+  @Input() posterImage;
+  @Input() autoPlay;
+  @Input() muted;
+  @Input() controls;
+  @Input() loop;
 
-  useObjectWrapper(...args: any[]) {
+  useObjectWrapper(...args) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
@@ -4268,17 +4316,17 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class Video {
-  @Input() attributes!: any;
-  @Input() fit!: any;
-  @Input() position!: any;
-  @Input() video!: any;
-  @Input() posterImage!: any;
-  @Input() autoPlay!: any;
-  @Input() muted!: any;
-  @Input() controls!: any;
-  @Input() loop!: any;
+  @Input() attributes;
+  @Input() fit;
+  @Input() position;
+  @Input() video;
+  @Input() posterImage;
+  @Input() autoPlay;
+  @Input() muted;
+  @Input() controls;
+  @Input() loop;
 
-  useObjectWrapper(...args: any[]) {
+  useObjectWrapper(...args) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
@@ -4367,7 +4415,7 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 
@@ -4392,17 +4440,15 @@ import {
   ],
 })
 export default class MyBasicForNoTagRefComponent {
-  @Input() actions!: any;
+  @Input() actions;
 
   @ViewChild(\\"tagnamegetterTemplate\\", { static: true })
-  tagnamegetterTemplateRef!: TemplateRef<any>;
-  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef!: TemplateRef<any>;
-  @ViewChild(\\"tagnameTemplate\\", { static: true })
-  tagnameTemplateRef!: TemplateRef<any>;
-  @ViewChild(\\"iconTemplate\\", { static: true })
-  iconTemplateRef!: TemplateRef<any>;
+  tagnamegetterTemplateRef;
+  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef;
+  @ViewChild(\\"tagnameTemplate\\", { static: true }) tagnameTemplateRef;
+  @ViewChild(\\"iconTemplate\\", { static: true }) iconTemplateRef;
 
-  myContent?: any[][];
+  myContent;
 
   name = \\"VincentW\\";
   TagName = \\"div\\";
@@ -4411,7 +4457,7 @@ export default class MyBasicForNoTagRefComponent {
     return \\"span\\";
   }
 
-  constructor(private vcRef: ViewContainerRef) {}
+  constructor(private vcRef) {}
 
   ngOnInit() {
     this.myContent = [
@@ -4438,7 +4484,7 @@ exports[`Angular > jsx > Javascript Test > basicForNoTagReference 2`] = `
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -4466,17 +4512,15 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicForNoTagRefComponent {
-  @Input() actions!: any;
+  @Input() actions;
 
   @ViewChild(\\"tagnamegetterTemplate\\", { static: true })
-  tagnamegetterTemplateRef!: TemplateRef<any>;
-  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef!: TemplateRef<any>;
-  @ViewChild(\\"tagnameTemplate\\", { static: true })
-  tagnameTemplateRef!: TemplateRef<any>;
-  @ViewChild(\\"iconTemplate\\", { static: true })
-  iconTemplateRef!: TemplateRef<any>;
+  tagnamegetterTemplateRef;
+  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef;
+  @ViewChild(\\"tagnameTemplate\\", { static: true }) tagnameTemplateRef;
+  @ViewChild(\\"iconTemplate\\", { static: true }) iconTemplateRef;
 
-  myContent?: any[][];
+  myContent;
 
   name = \\"VincentW\\";
   TagName = \\"div\\";
@@ -4485,7 +4529,7 @@ export default class MyBasicForNoTagRefComponent {
     return \\"span\\";
   }
 
-  constructor(private vcRef: ViewContainerRef) {}
+  constructor(private vcRef) {}
 
   ngOnInit() {
     this.myContent = [
@@ -4672,21 +4716,23 @@ import { Component } from \\"@angular/core\\";
 export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
-  ngAfterContentChecked() {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetch(\\"https://patrickjs.com/api/resource.json\\", {
-      signal,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.name = data.name;
-      });
-    return () => {
-      if (!signal.aborted) {
-        controller.abort();
-      }
-    };
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    }
   }
 }
 
@@ -4722,21 +4768,23 @@ import { CommonModule } from \\"@angular/common\\";
 export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
-  ngAfterContentChecked() {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetch(\\"https://patrickjs.com/api/resource.json\\", {
-      signal,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.name = data.name;
-      });
-    return () => {
-      if (!signal.aborted) {
-        controller.abort();
-      }
-    };
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    }
   }
 }
 "
@@ -5092,7 +5140,7 @@ import Context2 from \\"@dummy/2\\";
   ],
 })
 export default class ComponentWithContext {
-  @Input() content!: any;
+  @Input() content;
 
   constructor(public foo: Context1) {}
 }
@@ -5131,7 +5179,7 @@ import Context2 from \\"@dummy/2\\";
   imports: [CommonModule],
 })
 export default class ComponentWithContext {
-  @Input() content!: any;
+  @Input() content;
 
   constructor(public foo: Context1) {}
 }
@@ -5164,7 +5212,7 @@ import Context2 from \\"@dummy/2\\";
   ],
 })
 export default class ComponentWithContext {
-  @Input() content!: any;
+  @Input() content;
 
   constructor(public foo: Context1) {}
 }
@@ -5204,7 +5252,7 @@ import Context2 from \\"@dummy/2\\";
   imports: [CommonModule],
 })
 export default class ComponentWithContext {
-  @Input() content!: any;
+  @Input() content;
 
   constructor(public foo: Context1) {}
 }
@@ -5231,8 +5279,8 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class RenderContent {
-  @Input() content!: any;
-  @Input() customComponents!: any;
+  @Input() content;
+  @Input() customComponents;
 }
 
 @NgModule({
@@ -5266,8 +5314,8 @@ import BuilderContext from \\"@dummy/context.js\\";
   imports: [CommonModule],
 })
 export default class RenderContent {
-  @Input() content!: any;
-  @Input() customComponents!: any;
+  @Input() content;
+  @Input() customComponents;
 }
 "
 `;
@@ -5315,11 +5363,11 @@ const defaultProps = {
   ],
 })
 export default class Button {
-  @Input() link!: any = defaultProps[\\"link\\"];
-  @Input() attributes!: any;
-  @Input() openLinkInNewTab!: any = defaultProps[\\"openLinkInNewTab\\"];
-  @Input() text!: any = defaultProps[\\"text\\"];
-  @Input() buttonText!: any;
+  @Input() link = defaultProps[\\"link\\"];
+  @Input() attributes;
+  @Input() openLinkInNewTab = defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text = defaultProps[\\"text\\"];
+  @Input() buttonText;
 
   @Output() onClick = new EventEmitter();
 }
@@ -5376,11 +5424,11 @@ const defaultProps = {
   imports: [CommonModule],
 })
 export default class Button {
-  @Input() link!: any = defaultProps[\\"link\\"];
-  @Input() attributes!: any;
-  @Input() openLinkInNewTab!: any = defaultProps[\\"openLinkInNewTab\\"];
-  @Input() text!: any = defaultProps[\\"text\\"];
-  @Input() buttonText!: any;
+  @Input() link = defaultProps[\\"link\\"];
+  @Input() attributes;
+  @Input() openLinkInNewTab = defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text = defaultProps[\\"text\\"];
+  @Input() buttonText;
 
   @Output() onClick = new EventEmitter();
 }
@@ -5428,10 +5476,10 @@ const defaultProps = {
   ],
 })
 export default class Button {
-  @Input() link!: any = defaultProps[\\"link\\"];
-  @Input() attributes!: any;
-  @Input() openLinkInNewTab!: any = defaultProps[\\"openLinkInNewTab\\"];
-  @Input() text!: any = defaultProps[\\"text\\"];
+  @Input() link = defaultProps[\\"link\\"];
+  @Input() attributes;
+  @Input() openLinkInNewTab = defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text = defaultProps[\\"text\\"];
 
   @Output() onClick = new EventEmitter();
 }
@@ -5486,10 +5534,10 @@ const defaultProps = {
   imports: [CommonModule],
 })
 export default class Button {
-  @Input() link!: any = defaultProps[\\"link\\"];
-  @Input() attributes!: any;
-  @Input() openLinkInNewTab!: any = defaultProps[\\"openLinkInNewTab\\"];
-  @Input() text!: any = defaultProps[\\"text\\"];
+  @Input() link = defaultProps[\\"link\\"];
+  @Input() attributes;
+  @Input() openLinkInNewTab = defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text = defaultProps[\\"text\\"];
 
   @Output() onClick = new EventEmitter();
 }
@@ -5522,7 +5570,7 @@ const DEFAULT_VALUES = {
 export default class ComponentWithTypes {
   DEFAULT_VALUES = DEFAULT_VALUES;
 
-  @Input() name!: any;
+  @Input() name;
 }
 
 @NgModule({
@@ -5560,7 +5608,7 @@ const DEFAULT_VALUES = {
 export default class ComponentWithTypes {
   DEFAULT_VALUES = DEFAULT_VALUES;
 
-  @Input() name!: any;
+  @Input() name;
 }
 "
 `;
@@ -5577,7 +5625,7 @@ import { Component, Input } from \\"@angular/core\\";
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
-              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
     ></ng-container>
@@ -5591,8 +5639,8 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyComponent {
-  @Input() attributes!: any;
-  @Input() something!: any;
+  @Input() attributes;
+  @Input() something;
 
   obj = {
     name: \\"foo\\",
@@ -5622,7 +5670,7 @@ import { CommonModule } from \\"@angular/common\\";
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
-              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
     ></ng-container>
@@ -5638,8 +5686,8 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyComponent {
-  @Input() attributes!: any;
-  @Input() something!: any;
+  @Input() attributes;
+  @Input() something;
 
   obj = {
     name: \\"foo\\",
@@ -5661,7 +5709,7 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 
@@ -5672,7 +5720,7 @@ import {
     <ng-container
       *ngComponentOutlet=\\"
               Component;
-              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
     ></ng-container>
@@ -5686,20 +5734,19 @@ import {
   ],
 })
 export default class MyComponent {
-  @Input() attributes!: any;
-  @Input() something!: any;
+  @Input() attributes;
+  @Input() something;
 
-  @ViewChild(\\"componentTemplate\\", { static: true })
-  componentTemplateRef!: TemplateRef<any>;
+  @ViewChild(\\"componentTemplate\\", { static: true }) componentTemplateRef;
 
-  myContent?: any[][];
+  myContent;
 
   Component = HelloComponent;
   onClick = function onClick(event) {
     console.log(\\"hello\\", event);
   };
 
-  constructor(private vcRef: ViewContainerRef) {}
+  constructor(private vcRef) {}
 
   ngOnInit() {
     this.myContent = [
@@ -5723,7 +5770,7 @@ exports[`Angular > jsx > Javascript Test > dynamicComponentWithEventArg 2`] = `
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -5735,7 +5782,7 @@ import { CommonModule } from \\"@angular/common\\";
     <ng-container
       *ngComponentOutlet=\\"
               Component;
-              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
     ></ng-container>
@@ -5751,20 +5798,19 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyComponent {
-  @Input() attributes!: any;
-  @Input() something!: any;
+  @Input() attributes;
+  @Input() something;
 
-  @ViewChild(\\"componentTemplate\\", { static: true })
-  componentTemplateRef!: TemplateRef<any>;
+  @ViewChild(\\"componentTemplate\\", { static: true }) componentTemplateRef;
 
-  myContent?: any[][];
+  myContent;
 
   Component = HelloComponent;
   onClick = function onClick(event) {
     console.log(\\"hello\\", event);
   };
 
-  constructor(private vcRef: ViewContainerRef) {}
+  constructor(private vcRef) {}
 
   ngOnInit() {
     this.myContent = [
@@ -5795,11 +5841,15 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyComponent {
-  @Input() componentRef!: any;
+  @Input() componentRef;
 
-  refToUse = !(this.componentRef instanceof Function)
-    ? this.componentRef
-    : null;
+  refToUse = null;
+
+  ngOnInit() {
+    this.refToUse = !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null;
+  }
 }
 
 @NgModule({
@@ -5831,11 +5881,15 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyComponent {
-  @Input() componentRef!: any;
+  @Input() componentRef;
 
-  refToUse = !(this.componentRef instanceof Function)
-    ? this.componentRef
-    : null;
+  refToUse = null;
+
+  ngOnInit() {
+    this.refToUse = !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null;
+  }
 }
 "
 `;
@@ -5864,7 +5918,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class Button {
-  @Input() foo!: any;
+  @Input() foo;
 
   get foo2() {
     return this.foo + \\"foo\\";
@@ -5910,7 +5964,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class Button {
-  @Input() foo!: any;
+  @Input() foo;
 
   get foo2() {
     return this.foo + \\"foo\\";
@@ -5947,7 +6001,7 @@ import RenderBlock from \\"./builder-render-block.raw\\";
   ],
 })
 export default class RenderContent {
-  @Input() renderContentProps!: any;
+  @Input() renderContentProps;
 
   getRenderContentProps(block, index) {
     return {
@@ -5988,7 +6042,7 @@ import RenderBlock from \\"./builder-render-block.raw\\";
   imports: [CommonModule, RenderBlock],
 })
 export default class RenderContent {
-  @Input() renderContentProps!: any;
+  @Input() renderContentProps;
 
   getRenderContentProps(block, index) {
     return {
@@ -6073,9 +6127,11 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class MultipleOnUpdate {
-  ngAfterContentChecked() {
-    console.log(\\"Runs on every update/rerender\\");
-    console.log(\\"Runs on every update/rerender as well\\");
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+      console.log(\\"Runs on every update/rerender as well\\");
+    }
   }
 }
 
@@ -6108,9 +6164,11 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MultipleOnUpdate {
-  ngAfterContentChecked() {
-    console.log(\\"Runs on every update/rerender\\");
-    console.log(\\"Runs on every update/rerender as well\\");
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+      console.log(\\"Runs on every update/rerender as well\\");
+    }
   }
 }
 "
@@ -6141,16 +6199,18 @@ export default class MultipleOnUpdateWithDeps {
   c = \\"c\\";
   d = \\"d\\";
 
-  ngAfterContentChecked() {
-    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     }
   }
 }
@@ -6189,16 +6249,18 @@ export default class MultipleOnUpdateWithDeps {
   c = \\"c\\";
   d = \\"d\\";
 
-  ngAfterContentChecked() {
-    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     }
   }
 }
@@ -6291,7 +6353,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyComponent {
-  @Input() disabled!: any;
+  @Input() disabled;
 }
 
 @NgModule({
@@ -6328,7 +6390,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyComponent {
-  @Input() disabled!: any;
+  @Input() disabled;
 }
 "
 `;
@@ -6363,8 +6425,8 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class NestedShow {
-  @Input() conditionA!: any;
-  @Input() conditionB!: any;
+  @Input() conditionA;
+  @Input() conditionB;
 }
 
 @NgModule({
@@ -6406,8 +6468,8 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class NestedShow {
-  @Input() conditionA!: any;
-  @Input() conditionB!: any;
+  @Input() conditionA;
+  @Input() conditionB;
 }
 "
 `;
@@ -6535,14 +6597,16 @@ import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
   ],
 })
 export default class Embed {
-  @ViewChild(\\"elem\\") elem!: ElementRef;
+  @ViewChild(\\"elem\\") elem;
 
   foo(event) {
     console.log(\\"test2\\");
   }
 
   ngOnInit() {
-    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    if (typeof window !== \\"undefined\\") {
+      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    }
   }
 }
 
@@ -6575,14 +6639,16 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class Embed {
-  @ViewChild(\\"elem\\") elem!: ElementRef;
+  @ViewChild(\\"elem\\") elem;
 
   foo(event) {
     console.log(\\"test2\\");
   }
 
   ngOnInit() {
-    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    if (typeof window !== \\"undefined\\") {
+      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    }
   }
 }
 "
@@ -6608,12 +6674,12 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class OnInit {
-  constructor() {
-    console.log(\\"onInit\\");
-  }
-
   ngOnInit() {
-    console.log(\\"onMount\\");
+    console.log(\\"onInit\\");
+
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 
@@ -6646,12 +6712,12 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class OnInit {
-  constructor() {
-    console.log(\\"onInit\\");
-  }
-
   ngOnInit() {
-    console.log(\\"onMount\\");
+    console.log(\\"onInit\\");
+
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 "
@@ -6681,11 +6747,11 @@ export const defaultValues = {
   ],
 })
 export default class OnInit {
-  @Input() name!: any;
+  @Input() name;
 
   name = \\"\\";
 
-  constructor() {
+  ngOnInit() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   }
@@ -6724,11 +6790,11 @@ export const defaultValues = {
   imports: [CommonModule],
 })
 export default class OnInit {
-  @Input() name!: any;
+  @Input() name;
 
   name = \\"\\";
 
-  constructor() {
+  ngOnInit() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   }
@@ -6757,7 +6823,9 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -6795,7 +6863,9 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class Comp {
   ngOnInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -6826,18 +6896,20 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 
@@ -6871,18 +6943,20 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class Comp {
   ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 "
@@ -6908,8 +6982,10 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class OnUpdate {
-  ngAfterContentChecked() {
-    console.log(\\"Runs on every update/rerender\\");
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+    }
   }
 }
 
@@ -6942,8 +7018,10 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class OnUpdate {
-  ngAfterContentChecked() {
-    console.log(\\"Runs on every update/rerender\\");
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+    }
   }
 }
 "
@@ -6969,18 +7047,20 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class OnUpdateWithDeps {
-  @Input() size!: any;
+  @Input() size;
 
   a = \\"a\\";
   b = \\"b\\";
 
-  ngAfterContentChecked() {
-    console.log(
-      \\"Runs when this.a, this.b or size changes\\",
-      this.a,
-      this.b,
-      this.size
-    );
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(
+        \\"Runs when this.a, this.b or size changes\\",
+        this.a,
+        this.b,
+        this.size
+      );
+    }
   }
 }
 
@@ -7013,18 +7093,20 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class OnUpdateWithDeps {
-  @Input() size!: any;
+  @Input() size;
 
   a = \\"a\\";
   b = \\"b\\";
 
-  ngAfterContentChecked() {
-    console.log(
-      \\"Runs when this.a, this.b or size changes\\",
-      this.a,
-      this.b,
-      this.size
-    );
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(
+        \\"Runs when this.a, this.b or size changes\\",
+        this.a,
+        this.b,
+        this.size
+      );
+    }
   }
 }
 "
@@ -7188,7 +7270,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @Input() name!: any;
+  @Input() name;
 }
 
 @NgModule({
@@ -7220,7 +7302,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @Input() name!: any;
+  @Input() name;
 }
 "
 `;
@@ -7248,7 +7330,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @Input() type!: any;
+  @Input() type;
 
   name = \\"Decadef20\\";
 }
@@ -7285,7 +7367,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @Input() type!: any;
+  @Input() type;
 
   name = \\"Decadef20\\";
 }
@@ -7312,7 +7394,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @Input() name!: any;
+  @Input() name;
 }
 
 @NgModule({
@@ -7344,7 +7426,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @Input() name!: any;
+  @Input() name;
 }
 "
 `;
@@ -7369,7 +7451,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @Input() name!: any;
+  @Input() name;
 }
 
 @NgModule({
@@ -7401,7 +7483,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @Input() name!: any;
+  @Input() name;
 }
 "
 `;
@@ -7434,10 +7516,12 @@ export default class OnUpdate {
     };
   };
 
-  ngAfterContentChecked() {
-    this.foo({
-      someOption: this.bar,
-    });
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.foo({
+        someOption: this.bar,
+      });
+    }
   }
 }
 
@@ -7478,10 +7562,12 @@ export default class OnUpdate {
     };
   };
 
-  ngAfterContentChecked() {
-    this.foo({
-      someOption: this.bar,
-    });
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.foo({
+        someOption: this.bar,
+      });
+    }
   }
 }
 "
@@ -7496,7 +7582,7 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 
@@ -7526,7 +7612,9 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
         ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
-        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+        <ng-container
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+        >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
@@ -7564,14 +7652,14 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
 export default class RenderBlock {
   isEmptyHtmlElement = isEmptyHtmlElement;
 
-  @Input() block!: any;
-  @Input() context!: any;
+  @Input() block;
+  @Input() context;
 
   @ViewChild(\\"rendercomponenttagTemplate\\", { static: true })
-  rendercomponenttagTemplateRef!: TemplateRef<any>;
-  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef!: TemplateRef<any>;
+  rendercomponenttagTemplateRef;
+  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef;
 
-  myContent?: any[][];
+  myContent;
 
   get component() {
     const componentName = getProcessedBlock({
@@ -7745,8 +7833,17 @@ export default class RenderBlock {
       return RenderComponent;
     }
   }
+  trackByData0(index, data) {
+    return index;
+  }
+  trackByChild1(_, child) {
+    return \\"render-block-\\" + child.id;
+  }
+  trackByChild2(_, child) {
+    return \\"block-style-\\" + child.id;
+  }
 
-  constructor(private vcRef: ViewContainerRef) {}
+  constructor(private vcRef) {}
 
   ngOnInit() {
     this.myContent = [
@@ -7777,7 +7874,7 @@ exports[`Angular > jsx > Javascript Test > renderBlock 2`] = `
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7812,7 +7909,9 @@ import RenderRepeatedBlock from \\"./render-repeated-block.js\\";
         ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
-        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+        <ng-container
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+        >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
@@ -7852,14 +7951,14 @@ import RenderRepeatedBlock from \\"./render-repeated-block.js\\";
 export default class RenderBlock {
   isEmptyHtmlElement = isEmptyHtmlElement;
 
-  @Input() block!: any;
-  @Input() context!: any;
+  @Input() block;
+  @Input() context;
 
   @ViewChild(\\"rendercomponenttagTemplate\\", { static: true })
-  rendercomponenttagTemplateRef!: TemplateRef<any>;
-  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef!: TemplateRef<any>;
+  rendercomponenttagTemplateRef;
+  @ViewChild(\\"tagTemplate\\", { static: true }) tagTemplateRef;
 
-  myContent?: any[][];
+  myContent;
 
   get component() {
     const componentName = getProcessedBlock({
@@ -8033,8 +8132,17 @@ export default class RenderBlock {
       return RenderComponent;
     }
   }
+  trackByData0(index, data) {
+    return index;
+  }
+  trackByChild1(_, child) {
+    return \\"render-block-\\" + child.id;
+  }
+  trackByChild2(_, child) {
+    return \\"block-style-\\" + child.id;
+  }
 
-  constructor(private vcRef: ViewContainerRef) {}
+  constructor(private vcRef) {}
 
   ngOnInit() {
     this.myContent = [
@@ -8081,15 +8189,19 @@ import {
 export default class RenderContent {
   trackClick = trackClick;
 
-  @Input() customComponents!: any;
-  @Input() content!: any;
+  @Input() customComponents;
+  @Input() content;
 
   ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents);
+    }
   }
 
-  ngAfterContentChecked() {
-    dispatchNewContentToVisualEditor(this.content);
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      dispatchNewContentToVisualEditor(this.content);
+    }
   }
 }
 
@@ -8138,15 +8250,19 @@ import RenderBlocks from \\"@dummy/RenderBlocks.js\\";
 export default class RenderContent {
   trackClick = trackClick;
 
-  @Input() customComponents!: any;
-  @Input() content!: any;
+  @Input() customComponents;
+  @Input() content;
 
   ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents);
+    }
   }
 
-  ngAfterContentChecked() {
-    dispatchNewContentToVisualEditor(this.content);
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      dispatchNewContentToVisualEditor(this.content);
+    }
   }
 }
 "
@@ -8184,10 +8300,10 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class Button {
-  @Input() link!: any;
-  @Input() attributes!: any;
-  @Input() openLinkInNewTab!: any;
-  @Input() text!: any;
+  @Input() link;
+  @Input() attributes;
+  @Input() openLinkInNewTab;
+  @Input() text;
 }
 
 @NgModule({
@@ -8231,10 +8347,10 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class Button {
-  @Input() link!: any;
-  @Input() attributes!: any;
-  @Input() openLinkInNewTab!: any;
-  @Input() text!: any;
+  @Input() link;
+  @Input() attributes;
+  @Input() openLinkInNewTab;
+  @Input() text;
 }
 "
 `;
@@ -8260,7 +8376,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class RenderStyles {
-  @Input() foo!: any;
+  @Input() foo;
 }
 
 @NgModule({
@@ -8293,7 +8409,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class RenderStyles {
-  @Input() foo!: any;
+  @Input() foo;
 }
 "
 `;
@@ -8323,7 +8439,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyComponent {
-  @Input() name!: any;
+  @Input() name;
 }
 
 @NgModule({
@@ -8360,7 +8476,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule, MyComponent],
 })
 export default class MyComponent {
-  @Input() name!: any;
+  @Input() name;
 }
 "
 `;
@@ -8391,7 +8507,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyComponent {
-  @Input() name!: any;
+  @Input() name;
 }
 
 @NgModule({
@@ -8429,7 +8545,134 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule, MyComponent],
 })
 export default class MyComponent {
-  @Input() name!: any;
+  @Input() name;
+}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > showExpressions 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">Content0</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">hello</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">123</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">4mb</ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA;
+  @Input() conditionB;
+}
+
+@NgModule({
+  declarations: [ShowWithOtherValues],
+  imports: [CommonModule],
+  exports: [ShowWithOtherValues],
+})
+export class ShowWithOtherValuesModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > showExpressions 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">Content0</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">hello</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">123</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">4mb</ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA;
+  @Input() conditionB;
 }
 "
 `;
@@ -8444,7 +8687,9 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"nested-show, NestedShow\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items; let idx = index\\">
+      <ng-container
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+      >
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
@@ -8461,8 +8706,12 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class NestedShow {
-  @Input() conditionA!: any;
-  @Input() items!: any;
+  @Input() conditionA;
+  @Input() items;
+
+  trackByItem0(idx, item) {
+    return idx;
+  }
 }
 
 @NgModule({
@@ -8482,7 +8731,9 @@ import { CommonModule } from \\"@angular/common\\";
   selector: \\"nested-show, NestedShow\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items; let idx = index\\">
+      <ng-container
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+      >
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
@@ -8501,8 +8752,89 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class NestedShow {
-  @Input() conditionA!: any;
-  @Input() items!: any;
+  @Input() conditionA;
+  @Input() items;
+
+  trackByItem0(idx, item) {
+    return idx;
+  }
+}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > showWithOtherValues 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA;
+}
+
+@NgModule({
+  declarations: [ShowWithOtherValues],
+  imports: [CommonModule],
+  exports: [ShowWithOtherValues],
+})
+export class ShowWithOtherValuesModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > showWithOtherValues 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA;
 }
 "
 `;
@@ -8530,7 +8862,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class ShowRootText {
-  @Input() conditionA!: any;
+  @Input() conditionA;
 }
 
 @NgModule({
@@ -8565,7 +8897,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class ShowRootText {
-  @Input() conditionA!: any;
+  @Input() conditionA;
 }
 "
 `;
@@ -8593,12 +8925,14 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @Input() id!: any;
-  @Input() foo!: any;
+  @Input() id;
+  @Input() foo;
 
-  ngAfterContentChecked() {
-    console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"props.id changed\\", this.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+    }
   }
 }
 
@@ -8634,12 +8968,14 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @Input() id!: any;
-  @Input() foo!: any;
+  @Input() id;
+  @Input() foo;
 
-  ngAfterContentChecked() {
-    console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"props.id changed\\", this.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+    }
   }
 }
 "
@@ -8718,7 +9054,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @Input() nested!: any;
+  @Input() nested;
 }
 
 @NgModule({
@@ -8750,7 +9086,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @Input() nested!: any;
+  @Input() nested;
 }
 "
 `;
@@ -8808,6 +9144,196 @@ export default class MyBasicComponent {}
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > stateInit 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <div>{{asfas}}</div>
+      <div>{{someCompute}}</div>
+      <div>{{someOtherVal}}</div>
+      <div>{{sf}}</div>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() val;
+
+  add = function add(a, b) {
+    return a + b;
+  };
+  asfas = \\"asga\\";
+  subtract() {
+    return this.someCompute - this.someOtherVal;
+  }
+  someCompute = null;
+  someOtherVal = null;
+  sf = null;
+
+  ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
+    this.someOtherVal = this.val;
+
+    this.sf = this.add(this.val, 34);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > stateInit 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <div>{{asfas}}</div>
+      <div>{{someCompute}}</div>
+      <div>{{someOtherVal}}</div>
+      <div>{{sf}}</div>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() val;
+
+  add = function add(a, b) {
+    return a + b;
+  };
+  asfas = \\"asga\\";
+  subtract() {
+    return this.someCompute - this.someOtherVal;
+  }
+  someCompute = null;
+  someOtherVal = null;
+  sf = null;
+
+  ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
+    this.someOtherVal = this.val;
+
+    this.sf = this.add(this.val, 34);
+  }
+}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > stateInitSequence 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <Comp [val]=\\"useObjectWrapper(val)\\">{{val}}</Comp>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() value;
+
+  val = null;
+
+  useObjectWrapper(...args) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+
+  ngOnInit() {
+    this.val = this.value;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > stateInitSequence 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <Comp [val]=\\"useObjectWrapper(val)\\">{{val}}</Comp>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule, Comp],
+})
+export default class MyComponent {
+  @Input() value;
+
+  val = null;
+
+  useObjectWrapper(...args) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+
+  ngOnInit() {
+    this.val = this.value;
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -8836,7 +9362,7 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class MyComponent {
-  useObjectWrapper(...args: any[]) {
+  useObjectWrapper(...args) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
@@ -8882,7 +9408,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyComponent {
-  useObjectWrapper(...args: any[]) {
+  useObjectWrapper(...args) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
@@ -8918,7 +9444,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class StylePropClassAndCss {
-  @Input() attributes!: any;
+  @Input() attributes;
 }
 
 @NgModule({
@@ -8955,7 +9481,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class StylePropClassAndCss {
-  @Input() attributes!: any;
+  @Input() attributes;
 }
 "
 `;
@@ -9110,6 +9636,89 @@ export default class SvgComponent {}
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > twoForsTrackBy 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
+        <div>{{item}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
+        <div>{{item}}</div>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  items = [1, 2, 3];
+  trackByItem0(_, item) {
+    return item;
+  }
+  trackByItem1(_, item) {
+    return item;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > twoForsTrackBy 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
+        <div>{{item}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
+        <div>{{item}}</div>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  items = [1, 2, 3];
+  trackByItem0(_, item) {
+    return item;
+  }
+  trackByItem1(_, item) {
+    return item;
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > typeDependency 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -9130,7 +9739,7 @@ import { Component, Input } from \\"@angular/core\\";
   ],
 })
 export default class TypeDependency {
-  @Input() foo!: any;
+  @Input() foo;
 }
 
 @NgModule({
@@ -9162,7 +9771,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class TypeDependency {
-  @Input() foo!: any;
+  @Input() foo;
 }
 "
 `;
@@ -9394,7 +10003,10 @@ export default class UseTargetComponent {
   }
   lastName = \\"bar\\";
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+    }
+  }
 }
 
 @NgModule({
@@ -9432,7 +10044,10 @@ export default class UseTargetComponent {
   }
   lastName = \\"bar\\";
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+    }
+  }
 }
 "
 `;
@@ -9463,7 +10078,7 @@ import { register } from \\"swiper/element/bundle\\";
   ],
 })
 export default class MyBasicWebComponent {
-  constructor() {
+  ngOnInit() {
     register();
   }
 }
@@ -9503,7 +10118,7 @@ import { register } from \\"swiper/element/bundle\\";
   imports: [CommonModule],
 })
 export default class MyBasicWebComponent {
-  constructor() {
+  ngOnInit() {
     register();
   }
 }
@@ -9571,7 +10186,13 @@ exports[`Angular > jsx > Typescript Test > AdvancedRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface Props {
   showInput: boolean;
@@ -9628,8 +10249,10 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  ngAfterContentChecked() {
-    console.log(\\"Received an update\\");
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Received an update\\");
+    }
   }
 }
 
@@ -9643,7 +10266,13 @@ export class MyBasicRefComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > AdvancedRef 2`] = `
-"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -9703,8 +10332,10 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  ngAfterContentChecked() {
-    console.log(\\"Received an update\\");
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Received an update\\");
+    }
   }
 }
 "
@@ -9937,14 +10568,16 @@ export default class MyBasicComponent {
     console.log(change);
   };
 
-  constructor(public myService: MyService) {
-    const hi = this.myService.method(\\"hi\\");
-    console.log(hi);
-  }
+  constructor(public myService: MyService) {}
 
   ngOnInit() {
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
   }
 }
 
@@ -9990,14 +10623,16 @@ export default class MyBasicComponent {
     console.log(change);
   };
 
-  constructor(public myService: MyService) {
-    const hi = this.myService.method(\\"hi\\");
-    console.log(hi);
-  }
+  constructor(public myService: MyService) {}
 
   ngOnInit() {
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
   }
 }
 "
@@ -10034,12 +10669,12 @@ export default class MyBasicOnMountUpdateComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {
-    this.name = \\"PatrickJS onInit\\" + this.hi;
-  }
-
   ngOnInit() {
-    this.name = \\"PatrickJS onMount\\" + this.bye;
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+
+    if (typeof window !== \\"undefined\\") {
+      this.name = \\"PatrickJS onMount\\" + this.bye;
+    }
   }
 }
 
@@ -10083,12 +10718,12 @@ export default class MyBasicOnMountUpdateComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {
-    this.name = \\"PatrickJS onInit\\" + this.hi;
-  }
-
   ngOnInit() {
-    this.name = \\"PatrickJS onMount\\" + this.bye;
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+
+    if (typeof window !== \\"undefined\\") {
+      this.name = \\"PatrickJS onMount\\" + this.bye;
+    }
   }
 }
 "
@@ -10122,8 +10757,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -10164,8 +10801,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 "
@@ -10199,8 +10838,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 
@@ -10241,8 +10882,10 @@ export default class MyBasicOutputsComponent {
   name = \\"PatrickJS\\";
 
   ngOnInit() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    if (typeof window !== \\"undefined\\") {
+      this.onMessage.emit(this.name);
+      this.onEvent.emit(this.message);
+    }
   }
 }
 "
@@ -10523,7 +11166,9 @@ export default class MyBasicForComponent {
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
   ngOnInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 
@@ -10574,7 +11219,9 @@ export default class MyBasicForComponent {
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
   ngOnInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 "
@@ -10796,7 +11443,7 @@ exports[`Angular > jsx > Typescript Test > BasicRefPrevious 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 export interface Props {
   showInput: boolean;
@@ -10836,8 +11483,10 @@ export default class MyPreviousComponent {
 
   private _prevCount = this.count;
 
-  ngAfterContentChecked() {
-    this._prevCount = this.count;
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this._prevCount = this.count;
+    }
   }
 }
 
@@ -10851,7 +11500,7 @@ export class MyPreviousComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > BasicRefPrevious 2`] = `
-"import { Component } from \\"@angular/core\\";
+"import { Component, SimpleChanges } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -10894,8 +11543,10 @@ export default class MyPreviousComponent {
 
   private _prevCount = this.count;
 
-  ngAfterContentChecked() {
-    this._prevCount = this.count;
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this._prevCount = this.count;
+    }
   }
 }
 "
@@ -11450,7 +12101,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 
@@ -11542,7 +12195,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -11627,7 +12282,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 
@@ -11719,7 +12376,9 @@ export default class CustomCode {
   }
 
   ngOnInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -11776,7 +12435,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -11797,7 +12456,7 @@ import {
         ></BuilderBlocks>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'error' && responseData\\">
-        <pre class=\\"builder-form-error-text pre\\">{{useJsonStringify}}</pre>
+        <pre class=\\"builder-form-error-text pre\\">{{responseData | json}}</pre>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'success'\\">
         <BuilderBlocks
@@ -12070,9 +12729,8 @@ export default class FormComponent {
       );
     }
   }
-
-  useJsonStringify(obj: any): string {
-    return JSON.stringify(obj);
+  trackByBlock0(index, block) {
+    return block.id;
   }
 }
 
@@ -12134,7 +12792,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
         >
           <BuilderBlockComponent
             [block]=\\"block\\"
@@ -12155,7 +12813,7 @@ import {
         ></BuilderBlocks>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'error' && responseData\\">
-        <pre class=\\"builder-form-error-text pre\\">{{useJsonStringify}}</pre>
+        <pre class=\\"builder-form-error-text pre\\">{{responseData | json}}</pre>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'success'\\">
         <BuilderBlocks
@@ -12430,9 +13088,8 @@ export default class FormComponent {
       );
     }
   }
-
-  useJsonStringify(obj: any): string {
-    return JSON.stringify(obj);
+  trackByBlock0(index, block) {
+    return block.id;
   }
 }
 "
@@ -12525,27 +13182,29 @@ export default class Image {
   load = false;
 
   ngOnInit() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.pictureRef.nativeElement) {
-          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+    if (typeof window !== \\"undefined\\") {
+      if (this.useLazyLoading()) {
+        // throttled scroll capture listener
+        const listener = () => {
+          if (this.pictureRef.nativeElement) {
+            const rect = this.pictureRef.nativeElement.getBoundingClientRect();
+            const buffer = window.innerHeight / 2;
 
-          if (rect.top < window.innerHeight + buffer) {
-            this.load = true;
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
+            if (rect.top < window.innerHeight + buffer) {
+              this.load = true;
+              this.scrollListener = null;
+              window.removeEventListener(\\"scroll\\", listener);
+            }
           }
-        }
-      };
+        };
 
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+        this.scrollListener = listener;
+        window.addEventListener(\\"scroll\\", listener, {
+          capture: true,
+          passive: true,
+        });
+        listener();
+      }
     }
   }
 
@@ -12652,27 +13311,29 @@ export default class Image {
   load = false;
 
   ngOnInit() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.pictureRef.nativeElement) {
-          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+    if (typeof window !== \\"undefined\\") {
+      if (this.useLazyLoading()) {
+        // throttled scroll capture listener
+        const listener = () => {
+          if (this.pictureRef.nativeElement) {
+            const rect = this.pictureRef.nativeElement.getBoundingClientRect();
+            const buffer = window.innerHeight / 2;
 
-          if (rect.top < window.innerHeight + buffer) {
-            this.load = true;
-            this.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
+            if (rect.top < window.innerHeight + buffer) {
+              this.load = true;
+              this.scrollListener = null;
+              window.removeEventListener(\\"scroll\\", listener);
+            }
           }
-        }
-      };
+        };
 
-      this.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+        this.scrollListener = listener;
+        window.addEventListener(\\"scroll\\", listener, {
+          capture: true,
+          passive: true,
+        });
+        listener();
+      }
     }
   }
 
@@ -13754,7 +14415,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
           Submit
         </button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -13810,17 +14473,22 @@ export default class SmileReviews {
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
+  trackByReview0(index, review) {
+    return review.id;
+  }
 
   ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews = data.data;
+        });
+    }
   }
 }
 
@@ -13866,7 +14534,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
           Submit
         </button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -13924,17 +14594,22 @@ export default class SmileReviews {
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
+  trackByReview0(index, review) {
+    return review.id;
+  }
 
   ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews = data.data;
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews = data.data;
+        });
+    }
   }
 }
 "
@@ -14430,7 +15105,7 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 
@@ -14501,7 +15176,7 @@ exports[`Angular > jsx > Typescript Test > basicForNoTagReference 2`] = `
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -14736,7 +15411,7 @@ exports[`Angular > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector:
@@ -14755,21 +15430,23 @@ import { Component } from \\"@angular/core\\";
 export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
-  ngAfterContentChecked() {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetch(\\"https://patrickjs.com/api/resource.json\\", {
-      signal,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.name = data.name;
-      });
-    return () => {
-      if (!signal.aborted) {
-        controller.abort();
-      }
-    };
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    }
   }
 }
 
@@ -14783,7 +15460,7 @@ export class MyBasicOnUpdateReturnComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > basicOnUpdateReturn 2`] = `
-"import { Component } from \\"@angular/core\\";
+"import { Component, SimpleChanges } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14805,21 +15482,23 @@ import { CommonModule } from \\"@angular/common\\";
 export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
 
-  ngAfterContentChecked() {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetch(\\"https://patrickjs.com/api/resource.json\\", {
-      signal,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.name = data.name;
-      });
-    return () => {
-      if (!signal.aborted) {
-        controller.abort();
-      }
-    };
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    }
   }
 }
 "
@@ -15734,7 +16413,7 @@ import { Component, Input } from \\"@angular/core\\";
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
-              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
     ></ng-container>
@@ -15779,7 +16458,7 @@ import { CommonModule } from \\"@angular/common\\";
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
-              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
     ></ng-container>
@@ -15818,7 +16497,7 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 
@@ -15829,7 +16508,7 @@ import {
     <ng-container
       *ngComponentOutlet=\\"
               Component;
-              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
     ></ng-container>
@@ -15880,7 +16559,7 @@ exports[`Angular > jsx > Typescript Test > dynamicComponentWithEventArg 2`] = `
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -15892,7 +16571,7 @@ import { CommonModule } from \\"@angular/common\\";
     <ng-container
       *ngComponentOutlet=\\"
               Component;
-              inputs: { hello: 'world', onClick: onClick, attributes: attributes, something: something };
+              inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
     ></ng-container>
@@ -15954,9 +16633,13 @@ import { Component, Input } from \\"@angular/core\\";
 export default class MyComponent {
   @Input() componentRef!: any;
 
-  refToUse = !(this.componentRef instanceof Function)
-    ? this.componentRef
-    : null;
+  refToUse = null;
+
+  ngOnInit() {
+    this.refToUse = !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null;
+  }
 }
 
 @NgModule({
@@ -15990,9 +16673,13 @@ import { CommonModule } from \\"@angular/common\\";
 export default class MyComponent {
   @Input() componentRef!: any;
 
-  refToUse = !(this.componentRef instanceof Function)
-    ? this.componentRef
-    : null;
+  refToUse = null;
+
+  ngOnInit() {
+    this.refToUse = !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null;
+  }
 }
 "
 `;
@@ -16236,7 +16923,7 @@ exports[`Angular > jsx > Typescript Test > multipleOnUpdate 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"multiple-on-update, MultipleOnUpdate\\",
@@ -16252,9 +16939,11 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class MultipleOnUpdate {
-  ngAfterContentChecked() {
-    console.log(\\"Runs on every update/rerender\\");
-    console.log(\\"Runs on every update/rerender as well\\");
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+      console.log(\\"Runs on every update/rerender as well\\");
+    }
   }
 }
 
@@ -16268,7 +16957,7 @@ export class MultipleOnUpdateModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > multipleOnUpdate 2`] = `
-"import { Component } from \\"@angular/core\\";
+"import { Component, SimpleChanges } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -16287,9 +16976,11 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MultipleOnUpdate {
-  ngAfterContentChecked() {
-    console.log(\\"Runs on every update/rerender\\");
-    console.log(\\"Runs on every update/rerender as well\\");
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+      console.log(\\"Runs on every update/rerender as well\\");
+    }
   }
 }
 "
@@ -16299,7 +16990,7 @@ exports[`Angular > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"multiple-on-update-with-deps, MultipleOnUpdateWithDeps\\",
@@ -16320,16 +17011,18 @@ export default class MultipleOnUpdateWithDeps {
   c = \\"c\\";
   d = \\"d\\";
 
-  ngAfterContentChecked() {
-    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     }
   }
 }
@@ -16344,7 +17037,7 @@ export class MultipleOnUpdateWithDepsModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > multipleOnUpdateWithDeps 2`] = `
-"import { Component } from \\"@angular/core\\";
+"import { Component, SimpleChanges } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -16368,16 +17061,18 @@ export default class MultipleOnUpdateWithDeps {
   c = \\"c\\";
   d = \\"d\\";
 
-  ngAfterContentChecked() {
-    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     }
   }
 }
@@ -16731,7 +17426,9 @@ export default class Embed {
   }
 
   ngOnInit() {
-    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    if (typeof window !== \\"undefined\\") {
+      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    }
   }
 }
 
@@ -16771,7 +17468,9 @@ export default class Embed {
   }
 
   ngOnInit() {
-    this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    if (typeof window !== \\"undefined\\") {
+      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    }
   }
 }
 "
@@ -16797,12 +17496,12 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class OnInit {
-  constructor() {
-    console.log(\\"onInit\\");
-  }
-
   ngOnInit() {
-    console.log(\\"onMount\\");
+    console.log(\\"onInit\\");
+
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 
@@ -16835,12 +17534,12 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class OnInit {
-  constructor() {
-    console.log(\\"onInit\\");
-  }
-
   ngOnInit() {
-    console.log(\\"onMount\\");
+    console.log(\\"onInit\\");
+
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 "
@@ -16878,7 +17577,7 @@ export default class OnInit {
 
   name = \\"\\";
 
-  constructor() {
+  ngOnInit() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   }
@@ -16925,7 +17624,7 @@ export default class OnInit {
 
   name = \\"\\";
 
-  constructor() {
+  ngOnInit() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
   }
@@ -16954,7 +17653,9 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -16992,7 +17693,9 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class Comp {
   ngOnInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -17023,18 +17726,20 @@ import { Component } from \\"@angular/core\\";
 })
 export default class Comp {
   ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 
@@ -17068,18 +17773,20 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class Comp {
   ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 "
@@ -17089,7 +17796,7 @@ exports[`Angular > jsx > Typescript Test > onUpdate 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update, OnUpdate\\",
@@ -17105,8 +17812,10 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class OnUpdate {
-  ngAfterContentChecked() {
-    console.log(\\"Runs on every update/rerender\\");
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+    }
   }
 }
 
@@ -17120,7 +17829,7 @@ export class OnUpdateModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > onUpdate 2`] = `
-"import { Component } from \\"@angular/core\\";
+"import { Component, SimpleChanges } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -17139,8 +17848,10 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class OnUpdate {
-  ngAfterContentChecked() {
-    console.log(\\"Runs on every update/rerender\\");
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on every update/rerender\\");
+    }
   }
 }
 "
@@ -17150,7 +17861,7 @@ exports[`Angular > jsx > Typescript Test > onUpdateWithDeps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 type Props = {
   size: string;
@@ -17175,13 +17886,15 @@ export default class OnUpdateWithDeps {
   a = \\"a\\";
   b = \\"b\\";
 
-  ngAfterContentChecked() {
-    console.log(
-      \\"Runs when this.a, this.b or size changes\\",
-      this.a,
-      this.b,
-      this.size
-    );
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(
+        \\"Runs when this.a, this.b or size changes\\",
+        this.a,
+        this.b,
+        this.size
+      );
+    }
   }
 }
 
@@ -17195,7 +17908,7 @@ export class OnUpdateWithDepsModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > onUpdateWithDeps 2`] = `
-"import { Component, Input } from \\"@angular/core\\";
+"import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -17223,13 +17936,15 @@ export default class OnUpdateWithDeps {
   a = \\"a\\";
   b = \\"b\\";
 
-  ngAfterContentChecked() {
-    console.log(
-      \\"Runs when this.a, this.b or size changes\\",
-      this.a,
-      this.b,
-      this.size
-    );
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(
+        \\"Runs when this.a, this.b or size changes\\",
+        this.a,
+        this.b,
+        this.size
+      );
+    }
   }
 }
 "
@@ -17691,7 +18406,7 @@ exports[`Angular > jsx > Typescript Test > referencingFunInsideHook 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update, OnUpdate\\",
@@ -17715,10 +18430,12 @@ export default class OnUpdate {
     };
   };
 
-  ngAfterContentChecked() {
-    this.foo({
-      someOption: this.bar,
-    });
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.foo({
+        someOption: this.bar,
+      });
+    }
   }
 }
 
@@ -17732,7 +18449,7 @@ export class OnUpdateModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > referencingFunInsideHook 2`] = `
-"import { Component } from \\"@angular/core\\";
+"import { Component, SimpleChanges } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -17759,10 +18476,12 @@ export default class OnUpdate {
     };
   };
 
-  ngAfterContentChecked() {
-    this.foo({
-      someOption: this.bar,
-    });
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.foo({
+        someOption: this.bar,
+      });
+    }
   }
 }
 "
@@ -17777,7 +18496,7 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 
@@ -17819,7 +18538,9 @@ import type { RepeatData } from \\"./types.js\\";
         ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
-        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+        <ng-container
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+        >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
@@ -18038,6 +18759,15 @@ export default class RenderBlock {
       return RenderComponent;
     }
   }
+  trackByData0(index, data) {
+    return index;
+  }
+  trackByChild1(_, child) {
+    return \\"render-block-\\" + child.id;
+  }
+  trackByChild2(_, child) {
+    return \\"block-style-\\" + child.id;
+  }
 
   constructor(private vcRef: ViewContainerRef) {}
 
@@ -18070,7 +18800,7 @@ exports[`Angular > jsx > Typescript Test > renderBlock 2`] = `
   ViewChild,
   ElementRef,
   Input,
-  ViewContainerRef,
+  ViewChild,
   TemplateRef,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -18118,7 +18848,9 @@ import type { RepeatData } from \\"./types.js\\";
         ></ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
-        <ng-container *ngFor=\\"let data of repeatItemData; let index = index\\">
+        <ng-container
+          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+        >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
@@ -18339,6 +19071,15 @@ export default class RenderBlock {
       return RenderComponent;
     }
   }
+  trackByData0(index, data) {
+    return index;
+  }
+  trackByChild1(_, child) {
+    return \\"render-block-\\" + child.id;
+  }
+  trackByChild2(_, child) {
+    return \\"block-style-\\" + child.id;
+  }
 
   constructor(private vcRef: ViewContainerRef) {}
 
@@ -18357,7 +19098,7 @@ exports[`Angular > jsx > Typescript Test > renderContentExample 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 type Props = {
   customComponents: string[];
@@ -18399,11 +19140,15 @@ export default class RenderContent {
   @Input() content!: Props[\\"content\\"];
 
   ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents);
+    }
   }
 
-  ngAfterContentChecked() {
-    dispatchNewContentToVisualEditor(this.content);
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      dispatchNewContentToVisualEditor(this.content);
+    }
   }
 }
 
@@ -18417,7 +19162,7 @@ export class RenderContentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > renderContentExample 2`] = `
-"import { Component, Input } from \\"@angular/core\\";
+"import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -18464,11 +19209,15 @@ export default class RenderContent {
   @Input() content!: Props[\\"content\\"];
 
   ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents);
+    }
   }
 
-  ngAfterContentChecked() {
-    dispatchNewContentToVisualEditor(this.content);
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      dispatchNewContentToVisualEditor(this.content);
+    }
   }
 }
 "
@@ -18778,6 +19527,143 @@ export default class MyComponent {
 "
 `;
 
+exports[`Angular > jsx > Typescript Test > showExpressions 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">Content0</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">hello</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">123</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">4mb</ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA!: Props[\\"conditionA\\"];
+  @Input() conditionB!: Props[\\"conditionB\\"];
+}
+
+@NgModule({
+  declarations: [ShowWithOtherValues],
+  imports: [CommonModule],
+  exports: [ShowWithOtherValues],
+})
+export class ShowWithOtherValuesModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > showExpressions 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">Content0</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">hello</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">123</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">4mb</ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA!: Props[\\"conditionA\\"];
+  @Input() conditionB!: Props[\\"conditionB\\"];
+}
+"
+`;
+
 exports[`Angular > jsx > Typescript Test > showWithFor 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -18793,7 +19679,9 @@ interface Props {
   selector: \\"nested-show, NestedShow\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items; let idx = index\\">
+      <ng-container
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+      >
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
@@ -18812,6 +19700,10 @@ interface Props {
 export default class NestedShow {
   @Input() conditionA!: Props[\\"conditionA\\"];
   @Input() items!: Props[\\"items\\"];
+
+  trackByItem0(idx, item) {
+    return idx;
+  }
 }
 
 @NgModule({
@@ -18836,7 +19728,9 @@ interface Props {
   selector: \\"nested-show, NestedShow\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items; let idx = index\\">
+      <ng-container
+        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+      >
         <div>{{item}}</div>
       </ng-container>
     </ng-container>
@@ -18857,6 +19751,95 @@ interface Props {
 export default class NestedShow {
   @Input() conditionA!: Props[\\"conditionA\\"];
   @Input() items!: Props[\\"items\\"];
+
+  trackByItem0(idx, item) {
+    return idx;
+  }
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > showWithOtherValues 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA!: Props[\\"conditionA\\"];
+}
+
+@NgModule({
+  declarations: [ShowWithOtherValues],
+  imports: [CommonModule],
+  exports: [ShowWithOtherValues],
+})
+export class ShowWithOtherValuesModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > showWithOtherValues 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+interface Props {
+  conditionA: boolean;
+}
+
+@Component({
+  selector: \\"show-with-other-values, ShowWithOtherValues\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class ShowWithOtherValues {
+  @Input() conditionA!: Props[\\"conditionA\\"];
 }
 "
 `;
@@ -18936,7 +19919,7 @@ exports[`Angular > jsx > Typescript Test > signalsOnUpdate 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 
 type Props = {
   id: string;
@@ -18967,9 +19950,11 @@ export default class MyBasicComponent {
   @Input() id!: Props[\\"id\\"];
   @Input() foo!: Props[\\"foo\\"];
 
-  ngAfterContentChecked() {
-    console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"props.id changed\\", this.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    }
   }
 }
 
@@ -18983,7 +19968,7 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > signalsOnUpdate 2`] = `
-"import { Component, Input } from \\"@angular/core\\";
+"import { Component, Input, SimpleChanges } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -19017,9 +20002,11 @@ export default class MyBasicComponent {
   @Input() id!: Props[\\"id\\"];
   @Input() foo!: Props[\\"foo\\"];
 
-  ngAfterContentChecked() {
-    console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"props.id changed\\", this.id);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    }
   }
 }
 "
@@ -19185,6 +20172,196 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > stateInit 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <div>{{asfas}}</div>
+      <div>{{someCompute}}</div>
+      <div>{{someOtherVal}}</div>
+      <div>{{sf}}</div>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() val!: any;
+
+  add = function add(a, b) {
+    return a + b;
+  };
+  asfas = \\"asga\\";
+  subtract() {
+    return this.someCompute - this.someOtherVal;
+  }
+  someCompute = null;
+  someOtherVal = null;
+  sf = null;
+
+  ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
+    this.someOtherVal = this.val;
+
+    this.sf = this.add(this.val, 34);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > stateInit 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <div>{{asfas}}</div>
+      <div>{{someCompute}}</div>
+      <div>{{someOtherVal}}</div>
+      <div>{{sf}}</div>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() val!: any;
+
+  add = function add(a, b) {
+    return a + b;
+  };
+  asfas = \\"asga\\";
+  subtract() {
+    return this.someCompute - this.someOtherVal;
+  }
+  someCompute = null;
+  someOtherVal = null;
+  sf = null;
+
+  ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
+    this.someOtherVal = this.val;
+
+    this.sf = this.add(this.val, 34);
+  }
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > stateInitSequence 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <Comp [val]=\\"useObjectWrapper(val)\\">{{val}}</Comp>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() value!: any;
+
+  val = null;
+
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+
+  ngOnInit() {
+    this.val = this.value;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > stateInitSequence 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <Comp [val]=\\"useObjectWrapper(val)\\">{{val}}</Comp>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule, Comp],
+})
+export default class MyComponent {
+  @Input() value!: any;
+
+  val = null;
+
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+
+  ngOnInit() {
+    this.val = this.value;
+  }
+}
 "
 `;
 
@@ -19490,6 +20667,89 @@ export default class SvgComponent {}
 "
 `;
 
+exports[`Angular > jsx > Typescript Test > twoForsTrackBy 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
+        <div>{{item}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
+        <div>{{item}}</div>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  items = [1, 2, 3];
+  trackByItem0(_, item) {
+    return item;
+  }
+  trackByItem1(_, item) {
+    return item;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > twoForsTrackBy 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
+        <div>{{item}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
+        <div>{{item}}</div>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  items = [1, 2, 3];
+  trackByItem0(_, item) {
+    return item;
+  }
+  trackByItem1(_, item) {
+    return item;
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Typescript Test > typeDependency 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -19789,7 +21049,10 @@ export default class UseTargetComponent {
   }
   lastName = \\"bar\\";
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+    }
+  }
 }
 
 @NgModule({
@@ -19827,7 +21090,10 @@ export default class UseTargetComponent {
   }
   lastName = \\"bar\\";
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+    }
+  }
 }
 "
 `;
@@ -19858,7 +21124,7 @@ import { register } from \\"swiper/element/bundle\\";
   ],
 })
 export default class MyBasicWebComponent {
-  constructor() {
+  ngOnInit() {
     register();
   }
 }
@@ -19898,7 +21164,7 @@ import { register } from \\"swiper/element/bundle\\";
   imports: [CommonModule],
 })
 export default class MyBasicWebComponent {
-  constructor() {
+  ngOnInit() {
     register();
   }
 }
@@ -20204,7 +21470,7 @@ const defaultProps = {};
   ],
 })
 export default class MyComponent {
-  @Input() disabled!: any;
+  @Input() disabled;
 
   focus = true;
 }
@@ -20242,7 +21508,7 @@ const defaultProps = {};
   imports: [CommonModule],
 })
 export default class MyComponent {
-  @Input() disabled!: any;
+  @Input() disabled;
 
   focus = true;
 }
@@ -20662,11 +21928,15 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   ngOnInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
-  ngAfterContentChecked() {
-    console.log(\\"onAfterUpdate\\");
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onAfterUpdate\\");
+    }
   }
 
   ngOnDestroy() {
@@ -20704,11 +21974,15 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class MyComponent {
   ngOnInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
-  ngAfterContentChecked() {
-    console.log(\\"onAfterUpdate\\");
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onAfterUpdate\\");
+    }
   }
 
   ngOnDestroy() {
@@ -20821,8 +22095,10 @@ export default class MyComponent {
     this.result = a_ * b_;
   };
 
-  ngAfterContentChecked() {
-    this.calculateResult(this.a, this.b);
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.calculateResult(this.a, this.b);
+    }
   }
 }
 
@@ -20867,8 +22143,10 @@ export default class MyComponent {
     this.result = a_ * b_;
   };
 
-  ngAfterContentChecked() {
-    this.calculateResult(this.a, this.b);
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.calculateResult(this.a, this.b);
+    }
   }
 }
 "
@@ -21811,7 +23089,7 @@ exports[`Angular > svelte > Typescript Test > lifecycleHooks 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -21828,11 +23106,15 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   ngOnInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
-  ngAfterContentChecked() {
-    console.log(\\"onAfterUpdate\\");
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onAfterUpdate\\");
+    }
   }
 
   ngOnDestroy() {
@@ -21850,7 +23132,7 @@ export class MyComponentModule {}
 `;
 
 exports[`Angular > svelte > Typescript Test > lifecycleHooks 2`] = `
-"import { Component } from \\"@angular/core\\";
+"import { Component, SimpleChanges } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -21870,11 +23152,15 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class MyComponent {
   ngOnInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
-  ngAfterContentChecked() {
-    console.log(\\"onAfterUpdate\\");
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onAfterUpdate\\");
+    }
   }
 
   ngOnDestroy() {
@@ -21959,7 +23245,7 @@ exports[`Angular > svelte > Typescript Test > reactiveWithFn 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -21987,8 +23273,10 @@ export default class MyComponent {
     this.result = a_ * b_;
   };
 
-  ngAfterContentChecked() {
-    this.calculateResult(this.a, this.b);
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.calculateResult(this.a, this.b);
+    }
   }
 }
 
@@ -22002,7 +23290,7 @@ export class MyComponentModule {}
 `;
 
 exports[`Angular > svelte > Typescript Test > reactiveWithFn 2`] = `
-"import { Component } from \\"@angular/core\\";
+"import { Component, SimpleChanges } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22033,8 +23321,10 @@ export default class MyComponent {
     this.result = a_ * b_;
   };
 
-  ngAfterContentChecked() {
-    this.calculateResult(this.a, this.b);
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.calculateResult(this.a, this.b);
+    }
   }
 }
 "

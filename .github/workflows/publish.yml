@@ -17,28 +17,29 @@ jobs:
 
     steps:
       - name: Setup
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # need this custom token to run CI checks on the created PR
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: "https://registry.npmjs.org"
-          cache: 'yarn'
 
-      - name: Install dependencies
-        run: yarn --immutable
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-nm-install
+        with:
+          cache-node-modules: true
+          cache-install-state: true
 
       - name: Create Release PR & Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
           publish: yarn ci:release
-          title: "📦 Publish Mitosis"
-          commit: "📦 Publish Mitosis"
+          title: '📦 Publish Mitosis'
+          commit: '📦 Publish Mitosis'
         env:
           # need this custom token to run CI checks on the created PR
           GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}

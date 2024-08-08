@@ -4671,6 +4671,26 @@ export default MyComponent;
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > showExpressions 1`] = `
+"SyntaxError: Expression expected. (5:115)
+  3 | export const ShowWithOtherValues=component$((props)=>{
+  4 |
+> 5 | return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}</div>)});
+    |                                                                                                                   ^
+  6 |
+  7 | export default ShowWithOtherValues;
+========================================================================
+import{Fragment,component$,h}from\\"@builder.io/qwik\\";
+
+export const ShowWithOtherValues=component$((props)=>{
+
+return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}</div>)});
+
+export default ShowWithOtherValues;
+
+========================================================================"
+`;
+
 exports[`qwik > jsx > Javascript Test > showWithFor 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
@@ -4689,6 +4709,26 @@ export const NestedShow = component$((props) => {
 });
 
 export default NestedShow;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > showWithOtherValues 1`] = `
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const ShowWithOtherValues = component$((props) => {
+  return (
+    <div>
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+    </div>
+  );
+});
+
+export default ShowWithOtherValues;
 "
 `;
 
@@ -8271,6 +8311,30 @@ export default MyComponent;
 "
 `;
 
+exports[`qwik > jsx > Typescript Test > showExpressions 1`] = `
+"SyntaxError: Expression expected. (9:115)
+   7 | export const ShowWithOtherValues=component$((props:Props)=>{
+   8 |
+>  9 | return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}</div>)});
+     |                                                                                                                   ^
+  10 |
+  11 | export default ShowWithOtherValues;
+========================================================================
+import{Fragment,component$,h}from\\"@builder.io/qwik\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+export const ShowWithOtherValues=component$((props:Props)=>{
+
+return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}</div>)});
+
+export default ShowWithOtherValues;
+
+========================================================================"
+`;
+
 exports[`qwik > jsx > Typescript Test > showWithFor 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
@@ -8293,6 +8357,29 @@ export const NestedShow = component$((props: Props) => {
 });
 
 export default NestedShow;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > showWithOtherValues 1`] = `
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+interface Props {
+  conditionA: boolean;
+}
+export const ShowWithOtherValues = component$((props: Props) => {
+  return (
+    <div>
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <>ContentB</> : <>{undefined}</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+    </div>
+  );
+});
+
+export default ShowWithOtherValues;
 "
 `;
 
