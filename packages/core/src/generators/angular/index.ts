@@ -128,7 +128,7 @@ const handleObjectBindings = (code: string) => {
 
   temp = temp.replace(/\{\s*\.\.\.(\w+)\s*}/g, '$1');
   temp = temp.replace(/\.\.\./g, '');
-  temp = temp.replace(/(\s*\w+\s*:\s*((["'].+["'])|(\[[^]]+])|([\w.]+)))(,|[\n\s]*)/g, `{ $1 },`);
+  temp = temp.replace(/(\s*\w+\s*:\s*((["'].+["'])|(\[.+])|([\w.]+)))(,|[\n\s]*)/g, `{ $1 },`);
 
   // handle template strings
   if (temp.includes('`')) {
