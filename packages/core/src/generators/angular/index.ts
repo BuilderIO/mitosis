@@ -208,9 +208,6 @@ const processEventBinding = (key: string, code: string, nodeName: string, custom
 const stringifyBinding =
   (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
-    if (options.state === 'inline-with-wrappers') {
-      return;
-    }
     if (key.startsWith('$') || key.startsWith('"') || key === 'key') {
       return;
     }
@@ -238,7 +235,6 @@ const stringifyBinding =
       return ` [attr.${keyToUse}]="${code}" `;
     } else {
       const codeToUse =
-        // @ts-ignore
         options.state === 'inline-with-wrappers' ? processCodeBlockInTemplate(code) : code;
       return `[${keyToUse}]="${codeToUse}"`;
     }

@@ -54,6 +54,8 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
+  constructor(private renderer) {}
+
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Received an update\\");
@@ -523,6 +525,8 @@ export default class MyBasicRefComponent {
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
   };
+
+  constructor(private renderer) {}
 }
 
 @NgModule({
@@ -618,7 +622,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"button, Button\\",
@@ -628,12 +632,13 @@ import { Component, Input } from \\"@angular/core\\";
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" #elRef1>{{text}}</button>
       </ng-container>
     </div>
   \`,
@@ -643,6 +648,39 @@ export default class Button {
   @Input() attributes;
   @Input() openLinkInNewTab;
   @Input() text;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef1El\\") _elRef1El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -755,7 +793,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 const defaultProps = {
   content: \\"\\",
@@ -772,6 +810,7 @@ const defaultProps = {
         [attr.title]=\\"slotContent ? 'title1' : 'title2'\\"
         (click)=\\"show()\\"
         [class]=\\"cls\\"
+        #elRef0
       >
         <ng-container *ngIf=\\"showContent && slotContent\\">
           <ng-content select=\\"[content]\\">{{content}}</ng-content>
@@ -786,6 +825,8 @@ export default class ContentSlotJsxCode {
   @Input() attributes;
   @Input() content = defaultProps[\\"content\\"];
 
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
   name = \\"king\\";
   showContent = false;
   get cls() {
@@ -793,6 +834,33 @@ export default class ContentSlotJsxCode {
   }
   show() {
     this.slotContent ? 1 : \\"\\";
+  }
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
   }
 }
 
@@ -870,6 +938,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -953,6 +1023,8 @@ export default class CustomCode {
     }
   }
 
+  constructor(private renderer) {}
+
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
       this.findAndRunScripts();
@@ -973,7 +1045,13 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  Renderer2,
+} from \\"@angular/core\\";
 
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import {
@@ -993,6 +1071,7 @@ import {
       [attr.method]=\\"method\\"
       [attr.name]=\\"name\\"
       (submit)=\\"onSubmit($event)\\"
+      #elRef0
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
@@ -1060,6 +1139,8 @@ export default class FormComponent {
   @Input() successMessage;
 
   @ViewChild(\\"formRef\\") formRef;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -1280,8 +1361,37 @@ export default class FormComponent {
       );
     }
   }
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
   trackByBlock0(index, block) {
     return block.id;
+  }
+
+  constructor(private renderer) {}
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
   }
 }
 
@@ -1357,6 +1467,8 @@ export default class Image {
     );
   };
   load = false;
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -1437,7 +1549,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1448,6 +1560,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [ngStyle]=\\"useObjectWrapper({ objectFit: backgroundSize || 'cover' }, { objectPosition: backgroundPosition || 'center' })\\"
       [attr.alt]=\\"altText\\"
       [attr.src]=\\"imgSrc\\"
+      #elRef0
     />
   \`,
 })
@@ -1458,12 +1571,42 @@ export default class ImgComponent {
   @Input() imgSrc;
   @Input() altText;
 
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
   useObjectWrapper(...args) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
     });
     return obj;
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
   }
 }
 
@@ -1480,7 +1623,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1495,6 +1638,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
       (input)=\\"onChange?.($event.target.value)\\"
+      #elRef0
     />
   \`,
 })
@@ -1507,6 +1651,36 @@ export default class FormInputComponent {
   @Input() value;
   @Input() required;
   @Input() onChange;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -1584,7 +1758,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"section-component, SectionComponent\\",
@@ -1593,6 +1767,7 @@ import { Component, Input } from \\"@angular/core\\";
       [ngStyle]=\\"maxWidth && typeof maxWidth === 'number' ? {
           maxWidth: maxWidth
         } : undefined\\"
+      #elRef0
     >
       <ng-content></ng-content>
     </section>
@@ -1601,6 +1776,36 @@ import { Component, Input } from \\"@angular/core\\";
 export default class SectionComponent {
   @Input() attributes;
   @Input() maxWidth;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -1616,14 +1821,14 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"section-state-component, SectionStateComponent\\",
   template: \`
     <ng-container *ngIf=\\"max\\">
       <ng-container *ngFor=\\"let item of items\\">
-        <section [ngStyle]=\\"useObjectWrapper({ maxWidth: item + max })\\">
+        <section [ngStyle]=\\"useObjectWrapper({ maxWidth: item + max })\\" #elRef0>
           <ng-content></ng-content>
         </section>
       </ng-container>
@@ -1633,8 +1838,27 @@ import { Component, Input } from \\"@angular/core\\";
 export default class SectionStateComponent {
   @Input() attributes;
 
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
   max = 42;
   items = [42];
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
 
   useObjectWrapper(...args) {
     let obj = {};
@@ -1642,6 +1866,16 @@ export default class SectionStateComponent {
       obj = { ...obj, ...arg };
     });
     return obj;
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
   }
 }
 
@@ -1658,7 +1892,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1669,6 +1903,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.name]=\\"name\\"
+      #elRef0
     >
       <ng-container *ngFor=\\"let option of options; let index = index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
@@ -1684,6 +1919,36 @@ export default class SelectComponent {
   @Input() defaultValue;
   @Input() name;
   @Input() options;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -1921,17 +2186,47 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"submit-button, SubmitButton\\",
   template: \`
-    <button type=\\"submit\\">{{text}}</button>
+    <button type=\\"submit\\" #elRef0>{{text}}</button>
   \`,
 })
 export default class SubmitButton {
   @Input() attributes;
   @Input() text;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -1983,7 +2278,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"textarea, Textarea\\",
@@ -1993,6 +2288,7 @@ import { Component, Input } from \\"@angular/core\\";
       [attr.name]=\\"name\\"
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
+      #elRef0
     ></textarea>
   \`,
 })
@@ -2002,6 +2298,36 @@ export default class Textarea {
   @Input() name;
   @Input() value;
   @Input() defaultValue;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -2017,7 +2343,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"video, Video\\",
@@ -2030,6 +2356,7 @@ import { Component, Input } from \\"@angular/core\\";
       [attr.muted]=\\"muted\\"
       [attr.controls]=\\"controls\\"
       [attr.loop]=\\"loop\\"
+      #elRef0
     ></video>
   \`,
 })
@@ -2044,12 +2371,42 @@ export default class Video {
   @Input() controls;
   @Input() loop;
 
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
   useObjectWrapper(...args) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
     });
     return obj;
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
   }
 }
 
@@ -2535,7 +2892,13 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+import {
+  Output,
+  EventEmitter,
+  Component,
+  Input,
+  Renderer2,
+} from \\"@angular/core\\";
 
 const defaultProps = {
   text: \\"default text\\",
@@ -2554,12 +2917,13 @@ const defaultProps = {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
           {{buttonText}}
         </button>
       </ng-container>
@@ -2574,6 +2938,39 @@ export default class Button {
   @Input() buttonText;
 
   @Output() onClick = new EventEmitter();
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef1El\\") _elRef1El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -2589,7 +2986,13 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+import {
+  Output,
+  EventEmitter,
+  Component,
+  Input,
+  Renderer2,
+} from \\"@angular/core\\";
 
 const defaultProps = {
   text: \\"default text\\",
@@ -2606,12 +3009,13 @@ const defaultProps = {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
           {{text}}
         </button>
       </ng-container>
@@ -2625,6 +3029,39 @@ export default class Button {
   @Input() text = defaultProps[\\"text\\"];
 
   @Output() onClick = new EventEmitter();
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef1El\\") _elRef1El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -2840,24 +3277,59 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 import RenderBlock from \\"./builder-render-block.raw\\";
 
 @Component({
   selector: \\"render-content, RenderContent\\",
   template: \`
-    <render-block></render-block>
+    <render-block #elRef0></render-block>
   \`,
 })
 export default class RenderContent {
   @Input() renderContentProps;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
 
   getRenderContentProps(block, index) {
     return {
       block: block,
       index: index,
     };
+  }
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(
+      this.elRef0?.nativeElement,
+      this.getRenderContentProps(renderContentProps.block, 0)
+    );
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.getRenderContentProps(renderContentProps.block, 0)
+      );
+    }
   }
 }
 
@@ -2970,18 +3442,49 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef1 />
   \`,
 })
 export default class MyBasicComponent {
+  @ViewChild(\\"elRef1El\\") _elRef1El;
+
   attrs = {
     hello: \\"world\\",
   };
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+    this.setAttributes(this.elRef1?.nativeElement, this.props);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+      this.setAttributes(this.elRef1?.nativeElement, this.props);
+    }
+  }
 }
 
 @NgModule({
@@ -3129,6 +3632,8 @@ export default class Embed {
   foo(event) {
     console.log(\\"test2\\");
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -3908,7 +4413,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"button, Button\\",
@@ -3918,12 +4423,13 @@ import { Component, Input } from \\"@angular/core\\";
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" #elRef1>{{text}}</button>
       </ng-container>
     </ng-container>
   \`,
@@ -3933,6 +4439,39 @@ export default class Button {
   @Input() attributes;
   @Input() openLinkInNewTab;
   @Input() text;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef1El\\") _elRef1El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -4237,15 +4776,45 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
 })
-export default class MyBasicComponent {}
+export default class MyBasicComponent {
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+    }
+  }
+}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -4260,16 +4829,46 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
 })
 export default class MyBasicComponent {
   @Input() nested;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.nested);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.nested);
+    }
+  }
 }
 
 @NgModule({
@@ -4285,15 +4884,45 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
 })
-export default class MyBasicComponent {}
+export default class MyBasicComponent {
+  @ViewChild(\\"elRef0El\\") _elRef0El;
+
+  setAttributes(el, value) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.props);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.props);
+    }
+  }
+}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -4857,6 +5486,8 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"Received an update\\");
@@ -5344,6 +5975,8 @@ export default class MyBasicRefComponent {
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
   };
+
+  constructor(private renderer: Renderer2) {}
 }
 
 @NgModule({
@@ -5447,7 +6080,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -5464,12 +6097,13 @@ export interface ButtonProps {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" #elRef1>{{text}}</button>
       </ng-container>
     </div>
   \`,
@@ -5479,6 +6113,39 @@ export default class Button {
   @Input() attributes!: ButtonProps[\\"attributes\\"];
   @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"];
   @Input() text!: ButtonProps[\\"text\\"];
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -5613,7 +6280,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -5635,6 +6302,7 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
         [attr.title]=\\"slotContent ? 'title1' : 'title2'\\"
         (click)=\\"show()\\"
         [class]=\\"cls\\"
+        #elRef0
       >
         <ng-container *ngIf=\\"showContent && slotContent\\">
           <ng-content select=\\"[content]\\">{{content}}</ng-content>
@@ -5649,6 +6317,8 @@ export default class ContentSlotJsxCode {
   @Input() attributes!: Props[\\"attributes\\"];
   @Input() content!: Props[\\"content\\"] = defaultProps[\\"content\\"];
 
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
   name = \\"king\\";
   showContent = false;
   get cls() {
@@ -5656,6 +6326,33 @@ export default class ContentSlotJsxCode {
   }
   show() {
     this.slotContent ? 1 : \\"\\";
+  }
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
   }
 }
 
@@ -5738,6 +6435,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -5826,6 +6525,8 @@ export default class CustomCode {
     }
   }
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
       this.findAndRunScripts();
@@ -5846,7 +6547,14 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  Renderer2,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface FormProps {
   attributes?: any;
@@ -5890,6 +6598,7 @@ import {
       [attr.method]=\\"method\\"
       [attr.name]=\\"name\\"
       (submit)=\\"onSubmit($event)\\"
+      #elRef0
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
@@ -5957,6 +6666,8 @@ export default class FormComponent {
   @Input() successMessage!: FormProps[\\"successMessage\\"];
 
   @ViewChild(\\"formRef\\") formRef!: ElementRef;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -6184,8 +6895,37 @@ export default class FormComponent {
       );
     }
   }
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
   trackByBlock0(index, block) {
     return block.id;
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
   }
 }
 
@@ -6281,6 +7021,8 @@ export default class Image {
   };
   load = false;
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
       if (this.useLazyLoading()) {
@@ -6360,7 +7102,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 export interface ImgProps {
   attributes?: any;
@@ -6388,6 +7130,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [ngStyle]=\\"useObjectWrapper({ objectFit: backgroundSize || 'cover' }, { objectPosition: backgroundPosition || 'center' })\\"
       [attr.alt]=\\"altText\\"
       [attr.src]=\\"imgSrc\\"
+      #elRef0
     />
   \`,
 })
@@ -6398,12 +7141,42 @@ export default class ImgComponent {
   @Input() imgSrc!: ImgProps[\\"imgSrc\\"];
   @Input() altText!: ImgProps[\\"altText\\"];
 
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
   useObjectWrapper(...args: any[]) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
     });
     return obj;
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
   }
 }
 
@@ -6420,7 +7193,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 export interface FormInputProps {
   type?: string;
@@ -6446,6 +7219,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
       (input)=\\"onChange?.($event.target.value)\\"
+      #elRef0
     />
   \`,
 })
@@ -6458,6 +7232,36 @@ export default class FormInputComponent {
   @Input() value!: FormInputProps[\\"value\\"];
   @Input() required!: FormInputProps[\\"required\\"];
   @Input() onChange!: FormInputProps[\\"onChange\\"];
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -6540,7 +7344,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -6555,6 +7359,7 @@ export interface SectionProps {
       [ngStyle]=\\"maxWidth && typeof maxWidth === 'number' ? {
           maxWidth: maxWidth
         } : undefined\\"
+      #elRef0
     >
       <ng-content></ng-content>
     </section>
@@ -6563,6 +7368,36 @@ export interface SectionProps {
 export default class SectionComponent {
   @Input() attributes!: SectionProps[\\"attributes\\"];
   @Input() maxWidth!: SectionProps[\\"maxWidth\\"];
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -6578,7 +7413,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -6591,7 +7426,7 @@ export interface SectionProps {
   template: \`
     <ng-container *ngIf=\\"max\\">
       <ng-container *ngFor=\\"let item of items\\">
-        <section [ngStyle]=\\"useObjectWrapper({ maxWidth: item + max })\\">
+        <section [ngStyle]=\\"useObjectWrapper({ maxWidth: item + max })\\" #elRef0>
           <ng-content></ng-content>
         </section>
       </ng-container>
@@ -6601,8 +7436,27 @@ export interface SectionProps {
 export default class SectionStateComponent {
   @Input() attributes!: SectionProps[\\"attributes\\"];
 
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
   max = 42;
   items = [42];
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
 
   useObjectWrapper(...args: any[]) {
     let obj = {};
@@ -6610,6 +7464,16 @@ export default class SectionStateComponent {
       obj = { ...obj, ...arg };
     });
     return obj;
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
   }
 }
 
@@ -6626,7 +7490,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 export interface FormSelectProps {
   options?: {
@@ -6648,6 +7512,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.name]=\\"name\\"
+      #elRef0
     >
       <ng-container *ngFor=\\"let option of options; let index = index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
@@ -6663,6 +7528,36 @@ export default class SelectComponent {
   @Input() defaultValue!: FormSelectProps[\\"defaultValue\\"];
   @Input() name!: FormSelectProps[\\"name\\"];
   @Input() options!: FormSelectProps[\\"options\\"];
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -6921,7 +7816,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -6931,12 +7826,42 @@ export interface ButtonProps {
 @Component({
   selector: \\"submit-button, SubmitButton\\",
   template: \`
-    <button type=\\"submit\\">{{text}}</button>
+    <button type=\\"submit\\" #elRef0>{{text}}</button>
   \`,
 })
 export default class SubmitButton {
   @Input() attributes!: ButtonProps[\\"attributes\\"];
   @Input() text!: ButtonProps[\\"text\\"];
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -6996,7 +7921,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 export interface TextareaProps {
   attributes?: any;
@@ -7014,6 +7939,7 @@ export interface TextareaProps {
       [attr.name]=\\"name\\"
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
+      #elRef0
     ></textarea>
   \`,
 })
@@ -7023,6 +7949,36 @@ export default class Textarea {
   @Input() name!: TextareaProps[\\"name\\"];
   @Input() value!: TextareaProps[\\"value\\"];
   @Input() defaultValue!: TextareaProps[\\"defaultValue\\"];
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -7038,7 +7994,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 export interface VideoProps {
   attributes?: any;
@@ -7077,6 +8033,7 @@ export interface VideoProps {
       [attr.muted]=\\"muted\\"
       [attr.controls]=\\"controls\\"
       [attr.loop]=\\"loop\\"
+      #elRef0
     ></video>
   \`,
 })
@@ -7091,12 +8048,42 @@ export default class Video {
   @Input() controls!: VideoProps[\\"controls\\"];
   @Input() loop!: VideoProps[\\"loop\\"];
 
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
   useObjectWrapper(...args: any[]) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
     });
     return obj;
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    }
   }
 }
 
@@ -7609,7 +8596,14 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+import {
+  Output,
+  EventEmitter,
+  Component,
+  Input,
+  Renderer2,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -7637,12 +8631,13 @@ const defaultProps = {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
           {{buttonText}}
         </button>
       </ng-container>
@@ -7658,6 +8653,39 @@ export default class Button {
   @Input() buttonText!: ButtonProps[\\"buttonText\\"];
 
   @Output() onClick = new EventEmitter();
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -7673,7 +8701,14 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+import {
+  Output,
+  EventEmitter,
+  Component,
+  Input,
+  Renderer2,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -7697,12 +8732,13 @@ const defaultProps = {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
           {{text}}
         </button>
       </ng-container>
@@ -7717,6 +8753,39 @@ export default class Button {
   @Input() text!: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
 
   @Output() onClick = new EventEmitter();
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -7941,7 +9010,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 type RenderContentProps = {
   options?: GetContentOptions;
@@ -7955,17 +9024,52 @@ import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 @Component({
   selector: \\"render-content, RenderContent\\",
   template: \`
-    <render-block></render-block>
+    <render-block #elRef0></render-block>
   \`,
 })
 export default class RenderContent {
   @Input() renderContentProps!: RenderContentProps[\\"renderContentProps\\"];
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
 
   getRenderContentProps(block, index) {
     return {
       block: block,
       index: index,
     };
+  }
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(
+      this.elRef0?.nativeElement,
+      this.getRenderContentProps(renderContentProps.block, 0)
+    );
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.getRenderContentProps(renderContentProps.block, 0)
+      );
+    }
   }
 }
 
@@ -8078,18 +9182,49 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef1 />
   \`,
 })
 export default class MyBasicComponent {
+  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+
   attrs = {
     hello: \\"world\\",
   };
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+    this.setAttributes(this.elRef1?.nativeElement, this.props);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+      this.setAttributes(this.elRef1?.nativeElement, this.props);
+    }
+  }
 }
 
 @NgModule({
@@ -8242,6 +9377,8 @@ export default class Embed {
   foo(event) {
     console.log(\\"test2\\");
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -9087,7 +10224,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -9104,12 +10241,13 @@ export interface ButtonProps {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" #elRef1>{{text}}</button>
       </ng-container>
     </ng-container>
   \`,
@@ -9119,6 +10257,39 @@ export default class Button {
   @Input() attributes!: ButtonProps[\\"attributes\\"];
   @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"];
   @Input() text!: ButtonProps[\\"text\\"];
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+    }
+  }
 }
 
 @NgModule({
@@ -9454,15 +10625,45 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
 })
-export default class MyBasicComponent {}
+export default class MyBasicComponent {
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+    }
+  }
+}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -9477,16 +10678,46 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
 })
 export default class MyBasicComponent {
   @Input() nested!: any;
+
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.nested);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.nested);
+    }
+  }
 }
 
 @NgModule({
@@ -9502,15 +10733,45 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
 })
-export default class MyBasicComponent {}
+export default class MyBasicComponent {
+  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+
+  setAttributes(el: HTMLElement, value: any) {
+    if (!el) {
+      return;
+    }
+
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        this.renderer.listen(
+          el,
+          key.replace(\\"on\\", \\"\\").toLowerCase(),
+          value[key]
+        );
+      } else {
+        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.props);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(this.elRef0?.nativeElement, this.props);
+    }
+  }
+}
 
 @NgModule({
   declarations: [MyBasicComponent],
