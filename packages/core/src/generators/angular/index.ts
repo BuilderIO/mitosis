@@ -227,7 +227,7 @@ const stringifyBinding =
       return ` (${event})="${value}"`;
     } else if (keyToUse === 'class') {
       return ` [class]="${code}" `;
-    } else if (keyToUse === 'ref') {
+    } else if (keyToUse === 'ref' || keyToUse === 'spreadRef') {
       return ` #${code} `;
     } else if (
       (VALID_HTML_TAGS.includes(node.name.trim()) || keyToUse.includes('-')) &&
@@ -450,14 +450,16 @@ export const blockToAngular = ({
     for (const key in json.bindings) {
       if (json.bindings[key]?.type === 'spread') {
         // TODO: index it as there can be multiple
-        const refName = 'elRef';
-        json.bindings['ref'] = { code: refName, type: 'single' };
+        const spreadRefIndex = root.meta._spreadRefIndex || 0;
+        const refName = `elRef${spreadRefIndex}`;
+        root.meta._spreadRefIndex = (spreadRefIndex as number) + 1;
+        json.bindings['spreadRef'] = { code: refName, type: 'single' };
         root.refs[refName] = { argument: '' };
         root.hooks.onInit = root.hooks.onInit || { code: '' };
-        root.hooks.onInit.code += `\nthis.setAttributes(this.${refName}El?.nativeElement, this.${json.bindings[key]?.code});`;
+        root.hooks.onInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, this.${json.bindings[key]?.code});`;
         root.hooks.onUpdate = root.hooks.onUpdate || [];
         root.hooks.onUpdate.push({
-          code: `this.setAttributes(this.${refName}El?.nativeElement, this.${json.bindings[key]?.code});`,
+          code: `this.setAttributes(this.${refName}?.nativeElement, this.${json.bindings[key]?.code});`,
         });
         if (!root.state['setAttributes']) {
           root.state['setAttributes'] = {
@@ -896,7 +898,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       template = tryFormat(template, 'html');
     }
 
-    domRefs = getRefs(json);
+    const spreadDomRefs = getRefs(json, 'spreadRef');
 
     stripMetaProperties(json);
 
@@ -970,6 +972,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ...(domRefs.size || dynamicComponents.size ? ['ViewChild', 'ElementRef'] : []),
       ...(props.size ? ['Input'] : []),
       ...(dynamicComponents.size ? ['ViewContainerRef', 'TemplateRef'] : []),
+      ...(spreadDomRefs.size ? ['Renderer2'] : []),
       ...(json.hooks.onUpdate?.length && options.typescript ? ['SimpleChanges'] : []),
     ].join(', ');
 
@@ -1016,6 +1019,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .map(
           (refName) =>
             `@ViewChild('${refName}') ${refName}${options.typescript ? '!: ElementRef' : ''}`,
+        )
+        .join('\n')}
+
+      ${Array.from(spreadDomRefs)
+        .map(
+          (refName) =>
+            `@ViewChild('${refName}El') _${refName}El${options.typescript ? '!: ElementRef' : ''}`,
         )
         .join('\n')}
       
