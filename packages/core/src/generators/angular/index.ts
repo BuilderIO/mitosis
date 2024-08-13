@@ -444,18 +444,27 @@ export const blockToAngular = ({
     }
 
     for (const key in json.bindings) {
-      if (json.bindings[key]?.type === 'spread') {
-        // TODO: index it as there can be multiple
-        const spreadRefIndex = root.meta._spreadRefIndex || 0;
-        const refName = `elRef${spreadRefIndex}`;
-        root.meta._spreadRefIndex = (spreadRefIndex as number) + 1;
+      if (json.bindings[key]?.type === 'spread' && VALID_HTML_TAGS.includes(json.name.trim())) {
+        let refName = '';
+        if (json.bindings['spreadRef']?.code) {
+          refName = json.bindings['spreadRef'].code;
+        } else {
+          const spreadRefIndex = root.meta._spreadRefIndex || 0;
+          refName = `elRef${spreadRefIndex}`;
+          root.meta._spreadRefIndex = (spreadRefIndex as number) + 1;
+          json.bindings['spreadRef'] = { code: refName, type: 'single' };
+          root.refs[refName] = { argument: '' };
+        }
         json.bindings['spreadRef'] = { code: refName, type: 'single' };
         root.refs[refName] = { argument: '' };
         root.hooks.onInit = root.hooks.onInit || { code: '' };
-        root.hooks.onInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, this.${json.bindings[key]?.code});`;
+        const spreadCode = json.bindings[key]?.code.startsWith('{')
+          ? json.bindings[key]?.code
+          : `this.${json.bindings[key]?.code}`;
+        root.hooks.onInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`;
         root.hooks.onUpdate = root.hooks.onUpdate || [];
         root.hooks.onUpdate.push({
-          code: `this.setAttributes(this.${refName}?.nativeElement, this.${json.bindings[key]?.code});`,
+          code: `this.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`,
         });
         if (!root.state['setAttributes']) {
           root.state['setAttributes'] = {
@@ -826,7 +835,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }
       return `public ${variableName} : ${variableType}`;
     });
-    const hasConstructor = Boolean(injectables.length);
 
     const props = getProps(json);
     // prevent jsx props from showing up as @Input
@@ -894,8 +902,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       template = tryFormat(template, 'html');
     }
 
-    const spreadDomRefs = getRefs(json, 'spreadRef');
-
     stripMetaProperties(json);
 
     const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
@@ -919,6 +925,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         stateVars,
       }),
     });
+
+    const spreadDomRefs = getRefs(json, 'spreadRef');
 
     const hostDisplayCss = options.visuallyIgnoreHostElement ? ':host { display: contents; }' : '';
     const styles = css.length ? [hostDisplayCss, css].join('\n') : hostDisplayCss;
@@ -961,14 +969,18 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       return `const defaultProps = {${defalutPropsString}};\n`;
     };
 
+    const hasConstructor =
+      Boolean(injectables.length) || dynamicComponents.size || domRefs.size || spreadDomRefs.size;
+
     const angularCoreImports = [
       ...(outputs.length ? ['Output', 'EventEmitter'] : []),
       ...(options?.experimental?.inject ? ['Inject', 'forwardRef'] : []),
       'Component',
-      ...(domRefs.size || dynamicComponents.size ? ['ViewChild', 'ElementRef'] : []),
+      ...(domRefs.size || dynamicComponents.size || spreadDomRefs.size
+        ? ['ViewChild', 'ElementRef', 'Renderer2']
+        : []),
       ...(props.size ? ['Input'] : []),
       ...(dynamicComponents.size ? ['ViewContainerRef', 'TemplateRef'] : []),
-      ...(spreadDomRefs.size ? ['Renderer2'] : []),
       ...(json.hooks.onUpdate?.length && options.typescript ? ['SimpleChanges'] : []),
     ].join(', ');
 
@@ -1021,7 +1033,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${Array.from(spreadDomRefs)
         .map(
           (refName) =>
-            `@ViewChild('${refName}El') _${refName}El${options.typescript ? '!: ElementRef' : ''}`,
+            `@ViewChild('${refName}') ${refName}${options.typescript ? '!: ElementRef' : ''}`,
         )
         .join('\n')}
       
@@ -1061,14 +1073,16 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .join('\n')}
 
       ${
-        !hasConstructor && !dynamicComponents.size && !domRefs.size
+        !hasConstructor
           ? ''
           : `constructor(\n${injectables.join(',\n')}${
               dynamicComponents.size
                 ? `\nprivate vcRef${options.typescript ? ': ViewContainerRef' : ''},\n`
                 : ''
             }${
-              domRefs.size ? `\nprivate renderer${options.typescript ? ': Renderer2' : ''},\n` : ''
+              spreadDomRefs.size
+                ? `\nprivate renderer${options.typescript ? ': Renderer2' : ''},\n`
+                : ''
             }) {}
           `
       }
