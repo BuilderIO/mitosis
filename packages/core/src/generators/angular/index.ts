@@ -855,7 +855,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       return `@Output() ${variableName} = new EventEmitter()`;
     });
 
-    let domRefs = getRefs(json);
+    const domRefs = getRefs(json);
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
     const componentsUsed = Array.from(getComponentsUsed(json)).filter((item) => {
       return item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item);
