@@ -926,7 +926,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }),
     });
 
-    const spreadDomRefs = getRefs(json, 'spreadRef');
+    const refsForObjSpread = getRefs(json, 'spreadRef');
 
     const hostDisplayCss = options.visuallyIgnoreHostElement ? ':host { display: contents; }' : '';
     const styles = css.length ? [hostDisplayCss, css].join('\n') : hostDisplayCss;
@@ -970,15 +970,16 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     };
 
     const hasConstructor =
-      Boolean(injectables.length) || dynamicComponents.size || domRefs.size || spreadDomRefs.size;
+      Boolean(injectables.length) || dynamicComponents.size || refsForObjSpread.size;
 
     const angularCoreImports = [
       ...(outputs.length ? ['Output', 'EventEmitter'] : []),
       ...(options?.experimental?.inject ? ['Inject', 'forwardRef'] : []),
       'Component',
-      ...(domRefs.size || dynamicComponents.size || spreadDomRefs.size
-        ? ['ViewChild', 'ElementRef', 'Renderer2']
+      ...(domRefs.size || dynamicComponents.size || refsForObjSpread.size
+        ? ['ViewChild', 'ElementRef']
         : []),
+      ...(refsForObjSpread.size ? ['Renderer2'] : []),
       ...(props.size ? ['Input'] : []),
       ...(dynamicComponents.size ? ['ViewContainerRef', 'TemplateRef'] : []),
       ...(json.hooks.onUpdate?.length && options.typescript ? ['SimpleChanges'] : []),
@@ -1030,7 +1031,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         )
         .join('\n')}
 
-      ${Array.from(spreadDomRefs)
+      ${Array.from(refsForObjSpread)
         .map(
           (refName) =>
             `@ViewChild('${refName}') ${refName}${options.typescript ? '!: ElementRef' : ''}`,
@@ -1080,7 +1081,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
                 ? `\nprivate vcRef${options.typescript ? ': ViewContainerRef' : ''},\n`
                 : ''
             }${
-              spreadDomRefs.size
+              refsForObjSpread.size
                 ? `\nprivate renderer${options.typescript ? ': Renderer2' : ''},\n`
                 : ''
             }) {}
