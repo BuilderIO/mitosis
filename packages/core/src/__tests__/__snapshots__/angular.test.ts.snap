@@ -4,7 +4,13 @@ exports[`Angular > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-ref-component, MyBasicRefComponent\\",
@@ -57,7 +63,7 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  constructor(private renderer) {}
+  constructor() {}
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
@@ -76,7 +82,13 @@ export class MyBasicRefComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > AdvancedRef 2`] = `
-"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -132,7 +144,7 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  constructor(private renderer) {}
+  constructor() {}
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
@@ -1005,7 +1017,13 @@ exports[`Angular > jsx > Javascript Test > BasicRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-ref-component, MyBasicRefComponent\\",
@@ -1058,7 +1076,7 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  constructor(private renderer) {}
+  constructor() {}
 }
 
 @NgModule({
@@ -1071,7 +1089,13 @@ export class MyBasicRefComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > BasicRef 2`] = `
-"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1127,7 +1151,7 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  constructor(private renderer) {}
+  constructor() {}
 }
 "
 `;
@@ -1310,7 +1334,13 @@ exports[`Angular > jsx > Javascript Test > Button 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"button, Button\\",
@@ -1344,8 +1374,8 @@ export default class Button {
   @Input() openLinkInNewTab;
   @Input() text;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
-  @ViewChild(\\"elRef1El\\") _elRef1El;
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
 
   setAttributes(el, value) {
     if (!el) {
@@ -1364,6 +1394,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -1388,7 +1420,13 @@ export class ButtonModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > Button 2`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1425,8 +1463,8 @@ export default class Button {
   @Input() openLinkInNewTab;
   @Input() text;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
-  @ViewChild(\\"elRef1El\\") _elRef1El;
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
 
   setAttributes(el, value) {
     if (!el) {
@@ -1445,6 +1483,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -1665,7 +1705,13 @@ exports[`Angular > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 const defaultProps = {
   content: \\"\\",
@@ -1704,7 +1750,7 @@ export default class ContentSlotJsxCode {
   @Input() attributes;
   @Input() content = defaultProps[\\"content\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   name = \\"king\\";
   showContent = false;
@@ -1731,6 +1777,8 @@ export default class ContentSlotJsxCode {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -1753,7 +1801,13 @@ export class ContentSlotJsxCodeModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > ContentSlotJSX 2`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 const defaultProps = {
@@ -1795,7 +1849,7 @@ export default class ContentSlotJsxCode {
   @Input() attributes;
   @Input() content = defaultProps[\\"content\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   name = \\"king\\";
   showContent = false;
@@ -1823,6 +1877,8 @@ export default class ContentSlotJsxCode {
     });
   }
 
+  constructor(private renderer) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -1840,7 +1896,13 @@ exports[`Angular > jsx > Javascript Test > CustomCode 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"custom-code, CustomCode\\",
@@ -1909,7 +1971,7 @@ export default class CustomCode {
     }
   }
 
-  constructor(private renderer) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -1928,7 +1990,13 @@ export class CustomCodeModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > CustomCode 2`] = `
-"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2000,7 +2068,7 @@ export default class CustomCode {
     }
   }
 
-  constructor(private renderer) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -2015,7 +2083,13 @@ exports[`Angular > jsx > Javascript Test > Embed 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"custom-code, CustomCode\\",
@@ -2084,7 +2158,7 @@ export default class CustomCode {
     }
   }
 
-  constructor(private renderer) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -2103,7 +2177,13 @@ export class CustomCodeModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > Embed 2`] = `
-"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2175,7 +2255,7 @@ export default class CustomCode {
     }
   }
 
-  constructor(private renderer) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -2194,8 +2274,8 @@ import {
   Component,
   ViewChild,
   ElementRef,
-  Input,
   Renderer2,
+  Input,
 } from \\"@angular/core\\";
 
 import { Builder, builder } from \\"@builder.io/sdk\\";
@@ -2288,7 +2368,7 @@ export default class FormComponent {
 
   @ViewChild(\\"formRef\\") formRef;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -2557,8 +2637,8 @@ exports[`Angular > jsx > Javascript Test > Form 2`] = `
   Component,
   ViewChild,
   ElementRef,
-  Input,
   Renderer2,
+  Input,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
@@ -2654,7 +2734,7 @@ export default class FormComponent {
 
   @ViewChild(\\"formRef\\") formRef;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -2915,7 +2995,13 @@ exports[`Angular > jsx > Javascript Test > Image 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"image, Image\\",
@@ -2978,7 +3064,7 @@ export default class Image {
   };
   load = false;
 
-  constructor(private renderer) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -3024,7 +3110,13 @@ export class ImageModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > Image 2`] = `
-"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3090,7 +3182,7 @@ export default class Image {
   };
   load = false;
 
-  constructor(private renderer) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -3203,7 +3295,13 @@ exports[`Angular > jsx > Javascript Test > Img 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -3232,7 +3330,7 @@ export default class ImgComponent {
   @Input() imgSrc;
   @Input() altText;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -3259,6 +3357,8 @@ export default class ImgComponent {
     });
     return obj;
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -3281,7 +3381,13 @@ export class ImgComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > Img 2`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -3313,7 +3419,7 @@ export default class ImgComponent {
   @Input() imgSrc;
   @Input() altText;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -3341,6 +3447,8 @@ export default class ImgComponent {
     return obj;
   }
 
+  constructor(private renderer) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -3358,7 +3466,13 @@ exports[`Angular > jsx > Javascript Test > Input 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -3394,7 +3508,7 @@ export default class FormInputComponent {
   @Input() required;
   @Input() onChange;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -3413,6 +3527,8 @@ export default class FormInputComponent {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -3435,7 +3551,13 @@ export class FormInputComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > Input 2`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -3474,7 +3596,7 @@ export default class FormInputComponent {
   @Input() required;
   @Input() onChange;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -3493,6 +3615,8 @@ export default class FormInputComponent {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -3649,7 +3773,13 @@ exports[`Angular > jsx > Javascript Test > Section 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"section-component, SectionComponent\\",
@@ -3675,7 +3805,7 @@ export default class SectionComponent {
   @Input() attributes;
   @Input() maxWidth;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -3694,6 +3824,8 @@ export default class SectionComponent {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -3719,7 +3851,13 @@ exports[`Angular > jsx > Javascript Test > Section 2`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"section-state-component, SectionStateComponent\\",
@@ -3743,7 +3881,7 @@ import { Component, Input, Renderer2 } from \\"@angular/core\\";
 export default class SectionStateComponent {
   @Input() attributes;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   max = 42;
   items = [42];
@@ -3773,6 +3911,8 @@ export default class SectionStateComponent {
     return obj;
   }
 
+  constructor(private renderer) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -3794,7 +3934,13 @@ export class SectionStateComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > Section 3`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3823,7 +3969,7 @@ export default class SectionComponent {
   @Input() attributes;
   @Input() maxWidth;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -3843,6 +3989,8 @@ export default class SectionComponent {
     });
   }
 
+  constructor(private renderer) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -3857,7 +4005,13 @@ export default class SectionComponent {
 `;
 
 exports[`Angular > jsx > Javascript Test > Section 4`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3884,7 +4038,7 @@ import { CommonModule } from \\"@angular/common\\";
 export default class SectionStateComponent {
   @Input() attributes;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   max = 42;
   items = [42];
@@ -3914,6 +4068,8 @@ export default class SectionStateComponent {
     return obj;
   }
 
+  constructor(private renderer) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -3931,7 +4087,13 @@ exports[`Angular > jsx > Javascript Test > Select 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -3966,7 +4128,7 @@ export default class SelectComponent {
   @Input() name;
   @Input() options;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -3985,6 +4147,8 @@ export default class SelectComponent {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -4007,7 +4171,13 @@ export class SelectComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > Select 2`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -4045,7 +4215,7 @@ export default class SelectComponent {
   @Input() name;
   @Input() options;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -4064,6 +4234,8 @@ export default class SelectComponent {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -4553,7 +4725,13 @@ exports[`Angular > jsx > Javascript Test > Submit 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"submit-button, SubmitButton\\",
@@ -4572,7 +4750,7 @@ export default class SubmitButton {
   @Input() attributes;
   @Input() text;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -4591,6 +4769,8 @@ export default class SubmitButton {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -4613,7 +4793,13 @@ export class SubmitButtonModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > Submit 2`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4635,7 +4821,7 @@ export default class SubmitButton {
   @Input() attributes;
   @Input() text;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -4654,6 +4840,8 @@ export default class SubmitButton {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -4751,7 +4939,13 @@ exports[`Angular > jsx > Javascript Test > Textarea 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"textarea, Textarea\\",
@@ -4779,7 +4973,7 @@ export default class Textarea {
   @Input() value;
   @Input() defaultValue;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -4798,6 +4992,8 @@ export default class Textarea {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -4820,7 +5016,13 @@ export class TextareaModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > Textarea 2`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4851,7 +5053,7 @@ export default class Textarea {
   @Input() value;
   @Input() defaultValue;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -4871,6 +5073,8 @@ export default class Textarea {
     });
   }
 
+  constructor(private renderer) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -4888,7 +5092,13 @@ exports[`Angular > jsx > Javascript Test > Video 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"video, Video\\",
@@ -4923,7 +5133,7 @@ export default class Video {
   @Input() controls;
   @Input() loop;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -4951,6 +5161,8 @@ export default class Video {
     return obj;
   }
 
+  constructor(private renderer) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -4972,7 +5184,13 @@ export class VideoModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > Video 2`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5010,7 +5228,7 @@ export default class Video {
   @Input() controls;
   @Input() loop;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -5037,6 +5255,8 @@ export default class Video {
     });
     return obj;
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -5128,6 +5348,7 @@ import {
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -5197,6 +5418,7 @@ exports[`Angular > jsx > Javascript Test > basicForNoTagReference 2`] = `
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -6042,8 +6264,10 @@ import {
   Output,
   EventEmitter,
   Component,
-  Input,
+  ViewChild,
+  ElementRef,
   Renderer2,
+  Input,
 } from \\"@angular/core\\";
 
 const defaultProps = {
@@ -6092,8 +6316,8 @@ export default class Button {
 
   @Output() onClick = new EventEmitter();
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
-  @ViewChild(\\"elRef1El\\") _elRef1El;
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
 
   setAttributes(el, value) {
     if (!el) {
@@ -6112,6 +6336,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -6140,8 +6366,10 @@ exports[`Angular > jsx > Javascript Test > defaultProps 2`] = `
   Output,
   EventEmitter,
   Component,
-  Input,
+  ViewChild,
+  ElementRef,
   Renderer2,
+  Input,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
@@ -6193,8 +6421,8 @@ export default class Button {
 
   @Output() onClick = new EventEmitter();
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
-  @ViewChild(\\"elRef1El\\") _elRef1El;
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
 
   setAttributes(el, value) {
     if (!el) {
@@ -6213,6 +6441,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -6237,8 +6467,10 @@ import {
   Output,
   EventEmitter,
   Component,
-  Input,
+  ViewChild,
+  ElementRef,
   Renderer2,
+  Input,
 } from \\"@angular/core\\";
 
 const defaultProps = {
@@ -6284,8 +6516,8 @@ export default class Button {
 
   @Output() onClick = new EventEmitter();
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
-  @ViewChild(\\"elRef1El\\") _elRef1El;
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
 
   setAttributes(el, value) {
     if (!el) {
@@ -6304,6 +6536,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -6332,8 +6566,10 @@ exports[`Angular > jsx > Javascript Test > defaultPropsOutsideComponent 2`] = `
   Output,
   EventEmitter,
   Component,
-  Input,
+  ViewChild,
+  ElementRef,
   Renderer2,
+  Input,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
@@ -6382,8 +6618,8 @@ export default class Button {
 
   @Output() onClick = new EventEmitter();
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
-  @ViewChild(\\"elRef1El\\") _elRef1El;
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
 
   setAttributes(el, value) {
     if (!el) {
@@ -6402,6 +6638,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -6582,6 +6820,7 @@ import {
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -6643,6 +6882,7 @@ exports[`Angular > jsx > Javascript Test > dynamicComponentWithEventArg 2`] = `
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -6857,14 +7097,14 @@ exports[`Angular > jsx > Javascript Test > import types 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import { Component, Input } from \\"@angular/core\\";
 
 import RenderBlock from \\"./builder-render-block.raw\\";
 
 @Component({
   selector: \\"render-content, RenderContent\\",
   template: \`
-    <render-block #elRef0></render-block>
+    <render-block></render-block>
   \`,
   styles: [
     \`
@@ -6877,46 +7117,11 @@ import RenderBlock from \\"./builder-render-block.raw\\";
 export default class RenderContent {
   @Input() renderContentProps;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
-
   getRenderContentProps(block, index) {
     return {
       block: block,
       index: index,
     };
-  }
-  setAttributes(el, value) {
-    if (!el) {
-      return;
-    }
-
-    Object.keys(value).forEach((key) => {
-      if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
-        );
-      } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
-      }
-    });
-  }
-
-  ngOnInit() {
-    this.setAttributes(
-      this.elRef0?.nativeElement,
-      this.getRenderContentProps(renderContentProps.block, 0)
-    );
-  }
-
-  ngOnChanges(changes) {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.getRenderContentProps(renderContentProps.block, 0)
-      );
-    }
   }
 }
 
@@ -6930,7 +7135,7 @@ export class RenderContentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > import types 2`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import { Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import RenderBlock from \\"./builder-render-block.raw\\";
@@ -6938,7 +7143,7 @@ import RenderBlock from \\"./builder-render-block.raw\\";
 @Component({
   selector: \\"render-content, RenderContent\\",
   template: \`
-    <render-block #elRef0></render-block>
+    <render-block></render-block>
   \`,
   styles: [
     \`
@@ -6953,46 +7158,11 @@ import RenderBlock from \\"./builder-render-block.raw\\";
 export default class RenderContent {
   @Input() renderContentProps;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
-
   getRenderContentProps(block, index) {
     return {
       block: block,
       index: index,
     };
-  }
-  setAttributes(el, value) {
-    if (!el) {
-      return;
-    }
-
-    Object.keys(value).forEach((key) => {
-      if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
-        );
-      } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
-      }
-    });
-  }
-
-  ngOnInit() {
-    this.setAttributes(
-      this.elRef0?.nativeElement,
-      this.getRenderContentProps(renderContentProps.block, 0)
-    );
-  }
-
-  ngOnChanges(changes) {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.getRenderContentProps(renderContentProps.block, 0)
-      );
-    }
   }
 }
 "
@@ -7215,12 +7385,12 @@ exports[`Angular > jsx > Javascript Test > multipleSpreads 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Renderer2 } from \\"@angular/core\\";
+import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input #elRef1 />
+    <input #elRef0 />
   \`,
   styles: [
     \`
@@ -7231,7 +7401,7 @@ import { Component, Renderer2 } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef1El\\") _elRef1El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   attrs = {
     hello: \\"world\\",
@@ -7254,15 +7424,17 @@ export default class MyBasicComponent {
     });
   }
 
+  constructor(private renderer) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-    this.setAttributes(this.elRef1?.nativeElement, this.props);
+    this.setAttributes(this.elRef0?.nativeElement, this.props);
   }
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-      this.setAttributes(this.elRef1?.nativeElement, this.props);
+      this.setAttributes(this.elRef0?.nativeElement, this.props);
     }
   }
 }
@@ -7277,13 +7449,13 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > multipleSpreads 2`] = `
-"import { Component, Renderer2 } from \\"@angular/core\\";
+"import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input #elRef1 />
+    <input #elRef0 />
   \`,
   styles: [
     \`
@@ -7296,7 +7468,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef1El\\") _elRef1El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   attrs = {
     hello: \\"world\\",
@@ -7319,15 +7491,17 @@ export default class MyBasicComponent {
     });
   }
 
+  constructor(private renderer) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-    this.setAttributes(this.elRef1?.nativeElement, this.props);
+    this.setAttributes(this.elRef0?.nativeElement, this.props);
   }
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-      this.setAttributes(this.elRef1?.nativeElement, this.props);
+      this.setAttributes(this.elRef0?.nativeElement, this.props);
     }
   }
 }
@@ -7587,7 +7761,7 @@ exports[`Angular > jsx > Javascript Test > onEvent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"embed, Embed\\",
@@ -7609,7 +7783,7 @@ export default class Embed {
     console.log(\\"test2\\");
   }
 
-  constructor(private renderer) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -7628,7 +7802,7 @@ export class EmbedModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > onEvent 2`] = `
-"import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+"import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7653,7 +7827,7 @@ export default class Embed {
     console.log(\\"test2\\");
   }
 
-  constructor(private renderer) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -8591,6 +8765,7 @@ import {
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -8883,6 +9058,7 @@ exports[`Angular > jsx > Javascript Test > renderBlock 2`] = `
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -9282,7 +9458,13 @@ exports[`Angular > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"button, Button\\",
@@ -9316,8 +9498,8 @@ export default class Button {
   @Input() openLinkInNewTab;
   @Input() text;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
-  @ViewChild(\\"elRef1El\\") _elRef1El;
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
 
   setAttributes(el, value) {
     if (!el) {
@@ -9336,6 +9518,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -9360,7 +9544,13 @@ export class ButtonModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > rootFragmentMultiNode 2`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9397,8 +9587,8 @@ export default class Button {
   @Input() openLinkInNewTab;
   @Input() text;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
-  @ViewChild(\\"elRef1El\\") _elRef1El;
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
 
   setAttributes(el, value) {
     if (!el) {
@@ -9417,6 +9607,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -10063,7 +10255,7 @@ exports[`Angular > jsx > Javascript Test > spreadAttrs 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Renderer2 } from \\"@angular/core\\";
+import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
@@ -10079,7 +10271,7 @@ import { Component, Renderer2 } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -10098,6 +10290,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
@@ -10120,7 +10314,7 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > spreadAttrs 2`] = `
-"import { Component, Renderer2 } from \\"@angular/core\\";
+"import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10139,7 +10333,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -10158,6 +10352,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
@@ -10176,7 +10372,13 @@ exports[`Angular > jsx > Javascript Test > spreadNestedProps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2 } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
@@ -10194,7 +10396,7 @@ import { Component, Input, Renderer2 } from \\"@angular/core\\";
 export default class MyBasicComponent {
   @Input() nested;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -10213,6 +10415,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.nested);
@@ -10235,7 +10439,13 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > spreadNestedProps 2`] = `
-"import { Component, Input, Renderer2 } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10256,7 +10466,7 @@ import { CommonModule } from \\"@angular/common\\";
 export default class MyBasicComponent {
   @Input() nested;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -10275,6 +10485,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.nested);
@@ -10293,7 +10505,7 @@ exports[`Angular > jsx > Javascript Test > spreadProps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Renderer2 } from \\"@angular/core\\";
+import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
@@ -10309,7 +10521,7 @@ import { Component, Renderer2 } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -10328,6 +10540,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.props);
@@ -10350,7 +10564,7 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > spreadProps 2`] = `
-"import { Component, Renderer2 } from \\"@angular/core\\";
+"import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10369,7 +10583,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef0El\\") _elRef0El;
+  @ViewChild(\\"elRef0\\") elRef0;
 
   setAttributes(el, value) {
     if (!el) {
@@ -10388,6 +10602,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.props);
@@ -11448,6 +11664,7 @@ import {
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
@@ -11507,7 +11724,7 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
@@ -11530,6 +11747,7 @@ exports[`Angular > jsx > Typescript Test > AdvancedRef 2`] = `
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
@@ -11592,7 +11810,7 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
@@ -12493,7 +12711,13 @@ exports[`Angular > jsx > Typescript Test > BasicRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 export interface Props {
   showInput: boolean;
@@ -12550,7 +12774,7 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 }
 
 @NgModule({
@@ -12563,7 +12787,13 @@ export class MyBasicRefComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > BasicRef 2`] = `
-"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -12623,7 +12853,7 @@ export default class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 }
 "
 `;
@@ -12822,7 +13052,14 @@ exports[`Angular > jsx > Typescript Test > Button 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -12863,8 +13100,8 @@ export default class Button {
   @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"];
   @Input() text!: ButtonProps[\\"text\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
-  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -12883,6 +13120,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -12907,7 +13146,14 @@ export class ButtonModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > Button 2`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -12951,8 +13197,8 @@ export default class Button {
   @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"];
   @Input() text!: ButtonProps[\\"text\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
-  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -12971,6 +13217,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -13235,7 +13483,14 @@ exports[`Angular > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -13279,7 +13534,7 @@ export default class ContentSlotJsxCode {
   @Input() attributes!: Props[\\"attributes\\"];
   @Input() content!: Props[\\"content\\"] = defaultProps[\\"content\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   name = \\"king\\";
   showContent = false;
@@ -13306,6 +13561,8 @@ export default class ContentSlotJsxCode {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -13328,7 +13585,14 @@ export class ContentSlotJsxCodeModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > ContentSlotJSX 2`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -13375,7 +13639,7 @@ export default class ContentSlotJsxCode {
   @Input() attributes!: Props[\\"attributes\\"];
   @Input() content!: Props[\\"content\\"] = defaultProps[\\"content\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   name = \\"king\\";
   showContent = false;
@@ -13403,6 +13667,8 @@ export default class ContentSlotJsxCode {
     });
   }
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -13420,7 +13686,13 @@ exports[`Angular > jsx > Typescript Test > CustomCode 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -13494,7 +13766,7 @@ export default class CustomCode {
     }
   }
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -13513,7 +13785,13 @@ export class CustomCodeModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > CustomCode 2`] = `
-"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface CustomCodeProps {
@@ -13590,7 +13868,7 @@ export default class CustomCode {
     }
   }
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -13605,7 +13883,13 @@ exports[`Angular > jsx > Typescript Test > Embed 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -13679,7 +13963,7 @@ export default class CustomCode {
     }
   }
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -13698,7 +13982,13 @@ export class CustomCodeModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > Embed 2`] = `
-"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface CustomCodeProps {
@@ -13775,7 +14065,7 @@ export default class CustomCode {
     }
   }
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -13794,8 +14084,8 @@ import {
   Component,
   ViewChild,
   ElementRef,
-  Input,
   Renderer2,
+  Input,
   SimpleChanges,
 } from \\"@angular/core\\";
 
@@ -13913,7 +14203,7 @@ export default class FormComponent {
 
   @ViewChild(\\"formRef\\") formRef!: ElementRef;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -14189,8 +14479,8 @@ exports[`Angular > jsx > Typescript Test > Form 2`] = `
   Component,
   ViewChild,
   ElementRef,
-  Input,
   Renderer2,
+  Input,
   SimpleChanges,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -14311,7 +14601,7 @@ export default class FormComponent {
 
   @ViewChild(\\"formRef\\") formRef!: ElementRef;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -14579,7 +14869,13 @@ exports[`Angular > jsx > Typescript Test > Image 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 // TODO: AMP Support?
 export interface ImageProps {
@@ -14661,7 +14957,7 @@ export default class Image {
   };
   load = false;
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -14707,7 +15003,13 @@ export class ImageModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > Image 2`] = `
-"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 // TODO: AMP Support?
@@ -14792,7 +15094,7 @@ export default class Image {
   };
   load = false;
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -14905,7 +15207,14 @@ exports[`Angular > jsx > Typescript Test > Img 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ImgProps {
   attributes?: any;
@@ -14951,7 +15260,7 @@ export default class ImgComponent {
   @Input() imgSrc!: ImgProps[\\"imgSrc\\"];
   @Input() altText!: ImgProps[\\"altText\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -14978,6 +15287,8 @@ export default class ImgComponent {
     });
     return obj;
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -15000,7 +15311,14 @@ export class ImgComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > Img 2`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ImgProps {
@@ -15049,7 +15367,7 @@ export default class ImgComponent {
   @Input() imgSrc!: ImgProps[\\"imgSrc\\"];
   @Input() altText!: ImgProps[\\"altText\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -15077,6 +15395,8 @@ export default class ImgComponent {
     return obj;
   }
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -15094,7 +15414,14 @@ exports[`Angular > jsx > Typescript Test > Input 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface FormInputProps {
   type?: string;
@@ -15141,7 +15468,7 @@ export default class FormInputComponent {
   @Input() required!: FormInputProps[\\"required\\"];
   @Input() onChange!: FormInputProps[\\"onChange\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -15160,6 +15487,8 @@ export default class FormInputComponent {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -15182,7 +15511,14 @@ export class FormInputComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > Input 2`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface FormInputProps {
@@ -15232,7 +15568,7 @@ export default class FormInputComponent {
   @Input() required!: FormInputProps[\\"required\\"];
   @Input() onChange!: FormInputProps[\\"onChange\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -15251,6 +15587,8 @@ export default class FormInputComponent {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -15417,7 +15755,14 @@ exports[`Angular > jsx > Typescript Test > Section 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -15449,7 +15794,7 @@ export default class SectionComponent {
   @Input() attributes!: SectionProps[\\"attributes\\"];
   @Input() maxWidth!: SectionProps[\\"maxWidth\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -15468,6 +15813,8 @@ export default class SectionComponent {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -15493,7 +15840,14 @@ exports[`Angular > jsx > Typescript Test > Section 2`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -15523,7 +15877,7 @@ export interface SectionProps {
 export default class SectionStateComponent {
   @Input() attributes!: SectionProps[\\"attributes\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   max = 42;
   items = [42];
@@ -15553,6 +15907,8 @@ export default class SectionStateComponent {
     return obj;
   }
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -15574,7 +15930,14 @@ export class SectionStateComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > Section 3`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface SectionProps {
@@ -15609,7 +15972,7 @@ export default class SectionComponent {
   @Input() attributes!: SectionProps[\\"attributes\\"];
   @Input() maxWidth!: SectionProps[\\"maxWidth\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -15629,6 +15992,8 @@ export default class SectionComponent {
     });
   }
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -15643,7 +16008,14 @@ export default class SectionComponent {
 `;
 
 exports[`Angular > jsx > Typescript Test > Section 4`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface SectionProps {
@@ -15676,7 +16048,7 @@ export interface SectionProps {
 export default class SectionStateComponent {
   @Input() attributes!: SectionProps[\\"attributes\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   max = 42;
   items = [42];
@@ -15706,6 +16078,8 @@ export default class SectionStateComponent {
     return obj;
   }
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -15723,7 +16097,14 @@ exports[`Angular > jsx > Typescript Test > Select 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface FormSelectProps {
   options?: {
@@ -15769,7 +16150,7 @@ export default class SelectComponent {
   @Input() name!: FormSelectProps[\\"name\\"];
   @Input() options!: FormSelectProps[\\"options\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -15788,6 +16169,8 @@ export default class SelectComponent {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -15810,7 +16193,14 @@ export class SelectComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > Select 2`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface FormSelectProps {
@@ -15859,7 +16249,7 @@ export default class SelectComponent {
   @Input() name!: FormSelectProps[\\"name\\"];
   @Input() options!: FormSelectProps[\\"options\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -15878,6 +16268,8 @@ export default class SelectComponent {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -16409,7 +16801,14 @@ exports[`Angular > jsx > Typescript Test > Submit 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -16433,7 +16832,7 @@ export default class SubmitButton {
   @Input() attributes!: ButtonProps[\\"attributes\\"];
   @Input() text!: ButtonProps[\\"text\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -16452,6 +16851,8 @@ export default class SubmitButton {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -16474,7 +16875,14 @@ export class SubmitButtonModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > Submit 2`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -16501,7 +16909,7 @@ export default class SubmitButton {
   @Input() attributes!: ButtonProps[\\"attributes\\"];
   @Input() text!: ButtonProps[\\"text\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -16520,6 +16928,8 @@ export default class SubmitButton {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -16633,7 +17043,14 @@ exports[`Angular > jsx > Typescript Test > Textarea 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface TextareaProps {
   attributes?: any;
@@ -16669,7 +17086,7 @@ export default class Textarea {
   @Input() value!: TextareaProps[\\"value\\"];
   @Input() defaultValue!: TextareaProps[\\"defaultValue\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -16688,6 +17105,8 @@ export default class Textarea {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -16710,7 +17129,14 @@ export class TextareaModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > Textarea 2`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface TextareaProps {
@@ -16749,7 +17175,7 @@ export default class Textarea {
   @Input() value!: TextareaProps[\\"value\\"];
   @Input() defaultValue!: TextareaProps[\\"defaultValue\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -16769,6 +17195,8 @@ export default class Textarea {
     });
   }
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -16786,7 +17214,14 @@ exports[`Angular > jsx > Typescript Test > Video 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface VideoProps {
   attributes?: any;
@@ -16847,7 +17282,7 @@ export default class Video {
   @Input() controls!: VideoProps[\\"controls\\"];
   @Input() loop!: VideoProps[\\"loop\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -16875,6 +17310,8 @@ export default class Video {
     return obj;
   }
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
   }
@@ -16896,7 +17333,14 @@ export class VideoModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > Video 2`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface VideoProps {
@@ -16960,7 +17404,7 @@ export default class Video {
   @Input() controls!: VideoProps[\\"controls\\"];
   @Input() loop!: VideoProps[\\"loop\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -16987,6 +17431,8 @@ export default class Video {
     });
     return obj;
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -17078,6 +17524,7 @@ import {
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -17149,6 +17596,7 @@ exports[`Angular > jsx > Typescript Test > basicForNoTagReference 2`] = `
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -18046,8 +18494,10 @@ import {
   Output,
   EventEmitter,
   Component,
-  Input,
+  ViewChild,
+  ElementRef,
   Renderer2,
+  Input,
   SimpleChanges,
 } from \\"@angular/core\\";
 
@@ -18107,8 +18557,8 @@ export default class Button {
 
   @Output() onClick = new EventEmitter();
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
-  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -18127,6 +18577,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -18155,8 +18607,10 @@ exports[`Angular > jsx > Typescript Test > defaultProps 2`] = `
   Output,
   EventEmitter,
   Component,
-  Input,
+  ViewChild,
+  ElementRef,
   Renderer2,
+  Input,
   SimpleChanges,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -18219,8 +18673,8 @@ export default class Button {
 
   @Output() onClick = new EventEmitter();
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
-  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -18239,6 +18693,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -18263,8 +18719,10 @@ import {
   Output,
   EventEmitter,
   Component,
-  Input,
+  ViewChild,
+  ElementRef,
   Renderer2,
+  Input,
   SimpleChanges,
 } from \\"@angular/core\\";
 
@@ -18319,8 +18777,8 @@ export default class Button {
 
   @Output() onClick = new EventEmitter();
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
-  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -18339,6 +18797,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -18367,8 +18827,10 @@ exports[`Angular > jsx > Typescript Test > defaultPropsOutsideComponent 2`] = `
   Output,
   EventEmitter,
   Component,
-  Input,
+  ViewChild,
+  ElementRef,
   Renderer2,
+  Input,
   SimpleChanges,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -18426,8 +18888,8 @@ export default class Button {
 
   @Output() onClick = new EventEmitter();
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
-  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -18446,6 +18908,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -18634,6 +19098,7 @@ import {
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -18696,6 +19161,7 @@ exports[`Angular > jsx > Typescript Test > dynamicComponentWithEventArg 2`] = `
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -18919,7 +19385,7 @@ exports[`Angular > jsx > Typescript Test > import types 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import { Component, Input } from \\"@angular/core\\";
 
 type RenderContentProps = {
   options?: GetContentOptions;
@@ -18933,7 +19399,7 @@ import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 @Component({
   selector: \\"render-content, RenderContent\\",
   template: \`
-    <render-block #elRef0></render-block>
+    <render-block></render-block>
   \`,
   styles: [
     \`
@@ -18946,46 +19412,11 @@ import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 export default class RenderContent {
   @Input() renderContentProps!: RenderContentProps[\\"renderContentProps\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
-
   getRenderContentProps(block, index) {
     return {
       block: block,
       index: index,
     };
-  }
-  setAttributes(el: HTMLElement, value: any) {
-    if (!el) {
-      return;
-    }
-
-    Object.keys(value).forEach((key) => {
-      if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
-        );
-      } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
-      }
-    });
-  }
-
-  ngOnInit() {
-    this.setAttributes(
-      this.elRef0?.nativeElement,
-      this.getRenderContentProps(renderContentProps.block, 0)
-    );
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.getRenderContentProps(renderContentProps.block, 0)
-      );
-    }
   }
 }
 
@@ -18999,7 +19430,7 @@ export class RenderContentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > import types 2`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import { Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type RenderContentProps = {
@@ -19014,7 +19445,7 @@ import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 @Component({
   selector: \\"render-content, RenderContent\\",
   template: \`
-    <render-block #elRef0></render-block>
+    <render-block></render-block>
   \`,
   styles: [
     \`
@@ -19029,46 +19460,11 @@ import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 export default class RenderContent {
   @Input() renderContentProps!: RenderContentProps[\\"renderContentProps\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
-
   getRenderContentProps(block, index) {
     return {
       block: block,
       index: index,
     };
-  }
-  setAttributes(el: HTMLElement, value: any) {
-    if (!el) {
-      return;
-    }
-
-    Object.keys(value).forEach((key) => {
-      if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
-        );
-      } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
-      }
-    });
-  }
-
-  ngOnInit() {
-    this.setAttributes(
-      this.elRef0?.nativeElement,
-      this.getRenderContentProps(renderContentProps.block, 0)
-    );
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.getRenderContentProps(renderContentProps.block, 0)
-      );
-    }
   }
 }
 "
@@ -19291,12 +19687,18 @@ exports[`Angular > jsx > Typescript Test > multipleSpreads 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input #elRef1 />
+    <input #elRef0 />
   \`,
   styles: [
     \`
@@ -19307,7 +19709,7 @@ import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   attrs = {
     hello: \\"world\\",
@@ -19330,15 +19732,17 @@ export default class MyBasicComponent {
     });
   }
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-    this.setAttributes(this.elRef1?.nativeElement, this.props);
+    this.setAttributes(this.elRef0?.nativeElement, this.props);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-      this.setAttributes(this.elRef1?.nativeElement, this.props);
+      this.setAttributes(this.elRef0?.nativeElement, this.props);
     }
   }
 }
@@ -19353,13 +19757,19 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > multipleSpreads 2`] = `
-"import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input #elRef1 />
+    <input #elRef0 />
   \`,
   styles: [
     \`
@@ -19372,7 +19782,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   attrs = {
     hello: \\"world\\",
@@ -19395,15 +19805,17 @@ export default class MyBasicComponent {
     });
   }
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-    this.setAttributes(this.elRef1?.nativeElement, this.props);
+    this.setAttributes(this.elRef0?.nativeElement, this.props);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-      this.setAttributes(this.elRef1?.nativeElement, this.props);
+      this.setAttributes(this.elRef0?.nativeElement, this.props);
     }
   }
 }
@@ -19673,7 +20085,7 @@ exports[`Angular > jsx > Typescript Test > onEvent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"embed, Embed\\",
@@ -19695,7 +20107,7 @@ export default class Embed {
     console.log(\\"test2\\");
   }
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -19714,7 +20126,7 @@ export class EmbedModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > onEvent 2`] = `
-"import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+"import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -19739,7 +20151,7 @@ export default class Embed {
     console.log(\\"test2\\");
   }
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -20769,6 +21181,7 @@ import {
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -21073,6 +21486,7 @@ exports[`Angular > jsx > Typescript Test > renderBlock 2`] = `
   Component,
   ViewChild,
   ElementRef,
+  Renderer2,
   Input,
   ViewContainerRef,
   TemplateRef,
@@ -21501,7 +21915,14 @@ exports[`Angular > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -21542,8 +21963,8 @@ export default class Button {
   @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"];
   @Input() text!: ButtonProps[\\"text\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
-  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -21562,6 +21983,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -21586,7 +22009,14 @@ export class ButtonModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > rootFragmentMultiNode 2`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -21630,8 +22060,8 @@ export default class Button {
   @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"];
   @Input() text!: ButtonProps[\\"text\\"];
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
-  @ViewChild(\\"elRef1El\\") _elRef1El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -21650,6 +22080,8 @@ export default class Button {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attributes);
@@ -22358,7 +22790,13 @@ exports[`Angular > jsx > Typescript Test > spreadAttrs 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
@@ -22374,7 +22812,7 @@ import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -22393,6 +22831,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
@@ -22415,7 +22855,13 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > spreadAttrs 2`] = `
-"import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22434,7 +22880,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -22453,6 +22899,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
@@ -22471,7 +22919,14 @@ exports[`Angular > jsx > Typescript Test > spreadNestedProps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
@@ -22489,7 +22944,7 @@ import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
 export default class MyBasicComponent {
   @Input() nested!: any;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -22508,6 +22963,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.nested);
@@ -22530,7 +22987,14 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > spreadNestedProps 2`] = `
-"import { Component, Input, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22551,7 +23015,7 @@ import { CommonModule } from \\"@angular/common\\";
 export default class MyBasicComponent {
   @Input() nested!: any;
 
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -22570,6 +23034,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.nested);
@@ -22588,7 +23054,13 @@ exports[`Angular > jsx > Typescript Test > spreadProps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
@@ -22604,7 +23076,7 @@ import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -22623,6 +23095,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.props);
@@ -22645,7 +23119,13 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > spreadProps 2`] = `
-"import { Component, Renderer2, SimpleChanges } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  SimpleChanges,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22664,7 +23144,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class MyBasicComponent {
-  @ViewChild(\\"elRef0El\\") _elRef0El!: ElementRef;
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
@@ -22683,6 +23163,8 @@ export default class MyBasicComponent {
       }
     });
   }
+
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.props);
