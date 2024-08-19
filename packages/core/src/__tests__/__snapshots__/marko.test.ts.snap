@@ -366,13 +366,12 @@ exports[`Marko > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null); // Store current value in ref
-
+  let ref = useRef(null);
+  // Store current value in ref
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
-
   return ref;
 }
 
@@ -504,15 +503,12 @@ exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
     if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = this.elem.getElementsByTagName(\\"script\\");
-
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-
         if (script.src) {
           if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
-
           this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -529,7 +525,6 @@ exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
           if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
-
           try {
             this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -569,15 +564,12 @@ exports[`Marko > jsx > Javascript Test > Embed 1`] = `
     if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = this.elem.getElementsByTagName(\\"script\\");
-
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-
         if (script.src) {
           if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
-
           this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -594,7 +586,6 @@ exports[`Marko > jsx > Javascript Test > Embed 1`] = `
           if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
-
           try {
             this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -645,7 +636,6 @@ class {
   onSubmit(event) {
     const sendWithJs =
       this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
-
     if (this.input.sendSubmissionsTo === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
@@ -653,13 +643,13 @@ class {
         event.preventDefault();
         return;
       }
-
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.input.customHeaders || {};
       let body;
-      const formData = new FormData(el); // TODO: maybe support null
+      const formData = new FormData(el);
 
+      // TODO: maybe support null
       const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
@@ -667,7 +657,6 @@ class {
         .map((el) => {
           let value;
           const key = el.name;
-
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
               if (el.checked) {
@@ -681,7 +670,6 @@ class {
               value = el.checked;
             } else if (el.type === \\"number\\" || el.type === \\"range\\") {
               const num = el.valueAsNumber;
-
               if (!isNaN(num)) {
                 value = num;
               }
@@ -694,18 +682,15 @@ class {
           } else {
             value = el.value;
           }
-
           return {
             key,
             value,
           };
         });
       let contentType = this.input.contentType;
-
       if (this.input.sendSubmissionsTo === \\"email\\") {
         contentType = \\"multipart/form-data\\";
       }
-
       Array.from(formPairs).forEach(({ value }) => {
         if (
           value instanceof File ||
@@ -714,10 +699,11 @@ class {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
+      });
+
+      // TODO: send as urlEncoded or multipart by default
       // because of ease of use and reliability in browser API
       // for encoding the form?
-
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
@@ -728,7 +714,6 @@ class {
         });
         body = JSON.stringify(json);
       }
-
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */
@@ -737,21 +722,17 @@ class {
           headers[\\"content-type\\"] = contentType;
         }
       }
-
       const presubmitEvent = new CustomEvent(\\"presubmit\\", {
         detail: {
           body,
         },
       });
-
       if (this.formRef) {
         this.formRef.dispatchEvent(presubmitEvent);
-
         if (presubmitEvent.defaultPrevented) {
           return;
         }
       }
-
       this.state.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -759,8 +740,9 @@ class {
         this.input.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
-        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
-        /* TODO: throw error if no action URL */
+        this.input.sendSubmissionsTo === \\"email\\"
+          ? formUrl
+          : this.input.action /* TODO: throw error if no action URL */,
         {
           body,
           headers,
@@ -770,31 +752,25 @@ class {
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
-
           if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
             body = await res.json();
           } else {
             body = await res.text();
           }
-
           if (!res.ok && this.input.errorMessagePath) {
             /* TODO: allow supplying an error formatter function */
             let message = get(body, this.input.errorMessagePath);
-
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
             error: - email has been taken */
                 message = JSON.stringify(message);
               }
-
               this.state.formErrorMessage = message;
             }
           }
-
           this.state.responseData = body;
           this.state.formState = res.ok ? \\"success\\" : \\"error\\";
-
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: {
@@ -802,21 +778,18 @@ class {
                 body,
               },
             });
-
             if (this.formRef) {
               this.formRef.dispatchEvent(submitSuccessEvent);
-
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
               /* TODO: option to turn this on/off? */
-
               if (this.input.resetFormOnSubmit !== false) {
                 this.formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
+            /* TODO: client side route event first that can be preventDefaulted */
             if (this.input.successUrl) {
               if (this.formRef) {
                 const event = new CustomEvent(\\"route\\", {
@@ -825,7 +798,6 @@ class {
                   },
                 });
                 this.formRef.dispatchEvent(event);
-
                 if (!event.defaultPrevented) {
                   location.href = this.input.successUrl;
                 }
@@ -841,15 +813,12 @@ class {
               error: err,
             },
           });
-
           if (this.formRef) {
             this.formRef.dispatchEvent(submitErrorEvent);
-
             if (submitErrorEvent.defaultPrevented) {
               return;
             }
           }
-
           this.state.responseData = err;
           this.state.formState = \\"error\\";
         }
@@ -871,7 +840,7 @@ class {
 }
 
 style { 
-  .pre-13d8e5f6 {
+  .pre-577567dc {
     padding: 10px;
     color: red;
     text-align: center;
@@ -906,7 +875,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-13d8e5f6\\">
+    <pre class=\\"builder-form-error-text pre-577567dc\\">
 \${JSON.stringify(state.responseData, null, 2)}</pre>
   </if>
 
@@ -948,7 +917,6 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
         if (this.pictureRef) {
           const rect = this.pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
-
           if (rect.top < window.innerHeight + buffer) {
             this.state.load = true;
             this.state.scrollListener = null;
@@ -956,7 +924,6 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
           }
         }
       };
-
       this.state.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -973,7 +940,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
 }
 
 style { 
-  .img-e6dfb5ae {
+  .img-7716b6fb {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -986,7 +953,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-e6dfb5ae')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-7716b6fb')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -1656,13 +1623,11 @@ exports[`Marko > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
 
   onRender() {
     console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
-
     if (this.state.a === \\"a\\") {
       this.state.a = \\"b\\";
     }
 
     console.log(\\"Runs when c or d changes\\", this.state.c, this.state.d);
-
     if (this.state.a === \\"a\\") {
       this.state.a = \\"b\\";
     }
@@ -1789,19 +1754,14 @@ exports[`Marko > jsx > Javascript Test > onMountMultiple 1`] = `
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
     };
-
     onMountHook_0();
-
     const onMountHook_1 = () => {
       console.log(\\"Another one runs on Mount\\");
     };
-
     onMountHook_1();
-
     const onMountHook_2 = () => {
       console.log(\\"SSR runs on Mount\\");
     };
-
     onMountHook_2();
   }
 }
@@ -1925,13 +1885,10 @@ class {
       context: this.input.context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
-
     if (!componentName) {
       return null;
     }
-
     const ref = this.input.context.registeredComponents[componentName];
-
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
@@ -1986,7 +1943,6 @@ class {
       componentRef: this.component?.component,
       componentOptions: {
         ...getBlockComponentOptions(this.useBlock),
-
         /**
          * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
          * they are provided to the component itself directly.
@@ -1994,7 +1950,10 @@ class {
         ...(this.shouldWrap
           ? {}
           : {
-              attributes: { ...this.attributes, ...this.actions },
+              attributes: {
+                ...this.attributes,
+                ...this.actions,
+              },
             }),
         customBreakpoints: this.childrenContext?.content?.meta?.breakpoints,
       },
@@ -2025,21 +1984,17 @@ class {
      * which will not work if there is a repeat.
      */
     const { repeat, ...blockWithoutRepeat } = this.input.block;
-
     if (!repeat?.collection) {
       return undefined;
     }
-
     const itemsArray = evaluate({
       code: repeat.collection,
       state: this.input.context.state,
       context: this.input.context.context,
     });
-
     if (!Array.isArray(itemsArray)) {
       return undefined;
     }
-
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
@@ -2062,7 +2017,6 @@ class {
     if (TARGET !== \\"reactNative\\") {
       return {};
     }
-
     const styles = getReactNativeBlockStyles({
       block: this.useBlock,
       context: this.input.context,
@@ -2784,13 +2738,12 @@ exports[`Marko > jsx > Typescript Test > BasicRefPrevious 1`] = `
 "export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
-
+  let ref = useRef<T>(null);
+  // Store current value in ref
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
-
   return ref;
 }
 
@@ -2847,29 +2800,29 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
 }
 
 style { 
-  .div-589a139a {
+  .div-3cf04e74 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-589a139a {
+    .div-3cf04e74 {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-589a139a {
+    .div-3cf04e74 {
       flex-direction: row-reverse;
     }
   }
-  .div-589a139a-2 {
+  .div-3cf04e74-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-589a139a\\">
+<div class=\\"builder-columns div-3cf04e74\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-589a139a-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-3cf04e74-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -2926,15 +2879,12 @@ exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
     if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = this.elem.getElementsByTagName(\\"script\\");
-
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-
         if (script.src) {
           if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
-
           this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -2951,7 +2901,6 @@ exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
           if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
-
           try {
             this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -2991,15 +2940,12 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
     if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = this.elem.getElementsByTagName(\\"script\\");
-
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-
         if (script.src) {
           if (this.state.scriptsInserted.includes(script.src)) {
             continue;
           }
-
           this.state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -3016,7 +2962,6 @@ exports[`Marko > jsx > Typescript Test > Embed 1`] = `
           if (this.state.scriptsRun.includes(script.innerText)) {
             continue;
           }
-
           try {
             this.state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -3071,7 +3016,6 @@ class {
   ) {
     const sendWithJs =
       this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
-
     if (this.input.sendSubmissionsTo === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
@@ -3079,13 +3023,13 @@ class {
         event.preventDefault();
         return;
       }
-
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.input.customHeaders || {};
       let body: any;
-      const formData = new FormData(el); // TODO: maybe support null
+      const formData = new FormData(el);
 
+      // TODO: maybe support null
       const formPairs: {
         key: string;
         value: File | boolean | number | string | FileList;
@@ -3096,7 +3040,6 @@ class {
         .map((el) => {
           let value: any;
           const key = (el as HTMLImageElement).name;
-
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
               if (el.checked) {
@@ -3110,7 +3053,6 @@ class {
               value = el.checked;
             } else if (el.type === \\"number\\" || el.type === \\"range\\") {
               const num = el.valueAsNumber;
-
               if (!isNaN(num)) {
                 value = num;
               }
@@ -3123,18 +3065,15 @@ class {
           } else {
             value = (el as HTMLInputElement).value;
           }
-
           return {
             key,
             value,
           };
         });
       let contentType = this.input.contentType;
-
       if (this.input.sendSubmissionsTo === \\"email\\") {
         contentType = \\"multipart/form-data\\";
       }
-
       Array.from(formPairs).forEach(({ value }) => {
         if (
           value instanceof File ||
@@ -3143,10 +3082,11 @@ class {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
+      });
+
+      // TODO: send as urlEncoded or multipart by default
       // because of ease of use and reliability in browser API
       // for encoding the form?
-
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
@@ -3157,7 +3097,6 @@ class {
         });
         body = JSON.stringify(json);
       }
-
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */
@@ -3166,21 +3105,17 @@ class {
           headers[\\"content-type\\"] = contentType;
         }
       }
-
       const presubmitEvent = new CustomEvent(\\"presubmit\\", {
         detail: {
           body,
         },
       });
-
       if (this.formRef) {
         this.formRef.dispatchEvent(presubmitEvent);
-
         if (presubmitEvent.defaultPrevented) {
           return;
         }
       }
-
       this.state.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -3188,8 +3123,9 @@ class {
         this.input.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
-        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action!,
-        /* TODO: throw error if no action URL */
+        this.input.sendSubmissionsTo === \\"email\\"
+          ? formUrl
+          : this.input.action! /* TODO: throw error if no action URL */,
         {
           body,
           headers,
@@ -3199,31 +3135,25 @@ class {
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
-
           if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
             body = await res.json();
           } else {
             body = await res.text();
           }
-
           if (!res.ok && this.input.errorMessagePath) {
             /* TODO: allow supplying an error formatter function */
             let message = get(body, this.input.errorMessagePath);
-
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
             error: - email has been taken */
                 message = JSON.stringify(message);
               }
-
               this.state.formErrorMessage = message;
             }
           }
-
           this.state.responseData = body;
           this.state.formState = res.ok ? \\"success\\" : \\"error\\";
-
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: {
@@ -3231,21 +3161,18 @@ class {
                 body,
               },
             });
-
             if (this.formRef) {
               this.formRef.dispatchEvent(submitSuccessEvent);
-
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
               /* TODO: option to turn this on/off? */
-
               if (this.input.resetFormOnSubmit !== false) {
                 this.formRef.reset();
               }
             }
-            /* TODO: client side route event first that can be preventDefaulted */
 
+            /* TODO: client side route event first that can be preventDefaulted */
             if (this.input.successUrl) {
               if (this.formRef) {
                 const event = new CustomEvent(\\"route\\", {
@@ -3254,7 +3181,6 @@ class {
                   },
                 });
                 this.formRef.dispatchEvent(event);
-
                 if (!event.defaultPrevented) {
                   location.href = this.input.successUrl;
                 }
@@ -3270,15 +3196,12 @@ class {
               error: err,
             },
           });
-
           if (this.formRef) {
             this.formRef.dispatchEvent(submitErrorEvent);
-
             if (submitErrorEvent.defaultPrevented) {
               return;
             }
           }
-
           this.state.responseData = err;
           this.state.formState = \\"error\\";
         }
@@ -3300,7 +3223,7 @@ class {
 }
 
 style { 
-  .pre-6976c39e {
+  .pre-022482f4 {
     padding: 10px;
     color: red;
     text-align: center;
@@ -3335,7 +3258,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-6976c39e\\">
+    <pre class=\\"builder-form-error-text pre-022482f4\\">
 \${JSON.stringify(state.responseData, null, 2)}</pre>
   </if>
 
@@ -3377,7 +3300,6 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
         if (this.pictureRef) {
           const rect = this.pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
-
           if (rect.top < window.innerHeight + buffer) {
             this.state.load = true;
             this.state.scrollListener = null;
@@ -3385,7 +3307,6 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
           }
         }
       };
-
       this.state.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -3402,7 +3323,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 }
 
 style { 
-  .img-22f3c8d4 {
+  .img-6b4d8bfa {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -3415,7 +3336,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-22f3c8d4')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-6b4d8bfa')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -4088,13 +4009,11 @@ exports[`Marko > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 
   onRender() {
     console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
-
     if (this.state.a === \\"a\\") {
       this.state.a = \\"b\\";
     }
 
     console.log(\\"Runs when c or d changes\\", this.state.c, this.state.d);
-
     if (this.state.a === \\"a\\") {
       this.state.a = \\"b\\";
     }
@@ -4221,19 +4140,14 @@ exports[`Marko > jsx > Typescript Test > onMountMultiple 1`] = `
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
     };
-
     onMountHook_0();
-
     const onMountHook_1 = () => {
       console.log(\\"Another one runs on Mount\\");
     };
-
     onMountHook_1();
-
     const onMountHook_2 = () => {
       console.log(\\"SSR runs on Mount\\");
     };
-
     onMountHook_2();
   }
 }
@@ -4365,13 +4279,10 @@ class {
       context: this.input.context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
-
     if (!componentName) {
       return null;
     }
-
     const ref = this.input.context.registeredComponents[componentName];
-
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
@@ -4426,7 +4337,6 @@ class {
       componentRef: this.component?.component,
       componentOptions: {
         ...getBlockComponentOptions(this.useBlock),
-
         /**
          * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
          * they are provided to the component itself directly.
@@ -4434,7 +4344,10 @@ class {
         ...(this.shouldWrap
           ? {}
           : {
-              attributes: { ...this.attributes, ...this.actions },
+              attributes: {
+                ...this.attributes,
+                ...this.actions,
+              },
             }),
         customBreakpoints: this.childrenContext?.content?.meta?.breakpoints,
       },
@@ -4465,21 +4378,17 @@ class {
      * which will not work if there is a repeat.
      */
     const { repeat, ...blockWithoutRepeat } = this.input.block;
-
     if (!repeat?.collection) {
       return undefined;
     }
-
     const itemsArray = evaluate({
       code: repeat.collection,
       state: this.input.context.state,
       context: this.input.context.context,
     });
-
     if (!Array.isArray(itemsArray)) {
       return undefined;
     }
-
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
@@ -4502,7 +4411,6 @@ class {
     if (TARGET !== \\"reactNative\\") {
       return {};
     }
-
     const styles = getReactNativeBlockStyles({
       block: this.useBlock,
       context: this.input.context,

@@ -290,20 +290,16 @@ exports[`Context > Use and set context in complex components 1`] = `
     "component": {
       "code": "get component() {
   const componentName = state.useBlock.component?.name;
-
   if (!componentName) {
     return null;
   }
-
   const ref = components[state.useBlock.component?.name];
-
   if (componentName && !ref) {
     // TODO: Public doc page with more info about this message
     console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
   }
-
   return ref;
 }",
       "type": "getter",
@@ -376,20 +372,16 @@ import BlockStyles from \\"./block-styles\\";
 function RenderBlock(props) {
   function component() {
     const componentName = useBlock().component?.name;
-
     if (!componentName) {
       return null;
     }
-
     const ref = components[useBlock().component?.name];
-
     if (componentName && !ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
     }
-
     return ref;
   }
 
@@ -586,7 +578,6 @@ function ComponentWithContext(props) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -633,7 +624,6 @@ function ComponentWithContext(props) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },

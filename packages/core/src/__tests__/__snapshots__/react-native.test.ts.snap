@@ -560,13 +560,12 @@ import { useState, useRef, useEffect } from \\"react\\";
 export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null); // Store current value in ref
-
+  let ref = useRef(null);
+  // Store current value in ref
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
-
   return ref;
 }
 
@@ -822,15 +821,12 @@ function CustomCode(props) {
     if (elem.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.current.getElementsByTagName(\\"script\\");
-
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
-
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -847,7 +843,6 @@ function CustomCode(props) {
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
-
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -898,15 +893,12 @@ function CustomCode(props) {
     if (elem.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.current.getElementsByTagName(\\"script\\");
-
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
-
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -923,7 +915,6 @@ function CustomCode(props) {
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
-
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -984,7 +975,6 @@ function FormComponent(props) {
 
   function onSubmit(event) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
-
     if (props.sendSubmissionsTo === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
@@ -992,13 +982,13 @@ function FormComponent(props) {
         event.preventDefault();
         return;
       }
-
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
       let body;
-      const formData = new FormData(el); // TODO: maybe support null
+      const formData = new FormData(el);
 
+      // TODO: maybe support null
       const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
@@ -1006,7 +996,6 @@ function FormComponent(props) {
         .map((el) => {
           let value;
           const key = el.name;
-
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
               if (el.checked) {
@@ -1020,7 +1009,6 @@ function FormComponent(props) {
               value = el.checked;
             } else if (el.type === \\"number\\" || el.type === \\"range\\") {
               const num = el.valueAsNumber;
-
               if (!isNaN(num)) {
                 value = num;
               }
@@ -1033,18 +1021,15 @@ function FormComponent(props) {
           } else {
             value = el.value;
           }
-
           return {
             key,
             value,
           };
         });
       let contentType = props.contentType;
-
       if (props.sendSubmissionsTo === \\"email\\") {
         contentType = \\"multipart/form-data\\";
       }
-
       Array.from(formPairs).forEach(({ value }) => {
         if (
           value instanceof File ||
@@ -1053,10 +1038,11 @@ function FormComponent(props) {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
+      });
+
+      // TODO: send as urlEncoded or multipart by default
       // because of ease of use and reliability in browser API
       // for encoding the form?
-
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
@@ -1067,7 +1053,6 @@ function FormComponent(props) {
         });
         body = JSON.stringify(json);
       }
-
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */ !(
@@ -1259,7 +1244,6 @@ function Image(props) {
         if (pictureRef.current) {
           const rect = pictureRef.current.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
-
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
             setScrollListener(null);
@@ -1267,7 +1251,6 @@ function Image(props) {
           }
         }
       };
-
       setScrollListener(listener);
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -2321,7 +2304,12 @@ function MyBasicComponent(props) {
   }));
 
   return (
-    <View style={{ ...styles.view1, ...styleState }}>
+    <View
+      style={{
+        ...styles.view1,
+        ...styleState,
+      }}
+    >
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -2364,7 +2352,6 @@ function ComponentWithContext(props) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -2413,7 +2400,6 @@ function ComponentWithContext(props) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -2825,14 +2811,12 @@ function MultipleOnUpdateWithDeps(props) {
 
   useEffect(() => {
     console.log(\\"Runs when a or b changes\\", a, b);
-
     if (a === \\"a\\") {
       setA(\\"b\\");
     }
   }, [a, b]);
   useEffect(() => {
     console.log(\\"Runs when c or d changes\\", c, d);
-
     if (a === \\"a\\") {
       setA(\\"b\\");
     }
@@ -3483,13 +3467,10 @@ function RenderBlock(props) {
       context: props.context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
-
     if (!componentName) {
       return null;
     }
-
     const ref = props.context.registeredComponents[componentName];
-
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
@@ -3550,7 +3531,6 @@ function RenderBlock(props) {
       componentRef: component?.()?.component,
       componentOptions: {
         ...getBlockComponentOptions(useBlock()),
-
         /**
          * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
          * they are provided to the component itself directly.
@@ -3558,7 +3538,10 @@ function RenderBlock(props) {
         ...(shouldWrap()
           ? {}
           : {
-              attributes: { ...attributes(), ...actions() },
+              attributes: {
+                ...attributes(),
+                ...actions(),
+              },
             }),
         customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
       },
@@ -3592,21 +3575,17 @@ function RenderBlock(props) {
      * which will not work if there is a repeat.
      */
     const { repeat, ...blockWithoutRepeat } = props.block;
-
     if (!repeat?.collection) {
       return undefined;
     }
-
     const itemsArray = evaluate({
       code: repeat.collection,
       state: props.context.state,
       context: props.context.context,
     });
-
     if (!Array.isArray(itemsArray)) {
       return undefined;
     }
-
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
@@ -3630,7 +3609,6 @@ function RenderBlock(props) {
     if (TARGET !== \\"reactNative\\") {
       return {};
     }
-
     const styles = getReactNativeBlockStyles({
       block: useBlock(),
       context: props.context,
@@ -3756,7 +3734,6 @@ function RenderContent(props) {
         get content() {
           return 3;
         },
-
         get registeredComponents() {
           return 4;
         },
@@ -4385,7 +4362,14 @@ import {
 } from \\"react-native\\";
 
 function StylePropClassAndCss(props) {
-  return <View style={{ ...styles.view1, ...props.attributes.style }} />;
+  return (
+    <View
+      style={{
+        ...styles.view1,
+        ...props.attributes.style,
+      }}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
@@ -5286,13 +5270,12 @@ export interface Props {
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
-
+  let ref = useRef<T>(null);
+  // Store current value in ref
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
-
   return ref;
 }
 
@@ -5388,17 +5371,18 @@ import {
 } from \\"react-native\\";
 
 type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
-
+  content: any;
+  // TODO: Implement this when support for dynamic CSS lands
   width?: number;
 };
 export interface ColumnProps {
-  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+  columns?: Column[];
 
-  space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
-
+  // TODO: Implement this when support for dynamic CSS lands
+  space?: number;
+  // TODO: Implement this when support for dynamic CSS lands
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\";
+  // TODO: Implement this when support for dynamic CSS lands
   reverseColumnsWhenStacked?: boolean;
 }
 
@@ -5586,15 +5570,12 @@ function CustomCode(props: CustomCodeProps) {
     if (elem.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.current.getElementsByTagName(\\"script\\");
-
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
-
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -5611,7 +5592,6 @@ function CustomCode(props: CustomCodeProps) {
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
-
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -5667,15 +5647,12 @@ function CustomCode(props: CustomCodeProps) {
     if (elem.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.current.getElementsByTagName(\\"script\\");
-
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
-
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -5692,7 +5669,6 @@ function CustomCode(props: CustomCodeProps) {
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
-
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -5781,7 +5757,6 @@ function FormComponent(props: FormProps) {
     }
   ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
-
     if (props.sendSubmissionsTo === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
@@ -5789,13 +5764,13 @@ function FormComponent(props: FormProps) {
         event.preventDefault();
         return;
       }
-
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
       let body: any;
-      const formData = new FormData(el); // TODO: maybe support null
+      const formData = new FormData(el);
 
+      // TODO: maybe support null
       const formPairs: {
         key: string;
         value: File | boolean | number | string | FileList;
@@ -5806,7 +5781,6 @@ function FormComponent(props: FormProps) {
         .map((el) => {
           let value: any;
           const key = (el as HTMLImageElement).name;
-
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
               if (el.checked) {
@@ -5820,7 +5794,6 @@ function FormComponent(props: FormProps) {
               value = el.checked;
             } else if (el.type === \\"number\\" || el.type === \\"range\\") {
               const num = el.valueAsNumber;
-
               if (!isNaN(num)) {
                 value = num;
               }
@@ -5833,18 +5806,15 @@ function FormComponent(props: FormProps) {
           } else {
             value = (el as HTMLInputElement).value;
           }
-
           return {
             key,
             value,
           };
         });
       let contentType = props.contentType;
-
       if (props.sendSubmissionsTo === \\"email\\") {
         contentType = \\"multipart/form-data\\";
       }
-
       Array.from(formPairs).forEach(({ value }) => {
         if (
           value instanceof File ||
@@ -5853,10 +5823,11 @@ function FormComponent(props: FormProps) {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      }); // TODO: send as urlEncoded or multipart by default
+      });
+
+      // TODO: send as urlEncoded or multipart by default
       // because of ease of use and reliability in browser API
       // for encoding the form?
-
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
@@ -5867,7 +5838,6 @@ function FormComponent(props: FormProps) {
         });
         body = JSON.stringify(json);
       }
-
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */ !(
@@ -6030,6 +6000,7 @@ import {
 import { useState, useRef, useEffect } from \\"react\\";
 
 // TODO: AMP Support?
+
 export interface ImageProps {
   _class?: string;
   image: string;
@@ -6039,12 +6010,12 @@ export interface ImageProps {
   width?: number;
   altText?: string;
   backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-
-  srcset?: string; // TODO: Implement support for custom aspect ratios
-
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
-
+  backgroundPosition?: string;
+  // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+  srcset?: string;
+  // TODO: Implement support for custom aspect ratios
+  aspectRatio?: number;
+  // TODO: This might not work as expected in terms of positioning
   children?: any;
 }
 
@@ -6078,7 +6049,6 @@ function Image(props: ImageProps) {
         if (pictureRef.current) {
           const rect = pictureRef.current.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
-
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
             setScrollListener(null);
@@ -6086,7 +6056,6 @@ function Image(props: ImageProps) {
           }
         }
       };
-
       setScrollListener(listener);
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -6333,7 +6302,8 @@ import {
 
 export interface RawTextProps {
   attributes?: any;
-  text?: string; // builderBlock?: any;
+  text?: string;
+  // builderBlock?: any;
 }
 
 function RawText(props: RawTextProps) {
@@ -7278,7 +7248,12 @@ function MyBasicComponent(props: any) {
   }));
 
   return (
-    <View style={{ ...styles.view1, ...styleState }}>
+    <View
+      style={{
+        ...styles.view1,
+        ...styleState,
+      }}
+    >
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -7326,7 +7301,6 @@ function ComponentWithContext(props: ComponentWithContextProps) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -7380,7 +7354,6 @@ function ComponentWithContext(props: ComponentWithContextProps) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -7460,7 +7433,6 @@ export interface ButtonProps {
   attributes?: any;
   text?: string;
   buttonText?: string; // no default value
-
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -7825,14 +7797,12 @@ function MultipleOnUpdateWithDeps(props: any) {
 
   useEffect(() => {
     console.log(\\"Runs when a or b changes\\", a, b);
-
     if (a === \\"a\\") {
       setA(\\"b\\");
     }
   }, [a, b]);
   useEffect(() => {
     console.log(\\"Runs when c or d changes\\", c, d);
-
     if (a === \\"a\\") {
       setA(\\"b\\");
     }
@@ -8547,13 +8517,10 @@ function RenderBlock(props: RenderBlockProps) {
       context: props.context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
-
     if (!componentName) {
       return null;
     }
-
     const ref = props.context.registeredComponents[componentName];
-
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
@@ -8614,7 +8581,6 @@ function RenderBlock(props: RenderBlockProps) {
       componentRef: component?.()?.component,
       componentOptions: {
         ...getBlockComponentOptions(useBlock()),
-
         /**
          * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
          * they are provided to the component itself directly.
@@ -8622,7 +8588,10 @@ function RenderBlock(props: RenderBlockProps) {
         ...(shouldWrap()
           ? {}
           : {
-              attributes: { ...attributes(), ...actions() },
+              attributes: {
+                ...attributes(),
+                ...actions(),
+              },
             }),
         customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
       },
@@ -8656,21 +8625,17 @@ function RenderBlock(props: RenderBlockProps) {
      * which will not work if there is a repeat.
      */
     const { repeat, ...blockWithoutRepeat } = props.block;
-
     if (!repeat?.collection) {
       return undefined;
     }
-
     const itemsArray = evaluate({
       code: repeat.collection,
       state: props.context.state,
       context: props.context.context,
     });
-
     if (!Array.isArray(itemsArray)) {
       return undefined;
     }
-
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
@@ -8694,7 +8659,6 @@ function RenderBlock(props: RenderBlockProps) {
     if (TARGET !== \\"reactNative\\") {
       return {};
     }
-
     const styles = getReactNativeBlockStyles({
       block: useBlock(),
       context: props.context,
@@ -8828,7 +8792,6 @@ function RenderContent(props: Props) {
         get content() {
           return 3;
         },
-
         get registeredComponents() {
           return 4;
         },
@@ -9495,7 +9458,14 @@ import {
 } from \\"react-native\\";
 
 function StylePropClassAndCss(props: any) {
-  return <View style={{ ...styles.view1, ...props.attributes.style }} />;
+  return (
+    <View
+      style={{
+        ...styles.view1,
+        ...props.attributes.style,
+      }}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
