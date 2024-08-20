@@ -33,7 +33,7 @@ import {
   runPreJsonPlugins,
 } from '@/modules/plugins';
 import { hashCodeAsString } from '@/symbols/symbol-processor';
-import { MitosisComponent } from '@/types/mitosis-component';
+import { BaseHook, MitosisComponent } from '@/types/mitosis-component';
 import { Binding, MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { flow, pipe } from 'fp-ts/lib/function';
@@ -457,11 +457,11 @@ export const blockToAngular = ({
         }
         json.bindings['spreadRef'] = { code: refName, type: 'single' };
         root.refs[refName] = { argument: '' };
-        root.hooks.onInit = root.hooks.onInit || { code: '' };
+        root.hooks.onViewInit = (root.hooks.onViewInit as BaseHook) || { code: '' };
         const spreadCode = json.bindings[key]?.code.startsWith('{')
           ? json.bindings[key]?.code
           : `this.${json.bindings[key]?.code}`;
-        root.hooks.onInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`;
+        root.hooks.onViewInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`;
         root.hooks.onUpdate = root.hooks.onUpdate || [];
         root.hooks.onUpdate.push({
           code: `this.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`,
@@ -1122,6 +1122,12 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
                   : ''
               }
             }`
+      }
+
+      ${
+        (json.hooks.onViewInit as BaseHook)?.code
+          ? `ngAfterViewInit() { ${(json.hooks.onViewInit as BaseHook).code} }`
+          : ''
       }
 
       ${
