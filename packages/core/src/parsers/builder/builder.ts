@@ -777,10 +777,10 @@ const getHooks = (content: BuilderContent) => {
     return parseJsx(`
     export default function TemporaryComponent() {
       ${
-        // Mitosis parser looks for useState to be a variable assignment,
+        // Mitosis parser looks for useStore to be a variable assignment,
         // but in Builder that's not how it works. For now do a replace to
         // easily resuse the same parsing code as this is the only difference
-        code.replace(`useState(`, `var state = useState(`)
+        code.replace(`useStore(`, `var state = useStore(`)
       }
     }`);
   } catch (err) {
@@ -790,7 +790,7 @@ const getHooks = (content: BuilderContent) => {
 };
 
 /**
- * Take Builder custom jsCode and extract the contents of the useState hook
+ * Take Builder custom jsCode and extract the contents of the useStore hook
  * and return it as a JS object along with the inputted code with the hook
  * code extracted
  */
@@ -806,9 +806,9 @@ export function extractStateHook(code: string): {
     const statement = body[i];
     if (types.isExpressionStatement(statement)) {
       const { expression } = statement;
-      // Check for useState
+      // Check for useStore
       if (types.isCallExpression(expression)) {
-        if (types.isIdentifier(expression.callee) && expression.callee.name === 'useState') {
+        if (types.isIdentifier(expression.callee) && expression.callee.name === 'useStore') {
           const arg = expression.arguments[0];
           if (types.isObjectExpression(arg)) {
             state = parseStateObjectToMitosisState(arg);

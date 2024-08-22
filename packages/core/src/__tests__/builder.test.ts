@@ -401,3 +401,103 @@ describe('Builder', () => {
     expect(out).toMatchSnapshot();
   });
 });
+
+const bindingJson = {
+  data: {
+    inputs: [
+      {
+        '@type': '@builder.io/core:Field',
+        meta: {},
+        name: 'text',
+        type: 'text',
+        defaultValue: 'Hello',
+        required: false,
+        subFields: [],
+        helperText: '',
+        autoFocus: false,
+        simpleTextOnly: false,
+        disallowRemove: false,
+        broadcast: false,
+        bubble: false,
+        hideFromUI: false,
+        hideFromFieldsEditor: false,
+        showTemplatePicker: true,
+        permissionsRequiredToEdit: '',
+        advanced: false,
+        copyOnAdd: true,
+        onChange: '',
+        showIf: '',
+        mandatory: false,
+        hidden: false,
+        noPhotoPicker: false,
+        model: '',
+        supportsAiGeneration: false,
+        defaultCollapsed: false,
+      },
+    ],
+    cssCode: 'builder-component { max-width: none !important; }',
+    blocks: [
+      {
+        '@type': '@builder.io/sdk:Element',
+        '@version': 2,
+        id: 'builder-1e4cca42847b4712ae978bc679bf1d4a',
+        meta: {
+          id: '103:1952',
+          type: 'COMPONENT',
+          name: 'Frame 94',
+          componentProperties: null,
+          fromFigma: true,
+          vcpImportId: 'vcp-635bba9daed9496f82e2b1009dff92a2',
+        },
+        children: [
+          {
+            '@type': '@builder.io/sdk:Element',
+            '@version': 2,
+            bindings: {
+              'component.options.text': 'var _virtual_index=state.text;return _virtual_index',
+            },
+            code: { bindings: { 'component.options.text': 'state.text' } },
+            layerName: 'Book an Appointment',
+            id: 'builder-559bbc2a33124e8e843ddec300dcb5a9',
+            meta: {
+              id: '103:1951',
+              type: 'TEXT',
+              name: 'Book an Appointment',
+              componentPropertyReferences: { characters: 'Text#103:0' },
+            },
+            component: { name: 'Text', options: { text: 'BUY NOW' } },
+          },
+        ],
+        responsiveStyles: {
+          large: {
+            backgroundColor: 'rgba(0, 0, 0, 1)',
+            display: 'flex',
+            paddingLeft: '72px',
+            paddingRight: '72px',
+            paddingTop: '25px',
+            paddingBottom: '25px',
+            alignItems: 'start',
+            gap: '10px',
+            fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif',
+            fontSize: '16px',
+            color: 'rgba(255, 255, 255, 1)',
+            fontWeight: '700',
+            textTransform: 'uppercase',
+            justifyContent: 'start',
+          },
+        },
+      },
+    ],
+  },
+};
+
+describe('builder', () => {
+  test('binding', () => {
+    const component = builderContentToMitosisComponent(bindingJson as any as BuilderContent);
+    expect(component).toMatchSnapshot();
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component,
+    });
+    expect(mitosis).toMatchSnapshot();
+  });
+});
