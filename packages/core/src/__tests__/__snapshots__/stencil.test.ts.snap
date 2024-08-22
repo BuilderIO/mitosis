@@ -410,12 +410,13 @@ exports[`Stencil > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null);
-  // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
+
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
+
   return ref;
 }
 
@@ -602,12 +603,15 @@ export default class CustomCode {
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
+
           this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -624,6 +628,7 @@ export default class CustomCode {
           if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -672,12 +677,15 @@ export default class CustomCode {
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
+
           this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -694,6 +702,7 @@ export default class CustomCode {
           if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -774,6 +783,7 @@ export default class FormComponent {
   }
   onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
+
     if (this.sendSubmissionsTo === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
@@ -781,13 +791,13 @@ export default class FormComponent {
         event.preventDefault();
         return;
       }
+
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
       let body;
-      const formData = new FormData(el);
+      const formData = new FormData(el); // TODO: maybe support null
 
-      // TODO: maybe support null
       const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
@@ -795,6 +805,7 @@ export default class FormComponent {
         .map((el) => {
           let value;
           const key = el.name;
+
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
               if (el.checked) {
@@ -808,6 +819,7 @@ export default class FormComponent {
               value = el.checked;
             } else if (el.type === \\"number\\" || el.type === \\"range\\") {
               const num = el.valueAsNumber;
+
               if (!isNaN(num)) {
                 value = num;
               }
@@ -820,15 +832,18 @@ export default class FormComponent {
           } else {
             value = el.value;
           }
+
           return {
             key,
             value,
           };
         });
       let contentType = this.contentType;
+
       if (this.sendSubmissionsTo === \\"email\\") {
         contentType = \\"multipart/form-data\\";
       }
+
       Array.from(formPairs).forEach(({ value }) => {
         if (
           value instanceof File ||
@@ -837,11 +852,10 @@ export default class FormComponent {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      });
-
-      // TODO: send as urlEncoded or multipart by default
+      }); // TODO: send as urlEncoded or multipart by default
       // because of ease of use and reliability in browser API
       // for encoding the form?
+
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
@@ -852,6 +866,7 @@ export default class FormComponent {
         });
         body = JSON.stringify(json);
       }
+
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */
@@ -860,17 +875,21 @@ export default class FormComponent {
           headers[\\"content-type\\"] = contentType;
         }
       }
+
       const presubmitEvent = new CustomEvent(\\"presubmit\\", {
         detail: {
           body,
         },
       });
+
       if (formRef) {
         formRef.dispatchEvent(presubmitEvent);
+
         if (presubmitEvent.defaultPrevented) {
           return;
         }
       }
+
       this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -878,9 +897,8 @@ export default class FormComponent {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\"
-          ? formUrl
-          : this.action /* TODO: throw error if no action URL */,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+        /* TODO: throw error if no action URL */
         {
           body,
           headers,
@@ -890,25 +908,31 @@ export default class FormComponent {
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
+
           if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
             body = await res.json();
           } else {
             body = await res.text();
           }
+
           if (!res.ok && this.errorMessagePath) {
             /* TODO: allow supplying an error formatter function */
             let message = get(body, this.errorMessagePath);
+
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
             error: - email has been taken */
                 message = JSON.stringify(message);
               }
+
               this.formErrorMessage = message;
             }
           }
+
           this.responseData = body;
           this.formState = res.ok ? \\"success\\" : \\"error\\";
+
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: {
@@ -916,18 +940,21 @@ export default class FormComponent {
                 body,
               },
             });
+
             if (formRef) {
               formRef.dispatchEvent(submitSuccessEvent);
+
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
               /* TODO: option to turn this on/off? */
+
               if (this.resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-
             /* TODO: client side route event first that can be preventDefaulted */
+
             if (this.successUrl) {
               if (formRef) {
                 const event = new CustomEvent(\\"route\\", {
@@ -936,6 +963,7 @@ export default class FormComponent {
                   },
                 });
                 formRef.dispatchEvent(event);
+
                 if (!event.defaultPrevented) {
                   location.href = this.successUrl;
                 }
@@ -951,12 +979,15 @@ export default class FormComponent {
               error: err,
             },
           });
+
           if (formRef) {
             formRef.dispatchEvent(submitErrorEvent);
+
             if (submitErrorEvent.defaultPrevented) {
               return;
             }
           }
+
           this.responseData = err;
           this.formState = \\"error\\";
         }
@@ -1061,6 +1092,7 @@ export default class Image {
         if (pictureRef) {
           const rect = pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
+
           if (rect.top < window.innerHeight + buffer) {
             this.load = true;
             this.scrollListener = null;
@@ -1068,6 +1100,7 @@ export default class Image {
           }
         }
       };
+
       this.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -2346,14 +2379,19 @@ export default class Comp {
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
     };
+
     onMountHook_0();
+
     const onMountHook_1 = () => {
       console.log(\\"Another one runs on Mount\\");
     };
+
     onMountHook_1();
+
     const onMountHook_2 = () => {
       console.log(\\"SSR runs on Mount\\");
     };
+
     onMountHook_2();
   }
 
@@ -2542,14 +2580,14 @@ export default class OnUpdate {
 `;
 
 exports[`Stencil > jsx > Javascript Test > renderBlock 1`] = `
-"':' expected. (201:15)
-  199 |        return (
-  200 |
-> 201 |          {this.shouldWrap ? (
+"':' expected. (205:15)
+  203 |        return (
+  204 |
+> 205 |          {this.shouldWrap ? (
       |               ^
-  202 |      <>{isEmptyHtmlElement(this.tag) ? (
-  203 |      <state.tag  {...(state.attributes)}  {...(state.actions)} ></state.tag>
-  204 |    ) : null}"
+  206 |      <>{isEmptyHtmlElement(this.tag) ? (
+  207 |      <state.tag  {...(state.attributes)}  {...(state.actions)} ></state.tag>
+  208 |    ) : null}"
 `;
 
 exports[`Stencil > jsx > Javascript Test > renderContentExample 1`] = `
@@ -3431,12 +3469,13 @@ exports[`Stencil > jsx > Typescript Test > BasicRefPrevious 1`] = `
 "export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null);
-  // Store current value in ref
+  let ref = useRef<T>(null); // Store current value in ref
+
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
+
   return ref;
 }
 
@@ -3625,12 +3664,15 @@ export default class CustomCode {
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
+
           this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -3647,6 +3689,7 @@ export default class CustomCode {
           if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -3695,12 +3738,15 @@ export default class CustomCode {
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (this.scriptsInserted.includes(script.src)) {
             continue;
           }
+
           this.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -3717,6 +3763,7 @@ export default class CustomCode {
           if (this.scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             this.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -3801,6 +3848,7 @@ export default class FormComponent {
     }
   ) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
+
     if (this.sendSubmissionsTo === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
@@ -3808,13 +3856,13 @@ export default class FormComponent {
         event.preventDefault();
         return;
       }
+
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
       let body: any;
-      const formData = new FormData(el);
+      const formData = new FormData(el); // TODO: maybe support null
 
-      // TODO: maybe support null
       const formPairs: {
         key: string;
         value: File | boolean | number | string | FileList;
@@ -3825,6 +3873,7 @@ export default class FormComponent {
         .map((el) => {
           let value: any;
           const key = (el as HTMLImageElement).name;
+
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
               if (el.checked) {
@@ -3838,6 +3887,7 @@ export default class FormComponent {
               value = el.checked;
             } else if (el.type === \\"number\\" || el.type === \\"range\\") {
               const num = el.valueAsNumber;
+
               if (!isNaN(num)) {
                 value = num;
               }
@@ -3850,15 +3900,18 @@ export default class FormComponent {
           } else {
             value = (el as HTMLInputElement).value;
           }
+
           return {
             key,
             value,
           };
         });
       let contentType = this.contentType;
+
       if (this.sendSubmissionsTo === \\"email\\") {
         contentType = \\"multipart/form-data\\";
       }
+
       Array.from(formPairs).forEach(({ value }) => {
         if (
           value instanceof File ||
@@ -3867,11 +3920,10 @@ export default class FormComponent {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      });
-
-      // TODO: send as urlEncoded or multipart by default
+      }); // TODO: send as urlEncoded or multipart by default
       // because of ease of use and reliability in browser API
       // for encoding the form?
+
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
@@ -3882,6 +3934,7 @@ export default class FormComponent {
         });
         body = JSON.stringify(json);
       }
+
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */
@@ -3890,17 +3943,21 @@ export default class FormComponent {
           headers[\\"content-type\\"] = contentType;
         }
       }
+
       const presubmitEvent = new CustomEvent(\\"presubmit\\", {
         detail: {
           body,
         },
       });
+
       if (formRef) {
         formRef.dispatchEvent(presubmitEvent);
+
         if (presubmitEvent.defaultPrevented) {
           return;
         }
       }
+
       this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -3908,9 +3965,8 @@ export default class FormComponent {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\"
-          ? formUrl
-          : this.action! /* TODO: throw error if no action URL */,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
+        /* TODO: throw error if no action URL */
         {
           body,
           headers,
@@ -3920,25 +3976,31 @@ export default class FormComponent {
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
+
           if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
             body = await res.json();
           } else {
             body = await res.text();
           }
+
           if (!res.ok && this.errorMessagePath) {
             /* TODO: allow supplying an error formatter function */
             let message = get(body, this.errorMessagePath);
+
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
             error: - email has been taken */
                 message = JSON.stringify(message);
               }
+
               this.formErrorMessage = message;
             }
           }
+
           this.responseData = body;
           this.formState = res.ok ? \\"success\\" : \\"error\\";
+
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: {
@@ -3946,18 +4008,21 @@ export default class FormComponent {
                 body,
               },
             });
+
             if (formRef) {
               formRef.dispatchEvent(submitSuccessEvent);
+
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
               /* TODO: option to turn this on/off? */
+
               if (this.resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-
             /* TODO: client side route event first that can be preventDefaulted */
+
             if (this.successUrl) {
               if (formRef) {
                 const event = new CustomEvent(\\"route\\", {
@@ -3966,6 +4031,7 @@ export default class FormComponent {
                   },
                 });
                 formRef.dispatchEvent(event);
+
                 if (!event.defaultPrevented) {
                   location.href = this.successUrl;
                 }
@@ -3981,12 +4047,15 @@ export default class FormComponent {
               error: err,
             },
           });
+
           if (formRef) {
             formRef.dispatchEvent(submitErrorEvent);
+
             if (submitErrorEvent.defaultPrevented) {
               return;
             }
           }
+
           this.responseData = err;
           this.formState = \\"error\\";
         }
@@ -4091,6 +4160,7 @@ export default class Image {
         if (pictureRef) {
           const rect = pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
+
           if (rect.top < window.innerHeight + buffer) {
             this.load = true;
             this.scrollListener = null;
@@ -4098,6 +4168,7 @@ export default class Image {
           }
         }
       };
+
       this.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -5379,14 +5450,19 @@ export default class Comp {
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
     };
+
     onMountHook_0();
+
     const onMountHook_1 = () => {
       console.log(\\"Another one runs on Mount\\");
     };
+
     onMountHook_1();
+
     const onMountHook_2 = () => {
       console.log(\\"SSR runs on Mount\\");
     };
+
     onMountHook_2();
   }
 
@@ -5575,14 +5651,14 @@ export default class OnUpdate {
 `;
 
 exports[`Stencil > jsx > Typescript Test > renderBlock 1`] = `
-"':' expected. (206:15)
-  204 |        return (
-  205 |
-> 206 |          {this.shouldWrap ? (
+"':' expected. (210:15)
+  208 |        return (
+  209 |
+> 210 |          {this.shouldWrap ? (
       |               ^
-  207 |      <>{isEmptyHtmlElement(this.tag) ? (
-  208 |      <state.tag  {...(state.attributes)}  {...(state.actions)} ></state.tag>
-  209 |    ) : null}"
+  211 |      <>{isEmptyHtmlElement(this.tag) ? (
+  212 |      <state.tag  {...(state.attributes)}  {...(state.actions)} ></state.tag>
+  213 |    ) : null}"
 `;
 
 exports[`Stencil > jsx > Typescript Test > renderContentExample 1`] = `

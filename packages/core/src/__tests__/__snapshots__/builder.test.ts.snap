@@ -222,12 +222,15 @@ Object.assign(state, {
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
+
           state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -244,6 +247,7 @@ Object.assign(state, {
           if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -268,12 +272,15 @@ useState({
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
+
           state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -290,6 +297,7 @@ useState({
           if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -322,12 +330,15 @@ export default function MyComponent(props) {
       if (elem.current && typeof window !== \\"undefined\\") {
         /** @type {HTMLScriptElement[]} */
         const scripts = elem.current.getElementsByTagName(\\"script\\");
+
         for (let i = 0; i < scripts.length; i++) {
           const script = scripts[i];
+
           if (script.src) {
             if (state.scriptsInserted.includes(script.src)) {
               continue;
             }
+
             state.scriptsInserted.push(script.src);
             const newScript = document.createElement(\\"script\\");
             newScript.async = true;
@@ -344,6 +355,7 @@ export default function MyComponent(props) {
             if (state.scriptsRun.includes(script.innerText)) {
               continue;
             }
+
             try {
               state.scriptsRun.push(script.innerText);
               new Function(script.innerText)();
@@ -407,12 +419,15 @@ Object.assign(state, {
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
+
           state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -429,6 +444,7 @@ Object.assign(state, {
           if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -453,12 +469,15 @@ useState({
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (state.scriptsInserted.includes(script.src)) {
             continue;
           }
+
           state.scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -475,6 +494,7 @@ useState({
           if (state.scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -507,12 +527,15 @@ export default function MyComponent(props) {
       if (elem.current && typeof window !== \\"undefined\\") {
         /** @type {HTMLScriptElement[]} */
         const scripts = elem.current.getElementsByTagName(\\"script\\");
+
         for (let i = 0; i < scripts.length; i++) {
           const script = scripts[i];
+
           if (script.src) {
             if (state.scriptsInserted.includes(script.src)) {
               continue;
             }
+
             state.scriptsInserted.push(script.src);
             const newScript = document.createElement(\\"script\\");
             newScript.async = true;
@@ -529,6 +552,7 @@ export default function MyComponent(props) {
             if (state.scriptsRun.includes(script.innerText)) {
               continue;
             }
+
             try {
               state.scriptsRun.push(script.innerText);
               new Function(script.innerText)();
@@ -678,6 +702,7 @@ if (state.useLazyLoading()) {
     if (pictureRef) {
       const rect = pictureRef.getBoundingClientRect();
       const buffer = window.innerHeight / 2;
+
       if (rect.top < window.innerHeight + buffer) {
         state.load = true;
         state.scrollListener = null;
@@ -685,6 +710,7 @@ if (state.useLazyLoading()) {
       }
     }
   };
+
   state.scrollListener = listener;
   window.addEventListener(\\"scroll\\", listener, {
     capture: true,
@@ -720,6 +746,7 @@ onMount(() => {
       if (pictureRef) {
         const rect = pictureRef.getBoundingClientRect();
         const buffer = window.innerHeight / 2;
+
         if (rect.top < window.innerHeight + buffer) {
           state.load = true;
           state.scrollListener = null;
@@ -727,6 +754,7 @@ onMount(() => {
         }
       }
     };
+
     state.scrollListener = listener;
     window.addEventListener(\\"scroll\\", listener, {
       capture: true,
@@ -772,6 +800,7 @@ export default function MyComponent(props) {
         if (pictureRef.current) {
           const rect = pictureRef.current.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
+
           if (rect.top < window.innerHeight + buffer) {
             state.load = true;
             state.scrollListener = null;
@@ -779,6 +808,7 @@ export default function MyComponent(props) {
           }
         }
       };
+
       state.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,

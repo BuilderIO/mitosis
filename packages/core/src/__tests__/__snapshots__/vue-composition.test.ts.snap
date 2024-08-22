@@ -363,12 +363,13 @@ import { ref, watch } from \\"vue\\";
 export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null);
-  // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
+
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
+
   return ref;
 }
 
@@ -546,12 +547,15 @@ function findAndRunScripts() {
   if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
     const scripts = elem.value.getElementsByTagName(\\"script\\");
+
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
+
       if (script.src) {
         if (scriptsInserted.value.includes(script.src)) {
           continue;
         }
+
         scriptsInserted.value.push(script.src);
         const newScript = document.createElement(\\"script\\");
         newScript.async = true;
@@ -568,6 +572,7 @@ function findAndRunScripts() {
         if (scriptsRun.value.includes(script.innerText)) {
           continue;
         }
+
         try {
           scriptsRun.value.push(script.innerText);
           new Function(script.innerText)();
@@ -608,12 +613,15 @@ function findAndRunScripts() {
   if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
     const scripts = elem.value.getElementsByTagName(\\"script\\");
+
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
+
       if (script.src) {
         if (scriptsInserted.value.includes(script.src)) {
           continue;
         }
+
         scriptsInserted.value.push(script.src);
         const newScript = document.createElement(\\"script\\");
         newScript.async = true;
@@ -630,6 +638,7 @@ function findAndRunScripts() {
         if (scriptsRun.value.includes(script.innerText)) {
           continue;
         }
+
         try {
           scriptsRun.value.push(script.innerText);
           new Function(script.innerText)();
@@ -738,6 +747,7 @@ const submissionState = computed(() => {
 
 function onSubmit(event) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
   if (props.sendSubmissionsTo === \\"zapier\\") {
     event.preventDefault();
   } else if (sendWithJs) {
@@ -745,13 +755,13 @@ function onSubmit(event) {
       event.preventDefault();
       return;
     }
+
     event.preventDefault();
     const el = event.currentTarget;
     const headers = props.customHeaders || {};
     let body;
-    const formData = new FormData(el);
+    const formData = new FormData(el); // TODO: maybe support null
 
-    // TODO: maybe support null
     const formPairs = Array.from(
       event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
     )
@@ -759,6 +769,7 @@ function onSubmit(event) {
       .map((el) => {
         let value;
         const key = el.name;
+
         if (el instanceof HTMLInputElement) {
           if (el.type === \\"radio\\") {
             if (el.checked) {
@@ -772,6 +783,7 @@ function onSubmit(event) {
             value = el.checked;
           } else if (el.type === \\"number\\" || el.type === \\"range\\") {
             const num = el.valueAsNumber;
+
             if (!isNaN(num)) {
               value = num;
             }
@@ -784,15 +796,18 @@ function onSubmit(event) {
         } else {
           value = el.value;
         }
+
         return {
           key,
           value,
         };
       });
     let contentType = props.contentType;
+
     if (props.sendSubmissionsTo === \\"email\\") {
       contentType = \\"multipart/form-data\\";
     }
+
     Array.from(formPairs).forEach(({ value }) => {
       if (
         value instanceof File ||
@@ -801,11 +816,10 @@ function onSubmit(event) {
       ) {
         contentType = \\"multipart/form-data\\";
       }
-    });
-
-    // TODO: send as urlEncoded or multipart by default
+    }); // TODO: send as urlEncoded or multipart by default
     // because of ease of use and reliability in browser API
     // for encoding the form?
+
     if (contentType !== \\"application/json\\") {
       body = formData;
     } else {
@@ -816,6 +830,7 @@ function onSubmit(event) {
       });
       body = JSON.stringify(json);
     }
+
     if (contentType && contentType !== \\"multipart/form-data\\") {
       if (
         /* Zapier doesn't allow content-type header to be sent from browsers */
@@ -824,17 +839,21 @@ function onSubmit(event) {
         headers[\\"content-type\\"] = contentType;
       }
     }
+
     const presubmitEvent = new CustomEvent(\\"presubmit\\", {
       detail: {
         body,
       },
     });
+
     if (formRef.value) {
       formRef.value.dispatchEvent(presubmitEvent);
+
       if (presubmitEvent.defaultPrevented) {
         return;
       }
     }
+
     formState.value = \\"sending\\";
     const formUrl = \`\${
       builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -842,9 +861,8 @@ function onSubmit(event) {
       props.sendSubmissionsToEmail || \\"\\"
     )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
     fetch(
-      props.sendSubmissionsTo === \\"email\\"
-        ? formUrl
-        : props.action /* TODO: throw error if no action URL */,
+      props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+      /* TODO: throw error if no action URL */
       {
         body,
         headers,
@@ -854,25 +872,31 @@ function onSubmit(event) {
       async (res) => {
         let body;
         const contentType = res.headers.get(\\"content-type\\");
+
         if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
           body = await res.json();
         } else {
           body = await res.text();
         }
+
         if (!res.ok && props.errorMessagePath) {
           /* TODO: allow supplying an error formatter function */
           let message = get(body, props.errorMessagePath);
+
           if (message) {
             if (typeof message !== \\"string\\") {
               /* TODO: ideally convert json to yaml so it woul dbe like
          error: - email has been taken */
               message = JSON.stringify(message);
             }
+
             formErrorMessage.value = message;
           }
         }
+
         responseData.value = body;
         formState.value = res.ok ? \\"success\\" : \\"error\\";
+
         if (res.ok) {
           const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
             detail: {
@@ -880,18 +904,21 @@ function onSubmit(event) {
               body,
             },
           });
+
           if (formRef.value) {
             formRef.value.dispatchEvent(submitSuccessEvent);
+
             if (submitSuccessEvent.defaultPrevented) {
               return;
             }
             /* TODO: option to turn this on/off? */
+
             if (props.resetFormOnSubmit !== false) {
               formRef.value.reset();
             }
           }
-
           /* TODO: client side route event first that can be preventDefaulted */
+
           if (props.successUrl) {
             if (formRef.value) {
               const event = new CustomEvent(\\"route\\", {
@@ -900,6 +927,7 @@ function onSubmit(event) {
                 },
               });
               formRef.value.dispatchEvent(event);
+
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
               }
@@ -915,12 +943,15 @@ function onSubmit(event) {
             error: err,
           },
         });
+
         if (formRef.value) {
           formRef.value.dispatchEvent(submitErrorEvent);
+
           if (submitErrorEvent.defaultPrevented) {
             return;
           }
         }
+
         responseData.value = err;
         formState.value = \\"error\\";
       }
@@ -984,6 +1015,7 @@ onMounted(() => {
       if (pictureRef.value) {
         const rect = pictureRef.value.getBoundingClientRect();
         const buffer = window.innerHeight / 2;
+
         if (rect.top < window.innerHeight + buffer) {
           load.value = true;
           scrollListener.value = null;
@@ -991,6 +1023,7 @@ onMounted(() => {
         }
       }
     };
+
     scrollListener.value = listener;
     window.addEventListener(\\"scroll\\", listener, {
       capture: true,
@@ -1897,6 +1930,7 @@ watch(
   () => [a.value, b.value],
   () => {
     console.log(\\"Runs when a or b changes\\", a, b);
+
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
@@ -1907,6 +1941,7 @@ watch(
   () => [c.value, d.value],
   () => {
     console.log(\\"Runs when c or d changes\\", c, d);
+
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
@@ -2287,10 +2322,13 @@ const component = computed(() => {
     context: props.context.context,
     shouldEvaluateBindings: false,
   }).component?.name;
+
   if (!componentName) {
     return null;
   }
+
   const ref = props.context.registeredComponents[componentName];
+
   if (!ref) {
     // TODO: Public doc page with more info about this message
     console.warn(\`
@@ -2345,6 +2383,7 @@ const renderComponentProps = computed(() => {
     componentRef: component?.component,
     componentOptions: {
       ...getBlockComponentOptions(useBlock),
+
       /**
        * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
        * they are provided to the component itself directly.
@@ -2352,10 +2391,7 @@ const renderComponentProps = computed(() => {
       ...(shouldWrap
         ? {}
         : {
-            attributes: {
-              ...attributes,
-              ...actions,
-            },
+            attributes: { ...attributes, ...actions },
           }),
       customBreakpoints: childrenContext?.content?.meta?.breakpoints,
     },
@@ -2386,17 +2422,21 @@ const repeatItemData = computed(() => {
    * which will not work if there is a repeat.
    */
   const { repeat, ...blockWithoutRepeat } = props.block;
+
   if (!repeat?.collection) {
     return undefined;
   }
+
   const itemsArray = evaluate({
     code: repeat.collection,
     state: props.context.state,
     context: props.context.context,
   });
+
   if (!Array.isArray(itemsArray)) {
     return undefined;
   }
+
   const collectionName = repeat.collection.split(\\".\\").pop();
   const itemNameToUse =
     repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
@@ -2419,6 +2459,7 @@ const inheritedTextStyles = computed(() => {
   if (TARGET !== \\"reactNative\\") {
     return {};
   }
+
   const styles = getReactNativeBlockStyles({
     block: useBlock,
     context: props.context,
@@ -3328,12 +3369,13 @@ import { ref, watch } from \\"vue\\";
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null);
-  // Store current value in ref
+  let ref = useRef<T>(null); // Store current value in ref
+
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
+
   return ref;
 }
 
@@ -3396,18 +3438,17 @@ exports[`Vue > jsx > Typescript Test > Columns 1`] = `
 
 <script setup lang=\\"ts\\">
 type Column = {
-  content: any;
-  // TODO: Implement this when support for dynamic CSS lands
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
   width?: number;
 };
 export interface ColumnProps {
-  columns?: Column[];
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
 
-  // TODO: Implement this when support for dynamic CSS lands
-  space?: number;
-  // TODO: Implement this when support for dynamic CSS lands
-  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\";
-  // TODO: Implement this when support for dynamic CSS lands
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
   reverseColumnsWhenStacked?: boolean;
 }
 
@@ -3556,12 +3597,15 @@ function findAndRunScripts() {
   if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
     const scripts = elem.value.getElementsByTagName(\\"script\\");
+
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
+
       if (script.src) {
         if (scriptsInserted.value.includes(script.src)) {
           continue;
         }
+
         scriptsInserted.value.push(script.src);
         const newScript = document.createElement(\\"script\\");
         newScript.async = true;
@@ -3578,6 +3622,7 @@ function findAndRunScripts() {
         if (scriptsRun.value.includes(script.innerText)) {
           continue;
         }
+
         try {
           scriptsRun.value.push(script.innerText);
           new Function(script.innerText)();
@@ -3623,12 +3668,15 @@ function findAndRunScripts() {
   if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
     const scripts = elem.value.getElementsByTagName(\\"script\\");
+
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
+
       if (script.src) {
         if (scriptsInserted.value.includes(script.src)) {
           continue;
         }
+
         scriptsInserted.value.push(script.src);
         const newScript = document.createElement(\\"script\\");
         newScript.async = true;
@@ -3645,6 +3693,7 @@ function findAndRunScripts() {
         if (scriptsRun.value.includes(script.innerText)) {
           continue;
         }
+
         try {
           scriptsRun.value.push(script.innerText);
           new Function(script.innerText)();
@@ -3762,6 +3811,7 @@ function onSubmit(
   }
 ) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
   if (props.sendSubmissionsTo === \\"zapier\\") {
     event.preventDefault();
   } else if (sendWithJs) {
@@ -3769,13 +3819,13 @@ function onSubmit(
       event.preventDefault();
       return;
     }
+
     event.preventDefault();
     const el = event.currentTarget;
     const headers = props.customHeaders || {};
     let body: any;
-    const formData = new FormData(el);
+    const formData = new FormData(el); // TODO: maybe support null
 
-    // TODO: maybe support null
     const formPairs: {
       key: string;
       value: File | boolean | number | string | FileList;
@@ -3786,6 +3836,7 @@ function onSubmit(
       .map((el) => {
         let value: any;
         const key = (el as HTMLImageElement).name;
+
         if (el instanceof HTMLInputElement) {
           if (el.type === \\"radio\\") {
             if (el.checked) {
@@ -3799,6 +3850,7 @@ function onSubmit(
             value = el.checked;
           } else if (el.type === \\"number\\" || el.type === \\"range\\") {
             const num = el.valueAsNumber;
+
             if (!isNaN(num)) {
               value = num;
             }
@@ -3811,15 +3863,18 @@ function onSubmit(
         } else {
           value = (el as HTMLInputElement).value;
         }
+
         return {
           key,
           value,
         };
       });
     let contentType = props.contentType;
+
     if (props.sendSubmissionsTo === \\"email\\") {
       contentType = \\"multipart/form-data\\";
     }
+
     Array.from(formPairs).forEach(({ value }) => {
       if (
         value instanceof File ||
@@ -3828,11 +3883,10 @@ function onSubmit(
       ) {
         contentType = \\"multipart/form-data\\";
       }
-    });
-
-    // TODO: send as urlEncoded or multipart by default
+    }); // TODO: send as urlEncoded or multipart by default
     // because of ease of use and reliability in browser API
     // for encoding the form?
+
     if (contentType !== \\"application/json\\") {
       body = formData;
     } else {
@@ -3843,6 +3897,7 @@ function onSubmit(
       });
       body = JSON.stringify(json);
     }
+
     if (contentType && contentType !== \\"multipart/form-data\\") {
       if (
         /* Zapier doesn't allow content-type header to be sent from browsers */
@@ -3851,17 +3906,21 @@ function onSubmit(
         headers[\\"content-type\\"] = contentType;
       }
     }
+
     const presubmitEvent = new CustomEvent(\\"presubmit\\", {
       detail: {
         body,
       },
     });
+
     if (formRef.value) {
       formRef.value.dispatchEvent(presubmitEvent);
+
       if (presubmitEvent.defaultPrevented) {
         return;
       }
     }
+
     formState.value = \\"sending\\";
     const formUrl = \`\${
       builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -3869,9 +3928,8 @@ function onSubmit(
       props.sendSubmissionsToEmail || \\"\\"
     )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
     fetch(
-      props.sendSubmissionsTo === \\"email\\"
-        ? formUrl
-        : props.action! /* TODO: throw error if no action URL */,
+      props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
+      /* TODO: throw error if no action URL */
       {
         body,
         headers,
@@ -3881,25 +3939,31 @@ function onSubmit(
       async (res) => {
         let body;
         const contentType = res.headers.get(\\"content-type\\");
+
         if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
           body = await res.json();
         } else {
           body = await res.text();
         }
+
         if (!res.ok && props.errorMessagePath) {
           /* TODO: allow supplying an error formatter function */
           let message = get(body, props.errorMessagePath);
+
           if (message) {
             if (typeof message !== \\"string\\") {
               /* TODO: ideally convert json to yaml so it woul dbe like
          error: - email has been taken */
               message = JSON.stringify(message);
             }
+
             formErrorMessage.value = message;
           }
         }
+
         responseData.value = body;
         formState.value = res.ok ? \\"success\\" : \\"error\\";
+
         if (res.ok) {
           const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
             detail: {
@@ -3907,18 +3971,21 @@ function onSubmit(
               body,
             },
           });
+
           if (formRef.value) {
             formRef.value.dispatchEvent(submitSuccessEvent);
+
             if (submitSuccessEvent.defaultPrevented) {
               return;
             }
             /* TODO: option to turn this on/off? */
+
             if (props.resetFormOnSubmit !== false) {
               formRef.value.reset();
             }
           }
-
           /* TODO: client side route event first that can be preventDefaulted */
+
           if (props.successUrl) {
             if (formRef.value) {
               const event = new CustomEvent(\\"route\\", {
@@ -3927,6 +3994,7 @@ function onSubmit(
                 },
               });
               formRef.value.dispatchEvent(event);
+
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
               }
@@ -3942,12 +4010,15 @@ function onSubmit(
             error: err,
           },
         });
+
         if (formRef.value) {
           formRef.value.dispatchEvent(submitErrorEvent);
+
           if (submitErrorEvent.defaultPrevented) {
             return;
           }
         }
+
         responseData.value = err;
         formState.value = \\"error\\";
       }
@@ -3990,7 +4061,6 @@ exports[`Vue > jsx > Typescript Test > Image 1`] = `
 import { onMounted, onUnmounted, ref } from \\"vue\\";
 
 // TODO: AMP Support?
-
 export interface ImageProps {
   _class?: string;
   image: string;
@@ -4000,12 +4070,12 @@ export interface ImageProps {
   width?: number;
   altText?: string;
   backgroundSize?: string;
-  backgroundPosition?: string;
-  // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-  srcset?: string;
-  // TODO: Implement support for custom aspect ratios
-  aspectRatio?: number;
-  // TODO: This might not work as expected in terms of positioning
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
   children?: any;
 }
 
@@ -4023,6 +4093,7 @@ onMounted(() => {
       if (pictureRef.value) {
         const rect = pictureRef.value.getBoundingClientRect();
         const buffer = window.innerHeight / 2;
+
         if (rect.top < window.innerHeight + buffer) {
           load.value = true;
           scrollListener.value = null;
@@ -4030,6 +4101,7 @@ onMounted(() => {
         }
       }
     };
+
     scrollListener.value = listener;
     window.addEventListener(\\"scroll\\", listener, {
       capture: true,
@@ -4185,8 +4257,7 @@ exports[`Vue > jsx > Typescript Test > RawText 1`] = `
 <script setup lang=\\"ts\\">
 export interface RawTextProps {
   attributes?: any;
-  text?: string;
-  // builderBlock?: any;
+  text?: string; // builderBlock?: any;
 }
 
 const props = defineProps<RawTextProps>();
@@ -4902,6 +4973,7 @@ export interface ButtonProps {
   attributes?: any;
   text?: string;
   buttonText?: string; // no default value
+
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -5085,6 +5157,7 @@ watch(
   () => [a.value, b.value],
   () => {
     console.log(\\"Runs when a or b changes\\", a, b);
+
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
@@ -5095,6 +5168,7 @@ watch(
   () => [c.value, d.value],
   () => {
     console.log(\\"Runs when c or d changes\\", c, d);
+
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
@@ -5539,10 +5613,13 @@ const component = computed(() => {
     context: props.context.context,
     shouldEvaluateBindings: false,
   }).component?.name;
+
   if (!componentName) {
     return null;
   }
+
   const ref = props.context.registeredComponents[componentName];
+
   if (!ref) {
     // TODO: Public doc page with more info about this message
     console.warn(\`
@@ -5597,6 +5674,7 @@ const renderComponentProps = computed(() => {
     componentRef: component?.component,
     componentOptions: {
       ...getBlockComponentOptions(useBlock),
+
       /**
        * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
        * they are provided to the component itself directly.
@@ -5604,10 +5682,7 @@ const renderComponentProps = computed(() => {
       ...(shouldWrap
         ? {}
         : {
-            attributes: {
-              ...attributes,
-              ...actions,
-            },
+            attributes: { ...attributes, ...actions },
           }),
       customBreakpoints: childrenContext?.content?.meta?.breakpoints,
     },
@@ -5638,17 +5713,21 @@ const repeatItemData = computed(() => {
    * which will not work if there is a repeat.
    */
   const { repeat, ...blockWithoutRepeat } = props.block;
+
   if (!repeat?.collection) {
     return undefined;
   }
+
   const itemsArray = evaluate({
     code: repeat.collection,
     state: props.context.state,
     context: props.context.context,
   });
+
   if (!Array.isArray(itemsArray)) {
     return undefined;
   }
+
   const collectionName = repeat.collection.split(\\".\\").pop();
   const itemNameToUse =
     repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
@@ -5671,6 +5750,7 @@ const inheritedTextStyles = computed(() => {
   if (TARGET !== \\"reactNative\\") {
     return {};
   }
+
   const styles = getReactNativeBlockStyles({
     block: useBlock,
     context: props.context,
