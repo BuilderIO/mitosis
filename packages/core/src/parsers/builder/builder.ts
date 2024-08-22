@@ -375,8 +375,8 @@ const componentMappers: {
     const actionBindings = getActionBindingsFromBlock(block, options);
 
     const blockBindings: MitosisNode['bindings'] = {
-      ...mapBuilderBindingsToMitosisBindingWithCode(block.code?.bindings),
       ...mapBuilderBindingsToMitosisBindingWithCode(block.bindings),
+      ...mapBuilderBindingsToMitosisBindingWithCode(block.code?.bindings),
     };
 
     const bindings: any = {
@@ -415,9 +415,12 @@ const componentMappers: {
       });
     }
     const text = block.component!.options.text;
-    const innerProperties = {
-      [options.preserveTextBlocks ? 'innerHTML' : '_text']: text,
-    };
+
+    const innerProperties = innerBindings._text
+      ? {}
+      : {
+          [options.preserveTextBlocks ? 'innerHTML' : '_text']: text,
+        };
 
     if (options.preserveTextBlocks) {
       return createMitosisNode({

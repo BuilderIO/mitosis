@@ -2071,6 +2071,24 @@ exports[`builder > binding 1`] = `
     {
       "@type": "@builder.io/mitosis/node",
       "bindings": {
+        "label": {
+          "code": "state.text",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "Button",
+      "properties": {
+        "$tagName": undefined,
+        "label": "hello",
+      },
+      "scope": {},
+      "slots": {},
+    },
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
         "css": {
           "code": "{backgroundColor:'rgba(0, 0, 0, 1)',display:'flex',paddingLeft:'72px',paddingRight:'72px',paddingTop:'25px',paddingBottom:'25px',alignItems:'start',gap:'10px',fontFamily:'Poppins, -apple-system, Roboto, Helvetica, sans-serif',fontSize:'16px',color:'rgba(255, 255, 255, 1)',fontWeight:'700',textTransform:'uppercase',justifyContent:'start'}",
           "type": "single",
@@ -2081,16 +2099,14 @@ exports[`builder > binding 1`] = `
           "@type": "@builder.io/mitosis/node",
           "bindings": {
             "_text": {
-              "code": "{ var _virtual_index=state.text;return _virtual_index }",
+              "code": "state.text",
               "type": "single",
             },
           },
           "children": [],
           "meta": {},
           "name": "div",
-          "properties": {
-            "_text": "BUY NOW",
-          },
+          "properties": {},
           "scope": {},
         },
       ],
@@ -2133,29 +2149,34 @@ exports[`builder > binding 1`] = `
 `;
 
 exports[`builder > binding 2`] = `
-"export default function MyComponent(props) {
+"import { Button } from \\"@components\\";
+
+export default function MyComponent(props) {
   return (
-    <div
-      $name=\\"Book an Appointment\\"
-      css={{
-        backgroundColor: \\"rgba(0, 0, 0, 1)\\",
-        display: \\"flex\\",
-        paddingLeft: \\"72px\\",
-        paddingRight: \\"72px\\",
-        paddingTop: \\"25px\\",
-        paddingBottom: \\"25px\\",
-        alignItems: \\"start\\",
-        gap: \\"10px\\",
-        fontFamily: \\"Poppins, -apple-system, Roboto, Helvetica, sans-serif\\",
-        fontSize: \\"16px\\",
-        color: \\"rgba(255, 255, 255, 1)\\",
-        fontWeight: \\"700\\",
-        textTransform: \\"uppercase\\",
-        justifyContent: \\"start\\",
-      }}
-    >
-      BUY NOW
-    </div>
+    <>
+      <Button label=\\"hello\\" label={state.text} />
+      <div
+        $name=\\"Book an Appointment\\"
+        css={{
+          backgroundColor: \\"rgba(0, 0, 0, 1)\\",
+          display: \\"flex\\",
+          paddingLeft: \\"72px\\",
+          paddingRight: \\"72px\\",
+          paddingTop: \\"25px\\",
+          paddingBottom: \\"25px\\",
+          alignItems: \\"start\\",
+          gap: \\"10px\\",
+          fontFamily: \\"Poppins, -apple-system, Roboto, Helvetica, sans-serif\\",
+          fontSize: \\"16px\\",
+          color: \\"rgba(255, 255, 255, 1)\\",
+          fontWeight: \\"700\\",
+          textTransform: \\"uppercase\\",
+          justifyContent: \\"start\\",
+        }}
+      >
+        {state.text}
+      </div>
+    </>
   );
 }
 "

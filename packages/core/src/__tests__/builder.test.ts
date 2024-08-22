@@ -438,6 +438,19 @@ const bindingJson = {
     cssCode: 'builder-component { max-width: none !important; }',
     blocks: [
       {
+        component: {
+          name: 'Button',
+          options: {
+            label: 'hello',
+          },
+        },
+        code: {
+          bindings: {
+            'component.options.label': 'state.text',
+          },
+        },
+      },
+      {
         '@type': '@builder.io/sdk:Element',
         '@version': 2,
         id: 'builder-1e4cca42847b4712ae978bc679bf1d4a',
