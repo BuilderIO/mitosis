@@ -5,9 +5,13 @@ import { createCodeProcessorPlugin } from '@/helpers/plugins/process-code';
 import { MitosisComponent, MitosisState, StateValue } from '@/types/mitosis-component';
 import { NodePath } from '@babel/core';
 import {
-  assignmentExpression,
   BlockStatement,
   Expression,
+  Node,
+  ObjectExpression,
+  ObjectMethod,
+  ObjectProperty,
+  assignmentExpression,
   identifier,
   isArrowFunctionExpression,
   isDeclaration,
@@ -24,11 +28,7 @@ import {
   isTSInterfaceBody,
   isTSType,
   memberExpression,
-  Node,
-  ObjectExpression,
   objectMethod,
-  ObjectMethod,
-  ObjectProperty,
 } from '@babel/types';
 import { MitosisNode } from '@builder.io/mitosis';
 import { pipe } from 'fp-ts/lib/function';
