@@ -315,7 +315,7 @@ export const componentToBuilder =
         tsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
 
-        ${!hasState ? '' : `useState(${getStateObjectStringFromComponent(component)});`}
+        ${!hasState ? '' : `useStore(${getStateObjectStringFromComponent(component)});`}
 
         ${
           !component.hooks.onMount.length
