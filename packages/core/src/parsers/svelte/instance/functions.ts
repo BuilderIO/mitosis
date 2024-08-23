@@ -1,4 +1,11 @@
-import { isAssignmentExpression, isIdentifier, isUpdateExpression } from '@babel/types';
+import {
+  AssignmentExpression,
+  isAssignmentExpression,
+  isIdentifier,
+  isUpdateExpression,
+  Node,
+  UpdateExpression,
+} from '@babel/types';
 import { generate } from 'astring';
 import type { CallExpression, FunctionDeclaration, Identifier } from 'estree';
 import { capitalize } from 'lodash';
@@ -22,30 +29,35 @@ export function parseFunctions(json: SveltosisComponent, node: FunctionDeclarati
           const callee = node_.callee as Identifier;
 
           if (callee?.name === 'dispatch') {
-            const event = generate(node_.arguments[0]);
-            dispatchEventName = event;
+            dispatchEventName = generate(node_.arguments[0]);
           }
           break;
         }
         case 'UpdateExpression': {
-          if (isUpdateExpression(node) && isIdentifier(node.argument)) {
-            const argument = node.argument.name;
-            if (node.operator === '++') {
-              code = code.replace('++', ` = ${argument} + 1`);
-            } else if (node.operator === '--') {
-              code = code.replace('--', ` = ${argument} - 1`);
+          if (isUpdateExpression(node as Node)) {
+            const expression = node as UpdateExpression;
+            if (isIdentifier(expression.argument)) {
+              const argument = expression.argument.name;
+              if (expression.operator === '++') {
+                code = code.replace('++', ` = ${argument} + 1`);
+              } else if (expression.operator === '--') {
+                code = code.replace('--', ` = ${argument} - 1`);
+              }
             }
           }
           break;
         }
         case 'AssignmentExpression': {
-          if (isAssignmentExpression(node) && isIdentifier(node.left)) {
-            const argument = node.left.name;
+          if (isAssignmentExpression(node as Node)) {
+            const expression = node as AssignmentExpression;
+            if (isIdentifier(expression.left)) {
+              const argument = expression.left.name;
 
-            if (node.operator === '+=') {
-              code = code.replace('+=', `= ${argument} +`);
-            } else if (node.operator === '-=') {
-              code = code.replace('-=', `= ${argument} -`);
+              if (expression.operator === '+=') {
+                code = code.replace('+=', `= ${argument} +`);
+              } else if (expression.operator === '-=') {
+                code = code.replace('-=', `= ${argument} -`);
+              }
             }
           }
           break;

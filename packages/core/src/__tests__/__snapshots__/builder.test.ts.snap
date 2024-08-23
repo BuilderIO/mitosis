@@ -108,7 +108,7 @@ Object.assign(state, {
 ",
     "tsCode": "var props = state;
 
-useState({
+useStore({
   getColumns() {
     return props.columns || [];
   },
@@ -260,7 +260,7 @@ state.findAndRunScripts();
 ",
     "tsCode": "var props = state;
 
-useState({
+useStore({
   scriptsInserted: [],
   scriptsRun: [],
   findAndRunScripts() {
@@ -445,7 +445,7 @@ state.findAndRunScripts();
 ",
     "tsCode": "var props = state;
 
-useState({
+useStore({
   scriptsInserted: [],
   scriptsRun: [],
   findAndRunScripts() {
@@ -695,7 +695,7 @@ if (state.useLazyLoading()) {
 ",
     "tsCode": "var props = state;
 
-useState({
+useStore({
   scrollListener: null,
   imageLoaded: false,
   setLoaded() {
@@ -1486,7 +1486,7 @@ fetch(
 ",
     "tsCode": "var props = state;
 
-useState({
+useStore({
   reviews: [],
   name: \\"test\\",
   showReviewPrompt: false,
@@ -1847,14 +1847,11 @@ export default MyComponent;
 
 exports[`Builder > extractStateHook 1`] = `
 {
-  "code": "alert('hi');",
-  "state": {
-    "foo": {
-      "code": "'bar'",
-      "propertyType": "normal",
-      "type": "property",
-    },
-  },
+  "code": "useState({
+  foo: 'bar'
+});
+alert('hi');",
+  "state": {},
 }
 `;
 
@@ -2034,5 +2031,123 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`builder > binding 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "label": {
+          "code": "state.text",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "Button",
+      "properties": {
+        "$tagName": undefined,
+        "label": "hello",
+      },
+      "scope": {},
+      "slots": {},
+    },
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "css": {
+          "code": "{backgroundColor:'rgba(0, 0, 0, 1)',display:'flex',paddingLeft:'72px',paddingRight:'72px',paddingTop:'25px',paddingBottom:'25px',alignItems:'start',gap:'10px',fontFamily:'Poppins, -apple-system, Roboto, Helvetica, sans-serif',fontSize:'16px',color:'rgba(255, 255, 255, 1)',fontWeight:'700',textTransform:'uppercase',justifyContent:'start'}",
+          "type": "single",
+        },
+      },
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "_text": {
+              "code": "state.text",
+              "type": "single",
+            },
+          },
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {
+        "$name": "Book an Appointment",
+      },
+      "scope": {},
+      "slots": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [
+    {
+      "defaultValue": "Hello",
+      "name": "text",
+    },
+  ],
+  "meta": {
+    "cssCode": "builder-component { max-width: none !important; }",
+    "useMetadata": {
+      "httpRequests": undefined,
+    },
+  },
+  "name": "MyComponent",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`builder > binding 2`] = `
+"import { Button } from \\"@components\\";
+
+export default function MyComponent(props) {
+  return (
+    <>
+      <Button label=\\"hello\\" label={state.text} />
+      <div
+        $name=\\"Book an Appointment\\"
+        css={{
+          backgroundColor: \\"rgba(0, 0, 0, 1)\\",
+          display: \\"flex\\",
+          paddingLeft: \\"72px\\",
+          paddingRight: \\"72px\\",
+          paddingTop: \\"25px\\",
+          paddingBottom: \\"25px\\",
+          alignItems: \\"start\\",
+          gap: \\"10px\\",
+          fontFamily: \\"Poppins, -apple-system, Roboto, Helvetica, sans-serif\\",
+          fontSize: \\"16px\\",
+          color: \\"rgba(255, 255, 255, 1)\\",
+          fontWeight: \\"700\\",
+          textTransform: \\"uppercase\\",
+          justifyContent: \\"start\\",
+        }}
+      >
+        {state.text}
+      </div>
+    </>
+  );
+}
 "
 `;

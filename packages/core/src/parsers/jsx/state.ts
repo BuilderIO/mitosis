@@ -1,16 +1,39 @@
-import * as babel from '@babel/core';
-// import generate from '@babel/generator';
+import { babelTransformExpression } from '@/helpers/babel-transform';
+import { capitalize } from '@/helpers/capitalize';
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { createCodeProcessorPlugin } from '@/helpers/plugins/process-code';
+import { MitosisComponent, MitosisState, StateValue } from '@/types/mitosis-component';
+import { NodePath } from '@babel/core';
+import {
+  BlockStatement,
+  Expression,
+  Node,
+  ObjectExpression,
+  ObjectMethod,
+  ObjectProperty,
+  assignmentExpression,
+  identifier,
+  isArrowFunctionExpression,
+  isDeclaration,
+  isFunctionDeclaration,
+  isFunctionExpression,
+  isIdentifier,
+  isMemberExpression,
+  isObjectMethod,
+  isObjectProperty,
+  isOptionalMemberExpression,
+  isPrivateName,
+  isSpreadElement,
+  isTSAsExpression,
+  isTSInterfaceBody,
+  isTSType,
+  memberExpression,
+  objectMethod,
+} from '@babel/types';
 import { MitosisNode } from '@builder.io/mitosis';
 import { pipe } from 'fp-ts/lib/function';
 import traverse from 'neotraverse/legacy';
-import { babelTransformExpression } from '../../helpers/babel-transform';
-import { capitalize } from '../../helpers/capitalize';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { createCodeProcessorPlugin } from '../../helpers/plugins/process-code';
-import { MitosisComponent, MitosisState, StateValue } from '../../types/mitosis-component';
 import { parseCode, uncapitalize } from './helpers';
-
-const { types } = babel;
 
 function mapStateIdentifiersInExpression(expression: string, stateProperties: string[]) {
   const setExpressions = stateProperties.map((propertyName) => `set${capitalize(propertyName)}`);
@@ -21,20 +44,18 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
         if (stateProperties.includes(path.node.name)) {
           if (
             // ignore member expressions, as the `stateProperty` is going to be at the module scope.
-            !(types.isMemberExpression(path.parent) && path.parent.property === path.node) &&
-            !(
-              types.isOptionalMemberExpression(path.parent) && path.parent.property === path.node
-            ) &&
+            !(isMemberExpression(path.parent) && path.parent.property === path.node) &&
+            !(isOptionalMemberExpression(path.parent) && path.parent.property === path.node) &&
             // ignore declarations of that state property, e.g. `function foo() {}`
-            !types.isDeclaration(path.parent) &&
-            !types.isFunctionDeclaration(path.parent) &&
-            !(types.isFunctionExpression(path.parent) && path.parent.id === path.node) &&
+            !isDeclaration(path.parent) &&
+            !isFunctionDeclaration(path.parent) &&
+            !(isFunctionExpression(path.parent) && path.parent.id === path.node) &&
             // ignore object keys
-            !(types.isObjectProperty(path.parent) && path.parent.key === path.node)
+            !(isObjectProperty(path.parent) && path.parent.key === path.node)
           ) {
             let hasTypeParent = false;
-            path.findParent((parent) => {
-              if (types.isTSType(parent) || types.isTSInterfaceBody(parent)) {
+            path.findParent((parent: NodePath) => {
+              if (isTSType(parent as Node) || isTSInterfaceBody(parent as Node)) {
                 hasTypeParent = true;
                 return true;
               }
@@ -45,10 +66,7 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
               return;
             }
 
-            const newExpression = types.memberExpression(
-              types.identifier('state'),
-              types.identifier(path.node.name),
-            );
+            const newExpression = memberExpression(identifier('state'), identifier(path.node.name));
             try {
               path.replaceWith(newExpression);
             } catch (err) {
@@ -65,16 +83,16 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
         }
       },
       CallExpression(path) {
-        if (types.isIdentifier(path.node.callee)) {
+        if (isIdentifier(path.node.callee)) {
           if (setExpressions.includes(path.node.callee.name)) {
             // setFoo -> foo
             const statePropertyName = uncapitalize(path.node.callee.name.slice(3));
 
             // setFoo(...) -> state.foo = ...
             path.replaceWith(
-              types.assignmentExpression(
+              assignmentExpression(
                 '=',
-                types.identifier(`state.${statePropertyName}`),
+                identifier(`state.${statePropertyName}`),
                 path.node.arguments[0] as any,
               ),
             );
@@ -133,21 +151,19 @@ export function mapStateIdentifiers(json: MitosisComponent) {
   });
 }
 
-const processStateObjectSlice = (
-  item: babel.types.ObjectMethod | babel.types.ObjectProperty,
-): StateValue => {
-  if (types.isObjectProperty(item)) {
-    if (types.isFunctionExpression(item.value)) {
+const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValue => {
+  if (isObjectProperty(item)) {
+    if (isFunctionExpression(item.value)) {
       return {
         code: parseCode(item.value).trim(),
         type: 'function',
       };
-    } else if (types.isArrowFunctionExpression(item.value)) {
-      const n = babel.types.objectMethod(
+    } else if (isArrowFunctionExpression(item.value)) {
+      const n = objectMethod(
         'method',
-        item.key as babel.types.Expression,
+        item.key as Expression,
         item.value.params,
-        item.value.body as babel.types.BlockStatement,
+        item.value.body as BlockStatement,
       );
       const code = parseCode(n).trim();
       return {
@@ -157,7 +173,7 @@ const processStateObjectSlice = (
     } else {
       // Remove typescript types, e.g. from
       // { foo: ('string' as SomeType) }
-      if (types.isTSAsExpression(item.value)) {
+      if (isTSAsExpression(item.value)) {
         return {
           code: parseCode(item.value.expression).trim(),
           type: 'property',
@@ -170,7 +186,7 @@ const processStateObjectSlice = (
         propertyType: 'normal',
       };
     }
-  } else if (types.isObjectMethod(item)) {
+  } else if (isObjectMethod(item)) {
     const n = parseCode({ ...item, returnType: null }).trim();
 
     const isGetter = item.kind === 'get';
@@ -184,11 +200,9 @@ const processStateObjectSlice = (
   }
 };
 
-const processDefaultPropsSlice = (
-  item: babel.types.ObjectMethod | babel.types.ObjectProperty,
-): StateValue => {
-  if (types.isObjectProperty(item)) {
-    if (types.isFunctionExpression(item.value) || types.isArrowFunctionExpression(item.value)) {
+const processDefaultPropsSlice = (item: ObjectMethod | ObjectProperty): StateValue => {
+  if (isObjectProperty(item)) {
+    if (isFunctionExpression(item.value) || isArrowFunctionExpression(item.value)) {
       return {
         code: parseCode(item.value),
         type: 'method',
@@ -196,7 +210,7 @@ const processDefaultPropsSlice = (
     } else {
       // Remove typescript types, e.g. from
       // { foo: ('string' as SomeType) }
-      if (types.isTSAsExpression(item.value)) {
+      if (isTSAsExpression(item.value)) {
         return {
           code: parseCode(item.value.expression),
           type: 'property',
@@ -209,7 +223,7 @@ const processDefaultPropsSlice = (
         propertyType: 'normal',
       };
     }
-  } else if (types.isObjectMethod(item)) {
+  } else if (isObjectMethod(item)) {
     const n = parseCode({ ...item, returnType: null });
 
     const isGetter = item.kind === 'get';
@@ -224,20 +238,20 @@ const processDefaultPropsSlice = (
 };
 
 export const parseStateObjectToMitosisState = (
-  object: babel.types.ObjectExpression,
+  object: ObjectExpression,
   isState: boolean = true, // parse state or defaultProps
 ): MitosisState => {
   const state: MitosisState = {};
   object.properties.forEach((x) => {
-    if (types.isSpreadElement(x)) {
+    if (isSpreadElement(x)) {
       throw new Error('Parse Error: Mitosis cannot consume spread element in state object: ' + x);
     }
 
-    if (types.isPrivateName(x.key)) {
+    if (isPrivateName(x.key)) {
       throw new Error('Parse Error: Mitosis cannot consume private name in state object: ' + x.key);
     }
 
-    if (!types.isIdentifier(x.key)) {
+    if (!isIdentifier(x.key)) {
       throw new Error(
         'Parse Error: Mitosis cannot consume non-identifier key in state object: ' + x.key,
       );
