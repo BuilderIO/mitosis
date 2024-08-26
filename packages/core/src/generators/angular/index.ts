@@ -1050,6 +1050,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .join('\n')}
 
       ${dynamicComponents.size ? `myContent${options.typescript ? '?: any[][];' : ''}` : ''}
+      ${refsForObjSpread.size ? `_listenerFns${options.typescript ? ': any[] ' : ''}` : ''} = [];
 
       ${dataString}
 
@@ -1147,10 +1148,11 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }
 
       ${
-        !json.hooks.onUnMount
+        !json.hooks.onUnMount && !refsForObjSpread.size
           ? ''
           : `ngOnDestroy() {
-              ${json.hooks.onUnMount.code}
+              ${json.hooks.onUnMount?.code || ''}
+              ${refsForObjSpread.size ? `this._listenerFns.forEach(fn => fn());` : ''}
             }`
       }
 

@@ -26,11 +26,11 @@ export const HELPER_FUNCTIONS = (
       }
       Object.keys(value).forEach((key) => {
         if (key.startsWith('on')) {
-          this.renderer.listen(
+          this._listenerFns.push(this.renderer.listen(
             el,
             key.replace('on', '').toLowerCase(),
             value[key]
-          );
+          ));
         } else {
           this.renderer.setAttribute(el, key, value[key] ?? '');
         }
