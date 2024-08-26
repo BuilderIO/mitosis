@@ -654,6 +654,8 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0;
   @ViewChild(\\"elRef1\\") elRef1;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -661,10 +663,12 @@ export default class Button {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -684,6 +688,10 @@ export default class Button {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
       this.setAttributes(this.elRef1?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -837,6 +845,8 @@ export default class ContentSlotJsxCode {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   name = \\"king\\";
   showContent = false;
   get cls() {
@@ -852,10 +862,12 @@ export default class ContentSlotJsxCode {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -873,6 +885,10 @@ export default class ContentSlotJsxCode {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -1150,6 +1166,8 @@ export default class FormComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   formState = \\"unsubmitted\\";
   responseData = null;
   formErrorMessage = \\"\\";
@@ -1376,10 +1394,12 @@ export default class FormComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -1400,6 +1420,10 @@ export default class FormComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -1585,6 +1609,8 @@ export default class ImgComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -1592,10 +1618,12 @@ export default class ImgComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -1621,6 +1649,10 @@ export default class ImgComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -1674,6 +1706,8 @@ export default class FormInputComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -1681,10 +1715,12 @@ export default class FormInputComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -1702,6 +1738,10 @@ export default class FormInputComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -1807,6 +1847,8 @@ export default class SectionComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -1814,10 +1856,12 @@ export default class SectionComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -1835,6 +1879,10 @@ export default class SectionComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -1876,6 +1924,8 @@ export default class SectionStateComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   max = 42;
   items = [42];
   setAttributes(el, value) {
@@ -1885,10 +1935,12 @@ export default class SectionStateComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -1914,6 +1966,10 @@ export default class SectionStateComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -1966,6 +2022,8 @@ export default class SelectComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -1973,10 +2031,12 @@ export default class SelectComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -1994,6 +2054,10 @@ export default class SelectComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -2252,6 +2316,8 @@ export default class SubmitButton {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -2259,10 +2325,12 @@ export default class SubmitButton {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -2280,6 +2348,10 @@ export default class SubmitButton {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -2361,6 +2433,8 @@ export default class Textarea {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -2368,10 +2442,12 @@ export default class Textarea {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -2389,6 +2465,10 @@ export default class Textarea {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -2441,6 +2521,8 @@ export default class Video {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -2448,10 +2530,12 @@ export default class Video {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -2477,6 +2561,10 @@ export default class Video {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -3014,6 +3102,8 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0;
   @ViewChild(\\"elRef1\\") elRef1;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -3021,10 +3111,12 @@ export default class Button {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -3044,6 +3136,10 @@ export default class Button {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
       this.setAttributes(this.elRef1?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -3109,6 +3205,8 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0;
   @ViewChild(\\"elRef1\\") elRef1;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -3116,10 +3214,12 @@ export default class Button {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -3139,6 +3239,10 @@ export default class Button {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
       this.setAttributes(this.elRef1?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -3496,6 +3600,8 @@ import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   attrs = {
     hello: \\"world\\",
   };
@@ -3506,10 +3612,12 @@ export default class MyBasicComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -3529,6 +3637,10 @@ export default class MyBasicComponent {
       this.setAttributes(this.elRef0?.nativeElement, this.attrs);
       this.setAttributes(this.elRef0?.nativeElement, this.props);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -4492,6 +4604,8 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0;
   @ViewChild(\\"elRef1\\") elRef1;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -4499,10 +4613,12 @@ export default class Button {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -4522,6 +4638,10 @@ export default class Button {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
       this.setAttributes(this.elRef1?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -4838,6 +4958,8 @@ import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -4845,10 +4967,12 @@ export default class MyBasicComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -4866,6 +4990,10 @@ export default class MyBasicComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attrs);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -4901,6 +5029,8 @@ export default class MyBasicComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -4908,10 +5038,12 @@ export default class MyBasicComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -4929,6 +5061,10 @@ export default class MyBasicComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.nested);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -4956,6 +5092,8 @@ import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0;
 
+  _listenerFns = [];
+
   setAttributes(el, value) {
     if (!el) {
       return;
@@ -4963,10 +5101,12 @@ export default class MyBasicComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -4984,6 +5124,10 @@ export default class MyBasicComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.props);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -6183,6 +6327,8 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
   @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -6190,10 +6336,12 @@ export default class Button {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -6213,6 +6361,10 @@ export default class Button {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
       this.setAttributes(this.elRef1?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -6394,6 +6546,8 @@ export default class ContentSlotJsxCode {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   name = \\"king\\";
   showContent = false;
   get cls() {
@@ -6409,10 +6563,12 @@ export default class ContentSlotJsxCode {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -6430,6 +6586,10 @@ export default class ContentSlotJsxCode {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -6742,6 +6902,8 @@ export default class FormComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   formState = \\"unsubmitted\\";
   responseData = null;
   formErrorMessage = \\"\\";
@@ -6975,10 +7137,12 @@ export default class FormComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -6999,6 +7163,10 @@ export default class FormComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -7221,6 +7389,8 @@ export default class ImgComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -7228,10 +7398,12 @@ export default class ImgComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -7257,6 +7429,10 @@ export default class ImgComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -7322,6 +7498,8 @@ export default class FormInputComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -7329,10 +7507,12 @@ export default class FormInputComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -7350,6 +7530,10 @@ export default class FormInputComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -7467,6 +7651,8 @@ export default class SectionComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -7474,10 +7660,12 @@ export default class SectionComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -7495,6 +7683,10 @@ export default class SectionComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -7543,6 +7735,8 @@ export default class SectionStateComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   max = 42;
   items = [42];
   setAttributes(el: HTMLElement, value: any) {
@@ -7552,10 +7746,12 @@ export default class SectionStateComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -7581,6 +7777,10 @@ export default class SectionStateComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -7645,6 +7845,8 @@ export default class SelectComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -7652,10 +7854,12 @@ export default class SelectComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -7673,6 +7877,10 @@ export default class SelectComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -7958,6 +8166,8 @@ export default class SubmitButton {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -7965,10 +8175,12 @@ export default class SubmitButton {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -7986,6 +8198,10 @@ export default class SubmitButton {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -8084,6 +8300,8 @@ export default class Textarea {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -8091,10 +8309,12 @@ export default class Textarea {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -8112,6 +8332,10 @@ export default class Textarea {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -8191,6 +8415,8 @@ export default class Video {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -8198,10 +8424,12 @@ export default class Video {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -8227,6 +8455,10 @@ export default class Video {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -8802,6 +9034,8 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
   @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -8809,10 +9043,12 @@ export default class Button {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -8832,6 +9068,10 @@ export default class Button {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
       this.setAttributes(this.elRef1?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -8906,6 +9146,8 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
   @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -8913,10 +9155,12 @@ export default class Button {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -8936,6 +9180,10 @@ export default class Button {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
       this.setAttributes(this.elRef1?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -9315,6 +9563,8 @@ import {
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   attrs = {
     hello: \\"world\\",
   };
@@ -9325,10 +9575,12 @@ export default class MyBasicComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -9348,6 +9600,10 @@ export default class MyBasicComponent {
       this.setAttributes(this.elRef0?.nativeElement, this.attrs);
       this.setAttributes(this.elRef0?.nativeElement, this.props);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -10390,6 +10646,8 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
   @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -10397,10 +10655,12 @@ export default class Button {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -10420,6 +10680,10 @@ export default class Button {
       this.setAttributes(this.elRef0?.nativeElement, this.attributes);
       this.setAttributes(this.elRef1?.nativeElement, this.attributes);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -10773,6 +11037,8 @@ import {
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -10780,10 +11046,12 @@ export default class MyBasicComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -10801,6 +11069,10 @@ export default class MyBasicComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.attrs);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -10837,6 +11109,8 @@ export default class MyBasicComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -10844,10 +11118,12 @@ export default class MyBasicComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -10865,6 +11141,10 @@ export default class MyBasicComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.nested);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 
@@ -10898,6 +11178,8 @@ import {
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
+  _listenerFns: any[] = [];
+
   setAttributes(el: HTMLElement, value: any) {
     if (!el) {
       return;
@@ -10905,10 +11187,12 @@ export default class MyBasicComponent {
 
     Object.keys(value).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this.renderer.listen(
-          el,
-          key.replace(\\"on\\", \\"\\").toLowerCase(),
-          value[key]
+        this._listenerFns.push(
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            value[key]
+          )
         );
       } else {
         this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
@@ -10926,6 +11210,10 @@ export default class MyBasicComponent {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(this.elRef0?.nativeElement, this.props);
     }
+  }
+
+  ngOnDestroy() {
+    this._listenerFns.forEach((fn) => fn());
   }
 }
 

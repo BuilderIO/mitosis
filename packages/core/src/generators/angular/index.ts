@@ -1050,7 +1050,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .join('\n')}
 
       ${dynamicComponents.size ? `myContent${options.typescript ? '?: any[][];' : ''}` : ''}
-      ${refsForObjSpread.size ? `_listenerFns${options.typescript ? ': any[] ' : ''}` : ''} = [];
+      ${refsForObjSpread.size ? `_listenerFns${options.typescript ? ': any[] ' : ''} = [];` : ''}
 
       ${dataString}
 
