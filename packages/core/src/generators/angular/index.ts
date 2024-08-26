@@ -126,8 +126,12 @@ const handleObjectBindings = (code: string) => {
 
   let temp = objectCode;
 
+  //STEP 1. remove spread operator for expressions like '{ ...objectName }' and replace them with object name, example {...obj} => obj
   temp = temp.replace(/\{\s*\.\.\.(\w+)\s*}/g, '$1');
+  //STEP 2. remove all remaining spread operators that could be nested somewhere deeper, example { ...obj, field1: value1 } => { obj, field1: value1 }
   temp = temp.replace(/\.\.\./g, '');
+  //STEP 3. deal with consequences of STEP 2 - for all left field assignments we create new objects provided to useObjectWrapper,
+  //and we get rid of surrounding brackets of the initial input value, example {...obj1,test:true,...obj2} => obj1, {test: true}, obj2
   temp = temp.replace(/(\s*\w+\s*:\s*((["'].+["'])|(\[.+])|([\w.]+)))(,|[\n\s]*)/g, `{ $1 },`);
 
   // handle template strings
