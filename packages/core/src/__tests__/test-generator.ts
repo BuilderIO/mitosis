@@ -122,6 +122,8 @@ const renderContentExample = getRawFile('./data/render-content.raw.tsx');
 const onClickToPressable = getRawFile('./data/react-native/onclick-to-pressable.raw.tsx');
 const inputToTextInputRN = getRawFile('./data/react-native/text-input.raw.tsx');
 
+const StringLiteralStore = getRawFile('./data/string-literal-store.raw.tsx');
+
 type Tests = { [index: string]: RawFile };
 
 const SVELTE_SYNTAX_TESTS: Tests = {
@@ -225,6 +227,7 @@ const BASIC_TESTS: Tests = {
   useTarget,
   signalsOnUpdate,
   getterState,
+  'string-literal-store': StringLiteralStore,
 };
 
 const SLOTS_TESTS: Tests = {
