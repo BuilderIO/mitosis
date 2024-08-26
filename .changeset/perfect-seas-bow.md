@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-fix logic responsible for parsing object provided to useObjectWrapper angular method
+Angular: Fix: `useObjectWrapper` logic to correctly handle spread and objects as arguments
