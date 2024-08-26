@@ -4,5 +4,5 @@ import { useStore } from '@builder.io/mitosis';
 export default function StringLiteralStore() {
   const state = useStore({ 'foo-bar': 123 });
 
-  return <div>{state.foo}</div>;
+  return <div>{state['foo-bar']}</div>;
 }
