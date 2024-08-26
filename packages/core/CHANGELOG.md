@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.4.0
+
+### Minor Changes
+
+- 7d8f4ff: Correct support bindings netween Builder and Mitosis, including useStore() hook
+
+## 0.3.22
+
+### Patch Changes
+
+- f19a00f: Angular: Fix: `ViewContainerRef` import when importing for dynamic components
+
 ## 0.3.21
 
 ### Patch Changes

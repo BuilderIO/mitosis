@@ -930,7 +930,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       'Component',
       ...(domRefs.size || dynamicComponents.size ? ['ViewChild', 'ElementRef'] : []),
       ...(props.size ? ['Input'] : []),
-      ...(dynamicComponents.size ? ['ViewChild', 'TemplateRef'] : []),
+      ...(dynamicComponents.size ? ['ViewContainerRef', 'TemplateRef'] : []),
       ...(json.hooks.onUpdate?.length && options.typescript ? ['SimpleChanges'] : []),
     ].join(', ');
 
