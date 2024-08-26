@@ -123,6 +123,7 @@ const onClickToPressable = getRawFile('./data/react-native/onclick-to-pressable.
 const inputToTextInputRN = getRawFile('./data/react-native/text-input.raw.tsx');
 
 const StringLiteralStore = getRawFile('./data/string-literal-store.raw.tsx');
+const StringLiteralStoreKebab = getRawFile('./data/string-literal-store-kebab.raw.tsx');
 
 type Tests = { [index: string]: RawFile };
 
@@ -228,6 +229,7 @@ const BASIC_TESTS: Tests = {
   signalsOnUpdate,
   getterState,
   'string-literal-store': StringLiteralStore,
+  'string-literal-store-kebab': StringLiteralStoreKebab,
 };
 
 const SLOTS_TESTS: Tests = {
