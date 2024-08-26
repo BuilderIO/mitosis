@@ -458,13 +458,34 @@ export const blockToAngular = ({
         json.bindings['spreadRef'] = { code: refName, type: 'single' };
         root.refs[refName] = { argument: '' };
         root.meta.onViewInit = (root.meta.onViewInit || { code: '' }) as BaseHook;
-        const spreadCode = json.bindings[key]?.code.startsWith('{')
-          ? json.bindings[key]?.code
-          : `this.${json.bindings[key]?.code}`;
+        let spreadCode = '';
+        let changesCode = '';
+        if (json.bindings[key]?.code.startsWith('{')) {
+          json.meta._spreadStateRef = json.meta._spreadStateRef || 0;
+          const name = `${refName}_state_${json.meta._spreadStateRef}`;
+          json.meta._spreadStateRef = (json.meta._spreadStateRef as number) + 1;
+          root.state[name] = {
+            code: json.bindings[key]!.code as string,
+            type: 'property',
+          };
+          root.hooks['onInit'] = root.hooks['onInit'] || { code: '' };
+          root.hooks['onInit'].code += `\nthis.${name} = ${json.bindings[key]?.code};`;
+          root.hooks['onUpdate'] = root.hooks['onUpdate'] || [];
+          root.hooks['onUpdate'].push({
+            code: `this.${name} = ${json.bindings[key]?.code};`,
+          });
+          spreadCode = `this.${name}`;
+          changesCode = `changes['${name}']?.currentValue || {}`;
+        } else {
+          spreadCode = `this.${json.bindings[key]?.code}`;
+          changesCode = `changes['${json.bindings[key]?.code}']?.currentValue || {}`;
+        }
         root.meta.onViewInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`;
         root.hooks.onUpdate = root.hooks.onUpdate || [];
         root.hooks.onUpdate.push({
-          code: `this.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`,
+          code: `this.setAttributes(this.${refName}?.nativeElement, ${spreadCode}${
+            changesCode ? `, ${changesCode}` : ''
+          });`,
         });
         if (!root.state['setAttributes']) {
           root.state['setAttributes'] = {
@@ -1050,7 +1071,11 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .join('\n')}
 
       ${dynamicComponents.size ? `myContent${options.typescript ? '?: any[][];' : ''}` : ''}
-      ${refsForObjSpread.size ? `_listenerFns${options.typescript ? ': any[] ' : ''} = [];` : ''}
+      ${
+        refsForObjSpread.size
+          ? `_listenerFns = new Map${options.typescript ? '<string, Function>' : ''}()`
+          : ''
+      }
 
       ${dataString}
 
@@ -1152,7 +1177,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           ? ''
           : `ngOnDestroy() {
               ${json.hooks.onUnMount?.code || ''}
-              ${refsForObjSpread.size ? `this._listenerFns.forEach(fn => fn());` : ''}
+              ${refsForObjSpread.size ? `for (let fn of this._listenerFns.values()) { fn(); }` : ''}
             }`
       }
 

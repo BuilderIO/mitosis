@@ -19,24 +19,28 @@ export const HELPER_FUNCTIONS = (
   useJsonStringify: `useJsonStringify(...args${isTs ? ': any' : ''})${isTs ? ': string' : ''}) {
     return JSON.stringify(...args);
   }`,
-  setAttributes: `
-    setAttributes(el${isTs ? ': HTMLElement' : ''}, value${isTs ? ': any' : ''}) {
-      if (!el) {
-        return;
-      }
-      Object.keys(value).forEach((key) => {
-        if (key.startsWith('on')) {
-          this._listenerFns.push(this.renderer.listen(
-            el,
-            key.replace('on', '').toLowerCase(),
-            value[key]
-          ));
-        } else {
-          this.renderer.setAttribute(el, key, value[key] ?? '');
-        }
-      });
+  setAttributes: `setAttributes(el${isTs ? ': HTMLElement' : ''}, value${
+    isTs ? ': any' : ''
+  }, changes${isTs ? '?: any' : ''}) {
+    if (!el) {
+      return;
     }
-`,
+    const target = typeof changes === 'undefined' ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith('on')) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+        this._listenerFns.set(key, this.renderer.listen(
+          el,
+          key.replace('on', '').toLowerCase(),
+          target[key]
+        ));
+      } else {
+        this.renderer.setAttribute(el, key, target[key] ?? '');
+      }
+    });
+  }`,
 });
 
 export const getAppropriateTemplateFunctionKeys = (code: string) =>

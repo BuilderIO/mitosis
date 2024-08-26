@@ -769,24 +769,30 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0;
   @ViewChild(\\"elRef1\\") elRef1;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -800,13 +806,23 @@ export default class Button {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
-      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -977,7 +993,7 @@ export default class ContentSlotJsxCode {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
   name = \\"king\\";
   showContent = false;
@@ -987,22 +1003,28 @@ export default class ContentSlotJsxCode {
   show() {
     this.slotContent ? 1 : \\"\\";
   }
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -1015,12 +1037,18 @@ export default class ContentSlotJsxCode {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -1329,7 +1357,7 @@ export default class FormComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -1551,22 +1579,28 @@ export default class FormComponent {
     }
   }
   node_1_div = null;
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -1587,12 +1621,18 @@ export default class FormComponent {
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.node_1_div = JSON.stringify(this.responseData, null, 2);
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -1808,25 +1848,31 @@ export default class ImgComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
   node_0_img = null;
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -1850,12 +1896,18 @@ export default class ImgComponent {
         objectFit: this.backgroundSize || \\"cover\\",
         objectPosition: this.backgroundPosition || \\"center\\",
       };
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -1916,24 +1968,30 @@ export default class FormInputComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -1946,12 +2004,18 @@ export default class FormInputComponent {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -2073,25 +2137,31 @@ export default class SectionComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
   node_0_section = null;
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -2119,12 +2189,18 @@ export default class SectionComponent {
               maxWidth: this.maxWidth,
             }
           : undefined;
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -2173,29 +2249,35 @@ export default class SectionStateComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
   max = 42;
   items = [42];
   node_0_section = (item) => ({
     maxWidth: item + this.max,
   });
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -2208,12 +2290,18 @@ export default class SectionStateComponent {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -2273,24 +2361,30 @@ export default class SelectComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -2303,12 +2397,18 @@ export default class SelectComponent {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -2601,24 +2701,30 @@ export default class SubmitButton {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -2631,12 +2737,18 @@ export default class SubmitButton {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -2745,24 +2857,30 @@ export default class Textarea {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -2775,12 +2893,18 @@ export default class Textarea {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -2840,25 +2964,31 @@ export default class Video {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
   node_0_video = null;
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -2894,12 +3024,18 @@ export default class Video {
         // not have the video overflow
         borderRadius: 1,
       };
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -3520,24 +3656,30 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0;
   @ViewChild(\\"elRef1\\") elRef1;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -3551,13 +3693,23 @@ export default class Button {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
-      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -3630,24 +3782,30 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0;
   @ViewChild(\\"elRef1\\") elRef1;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -3661,13 +3819,23 @@ export default class Button {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
-      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -4161,27 +4329,33 @@ import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
   attrs = {
     hello: \\"world\\",
   };
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -4195,13 +4369,23 @@ export default class MyBasicComponent {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-      this.setAttributes(this.elRef0?.nativeElement, this.props);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attrs,
+        changes[\\"attrs\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.props,
+        changes[\\"props\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -5317,24 +5501,30 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0;
   @ViewChild(\\"elRef1\\") elRef1;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -5348,13 +5538,23 @@ export default class Button {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
-      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -5730,24 +5930,30 @@ import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -5760,12 +5966,18 @@ export default class MyBasicComponent {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attrs,
+        changes[\\"attrs\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -5808,24 +6020,30 @@ export default class MyBasicComponent {
 
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -5838,12 +6056,18 @@ export default class MyBasicComponent {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.nested);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.nested,
+        changes[\\"nested\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -5878,24 +6102,30 @@ import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0;
 
-  _listenerFns = [];
+  _listenerFns = new Map();
 
-  setAttributes(el, value) {
+  setAttributes(el, value, changes) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -5908,12 +6138,18 @@ export default class MyBasicComponent {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.props);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.props,
+        changes[\\"props\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -7317,24 +7553,30 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
   @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -7348,13 +7590,23 @@ export default class Button {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
-      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -7553,7 +7805,7 @@ export default class ContentSlotJsxCode {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
   name = \\"king\\";
   showContent = false;
@@ -7563,22 +7815,28 @@ export default class ContentSlotJsxCode {
   show() {
     this.slotContent ? 1 : \\"\\";
   }
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -7591,12 +7849,18 @@ export default class ContentSlotJsxCode {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -7952,7 +8216,7 @@ export default class FormComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -8181,22 +8445,28 @@ export default class FormComponent {
     }
   }
   node_1_div = null;
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -8217,12 +8487,18 @@ export default class FormComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.node_1_div = JSON.stringify(this.responseData, null, 2);
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -8481,25 +8757,31 @@ export default class ImgComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
   node_0_img = null;
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -8523,12 +8805,18 @@ export default class ImgComponent {
         objectFit: this.backgroundSize || \\"cover\\",
         objectPosition: this.backgroundPosition || \\"center\\",
       };
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -8601,24 +8889,30 @@ export default class FormInputComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -8631,12 +8925,18 @@ export default class FormInputComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -8770,25 +9070,31 @@ export default class SectionComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
   node_0_section = null;
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -8816,12 +9122,18 @@ export default class SectionComponent {
               maxWidth: this.maxWidth,
             }
           : undefined;
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -8877,29 +9189,35 @@ export default class SectionStateComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
   max = 42;
   items = [42];
   node_0_section = (item) => ({
     maxWidth: item + this.max,
   });
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -8912,12 +9230,18 @@ export default class SectionStateComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -8989,24 +9313,30 @@ export default class SelectComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -9019,12 +9349,18 @@ export default class SelectComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -9344,24 +9680,30 @@ export default class SubmitButton {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -9374,12 +9716,18 @@ export default class SubmitButton {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -9505,24 +9853,30 @@ export default class Textarea {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -9535,12 +9889,18 @@ export default class Textarea {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -9627,25 +9987,31 @@ export default class Video {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
   node_0_video = null;
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -9681,12 +10047,18 @@ export default class Video {
         // not have the video overflow
         borderRadius: 1,
       };
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -10346,24 +10718,30 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
   @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -10377,13 +10755,23 @@ export default class Button {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
-      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -10465,24 +10853,30 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
   @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -10496,13 +10890,23 @@ export default class Button {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
-      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -11019,27 +11423,33 @@ import {
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
   attrs = {
     hello: \\"world\\",
   };
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -11053,13 +11463,23 @@ export default class MyBasicComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-      this.setAttributes(this.elRef0?.nativeElement, this.props);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attrs,
+        changes[\\"attrs\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.props,
+        changes[\\"props\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -12255,24 +12675,30 @@ export default class Button {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
   @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -12286,13 +12712,23 @@ export default class Button {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attributes);
-      this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -12705,24 +13141,30 @@ import {
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -12735,12 +13177,18 @@ export default class MyBasicComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attrs,
+        changes[\\"attrs\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -12784,24 +13232,30 @@ export default class MyBasicComponent {
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -12814,12 +13268,18 @@ export default class MyBasicComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.nested);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.nested,
+        changes[\\"nested\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -12860,24 +13320,30 @@ import {
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
-  _listenerFns: any[] = [];
+  _listenerFns = new Map<string, Function>();
 
-  setAttributes(el: HTMLElement, value: any) {
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
     if (!el) {
       return;
     }
 
-    Object.keys(value).forEach((key) => {
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
       if (key.startsWith(\\"on\\")) {
-        this._listenerFns.push(
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
           this.renderer.listen(
             el,
             key.replace(\\"on\\", \\"\\").toLowerCase(),
-            value[key]
+            target[key]
           )
         );
       } else {
-        this.renderer.setAttribute(el, key, value[key] ?? \\"\\");
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
   }
@@ -12890,12 +13356,18 @@ export default class MyBasicComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0?.nativeElement, this.props);
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.props,
+        changes[\\"props\\"]?.currentValue || {}
+      );
     }
   }
 
   ngOnDestroy() {
-    this._listenerFns.forEach((fn) => fn());
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
