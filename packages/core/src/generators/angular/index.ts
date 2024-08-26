@@ -457,11 +457,11 @@ export const blockToAngular = ({
         }
         json.bindings['spreadRef'] = { code: refName, type: 'single' };
         root.refs[refName] = { argument: '' };
-        root.hooks.onViewInit = (root.hooks.onViewInit as BaseHook) || { code: '' };
+        root.meta.onViewInit = (root.meta.onViewInit || { code: '' }) as BaseHook;
         const spreadCode = json.bindings[key]?.code.startsWith('{')
           ? json.bindings[key]?.code
           : `this.${json.bindings[key]?.code}`;
-        root.hooks.onViewInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`;
+        root.meta.onViewInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`;
         root.hooks.onUpdate = root.hooks.onUpdate || [];
         root.hooks.onUpdate.push({
           code: `this.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`,
@@ -1125,8 +1125,10 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }
 
       ${
-        (json.hooks.onViewInit as BaseHook)?.code
-          ? `ngAfterViewInit() { ${(json.hooks.onViewInit as BaseHook).code} }`
+        // a special case for Angular where we need to use ngAfterViewInit instead of ngOnInit
+        // to make sure the view is fully initialized and set destructured properties using ViewChild
+        (json.meta.onViewInit as BaseHook)?.code
+          ? `ngAfterViewInit() { ${(json.meta.onViewInit as BaseHook).code} }`
           : ''
       }
 

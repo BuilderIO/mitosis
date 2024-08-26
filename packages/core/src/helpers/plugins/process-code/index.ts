@@ -12,7 +12,7 @@ export const createCodeProcessorPlugin =
   ) =>
   (json: MitosisComponent): void => {
     function processHook(key: keyof typeof json.hooks, hook: BaseHook) {
-      const result = codeProcessor('hooks', json)(hook.code, String(key));
+      const result = codeProcessor('hooks', json)(hook.code, key);
 
       if (typeof result === 'string') {
         hook.code = result;
@@ -20,7 +20,7 @@ export const createCodeProcessorPlugin =
         result();
       }
       if (hook.deps) {
-        const result = codeProcessor('hooks-deps', json)(hook.deps, String(key));
+        const result = codeProcessor('hooks-deps', json)(hook.deps, key);
 
         if (typeof result === 'string') {
           hook.deps = result;

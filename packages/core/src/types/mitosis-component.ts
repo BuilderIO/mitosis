@@ -141,7 +141,6 @@ export type MitosisComponent = {
     postComponent?: BaseHook;
     onUpdate?: BaseHook[];
     onEvent: OnEventHook[];
-    [key: string]: BaseHook[] | BaseHook | undefined;
   };
   targetBlocks?: Dictionary<TargetBlockDefinition>;
   children: MitosisNode[];
