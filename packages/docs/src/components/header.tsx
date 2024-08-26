@@ -40,7 +40,7 @@ export default component$(() => {
               alt="Mitosis logo"
               class="object-contain max-md:max-w-[110px]"
               width={160}
-              height={80}
+              height={40}
               src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0fdb9aabd10f4205b3b3b56d7b950239"
             />
           </Link>
