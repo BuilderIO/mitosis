@@ -24,6 +24,7 @@ import {
   isOptionalMemberExpression,
   isPrivateName,
   isSpreadElement,
+  isStringLiteral,
   isTSAsExpression,
   isTSInterfaceBody,
   isTSType,
@@ -251,13 +252,15 @@ export const parseStateObjectToMitosisState = (
       throw new Error('Parse Error: Mitosis cannot consume private name in state object: ' + x.key);
     }
 
-    if (!isIdentifier(x.key)) {
+    if (!isIdentifier(x.key) && !isStringLiteral(x.key)) {
       throw new Error(
-        'Parse Error: Mitosis cannot consume non-identifier key in state object: ' + x.key,
+        'Parse Error: Mitosis cannot consume non-identifier and non-string key in state object: ' +
+          x.key,
       );
     }
 
-    state[x.key.name] = isState ? processStateObjectSlice(x) : processDefaultPropsSlice(x);
+    const keyName = isStringLiteral(x.key) ? x.key.value : x.key.name;
+    state[keyName] = isState ? processStateObjectSlice(x) : processDefaultPropsSlice(x);
   });
 
   return state;

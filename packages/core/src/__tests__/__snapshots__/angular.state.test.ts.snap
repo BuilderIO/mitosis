@@ -5242,6 +5242,99 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > string-literal-store 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"string-literal-store, StringLiteralStore\\",
+  template: \`
+    <div>{{foo}}</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class StringLiteralStore {
+  foo = 123;
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+})
+export class StringLiteralStoreModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > string-literal-store-kebab 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from '@angular/core';
+
+
+
+
+
+
+
+
+
+
+@Component({
+  selector: 'string-literal-store, StringLiteralStore',template: \`
+
+        <div>{{'foo-bar'}}</div>
+
+        \`,styles: [\`:host { display: contents; }\`]
+})
+export default class StringLiteralStore {
+
+
+
+
+
+
+
+
+
+
+
+
+
+   foo-bar= 123
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+  
+})
+export class StringLiteralStoreModule {}"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -5593,6 +5686,117 @@ export default class MyComponent {}
 @NgModule({
   declarations: [MyComponent],
   imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > useObjectWrapper 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <Comp
+        [val1]=\\"node_0_Comp\\"
+        [val2]=\\"node_1_Comp\\"
+        [val3]=\\"node_2_Comp\\"
+        [val4]=\\"node_3_Comp\\"
+        [val5]=\\"node_4_Comp\\"
+        [val6]=\\"node_5_Comp\\"
+      ></Comp>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() spreadAttrs;
+
+  attributes = {
+    id: 1,
+  };
+  attributes2 = {
+    id2: 1,
+  };
+  something = {
+    id3: 1,
+  };
+  node_0_Comp = null;
+  node_1_Comp = null;
+  node_2_Comp = null;
+  node_3_Comp = null;
+  node_4_Comp = null;
+  node_5_Comp = null;
+
+  ngOnInit() {
+    this.node_0_Comp = { ...this.attributes2 };
+    this.node_1_Comp = { ...this.attributes, ...this.attributes2 };
+    this.node_2_Comp = { ...this.something, anything: \\"hello\\", hello: \\"world\\" };
+    this.node_3_Comp = {
+      ...this.attributes,
+      ...this.something,
+      anything: [1, 2, 3],
+      hello: \\"hello\\",
+      ...this.attributes2,
+    };
+    this.node_4_Comp = {
+      ...this.attributes,
+      ...this.something,
+      anything: [1, 2, 3],
+      anythingString: [\\"a\\", \\"b\\", \\"c\\"],
+      hello: \\"hello\\",
+      ...this.spreadAttrs,
+    };
+    this.node_5_Comp = {
+      anything: [1, 2, 3],
+    };
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Comp = { ...this.attributes2 };
+      this.node_1_Comp = { ...this.attributes, ...this.attributes2 };
+      this.node_2_Comp = {
+        ...this.something,
+        anything: \\"hello\\",
+        hello: \\"world\\",
+      };
+      this.node_3_Comp = {
+        ...this.attributes,
+        ...this.something,
+        anything: [1, 2, 3],
+        hello: \\"hello\\",
+        ...this.attributes2,
+      };
+      this.node_4_Comp = {
+        ...this.attributes,
+        ...this.something,
+        anything: [1, 2, 3],
+        anythingString: [\\"a\\", \\"b\\", \\"c\\"],
+        hello: \\"hello\\",
+        ...this.spreadAttrs,
+      };
+      this.node_5_Comp = {
+        anything: [1, 2, 3],
+      };
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
   exports: [MyComponent],
 })
 export class MyComponentModule {}
@@ -11411,6 +11615,99 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > string-literal-store 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"string-literal-store, StringLiteralStore\\",
+  template: \`
+    <div>{{foo}}</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class StringLiteralStore {
+  foo = 123;
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+})
+export class StringLiteralStoreModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > string-literal-store-kebab 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from '@angular/core';
+
+
+
+
+
+
+
+
+
+
+@Component({
+  selector: 'string-literal-store, StringLiteralStore',template: \`
+
+        <div>{{'foo-bar'}}</div>
+
+        \`,styles: [\`:host { display: contents; }\`]
+})
+export default class StringLiteralStore {
+
+
+
+
+
+
+
+
+
+
+
+
+
+   foo-bar= 123
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+  
+})
+export class StringLiteralStoreModule {}"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11769,6 +12066,117 @@ export default class MyComponent {}
 @NgModule({
   declarations: [MyComponent],
   imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > useObjectWrapper 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <Comp
+        [val1]=\\"node_0_Comp\\"
+        [val2]=\\"node_1_Comp\\"
+        [val3]=\\"node_2_Comp\\"
+        [val4]=\\"node_3_Comp\\"
+        [val5]=\\"node_4_Comp\\"
+        [val6]=\\"node_5_Comp\\"
+      ></Comp>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() spreadAttrs!: any;
+
+  attributes = {
+    id: 1,
+  };
+  attributes2 = {
+    id2: 1,
+  };
+  something = {
+    id3: 1,
+  };
+  node_0_Comp = null;
+  node_1_Comp = null;
+  node_2_Comp = null;
+  node_3_Comp = null;
+  node_4_Comp = null;
+  node_5_Comp = null;
+
+  ngOnInit() {
+    this.node_0_Comp = { ...this.attributes2 };
+    this.node_1_Comp = { ...this.attributes, ...this.attributes2 };
+    this.node_2_Comp = { ...this.something, anything: \\"hello\\", hello: \\"world\\" };
+    this.node_3_Comp = {
+      ...this.attributes,
+      ...this.something,
+      anything: [1, 2, 3],
+      hello: \\"hello\\",
+      ...this.attributes2,
+    };
+    this.node_4_Comp = {
+      ...this.attributes,
+      ...this.something,
+      anything: [1, 2, 3],
+      anythingString: [\\"a\\", \\"b\\", \\"c\\"],
+      hello: \\"hello\\",
+      ...this.spreadAttrs,
+    };
+    this.node_5_Comp = {
+      anything: [1, 2, 3],
+    };
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_Comp = { ...this.attributes2 };
+      this.node_1_Comp = { ...this.attributes, ...this.attributes2 };
+      this.node_2_Comp = {
+        ...this.something,
+        anything: \\"hello\\",
+        hello: \\"world\\",
+      };
+      this.node_3_Comp = {
+        ...this.attributes,
+        ...this.something,
+        anything: [1, 2, 3],
+        hello: \\"hello\\",
+        ...this.attributes2,
+      };
+      this.node_4_Comp = {
+        ...this.attributes,
+        ...this.something,
+        anything: [1, 2, 3],
+        anythingString: [\\"a\\", \\"b\\", \\"c\\"],
+        hello: \\"hello\\",
+        ...this.spreadAttrs,
+      };
+      this.node_5_Comp = {
+        anything: [1, 2, 3],
+      };
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
   exports: [MyComponent],
 })
 export class MyComponentModule {}
