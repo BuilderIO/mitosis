@@ -130,29 +130,15 @@ const handleObjectBindings = (code: string) => {
   let objectCode = code.replace(/^{/, '').replace(/}$/, '');
   objectCode = objectCode.replace(/\/\/.*\n/g, '');
 
-  const spreadOutObjects = objectCode
-    .split(',')
-    .filter((item) => item.includes('...'))
-    .map((item) => item.replace('...', '').trim());
+  let temp = objectCode;
 
-  const objectKeys = objectCode
-    .split(',')
-    .filter((item) => !item.includes('...'))
-    .map((item) => item.trim());
-
-  const otherObjs = objectKeys.map((item) => {
-    return `{ ${item} }`;
-  });
-
-  let temp = `${spreadOutObjects.join(', ')}, ${otherObjs.join(', ')}`;
-
-  if (temp.endsWith(', ')) {
-    temp = temp.slice(0, -2);
-  }
-
-  if (temp.startsWith(', ')) {
-    temp = temp.slice(2);
-  }
+  //STEP 1. remove spread operator for expressions like '{ ...objectName }' and replace them with object name, example {...obj} => obj
+  temp = temp.replace(/\{\s*\.\.\.(\w+)\s*}/g, '$1');
+  //STEP 2. remove all remaining spread operators that could be nested somewhere deeper, example { ...obj, field1: value1 } => { obj, field1: value1 }
+  temp = temp.replace(/\.\.\./g, '');
+  //STEP 3. deal with consequences of STEP 2 - for all left field assignments we create new objects provided to useObjectWrapper,
+  //and we get rid of surrounding brackets of the initial input value, example {...obj1,test:true,...obj2} => obj1, {test: true}, obj2
+  temp = temp.replace(/(\s*\w+\s*:\s*((["'].+["'])|(\[.+])|([\w.]+)))(,|[\n\s]*)/g, `{ $1 },`);
 
   // handle template strings
   if (temp.includes('`')) {
@@ -172,7 +158,7 @@ const handleObjectBindings = (code: string) => {
 
 const processCodeBlockInTemplate = (code: string) => {
   // contains helper calls as Angular doesn't support JS expressions in templates
-  if (code.startsWith('{')) {
+  if (code.startsWith('{') && code.includes('...')) {
     // Objects cannot be spread out directly in Angular so we need to use `useObjectWrapper`
     return `useObjectWrapper(${handleObjectBindings(code)})`;
   } else if (code.startsWith('Object.values')) {
