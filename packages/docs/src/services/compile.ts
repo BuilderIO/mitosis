@@ -74,7 +74,6 @@ const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
     componentToBuilder,
   } = await import('@builder.io/mitosis');
 
-  console.log('get output', output);
   const options = {};
 
   switch (output) {
