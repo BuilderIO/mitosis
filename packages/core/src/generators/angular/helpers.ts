@@ -1,3 +1,5 @@
+import { type MitosisComponent } from '@/types/mitosis-component';
+
 export const HELPER_FUNCTIONS = (
   isTs?: boolean,
 ): {
@@ -45,3 +47,23 @@ export const HELPER_FUNCTIONS = (
 
 export const getAppropriateTemplateFunctionKeys = (code: string) =>
   Object.keys(HELPER_FUNCTIONS()).filter((key) => code.includes(key));
+
+export const addCodeToOnUpdate = (root: MitosisComponent, code: string) => {
+  root.hooks.onUpdate = root.hooks.onUpdate || [];
+  root.hooks.onUpdate.push({
+    code,
+  });
+};
+
+export const addCodeToOnInit = (root: MitosisComponent, code: string) => {
+  if (!root.hooks.onInit?.code) {
+    root.hooks.onInit = { code: '' };
+  }
+  root.hooks.onInit.code += `\n${code};`;
+};
+
+export const makeReactiveState = (root: MitosisComponent, stateName: string, code: string) => {
+  root.state[stateName] = { code: 'null', type: 'property' };
+  addCodeToOnInit(root, code);
+  addCodeToOnUpdate(root, code);
+};

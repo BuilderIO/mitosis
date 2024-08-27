@@ -42,7 +42,13 @@ import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
 import isChildren from '../../helpers/is-children';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
-import { HELPER_FUNCTIONS, getAppropriateTemplateFunctionKeys } from './helpers';
+import {
+  HELPER_FUNCTIONS,
+  addCodeToOnInit,
+  addCodeToOnUpdate,
+  getAppropriateTemplateFunctionKeys,
+  makeReactiveState,
+} from './helpers';
 import {
   AngularBlockOptions,
   BUILT_IN_COMPONENTS,
@@ -399,10 +405,7 @@ export const blockToAngular = ({
         type: 'property',
       };
       if (!root.hooks.onInit?.code.includes(inputsPropsStateName)) {
-        if (!root.hooks.onInit) {
-          root.hooks.onInit = { code: '' };
-        }
-        root.hooks.onInit.code += `\nthis.${inputsPropsStateName} = {${allProps}};\n`;
+        addCodeToOnInit(root, `this.${inputsPropsStateName} = {${allProps}};`);
       }
       if (
         !root.hooks.onUpdate
@@ -410,12 +413,7 @@ export const blockToAngular = ({
           .join('')
           .includes(inputsPropsStateName)
       ) {
-        if (!root.hooks.onUpdate) {
-          root.hooks.onUpdate = [];
-        }
-        root.hooks.onUpdate.push({
-          code: `this.${inputsPropsStateName} = {${allProps}}`,
-        });
+        addCodeToOnUpdate(root, `this.${inputsPropsStateName} = {${allProps}};`);
       }
       allProps = `${inputsPropsStateName}`;
     } else {
@@ -469,16 +467,7 @@ export const blockToAngular = ({
           json.meta._spreadStateRef = json.meta._spreadStateRef || 0;
           const name = `${refName}_state_${json.meta._spreadStateRef}`;
           json.meta._spreadStateRef = (json.meta._spreadStateRef as number) + 1;
-          root.state[name] = {
-            code: json.bindings[key]!.code as string,
-            type: 'property',
-          };
-          root.hooks['onInit'] = root.hooks['onInit'] || { code: '' };
-          root.hooks['onInit'].code += `\nthis.${name} = ${json.bindings[key]?.code};`;
-          root.hooks['onUpdate'] = root.hooks['onUpdate'] || [];
-          root.hooks['onUpdate'].push({
-            code: `this.${name} = ${json.bindings[key]?.code};`,
-          });
+          makeReactiveState(root, name, `this.${name} = ${json.bindings[key]?.code};`);
           spreadCode = `this.${name}`;
           changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue || {}`;
         } else {
@@ -486,12 +475,12 @@ export const blockToAngular = ({
           changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue || {}`;
         }
         root.meta.onViewInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`;
-        root.hooks.onUpdate = root.hooks.onUpdate || [];
-        root.hooks.onUpdate.push({
-          code: `this.setAttributes(this.${refName}?.nativeElement, ${spreadCode}${
+        addCodeToOnUpdate(
+          root,
+          `this.setAttributes(this.${refName}?.nativeElement, ${spreadCode}${
             changesCode ? `, ${changesCode}` : ''
           });`,
-        });
+        );
         if (!root.state['setAttributes']) {
           root.state['setAttributes'] = {
             code: HELPER_FUNCTIONS(options?.typescript).setAttributes as string,
@@ -639,14 +628,11 @@ const handleBindings = (
     } else if (item.bindings[key]?.code) {
       if (item.bindings[key]?.type !== 'spread' && !key.startsWith('on')) {
         json.state[newBindingName] = { code: 'null', type: 'property' };
-        if (!json.hooks['onInit']?.code) {
-          json.hooks['onInit'] = { code: '' };
-        }
-        json.hooks['onInit'].code += `\nstate.${newBindingName} = ${item.bindings[key]!.code};\n`;
-        json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
-        json.hooks['onUpdate'].push({
-          code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
-        });
+        makeReactiveState(
+          json,
+          newBindingName,
+          `this.${newBindingName} = ${item.bindings[key]!.code}`,
+        );
         item.bindings[key]!.code = `state.${newBindingName}`;
       } else if (key.startsWith('on')) {
         const { arguments: cusArgs = ['event'] } = item.bindings[key]!;
@@ -661,17 +647,11 @@ const handleBindings = (
           item.bindings[key]!.code = `state.${newBindingName}(${cusArgs.join(', ')})`;
         }
       } else {
-        json.state[newBindingName] = { code: `null`, type: 'property' };
-        if (!json.hooks['onInit']?.code) {
-          json.hooks['onInit'] = { code: '' };
-        }
-        json.hooks['onInit'].code += `\nstate.${newBindingName} = {...(${
-          item.bindings[key]!.code
-        })};\n`;
-        json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
-        json.hooks['onUpdate'].push({
-          code: `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
-        });
+        makeReactiveState(
+          json,
+          newBindingName,
+          `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
+        );
         item.bindings[newBindingName] = item.bindings[key];
         item.bindings[key]!.code = `state.${newBindingName}`;
         delete item.bindings[key];
