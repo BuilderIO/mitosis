@@ -1680,14 +1680,6 @@ export default class ImgComponent {
     });
   }
 
-  useObjectWrapper(...args) {
-    let obj = {};
-    args.forEach((arg) => {
-      obj = { ...obj, ...arg };
-    });
-    return obj;
-  }
-
   constructor(private renderer) {}
 
   ngAfterViewInit() {
@@ -1991,7 +1983,12 @@ import {
   template: \`
     <ng-container *ngIf=\\"max\\">
       <ng-container *ngFor=\\"let item of items\\">
-        <section [ngStyle]=\\"useObjectWrapper({ maxWidth: item + max })\\" #elRef0>
+        <section
+          [ngStyle]=\\"{
+          maxWidth: item + max
+        }\\"
+          #elRef0
+        >
           <ng-content></ng-content>
         </section>
       </ng-container>
@@ -2031,14 +2028,6 @@ export default class SectionStateComponent {
         this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
-  }
-
-  useObjectWrapper(...args) {
-    let obj = {};
-    args.forEach((arg) => {
-      obj = { ...obj, ...arg };
-    });
-    return obj;
   }
 
   constructor(private renderer) {}
@@ -7843,14 +7832,6 @@ export default class ImgComponent {
     });
   }
 
-  useObjectWrapper(...args: any[]) {
-    let obj = {};
-    args.forEach((arg) => {
-      obj = { ...obj, ...arg };
-    });
-    return obj;
-  }
-
   constructor(private renderer: Renderer2) {}
 
   ngAfterViewInit() {
@@ -8185,7 +8166,12 @@ export interface SectionProps {
   template: \`
     <ng-container *ngIf=\\"max\\">
       <ng-container *ngFor=\\"let item of items\\">
-        <section [ngStyle]=\\"useObjectWrapper({ maxWidth: item + max })\\" #elRef0>
+        <section
+          [ngStyle]=\\"{
+          maxWidth: item + max
+        }\\"
+          #elRef0
+        >
           <ng-content></ng-content>
         </section>
       </ng-container>
@@ -8225,14 +8211,6 @@ export default class SectionStateComponent {
         this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
       }
     });
-  }
-
-  useObjectWrapper(...args: any[]) {
-    let obj = {};
-    args.forEach((arg) => {
-      obj = { ...obj, ...arg };
-    });
-    return obj;
   }
 
   constructor(private renderer: Renderer2) {}
