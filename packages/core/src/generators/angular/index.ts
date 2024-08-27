@@ -1051,7 +1051,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${dynamicComponents.size ? `myContent${options.typescript ? '?: any[][];' : ''}` : ''}
       ${
         refsForObjSpread.size
-          ? `_listenerFns = new Map${options.typescript ? '<string, Function>' : ''}()`
+          ? `_listenerFns = new Map${options.typescript ? '<string, () => void>' : ''}()`
           : ''
       }
 

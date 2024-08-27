@@ -31,7 +31,7 @@ export const HELPER_FUNCTIONS = (
     Object.keys(target).forEach((key) => {
       if (key.startsWith('on')) {
         if (this._listenerFns.has(key)) {
-          this._listenerFns.get(key)();
+          this._listenerFns.get(key)${isTs ? '!' : ''}();
         }
         this._listenerFns.set(key, this.renderer.listen(
           el,
