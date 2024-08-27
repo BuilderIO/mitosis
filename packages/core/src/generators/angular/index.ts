@@ -445,6 +445,11 @@ export const blockToAngular = ({
 
     for (const key in json.bindings) {
       if (json.bindings[key]?.type === 'spread' && VALID_HTML_TAGS.includes(json.name.trim())) {
+        if (json.bindings[key]?.code === 'this') {
+          // if its an arbitrary { ...props } spread then we skip because Angular needs a named prop to be defined
+          continue;
+        }
+
         let refName = '';
         if (json.bindings['spreadRef']?.code) {
           refName = json.bindings['spreadRef'].code;
@@ -474,11 +479,11 @@ export const blockToAngular = ({
           root.hooks['onUpdate'].push({
             code: `this.${name} = ${json.bindings[key]?.code};`,
           });
-          spreadCode = `this.${name}`;
-          changesCode = `changes['${name}']?.currentValue || {}`;
+          spreadCode = name;
+          changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue || {}`;
         } else {
-          spreadCode = `this.${json.bindings[key]?.code}`;
-          changesCode = `changes['${json.bindings[key]?.code}']?.currentValue || {}`;
+          spreadCode = `${json.bindings[key]?.code}`;
+          changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue || {}`;
         }
         root.meta.onViewInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`;
         root.hooks.onUpdate = root.hooks.onUpdate || [];
@@ -775,7 +780,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
     options.plugins = [
       ...(options.plugins || []),
-      CODE_PROCESSOR_PLUGIN((codeType) => {
+      CODE_PROCESSOR_PLUGIN((codeType, _, node) => {
         switch (codeType) {
           case 'hooks':
             return flow(
@@ -800,11 +805,18 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             );
 
           case 'bindings':
-            return (code) => {
+            return (code, key) => {
+              // we create a separate state property for spread binding and use ref to attach the attributes
+              // so we need to use `this.` inside the class to access state and props
+              const isSpreadAttributeBinding =
+                node?.bindings[key]?.type === 'spread' &&
+                VALID_HTML_TAGS.includes(node.name.trim());
+
               const newLocal = processAngularCode({
                 contextVars: [],
                 outputVars,
                 domRefs: [], // the template doesn't need the this keyword.
+                replaceWith: isSpreadAttributeBinding ? 'this' : undefined,
               })(code);
               return newLocal.replace(/"/g, '&quot;');
             };

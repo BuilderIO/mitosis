@@ -7898,7 +7898,6 @@ export default class MyBasicComponent {
 
   ngAfterViewInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-    this.setAttributes(this.elRef0?.nativeElement, this.props);
   }
 
   ngOnChanges(changes) {
@@ -7907,11 +7906,6 @@ export default class MyBasicComponent {
         this.elRef0?.nativeElement,
         this.attrs,
         changes[\\"attrs\\"]?.currentValue || {}
-      );
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.props,
-        changes[\\"props\\"]?.currentValue || {}
       );
     }
   }
@@ -7989,7 +7983,6 @@ export default class MyBasicComponent {
 
   ngAfterViewInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-    this.setAttributes(this.elRef0?.nativeElement, this.props);
   }
 
   ngOnChanges(changes) {
@@ -7998,11 +7991,6 @@ export default class MyBasicComponent {
         this.elRef0?.nativeElement,
         this.attrs,
         changes[\\"attrs\\"]?.currentValue || {}
-      );
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.props,
-        changes[\\"props\\"]?.currentValue || {}
       );
     }
   }
@@ -10854,14 +10842,14 @@ export default class MyBasicComponent {
   constructor(private renderer) {}
 
   ngAfterViewInit() {
-    this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+    this.setAttributes(this.elRef0?.nativeElement, attrs);
   }
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(
         this.elRef0?.nativeElement,
-        this.attrs,
+        attrs,
         changes[\\"attrs\\"]?.currentValue || {}
       );
     }
@@ -10936,14 +10924,14 @@ export default class MyBasicComponent {
   constructor(private renderer) {}
 
   ngAfterViewInit() {
-    this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+    this.setAttributes(this.elRef0?.nativeElement, attrs);
   }
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(
         this.elRef0?.nativeElement,
-        this.attrs,
+        attrs,
         changes[\\"attrs\\"]?.currentValue || {}
       );
     }
@@ -11135,12 +11123,12 @@ exports[`Angular > jsx > Javascript Test > spreadProps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
+import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input #elRef0 />
+    <input />
   \`,
   styles: [
     \`
@@ -11150,59 +11138,7 @@ import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
     \`,
   ],
 })
-export default class MyBasicComponent {
-  @ViewChild(\\"elRef0\\") elRef0;
-
-  _listenerFns = new Map();
-
-  setAttributes(el, value, changes) {
-    if (!el) {
-      return;
-    }
-
-    const target = typeof changes === \\"undefined\\" ? value : changes;
-    Object.keys(target).forEach((key) => {
-      if (key.startsWith(\\"on\\")) {
-        if (this._listenerFns.has(key)) {
-          this._listenerFns.get(key)();
-        }
-
-        this._listenerFns.set(
-          key,
-          this.renderer.listen(
-            el,
-            key.replace(\\"on\\", \\"\\").toLowerCase(),
-            target[key]
-          )
-        );
-      } else {
-        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
-      }
-    });
-  }
-
-  constructor(private renderer) {}
-
-  ngAfterViewInit() {
-    this.setAttributes(this.elRef0?.nativeElement, this.props);
-  }
-
-  ngOnChanges(changes) {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.props,
-        changes[\\"props\\"]?.currentValue || {}
-      );
-    }
-  }
-
-  ngOnDestroy() {
-    for (let fn of this._listenerFns.values()) {
-      fn();
-    }
-  }
-}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -11214,13 +11150,13 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > spreadProps 2`] = `
-"import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
+"import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input #elRef0 />
+    <input />
   \`,
   styles: [
     \`
@@ -11232,59 +11168,7 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
 })
-export default class MyBasicComponent {
-  @ViewChild(\\"elRef0\\") elRef0;
-
-  _listenerFns = new Map();
-
-  setAttributes(el, value, changes) {
-    if (!el) {
-      return;
-    }
-
-    const target = typeof changes === \\"undefined\\" ? value : changes;
-    Object.keys(target).forEach((key) => {
-      if (key.startsWith(\\"on\\")) {
-        if (this._listenerFns.has(key)) {
-          this._listenerFns.get(key)();
-        }
-
-        this._listenerFns.set(
-          key,
-          this.renderer.listen(
-            el,
-            key.replace(\\"on\\", \\"\\").toLowerCase(),
-            target[key]
-          )
-        );
-      } else {
-        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
-      }
-    });
-  }
-
-  constructor(private renderer) {}
-
-  ngAfterViewInit() {
-    this.setAttributes(this.elRef0?.nativeElement, this.props);
-  }
-
-  ngOnChanges(changes) {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.props,
-        changes[\\"props\\"]?.currentValue || {}
-      );
-    }
-  }
-
-  ngOnDestroy() {
-    for (let fn of this._listenerFns.values()) {
-      fn();
-    }
-  }
-}
+export default class MyBasicComponent {}
 "
 `;
 
@@ -20886,7 +20770,6 @@ export default class MyBasicComponent {
 
   ngAfterViewInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-    this.setAttributes(this.elRef0?.nativeElement, this.props);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -20895,11 +20778,6 @@ export default class MyBasicComponent {
         this.elRef0?.nativeElement,
         this.attrs,
         changes[\\"attrs\\"]?.currentValue || {}
-      );
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.props,
-        changes[\\"props\\"]?.currentValue || {}
       );
     }
   }
@@ -20983,7 +20861,6 @@ export default class MyBasicComponent {
 
   ngAfterViewInit() {
     this.setAttributes(this.elRef0?.nativeElement, this.attrs);
-    this.setAttributes(this.elRef0?.nativeElement, this.props);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -20992,11 +20869,6 @@ export default class MyBasicComponent {
         this.elRef0?.nativeElement,
         this.attrs,
         changes[\\"attrs\\"]?.currentValue || {}
-      );
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.props,
-        changes[\\"props\\"]?.currentValue || {}
       );
     }
   }
@@ -24075,14 +23947,14 @@ export default class MyBasicComponent {
   constructor(private renderer: Renderer2) {}
 
   ngAfterViewInit() {
-    this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+    this.setAttributes(this.elRef0?.nativeElement, attrs);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(
         this.elRef0?.nativeElement,
-        this.attrs,
+        attrs,
         changes[\\"attrs\\"]?.currentValue || {}
       );
     }
@@ -24163,14 +24035,14 @@ export default class MyBasicComponent {
   constructor(private renderer: Renderer2) {}
 
   ngAfterViewInit() {
-    this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+    this.setAttributes(this.elRef0?.nativeElement, attrs);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.setAttributes(
         this.elRef0?.nativeElement,
-        this.attrs,
+        attrs,
         changes[\\"attrs\\"]?.currentValue || {}
       );
     }
@@ -24364,18 +24236,12 @@ exports[`Angular > jsx > Typescript Test > spreadProps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  Renderer2,
-  SimpleChanges,
-} from \\"@angular/core\\";
+import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input #elRef0 />
+    <input />
   \`,
   styles: [
     \`
@@ -24385,59 +24251,7 @@ import {
     \`,
   ],
 })
-export default class MyBasicComponent {
-  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
-
-  _listenerFns = new Map<string, Function>();
-
-  setAttributes(el: HTMLElement, value: any, changes?: any) {
-    if (!el) {
-      return;
-    }
-
-    const target = typeof changes === \\"undefined\\" ? value : changes;
-    Object.keys(target).forEach((key) => {
-      if (key.startsWith(\\"on\\")) {
-        if (this._listenerFns.has(key)) {
-          this._listenerFns.get(key)();
-        }
-
-        this._listenerFns.set(
-          key,
-          this.renderer.listen(
-            el,
-            key.replace(\\"on\\", \\"\\").toLowerCase(),
-            target[key]
-          )
-        );
-      } else {
-        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
-      }
-    });
-  }
-
-  constructor(private renderer: Renderer2) {}
-
-  ngAfterViewInit() {
-    this.setAttributes(this.elRef0?.nativeElement, this.props);
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.props,
-        changes[\\"props\\"]?.currentValue || {}
-      );
-    }
-  }
-
-  ngOnDestroy() {
-    for (let fn of this._listenerFns.values()) {
-      fn();
-    }
-  }
-}
+export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -24449,19 +24263,13 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > spreadProps 2`] = `
-"import {
-  Component,
-  ViewChild,
-  ElementRef,
-  Renderer2,
-  SimpleChanges,
-} from \\"@angular/core\\";
+"import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input #elRef0 />
+    <input />
   \`,
   styles: [
     \`
@@ -24473,59 +24281,7 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
 })
-export default class MyBasicComponent {
-  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
-
-  _listenerFns = new Map<string, Function>();
-
-  setAttributes(el: HTMLElement, value: any, changes?: any) {
-    if (!el) {
-      return;
-    }
-
-    const target = typeof changes === \\"undefined\\" ? value : changes;
-    Object.keys(target).forEach((key) => {
-      if (key.startsWith(\\"on\\")) {
-        if (this._listenerFns.has(key)) {
-          this._listenerFns.get(key)();
-        }
-
-        this._listenerFns.set(
-          key,
-          this.renderer.listen(
-            el,
-            key.replace(\\"on\\", \\"\\").toLowerCase(),
-            target[key]
-          )
-        );
-      } else {
-        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
-      }
-    });
-  }
-
-  constructor(private renderer: Renderer2) {}
-
-  ngAfterViewInit() {
-    this.setAttributes(this.elRef0?.nativeElement, this.props);
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(
-        this.elRef0?.nativeElement,
-        this.props,
-        changes[\\"props\\"]?.currentValue || {}
-      );
-    }
-  }
-
-  ngOnDestroy() {
-    for (let fn of this._listenerFns.values()) {
-      fn();
-    }
-  }
-}
+export default class MyBasicComponent {}
 "
 `;
 
