@@ -122,7 +122,19 @@ const renderContentExample = getRawFile('./data/render-content.raw.tsx');
 const onClickToPressable = getRawFile('./data/react-native/onclick-to-pressable.raw.tsx');
 const inputToTextInputRN = getRawFile('./data/react-native/text-input.raw.tsx');
 
-type Tests = { [index: string]: RawFile };
+const StringLiteralStore = getRawFile('./data/string-literal-store.raw.tsx');
+const StringLiteralStoreKebab = getRawFile('./data/string-literal-store-kebab.raw.tsx');
+
+/**
+ * Use TestsWithFailFor when you want to write a test that you know will fail
+ * on certain targets. This is useful in test driven development when you want
+ * to capture a test before support for a specific target has been implemented.
+ */
+type TestWithFailFor = { file: RawFile; failFor: Target[] };
+type Tests = { [index: string]: RawFile | TestWithFailFor };
+const isTestWithFailFor = (test: RawFile | TestWithFailFor): test is TestWithFailFor => {
+  return 'failFor' in test;
+};
 
 const SVELTE_SYNTAX_TESTS: Tests = {
   basic: getRawFile('./syntax/svelte/basic.raw.svelte'),
@@ -225,6 +237,28 @@ const BASIC_TESTS: Tests = {
   useTarget,
   signalsOnUpdate,
   getterState,
+  'string-literal-store': StringLiteralStore,
+  'string-literal-store-kebab': {
+    file: StringLiteralStoreKebab,
+    failFor: [
+      'alpine',
+      'customElement',
+      'mitosis',
+      'react',
+      'reactNative',
+      'solid',
+      'svelte',
+      'swift',
+      'template',
+      'webcomponent',
+      'stencil',
+      'qwik',
+      'preact',
+      'lit',
+      'rsc',
+      'taro',
+    ],
+  },
 };
 
 const SLOTS_TESTS: Tests = {
@@ -519,7 +553,9 @@ export const runTestsForJsx = () => {
       JSX_TESTS.forEach((tests) => {
         Object.keys(tests).forEach((key) => {
           test(key, async () => {
-            const component = parseJsx((await tests[key]).code, config);
+            const singleTest = tests[key];
+            const t = isTestWithFailFor(singleTest) ? singleTest.file : singleTest;
+            const component = parseJsx((await t).code, config);
             expect(component).toMatchSnapshot();
           });
         });
@@ -530,7 +566,9 @@ export const runTestsForJsx = () => {
 export const runTestsForSvelteSyntax = () => {
   Object.keys(SVELTE_SYNTAX_TESTS).forEach((key) => {
     test(key, async () => {
-      const component = await parseSvelte((await SVELTE_SYNTAX_TESTS[key]).code);
+      const singleTest = SVELTE_SYNTAX_TESTS[key];
+      const t = isTestWithFailFor(singleTest) ? singleTest.file : singleTest;
+      const component = await parseSvelte((await t).code);
       expect(component).toMatchSnapshot();
     });
   });
@@ -599,14 +637,23 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
           describe(testName, () => {
             testsArray.forEach((tests) => {
               Object.keys(tests).forEach((key) => {
+                const singleTest = tests[key];
+                const shouldFail =
+                  isTestWithFailFor(singleTest) && singleTest.failFor.includes(target);
                 test(key, async () => {
-                  const t = await tests[key];
+                  const t = isTestWithFailFor(singleTest)
+                    ? await singleTest.file
+                    : await singleTest;
                   const component = await parser(t);
                   const getOutput = () => generator(options)({ component, path: t.filePath });
-                  try {
-                    expect(getOutput()).toMatchSnapshot();
-                  } catch (error) {
-                    expect(getOutput).toThrowErrorMatchingSnapshot();
+                  if (shouldFail) {
+                    expect(getOutput).toThrowError();
+                  } else {
+                    try {
+                      expect(getOutput()).toMatchSnapshot();
+                    } catch (error) {
+                      expect(getOutput).toThrowErrorMatchingSnapshot();
+                    }
                   }
                 });
               });
