@@ -2713,6 +2713,136 @@ export class VideoModule {}
 "
 `;
 
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > allSpread 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div #elRef0>
+      Hello! I can run natively in React, Vue, Svelte, Qwik, and many more
+      frameworks!
+    </div>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes;
+  @Input() accessHere;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
+  attrsUsingUseState = {
+    hello: \\"world\\",
+  };
+  properties = {
+    style: \\"color: blue\\",
+    onClick: () => console.log(\\"pressed\\"),
+  };
+  specifics = {
+    someSpecificState: \\"specific\\",
+  };
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
+      }
+    });
+  }
+  elRef0_state_0 = {
+    someOtherAttrs: this.accessHere,
+    someStateAttrs: this.specifics,
+  };
+
+  constructor(private renderer) {}
+
+  ngOnInit() {
+    this.elRef0_state_0 = {
+      someOtherAttrs: this.accessHere,
+      someStateAttrs: this.specifics,
+    };
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attrsUsingUseState);
+    this.setAttributes(this.elRef0?.nativeElement, this.properties);
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef0?.nativeElement, this.elRef0_state_0);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attrsUsingUseState,
+        changes[\\"attrsUsingUseState\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.properties,
+        changes[\\"properties\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
+      this.elRef0_state_0 = {
+        someOtherAttrs: this.accessHere,
+        someStateAttrs: this.specifics,
+      };
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.elRef0_state_0,
+        changes[\\"elRef0_state_0\\"]?.currentValue || {}
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -8782,6 +8912,137 @@ export default class Video {
   exports: [Video],
 })
 export class VideoModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > allSpread 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div #elRef0>
+      Hello! I can run natively in React, Vue, Svelte, Qwik, and many more
+      frameworks!
+    </div>
+  \`,
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() accessHere!: any;
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, Function>();
+
+  attrsUsingUseState = {
+    hello: \\"world\\",
+  };
+  properties = {
+    style: \\"color: blue\\",
+    onClick: () => console.log(\\"pressed\\"),
+  };
+  specifics = {
+    someSpecificState: \\"specific\\",
+  };
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key, target[key] ?? \\"\\");
+      }
+    });
+  }
+  elRef0_state_0 = {
+    someOtherAttrs: this.accessHere,
+    someStateAttrs: this.specifics,
+  };
+
+  constructor(private renderer: Renderer2) {}
+
+  ngOnInit() {
+    this.elRef0_state_0 = {
+      someOtherAttrs: this.accessHere,
+      someStateAttrs: this.specifics,
+    };
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attrsUsingUseState);
+    this.setAttributes(this.elRef0?.nativeElement, this.properties);
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef0?.nativeElement, this.elRef0_state_0);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attrsUsingUseState,
+        changes[\\"attrsUsingUseState\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.properties,
+        changes[\\"properties\\"]?.currentValue || {}
+      );
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue || {}
+      );
+      this.elRef0_state_0 = {
+        someOtherAttrs: this.accessHere,
+        someStateAttrs: this.specifics,
+      };
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.elRef0_state_0,
+        changes[\\"elRef0_state_0\\"]?.currentValue || {}
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (let fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 

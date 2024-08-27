@@ -287,6 +287,7 @@ const ANGULAR_TESTS: Tests = {
   twoForsTrackBy: getRawFile('./data/angular/two-fors.raw.tsx'),
   stateInit: getRawFile('./data/angular/state-init.raw.tsx'),
   stateInitSequence: getRawFile('./data/angular/state-init-sequence.raw.tsx'),
+  allSpread: getRawFile('./data/angular/all-spread.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {

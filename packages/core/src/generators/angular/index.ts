@@ -479,7 +479,7 @@ export const blockToAngular = ({
           root.hooks['onUpdate'].push({
             code: `this.${name} = ${json.bindings[key]?.code};`,
           });
-          spreadCode = name;
+          spreadCode = `this.${name}`;
           changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue || {}`;
         } else {
           spreadCode = `${json.bindings[key]?.code}`;
