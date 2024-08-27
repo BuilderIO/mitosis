@@ -74,6 +74,7 @@ const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
     componentToBuilder,
   } = await import('@builder.io/mitosis');
 
+  console.log('get output', output);
   const options = {};
 
   switch (output) {
@@ -106,7 +107,9 @@ const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
     case 'vue':
       return componentToVue({ api: 'composition' });
     case 'builder':
-      return componentToBuilder();
+      return ({ component }: { component: MitosisComponent }) => {
+        return JSON.stringify(componentToBuilder(options)({ component }), null, 2);
+      };
     default:
       throw new Error('unexpected Output ' + output);
   }
