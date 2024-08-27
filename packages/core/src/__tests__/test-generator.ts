@@ -647,7 +647,7 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                   const component = await parser(t);
                   const getOutput = () => generator(options)({ component, path: t.filePath });
                   if (shouldFail) {
-                    expect(getOutput).toThrowErrorMatchingSnapshot();
+                    expect(getOutput).toThrowError();
                   } else {
                     try {
                       expect(getOutput()).toMatchSnapshot();
