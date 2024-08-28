@@ -460,7 +460,18 @@ export const blockToAngular = ({
           spreadCode = `${json.bindings[key]?.code}`;
           changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue || {}`;
         }
-        root.meta.onViewInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`;
+        if (!root.compileContext) {
+          root.compileContext = {
+            angular: {
+              hooks: {
+                ngAfterViewInit: {
+                  code: '',
+                },
+              },
+            },
+          };
+        }
+        root.compileContext.angular!.hooks!.ngAfterViewInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`;
         addCodeToOnUpdate(
           root,
           `this.setAttributes(this.${refName}?.nativeElement, ${spreadCode}${
@@ -1129,10 +1140,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }
 
       ${
-        // a special case for Angular where we need to use ngAfterViewInit instead of ngOnInit
-        // to make sure the view is fully initialized and set destructured properties using ViewChild
-        (json.meta.onViewInit as BaseHook)?.code
-          ? `ngAfterViewInit() { ${(json.meta.onViewInit as BaseHook).code} }`
+        // hooks specific to Angular
+        json.compileContext?.angular?.hooks
+          ? Object.entries(json.compileContext?.angular?.hooks).map(([key, value]) => {
+              return `${key}() {
+            ${value.code}
+          }`;
+            })
           : ''
       }
 
@@ -1174,6 +1188,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     if (options.plugins) {
       str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
+
+    delete json.compileContext?.angular;
 
     return str;
   };
