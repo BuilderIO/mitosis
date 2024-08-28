@@ -363,10 +363,11 @@ const componentMappers: {
       },
       scope: {
         forName: block.component!.options!.repeat!.itemName,
-        indexName: '$index',
       },
       meta: getMetaFromBlock(block, options),
-      children: (block.children || []).map((child) => builderElementToMitosisNode(child, options)),
+      children: (block.children || []).map((child) =>
+        builderElementToMitosisNode(updateBindings(child, 'state.$index', 'index'), options),
+      ),
     });
   },
   Text: (block, options) => {
@@ -522,10 +523,12 @@ export const builderElementToMitosisNode = (
         },
         scope: {
           forName: block.repeat?.itemName || 'item',
-          indexName: '$index',
         },
         meta: getMetaFromBlock(block, options),
-        children: block.children?.map((child) => builderElementToMitosisNode(child, options)) || [],
+        children:
+          block.children?.map((child) =>
+            builderElementToMitosisNode(updateBindings(child, 'state.$index', 'index'), options),
+          ) || [],
       });
     } else {
       const useBlock =
@@ -872,6 +875,29 @@ export function convertExportDefaultToReturn(code: string) {
     }
   }
 }
+
+const updateBindings = (node: BuilderElement, from: string, to: string) => {
+  traverse(node).forEach(function (item) {
+    if (isBuilderElement(item)) {
+      if (item.bindings) {
+        for (const [key, value] of Object.entries(item.bindings)) {
+          if (value?.includes(from)) {
+            item.bindings[key] = value.replaceAll(from, to);
+          }
+        }
+      }
+      if (item.actions) {
+        for (const [key, value] of Object.entries(item.actions)) {
+          if (value?.includes(from)) {
+            item.actions[key] = value.replaceAll(from, to);
+          }
+        }
+      }
+    }
+  });
+
+  return node;
+};
 
 // TODO: maybe this should be part of the builder -> Mitosis part
 function extractSymbols(json: BuilderContent) {

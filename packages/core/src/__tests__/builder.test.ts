@@ -172,6 +172,10 @@ describe('Builder', () => {
       export default function MyComponent(props) {
         const state = useStore({ people: ["Steve", "Sewell"] });
 
+        onMount(() => {
+          state.people.push("John");
+        });
+
         return (
           <For each={state.people}>
             {(person, index) => (
@@ -400,6 +404,15 @@ describe('Builder', () => {
     expect(component).toMatchSnapshot();
     expect(out).toMatchSnapshot();
   });
+
+  test('binding', () => {
+    const component = builderContentToMitosisComponent(bindingJson as any as BuilderContent);
+    expect(component).toMatchSnapshot();
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component,
+    });
+    expect(mitosis).toMatchSnapshot();
+  });
 });
 
 const bindingJson = {
@@ -503,14 +516,3 @@ const bindingJson = {
     ],
   },
 };
-
-describe('builder', () => {
-  test('binding', () => {
-    const component = builderContentToMitosisComponent(bindingJson as any as BuilderContent);
-    expect(component).toMatchSnapshot();
-    const mitosis = componentToMitosis(mitosisOptions)({
-      component,
-    });
-    expect(mitosis).toMatchSnapshot();
-  });
-});
