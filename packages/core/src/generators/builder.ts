@@ -1,5 +1,6 @@
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
-import { replaceIdentifiers } from '@/helpers/replace-identifiers';
+import { replaceNodes } from '@/helpers/replace-identifiers';
+import { types } from '@babel/core';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { attempt, mapValues, omit, omitBy, set } from 'lodash';
@@ -99,10 +100,17 @@ const componentMappers: {
         if (isMitosisNode(thing)) {
           for (const [key, value] of Object.entries(thing.bindings)) {
             if (value?.code.includes('index')) {
-              thing.bindings[key]!.code = replaceIdentifiers({
+              thing.bindings[key]!.code = replaceNodes({
                 code: value.code,
-                from: 'index',
-                to: 'state.$index',
+                nodeMaps: [
+                  {
+                    from: types.identifier('index'),
+                    to: types.memberExpression(
+                      types.identifier('state'),
+                      types.identifier('$index'),
+                    ),
+                  },
+                ],
               });
             }
           }
