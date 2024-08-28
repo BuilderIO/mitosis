@@ -60,7 +60,7 @@ export const blockToMitosis = (
   if (checkIsForNode(json)) {
     const needsWrapper = json.children.length !== 1;
     return `<For each={${json.bindings.each?.code}}>
-    {(${json.scope.forName}, index) =>
+    {(${json.scope.forName}, ${json.scope.indexName || 'index'}) =>
       ${needsWrapper ? '<>' : ''}
         ${json.children.map((child) => blockToMitosis(child, options, component))}}
       ${needsWrapper ? '</>' : ''}
