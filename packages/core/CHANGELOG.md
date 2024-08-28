@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.2
+
+### Patch Changes
+
+- c29e3ca: fix index in for loops between mitosis<->builder
+
 ## 0.4.1
 
 ### Patch Changes
