@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.4.1
+
+### Patch Changes
+
+- 1943604: state parser supports string literal keys
+- d446881: Angular: Fix: `useObjectWrapper` logic to correctly handle spread and objects as arguments
+
 ## 0.4.0
 
 ### Minor Changes
