@@ -1169,7 +1169,11 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           ? ''
           : `ngOnDestroy() {
               ${json.hooks.onUnMount?.code || ''}
-              ${refsForObjSpread.size ? `for (let fn of this._listenerFns.values()) { fn(); }` : ''}
+              ${
+                refsForObjSpread.size
+                  ? `for (const fn of this._listenerFns.values()) { fn(); }`
+                  : ''
+              }
             }`
       }
 
