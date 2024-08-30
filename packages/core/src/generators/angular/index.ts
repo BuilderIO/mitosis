@@ -1193,8 +1193,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
     }
 
-    delete json.compileContext?.angular;
-
     return str;
   };
 
