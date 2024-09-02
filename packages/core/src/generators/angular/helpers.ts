@@ -39,7 +39,7 @@ export const HELPER_FUNCTIONS = (
           target[key]
         ));
       } else {
-        this.renderer.setAttribute(el, key, target[key] ?? '');
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? '');
       }
     });
   }`,

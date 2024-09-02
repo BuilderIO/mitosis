@@ -455,10 +455,10 @@ export const blockToAngular = ({
           json.meta._spreadStateRef = (json.meta._spreadStateRef as number) + 1;
           makeReactiveState(root, name, `this.${name} = ${json.bindings[key]?.code};`);
           spreadCode = `this.${name}`;
-          changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue || {}`;
+          changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue`;
         } else {
           spreadCode = `${json.bindings[key]?.code}`;
-          changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue || {}`;
+          changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue`;
         }
         if (!root.compileContext) {
           root.compileContext = {
