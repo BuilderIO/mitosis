@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.4.2
+
+### Patch Changes
+
+- c29e3ca: fix index in for loops between mitosis<->builder
+
+## 0.4.1
+
+### Patch Changes
+
+- 1943604: state parser supports string literal keys
+- d446881: Angular: Fix: `useObjectWrapper` logic to correctly handle spread and objects as arguments
+
 ## 0.4.0
 
 ### Minor Changes

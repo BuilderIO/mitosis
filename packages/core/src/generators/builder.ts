@@ -1,3 +1,6 @@
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { replaceNodes } from '@/helpers/replace-identifiers';
+import { types } from '@babel/core';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { attempt, mapValues, omit, omitBy, set } from 'lodash';
@@ -91,6 +94,31 @@ const componentMappers: {
     return block;
   },
   For(_node, options) {
+    // rename `index` var to `state.$index`
+    const replaceIndex = (node: MitosisNode) => {
+      traverse(node).forEach(function (thing) {
+        if (isMitosisNode(thing)) {
+          for (const [key, value] of Object.entries(thing.bindings)) {
+            if (value?.code.includes('index')) {
+              thing.bindings[key]!.code = replaceNodes({
+                code: value.code,
+                nodeMaps: [
+                  {
+                    from: types.identifier('index'),
+                    to: types.memberExpression(
+                      types.identifier('state'),
+                      types.identifier('$index'),
+                    ),
+                  },
+                ],
+              });
+            }
+          }
+        }
+      });
+      return node;
+    };
+
     const node = _node as any as ForNode;
     return el(
       {
@@ -103,7 +131,7 @@ const componentMappers: {
         },
         children: node.children
           .filter(filterEmptyTextNodes)
-          .map((node) => blockToBuilder(node, options)),
+          .map((node) => blockToBuilder(replaceIndex(node), options)),
       },
       options,
     );

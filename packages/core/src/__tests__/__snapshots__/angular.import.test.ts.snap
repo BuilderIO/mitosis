@@ -1549,7 +1549,10 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"img-component\\",
   template: \`
     <img
-      [ngStyle]=\\"useObjectWrapper({ objectFit: backgroundSize || 'cover' }, { objectPosition: backgroundPosition || 'center' })\\"
+      [ngStyle]=\\"{
+          objectFit: backgroundSize || 'cover',
+          objectPosition: backgroundPosition || 'center'
+        }\\"
       [attr.alt]=\\"altText\\"
       [attr.src]=\\"imgSrc\\"
     />
@@ -1568,14 +1571,6 @@ export default class ImgComponent {
   @Input() attributes;
   @Input() imgSrc;
   @Input() altText;
-
-  useObjectWrapper(...args) {
-    let obj = {};
-    args.forEach((arg) => {
-      obj = { ...obj, ...arg };
-    });
-    return obj;
-  }
 }
 
 @NgModule({
@@ -1762,7 +1757,11 @@ import { Component, Input } from \\"@angular/core\\";
   template: \`
     <ng-container *ngIf=\\"max\\">
       <ng-container *ngFor=\\"let item of items\\">
-        <section [ngStyle]=\\"useObjectWrapper({ maxWidth: item + max })\\">
+        <section
+          [ngStyle]=\\"{
+          maxWidth: item + max
+        }\\"
+        >
           <ng-content></ng-content>
         </section>
       </ng-container>
@@ -1781,14 +1780,6 @@ export default class SectionStateComponent {
 
   max = 42;
   items = [42];
-
-  useObjectWrapper(...args) {
-    let obj = {};
-    args.forEach((arg) => {
-      obj = { ...obj, ...arg };
-    });
-    return obj;
-  }
 }
 
 @NgModule({
@@ -2229,7 +2220,13 @@ import { Component, Input } from \\"@angular/core\\";
   template: \`
     <video
       preload=\\"none\\"
-      [ngStyle]=\\"useObjectWrapper(attributes?.style, { width: '100%' }, { height: '100%' }, { objectFit: fit }, { objectPosition: position }, { borderRadius: 1 })\\"
+      [ngStyle]=\\"useObjectWrapper({
+          width: '100%' },{
+          height: '100%' },
+          attributes?.style,{
+          objectFit: fit },{
+          objectPosition: position },{
+              borderRadius: 1 },)\\"
       [attr.poster]=\\"posterImage\\"
       [attr.autoplay]=\\"autoPlay\\"
       [attr.muted]=\\"muted\\"
@@ -4966,7 +4963,12 @@ import { Component, Input } from \\"@angular/core\\";
 @Component({
   selector: \\"my-component, MyComponent\\",
   template: \`
-    <Comp [val]=\\"useObjectWrapper(val)\\">{{val}}</Comp>
+    <Comp
+      [val]=\\"useObjectWrapper( val
+        )\\"
+    >
+      {{val}}
+    </Comp>
   \`,
   styles: [
     \`
@@ -5003,6 +5005,99 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > string-literal-store 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"string-literal-store, StringLiteralStore\\",
+  template: \`
+    <div>{{foo}}</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class StringLiteralStore {
+  foo = 123;
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+})
+export class StringLiteralStoreModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > string-literal-store-kebab 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from '@angular/core';
+
+
+
+
+
+
+
+
+
+
+@Component({
+  selector: 'string-literal-store, StringLiteralStore',template: \`
+
+        <div>{{'foo-bar'}}</div>
+
+        \`,styles: [\`:host { display: contents; }\`]
+})
+export default class StringLiteralStore {
+
+
+
+
+
+
+
+
+
+
+
+
+
+   foo-bar= 123
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+  
+})
+export class StringLiteralStoreModule {}"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -5014,7 +5109,9 @@ import { Component } from \\"@angular/core\\";
   template: \`
     <div
       class=\\"builder-column div\\"
-      [ngStyle]=\\"useObjectWrapper({ width: '100%' })\\"
+      [ngStyle]=\\"{
+          width: '100%'
+        }\\"
     ></div>
   \`,
   styles: [
@@ -5030,15 +5127,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export default class MyComponent {
-  useObjectWrapper(...args) {
-    let obj = {};
-    args.forEach((arg) => {
-      obj = { ...obj, ...arg };
-    });
-    return obj;
-  }
-}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -5351,6 +5440,83 @@ export default class MyComponent {}
 @NgModule({
   declarations: [MyComponent],
   imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > useObjectWrapper 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <Comp
+        [val1]=\\"useObjectWrapper( attributes2
+        )\\"
+        [val2]=\\"useObjectWrapper( attributes,
+          attributes2
+        )\\"
+        [val3]=\\"useObjectWrapper( something,{
+          anything: 'hello' },{
+          hello: 'world' },)\\"
+        [val4]=\\"useObjectWrapper( attributes,
+          something,{
+          anything: [1, 2, 3] },{
+          hello: 'hello' },
+          attributes2
+        )\\"
+        [val5]=\\"useObjectWrapper( attributes,
+          something,{
+          anything: [1, 2, 3] },{
+          anythingString: ['a', 'b', 'c'] },{
+          hello: 'hello' },
+          spreadAttrs
+        )\\"
+        [val6]=\\"{
+          anything: [1, 2, 3]
+        }\\"
+      ></Comp>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() spreadAttrs;
+
+  attributes = {
+    id: 1,
+  };
+  attributes2 = {
+    id2: 1,
+  };
+  something = {
+    id3: 1,
+  };
+
+  useObjectWrapper(...args) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
   exports: [MyComponent],
 })
 export class MyComponentModule {}
@@ -7168,7 +7334,10 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"img-component\\",
   template: \`
     <img
-      [ngStyle]=\\"useObjectWrapper({ objectFit: backgroundSize || 'cover' }, { objectPosition: backgroundPosition || 'center' })\\"
+      [ngStyle]=\\"{
+          objectFit: backgroundSize || 'cover',
+          objectPosition: backgroundPosition || 'center'
+        }\\"
       [attr.alt]=\\"altText\\"
       [attr.src]=\\"imgSrc\\"
     />
@@ -7187,14 +7356,6 @@ export default class ImgComponent {
   @Input() attributes!: ImgProps[\\"attributes\\"];
   @Input() imgSrc!: ImgProps[\\"imgSrc\\"];
   @Input() altText!: ImgProps[\\"altText\\"];
-
-  useObjectWrapper(...args: any[]) {
-    let obj = {};
-    args.forEach((arg) => {
-      obj = { ...obj, ...arg };
-    });
-    return obj;
-  }
 }
 
 @NgModule({
@@ -7410,7 +7571,11 @@ export interface SectionProps {
   template: \`
     <ng-container *ngIf=\\"max\\">
       <ng-container *ngFor=\\"let item of items\\">
-        <section [ngStyle]=\\"useObjectWrapper({ maxWidth: item + max })\\">
+        <section
+          [ngStyle]=\\"{
+          maxWidth: item + max
+        }\\"
+        >
           <ng-content></ng-content>
         </section>
       </ng-container>
@@ -7429,14 +7594,6 @@ export default class SectionStateComponent {
 
   max = 42;
   items = [42];
-
-  useObjectWrapper(...args: any[]) {
-    let obj = {};
-    args.forEach((arg) => {
-      obj = { ...obj, ...arg };
-    });
-    return obj;
-  }
 }
 
 @NgModule({
@@ -7956,7 +8113,13 @@ export interface VideoProps {
   template: \`
     <video
       preload=\\"none\\"
-      [ngStyle]=\\"useObjectWrapper(attributes?.style, { width: '100%' }, { height: '100%' }, { objectFit: fit }, { objectPosition: position }, { borderRadius: 1 })\\"
+      [ngStyle]=\\"useObjectWrapper({
+          width: '100%' },{
+          height: '100%' },
+          attributes?.style,{
+          objectFit: fit },{
+          objectPosition: position },{
+              borderRadius: 1 },)\\"
       [attr.poster]=\\"posterImage\\"
       [attr.autoplay]=\\"autoPlay\\"
       [attr.muted]=\\"muted\\"
@@ -10863,7 +11026,12 @@ import { Component, Input } from \\"@angular/core\\";
 @Component({
   selector: \\"my-component, MyComponent\\",
   template: \`
-    <Comp [val]=\\"useObjectWrapper(val)\\">{{val}}</Comp>
+    <Comp
+      [val]=\\"useObjectWrapper( val
+        )\\"
+    >
+      {{val}}
+    </Comp>
   \`,
   styles: [
     \`
@@ -10900,6 +11068,99 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > string-literal-store 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"string-literal-store, StringLiteralStore\\",
+  template: \`
+    <div>{{foo}}</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class StringLiteralStore {
+  foo = 123;
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+})
+export class StringLiteralStoreModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > string-literal-store-kebab 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from '@angular/core';
+
+
+
+
+
+
+
+
+
+
+@Component({
+  selector: 'string-literal-store, StringLiteralStore',template: \`
+
+        <div>{{'foo-bar'}}</div>
+
+        \`,styles: [\`:host { display: contents; }\`]
+})
+export default class StringLiteralStore {
+
+
+
+
+
+
+
+
+
+
+
+
+
+   foo-bar= 123
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+  
+})
+export class StringLiteralStoreModule {}"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > styleClassAndCss 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -10911,7 +11172,9 @@ import { Component } from \\"@angular/core\\";
   template: \`
     <div
       class=\\"builder-column div\\"
-      [ngStyle]=\\"useObjectWrapper({ width: '100%' })\\"
+      [ngStyle]=\\"{
+          width: '100%'
+        }\\"
     ></div>
   \`,
   styles: [
@@ -10927,15 +11190,7 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export default class MyComponent {
-  useObjectWrapper(...args: any[]) {
-    let obj = {};
-    args.forEach((arg) => {
-      obj = { ...obj, ...arg };
-    });
-    return obj;
-  }
-}
+export default class MyComponent {}
 
 @NgModule({
   declarations: [MyComponent],
@@ -11256,6 +11511,83 @@ export default class MyComponent {}
 @NgModule({
   declarations: [MyComponent],
   imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > useObjectWrapper 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <Comp
+        [val1]=\\"useObjectWrapper( attributes2
+        )\\"
+        [val2]=\\"useObjectWrapper( attributes,
+          attributes2
+        )\\"
+        [val3]=\\"useObjectWrapper( something,{
+          anything: 'hello' },{
+          hello: 'world' },)\\"
+        [val4]=\\"useObjectWrapper( attributes,
+          something,{
+          anything: [1, 2, 3] },{
+          hello: 'hello' },
+          attributes2
+        )\\"
+        [val5]=\\"useObjectWrapper( attributes,
+          something,{
+          anything: [1, 2, 3] },{
+          anythingString: ['a', 'b', 'c'] },{
+          hello: 'hello' },
+          spreadAttrs
+        )\\"
+        [val6]=\\"{
+          anything: [1, 2, 3]
+        }\\"
+      ></Comp>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() spreadAttrs!: any;
+
+  attributes = {
+    id: 1,
+  };
+  attributes2 = {
+    id2: 1,
+  };
+  something = {
+    id3: 1,
+  };
+
+  useObjectWrapper(...args: any[]) {
+    let obj = {};
+    args.forEach((arg) => {
+      obj = { ...obj, ...arg };
+    });
+    return obj;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, CompModule],
   exports: [MyComponent],
 })
 export class MyComponentModule {}
