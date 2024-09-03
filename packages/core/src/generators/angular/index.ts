@@ -57,16 +57,23 @@ import {
 } from './types';
 
 const mappers: {
-  [key: string]: (root: MitosisComponent, json: MitosisNode, options: ToAngularOptions) => string;
+  [key: string]: (
+    root: MitosisComponent,
+    json: MitosisNode,
+    options: ToAngularOptions,
+    blockOptions: AngularBlockOptions,
+  ) => string;
 } = {
-  Fragment: (root, json, options) => {
+  Fragment: (root, json, options, blockOptions) => {
     return `<ng-container>${json.children
-      .map((item) => blockToAngular({ root, json: item, options }))
+      .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
       .join('\n')}</ng-container>`;
   },
-  Slot: (root, json, options) => {
+  Slot: (root, json, options, blockOptions) => {
     const renderChildren = () =>
-      json.children?.map((item) => blockToAngular({ root, json: item, options })).join('\n');
+      json.children
+        ?.map((item) => blockToAngular({ root, json: item, options, blockOptions }))
+        .join('\n');
 
     return `<ng-content ${Object.entries({ ...json.bindings, ...json.properties })
       .map(([binding, value]) => {
@@ -220,7 +227,7 @@ const stringifyBinding =
       return ` #${code} `;
     } else if (
       (VALID_HTML_TAGS.includes(node.name.trim()) || keyToUse.includes('-')) &&
-      !blockOptions.nativeAttributes.includes(keyToUse) &&
+      !blockOptions.nativeAttributes?.includes(keyToUse) &&
       !Object.values(BINDINGS_MAPPER).includes(keyToUse)
     ) {
       // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
@@ -305,7 +312,7 @@ export const blockToAngular = ({
   const childComponents = blockOptions?.childComponents || [];
 
   if (mappers[json.name]) {
-    return mappers[json.name](root, json, options);
+    return mappers[json.name](root, json, options, blockOptions);
   }
 
   if (isChildren({ node: json })) {
@@ -817,7 +824,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
 
     const [forwardProp, hasPropRef] = getPropsRef(json, true);
-    const childComponents: string[] = [];
+    const childComponents: string[] = [json.name]; // a component can be recursively used in itself
     const propsTypeRef = json.propsTypeRef !== 'any' ? json.propsTypeRef : undefined;
 
     json.imports.forEach(({ imports }) => {
@@ -943,11 +950,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
-      selector: `'${kebabCase(json.name || 'my-component')}, ${json.name}'`,
+      selector: useMetadata?.angular?.selector
+        ? `'${useMetadata?.angular?.selector}'`
+        : `'${kebabCase(json.name || 'my-component')}'`,
       template: `\`
-        ${indent(dynamicTemplate, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
-        ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
-        \``,
+      ${indent(dynamicTemplate, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
+      ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
+      \``,
       ...(styles
         ? {
             styles: `[\`${indent(styles, 8)}\`]`,
