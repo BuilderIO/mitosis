@@ -718,7 +718,13 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Button 1`] =
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"button, Button\\",
@@ -728,12 +734,13 @@ import { Component, Input } from \\"@angular/core\\";
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" #elRef1>{{text}}</button>
       </ng-container>
     </div>
   \`,
@@ -750,6 +757,65 @@ export default class Button {
   @Input() attributes;
   @Input() openLinkInNewTab;
   @Input() text;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -875,7 +941,13 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > ContentSlotJ
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 const defaultProps = {
   content: \\"\\",
@@ -892,6 +964,7 @@ const defaultProps = {
         [attr.title]=\\"slotContent ? 'title1' : 'title2'\\"
         (click)=\\"show()\\"
         [class]=\\"cls\\"
+        #elRef0
       >
         <ng-container *ngIf=\\"showContent && slotContent\\">
           <ng-content select=\\"[content]\\">{{content}}</ng-content>
@@ -913,6 +986,10 @@ export default class ContentSlotJsxCode {
   @Input() attributes;
   @Input() content = defaultProps[\\"content\\"];
 
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
   name = \\"king\\";
   showContent = false;
   get cls() {
@@ -920,6 +997,53 @@ export default class ContentSlotJsxCode {
   }
   show() {
     this.slotContent ? 1 : \\"\\";
+  }
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -1117,7 +1241,13 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Form 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import {
@@ -1137,6 +1267,7 @@ import {
       [attr.method]=\\"method\\"
       [attr.name]=\\"name\\"
       (submit)=\\"onSubmit($event)\\"
+      #elRef0
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
@@ -1207,6 +1338,10 @@ export default class FormComponent {
   @Input() successMessage;
 
   @ViewChild(\\"formRef\\") formRef;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -1427,8 +1562,55 @@ export default class FormComponent {
       );
     }
   }
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
   trackByBlock0(index, block) {
     return block.id;
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -1597,7 +1779,13 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Img 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1611,6 +1799,7 @@ import { Builder } from \\"@builder.io/sdk\\";
         }\\"
       [attr.alt]=\\"altText\\"
       [attr.src]=\\"imgSrc\\"
+      #elRef0
     />
   \`,
   styles: [
@@ -1627,6 +1816,58 @@ export default class ImgComponent {
   @Input() attributes;
   @Input() imgSrc;
   @Input() altText;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -1643,7 +1884,13 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Input 1`] = 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1658,6 +1905,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
       (input)=\\"onChange?.($event.target.value)\\"
+      #elRef0
     />
   \`,
   styles: [
@@ -1677,6 +1925,58 @@ export default class FormInputComponent {
   @Input() value;
   @Input() required;
   @Input() onChange;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -1771,7 +2071,13 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Section 1`] 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"section-component, SectionComponent\\",
@@ -1780,6 +2086,7 @@ import { Component, Input } from \\"@angular/core\\";
       [ngStyle]=\\"maxWidth && typeof maxWidth === 'number' ? {
           maxWidth: maxWidth
         } : undefined\\"
+      #elRef0
     >
       <ng-content></ng-content>
     </section>
@@ -1795,6 +2102,58 @@ import { Component, Input } from \\"@angular/core\\";
 export default class SectionComponent {
   @Input() attributes;
   @Input() maxWidth;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -1811,7 +2170,13 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Section 2`] 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"section-state-component, SectionStateComponent\\",
@@ -1822,6 +2187,7 @@ import { Component, Input } from \\"@angular/core\\";
           [ngStyle]=\\"{
           maxWidth: item + max
         }\\"
+          #elRef0
         >
           <ng-content></ng-content>
         </section>
@@ -1839,8 +2205,59 @@ import { Component, Input } from \\"@angular/core\\";
 export default class SectionStateComponent {
   @Input() attributes;
 
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
   max = 42;
   items = [42];
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -1857,7 +2274,13 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Select 1`] =
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1868,6 +2291,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.name]=\\"name\\"
+      #elRef0
     >
       <ng-container *ngFor=\\"let option of options; let index = index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
@@ -1890,6 +2314,58 @@ export default class SelectComponent {
   @Input() defaultValue;
   @Input() name;
   @Input() options;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -2164,12 +2640,18 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Submit 1`] =
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"submit-button, SubmitButton\\",
   template: \`
-    <button type=\\"submit\\">{{text}}</button>
+    <button type=\\"submit\\" #elRef0>{{text}}</button>
   \`,
   styles: [
     \`
@@ -2182,6 +2664,58 @@ import { Component, Input } from \\"@angular/core\\";
 export default class SubmitButton {
   @Input() attributes;
   @Input() text;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -2242,7 +2776,13 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Textarea 1`]
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"textarea, Textarea\\",
@@ -2252,6 +2792,7 @@ import { Component, Input } from \\"@angular/core\\";
       [attr.name]=\\"name\\"
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
+      #elRef0
     ></textarea>
   \`,
   styles: [
@@ -2268,6 +2809,58 @@ export default class Textarea {
   @Input() name;
   @Input() value;
   @Input() defaultValue;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -2284,7 +2877,13 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Video 1`] = 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"video, Video\\",
@@ -2303,6 +2902,7 @@ import { Component, Input } from \\"@angular/core\\";
       [attr.muted]=\\"muted\\"
       [attr.controls]=\\"controls\\"
       [attr.loop]=\\"loop\\"
+      #elRef0
     ></video>
   \`,
   styles: [
@@ -2324,12 +2924,64 @@ export default class Video {
   @Input() controls;
   @Input() loop;
 
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
   useObjectWrapper(...args) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
     });
     return obj;
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -2340,6 +2992,141 @@ export default class Video {
   bootstrap: [SomeOtherComponent],
 })
 export class VideoModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > allSpread 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div #elRef0>
+      Hello! I can run natively in React, Vue, Svelte, Qwik, and many more
+      frameworks!
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() attributes;
+  @Input() accessHere;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
+  attrsUsingUseState = {
+    hello: \\"world\\",
+  };
+  properties = {
+    style: \\"color: blue\\",
+    onClick: () => console.log(\\"pressed\\"),
+  };
+  specifics = {
+    someSpecificState: \\"specific\\",
+  };
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+  elRef0_state_0 = null;
+
+  constructor(private renderer) {}
+
+  ngOnInit() {
+    this.elRef0_state_0 = {
+      someOtherAttrs: this.accessHere,
+      someStateAttrs: this.specifics,
+    };
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attrsUsingUseState);
+    this.setAttributes(this.elRef0?.nativeElement, this.properties);
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef0?.nativeElement, this.elRef0_state_0);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attrsUsingUseState,
+        changes[\\"attrsUsingUseState\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.properties,
+        changes[\\"properties\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+      this.elRef0_state_0 = {
+        someOtherAttrs: this.accessHere,
+        someStateAttrs: this.specifics,
+      };
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.elRef0_state_0,
+        changes[\\"elRef0_state_0\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -2898,7 +3685,15 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > defaultProps
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+import {
+  Output,
+  EventEmitter,
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 const defaultProps = {
   text: \\"default text\\",
@@ -2917,12 +3712,13 @@ const defaultProps = {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
           {{buttonText}}
         </button>
       </ng-container>
@@ -2944,6 +3740,65 @@ export default class Button {
   @Input() buttonText;
 
   @Output() onClick = new EventEmitter();
+
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -2960,7 +3815,15 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > defaultProps
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+import {
+  Output,
+  EventEmitter,
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 const defaultProps = {
   text: \\"default text\\",
@@ -2977,12 +3840,13 @@ const defaultProps = {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
           {{text}}
         </button>
       </ng-container>
@@ -3003,6 +3867,65 @@ export default class Button {
   @Input() text = defaultProps[\\"text\\"];
 
   @Output() onClick = new EventEmitter();
+
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -3421,12 +4344,12 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > multipleSpre
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: [
     \`
@@ -3437,9 +4360,60 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
   attrs = {
     hello: \\"world\\",
   };
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attrs,
+        changes[\\"attrs\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -4517,7 +5491,13 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > rootFragment
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"button, Button\\",
@@ -4527,12 +5507,13 @@ import { Component, Input } from \\"@angular/core\\";
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" #elRef1>{{text}}</button>
       </ng-container>
     </ng-container>
   \`,
@@ -4549,6 +5530,65 @@ export default class Button {
   @Input() attributes;
   @Input() openLinkInNewTab;
   @Input() text;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+  @ViewChild(\\"elRef1\\") elRef1;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -4914,12 +5954,12 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > spreadAttrs 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: [
     \`
@@ -4929,7 +5969,59 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export default class MyBasicComponent {}
+export default class MyBasicComponent {
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, attrs);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        attrs,
+        changes[\\"attrs\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
+}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -4945,12 +6037,18 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > spreadNested
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: [
     \`
@@ -4962,6 +6060,58 @@ import { Component, Input } from \\"@angular/core\\";
 })
 export default class MyBasicComponent {
   @Input() nested;
+
+  @ViewChild(\\"elRef0\\") elRef0;
+
+  _listenerFns = new Map();
+
+  setAttributes(el, value, changes) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.nested);
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.nested,
+        changes[\\"nested\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -5183,7 +6333,12 @@ export default class StringLiteralStore {
 
 
 
+
+
+
    foo-bar= 123
+
+
 
 
 
@@ -6513,7 +7668,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Button 1`] =
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -6530,12 +7692,13 @@ export interface ButtonProps {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" #elRef1>{{text}}</button>
       </ng-container>
     </div>
   \`,
@@ -6552,6 +7715,65 @@ export default class Button {
   @Input() attributes!: ButtonProps[\\"attributes\\"];
   @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"];
   @Input() text!: ButtonProps[\\"text\\"];
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -6699,7 +7921,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > ContentSlotJ
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -6721,6 +7950,7 @@ import { JSX } from \\"../../../../jsx-runtime\\";
         [attr.title]=\\"slotContent ? 'title1' : 'title2'\\"
         (click)=\\"show()\\"
         [class]=\\"cls\\"
+        #elRef0
       >
         <ng-container *ngIf=\\"showContent && slotContent\\">
           <ng-content select=\\"[content]\\">{{content}}</ng-content>
@@ -6742,6 +7972,10 @@ export default class ContentSlotJsxCode {
   @Input() attributes!: Props[\\"attributes\\"];
   @Input() content!: Props[\\"content\\"] = defaultProps[\\"content\\"];
 
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
   name = \\"king\\";
   showContent = false;
   get cls() {
@@ -6749,6 +7983,53 @@ export default class ContentSlotJsxCode {
   }
   show() {
     this.slotContent ? 1 : \\"\\";
+  }
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -6956,7 +8237,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Form 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface FormProps {
   attributes?: any;
@@ -7000,6 +8288,7 @@ import {
       [attr.method]=\\"method\\"
       [attr.name]=\\"name\\"
       (submit)=\\"onSubmit($event)\\"
+      #elRef0
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
@@ -7070,6 +8359,10 @@ export default class FormComponent {
   @Input() successMessage!: FormProps[\\"successMessage\\"];
 
   @ViewChild(\\"formRef\\") formRef!: ElementRef;
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
 
   formState = \\"unsubmitted\\";
   responseData = null;
@@ -7297,8 +8590,55 @@ export default class FormComponent {
       );
     }
   }
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
   trackByBlock0(index, block) {
     return block.id;
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -7486,7 +8826,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Img 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ImgProps {
   attributes?: any;
@@ -7517,6 +8864,7 @@ import { Builder } from \\"@builder.io/sdk\\";
         }\\"
       [attr.alt]=\\"altText\\"
       [attr.src]=\\"imgSrc\\"
+      #elRef0
     />
   \`,
   styles: [
@@ -7533,6 +8881,58 @@ export default class ImgComponent {
   @Input() attributes!: ImgProps[\\"attributes\\"];
   @Input() imgSrc!: ImgProps[\\"imgSrc\\"];
   @Input() altText!: ImgProps[\\"altText\\"];
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -7549,7 +8949,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Input 1`] = 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface FormInputProps {
   type?: string;
@@ -7575,6 +8982,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
       (input)=\\"onChange?.($event.target.value)\\"
+      #elRef0
     />
   \`,
   styles: [
@@ -7594,6 +9002,58 @@ export default class FormInputComponent {
   @Input() value!: FormInputProps[\\"value\\"];
   @Input() required!: FormInputProps[\\"required\\"];
   @Input() onChange!: FormInputProps[\\"onChange\\"];
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -7693,7 +9153,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Section 1`] 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -7708,6 +9175,7 @@ export interface SectionProps {
       [ngStyle]=\\"maxWidth && typeof maxWidth === 'number' ? {
           maxWidth: maxWidth
         } : undefined\\"
+      #elRef0
     >
       <ng-content></ng-content>
     </section>
@@ -7723,6 +9191,58 @@ export interface SectionProps {
 export default class SectionComponent {
   @Input() attributes!: SectionProps[\\"attributes\\"];
   @Input() maxWidth!: SectionProps[\\"maxWidth\\"];
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -7739,7 +9259,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Section 2`] 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -7756,6 +9283,7 @@ export interface SectionProps {
           [ngStyle]=\\"{
           maxWidth: item + max
         }\\"
+          #elRef0
         >
           <ng-content></ng-content>
         </section>
@@ -7773,8 +9301,59 @@ export interface SectionProps {
 export default class SectionStateComponent {
   @Input() attributes!: SectionProps[\\"attributes\\"];
 
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
   max = 42;
   items = [42];
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -7791,7 +9370,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Select 1`] =
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface FormSelectProps {
   options?: {
@@ -7813,6 +9399,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.name]=\\"name\\"
+      #elRef0
     >
       <ng-container *ngFor=\\"let option of options; let index = index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
@@ -7835,6 +9422,58 @@ export default class SelectComponent {
   @Input() defaultValue!: FormSelectProps[\\"defaultValue\\"];
   @Input() name!: FormSelectProps[\\"name\\"];
   @Input() options!: FormSelectProps[\\"options\\"];
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -8130,7 +9769,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Submit 1`] =
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -8140,7 +9786,7 @@ export interface ButtonProps {
 @Component({
   selector: \\"submit-button, SubmitButton\\",
   template: \`
-    <button type=\\"submit\\">{{text}}</button>
+    <button type=\\"submit\\" #elRef0>{{text}}</button>
   \`,
   styles: [
     \`
@@ -8153,6 +9799,58 @@ export interface ButtonProps {
 export default class SubmitButton {
   @Input() attributes!: ButtonProps[\\"attributes\\"];
   @Input() text!: ButtonProps[\\"text\\"];
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -8221,7 +9919,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Textarea 1`]
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface TextareaProps {
   attributes?: any;
@@ -8239,6 +9944,7 @@ export interface TextareaProps {
       [attr.name]=\\"name\\"
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
+      #elRef0
     ></textarea>
   \`,
   styles: [
@@ -8255,6 +9961,58 @@ export default class Textarea {
   @Input() name!: TextareaProps[\\"name\\"];
   @Input() value!: TextareaProps[\\"value\\"];
   @Input() defaultValue!: TextareaProps[\\"defaultValue\\"];
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -8271,7 +10029,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Video 1`] = 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface VideoProps {
   attributes?: any;
@@ -8316,6 +10081,7 @@ export interface VideoProps {
       [attr.muted]=\\"muted\\"
       [attr.controls]=\\"controls\\"
       [attr.loop]=\\"loop\\"
+      #elRef0
     ></video>
   \`,
   styles: [
@@ -8337,12 +10103,64 @@ export default class Video {
   @Input() controls!: VideoProps[\\"controls\\"];
   @Input() loop!: VideoProps[\\"loop\\"];
 
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
   useObjectWrapper(...args: any[]) {
     let obj = {};
     args.forEach((arg) => {
       obj = { ...obj, ...arg };
     });
     return obj;
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
   }
 }
 
@@ -8353,6 +10171,142 @@ export default class Video {
   bootstrap: [SomeOtherComponent],
 })
 export class VideoModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > allSpread 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div #elRef0>
+      Hello! I can run natively in React, Vue, Svelte, Qwik, and many more
+      frameworks!
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() attributes!: any;
+  @Input() accessHere!: any;
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  attrsUsingUseState = {
+    hello: \\"world\\",
+  };
+  properties = {
+    style: \\"color: blue\\",
+    onClick: () => console.log(\\"pressed\\"),
+  };
+  specifics = {
+    someSpecificState: \\"specific\\",
+  };
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+  elRef0_state_0 = null;
+
+  constructor(private renderer: Renderer2) {}
+
+  ngOnInit() {
+    this.elRef0_state_0 = {
+      someOtherAttrs: this.accessHere,
+      someStateAttrs: this.specifics,
+    };
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attrsUsingUseState);
+    this.setAttributes(this.elRef0?.nativeElement, this.properties);
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef0?.nativeElement, this.elRef0_state_0);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attrsUsingUseState,
+        changes[\\"attrsUsingUseState\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.properties,
+        changes[\\"properties\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+      this.elRef0_state_0 = {
+        someOtherAttrs: this.accessHere,
+        someStateAttrs: this.specifics,
+      };
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.elRef0_state_0,
+        changes[\\"elRef0_state_0\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -8938,7 +10892,16 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > defaultProps
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+import {
+  Output,
+  EventEmitter,
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -8966,12 +10929,13 @@ const defaultProps = {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
           {{buttonText}}
         </button>
       </ng-container>
@@ -8994,6 +10958,65 @@ export default class Button {
   @Input() buttonText!: ButtonProps[\\"buttonText\\"];
 
   @Output() onClick = new EventEmitter();
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -9010,7 +11033,16 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > defaultProps
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+import {
+  Output,
+  EventEmitter,
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -9034,12 +11066,13 @@ const defaultProps = {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
           {{text}}
         </button>
       </ng-container>
@@ -9061,6 +11094,65 @@ export default class Button {
   @Input() text!: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
 
   @Output() onClick = new EventEmitter();
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -9497,12 +11589,18 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > multipleSpre
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: [
     \`
@@ -9513,9 +11611,60 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class MyBasicComponent {
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
   attrs = {
     hello: \\"world\\",
   };
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attrs);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attrs,
+        changes[\\"attrs\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -10665,7 +12814,14 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > rootFragment
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -10682,12 +12838,13 @@ export interface ButtonProps {
         <a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+          #elRef0
         >
           {{text}}
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" #elRef1>{{text}}</button>
       </ng-container>
     </ng-container>
   \`,
@@ -10704,6 +12861,65 @@ export default class Button {
   @Input() attributes!: ButtonProps[\\"attributes\\"];
   @Input() openLinkInNewTab!: ButtonProps[\\"openLinkInNewTab\\"];
   @Input() text!: ButtonProps[\\"text\\"];
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+  @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.attributes);
+    this.setAttributes(this.elRef1?.nativeElement, this.attributes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+      this.setAttributes(
+        this.elRef1?.nativeElement,
+        this.attributes,
+        changes[\\"attributes\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -11100,12 +13316,18 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > spreadAttrs 
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: [
     \`
@@ -11115,7 +13337,59 @@ import { Component } from \\"@angular/core\\";
     \`,
   ],
 })
-export default class MyBasicComponent {}
+export default class MyBasicComponent {
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, attrs);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        attrs,
+        changes[\\"attrs\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
+}
 
 @NgModule({
   declarations: [MyBasicComponent],
@@ -11131,12 +13405,19 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > spreadNested
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component, MyBasicComponent\\",
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: [
     \`
@@ -11148,6 +13429,58 @@ import { Component, Input } from \\"@angular/core\\";
 })
 export default class MyBasicComponent {
   @Input() nested!: any;
+
+  @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
+
+  _listenerFns = new Map<string, () => void>();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0?.nativeElement, this.nested);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.setAttributes(
+        this.elRef0?.nativeElement,
+        this.nested,
+        changes[\\"nested\\"]?.currentValue
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 
 @NgModule({
@@ -11369,7 +13702,12 @@ export default class StringLiteralStore {
 
 
 
+
+
+
    foo-bar= 123
+
+
 
 
 

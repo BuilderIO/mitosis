@@ -322,6 +322,7 @@ const ANGULAR_TESTS: Tests = {
   stateInit: getRawFile('./data/angular/state-init.raw.tsx'),
   stateInitSequence: getRawFile('./data/angular/state-init-sequence.raw.tsx'),
   useObjectWrapper: getRawFile('./data/angular/use-object-wrapper.raw.tsx'),
+  allSpread: getRawFile('./data/angular/all-spread.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {
