@@ -1656,12 +1656,15 @@ exports[`Html > jsx > Javascript Test > CustomCode 1`] = `
         if (elem && typeof window !== \\"undefined\\") {
           /** @type {HTMLScriptElement[]} */
           const scripts = elem.getElementsByTagName(\\"script\\");
+
           for (let i = 0; i < scripts.length; i++) {
             const script = scripts[i];
+
             if (script.src) {
               if (state.scriptsInserted.includes(script.src)) {
                 continue;
               }
+
               state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
@@ -1678,6 +1681,7 @@ exports[`Html > jsx > Javascript Test > CustomCode 1`] = `
               if (state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
+
               try {
                 state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
@@ -1743,12 +1747,15 @@ exports[`Html > jsx > Javascript Test > Embed 1`] = `
         if (elem && typeof window !== \\"undefined\\") {
           /** @type {HTMLScriptElement[]} */
           const scripts = elem.getElementsByTagName(\\"script\\");
+
           for (let i = 0; i < scripts.length; i++) {
             const script = scripts[i];
+
             if (script.src) {
               if (state.scriptsInserted.includes(script.src)) {
                 continue;
               }
+
               state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
@@ -1765,6 +1772,7 @@ exports[`Html > jsx > Javascript Test > Embed 1`] = `
               if (state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
+
               try {
                 state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
@@ -1927,6 +1935,7 @@ exports[`Html > jsx > Javascript Test > Image 1`] = `
         if (pictureRef) {
           const rect = pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
+
           if (rect.top < window.innerHeight + buffer) {
             state.load = true;
             update();
@@ -1936,6 +1945,7 @@ exports[`Html > jsx > Javascript Test > Image 1`] = `
           }
         }
       };
+
       state.scrollListener = listener;
       update();
       window.addEventListener(\\"scroll\\", listener, {
@@ -4580,14 +4590,19 @@ exports[`Html > jsx > Javascript Test > onMountMultiple 1`] = `
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
     };
+
     onMountHook_0();
+
     const onMountHook_1 = () => {
       console.log(\\"Another one runs on Mount\\");
     };
+
     onMountHook_1();
+
     const onMountHook_2 = () => {
       console.log(\\"SSR runs on Mount\\");
     };
+
     onMountHook_2();
   })();
 </script>
@@ -4882,10 +4897,13 @@ exports[`Html > jsx > Javascript Test > renderBlock 1`] = `
           context: props.context.context,
           shouldEvaluateBindings: false,
         }).component?.name;
+
         if (!componentName) {
           return null;
         }
+
         const ref = props.context.registeredComponents[componentName];
+
         if (!ref) {
           // TODO: Public doc page with more info about this message
           console.warn(\`
@@ -4940,6 +4958,7 @@ exports[`Html > jsx > Javascript Test > renderBlock 1`] = `
           componentRef: state.component?.component,
           componentOptions: {
             ...getBlockComponentOptions(state.useBlock),
+
             /**
              * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
              * they are provided to the component itself directly.
@@ -4947,10 +4966,7 @@ exports[`Html > jsx > Javascript Test > renderBlock 1`] = `
             ...(state.shouldWrap
               ? {}
               : {
-                  attributes: {
-                    ...state.attributes,
-                    ...state.actions,
-                  },
+                  attributes: { ...state.attributes, ...state.actions },
                 }),
             customBreakpoints:
               state.childrenContext?.content?.meta?.breakpoints,
@@ -4982,17 +4998,21 @@ exports[`Html > jsx > Javascript Test > renderBlock 1`] = `
          * which will not work if there is a repeat.
          */
         const { repeat, ...blockWithoutRepeat } = props.block;
+
         if (!repeat?.collection) {
           return undefined;
         }
+
         const itemsArray = evaluate({
           code: repeat.collection,
           state: props.context.state,
           context: props.context.context,
         });
+
         if (!Array.isArray(itemsArray)) {
           return undefined;
         }
+
         const collectionName = repeat.collection.split(\\".\\").pop();
         const itemNameToUse =
           repeat.itemName ||
@@ -5016,6 +5036,7 @@ exports[`Html > jsx > Javascript Test > renderBlock 1`] = `
         if (TARGET !== \\"reactNative\\") {
           return {};
         }
+
         const styles = getReactNativeBlockStyles({
           block: state.useBlock,
           context: props.context,
@@ -8447,12 +8468,15 @@ exports[`Html > jsx > Typescript Test > CustomCode 1`] = `
         if (elem && typeof window !== \\"undefined\\") {
           /** @type {HTMLScriptElement[]} */
           const scripts = elem.getElementsByTagName(\\"script\\");
+
           for (let i = 0; i < scripts.length; i++) {
             const script = scripts[i];
+
             if (script.src) {
               if (state.scriptsInserted.includes(script.src)) {
                 continue;
               }
+
               state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
@@ -8469,6 +8493,7 @@ exports[`Html > jsx > Typescript Test > CustomCode 1`] = `
               if (state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
+
               try {
                 state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
@@ -8534,12 +8559,15 @@ exports[`Html > jsx > Typescript Test > Embed 1`] = `
         if (elem && typeof window !== \\"undefined\\") {
           /** @type {HTMLScriptElement[]} */
           const scripts = elem.getElementsByTagName(\\"script\\");
+
           for (let i = 0; i < scripts.length; i++) {
             const script = scripts[i];
+
             if (script.src) {
               if (state.scriptsInserted.includes(script.src)) {
                 continue;
               }
+
               state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
@@ -8556,6 +8584,7 @@ exports[`Html > jsx > Typescript Test > Embed 1`] = `
               if (state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
+
               try {
                 state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
@@ -8718,6 +8747,7 @@ exports[`Html > jsx > Typescript Test > Image 1`] = `
         if (pictureRef) {
           const rect = pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
+
           if (rect.top < window.innerHeight + buffer) {
             state.load = true;
             update();
@@ -8727,6 +8757,7 @@ exports[`Html > jsx > Typescript Test > Image 1`] = `
           }
         }
       };
+
       state.scrollListener = listener;
       update();
       window.addEventListener(\\"scroll\\", listener, {
@@ -11371,14 +11402,19 @@ exports[`Html > jsx > Typescript Test > onMountMultiple 1`] = `
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
     };
+
     onMountHook_0();
+
     const onMountHook_1 = () => {
       console.log(\\"Another one runs on Mount\\");
     };
+
     onMountHook_1();
+
     const onMountHook_2 = () => {
       console.log(\\"SSR runs on Mount\\");
     };
+
     onMountHook_2();
   })();
 </script>
@@ -11673,10 +11709,13 @@ exports[`Html > jsx > Typescript Test > renderBlock 1`] = `
           context: props.context.context,
           shouldEvaluateBindings: false,
         }).component?.name;
+
         if (!componentName) {
           return null;
         }
+
         const ref = props.context.registeredComponents[componentName];
+
         if (!ref) {
           // TODO: Public doc page with more info about this message
           console.warn(\`
@@ -11731,6 +11770,7 @@ exports[`Html > jsx > Typescript Test > renderBlock 1`] = `
           componentRef: state.component?.component,
           componentOptions: {
             ...getBlockComponentOptions(state.useBlock),
+
             /**
              * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
              * they are provided to the component itself directly.
@@ -11738,10 +11778,7 @@ exports[`Html > jsx > Typescript Test > renderBlock 1`] = `
             ...(state.shouldWrap
               ? {}
               : {
-                  attributes: {
-                    ...state.attributes,
-                    ...state.actions,
-                  },
+                  attributes: { ...state.attributes, ...state.actions },
                 }),
             customBreakpoints:
               state.childrenContext?.content?.meta?.breakpoints,
@@ -11773,17 +11810,21 @@ exports[`Html > jsx > Typescript Test > renderBlock 1`] = `
          * which will not work if there is a repeat.
          */
         const { repeat, ...blockWithoutRepeat } = props.block;
+
         if (!repeat?.collection) {
           return undefined;
         }
+
         const itemsArray = evaluate({
           code: repeat.collection,
           state: props.context.state,
           context: props.context.context,
         });
+
         if (!Array.isArray(itemsArray)) {
           return undefined;
         }
+
         const collectionName = repeat.collection.split(\\".\\").pop();
         const itemNameToUse =
           repeat.itemName ||
@@ -11810,6 +11851,7 @@ exports[`Html > jsx > Typescript Test > renderBlock 1`] = `
         if (TARGET !== \\"reactNative\\") {
           return {};
         }
+
         const styles = getReactNativeBlockStyles({
           block: state.useBlock,
           context: props.context,

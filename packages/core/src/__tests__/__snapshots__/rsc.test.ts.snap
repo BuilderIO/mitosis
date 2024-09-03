@@ -400,12 +400,13 @@ import { useState, useRef, useEffect } from \\"react\\";
 export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null);
-  // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
+
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
+
   return ref;
 }
 
@@ -610,12 +611,15 @@ function CustomCode(props) {
     if (elem.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.current.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
+
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -632,6 +636,7 @@ function CustomCode(props) {
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -678,12 +683,15 @@ function CustomCode(props) {
     if (elem.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.current.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
+
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -700,6 +708,7 @@ function CustomCode(props) {
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -756,6 +765,7 @@ function FormComponent(props) {
 
   function onSubmit(event) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
     if (props.sendSubmissionsTo === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
@@ -763,13 +773,13 @@ function FormComponent(props) {
         event.preventDefault();
         return;
       }
+
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
       let body;
-      const formData = new FormData(el);
+      const formData = new FormData(el); // TODO: maybe support null
 
-      // TODO: maybe support null
       const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
@@ -777,6 +787,7 @@ function FormComponent(props) {
         .map((el) => {
           let value;
           const key = el.name;
+
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
               if (el.checked) {
@@ -790,6 +801,7 @@ function FormComponent(props) {
               value = el.checked;
             } else if (el.type === \\"number\\" || el.type === \\"range\\") {
               const num = el.valueAsNumber;
+
               if (!isNaN(num)) {
                 value = num;
               }
@@ -802,15 +814,18 @@ function FormComponent(props) {
           } else {
             value = el.value;
           }
+
           return {
             key,
             value,
           };
         });
       let contentType = props.contentType;
+
       if (props.sendSubmissionsTo === \\"email\\") {
         contentType = \\"multipart/form-data\\";
       }
+
       Array.from(formPairs).forEach(({ value }) => {
         if (
           value instanceof File ||
@@ -819,11 +834,10 @@ function FormComponent(props) {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      });
-
-      // TODO: send as urlEncoded or multipart by default
+      }); // TODO: send as urlEncoded or multipart by default
       // because of ease of use and reliability in browser API
       // for encoding the form?
+
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
@@ -834,6 +848,7 @@ function FormComponent(props) {
         });
         body = JSON.stringify(json);
       }
+
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */ !(
@@ -1024,6 +1039,7 @@ function Image(props) {
         if (pictureRef.current) {
           const rect = pictureRef.current.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
+
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
             setScrollListener(null);
@@ -1031,6 +1047,7 @@ function Image(props) {
           }
         }
       };
+
       setScrollListener(listener);
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -1810,6 +1827,7 @@ function ComponentWithContext(props) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
+
           content() {
             return props.content;
           },
@@ -1844,6 +1862,7 @@ function ComponentWithContext(props) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
+
           content() {
             return props.content;
           },
@@ -2085,12 +2104,14 @@ function MultipleOnUpdateWithDeps(props) {
 
   useEffect(() => {
     console.log(\\"Runs when a or b changes\\", a, b);
+
     if (a === \\"a\\") {
       setA(\\"b\\");
     }
   }, [a, b]);
   useEffect(() => {
     console.log(\\"Runs when c or d changes\\", c, d);
+
     if (a === \\"a\\") {
       setA(\\"b\\");
     }
@@ -2467,14 +2488,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Javascript Test > renderBlock 1`] = `
-"Identifier expected. (209:8)
-  207 |    {shouldWrap() ? (
-  208 |    <>{isEmptyHtmlElement(tag()) ? (
-> 209 |    <tag()  {...(attributes())}  {...(actions())}  />
+"Identifier expected. (213:8)
+  211 |    {shouldWrap() ? (
+  212 |    <>{isEmptyHtmlElement(tag()) ? (
+> 213 |    <tag()  {...(attributes())}  {...(actions())}  />
       |        ^
-  210 |  ) : null}
-  211 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-  212 |    <>{repeatItemData()?.map((data, index) => ("
+  214 |  ) : null}
+  215 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  216 |    <>{repeatItemData()?.map((data, index) => ("
 `;
 
 exports[`RSC > jsx > Javascript Test > renderContentExample 1`] = `
@@ -2505,6 +2526,7 @@ function RenderContent(props) {
           get content() {
             return 3;
           },
+
           get registeredComponents() {
             return 4;
           },
@@ -2783,17 +2805,6 @@ function StringLiteralStore(props) {
 
 export default StringLiteralStore;
 "
-`;
-
-exports[`RSC > jsx > Javascript Test > string-literal-store-kebab 1`] = `
-"',' expected. (15:13)
-  13 |
-  14 |   function StringLiteralStore(props) {
-> 15 |   const [foo-bar, setFoo-bar] = useState(() => (123))
-     |             ^
-  16 |
-  17 |
-  18 |"
 `;
 
 exports[`RSC > jsx > Javascript Test > styleClassAndCss 1`] = `
@@ -3466,12 +3477,13 @@ export interface Props {
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null);
-  // Store current value in ref
+  let ref = useRef<T>(null); // Store current value in ref
+
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
+
   return ref;
 }
 
@@ -3537,18 +3549,17 @@ exports[`RSC > jsx > Typescript Test > Columns 1`] = `
 "import * as React from \\"react\\";
 
 type Column = {
-  content: any;
-  // TODO: Implement this when support for dynamic CSS lands
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
   width?: number;
 };
 export interface ColumnProps {
-  columns?: Column[];
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
 
-  // TODO: Implement this when support for dynamic CSS lands
-  space?: number;
-  // TODO: Implement this when support for dynamic CSS lands
-  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\";
-  // TODO: Implement this when support for dynamic CSS lands
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
   reverseColumnsWhenStacked?: boolean;
 }
 
@@ -3715,12 +3726,15 @@ function CustomCode(props: CustomCodeProps) {
     if (elem.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.current.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
+
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -3737,6 +3751,7 @@ function CustomCode(props: CustomCodeProps) {
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -3788,12 +3803,15 @@ function CustomCode(props: CustomCodeProps) {
     if (elem.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.current.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
+
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -3810,6 +3828,7 @@ function CustomCode(props: CustomCodeProps) {
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -3894,6 +3913,7 @@ function FormComponent(props: FormProps) {
     }
   ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
     if (props.sendSubmissionsTo === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
@@ -3901,13 +3921,13 @@ function FormComponent(props: FormProps) {
         event.preventDefault();
         return;
       }
+
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
       let body: any;
-      const formData = new FormData(el);
+      const formData = new FormData(el); // TODO: maybe support null
 
-      // TODO: maybe support null
       const formPairs: {
         key: string;
         value: File | boolean | number | string | FileList;
@@ -3918,6 +3938,7 @@ function FormComponent(props: FormProps) {
         .map((el) => {
           let value: any;
           const key = (el as HTMLImageElement).name;
+
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
               if (el.checked) {
@@ -3931,6 +3952,7 @@ function FormComponent(props: FormProps) {
               value = el.checked;
             } else if (el.type === \\"number\\" || el.type === \\"range\\") {
               const num = el.valueAsNumber;
+
               if (!isNaN(num)) {
                 value = num;
               }
@@ -3943,15 +3965,18 @@ function FormComponent(props: FormProps) {
           } else {
             value = (el as HTMLInputElement).value;
           }
+
           return {
             key,
             value,
           };
         });
       let contentType = props.contentType;
+
       if (props.sendSubmissionsTo === \\"email\\") {
         contentType = \\"multipart/form-data\\";
       }
+
       Array.from(formPairs).forEach(({ value }) => {
         if (
           value instanceof File ||
@@ -3960,11 +3985,10 @@ function FormComponent(props: FormProps) {
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      });
-
-      // TODO: send as urlEncoded or multipart by default
+      }); // TODO: send as urlEncoded or multipart by default
       // because of ease of use and reliability in browser API
       // for encoding the form?
+
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
@@ -3975,6 +3999,7 @@ function FormComponent(props: FormProps) {
         });
         body = JSON.stringify(json);
       }
+
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */ !(
@@ -4136,7 +4161,6 @@ import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
 // TODO: AMP Support?
-
 export interface ImageProps {
   _class?: string;
   image: string;
@@ -4146,12 +4170,12 @@ export interface ImageProps {
   width?: number;
   altText?: string;
   backgroundSize?: string;
-  backgroundPosition?: string;
-  // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-  srcset?: string;
-  // TODO: Implement support for custom aspect ratios
-  aspectRatio?: number;
-  // TODO: This might not work as expected in terms of positioning
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
   children?: any;
 }
 
@@ -4185,6 +4209,7 @@ function Image(props: ImageProps) {
         if (pictureRef.current) {
           const rect = pictureRef.current.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
+
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
             setScrollListener(null);
@@ -4192,6 +4217,7 @@ function Image(props: ImageProps) {
           }
         }
       };
+
       setScrollListener(listener);
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -4380,8 +4406,7 @@ exports[`RSC > jsx > Typescript Test > RawText 1`] = `
 
 export interface RawTextProps {
   attributes?: any;
-  text?: string;
-  // builderBlock?: any;
+  text?: string; // builderBlock?: any;
 }
 
 function RawText(props: RawTextProps) {
@@ -5115,6 +5140,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
+
           content() {
             return props.content;
           },
@@ -5154,6 +5180,7 @@ function ComponentWithContext(props: ComponentWithContextProps) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
+
           content() {
             return props.content;
           },
@@ -5203,6 +5230,7 @@ export interface ButtonProps {
   attributes?: any;
   text?: string;
   buttonText?: string; // no default value
+
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -5427,12 +5455,14 @@ function MultipleOnUpdateWithDeps(props: any) {
 
   useEffect(() => {
     console.log(\\"Runs when a or b changes\\", a, b);
+
     if (a === \\"a\\") {
       setA(\\"b\\");
     }
   }, [a, b]);
   useEffect(() => {
     console.log(\\"Runs when c or d changes\\", c, d);
+
     if (a === \\"a\\") {
       setA(\\"b\\");
     }
@@ -5860,14 +5890,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Typescript Test > renderBlock 1`] = `
-"Identifier expected. (217:8)
-  215 |    {shouldWrap() ? (
-  216 |    <>{isEmptyHtmlElement(tag()) ? (
-> 217 |    <tag()  {...(attributes())}  {...(actions())}  />
+"Identifier expected. (221:8)
+  219 |    {shouldWrap() ? (
+  220 |    <>{isEmptyHtmlElement(tag()) ? (
+> 221 |    <tag()  {...(attributes())}  {...(actions())}  />
       |        ^
-  218 |  ) : null}
-  219 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-  220 |    <>{repeatItemData()?.map((data, index) => ("
+  222 |  ) : null}
+  223 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  224 |    <>{repeatItemData()?.map((data, index) => ("
 `;
 
 exports[`RSC > jsx > Typescript Test > renderContentExample 1`] = `
@@ -5906,6 +5936,7 @@ function RenderContent(props: Props) {
           get content() {
             return 3;
           },
+
           get registeredComponents() {
             return 4;
           },
@@ -6222,17 +6253,6 @@ function StringLiteralStore(props: any) {
 
 export default StringLiteralStore;
 "
-`;
-
-exports[`RSC > jsx > Typescript Test > string-literal-store-kebab 1`] = `
-"',' expected. (15:13)
-  13 |
-  14 |   function StringLiteralStore(props:any) {
-> 15 |   const [foo-bar, setFoo-bar] = useState(() => (123))
-     |             ^
-  16 |
-  17 |
-  18 |"
 `;
 
 exports[`RSC > jsx > Typescript Test > styleClassAndCss 1`] = `

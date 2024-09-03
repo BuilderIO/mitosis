@@ -249,6 +249,7 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-smile-reviews']\\")
       .forEach((el) => {
         const whenCondition = this.state.showReviewPrompt;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -608,6 +609,7 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-basic-ref-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.showInput;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -971,6 +973,7 @@ class MyBasicForShowComponent extends HTMLElement {
       .forEach((el) => {
         const person = this.getScope(el, \\"person\\");
         const whenCondition = person === this.state.name;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -1870,6 +1873,7 @@ class MyBooleanAttribute extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-boolean-attribute']\\")
       .forEach((el) => {
         const whenCondition = this.props.children;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -1888,8 +1892,10 @@ class MyBooleanAttribute extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"toggle\\", true);
         el.toggle = true;
+
         if (el.props) {
           el.props.toggle = true;
+
           if (el.update) {
             el.update();
           }
@@ -1906,8 +1912,10 @@ class MyBooleanAttribute extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"toggle\\", true);
         el.toggle = true;
+
         if (el.props) {
           el.props.toggle = true;
+
           if (el.update) {
             el.update();
           }
@@ -1924,8 +1932,10 @@ class MyBooleanAttribute extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"list\\", null);
         el.list = null;
+
         if (el.props) {
           el.props.list = null;
+
           if (el.update) {
             el.update();
           }
@@ -2050,8 +2060,10 @@ class MyBasicChildComponent extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"hi\\", this.state.name);
         el.hi = this.state.name;
+
         if (el.props) {
           el.props.hi = this.state.name;
+
           if (el.update) {
             el.update();
           }
@@ -2059,10 +2071,13 @@ class MyBasicChildComponent extends HTMLElement {
           el.props = {};
           el.props.hi = this.state.name;
         }
+
         el.setAttribute(\\"bye\\", this.state.dev);
         el.bye = this.state.dev;
+
         if (el.props) {
           el.props.bye = this.state.dev;
+
           if (el.update) {
             el.update();
           }
@@ -2526,6 +2541,7 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-basic-ref-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.showInput;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -2691,12 +2707,13 @@ exports[`webcomponent > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null);
-  // Store current value in ref
+  let ref = useRef(null); // Store current value in ref
+
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
+
   return ref;
 }
 
@@ -2955,6 +2972,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -2974,6 +2992,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -3476,6 +3495,7 @@ class ContentSlotJsxCode extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-content-slot-jsx-code']\\")
       .forEach((el) => {
         const whenCondition = this.props.slotReference;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -3495,6 +3515,7 @@ class ContentSlotJsxCode extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-content-slot-jsx-code-2']\\")
       .forEach((el) => {
         const whenCondition = this.state.showContent && this.props.slotContent;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -3553,12 +3574,15 @@ class CustomCode extends HTMLElement {
         if (self._elem && typeof window !== \\"undefined\\") {
           /** @type {HTMLScriptElement[]} */
           const scripts = self._elem.getElementsByTagName(\\"script\\");
+
           for (let i = 0; i < scripts.length; i++) {
             const script = scripts[i];
+
             if (script.src) {
               if (self.state.scriptsInserted.includes(script.src)) {
                 continue;
               }
+
               self.state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
@@ -3575,6 +3599,7 @@ class CustomCode extends HTMLElement {
               if (self.state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
+
               try {
                 self.state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
@@ -3712,12 +3737,15 @@ class CustomCode extends HTMLElement {
         if (self._elem && typeof window !== \\"undefined\\") {
           /** @type {HTMLScriptElement[]} */
           const scripts = self._elem.getElementsByTagName(\\"script\\");
+
           for (let i = 0; i < scripts.length; i++) {
             const script = scripts[i];
+
             if (script.src) {
               if (self.state.scriptsInserted.includes(script.src)) {
                 continue;
               }
+
               self.state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
@@ -3734,6 +3762,7 @@ class CustomCode extends HTMLElement {
               if (self.state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
+
               try {
                 self.state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
@@ -3990,7 +4019,9 @@ class Image extends HTMLElement {
       const listener = () => {
         if (self._pictureRef) {
           const rect = self._pictureRef.getBoundingClientRect();
+
           const buffer = window.innerHeight / 2;
+
           if (rect.top < window.innerHeight + buffer) {
             this.state.load = true;
             this.update();
@@ -4000,6 +4031,7 @@ class Image extends HTMLElement {
           }
         }
       };
+
       this.state.scrollListener = listener;
       this.update();
       window.addEventListener(\\"scroll\\", listener, {
@@ -4031,6 +4063,7 @@ class Image extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-image']\\").forEach((el) => {
       const whenCondition = !this.state.useLazyLoading() || this.state.load;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -4986,6 +5019,7 @@ class SectionStateComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-section-state-component']\\")
       .forEach((el) => {
         const whenCondition = this.state.max;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -5590,8 +5624,10 @@ class SlotCode extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"slotTesting\\", <div>Hello</div>);
         el.slotTesting = <div>Hello</div>;
+
         if (el.props) {
           el.props.slotTesting = <div>Hello</div>;
+
           if (el.update) {
             el.update();
           }
@@ -5976,6 +6012,7 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-smile-reviews']\\")
       .forEach((el) => {
         const whenCondition = this.state.showReviewPrompt || \\"asdf\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -8366,6 +8403,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -8385,6 +8423,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -8546,6 +8585,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -8565,6 +8605,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -9236,6 +9277,7 @@ class MultipleOnUpdateWithDeps extends HTMLElement {
       const __hasChange = __prev.find((val, index) => val !== __next[index]);
       if (__hasChange !== undefined) {
         console.log(\\"Runs when a or b changes\\", self.state.a, self.state.b);
+
         if (self.state.a === \\"a\\") {
           self.state.a = \\"b\\";
         }
@@ -9247,6 +9289,7 @@ class MultipleOnUpdateWithDeps extends HTMLElement {
       const __hasChange = __prev.find((val, index) => val !== __next[index]);
       if (__hasChange !== undefined) {
         console.log(\\"Runs when c or d changes\\", self.state.c, self.state.d);
+
         if (self.state.a === \\"a\\") {
           self.state.a = \\"b\\";
         }
@@ -9535,6 +9578,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -9544,6 +9588,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show-2']\\")
       .forEach((el) => {
         const whenCondition = !this.props.conditionB;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -10159,14 +10204,19 @@ class Comp extends HTMLElement {
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
     };
+
     onMountHook_0();
+
     const onMountHook_1 = () => {
       console.log(\\"Another one runs on Mount\\");
     };
+
     onMountHook_1();
+
     const onMountHook_2 = () => {
       console.log(\\"SSR runs on Mount\\");
     };
+
     onMountHook_2();
   }
 
@@ -11109,10 +11159,13 @@ class RenderBlock extends HTMLElement {
           context: self.props.context.context,
           shouldEvaluateBindings: false,
         }).component?.name;
+
         if (!componentName) {
           return null;
         }
+
         const ref = self.props.context.registeredComponents[componentName];
+
         if (!ref) {
           // TODO: Public doc page with more info about this message
           console.warn(\`
@@ -11167,6 +11220,7 @@ class RenderBlock extends HTMLElement {
           componentRef: self.state.component?.component,
           componentOptions: {
             ...getBlockComponentOptions(self.state.useBlock),
+
             /**
              * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
              * they are provided to the component itself directly.
@@ -11209,17 +11263,21 @@ class RenderBlock extends HTMLElement {
          * which will not work if there is a repeat.
          */
         const { repeat, ...blockWithoutRepeat } = self.props.block;
+
         if (!repeat?.collection) {
           return undefined;
         }
+
         const itemsArray = evaluate({
           code: repeat.collection,
           state: self.props.context.state,
           context: self.props.context.context,
         });
+
         if (!Array.isArray(itemsArray)) {
           return undefined;
         }
+
         const collectionName = repeat.collection.split(\\".\\").pop();
         const itemNameToUse =
           repeat.itemName ||
@@ -11243,6 +11301,7 @@ class RenderBlock extends HTMLElement {
         if (TARGET !== \\"reactNative\\") {
           return {};
         }
+
         const styles = getReactNativeBlockStyles({
           block: self.state.useBlock,
           context: self.props.context,
@@ -11388,6 +11447,7 @@ class RenderBlock extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-render-block']\\")
       .forEach((el) => {
         const whenCondition = this.state.shouldWrap;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -11397,6 +11457,7 @@ class RenderBlock extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-render-block-2']\\")
       .forEach((el) => {
         const whenCondition = isEmptyHtmlElement(this.state.tag);
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -11407,6 +11468,7 @@ class RenderBlock extends HTMLElement {
       .forEach((el) => {
         const whenCondition =
           !isEmptyHtmlElement(this.state.tag) && this.state.repeatItemData;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -11425,8 +11487,10 @@ class RenderBlock extends HTMLElement {
         const index = this.getScope(el, \\"index\\");
         const data = this.getScope(el, \\"data\\");
         el.key = index;
+
         if (el.props) {
           el.props.key = index;
+
           if (el.update) {
             el.update();
           }
@@ -11434,10 +11498,13 @@ class RenderBlock extends HTMLElement {
           el.props = {};
           el.props.key = index;
         }
+
         el.setAttribute(\\"repeatContext\\", data.context);
         el.repeatContext = data.context;
+
         if (el.props) {
           el.props.repeatContext = data.context;
+
           if (el.update) {
             el.update();
           }
@@ -11445,10 +11512,13 @@ class RenderBlock extends HTMLElement {
           el.props = {};
           el.props.repeatContext = data.context;
         }
+
         el.setAttribute(\\"block\\", data.block);
         el.block = data.block;
+
         if (el.props) {
           el.props.block = data.block;
+
           if (el.update) {
             el.update();
           }
@@ -11463,6 +11533,7 @@ class RenderBlock extends HTMLElement {
       .forEach((el) => {
         const whenCondition =
           !isEmptyHtmlElement(this.state.tag) && !this.state.repeatItemData;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -11496,8 +11567,10 @@ class RenderBlock extends HTMLElement {
       .forEach((el) => {
         const child = this.getScope(el, \\"child\\");
         el.key = \\"block-style-\\" + child.id;
+
         if (el.props) {
           el.props.key = \\"block-style-\\" + child.id;
+
           if (el.update) {
             el.update();
           }
@@ -11505,10 +11578,13 @@ class RenderBlock extends HTMLElement {
           el.props = {};
           el.props.key = \\"block-style-\\" + child.id;
         }
+
         el.setAttribute(\\"block\\", child);
         el.block = child;
+
         if (el.props) {
           el.props.block = child;
+
           if (el.update) {
             el.update();
           }
@@ -11516,10 +11592,13 @@ class RenderBlock extends HTMLElement {
           el.props = {};
           el.props.block = child;
         }
+
         el.setAttribute(\\"context\\", this.state.childrenContext);
         el.context = this.state.childrenContext;
+
         if (el.props) {
           el.props.context = this.state.childrenContext;
+
           if (el.update) {
             el.update();
           }
@@ -11733,8 +11812,10 @@ class RenderContent extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"blocks\\", this.props.content.blocks);
         el.blocks = this.props.content.blocks;
+
         if (el.props) {
           el.props.blocks = this.props.content.blocks;
+
           if (el.update) {
             el.update();
           }
@@ -11878,6 +11959,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -11897,6 +11979,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -12033,6 +12116,7 @@ class RenderStyles extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-render-styles']\\")
       .forEach((el) => {
         const whenCondition = this.props.foo === \\"bar\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12176,6 +12260,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.name === \\"Batman\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12320,6 +12405,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.name === \\"Batman\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12474,6 +12560,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12483,6 +12570,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-2']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12492,6 +12580,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-3']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12501,6 +12590,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-4']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12510,6 +12600,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-5']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12525,6 +12616,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-6']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12534,6 +12626,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-7']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12543,6 +12636,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-8']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12552,6 +12646,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-9']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12561,6 +12656,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-10']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12570,6 +12666,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-11']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12579,6 +12676,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-12']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12588,6 +12686,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-13']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12597,6 +12696,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-14']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA === \\"Default\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12606,6 +12706,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-15']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA === \\"Default\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12615,6 +12716,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-16']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionB === \\"Complete\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12753,6 +12855,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12964,6 +13067,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12973,6 +13077,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-2']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12982,6 +13087,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-3']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -12991,6 +13097,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-4']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -13000,6 +13107,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-5']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -13009,6 +13117,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-6']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -13141,6 +13250,7 @@ class ShowRootText extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-root-text']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -13800,8 +13910,6 @@ class StringLiteralStore extends HTMLElement {
 customElements.define(\\"string-literal-store\\", StringLiteralStore);
 "
 `;
-
-exports[`webcomponent > jsx > Javascript Test > string-literal-store-kebab 1`] = `"unknown: Property property of MemberExpression expected node to be of a type [\\"Identifier\\",\\"PrivateName\\"] but instead got \\"StringLiteral\\""`;
 
 exports[`webcomponent > jsx > Javascript Test > styleClassAndCss 1`] = `
 "/**
@@ -15167,6 +15275,7 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-basic-ref-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.showInput;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -15534,6 +15643,7 @@ class MyBasicForShowComponent extends HTMLElement {
       .forEach((el) => {
         const person = this.getScope(el, \\"person\\");
         const whenCondition = person === this.state.name;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -16443,6 +16553,7 @@ class MyBooleanAttribute extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-boolean-attribute']\\")
       .forEach((el) => {
         const whenCondition = this.props.children;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -16461,8 +16572,10 @@ class MyBooleanAttribute extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"toggle\\", true);
         el.toggle = true;
+
         if (el.props) {
           el.props.toggle = true;
+
           if (el.update) {
             el.update();
           }
@@ -16479,8 +16592,10 @@ class MyBooleanAttribute extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"toggle\\", true);
         el.toggle = true;
+
         if (el.props) {
           el.props.toggle = true;
+
           if (el.update) {
             el.update();
           }
@@ -16497,8 +16612,10 @@ class MyBooleanAttribute extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"list\\", null);
         el.list = null;
+
         if (el.props) {
           el.props.list = null;
+
           if (el.update) {
             el.update();
           }
@@ -16623,8 +16740,10 @@ class MyBasicChildComponent extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"hi\\", this.state.name);
         el.hi = this.state.name;
+
         if (el.props) {
           el.props.hi = this.state.name;
+
           if (el.update) {
             el.update();
           }
@@ -16632,10 +16751,13 @@ class MyBasicChildComponent extends HTMLElement {
           el.props = {};
           el.props.hi = this.state.name;
         }
+
         el.setAttribute(\\"bye\\", this.state.dev);
         el.bye = this.state.dev;
+
         if (el.props) {
           el.props.bye = this.state.dev;
+
           if (el.update) {
             el.update();
           }
@@ -17103,6 +17225,7 @@ class MyBasicRefComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-basic-ref-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.showInput;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -17276,12 +17399,13 @@ exports[`webcomponent > jsx > Typescript Test > BasicRefPrevious 1`] = `
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null);
-  // Store current value in ref
+  let ref = useRef<T>(null); // Store current value in ref
+
   onUpdate(() => {
     ref = value;
   }, [value]); // Only re-run if value changes
   // Return previous value (happens before update in useEffect above)
+
   return ref;
 }
 
@@ -17547,6 +17671,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -17566,6 +17691,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -17596,18 +17722,17 @@ customElements.define(\\"button\\", Button);
 
 exports[`webcomponent > jsx > Typescript Test > Columns 1`] = `
 "type Column = {
-  content: any;
-  // TODO: Implement this when support for dynamic CSS lands
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
   width?: number;
 };
 export interface ColumnProps {
-  columns?: Column[];
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
 
-  // TODO: Implement this when support for dynamic CSS lands
-  space?: number;
-  // TODO: Implement this when support for dynamic CSS lands
-  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\";
-  // TODO: Implement this when support for dynamic CSS lands
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
   reverseColumnsWhenStacked?: boolean;
 }
 
@@ -18097,6 +18222,7 @@ class ContentSlotJsxCode extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-content-slot-jsx-code']\\")
       .forEach((el) => {
         const whenCondition = this.props.slotReference;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -18116,6 +18242,7 @@ class ContentSlotJsxCode extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-content-slot-jsx-code-2']\\")
       .forEach((el) => {
         const whenCondition = this.state.showContent && this.props.slotContent;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -18179,12 +18306,15 @@ class CustomCode extends HTMLElement {
         if (self._elem && typeof window !== \\"undefined\\") {
           /** @type {HTMLScriptElement[]} */
           const scripts = self._elem.getElementsByTagName(\\"script\\");
+
           for (let i = 0; i < scripts.length; i++) {
             const script = scripts[i];
+
             if (script.src) {
               if (self.state.scriptsInserted.includes(script.src)) {
                 continue;
               }
+
               self.state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
@@ -18201,6 +18331,7 @@ class CustomCode extends HTMLElement {
               if (self.state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
+
               try {
                 self.state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
@@ -18343,12 +18474,15 @@ class CustomCode extends HTMLElement {
         if (self._elem && typeof window !== \\"undefined\\") {
           /** @type {HTMLScriptElement[]} */
           const scripts = self._elem.getElementsByTagName(\\"script\\");
+
           for (let i = 0; i < scripts.length; i++) {
             const script = scripts[i];
+
             if (script.src) {
               if (self.state.scriptsInserted.includes(script.src)) {
                 continue;
               }
+
               self.state.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
@@ -18365,6 +18499,7 @@ class CustomCode extends HTMLElement {
               if (self.state.scriptsRun.includes(script.innerText)) {
                 continue;
               }
+
               try {
                 self.state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
@@ -18476,7 +18611,6 @@ customElements.define(\\"custom-code\\", CustomCode);
 
 exports[`webcomponent > jsx > Typescript Test > Image 1`] = `
 "// TODO: AMP Support?
-
 export interface ImageProps {
   _class?: string;
   image: string;
@@ -18486,12 +18620,12 @@ export interface ImageProps {
   width?: number;
   altText?: string;
   backgroundSize?: string;
-  backgroundPosition?: string;
-  // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-  srcset?: string;
-  // TODO: Implement support for custom aspect ratios
-  aspectRatio?: number;
-  // TODO: This might not work as expected in terms of positioning
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
   children?: any;
 }
 
@@ -18641,7 +18775,9 @@ class Image extends HTMLElement {
       const listener = () => {
         if (self._pictureRef) {
           const rect = self._pictureRef.getBoundingClientRect();
+
           const buffer = window.innerHeight / 2;
+
           if (rect.top < window.innerHeight + buffer) {
             this.state.load = true;
             this.update();
@@ -18651,6 +18787,7 @@ class Image extends HTMLElement {
           }
         }
       };
+
       this.state.scrollListener = listener;
       this.update();
       window.addEventListener(\\"scroll\\", listener, {
@@ -18682,6 +18819,7 @@ class Image extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-image']\\").forEach((el) => {
       const whenCondition = !this.state.useLazyLoading() || this.state.load;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -19331,8 +19469,7 @@ customElements.define(\\"stepper\\", Stepper);
 exports[`webcomponent > jsx > Typescript Test > RawText 1`] = `
 "export interface RawTextProps {
   attributes?: any;
-  text?: string;
-  // builderBlock?: any;
+  text?: string; // builderBlock?: any;
 }
 
 /**
@@ -19683,6 +19820,7 @@ class SectionStateComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-section-state-component']\\")
       .forEach((el) => {
         const whenCondition = this.state.max;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -20310,8 +20448,10 @@ class SlotCode extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"slotTesting\\", <div>Hello</div>);
         el.slotTesting = <div>Hello</div>;
+
         if (el.props) {
           el.props.slotTesting = <div>Hello</div>;
+
           if (el.update) {
             el.update();
           }
@@ -20705,6 +20845,7 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-smile-reviews']\\")
       .forEach((el) => {
         const whenCondition = this.state.showReviewPrompt || \\"asdf\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -23043,6 +23184,7 @@ exports[`webcomponent > jsx > Typescript Test > defaultProps 1`] = `
   attributes?: any;
   text?: string;
   buttonText?: string; // no default value
+
   link?: string;
   openLinkInNewTab?: boolean;
   onClick?: () => void;
@@ -23176,6 +23318,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -23195,6 +23338,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -23364,6 +23508,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -23383,6 +23528,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -24069,6 +24215,7 @@ class MultipleOnUpdateWithDeps extends HTMLElement {
       const __hasChange = __prev.find((val, index) => val !== __next[index]);
       if (__hasChange !== undefined) {
         console.log(\\"Runs when a or b changes\\", self.state.a, self.state.b);
+
         if (self.state.a === \\"a\\") {
           self.state.a = \\"b\\";
         }
@@ -24080,6 +24227,7 @@ class MultipleOnUpdateWithDeps extends HTMLElement {
       const __hasChange = __prev.find((val, index) => val !== __next[index]);
       if (__hasChange !== undefined) {
         console.log(\\"Runs when c or d changes\\", self.state.c, self.state.d);
+
         if (self.state.a === \\"a\\") {
           self.state.a = \\"b\\";
         }
@@ -24373,6 +24521,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -24382,6 +24531,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show-2']\\")
       .forEach((el) => {
         const whenCondition = !this.props.conditionB;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -25001,14 +25151,19 @@ class Comp extends HTMLElement {
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
     };
+
     onMountHook_0();
+
     const onMountHook_1 = () => {
       console.log(\\"Another one runs on Mount\\");
     };
+
     onMountHook_1();
+
     const onMountHook_2 = () => {
       console.log(\\"SSR runs on Mount\\");
     };
+
     onMountHook_2();
   }
 
@@ -26006,10 +26161,13 @@ class RenderBlock extends HTMLElement {
           context: self.props.context.context,
           shouldEvaluateBindings: false,
         }).component?.name;
+
         if (!componentName) {
           return null;
         }
+
         const ref = self.props.context.registeredComponents[componentName];
+
         if (!ref) {
           // TODO: Public doc page with more info about this message
           console.warn(\`
@@ -26064,6 +26222,7 @@ class RenderBlock extends HTMLElement {
           componentRef: self.state.component?.component,
           componentOptions: {
             ...getBlockComponentOptions(self.state.useBlock),
+
             /**
              * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
              * they are provided to the component itself directly.
@@ -26106,17 +26265,21 @@ class RenderBlock extends HTMLElement {
          * which will not work if there is a repeat.
          */
         const { repeat, ...blockWithoutRepeat } = self.props.block;
+
         if (!repeat?.collection) {
           return undefined;
         }
+
         const itemsArray = evaluate({
           code: repeat.collection,
           state: self.props.context.state,
           context: self.props.context.context,
         });
+
         if (!Array.isArray(itemsArray)) {
           return undefined;
         }
+
         const collectionName = repeat.collection.split(\\".\\").pop();
         const itemNameToUse =
           repeat.itemName ||
@@ -26140,6 +26303,7 @@ class RenderBlock extends HTMLElement {
         if (TARGET !== \\"reactNative\\") {
           return {};
         }
+
         const styles = getReactNativeBlockStyles({
           block: self.state.useBlock,
           context: self.props.context,
@@ -26285,6 +26449,7 @@ class RenderBlock extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-render-block']\\")
       .forEach((el) => {
         const whenCondition = this.state.shouldWrap;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -26294,6 +26459,7 @@ class RenderBlock extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-render-block-2']\\")
       .forEach((el) => {
         const whenCondition = isEmptyHtmlElement(this.state.tag);
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -26304,6 +26470,7 @@ class RenderBlock extends HTMLElement {
       .forEach((el) => {
         const whenCondition =
           !isEmptyHtmlElement(this.state.tag) && this.state.repeatItemData;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -26322,8 +26489,10 @@ class RenderBlock extends HTMLElement {
         const index = this.getScope(el, \\"index\\");
         const data = this.getScope(el, \\"data\\");
         el.key = index;
+
         if (el.props) {
           el.props.key = index;
+
           if (el.update) {
             el.update();
           }
@@ -26331,10 +26500,13 @@ class RenderBlock extends HTMLElement {
           el.props = {};
           el.props.key = index;
         }
+
         el.setAttribute(\\"repeatContext\\", data.context);
         el.repeatContext = data.context;
+
         if (el.props) {
           el.props.repeatContext = data.context;
+
           if (el.update) {
             el.update();
           }
@@ -26342,10 +26514,13 @@ class RenderBlock extends HTMLElement {
           el.props = {};
           el.props.repeatContext = data.context;
         }
+
         el.setAttribute(\\"block\\", data.block);
         el.block = data.block;
+
         if (el.props) {
           el.props.block = data.block;
+
           if (el.update) {
             el.update();
           }
@@ -26360,6 +26535,7 @@ class RenderBlock extends HTMLElement {
       .forEach((el) => {
         const whenCondition =
           !isEmptyHtmlElement(this.state.tag) && !this.state.repeatItemData;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -26393,8 +26569,10 @@ class RenderBlock extends HTMLElement {
       .forEach((el) => {
         const child = this.getScope(el, \\"child\\");
         el.key = \\"block-style-\\" + child.id;
+
         if (el.props) {
           el.props.key = \\"block-style-\\" + child.id;
+
           if (el.update) {
             el.update();
           }
@@ -26402,10 +26580,13 @@ class RenderBlock extends HTMLElement {
           el.props = {};
           el.props.key = \\"block-style-\\" + child.id;
         }
+
         el.setAttribute(\\"block\\", child);
         el.block = child;
+
         if (el.props) {
           el.props.block = child;
+
           if (el.update) {
             el.update();
           }
@@ -26413,10 +26594,13 @@ class RenderBlock extends HTMLElement {
           el.props = {};
           el.props.block = child;
         }
+
         el.setAttribute(\\"context\\", this.state.childrenContext);
         el.context = this.state.childrenContext;
+
         if (el.props) {
           el.props.context = this.state.childrenContext;
+
           if (el.update) {
             el.update();
           }
@@ -26638,8 +26822,10 @@ class RenderContent extends HTMLElement {
       .forEach((el) => {
         el.setAttribute(\\"blocks\\", this.props.content.blocks);
         el.blocks = this.props.content.blocks;
+
         if (el.props) {
           el.props.blocks = this.props.content.blocks;
+
           if (el.update) {
             el.update();
           }
@@ -26790,6 +26976,7 @@ class Button extends HTMLElement {
   updateBindings() {
     this._root.querySelectorAll(\\"[data-el='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -26809,6 +26996,7 @@ class Button extends HTMLElement {
 
     this._root.querySelectorAll(\\"[data-el='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
+
       if (whenCondition) {
         this.showContent(el);
       }
@@ -26949,6 +27137,7 @@ class RenderStyles extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-render-styles']\\")
       .forEach((el) => {
         const whenCondition = this.props.foo === \\"bar\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27092,6 +27281,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.name === \\"Batman\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27236,6 +27426,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.name === \\"Batman\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27395,6 +27586,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27404,6 +27596,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-2']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27413,6 +27606,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-3']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27422,6 +27616,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-4']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27431,6 +27626,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-5']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27446,6 +27642,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-6']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27455,6 +27652,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-7']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27464,6 +27662,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-8']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27473,6 +27672,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-9']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27482,6 +27682,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-10']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27491,6 +27692,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-11']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27500,6 +27702,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-12']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27509,6 +27712,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-13']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27518,6 +27722,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-14']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA === \\"Default\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27527,6 +27732,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-15']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA === \\"Default\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27536,6 +27742,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-16']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionB === \\"Complete\\";
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27679,6 +27886,7 @@ class NestedShow extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-nested-show']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27894,6 +28102,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27903,6 +28112,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-2']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27912,6 +28122,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-3']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27921,6 +28132,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-4']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27930,6 +28142,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-5']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -27939,6 +28152,7 @@ class ShowWithOtherValues extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-with-other-values-6']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -28075,6 +28289,7 @@ class ShowRootText extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-show-root-text']\\")
       .forEach((el) => {
         const whenCondition = this.props.conditionA;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -28740,8 +28955,6 @@ class StringLiteralStore extends HTMLElement {
 customElements.define(\\"string-literal-store\\", StringLiteralStore);
 "
 `;
-
-exports[`webcomponent > jsx > Typescript Test > string-literal-store-kebab 1`] = `"unknown: Property property of MemberExpression expected node to be of a type [\\"Identifier\\",\\"PrivateName\\"] but instead got \\"StringLiteral\\""`;
 
 exports[`webcomponent > jsx > Typescript Test > styleClassAndCss 1`] = `
 "/**
@@ -31114,6 +31327,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.state.show;
+
         if (whenCondition) {
           this.showContent(el);
         }
@@ -33352,6 +33566,7 @@ class MyComponent extends HTMLElement {
       .querySelectorAll(\\"[data-el='show-my-component']\\")
       .forEach((el) => {
         const whenCondition = this.state.show;
+
         if (whenCondition) {
           this.showContent(el);
         }

@@ -8,6 +8,7 @@ exports[`Svelte > jsx > Javascript Test > AdvancedRef 1`] = `
     // Maintain focus
     inputRef.focus();
   }
+
   function lowerCaseName() {
     return name.toLowerCase();
   }
@@ -266,6 +267,7 @@ exports[`Svelte > jsx > Javascript Test > BasicRef 1`] = `
     // Maintain focus
     inputRef.focus();
   }
+
   function lowerCaseName() {
     return name.toLowerCase();
   }
@@ -326,12 +328,13 @@ exports[`Svelte > jsx > Javascript Test > BasicRefPrevious 1`] = `
   export function usePrevious(value) {
     // The ref object is a generic container whose current property is mutable ...
     // ... and can hold any value, similar to an instance property on a class
-    let ref = useRef(null);
-    // Store current value in ref
+    let ref = useRef(null); // Store current value in ref
+
     onUpdate(() => {
       ref = value;
     }, [value]); // Only re-run if value changes
     // Return previous value (happens before update in useEffect above)
+
     return ref;
   }
 
@@ -386,13 +389,16 @@ exports[`Svelte > jsx > Javascript Test > Columns 1`] = `
   function getColumns() {
     return columns || [];
   }
+
   function getGutterSize() {
     return typeof space === \\"number\\" ? space || 0 : 20;
   }
+
   function getWidth(index) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
+
   function getColumnCssWidth(index) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
@@ -485,12 +491,15 @@ exports[`Svelte > jsx > Javascript Test > CustomCode 1`] = `
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
+
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -507,6 +516,7 @@ exports[`Svelte > jsx > Javascript Test > CustomCode 1`] = `
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -548,12 +558,15 @@ exports[`Svelte > jsx > Javascript Test > Embed 1`] = `
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
+
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -570,6 +583,7 @@ exports[`Svelte > jsx > Javascript Test > Embed 1`] = `
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -630,6 +644,7 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
 
   function onSubmit(event) {
     const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
+
     if (sendSubmissionsTo === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
@@ -637,13 +652,13 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
         event.preventDefault();
         return;
       }
+
       event.preventDefault();
       const el = event.currentTarget;
       const headers = customHeaders || {};
       let body;
-      const formData = new FormData(el);
+      const formData = new FormData(el); // TODO: maybe support null
 
-      // TODO: maybe support null
       const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
@@ -651,6 +666,7 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
         .map((el) => {
           let value;
           const key = el.name;
+
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
               if (el.checked) {
@@ -664,6 +680,7 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
               value = el.checked;
             } else if (el.type === \\"number\\" || el.type === \\"range\\") {
               const num = el.valueAsNumber;
+
               if (!isNaN(num)) {
                 value = num;
               }
@@ -676,15 +693,18 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
           } else {
             value = el.value;
           }
+
           return {
             key,
             value,
           };
         });
       let contentType = contentType;
+
       if (sendSubmissionsTo === \\"email\\") {
         contentType = \\"multipart/form-data\\";
       }
+
       Array.from(formPairs).forEach(({ value }) => {
         if (
           value instanceof File ||
@@ -693,11 +713,10 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      });
-
-      // TODO: send as urlEncoded or multipart by default
+      }); // TODO: send as urlEncoded or multipart by default
       // because of ease of use and reliability in browser API
       // for encoding the form?
+
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
@@ -708,6 +727,7 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
         });
         body = JSON.stringify(json);
       }
+
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */
@@ -716,17 +736,21 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
           headers[\\"content-type\\"] = contentType;
         }
       }
+
       const presubmitEvent = new CustomEvent(\\"presubmit\\", {
         detail: {
           body,
         },
       });
+
       if (formRef) {
         formRef.dispatchEvent(presubmitEvent);
+
         if (presubmitEvent.defaultPrevented) {
           return;
         }
       }
+
       formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -734,9 +758,8 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
         sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(name || \\"\\")}\`;
       fetch(
-        sendSubmissionsTo === \\"email\\"
-          ? formUrl
-          : action /* TODO: throw error if no action URL */,
+        sendSubmissionsTo === \\"email\\" ? formUrl : action,
+        /* TODO: throw error if no action URL */
         {
           body,
           headers,
@@ -746,25 +769,31 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
+
           if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
             body = await res.json();
           } else {
             body = await res.text();
           }
+
           if (!res.ok && errorMessagePath) {
             /* TODO: allow supplying an error formatter function */
             let message = get(body, errorMessagePath);
+
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
            error: - email has been taken */
                 message = JSON.stringify(message);
               }
+
               formErrorMessage = message;
             }
           }
+
           responseData = body;
           formState = res.ok ? \\"success\\" : \\"error\\";
+
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: {
@@ -772,18 +801,21 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
                 body,
               },
             });
+
             if (formRef) {
               formRef.dispatchEvent(submitSuccessEvent);
+
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
               /* TODO: option to turn this on/off? */
+
               if (resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-
             /* TODO: client side route event first that can be preventDefaulted */
+
             if (successUrl) {
               if (formRef) {
                 const event = new CustomEvent(\\"route\\", {
@@ -792,6 +824,7 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
                   },
                 });
                 formRef.dispatchEvent(event);
+
                 if (!event.defaultPrevented) {
                   location.href = successUrl;
                 }
@@ -807,12 +840,15 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
               error: err,
             },
           });
+
           if (formRef) {
             formRef.dispatchEvent(submitErrorEvent);
+
             if (submitErrorEvent.defaultPrevented) {
               return;
             }
           }
+
           responseData = err;
           formState = \\"error\\";
         }
@@ -887,10 +923,12 @@ exports[`Svelte > jsx > Javascript Test > Image 1`] = `
   function setLoaded() {
     imageLoaded = true;
   }
+
   function useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
     return !!lazy && isBrowser();
   }
+
   function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
@@ -910,6 +948,7 @@ exports[`Svelte > jsx > Javascript Test > Image 1`] = `
         if (pictureRef) {
           const rect = pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
+
           if (rect.top < window.innerHeight + buffer) {
             load = true;
             scrollListener = null;
@@ -917,6 +956,7 @@ exports[`Svelte > jsx > Javascript Test > Image 1`] = `
           }
         }
       };
+
       scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -1225,6 +1265,7 @@ exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
   function kebabCaseValue() {
     return kebabCase(\\"testThat\\");
   }
+
   function snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
@@ -1396,6 +1437,7 @@ exports[`Svelte > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
   function setName(value) {
     name = value;
   }
+
   function updateNameWithArrowFn(value) {
     name = value;
   }
@@ -1575,6 +1617,7 @@ exports[`Svelte > jsx > Javascript Test > componentWithContext 1`] = `
 
   setContext(Context1.key, {
     foo: \\"bar\\",
+
     content() {
       return content;
     },
@@ -1600,6 +1643,7 @@ exports[`Svelte > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
 
   setContext(Context1.key, {
     foo: \\"bar\\",
+
     content() {
       return content;
     },
@@ -1724,6 +1768,7 @@ exports[`Svelte > jsx > Javascript Test > getterState 1`] = `
   $: foo2 = () => {
     return foo + \\"foo\\";
   };
+
   $: bar = () => {
     return \\"bar\\";
   };
@@ -1777,6 +1822,7 @@ exports[`Svelte > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
 
   function onUpdateFn_0(..._args) {
     console.log(\\"Runs when a or b changes\\", a, b);
+
     if (a === \\"a\\") {
       a = \\"b\\";
     }
@@ -1786,6 +1832,7 @@ exports[`Svelte > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
 
   function onUpdateFn_1(..._args) {
     console.log(\\"Runs when c or d changes\\", c, d);
+
     if (a === \\"a\\") {
       a = \\"b\\";
     }
@@ -1863,6 +1910,7 @@ exports[`Svelte > jsx > Javascript Test > onEvent 1`] = `
   function foo(event) {
     console.log(\\"test2\\");
   }
+
   function elem_onInitEditingBldr(event) {
     console.log(\\"test\\");
     foo(event);
@@ -2033,7 +2081,9 @@ exports[`Svelte > jsx > Javascript Test > referencingFunInsideHook 1`] = `
   import { afterUpdate } from \\"svelte\\";
 
   function foo(params) {}
+
   function bar() {}
+
   function zoo() {
     const params = {
       cb: bar,
@@ -2077,10 +2127,13 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
       context: context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
+
     if (!componentName) {
       return null;
     }
+
     const ref = context.registeredComponents[componentName];
+
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
@@ -2091,9 +2144,11 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
       return ref;
     }
   };
+
   $: tag = () => {
     return getBlockTag(useBlock());
   };
+
   $: useBlock = () => {
     return repeatItemData()
       ? block
@@ -2104,6 +2159,7 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
           shouldEvaluateBindings: true,
         });
   };
+
   $: actions = () => {
     return getBlockActions({
       block: useBlock(),
@@ -2111,6 +2167,7 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
       context: context.context,
     });
   };
+
   $: attributes = () => {
     const blockProperties = getBlockProperties(useBlock());
     return {
@@ -2126,15 +2183,18 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
         : {}),
     };
   };
+
   $: shouldWrap = () => {
     return !component?.()?.noWrap;
   };
+
   $: renderComponentProps = () => {
     return {
       blockChildren: useChildren(),
       componentRef: component?.()?.component,
       componentOptions: {
         ...getBlockComponentOptions(useBlock()),
+
         /**
          * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
          * they are provided to the component itself directly.
@@ -2142,16 +2202,14 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
         ...(shouldWrap()
           ? {}
           : {
-              attributes: {
-                ...attributes(),
-                ...actions(),
-              },
+              attributes: { ...attributes(), ...actions() },
             }),
         customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
       },
       context: childrenContext(),
     };
   };
+
   $: useChildren = () => {
     // TO-DO: When should \`canHaveChildren\` dictate rendering?
     // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
@@ -2159,6 +2217,7 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
     // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
     return useBlock().children ?? [];
   };
+
   $: childrenWithoutParentComponent = () => {
     /**
      * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
@@ -2170,23 +2229,28 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
       !component?.()?.component && !repeatItemData();
     return shouldRenderChildrenOutsideRef ? useChildren() : [];
   };
+
   $: repeatItemData = () => {
     /**
      * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
      * which will not work if there is a repeat.
      */
     const { repeat, ...blockWithoutRepeat } = block;
+
     if (!repeat?.collection) {
       return undefined;
     }
+
     const itemsArray = evaluate({
       code: repeat.collection,
       state: context.state,
       context: context.context,
     });
+
     if (!Array.isArray(itemsArray)) {
       return undefined;
     }
+
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
@@ -2205,10 +2269,12 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
     }));
     return repeatArray;
   };
+
   $: inheritedTextStyles = () => {
     if (TARGET !== \\"reactNative\\") {
       return {};
     }
+
     const styles = getReactNativeBlockStyles({
       block: useBlock(),
       context: context,
@@ -2216,6 +2282,7 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
     });
     return extractTextStyles(styles);
   };
+
   $: childrenContext = () => {
     return {
       apiKey: context.apiKey,
@@ -2226,6 +2293,7 @@ exports[`Svelte > jsx > Javascript Test > renderBlock 1`] = `
       inheritedStyles: inheritedTextStyles(),
     };
   };
+
   $: renderComponentTag = () => {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
@@ -2298,6 +2366,7 @@ exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
     get content() {
       return 3;
     },
+
     get registeredComponents() {
       return 4;
     },
@@ -2561,14 +2630,6 @@ exports[`Svelte > jsx > Javascript Test > string-literal-store 1`] = `
 <div>{foo}</div>"
 `;
 
-exports[`Svelte > jsx > Javascript Test > string-literal-store-kebab 1`] = `
-"unknown: Missing semicolon. (1:8)
-
-> 1 | let  foo-bar= 123
-    |         ^
-  2 |"
-`;
-
 exports[`Svelte > jsx > Javascript Test > styleClassAndCss 1`] = `
 "<script>
   function stringifyStyles(stylesObj) {
@@ -2766,6 +2827,7 @@ exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
     // Maintain focus
     inputRef.focus();
   }
+
   function lowerCaseName() {
     return name.toLowerCase();
   }
@@ -3055,6 +3117,7 @@ exports[`Svelte > jsx > Typescript Test > BasicRef 1`] = `
     // Maintain focus
     inputRef.focus();
   }
+
   function lowerCaseName() {
     return name.toLowerCase();
   }
@@ -3127,12 +3190,13 @@ exports[`Svelte > jsx > Typescript Test > BasicRefPrevious 1`] = `
   export function usePrevious<T>(value: T) {
     // The ref object is a generic container whose current property is mutable ...
     // ... and can hold any value, similar to an instance property on a class
-    let ref = useRef<T>(null);
-    // Store current value in ref
+    let ref = useRef<T>(null); // Store current value in ref
+
     onUpdate(() => {
       ref = value;
     }, [value]); // Only re-run if value changes
     // Return previous value (happens before update in useEffect above)
+
     return ref;
   }
 
@@ -3191,19 +3255,18 @@ exports[`Svelte > jsx > Typescript Test > Button 1`] = `
 exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   type Column = {
-    content: any;
-    // TODO: Implement this when support for dynamic CSS lands
+    content: any; // TODO: Implement this when support for dynamic CSS lands
+
     width?: number;
   };
 
   export interface ColumnProps {
-    columns?: Column[];
+    columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
 
-    // TODO: Implement this when support for dynamic CSS lands
-    space?: number;
-    // TODO: Implement this when support for dynamic CSS lands
-    stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\";
-    // TODO: Implement this when support for dynamic CSS lands
+    space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+    stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
     reverseColumnsWhenStacked?: boolean;
   }
 </script>
@@ -3215,13 +3278,16 @@ exports[`Svelte > jsx > Typescript Test > Columns 1`] = `
   function getColumns() {
     return columns || [];
   }
+
   function getGutterSize() {
     return typeof space === \\"number\\" ? space || 0 : 20;
   }
+
   function getWidth(index: number) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
+
   function getColumnCssWidth(index: number) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
@@ -3340,12 +3406,15 @@ exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
+
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -3362,6 +3431,7 @@ exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -3410,12 +3480,15 @@ exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
+
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
+
         if (script.src) {
           if (scriptsInserted.includes(script.src)) {
             continue;
           }
+
           scriptsInserted.push(script.src);
           const newScript = document.createElement(\\"script\\");
           newScript.async = true;
@@ -3432,6 +3505,7 @@ exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
           if (scriptsRun.includes(script.innerText)) {
             continue;
           }
+
           try {
             scriptsRun.push(script.innerText);
             new Function(script.innerText)();
@@ -3524,6 +3598,7 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
     }
   ) {
     const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
+
     if (sendSubmissionsTo === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
@@ -3531,13 +3606,13 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
         event.preventDefault();
         return;
       }
+
       event.preventDefault();
       const el = event.currentTarget;
       const headers = customHeaders || {};
       let body: any;
-      const formData = new FormData(el);
+      const formData = new FormData(el); // TODO: maybe support null
 
-      // TODO: maybe support null
       const formPairs: {
         key: string;
         value: File | boolean | number | string | FileList;
@@ -3548,6 +3623,7 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
         .map((el) => {
           let value: any;
           const key = (el as HTMLImageElement).name;
+
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
               if (el.checked) {
@@ -3561,6 +3637,7 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
               value = el.checked;
             } else if (el.type === \\"number\\" || el.type === \\"range\\") {
               const num = el.valueAsNumber;
+
               if (!isNaN(num)) {
                 value = num;
               }
@@ -3573,15 +3650,18 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
           } else {
             value = (el as HTMLInputElement).value;
           }
+
           return {
             key,
             value,
           };
         });
       let contentType = contentType;
+
       if (sendSubmissionsTo === \\"email\\") {
         contentType = \\"multipart/form-data\\";
       }
+
       Array.from(formPairs).forEach(({ value }) => {
         if (
           value instanceof File ||
@@ -3590,11 +3670,10 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
         ) {
           contentType = \\"multipart/form-data\\";
         }
-      });
-
-      // TODO: send as urlEncoded or multipart by default
+      }); // TODO: send as urlEncoded or multipart by default
       // because of ease of use and reliability in browser API
       // for encoding the form?
+
       if (contentType !== \\"application/json\\") {
         body = formData;
       } else {
@@ -3605,6 +3684,7 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
         });
         body = JSON.stringify(json);
       }
+
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */
@@ -3613,17 +3693,21 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
           headers[\\"content-type\\"] = contentType;
         }
       }
+
       const presubmitEvent = new CustomEvent(\\"presubmit\\", {
         detail: {
           body,
         },
       });
+
       if (formRef) {
         formRef.dispatchEvent(presubmitEvent);
+
         if (presubmitEvent.defaultPrevented) {
           return;
         }
       }
+
       formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -3631,9 +3715,8 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
         sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(name || \\"\\")}\`;
       fetch(
-        sendSubmissionsTo === \\"email\\"
-          ? formUrl
-          : action! /* TODO: throw error if no action URL */,
+        sendSubmissionsTo === \\"email\\" ? formUrl : action!,
+        /* TODO: throw error if no action URL */
         {
           body,
           headers,
@@ -3643,25 +3726,31 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
         async (res) => {
           let body;
           const contentType = res.headers.get(\\"content-type\\");
+
           if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
             body = await res.json();
           } else {
             body = await res.text();
           }
+
           if (!res.ok && errorMessagePath) {
             /* TODO: allow supplying an error formatter function */
             let message = get(body, errorMessagePath);
+
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
            error: - email has been taken */
                 message = JSON.stringify(message);
               }
+
               formErrorMessage = message;
             }
           }
+
           responseData = body;
           formState = res.ok ? \\"success\\" : \\"error\\";
+
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: {
@@ -3669,18 +3758,21 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
                 body,
               },
             });
+
             if (formRef) {
               formRef.dispatchEvent(submitSuccessEvent);
+
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
               /* TODO: option to turn this on/off? */
+
               if (resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
-
             /* TODO: client side route event first that can be preventDefaulted */
+
             if (successUrl) {
               if (formRef) {
                 const event = new CustomEvent(\\"route\\", {
@@ -3689,6 +3781,7 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
                   },
                 });
                 formRef.dispatchEvent(event);
+
                 if (!event.defaultPrevented) {
                   location.href = successUrl;
                 }
@@ -3704,12 +3797,15 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
               error: err,
             },
           });
+
           if (formRef) {
             formRef.dispatchEvent(submitErrorEvent);
+
             if (submitErrorEvent.defaultPrevented) {
               return;
             }
           }
+
           responseData = err;
           formState = \\"error\\";
         }
@@ -3773,7 +3869,6 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
 exports[`Svelte > jsx > Typescript Test > Image 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   // TODO: AMP Support?
-
   export interface ImageProps {
     _class?: string;
     image: string;
@@ -3783,12 +3878,12 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
     width?: number;
     altText?: string;
     backgroundSize?: string;
-    backgroundPosition?: string;
-    // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-    srcset?: string;
-    // TODO: Implement support for custom aspect ratios
-    aspectRatio?: number;
-    // TODO: This might not work as expected in terms of positioning
+    backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+    srcset?: string; // TODO: Implement support for custom aspect ratios
+
+    aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
     children?: any;
   }
 </script>
@@ -3806,10 +3901,12 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
   function setLoaded() {
     imageLoaded = true;
   }
+
   function useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
     return !!lazy && isBrowser();
   }
+
   function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
@@ -3829,6 +3926,7 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
         if (pictureRef) {
           const rect = pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
+
           if (rect.top < window.innerHeight + buffer) {
             load = true;
             scrollListener = null;
@@ -3836,6 +3934,7 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
           }
         }
       };
+
       scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
@@ -4007,8 +4106,7 @@ exports[`Svelte > jsx > Typescript Test > RawText 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   export interface RawTextProps {
     attributes?: any;
-    text?: string;
-    // builderBlock?: any;
+    text?: string; // builderBlock?: any;
   }
 </script>
 
@@ -4255,6 +4353,7 @@ exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
   function kebabCaseValue() {
     return kebabCase(\\"testThat\\");
   }
+
   function snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
@@ -4481,6 +4580,7 @@ exports[`Svelte > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
   function setName(value) {
     name = value;
   }
+
   function updateNameWithArrowFn(value) {
     name = value;
   }
@@ -4698,6 +4798,7 @@ exports[`Svelte > jsx > Typescript Test > componentWithContext 1`] = `
 
   setContext(Context1.key, {
     foo: \\"bar\\",
+
     content() {
       return content;
     },
@@ -4729,6 +4830,7 @@ exports[`Svelte > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
 
   setContext(Context1.key, {
     foo: \\"bar\\",
+
     content() {
       return content;
     },
@@ -4766,6 +4868,7 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
     attributes?: any;
     text?: string;
     buttonText?: string; // no default value
+
     link?: string;
     openLinkInNewTab?: boolean;
     onClick?: () => void;
@@ -4888,6 +4991,7 @@ exports[`Svelte > jsx > Typescript Test > getterState 1`] = `
   $: foo2 = () => {
     return foo + \\"foo\\";
   };
+
   $: bar = () => {
     return \\"bar\\";
   };
@@ -4950,6 +5054,7 @@ exports[`Svelte > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 
   function onUpdateFn_0(..._args: any[]) {
     console.log(\\"Runs when a or b changes\\", a, b);
+
     if (a === \\"a\\") {
       a = \\"b\\";
     }
@@ -4959,6 +5064,7 @@ exports[`Svelte > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 
   function onUpdateFn_1(..._args: any[]) {
     console.log(\\"Runs when c or d changes\\", c, d);
+
     if (a === \\"a\\") {
       a = \\"b\\";
     }
@@ -5046,6 +5152,7 @@ exports[`Svelte > jsx > Typescript Test > onEvent 1`] = `
   function foo(event) {
     console.log(\\"test2\\");
   }
+
   function elem_onInitEditingBldr(event) {
     console.log(\\"test\\");
     foo(event);
@@ -5282,7 +5389,9 @@ exports[`Svelte > jsx > Typescript Test > referencingFunInsideHook 1`] = `
   import { afterUpdate } from \\"svelte\\";
 
   function foo(params) {}
+
   function bar() {}
+
   function zoo() {
     const params = {
       cb: bar,
@@ -5341,10 +5450,13 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
       context: context.context,
       shouldEvaluateBindings: false,
     }).component?.name;
+
     if (!componentName) {
       return null;
     }
+
     const ref = context.registeredComponents[componentName];
+
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
@@ -5355,9 +5467,11 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
       return ref;
     }
   };
+
   $: tag = () => {
     return getBlockTag(useBlock());
   };
+
   $: useBlock = () => {
     return repeatItemData()
       ? block
@@ -5368,6 +5482,7 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
           shouldEvaluateBindings: true,
         });
   };
+
   $: actions = () => {
     return getBlockActions({
       block: useBlock(),
@@ -5375,6 +5490,7 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
       context: context.context,
     });
   };
+
   $: attributes = () => {
     const blockProperties = getBlockProperties(useBlock());
     return {
@@ -5390,15 +5506,18 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
         : {}),
     };
   };
+
   $: shouldWrap = () => {
     return !component?.()?.noWrap;
   };
+
   $: renderComponentProps = () => {
     return {
       blockChildren: useChildren(),
       componentRef: component?.()?.component,
       componentOptions: {
         ...getBlockComponentOptions(useBlock()),
+
         /**
          * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
          * they are provided to the component itself directly.
@@ -5406,16 +5525,14 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
         ...(shouldWrap()
           ? {}
           : {
-              attributes: {
-                ...attributes(),
-                ...actions(),
-              },
+              attributes: { ...attributes(), ...actions() },
             }),
         customBreakpoints: childrenContext?.()?.content?.meta?.breakpoints,
       },
       context: childrenContext(),
     };
   };
+
   $: useChildren = () => {
     // TO-DO: When should \`canHaveChildren\` dictate rendering?
     // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
@@ -5423,6 +5540,7 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
     // return state.componentInfo?.canHaveChildren ? useBlock().children : [];
     return useBlock().children ?? [];
   };
+
   $: childrenWithoutParentComponent = () => {
     /**
      * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
@@ -5434,23 +5552,28 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
       !component?.()?.component && !repeatItemData();
     return shouldRenderChildrenOutsideRef ? useChildren() : [];
   };
+
   $: repeatItemData = () => {
     /**
      * we don't use \`useBlock()\` here because the processing done within its logic includes evaluating the block's bindings,
      * which will not work if there is a repeat.
      */
     const { repeat, ...blockWithoutRepeat } = block;
+
     if (!repeat?.collection) {
       return undefined;
     }
+
     const itemsArray = evaluate({
       code: repeat.collection,
       state: context.state,
       context: context.context,
     });
+
     if (!Array.isArray(itemsArray)) {
       return undefined;
     }
+
     const collectionName = repeat.collection.split(\\".\\").pop();
     const itemNameToUse =
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
@@ -5469,10 +5592,12 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
     }));
     return repeatArray;
   };
+
   $: inheritedTextStyles = () => {
     if (TARGET !== \\"reactNative\\") {
       return {};
     }
+
     const styles = getReactNativeBlockStyles({
       block: useBlock(),
       context: context,
@@ -5480,6 +5605,7 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
     });
     return extractTextStyles(styles);
   };
+
   $: childrenContext = () => {
     return {
       apiKey: context.apiKey,
@@ -5490,6 +5616,7 @@ exports[`Svelte > jsx > Typescript Test > renderBlock 1`] = `
       inheritedStyles: inheritedTextStyles(),
     };
   };
+
   $: renderComponentTag = () => {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
@@ -5572,6 +5699,7 @@ exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `
     get content() {
       return 3;
     },
+
     get registeredComponents() {
       return 4;
     },
@@ -5897,14 +6025,6 @@ exports[`Svelte > jsx > Typescript Test > string-literal-store 1`] = `
 </script>
 
 <div>{foo}</div>"
-`;
-
-exports[`Svelte > jsx > Typescript Test > string-literal-store-kebab 1`] = `
-"unknown: Missing semicolon. (1:8)
-
-> 1 | let  foo-bar= 123
-    |         ^
-  2 |"
 `;
 
 exports[`Svelte > jsx > Typescript Test > styleClassAndCss 1`] = `
