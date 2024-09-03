@@ -38,7 +38,8 @@ const mapComponentName = (name: string) => {
   for (const prefix of builderBlockPrefixes) {
     if (name.startsWith(prefix)) {
       const suffix = name.replace(prefix, '');
-      if (isUpperCase(suffix[0])) {
+      const restOfName = suffix[0];
+      if (restOfName && isUpperCase(restOfName)) {
         return `${prefix}:${name.replace(prefix, '')}`;
       }
     }
