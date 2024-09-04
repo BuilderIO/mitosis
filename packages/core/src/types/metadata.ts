@@ -14,7 +14,9 @@ export type ComponentMetadata = {
   angular?: {
     /* Mitosis uses `attr.XXX` as default see https://angular.io/guide/attribute-binding. 
     If you want to skip some you can use the 'nativeAttributes'. */
-    nativeAttributes: string[];
+    nativeAttributes?: string[];
+    /* Overwrite default selector for component. Default will be kebab case (MyComponent -> my-component) */
+    selector?: string;
   };
   qwik?: {
     component?: {

@@ -21,5 +21,6 @@ export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
 
 export interface AngularBlockOptions {
   childComponents?: string[];
-  nativeAttributes: string[]; // set by useMetadata (packages/core/src/types/metadata.ts)
+  nativeAttributes?: string[]; // set by useMetadata (packages/core/src/types/metadata.ts)
+  selector?: string; // set by useMetadata (packages/core/src/types/metadata.ts)
 }

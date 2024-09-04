@@ -312,6 +312,7 @@ const IMPORT_TEST: Tests = {
 };
 
 const ANGULAR_TESTS: Tests = {
+  customSelector: getRawFile('./data/angular/custom-selector.raw.tsx'),
   nativeAttributes: getRawFile('./data/angular/native-attributes.raw.tsx'),
   outputEventBinding: getRawFile('./data/angular/output-event-bindings.raw.tsx'),
   dynamicComponent: getRawFile('./data/angular/dynamic-component.raw.tsx'),
@@ -322,6 +323,7 @@ const ANGULAR_TESTS: Tests = {
   stateInit: getRawFile('./data/angular/state-init.raw.tsx'),
   stateInitSequence: getRawFile('./data/angular/state-init-sequence.raw.tsx'),
   useObjectWrapper: getRawFile('./data/angular/use-object-wrapper.raw.tsx'),
+  allSpread: getRawFile('./data/angular/all-spread.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {

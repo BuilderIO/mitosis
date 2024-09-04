@@ -33,7 +33,7 @@ import {
   runPreJsonPlugins,
 } from '@/modules/plugins';
 import { hashCodeAsString } from '@/symbols/symbol-processor';
-import { MitosisComponent } from '@/types/mitosis-component';
+import { BaseHook, MitosisComponent } from '@/types/mitosis-component';
 import { Binding, MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { flow, pipe } from 'fp-ts/lib/function';
@@ -42,7 +42,13 @@ import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
 import isChildren from '../../helpers/is-children';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
-import { HELPER_FUNCTIONS, getAppropriateTemplateFunctionKeys } from './helpers';
+import {
+  HELPER_FUNCTIONS,
+  addCodeToOnInit,
+  addCodeToOnUpdate,
+  getAppropriateTemplateFunctionKeys,
+  makeReactiveState,
+} from './helpers';
 import {
   AngularBlockOptions,
   BUILT_IN_COMPONENTS,
@@ -51,16 +57,23 @@ import {
 } from './types';
 
 const mappers: {
-  [key: string]: (root: MitosisComponent, json: MitosisNode, options: ToAngularOptions) => string;
+  [key: string]: (
+    root: MitosisComponent,
+    json: MitosisNode,
+    options: ToAngularOptions,
+    blockOptions: AngularBlockOptions,
+  ) => string;
 } = {
-  Fragment: (root, json, options) => {
+  Fragment: (root, json, options, blockOptions) => {
     return `<ng-container>${json.children
-      .map((item) => blockToAngular({ root, json: item, options }))
+      .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
       .join('\n')}</ng-container>`;
   },
-  Slot: (root, json, options) => {
+  Slot: (root, json, options, blockOptions) => {
     const renderChildren = () =>
-      json.children?.map((item) => blockToAngular({ root, json: item, options })).join('\n');
+      json.children
+        ?.map((item) => blockToAngular({ root, json: item, options, blockOptions }))
+        .join('\n');
 
     return `<ng-content ${Object.entries({ ...json.bindings, ...json.properties })
       .map(([binding, value]) => {
@@ -194,12 +207,13 @@ const processEventBinding = (key: string, code: string, nodeName: string, custom
 const stringifyBinding =
   (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
-    if (options.state === 'inline-with-wrappers' && binding?.type === 'spread') {
-      return;
-    }
     if (key.startsWith('$') || key.startsWith('"') || key === 'key') {
       return;
     }
+    if (binding?.type === 'spread') {
+      return;
+    }
+
     const keyToUse = BINDINGS_MAPPER[key] || key;
     const { code, arguments: cusArgs = ['event'] } = binding!;
     // TODO: proper babel transform to replace. Util for this
@@ -209,11 +223,11 @@ const stringifyBinding =
       return ` (${event})="${value}"`;
     } else if (keyToUse === 'class') {
       return ` [class]="${code}" `;
-    } else if (keyToUse === 'ref') {
+    } else if (keyToUse === 'ref' || keyToUse === 'spreadRef') {
       return ` #${code} `;
     } else if (
       (VALID_HTML_TAGS.includes(node.name.trim()) || keyToUse.includes('-')) &&
-      !blockOptions.nativeAttributes.includes(keyToUse) &&
+      !blockOptions.nativeAttributes?.includes(keyToUse) &&
       !Object.values(BINDINGS_MAPPER).includes(keyToUse)
     ) {
       // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
@@ -298,7 +312,7 @@ export const blockToAngular = ({
   const childComponents = blockOptions?.childComponents || [];
 
   if (mappers[json.name]) {
-    return mappers[json.name](root, json, options);
+    return mappers[json.name](root, json, options, blockOptions);
   }
 
   if (isChildren({ node: json })) {
@@ -384,10 +398,7 @@ export const blockToAngular = ({
         type: 'property',
       };
       if (!root.hooks.onInit?.code.includes(inputsPropsStateName)) {
-        if (!root.hooks.onInit) {
-          root.hooks.onInit = { code: '' };
-        }
-        root.hooks.onInit.code += `\nthis.${inputsPropsStateName} = {${allProps}};\n`;
+        addCodeToOnInit(root, `this.${inputsPropsStateName} = {${allProps}};`);
       }
       if (
         !root.hooks.onUpdate
@@ -395,12 +406,7 @@ export const blockToAngular = ({
           .join('')
           .includes(inputsPropsStateName)
       ) {
-        if (!root.hooks.onUpdate) {
-          root.hooks.onUpdate = [];
-        }
-        root.hooks.onUpdate.push({
-          code: `this.${inputsPropsStateName} = {${allProps}}`,
-        });
+        addCodeToOnUpdate(root, `this.${inputsPropsStateName} = {${allProps}};`);
       }
       allProps = `${inputsPropsStateName}`;
     } else {
@@ -420,19 +426,72 @@ export const blockToAngular = ({
       : json.name;
     str += `<${elSelector} `;
 
-    // TODO: spread support for angular
-    // if (json.bindings._spread) {
-    //   str += `v-bind="${stripStateAndPropsRefs(
-    //     json.bindings._spread as string,
-    //   )}"`;
-    // }
-
     for (const key in json.properties) {
       if (key.startsWith('$')) {
         continue;
       }
       const value = json.properties[key];
       str += ` ${key}="${value}" `;
+    }
+
+    for (const key in json.bindings) {
+      if (json.bindings[key]?.type === 'spread' && VALID_HTML_TAGS.includes(json.name.trim())) {
+        if (json.bindings[key]?.code === 'this') {
+          // if its an arbitrary { ...props } spread then we skip because Angular needs a named prop to be defined
+          continue;
+        }
+
+        let refName = '';
+        if (json.bindings['spreadRef']?.code) {
+          refName = json.bindings['spreadRef'].code;
+        } else {
+          const spreadRefIndex = root.meta._spreadRefIndex || 0;
+          refName = `elRef${spreadRefIndex}`;
+          root.meta._spreadRefIndex = (spreadRefIndex as number) + 1;
+          json.bindings['spreadRef'] = { code: refName, type: 'single' };
+          root.refs[refName] = { argument: '' };
+        }
+        json.bindings['spreadRef'] = { code: refName, type: 'single' };
+        root.refs[refName] = { argument: '' };
+        root.meta.onViewInit = (root.meta.onViewInit || { code: '' }) as BaseHook;
+        let spreadCode = '';
+        let changesCode = '';
+        if (json.bindings[key]?.code.startsWith('{')) {
+          json.meta._spreadStateRef = json.meta._spreadStateRef || 0;
+          const name = `${refName}_state_${json.meta._spreadStateRef}`;
+          json.meta._spreadStateRef = (json.meta._spreadStateRef as number) + 1;
+          makeReactiveState(root, name, `this.${name} = ${json.bindings[key]?.code};`);
+          spreadCode = `this.${name}`;
+          changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue`;
+        } else {
+          spreadCode = `${json.bindings[key]?.code}`;
+          changesCode = `changes['${spreadCode.replace('this.', '')}']?.currentValue`;
+        }
+        if (!root.compileContext) {
+          root.compileContext = {
+            angular: {
+              hooks: {
+                ngAfterViewInit: {
+                  code: '',
+                },
+              },
+            },
+          };
+        }
+        root.compileContext.angular!.hooks!.ngAfterViewInit.code += `\nthis.setAttributes(this.${refName}?.nativeElement, ${spreadCode});`;
+        addCodeToOnUpdate(
+          root,
+          `this.setAttributes(this.${refName}?.nativeElement, ${spreadCode}${
+            changesCode ? `, ${changesCode}` : ''
+          });`,
+        );
+        if (!root.state['setAttributes']) {
+          root.state['setAttributes'] = {
+            code: HELPER_FUNCTIONS(options?.typescript).setAttributes as string,
+            type: 'method',
+          };
+        }
+      }
     }
 
     const stringifiedBindings = Object.entries(json.bindings)
@@ -573,14 +632,11 @@ const handleBindings = (
     } else if (item.bindings[key]?.code) {
       if (item.bindings[key]?.type !== 'spread' && !key.startsWith('on')) {
         json.state[newBindingName] = { code: 'null', type: 'property' };
-        if (!json.hooks['onInit']?.code) {
-          json.hooks['onInit'] = { code: '' };
-        }
-        json.hooks['onInit'].code += `\nstate.${newBindingName} = ${item.bindings[key]!.code};\n`;
-        json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
-        json.hooks['onUpdate'].push({
-          code: `state.${newBindingName} = ${item.bindings[key]!.code}`,
-        });
+        makeReactiveState(
+          json,
+          newBindingName,
+          `this.${newBindingName} = ${item.bindings[key]!.code}`,
+        );
         item.bindings[key]!.code = `state.${newBindingName}`;
       } else if (key.startsWith('on')) {
         const { arguments: cusArgs = ['event'] } = item.bindings[key]!;
@@ -595,17 +651,11 @@ const handleBindings = (
           item.bindings[key]!.code = `state.${newBindingName}(${cusArgs.join(', ')})`;
         }
       } else {
-        json.state[newBindingName] = { code: `null`, type: 'property' };
-        if (!json.hooks['onInit']?.code) {
-          json.hooks['onInit'] = { code: '' };
-        }
-        json.hooks['onInit'].code += `\nstate.${newBindingName} = {...(${
-          item.bindings[key]!.code
-        })};\n`;
-        json.hooks['onUpdate'] = json.hooks['onUpdate'] || [];
-        json.hooks['onUpdate'].push({
-          code: `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
-        });
+        makeReactiveState(
+          json,
+          newBindingName,
+          `state.${newBindingName} = {...(${item.bindings[key]!.code})}`,
+        );
         item.bindings[newBindingName] = item.bindings[key];
         item.bindings[key]!.code = `state.${newBindingName}`;
         delete item.bindings[key];
@@ -714,7 +764,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
     options.plugins = [
       ...(options.plugins || []),
-      CODE_PROCESSOR_PLUGIN((codeType) => {
+      CODE_PROCESSOR_PLUGIN((codeType, _, node) => {
         switch (codeType) {
           case 'hooks':
             return flow(
@@ -739,11 +789,18 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             );
 
           case 'bindings':
-            return (code) => {
+            return (code, key) => {
+              // we create a separate state property for spread binding and use ref to attach the attributes
+              // so we need to use `this.` inside the class to access state and props
+              const isSpreadAttributeBinding =
+                node?.bindings[key]?.type === 'spread' &&
+                VALID_HTML_TAGS.includes(node.name.trim());
+
               const newLocal = processAngularCode({
                 contextVars: [],
                 outputVars,
                 domRefs: [], // the template doesn't need the this keyword.
+                replaceWith: isSpreadAttributeBinding ? 'this' : undefined,
               })(code);
               return newLocal.replace(/"/g, '&quot;');
             };
@@ -767,7 +824,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
 
     const [forwardProp, hasPropRef] = getPropsRef(json, true);
-    const childComponents: string[] = [];
+    const childComponents: string[] = [json.name]; // a component can be recursively used in itself
     const propsTypeRef = json.propsTypeRef !== 'any' ? json.propsTypeRef : undefined;
 
     json.imports.forEach(({ imports }) => {
@@ -795,7 +852,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }
       return `public ${variableName} : ${variableType}`;
     });
-    const hasConstructor = Boolean(injectables.length);
 
     const props = getProps(json);
     // prevent jsx props from showing up as @Input
@@ -887,16 +943,20 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }),
     });
 
+    const refsForObjSpread = getRefs(json, 'spreadRef');
+
     const hostDisplayCss = options.visuallyIgnoreHostElement ? ':host { display: contents; }' : '';
     const styles = css.length ? [hostDisplayCss, css].join('\n') : hostDisplayCss;
 
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
-      selector: `'${kebabCase(json.name || 'my-component')}, ${json.name}'`,
+      selector: useMetadata?.angular?.selector
+        ? `'${useMetadata?.angular?.selector}'`
+        : `'${kebabCase(json.name || 'my-component')}'`,
       template: `\`
-        ${indent(dynamicTemplate, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
-        ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
-        \``,
+      ${indent(dynamicTemplate, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
+      ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
+      \``,
       ...(styles
         ? {
             styles: `[\`${indent(styles, 8)}\`]`,
@@ -928,11 +988,17 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       return `const defaultProps = {${defalutPropsString}};\n`;
     };
 
+    const hasConstructor =
+      Boolean(injectables.length) || dynamicComponents.size || refsForObjSpread.size;
+
     const angularCoreImports = [
       ...(outputs.length ? ['Output', 'EventEmitter'] : []),
       ...(options?.experimental?.inject ? ['Inject', 'forwardRef'] : []),
       'Component',
-      ...(domRefs.size || dynamicComponents.size ? ['ViewChild', 'ElementRef'] : []),
+      ...(domRefs.size || dynamicComponents.size || refsForObjSpread.size
+        ? ['ViewChild', 'ElementRef']
+        : []),
+      ...(refsForObjSpread.size ? ['Renderer2'] : []),
       ...(props.size ? ['Input'] : []),
       ...(dynamicComponents.size ? ['ViewContainerRef', 'TemplateRef'] : []),
       ...(json.hooks.onUpdate?.length && options.typescript ? ['SimpleChanges'] : []),
@@ -983,6 +1049,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             `@ViewChild('${refName}') ${refName}${options.typescript ? '!: ElementRef' : ''}`,
         )
         .join('\n')}
+
+      ${Array.from(refsForObjSpread)
+        .map(
+          (refName) =>
+            `@ViewChild('${refName}') ${refName}${options.typescript ? '!: ElementRef' : ''}`,
+        )
+        .join('\n')}
       
       ${Array.from(dynamicComponents)
         .map(
@@ -996,6 +1069,11 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .join('\n')}
 
       ${dynamicComponents.size ? `myContent${options.typescript ? '?: any[][];' : ''}` : ''}
+      ${
+        refsForObjSpread.size
+          ? `_listenerFns = new Map${options.typescript ? '<string, () => void>' : ''}()`
+          : ''
+      }
 
       ${dataString}
 
@@ -1020,11 +1098,15 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .join('\n')}
 
       ${
-        !hasConstructor && !dynamicComponents.size
+        !hasConstructor
           ? ''
           : `constructor(\n${injectables.join(',\n')}${
               dynamicComponents.size
                 ? `\nprivate vcRef${options.typescript ? ': ViewContainerRef' : ''},\n`
+                : ''
+            }${
+              refsForObjSpread.size
+                ? `\nprivate renderer${options.typescript ? ': Renderer2' : ''},\n`
                 : ''
             }) {}
           `
@@ -1067,6 +1149,17 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }
 
       ${
+        // hooks specific to Angular
+        json.compileContext?.angular?.hooks
+          ? Object.entries(json.compileContext?.angular?.hooks).map(([key, value]) => {
+              return `${key}() {
+            ${value.code}
+          }`;
+            })
+          : ''
+      }
+
+      ${
         !json.hooks.onUpdate?.length
           ? ''
           : `ngOnChanges(changes${options.typescript ? ': SimpleChanges' : ''}) {
@@ -1081,10 +1174,15 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       }
 
       ${
-        !json.hooks.onUnMount
+        !json.hooks.onUnMount && !refsForObjSpread.size
           ? ''
           : `ngOnDestroy() {
-              ${json.hooks.onUnMount.code}
+              ${json.hooks.onUnMount?.code || ''}
+              ${
+                refsForObjSpread.size
+                  ? `for (const fn of this._listenerFns.values()) { fn(); }`
+                  : ''
+              }
             }`
       }
 
