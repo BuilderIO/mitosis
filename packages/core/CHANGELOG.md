@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.4.3
+
+### Patch Changes
+
+- 1bf28ea: Builder: fix: ensure component name suffix
+- 814d171: Angular: Feature: custom template selectors using metadata hook.
+- 531c15c: fix: check string value in `isUpperCase`
+- 84038d5: Angular: Feat: support destructuring of props or state objects with attributes as well as event listeners directly inside an HTML element
+
 ## 0.4.2
 
 ### Patch Changes
