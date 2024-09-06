@@ -12,7 +12,7 @@ export type ComponentMetadata = {
   [index: string]: any;
   httpRequests?: Record<string, string>;
   options?: TargetOptions;
-  isAttachedToShadowDom: boolean; // For web-components to enable shadowDOM
+  isAttachedToShadowDom?: boolean; // For web-components to enable shadowDOM
   angular?: {
     /* Mitosis uses `attr.XXX` as default see https://angular.io/guide/attribute-binding. 
     If you want to skip some you can use the 'nativeAttributes'. */
