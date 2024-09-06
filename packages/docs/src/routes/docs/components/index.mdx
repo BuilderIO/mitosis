@@ -143,7 +143,7 @@ export default function MyComponent() {
 
 ## Styling
 
-### `css`
+### `css-in-js`
 
 Styling is done via the `css` prop on DOM elements and components. It takes CSS properties in `camelCase` (like the `style` object on DOM elements) and properties as valid CSS strings
 
@@ -170,7 +170,49 @@ export default function ResponsiveExample() {
 }
 ```
 
-You can also use the [useStyle](/docs/hooks#useStyle) hook to add styles to a component
+You can also use the [useStyle](/docs/hooks#usestyle) hook to add styles to a component
+
+### `import .css file`
+
+In general all imports inside a Mitosis component are passed to the generated output file.
+Therefore, you can import a `.css` file like this:
+
+````css
+/* ./src/my-component/my-component.css */
+
+
+.my-component{
+    margin-top: 10px;
+}
+````
+
+```tsx
+/* ./src/my-component/my-component.lite.tsx */
+import "./my-component.css";
+
+export default function CSSExample() {
+  return <div class="my-component" />;
+}
+```
+
+> **Note:** The Mitosis cli will only move `.ts` and `.js` files to the output directory.
+> You need to move the `.css` file by your own.
+
+### `standalone components`
+
+You should consider developing your components without a fixed style inside the Mitosis component.
+Loading the style inside the consuming app via bundler (vite, webpack, etc.) or with default `<link rel="stylesheet" ...`,
+enables a flexible approach. You would use `class` or `data-*` attributes inside your Mitosis component:
+
+```tsx
+/* ./src/my-component/my-component.lite.tsx */
+export default function CSSExample() {
+  return <div class="my-component" />;
+}
+```
+
+The advantage of this is, that you can rely on the CSS ecosystem (sass, less, etc.).
+But you might encounter some problems when you want to use web-components with shadowDOM.
 
 ## `class` vs `className`
 
