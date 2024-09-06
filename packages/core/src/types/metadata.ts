@@ -1,6 +1,21 @@
-import { Target } from '..';
-import { SolidState } from '../generators/solid/types';
-import { Dictionary } from '../helpers/typescript';
+import { AlpineMetadata } from '@/generators/alpine/types';
+import { AngularMetadata } from '@/generators/angular/types';
+import { BuilderMetadata } from '@/generators/builder/types';
+import { HtmlMetadata } from '@/generators/html/types';
+import { LiquidMetadata } from '@/generators/liquid/types';
+import { LitMetadata } from '@/generators/lit/types';
+import { MarkoMetadata } from '@/generators/marko/types';
+import { MitosisMetadata } from '@/generators/mitosis/types';
+import { QwikMetadata } from '@/generators/qwik/types';
+import { ReactNativeMetadata } from '@/generators/react-native/types';
+import { ReactServerComponentsMetadata } from '@/generators/rsc/types';
+import { SolidMetadata } from '@/generators/solid/types';
+import { StencilMetadata } from '@/generators/stencil/types';
+import { SvelteMetadata } from '@/generators/svelte/types';
+import { SwiftMetadata } from '@/generators/swift/types';
+import { TaroMetadata } from '@/generators/taro/types';
+import { TemplateMetadata } from '@/generators/template/types';
+import { ReactMetadata, Target, VueMetadata } from '..';
 
 type Targets = typeof import('../targets').targets;
 type TargetOptions = {
@@ -11,27 +26,26 @@ export type ComponentMetadata = {
   [index: string]: any;
   httpRequests?: Record<string, string>;
   options?: TargetOptions;
-  angular?: {
-    /* Mitosis uses `attr.XXX` as default see https://angular.io/guide/attribute-binding. 
-    If you want to skip some you can use the 'nativeAttributes'. */
-    nativeAttributes?: string[];
-    /* Overwrite default selector for component. Default will be kebab case (MyComponent -> my-component) */
-    selector?: string;
-  };
-  qwik?: {
-    component?: {
-      isLight?: boolean;
-    };
-    setUseStoreFirst?: boolean;
-    hasDeepStore?: boolean;
-    mutable?: string[];
-    imports?: Dictionary<string>;
-    replace?: Record<string, string>;
-  };
-  solid?: {
-    state?: Dictionary<SolidState>;
-  };
-  rsc?: {
-    componentType?: 'client' | 'server';
-  };
+  tagName?: string; // Deprecated: Use this for web-components to change the tagName
+  forwardRef?: string; // Deprecated: Use this for react forwardRef
+  isAttachedToShadowDom?: boolean; // Enables shadowDom for web-components
+  alpine?: AlpineMetadata;
+  angular?: AngularMetadata;
+  builder?: BuilderMetadata;
+  html?: HtmlMetadata;
+  lit?: LitMetadata;
+  liquid?: LiquidMetadata;
+  marko?: MarkoMetadata;
+  mitosis?: MitosisMetadata;
+  qwik?: QwikMetadata;
+  react?: ReactMetadata;
+  reactNative?: ReactNativeMetadata;
+  rsc?: ReactServerComponentsMetadata;
+  solid?: SolidMetadata;
+  stencil?: StencilMetadata;
+  svelte?: SvelteMetadata;
+  swift?: SwiftMetadata;
+  taro?: TaroMetadata;
+  template?: TemplateMetadata;
+  vue?: VueMetadata;
 };

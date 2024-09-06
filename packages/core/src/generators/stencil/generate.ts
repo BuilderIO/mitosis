@@ -1,3 +1,4 @@
+import { ToStencilOptions } from '@/generators/stencil/types';
 import { dashCase } from '@/helpers/dash-case';
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
@@ -13,7 +14,7 @@ import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
 import { collectCss } from '@/helpers/styles/collect-css';
 import { checkIsForNode, MitosisNode } from '@/types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
+import { TranspilerGenerator } from '@/types/transpiler';
 import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import {
@@ -24,8 +25,6 @@ import {
 } from '../../modules/plugins';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { collectClassString } from './collect-class-string';
-
-export interface ToStencilOptions extends BaseTranspilerOptions {}
 
 const blockToStencil = (
   json: MitosisNode,

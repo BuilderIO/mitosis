@@ -1,3 +1,4 @@
+import { ToLitOptions } from '@/generators/lit/types';
 import { dashCase } from '@/helpers/dash-case';
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
@@ -15,7 +16,7 @@ import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
 import { collectCss } from '@/helpers/styles/collect-css';
 import { checkIsForNode, MitosisNode } from '@/types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
+import { TranspilerGenerator } from '@/types/transpiler';
 import { camelCase, some } from 'lodash';
 import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
@@ -41,10 +42,6 @@ const getCustomTagName = (name: string, options: ToLitOptions) => {
 
   return kebabCaseName;
 };
-
-export interface ToLitOptions extends BaseTranspilerOptions {
-  useShadowDom?: boolean;
-}
 
 const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
   if (json.properties._text) {
