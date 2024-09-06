@@ -1,8 +1,8 @@
+import { parseJsx } from '@/parsers/jsx';
+import { Target } from '@/types/config';
+import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
 import { describe, test } from 'vitest';
 import { MitosisComponent, createTypescriptProject, parseSvelte } from '..';
-import { parseJsx } from '../parsers/jsx';
-import { Target } from '../types/config';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 const getRawFile = async (filePath: string) => {
   const code = await import(`${filePath}?raw`).then((x) => x.default as string);
   return { code, filePath: ['src', '__tests__', filePath].join('/') };
@@ -471,13 +471,12 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
-    // ROOT_SHOW_TESTS,
     FORWARD_REF_TESTS,
-    // MULTI_ON_UPDATE_TESTS,
+    MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
     ADVANCED_REF,
     ON_UPDATE_RETURN,
-    // FOR_SHOW_TESTS
+    FOR_SHOW_TESTS,
   ],
   solid: [
     CONTEXT_TEST,
@@ -578,14 +577,35 @@ export const runTestsForSvelteSyntax = () => {
 
 const tsProject = createTypescriptProject(__dirname + '/tsconfig.json');
 
+const filterTests = (testArray?: Tests[], only?: string[]) =>
+  testArray?.map((tests: Tests) => {
+    if (!only) {
+      return tests;
+    }
+
+    const filteredTests: Tests = {};
+
+    Object.entries(tests).forEach(([key, test]) => {
+      if (only.includes(key)) {
+        filteredTests[key] = test;
+      }
+    });
+
+    return filteredTests;
+  });
+
 export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   target,
   generator,
   options,
+  only,
+  logOutput,
 }: {
   target: Target;
   generator: TranspilerGenerator<X>;
   options: X;
+  logOutput?: boolean;
+  only?: string[]; // Test only some tests based on key
 }) => {
   const configurations: { options: X; testName: string }[] = [
     { options: { ...options, typescript: false }, testName: 'Javascript Test' },
@@ -615,12 +635,12 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                   typescript: false,
                 },
           ),
-        testsArray: JSX_TESTS_FOR_TARGET[target],
+        testsArray: filterTests(JSX_TESTS_FOR_TARGET[target], only),
       },
       {
         name: 'svelte',
         parser: async ({ filePath, code }) => parseSvelte(code),
-        testsArray: [SVELTE_SYNTAX_TESTS],
+        testsArray: filterTests([SVELTE_SYNTAX_TESTS], only),
       },
     ];
     for (const { name, parser, testsArray } of parsers) {
@@ -652,7 +672,13 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                     expect(getOutput).toThrowError();
                   } else {
                     try {
-                      expect(getOutput()).toMatchSnapshot();
+                      const output = getOutput();
+                      if (logOutput) {
+                        process.stdout.write(`--- Start: ${key} ---\n\n`);
+                        process.stdout.write(output);
+                        process.stdout.write(`--- End: ${key} ---\n\n`);
+                      }
+                      expect(output).toMatchSnapshot();
                     } catch (error) {
                       expect(getOutput).toThrowErrorMatchingSnapshot();
                     }

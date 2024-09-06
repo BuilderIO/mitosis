@@ -1,6 +1,7 @@
+import { SolidState } from '@/generators/solid/types';
+import { StencilMetadata } from '@/generators/stencil/types';
+import { Dictionary } from '@/helpers/typescript';
 import { Target } from '..';
-import { SolidState } from '../generators/solid/types';
-import { Dictionary } from '../helpers/typescript';
 
 type Targets = typeof import('../targets').targets;
 type TargetOptions = {
@@ -11,6 +12,7 @@ export type ComponentMetadata = {
   [index: string]: any;
   httpRequests?: Record<string, string>;
   options?: TargetOptions;
+  isAttachedToShadowDom: boolean; // For web-components to enable shadowDOM
   angular?: {
     /* Mitosis uses `attr.XXX` as default see https://angular.io/guide/attribute-binding. 
     If you want to skip some you can use the 'nativeAttributes'. */
@@ -28,6 +30,7 @@ export type ComponentMetadata = {
     imports?: Dictionary<string>;
     replace?: Record<string, string>;
   };
+  stencil?: StencilMetadata;
   solid?: {
     state?: Dictionary<SolidState>;
   };

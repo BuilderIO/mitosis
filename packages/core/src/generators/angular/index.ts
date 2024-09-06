@@ -1,6 +1,7 @@
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
+import { getChildComponents } from '@/helpers/get-child-components';
 import { getComponentsUsed } from '@/helpers/get-components-used';
 import { getCustomImports } from '@/helpers/get-custom-imports';
 import { getPropFunctions } from '@/helpers/get-prop-functions';
@@ -824,16 +825,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
 
     const [forwardProp, hasPropRef] = getPropsRef(json, true);
-    const childComponents: string[] = [json.name]; // a component can be recursively used in itself
     const propsTypeRef = json.propsTypeRef !== 'any' ? json.propsTypeRef : undefined;
 
-    json.imports.forEach(({ imports }) => {
-      Object.keys(imports).forEach((key) => {
-        if (imports[key] === 'default') {
-          childComponents.push(key);
-        }
-      });
-    });
+    const childComponents: string[] = getChildComponents(json);
 
     const customImports = getCustomImports(json);
 

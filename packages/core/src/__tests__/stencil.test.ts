@@ -1,4 +1,4 @@
-import { componentToStencil } from '../generators/stencil';
+import { componentToStencil } from '@/generators/stencil';
 import { runTestsForTarget } from './test-generator';
 
 describe('Stencil', () => {
