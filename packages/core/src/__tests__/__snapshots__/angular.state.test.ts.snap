@@ -6716,6 +6716,38 @@ export class TypeDependencyModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > typeExternalStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"type-external-store\\",
+  template: \`
+    <div>Hello {{_name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeExternalStore {
+  _name = \\"test\\";
+}
+
+@NgModule({
+  declarations: [TypeExternalStore],
+  imports: [CommonModule],
+  exports: [TypeExternalStore],
+})
+export class TypeExternalStoreModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > use-style 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -14250,6 +14282,40 @@ export default class TypeDependency {
   exports: [TypeDependency],
 })
 export class TypeDependencyModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > typeExternalStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+import { FooStore } from \\"./foo-store\\";
+
+@Component({
+  selector: \\"type-external-store\\",
+  template: \`
+    <div>Hello {{_name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeExternalStore {
+  _name = \\"test\\";
+}
+
+@NgModule({
+  declarations: [TypeExternalStore],
+  imports: [CommonModule],
+  exports: [TypeExternalStore],
+})
+export class TypeExternalStoreModule {}
 "
 `;
 

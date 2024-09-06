@@ -6636,6 +6636,39 @@ export class TypeDependencyModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > typeExternalStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"type-external-store\\",
+  template: \`
+    <div>Hello {{_name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeExternalStore {
+  _name = \\"test\\";
+}
+
+@NgModule({
+  declarations: [TypeExternalStore],
+  imports: [CommonModule],
+  exports: [TypeExternalStore],
+  bootstrap: [SomeOtherComponent],
+})
+export class TypeExternalStoreModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > use-style 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -14040,6 +14073,41 @@ export default class TypeDependency {
   bootstrap: [SomeOtherComponent],
 })
 export class TypeDependencyModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > typeExternalStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+import { FooStore } from \\"./foo-store\\";
+
+@Component({
+  selector: \\"type-external-store\\",
+  template: \`
+    <div>Hello {{_name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeExternalStore {
+  _name = \\"test\\";
+}
+
+@NgModule({
+  declarations: [TypeExternalStore],
+  imports: [CommonModule],
+  exports: [TypeExternalStore],
+  bootstrap: [SomeOtherComponent],
+})
+export class TypeExternalStoreModule {}
 "
 `;
 

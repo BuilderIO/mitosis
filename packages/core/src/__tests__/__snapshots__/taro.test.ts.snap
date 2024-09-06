@@ -3221,6 +3221,22 @@ export default TypeDependency;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > typeExternalStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = useState(() => \\"test\\");
+
+  return <View>Hello {_name}! </View>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
 exports[`Taro > jsx > Javascript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 import { Button, View, Text } from \\"@tarojs/components\\";
@@ -3379,7 +3395,7 @@ import { View, Input, Text } from \\"@tarojs/components\\";
 function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputNoArgRef = useRef<HTMLLabelElement>(null);
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+  const [name, setName] = useState<any>(() => \\"PatrickJS\\");
 
   function onBlur() {
     // Maintain focus
@@ -3447,15 +3463,15 @@ export const DEFAULT_VALUES = {
 };
 
 function MyBasicComponent(props: MyBasicComponentProps) {
-  const [name, setName] = useState(() => \\"Steve\\");
+  const [name, setName] = useState<any>(() => \\"Steve\\");
 
   function underscore_fn_name() {
     return \\"bar\\";
   }
 
-  const [age, setAge] = useState(() => 1);
+  const [age, setAge] = useState<number>(() => 1);
 
-  const [sports, setSports] = useState(() => [\\"\\"]);
+  const [sports, setSports] = useState<Array<string>>(() => [\\"\\"]);
 
   return (
     <>
@@ -3487,7 +3503,7 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 import { View, Text, Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+  const [name, setName] = useState<any>(() => \\"PatrickJS\\");
 
   function onChange() {
     const change = myService.method(\\"change\\");
@@ -3536,9 +3552,9 @@ export interface Props {
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicOnMountUpdateComponent(props: Props) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+  const [name, setName] = useState<any>(() => \\"PatrickJS\\");
 
-  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+  const [names, setNames] = useState<any>(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
   const hasInitialized = useRef(false);
   if (!hasInitialized.current) {
@@ -3564,7 +3580,7 @@ import { useState, useEffect } from \\"react\\";
 import { View } from \\"@tarojs/components\\";
 
 function MyBasicOutputsComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+  const [name, setName] = useState<any>(() => \\"PatrickJS\\");
 
   useEffect(() => {
     props.onMessage(name);
@@ -3585,7 +3601,7 @@ import { useState, useEffect } from \\"react\\";
 import { View } from \\"@tarojs/components\\";
 
 function MyBasicOutputsComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+  const [name, setName] = useState<any>(() => \\"PatrickJS\\");
 
   useEffect(() => {
     props.onMessage(name);
@@ -3650,9 +3666,9 @@ import MyBasicComponent from \\"./basic.raw\\";
 import { View } from \\"@tarojs/components\\";
 
 function MyBasicChildComponent(props: any) {
-  const [name, setName] = useState(() => \\"Steve\\");
+  const [name, setName] = useState<any>(() => \\"Steve\\");
 
-  const [dev, setDev] = useState(() => \\"PatrickJS\\");
+  const [dev, setDev] = useState<any>(() => \\"PatrickJS\\");
 
   return (
     <View>
@@ -3675,9 +3691,9 @@ import { useState, useEffect } from \\"react\\";
 import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyBasicForComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+  const [name, setName] = useState<any>(() => \\"PatrickJS\\");
 
-  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+  const [names, setNames] = useState<any>(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
   useEffect(() => {
     console.log(\\"onMount code\\");
@@ -3720,7 +3736,7 @@ import { View, Input, Text } from \\"@tarojs/components\\";
 function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputNoArgRef = useRef<HTMLLabelElement>(null);
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+  const [name, setName] = useState<any>(() => \\"PatrickJS\\");
 
   function onBlur() {
     // Maintain focus
@@ -3823,7 +3839,7 @@ export function usePrevious<T>(value: T) {
 }
 
 function MyPreviousComponent(props: Props) {
-  const [count, setCount] = useState(() => 0);
+  const [count, setCount] = useState<any>(() => 0);
 
   const prevCount = useRef(count);
 
@@ -4002,9 +4018,9 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function ContentSlotJsxCode(props: Props) {
-  const [name, setName] = useState(() => \\"king\\");
+  const [name, setName] = useState<any>(() => \\"king\\");
 
-  const [showContent, setShowContent] = useState(() => false);
+  const [showContent, setShowContent] = useState<any>(() => false);
 
   function cls() {
     return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
@@ -4062,9 +4078,9 @@ import { View } from \\"@tarojs/components\\";
 
 function CustomCode(props: CustomCodeProps) {
   const elem = useRef<HTMLDivElement>(null);
-  const [scriptsInserted, setScriptsInserted] = useState(() => []);
+  const [scriptsInserted, setScriptsInserted] = useState<any>(() => []);
 
-  const [scriptsRun, setScriptsRun] = useState(() => []);
+  const [scriptsRun, setScriptsRun] = useState<any>(() => []);
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -4133,9 +4149,9 @@ import { View } from \\"@tarojs/components\\";
 
 function CustomCode(props: CustomCodeProps) {
   const elem = useRef<HTMLDivElement>(null);
-  const [scriptsInserted, setScriptsInserted] = useState(() => []);
+  const [scriptsInserted, setScriptsInserted] = useState<any>(() => []);
 
-  const [scriptsRun, setScriptsRun] = useState(() => []);
+  const [scriptsRun, setScriptsRun] = useState<any>(() => []);
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -4229,11 +4245,11 @@ import { Form, View, Text } from \\"@tarojs/components\\";
 
 function FormComponent(props: FormProps) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [formState, setFormState] = useState(() => \\"unsubmitted\\");
+  const [formState, setFormState] = useState<any>(() => \\"unsubmitted\\");
 
-  const [responseData, setResponseData] = useState(() => null);
+  const [responseData, setResponseData] = useState<any>(() => null);
 
-  const [formErrorMessage, setFormErrorMessage] = useState(() => \\"\\");
+  const [formErrorMessage, setFormErrorMessage] = useState<any>(() => \\"\\");
 
   function submissionState() {
     return (Builder.isEditing && props.previewState) || formState;
@@ -4513,9 +4529,9 @@ import { View, Image, Text } from \\"@tarojs/components\\";
 
 function Image(props: ImageProps) {
   const pictureRef = useRef<HTMLElement>(null);
-  const [scrollListener, setScrollListener] = useState(() => null);
+  const [scrollListener, setScrollListener] = useState<any>(() => null);
 
-  const [imageLoaded, setImageLoaded] = useState(() => false);
+  const [imageLoaded, setImageLoaded] = useState<any>(() => false);
 
   function setLoaded() {
     setImageLoaded(true);
@@ -4532,7 +4548,7 @@ function Image(props: ImageProps) {
     );
   }
 
-  const [load, setLoad] = useState(() => false);
+  const [load, setLoad] = useState<any>(() => false);
 
   useEffect(() => {
     if (useLazyLoading()) {
@@ -4609,9 +4625,11 @@ import { useState } from \\"react\\";
 import { View, Image } from \\"@tarojs/components\\";
 
 function ImgStateComponent(props: any) {
-  const [canShow, setCanShow] = useState(() => true);
+  const [canShow, setCanShow] = useState<any>(() => true);
 
-  const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
+  const [images, setImages] = useState<any>(() => [
+    \\"http://example.com/qwik.png\\",
+  ]);
 
   return (
     <View>
@@ -4923,11 +4941,11 @@ import { kebabCase, snakeCase } from \\"lodash\\";
 import { View, Button, Text, Input, Textarea, Image } from \\"@tarojs/components\\";
 
 function SmileReviews(props: SmileReviewsProps) {
-  const [reviews, setReviews] = useState(() => []);
+  const [reviews, setReviews] = useState<any>(() => []);
 
-  const [name, setName] = useState(() => \\"test\\");
+  const [name, setName] = useState<any>(() => \\"test\\");
 
-  const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
+  const [showReviewPrompt, setShowReviewPrompt] = useState<any>(() => false);
 
   function kebabCaseValue() {
     return kebabCase(\\"testThat\\");
@@ -5057,7 +5075,7 @@ import { Builder } from \\"@builder.io/sdk\\";
 import { View } from \\"@tarojs/components\\";
 
 function Text(props: TextProps) {
-  const [name, setName] = useState(() => \\"Decadef20\\");
+  const [name, setName] = useState<any>(() => \\"Decadef20\\");
 
   return (
     <View
@@ -5176,7 +5194,7 @@ import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [name, setName] = useState(() => \\"steve\\");
+  const [name, setName] = useState<any>(() => \\"steve\\");
 
   function setName(value) {
     setName(value);
@@ -5200,11 +5218,11 @@ import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicForNoTagRefComponent(props: any) {
-  const [name, setName] = useState(() => \\"VincentW\\");
+  const [name, setName] = useState<any>(() => \\"VincentW\\");
 
-  const [TagName, setTagName] = useState(() => \\"div\\");
+  const [TagName, setTagName] = useState<any>(() => \\"div\\");
 
-  const [tag, setTag] = useState(() => \\"span\\");
+  const [tag, setTag] = useState<any>(() => \\"span\\");
 
   function TagNameGetter() {
     return \\"span\\";
@@ -5243,7 +5261,7 @@ import { View, Input } from \\"@tarojs/components\\";
 
 const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
   function MyBasicForwardRefComponent(props: Props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
+    const [name, setName] = useState<any>(() => \\"PatrickJS\\");
 
     return (
       <>
@@ -5283,7 +5301,7 @@ import { View, Input } from \\"@tarojs/components\\";
 
 const MyBasicForwardRefComponent = forwardRef<Props[\\"inputRef\\"]>(
   function MyBasicForwardRefComponent(props: Props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
+    const [name, setName] = useState<any>(() => \\"PatrickJS\\");
 
     return (
       <>
@@ -5316,7 +5334,7 @@ import { useState, useEffect } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicOnUpdateReturnComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+  const [name, setName] = useState<any>(() => \\"PatrickJS\\");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -5424,7 +5442,7 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function ClassNameCode(props: Props) {
-  const [bindings, setBindings] = useState(() => \\"a binding\\");
+  const [bindings, setBindings] = useState<any>(() => \\"a binding\\");
 
   return (
     <View>
@@ -5445,9 +5463,9 @@ import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
-  const [classState, setClassState] = useState(() => \\"testClassName\\");
+  const [classState, setClassState] = useState<any>(() => \\"testClassName\\");
 
-  const [styleState, setStyleState] = useState(() => ({
+  const [styleState, setStyleState] = useState<any>(() => ({
     color: \\"red\\",
   }));
 
@@ -5706,7 +5724,7 @@ import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [refToUse, setRefToUse] = useState(() =>
+  const [refToUse, setRefToUse] = useState<any>(() =>
     !(props.componentRef instanceof Function) ? props.componentRef : null
   );
 
@@ -5811,13 +5829,13 @@ import { useState, useEffect } from \\"react\\";
 import { View } from \\"@tarojs/components\\";
 
 function MultipleOnUpdateWithDeps(props: any) {
-  const [a, setA] = useState(() => \\"a\\");
+  const [a, setA] = useState<any>(() => \\"a\\");
 
-  const [b, setB] = useState(() => \\"b\\");
+  const [b, setB] = useState<any>(() => \\"b\\");
 
-  const [c, setC] = useState(() => \\"c\\");
+  const [c, setC] = useState<any>(() => \\"c\\");
 
-  const [d, setD] = useState(() => \\"d\\");
+  const [d, setD] = useState<any>(() => \\"d\\");
 
   useEffect(() => {
     console.log(\\"Runs when a or b changes\\", a, b);
@@ -5848,7 +5866,7 @@ import { useState } from \\"react\\";
 import { Input } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
-  const [attrs, setAttrs] = useState(() => ({
+  const [attrs, setAttrs] = useState<any>(() => ({
     hello: \\"world\\",
   }));
 
@@ -6013,7 +6031,7 @@ export const defaultValues = {
 };
 
 function OnInit(props: Props) {
-  const [name, setName] = useState(() => \\"\\");
+  const [name, setName] = useState<any>(() => \\"\\");
 
   const hasInitialized = useRef(false);
   if (!hasInitialized.current) {
@@ -6106,9 +6124,9 @@ type Props = {
 import { View } from \\"@tarojs/components\\";
 
 function OnUpdateWithDeps(props: Props) {
-  const [a, setA] = useState(() => \\"a\\");
+  const [a, setA] = useState<any>(() => \\"a\\");
 
-  const [b, setB] = useState(() => \\"b\\");
+  const [b, setB] = useState<any>(() => \\"b\\");
 
   useEffect(() => {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
@@ -6189,7 +6207,7 @@ type Props = {
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: Props) {
-  const [name, setName] = useState(() => \\"Decadef20\\");
+  const [name, setName] = useState<any>(() => \\"Decadef20\\");
 
   return (
     <View>
@@ -6492,7 +6510,7 @@ function RenderBlock(props: RenderBlockProps) {
     }
   }
 
-  const [componentInfo, setComponentInfo] = useState(() => null);
+  const [componentInfo, setComponentInfo] = useState<any>(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
 
@@ -6918,7 +6936,7 @@ import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function StringLiteralStore(props: any) {
-  const [foo, setFoo] = useState(() => 123);
+  const [foo, setFoo] = useState<any>(() => 123);
 
   return <View>{foo}</View>;
 }
@@ -7038,6 +7056,23 @@ export default TypeDependency;
 "
 `;
 
+exports[`Taro > jsx > Typescript Test > typeExternalStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { FooStore } from \\"./foo-store\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = useState<FooStore[\\"_name\\"]>(() => \\"test\\");
+
+  return <View>Hello {_name}! </View>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
 exports[`Taro > jsx > Typescript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 import { Button, View, Text } from \\"@tarojs/components\\";
@@ -7127,7 +7162,7 @@ function UseTargetComponent(props: any) {
     return prefix + \\"foo\\";
   }
 
-  const [lastName, setLastName] = useState(() => \\"bar\\");
+  const [lastName, setLastName] = useState<any>(() => \\"bar\\");
 
   useEffect(() => {}, []);
 
@@ -7581,7 +7616,7 @@ import { useState } from \\"react\\";
 import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [name, setName] = useState(() => \\"Steve\\");
+  const [name, setName] = useState<any>(() => \\"Steve\\");
 
   return (
     <View>
@@ -7602,9 +7637,9 @@ import { useState } from \\"react\\";
 import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [tortilla, setTortilla] = useState(() => \\"Plain\\");
+  const [tortilla, setTortilla] = useState<any>(() => \\"Plain\\");
 
-  const [fillings, setFillings] = useState(() => []);
+  const [fillings, setFillings] = useState<any>(() => []);
 
   return (
     <View>
@@ -7669,7 +7704,7 @@ import { useState } from \\"react\\";
 import { Input } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [value, setValue] = useState(() => \\"hello\\");
+  const [value, setValue] = useState<any>(() => \\"hello\\");
 
   return <Input value={value} />;
 }
@@ -7685,7 +7720,7 @@ import { useState } from \\"react\\";
 import { Input } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [focus, setFocus] = useState(() => true);
+  const [focus, setFocus] = useState<any>(() => true);
 
   return <Input />;
 }
@@ -7714,7 +7749,7 @@ import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
+  const [numbers, setNumbers] = useState<any>(() => [\\"one\\", \\"two\\", \\"three\\"]);
 
   return (
     <View>
@@ -7758,7 +7793,7 @@ import { useState } from \\"react\\";
 import { View } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
+  const [html, setHtml] = useState<any>(() => \\"<b>bold</b>\\");
 
   return <View dangerouslySetInnerHTML={{ __html: html }} />;
 }
@@ -7774,7 +7809,7 @@ import { useState } from \\"react\\";
 import { Button, View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [show, setShow] = useState(() => true);
+  const [show, setShow] = useState<any>(() => true);
 
   function toggle() {
     setShow(!show);
@@ -7805,7 +7840,7 @@ import Button from \\"./Button\\";
 import { View } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [disabled, setDisabled] = useState(() => false);
+  const [disabled, setDisabled] = useState<any>(() => false);
 
   return (
     <View>
@@ -7855,7 +7890,7 @@ import { useState } from \\"react\\";
 import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [name, setName] = useState(() => \\"Steve\\");
+  const [name, setName] = useState<any>(() => \\"Steve\\");
 
   function lowercaseName() {
     return name.toLowerCase();
@@ -7880,11 +7915,11 @@ import { useState, useEffect } from \\"react\\";
 import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [a, setA] = useState(() => 2);
+  const [a, setA] = useState<any>(() => 2);
 
-  const [b, setB] = useState(() => 5);
+  const [b, setB] = useState<any>(() => 5);
 
-  const [result, setResult] = useState(() => null);
+  const [result, setResult] = useState<any>(() => null);
 
   function calculateResult(a_, b_) {
     setResult(a_ * b_);
@@ -7965,9 +8000,9 @@ import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyComponent(props: any) {
-  const [a, setA] = useState(() => 5);
+  const [a, setA] = useState<any>(() => 5);
 
-  const [b, setB] = useState(() => 12);
+  const [b, setB] = useState<any>(() => 12);
 
   return (
     <View>

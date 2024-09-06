@@ -36,24 +36,25 @@ const processStateValue = (options: ToReactOptions) => {
     if (!stateVal) {
       return '';
     }
+
+    const stateType = options.typescript ? `<${stateVal.typeParameter ?? 'any'}>` : '';
+
     const getDefaultCase = () =>
-      `const [${key}, ${getSetStateFnName(key)}] = useState(() => (${mapValue(value)}))`;
+      `const [${key}, ${getSetStateFnName(key)}] = useState${stateType}(() => (${mapValue(
+        value,
+      )}))`;
 
     const value = stateVal.code || '';
     const type = stateVal.type;
-    if (typeof value === 'string') {
-      switch (type) {
-        case 'getter':
-          return pipe(value, replaceGetterWithFunction, mapValue);
-        case 'function':
-          return mapValue(value);
-        case 'method':
-          return pipe(value, prefixWithFunction, mapValue);
-        default:
-          return getDefaultCase();
-      }
-    } else {
-      return getDefaultCase();
+    switch (type) {
+      case 'getter':
+        return pipe(value, replaceGetterWithFunction, mapValue);
+      case 'function':
+        return mapValue(value);
+      case 'method':
+        return pipe(value, prefixWithFunction, mapValue);
+      default:
+        return getDefaultCase();
     }
   };
 };
