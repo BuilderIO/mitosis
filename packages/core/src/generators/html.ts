@@ -431,9 +431,6 @@ const blockToHtml = (
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
-        if (!isComponent(json) && event === 'change') {
-          event = 'input';
-        }
         const fnName = camelCase(`on-${elId}-${event}`);
         const codeContent: string = removeSurroundingBlock(
           updateReferencesInCode(useValue, options, blockOptions),

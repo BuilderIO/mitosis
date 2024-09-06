@@ -3754,6 +3754,44 @@ export default ComponentWithTypes;
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > eventInputAndChange 1`] = `
+"import {
+  $,
+  Fragment,
+  component$,
+  h,
+  useStore,
+  useStylesScoped$,
+} from \\"@builder.io/qwik\\";
+
+export const EventInputAndChange = component$((props) => {
+  useStylesScoped$(STYLES);
+
+  const state = useStore({ name: \\"Steve\\" });
+
+  return (
+    <div>
+      <input
+        class=\\"input-EventInputAndChange\\"
+        value={state.name}
+        onInput$={$((event) => (state.name = event.target.value))}
+        onChange$={$((event) => (state.name = event.target.value))}
+      />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+});
+
+export default EventInputAndChange;
+
+export const STYLES = \`
+.input-EventInputAndChange {
+  color: red;
+}
+\`;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > expressionState 1`] = `
 "import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
@@ -7314,6 +7352,44 @@ export const ComponentWithTypes = component$((props: Props) => {
 });
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > eventInputAndChange 1`] = `
+"import {
+  $,
+  Fragment,
+  component$,
+  h,
+  useStore,
+  useStylesScoped$,
+} from \\"@builder.io/qwik\\";
+
+export const EventInputAndChange = component$((props: any) => {
+  useStylesScoped$(STYLES);
+
+  const state = useStore<any>({ name: \\"Steve\\" });
+
+  return (
+    <div>
+      <input
+        class=\\"input-EventInputAndChange\\"
+        value={state.name}
+        onInput$={$((event) => (state.name = event.target.value))}
+        onChange$={$((event) => (state.name = event.target.value))}
+      />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+});
+
+export default EventInputAndChange;
+
+export const STYLES = \`
+.input-EventInputAndChange {
+  color: red;
+}
+\`;
 "
 `;
 

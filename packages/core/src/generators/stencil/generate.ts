@@ -94,8 +94,7 @@ const blockToStencil = (
     } else if (key === 'ref') {
       str += ` ref={(el) => this.${code} = el} `;
     } else if (key.startsWith('on')) {
-      const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
-      str += ` ${useKey}={${cusArgs.join(',')} => ${processBinding(code as string)}} `;
+      str += ` ${key}={${cusArgs.join(',')} => ${processBinding(code as string)}} `;
     } else {
       str += ` ${key}={${processBinding(code as string)}} `;
     }

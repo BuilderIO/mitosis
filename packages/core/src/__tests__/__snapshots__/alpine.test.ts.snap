@@ -1684,6 +1684,32 @@ exports[`Alpine.js > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > eventInputAndChange 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"eventInputAndChange()\\">
+  <input
+    class=\\"input\\"
+    x-bind:value=\\"name\\"
+    x-on:input=\\"name = $event.target.value\\"
+    x-on:change=\\"name = $event.target.value\\"
+  />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"eventInputAndChange\\", () => ({
+      name: \\"Steve\\",
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > expressionState 1`] = `
 "<div x-data=\\"myComponent()\\"><span x-html=\\"refToUse\\"></span></div>
 <script>
@@ -4423,6 +4449,32 @@ exports[`Alpine.js > jsx > Typescript Test > defaultValsWithTypes 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"componentWithTypes\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > eventInputAndChange 1`] = `
+"<style>
+  .input {
+    color: red;
+  }
+</style>
+<div x-data=\\"eventInputAndChange()\\">
+  <input
+    class=\\"input\\"
+    x-bind:value=\\"name\\"
+    x-on:input=\\"name = $event.target.value\\"
+    x-on:change=\\"name = $event.target.value\\"
+  />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"eventInputAndChange\\", () => ({
+      name: \\"Steve\\",
+    }));
   });
 </script>
 "
