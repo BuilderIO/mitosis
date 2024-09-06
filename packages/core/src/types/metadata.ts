@@ -26,9 +26,12 @@ export type ComponentMetadata = {
   [index: string]: any;
   httpRequests?: Record<string, string>;
   options?: TargetOptions;
-  tagName?: string; // Deprecated: Use this for web-components to change the tagName
-  forwardRef?: string; // Deprecated: Use this for react forwardRef
-  isAttachedToShadowDom?: boolean; // Enables shadowDom for web-components
+  /** @deprecated Use this for web-components to change the tagName  */
+  tagName?: string;
+  /** @deprecated Use this for react forwardRef */
+  forwardRef?: string;
+  /** Enables shadowDom for web-components */
+  isAttachedToShadowDom?: boolean;
   alpine?: AlpineMetadata;
   angular?: AngularMetadata;
   builder?: BuilderMetadata;
