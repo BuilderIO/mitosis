@@ -124,13 +124,17 @@ function processRefs({
   options: ToVueOptions;
   thisPrefix: ProcessBinding['thisPrefix'];
 }) {
-  const refs = options.api === 'options' ? getContextNames(component) : getAllRefs(component);
+  const { api } = options;
+  const refs = api === 'options' ? getContextNames(component) : getAllRefs(component);
 
   return babelTransformExpression(input, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
       const name = path.node.name;
-      if (refs.includes(name) && shouldAppendValueToRef(path)) {
-        const newValue = options.api === 'options' ? `${thisPrefix}.${name}` : `${name}.value`;
+      // Composition api should use .value all the time
+      if (refs.includes(name) && (api === 'composition' || shouldAppendValueToRef(path))) {
+        const isAssignment = types.isAssignmentExpression(path.parent); // Ref could be optional
+        const newValue =
+          api === 'options' ? `${thisPrefix}.${name}` : `${name}${isAssignment ? '' : '?'}.value`;
         path.replaceWith(types.identifier(newValue));
       }
     },

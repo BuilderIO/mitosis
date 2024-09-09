@@ -1466,6 +1466,42 @@ export default Stepper;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > NestedStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function NestedStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_messageId, set_messageId] = useState(() => _id + \\"-message\\");
+
+  return (
+    <View id={_id}>
+      <Text>Test</Text>
+      <View id={_messageId}>
+        <Text>Message</Text>
+      </View>
+    </View>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -1901,6 +1937,53 @@ function Textarea(props) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+function UseValueAndFnFromStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_active, set_active] = useState(() => false);
+
+  function _do(id) {
+    _active = !!id;
+
+    if (props.onChange) {
+      props.onChange(_active);
+    }
+  }
+
+  useEffect(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+
+  return (
+    <View>
+      <Text>Test</Text>
+    </View>
+  );
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -6346,6 +6429,47 @@ export default Stepper;
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > NestedStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+function NestedStore(props: any) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_messageId, set_messageId] = useState(() => _id + \\"-message\\");
+
+  return (
+    <View id={_id}>
+      <Text>Test</Text>
+      <View id={_messageId}>
+        <Text>Message</Text>
+      </View>
+    </View>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -6847,6 +6971,62 @@ function Textarea(props: TextareaProps) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+function UseValueAndFnFromStore(props: MyProps) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_active, set_active] = useState(() => false);
+
+  function _do(id?: string) {
+    _active = !!id;
+
+    if (props.onChange) {
+      props.onChange(_active);
+    }
+  }
+
+  useEffect(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+
+  return (
+    <View>
+      <Text>Test</Text>
+    </View>
+  );
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 

@@ -1063,6 +1063,20 @@ class {
 ></FormInputComponent>"
 `;
 
+exports[`Marko > jsx > Javascript Test > NestedStore 1`] = `
+"class {
+  onCreate() {
+    this.state = { _id: \\"abc\\", _messageId: this._id + \\"-message\\" };
+  }
+}
+
+<div id=(state._id)>
+  Test
+
+  <p id=(state._messageId)>Message</p>
+</div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > RawText 1`] = `
 "class {}
 
@@ -1284,6 +1298,30 @@ exports[`Marko > jsx > Javascript Test > Textarea 1`] = `
   value=(input.value)
   defaultValue=(input.defaultValue)
 ></textarea>"
+`;
+
+exports[`Marko > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"class {
+  _do(id) {
+    this._active = !!id;
+
+    if (this.input.onChange) {
+      this.input.onChange(this._active);
+    }
+  }
+
+  onCreate(input) {
+    this.state = { _id: \\"abc\\", _active: false };
+  }
+
+  onRender() {
+    if (this._do) {
+      this._do(this.state._id);
+    }
+  }
+}
+
+<div>Test</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > Video 1`] = `
@@ -3514,6 +3552,20 @@ class {
 ></FormInputComponent>"
 `;
 
+exports[`Marko > jsx > Typescript Test > NestedStore 1`] = `
+"class {
+  onCreate() {
+    this.state = { _id: \\"abc\\", _messageId: this._id + \\"-message\\" };
+  }
+}
+
+<div id=(state._id)>
+  Test
+
+  <p id=(state._messageId)>Message</p>
+</div>"
+`;
+
 exports[`Marko > jsx > Typescript Test > RawText 1`] = `
 "class {}
 
@@ -3735,6 +3787,30 @@ exports[`Marko > jsx > Typescript Test > Textarea 1`] = `
   value=(input.value)
   defaultValue=(input.defaultValue)
 ></textarea>"
+`;
+
+exports[`Marko > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"class {
+  _do(id?: string) {
+    this._active = !!id;
+
+    if (this.input.onChange) {
+      this.input.onChange(this._active);
+    }
+  }
+
+  onCreate(input) {
+    this.state = { _id: \\"abc\\", _active: false };
+  }
+
+  onRender() {
+    if (this._do) {
+      this._do(this.state._id);
+    }
+  }
+}
+
+<div>Test</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > Video 1`] = `

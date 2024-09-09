@@ -34,7 +34,7 @@ const inputRef = ref(null);
 const inputNoArgRef = ref(null);
 
 watch(
-  () => [inputRef.value, inputNoArgRef.value],
+  () => [inputRef?.value, inputNoArgRef?.value],
   () => {
     console.log(\\"Received an update\\");
   },
@@ -42,10 +42,10 @@ watch(
 );
 function onBlur() {
   // Maintain focus
-  inputRef.value.focus();
+  inputRef?.value.focus();
 }
 function lowerCaseName() {
-  return name.value.toLowerCase();
+  return name?.value.toLowerCase();
 }
 </script>
 
@@ -181,7 +181,7 @@ const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name);
+  props.onMessage(name?.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -199,7 +199,7 @@ const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name);
+  props.onMessage(name?.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -319,10 +319,10 @@ const inputNoArgRef = ref(null);
 
 function onBlur() {
   // Maintain focus
-  inputRef.value.focus();
+  inputRef?.value.focus();
 }
 function lowerCaseName() {
-  return name.value.toLowerCase();
+  return name?.value.toLowerCase();
 }
 </script>
 
@@ -339,12 +339,14 @@ exports[`Vue > jsx > Javascript Test > BasicRefAssignment 1`] = `
 </template>
 
 <script setup>
+import { ref } from \\"vue\\";
+
 const holdValueRef = ref(null);
 
 function handlerClick(event) {
   event.preventDefault();
-  console.log(\\"current value\\", holdValueRef);
-  holdValueRef.value = holdValueRef.value + \\"JS\\";
+  console.log(\\"current value\\", holdValueRef?.value);
+  holdValueRef.value = holdValueRef?.value + \\"JS\\";
 }
 </script>"
 `;
@@ -378,7 +380,7 @@ const count = ref(0);
 const prevCount = ref(null);
 
 watch(
-  () => [count.value],
+  () => [count?.value],
   () => {
     prevCount.value = count.value;
   },
@@ -510,7 +512,7 @@ const showContent = ref(false);
 
 const cls = computed(() => {
   return useSlots().content && useSlots().default
-    ? \`\${name.value}-content\`
+    ? \`\${name?.value}-content\`
     : \\"\\";
 });
 
@@ -544,19 +546,19 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem.value && typeof window !== \\"undefined\\") {
+  if (elem?.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.value.getElementsByTagName(\\"script\\");
+    const scripts = elem?.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
 
       if (script.src) {
-        if (scriptsInserted.value.includes(script.src)) {
+        if (scriptsInserted?.value.includes(script.src)) {
           continue;
         }
 
-        scriptsInserted.value.push(script.src);
+        scriptsInserted?.value.push(script.src);
         const newScript = document.createElement(\\"script\\");
         newScript.async = true;
         newScript.src = script.src;
@@ -569,12 +571,12 @@ function findAndRunScripts() {
           \\"application/ecmascript\\",
         ].includes(script.type)
       ) {
-        if (scriptsRun.value.includes(script.innerText)) {
+        if (scriptsRun?.value.includes(script.innerText)) {
           continue;
         }
 
         try {
-          scriptsRun.value.push(script.innerText);
+          scriptsRun?.value.push(script.innerText);
           new Function(script.innerText)();
         } catch (error) {
           console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -610,19 +612,19 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem.value && typeof window !== \\"undefined\\") {
+  if (elem?.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.value.getElementsByTagName(\\"script\\");
+    const scripts = elem?.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
 
       if (script.src) {
-        if (scriptsInserted.value.includes(script.src)) {
+        if (scriptsInserted?.value.includes(script.src)) {
           continue;
         }
 
-        scriptsInserted.value.push(script.src);
+        scriptsInserted?.value.push(script.src);
         const newScript = document.createElement(\\"script\\");
         newScript.async = true;
         newScript.src = script.src;
@@ -635,12 +637,12 @@ function findAndRunScripts() {
           \\"application/ecmascript\\",
         ].includes(script.type)
       ) {
-        if (scriptsRun.value.includes(script.innerText)) {
+        if (scriptsRun?.value.includes(script.innerText)) {
           continue;
         }
 
         try {
-          scriptsRun.value.push(script.innerText);
+          scriptsRun?.value.push(script.innerText);
           new Function(script.innerText)();
         } catch (error) {
           console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -742,7 +744,7 @@ const formErrorMessage = ref(\\"\\");
 const formRef = ref(null);
 
 const submissionState = computed(() => {
-  return (Builder.isEditing && props.previewState) || formState.value;
+  return (Builder.isEditing && props.previewState) || formState?.value;
 });
 
 function onSubmit(event) {
@@ -846,8 +848,8 @@ function onSubmit(event) {
       },
     });
 
-    if (formRef.value) {
-      formRef.value.dispatchEvent(presubmitEvent);
+    if (formRef?.value) {
+      formRef?.value.dispatchEvent(presubmitEvent);
 
       if (presubmitEvent.defaultPrevented) {
         return;
@@ -905,8 +907,8 @@ function onSubmit(event) {
             },
           });
 
-          if (formRef.value) {
-            formRef.value.dispatchEvent(submitSuccessEvent);
+          if (formRef?.value) {
+            formRef?.value.dispatchEvent(submitSuccessEvent);
 
             if (submitSuccessEvent.defaultPrevented) {
               return;
@@ -914,19 +916,19 @@ function onSubmit(event) {
             /* TODO: option to turn this on/off? */
 
             if (props.resetFormOnSubmit !== false) {
-              formRef.value.reset();
+              formRef?.value.reset();
             }
           }
           /* TODO: client side route event first that can be preventDefaulted */
 
           if (props.successUrl) {
-            if (formRef.value) {
+            if (formRef?.value) {
               const event = new CustomEvent(\\"route\\", {
                 detail: {
                   url: props.successUrl,
                 },
               });
-              formRef.value.dispatchEvent(event);
+              formRef?.value.dispatchEvent(event);
 
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
@@ -944,8 +946,8 @@ function onSubmit(event) {
           },
         });
 
-        if (formRef.value) {
-          formRef.value.dispatchEvent(submitErrorEvent);
+        if (formRef?.value) {
+          formRef?.value.dispatchEvent(submitErrorEvent);
 
           if (submitErrorEvent.defaultPrevented) {
             return;
@@ -1012,8 +1014,8 @@ onMounted(() => {
   if (useLazyLoading()) {
     // throttled scroll capture listener
     const listener = () => {
-      if (pictureRef.value) {
-        const rect = pictureRef.value.getBoundingClientRect();
+      if (pictureRef?.value) {
+        const rect = pictureRef?.value.getBoundingClientRect();
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
@@ -1033,8 +1035,8 @@ onMounted(() => {
   }
 });
 onUnmounted(() => {
-  if (scrollListener.value) {
-    window.removeEventListener(\\"scroll\\", scrollListener);
+  if (scrollListener?.value) {
+    window.removeEventListener(\\"scroll\\", scrollListener?.value);
   }
 });
 
@@ -1152,6 +1154,22 @@ import FormInputComponent from \\"./input.raw\\";
 function handleChange(value) {
   console.log(value);
 }
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > NestedStore 1`] = `
+"<template>
+  <div :id=\\"_id\\">
+    Test
+    <p :id=\\"_messageId\\">Message</p>
+  </div>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const _id = ref(\\"abc\\");
+const _messageId = ref(_id?.value + \\"-message\\");
 </script>"
 `;
 
@@ -1432,6 +1450,52 @@ const props = defineProps([
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"<template>
+  <div>Test</div>
+</template>
+
+<script setup>
+    import { onUpdated, ref } from \\"vue\\"
+
+
+
+
+
+
+
+
+
+    const props = defineProps(['onChange'])
+const _id= ref('abc')
+const _active= ref(false)
+
+
+
+
+
+
+
+
+
+
+
+
+onUpdated(() => {if (_do) {
+_do(_id?.value);
+}})
+
+
+ function _do(id) {
+_active?.value = !!id;
+
+if (props.onChange) {
+props.onChange(_active?.value);
+}
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > Video 1`] = `
 "<template>
   <video
@@ -1580,7 +1644,7 @@ import { ref, watch } from \\"vue\\";
 const name = ref(\\"PatrickJS\\");
 
 watch(
-  () => [name.value],
+  () => [name?.value],
   () => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -1589,7 +1653,7 @@ watch(
     })
       .then((response) => response.json())
       .then((data) => {
-        name.value = data.name;
+        name.value = data.name?.value;
       });
     return () => {
       if (!signal.aborted) {
@@ -1927,22 +1991,22 @@ const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
 watch(
-  () => [a.value, b.value],
+  () => [a?.value, b?.value],
   () => {
-    console.log(\\"Runs when a or b changes\\", a, b);
+    console.log(\\"Runs when a or b changes\\", a?.value, b?.value);
 
-    if (a.value === \\"a\\") {
+    if (a?.value === \\"a\\") {
       a.value = \\"b\\";
     }
   },
   { immediate: true }
 );
 watch(
-  () => [c.value, d.value],
+  () => [c?.value, d?.value],
   () => {
-    console.log(\\"Runs when c or d changes\\", c, d);
+    console.log(\\"Runs when c or d changes\\", c?.value, d?.value);
 
-    if (a.value === \\"a\\") {
+    if (a?.value === \\"a\\") {
       a.value = \\"b\\";
     }
   },
@@ -2035,12 +2099,12 @@ exports[`Vue > jsx > Javascript Test > onEvent 1`] = `
 </template>
 
 <script setup>
-import { onMounted } from \\"vue\\";
+import { onMounted, ref } from \\"vue\\";
 
 const elem = ref(null);
 
 onMounted(() => {
-  elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  elem?.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
 });
 
 function foo(event) {
@@ -2083,7 +2147,7 @@ export const defaultValues = {
 const props = defineProps([\\"name\\"]);
 const name = ref(\\"\\");
 
-name.value = defaultValues.name || props.name;
+name.value = defaultValues.name?.value || props.name?.value;
 console.log(\\"set defaults with props\\");
 </script>"
 `;
@@ -2152,9 +2216,14 @@ const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
 watch(
-  () => [a.value, b.value, props.size],
+  () => [a?.value, b?.value, props.size],
   () => {
-    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
+    console.log(
+      \\"Runs when a, b or size changes\\",
+      a?.value,
+      b?.value,
+      props.size
+    );
   },
   { immediate: true }
 );
@@ -3046,11 +3115,11 @@ export interface Props {
 const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 
-const inputRef = ref<HTMLInputElement>();
-const inputNoArgRef = ref<HTMLLabelElement>();
+const inputRef = ref<HTMLInputElement>(null);
+const inputNoArgRef = ref<HTMLLabelElement>(null);
 
 watch(
-  () => [inputRef.value, inputNoArgRef.value],
+  () => [inputRef?.value, inputNoArgRef?.value],
   () => {
     console.log(\\"Received an update\\");
   },
@@ -3058,10 +3127,10 @@ watch(
 );
 function onBlur() {
   // Maintain focus
-  inputRef.value.focus();
+  inputRef?.value.focus();
 }
 function lowerCaseName() {
-  return name.value.toLowerCase();
+  return name?.value.toLowerCase();
 }
 </script>
 
@@ -3206,7 +3275,7 @@ const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name);
+  props.onMessage(name?.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -3224,7 +3293,7 @@ const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name);
+  props.onMessage(name?.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -3348,15 +3417,15 @@ export interface Props {
 const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 
-const inputRef = ref<HTMLInputElement>();
-const inputNoArgRef = ref<HTMLLabelElement>();
+const inputRef = ref<HTMLInputElement>(null);
+const inputNoArgRef = ref<HTMLLabelElement>(null);
 
 function onBlur() {
   // Maintain focus
-  inputRef.value.focus();
+  inputRef?.value.focus();
 }
 function lowerCaseName() {
-  return name.value.toLowerCase();
+  return name?.value.toLowerCase();
 }
 </script>
 
@@ -3373,16 +3442,18 @@ exports[`Vue > jsx > Typescript Test > BasicRefAssignment 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
 export interface Props {
   showInput: boolean;
 }
 
-const holdValueRef = ref<undefined>();
+const holdValueRef = ref<any>(null);
 
 function handlerClick(event: Event) {
   event.preventDefault();
-  console.log(\\"current value\\", holdValueRef);
-  holdValueRef.value = holdValueRef.value + \\"JS\\";
+  console.log(\\"current value\\", holdValueRef?.value);
+  holdValueRef.value = holdValueRef?.value + \\"JS\\";
 }
 </script>"
 `;
@@ -3417,10 +3488,10 @@ export interface Props {
 
 const count = ref(0);
 
-const prevCount = ref<undefined>();
+const prevCount = ref<any>(null);
 
 watch(
-  () => [count.value],
+  () => [count?.value],
   () => {
     prevCount.value = count.value;
   },
@@ -3587,7 +3658,7 @@ const showContent = ref(false);
 
 const cls = computed(() => {
   return useSlots().content && useSlots().default
-    ? \`\${name.value}-content\`
+    ? \`\${name?.value}-content\`
     : \\"\\";
 });
 
@@ -3618,7 +3689,7 @@ const props = defineProps<CustomCodeProps>();
 const scriptsInserted = ref([]);
 const scriptsRun = ref([]);
 
-const elem = ref<HTMLDivElement>();
+const elem = ref<HTMLDivElement>(null);
 
 onMounted(() => {
   findAndRunScripts();
@@ -3626,19 +3697,19 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem.value && typeof window !== \\"undefined\\") {
+  if (elem?.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.value.getElementsByTagName(\\"script\\");
+    const scripts = elem?.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
 
       if (script.src) {
-        if (scriptsInserted.value.includes(script.src)) {
+        if (scriptsInserted?.value.includes(script.src)) {
           continue;
         }
 
-        scriptsInserted.value.push(script.src);
+        scriptsInserted?.value.push(script.src);
         const newScript = document.createElement(\\"script\\");
         newScript.async = true;
         newScript.src = script.src;
@@ -3651,12 +3722,12 @@ function findAndRunScripts() {
           \\"application/ecmascript\\",
         ].includes(script.type)
       ) {
-        if (scriptsRun.value.includes(script.innerText)) {
+        if (scriptsRun?.value.includes(script.innerText)) {
           continue;
         }
 
         try {
-          scriptsRun.value.push(script.innerText);
+          scriptsRun?.value.push(script.innerText);
           new Function(script.innerText)();
         } catch (error) {
           console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -3689,7 +3760,7 @@ const props = defineProps<CustomCodeProps>();
 const scriptsInserted = ref([]);
 const scriptsRun = ref([]);
 
-const elem = ref<HTMLDivElement>();
+const elem = ref<HTMLDivElement>(null);
 
 onMounted(() => {
   findAndRunScripts();
@@ -3697,19 +3768,19 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem.value && typeof window !== \\"undefined\\") {
+  if (elem?.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.value.getElementsByTagName(\\"script\\");
+    const scripts = elem?.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
 
       if (script.src) {
-        if (scriptsInserted.value.includes(script.src)) {
+        if (scriptsInserted?.value.includes(script.src)) {
           continue;
         }
 
-        scriptsInserted.value.push(script.src);
+        scriptsInserted?.value.push(script.src);
         const newScript = document.createElement(\\"script\\");
         newScript.async = true;
         newScript.src = script.src;
@@ -3722,12 +3793,12 @@ function findAndRunScripts() {
           \\"application/ecmascript\\",
         ].includes(script.type)
       ) {
-        if (scriptsRun.value.includes(script.innerText)) {
+        if (scriptsRun?.value.includes(script.innerText)) {
           continue;
         }
 
         try {
-          scriptsRun.value.push(script.innerText);
+          scriptsRun?.value.push(script.innerText);
           new Function(script.innerText)();
         } catch (error) {
           console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -3831,10 +3902,10 @@ const formState = ref(\\"unsubmitted\\");
 const responseData = ref(null);
 const formErrorMessage = ref(\\"\\");
 
-const formRef = ref<HTMLFormElement>();
+const formRef = ref<HTMLFormElement>(null);
 
 const submissionState = computed(() => {
-  return (Builder.isEditing && props.previewState) || formState.value;
+  return (Builder.isEditing && props.previewState) || formState?.value;
 });
 
 function onSubmit(
@@ -3945,8 +4016,8 @@ function onSubmit(
       },
     });
 
-    if (formRef.value) {
-      formRef.value.dispatchEvent(presubmitEvent);
+    if (formRef?.value) {
+      formRef?.value.dispatchEvent(presubmitEvent);
 
       if (presubmitEvent.defaultPrevented) {
         return;
@@ -4004,8 +4075,8 @@ function onSubmit(
             },
           });
 
-          if (formRef.value) {
-            formRef.value.dispatchEvent(submitSuccessEvent);
+          if (formRef?.value) {
+            formRef?.value.dispatchEvent(submitSuccessEvent);
 
             if (submitSuccessEvent.defaultPrevented) {
               return;
@@ -4013,19 +4084,19 @@ function onSubmit(
             /* TODO: option to turn this on/off? */
 
             if (props.resetFormOnSubmit !== false) {
-              formRef.value.reset();
+              formRef?.value.reset();
             }
           }
           /* TODO: client side route event first that can be preventDefaulted */
 
           if (props.successUrl) {
-            if (formRef.value) {
+            if (formRef?.value) {
               const event = new CustomEvent(\\"route\\", {
                 detail: {
                   url: props.successUrl,
                 },
               });
-              formRef.value.dispatchEvent(event);
+              formRef?.value.dispatchEvent(event);
 
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
@@ -4043,8 +4114,8 @@ function onSubmit(
           },
         });
 
-        if (formRef.value) {
-          formRef.value.dispatchEvent(submitErrorEvent);
+        if (formRef?.value) {
+          formRef?.value.dispatchEvent(submitErrorEvent);
 
           if (submitErrorEvent.defaultPrevented) {
             return;
@@ -4116,14 +4187,14 @@ const scrollListener = ref(null);
 const imageLoaded = ref(false);
 const load = ref(false);
 
-const pictureRef = ref<HTMLElement>();
+const pictureRef = ref<HTMLElement>(null);
 
 onMounted(() => {
   if (useLazyLoading()) {
     // throttled scroll capture listener
     const listener = () => {
-      if (pictureRef.value) {
-        const rect = pictureRef.value.getBoundingClientRect();
+      if (pictureRef?.value) {
+        const rect = pictureRef?.value.getBoundingClientRect();
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
@@ -4143,8 +4214,8 @@ onMounted(() => {
   }
 });
 onUnmounted(() => {
-  if (scrollListener.value) {
-    window.removeEventListener(\\"scroll\\", scrollListener);
+  if (scrollListener?.value) {
+    window.removeEventListener(\\"scroll\\", scrollListener?.value);
   }
 });
 
@@ -4275,6 +4346,27 @@ import FormInputComponent from \\"./input.raw\\";
 function handleChange(value: string) {
   console.log(value);
 }
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > NestedStore 1`] = `
+"<template>
+  <div :id=\\"_id\\">
+    Test
+    <p :id=\\"_messageId\\">Message</p>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+const _id = ref(\\"abc\\");
+const _messageId = ref(_id?.value + \\"-message\\");
 </script>"
 `;
 
@@ -4617,6 +4709,43 @@ const props = defineProps<TextareaProps>();
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"<template>
+  <div>Test</div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { onUpdated, ref } from \\"vue\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+const props = defineProps<MyProps>();
+const _id = ref(\\"abc\\");
+const _active = ref(false);
+
+onUpdated(() => {
+  if (_do) {
+    _do(_id?.value);
+  }
+});
+
+function _do(id?: string) {
+  _active?.value = !!id;
+
+  if (props.onChange) {
+    props.onChange(_active?.value);
+  }
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > Video 1`] = `
 "<template>
   <video
@@ -4791,7 +4920,7 @@ import { ref, watch } from \\"vue\\";
 const name = ref(\\"PatrickJS\\");
 
 watch(
-  () => [name.value],
+  () => [name?.value],
   () => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -4800,7 +4929,7 @@ watch(
     })
       .then((response) => response.json())
       .then((data) => {
-        name.value = data.name;
+        name.value = data.name?.value;
       });
     return () => {
       if (!signal.aborted) {
@@ -5186,22 +5315,22 @@ const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
 watch(
-  () => [a.value, b.value],
+  () => [a?.value, b?.value],
   () => {
-    console.log(\\"Runs when a or b changes\\", a, b);
+    console.log(\\"Runs when a or b changes\\", a?.value, b?.value);
 
-    if (a.value === \\"a\\") {
+    if (a?.value === \\"a\\") {
       a.value = \\"b\\";
     }
   },
   { immediate: true }
 );
 watch(
-  () => [c.value, d.value],
+  () => [c?.value, d?.value],
   () => {
-    console.log(\\"Runs when c or d changes\\", c, d);
+    console.log(\\"Runs when c or d changes\\", c?.value, d?.value);
 
-    if (a.value === \\"a\\") {
+    if (a?.value === \\"a\\") {
       a.value = \\"b\\";
     }
   },
@@ -5299,12 +5428,12 @@ exports[`Vue > jsx > Typescript Test > onEvent 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import { onMounted } from \\"vue\\";
+import { onMounted, ref } from \\"vue\\";
 
-const elem = ref<HTMLDivElement>();
+const elem = ref<HTMLDivElement>(null);
 
 onMounted(() => {
-  elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+  elem?.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
 });
 
 function foo(event) {
@@ -5351,7 +5480,7 @@ type Props = {
 const props = defineProps<Props>();
 const name = ref(\\"\\");
 
-name.value = defaultValues.name || props.name;
+name.value = defaultValues.name?.value || props.name?.value;
 console.log(\\"set defaults with props\\");
 </script>"
 `;
@@ -5424,9 +5553,14 @@ const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
 watch(
-  () => [a.value, b.value, props.size],
+  () => [a?.value, b?.value, props.size],
   () => {
-    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
+    console.log(
+      \\"Runs when a, b or size changes\\",
+      a?.value,
+      b?.value,
+      props.size
+    );
   },
   { immediate: true }
 );
@@ -6483,7 +6617,7 @@ const activeTab = ref(0);
 
 const disabled = inject(\\"disabled\\");
 
-provide(\\"activeTab\\", activeTab.value);
+provide(\\"activeTab\\", activeTab?.value);
 </script>"
 `;
 
@@ -6548,7 +6682,7 @@ import { ref } from \\"vue\\";
 const show = ref(true);
 
 function toggle() {
-  show.value = !show.value;
+  show.value = !show?.value;
 }
 </script>"
 `;
@@ -6601,7 +6735,7 @@ import { computed, ref } from \\"vue\\";
 const name = ref(\\"Steve\\");
 
 const lowercaseName = computed(() => {
-  return name.value.toLowerCase();
+  return name?.value.toLowerCase();
 });
 </script>"
 `;
@@ -6626,9 +6760,9 @@ const b = ref(5);
 const result = ref(null);
 
 watch(
-  () => [a.value, b.value],
+  () => [a?.value, b?.value],
   () => {
-    calculateResult(a, b);
+    calculateResult(a?.value, b?.value);
   },
   { immediate: true }
 );
@@ -6789,7 +6923,7 @@ const activeTab = ref(0);
 
 const disabled = inject(\\"disabled\\");
 
-provide(\\"activeTab\\", activeTab.value);
+provide(\\"activeTab\\", activeTab?.value);
 </script>"
 `;
 
@@ -6854,7 +6988,7 @@ import { ref } from \\"vue\\";
 const show = ref(true);
 
 function toggle() {
-  show.value = !show.value;
+  show.value = !show?.value;
 }
 </script>"
 `;
@@ -6907,7 +7041,7 @@ import { computed, ref } from \\"vue\\";
 const name = ref(\\"Steve\\");
 
 const lowercaseName = computed(() => {
-  return name.value.toLowerCase();
+  return name?.value.toLowerCase();
 });
 </script>"
 `;
@@ -6932,9 +7066,9 @@ const b = ref(5);
 const result = ref(null);
 
 watch(
-  () => [a.value, b.value],
+  () => [a?.value, b?.value],
   () => {
-    calculateResult(a, b);
+    calculateResult(a?.value, b?.value);
   },
   { immediate: true }
 );

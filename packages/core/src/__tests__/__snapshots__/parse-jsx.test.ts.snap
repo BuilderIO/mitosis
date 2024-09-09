@@ -3476,6 +3476,95 @@ exports[`Parse JSX > Javascript > InputParent 1`] = `
 }
 `;
 
+exports[`Parse JSX > Javascript > NestedStore 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "id": {
+          "code": "state._id",
+          "type": "single",
+        },
+      },
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      Test
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "id": {
+              "code": "state._messageId",
+              "type": "single",
+            },
+          },
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "Message",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "p",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "NestedStore",
+  "refs": {},
+  "state": {
+    "_id": {
+      "code": "\\"abc\\"",
+      "propertyType": "normal",
+      "type": "property",
+    },
+    "_messageId": {
+      "code": "this._id + \\"-message\\"",
+      "propertyType": "normal",
+      "type": "property",
+    },
+  },
+  "subComponents": [],
+}
+`;
+
 exports[`Parse JSX > Javascript > RawText 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -4682,6 +4771,80 @@ exports[`Parse JSX > Javascript > Textarea 1`] = `
   "name": "Textarea",
   "refs": {},
   "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Parse JSX > Javascript > UseValueAndFnFromStore 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "Test",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+    "onUpdate": [
+      {
+        "code": "if (state._do) {
+  state._do(state._id);
+}",
+        "deps": "",
+      },
+    ],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "UseValueAndFnFromStore",
+  "refs": {},
+  "state": {
+    "_active": {
+      "code": "false",
+      "propertyType": "normal",
+      "type": "property",
+    },
+    "_do": {
+      "code": "_do(id) {
+  this._active = !!id;
+
+  if (props.onChange) {
+    props.onChange(this._active);
+  }
+}",
+      "type": "method",
+    },
+    "_id": {
+      "code": "'abc'",
+      "propertyType": "normal",
+      "type": "property",
+    },
+  },
   "subComponents": [],
 }
 `;
@@ -14522,6 +14685,101 @@ exports[`Parse JSX > Typescript > InputParent 1`] = `
 }
 `;
 
+exports[`Parse JSX > Typescript > NestedStore 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "id": {
+          "code": "state._id",
+          "type": "single",
+        },
+      },
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      Test
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "id": {
+              "code": "state._messageId",
+              "type": "single",
+            },
+          },
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "Message",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "p",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "NestedStore",
+  "refs": {},
+  "state": {
+    "_id": {
+      "code": "\\"abc\\"",
+      "propertyType": "normal",
+      "type": "property",
+    },
+    "_messageId": {
+      "code": "this._id + \\"-message\\"",
+      "propertyType": "normal",
+      "type": "property",
+    },
+  },
+  "subComponents": [],
+  "types": [
+    "type MyStore = {
+  _id?: string;
+  _messageId?: string;
+}",
+  ],
+}
+`;
+
 exports[`Parse JSX > Typescript > RawText 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -15822,6 +16080,91 @@ exports[`Parse JSX > Typescript > Textarea 1`] = `
   value?: string;
   defaultValue?: string;
   placeholder?: string;
+}",
+  ],
+}
+`;
+
+exports[`Parse JSX > Typescript > UseValueAndFnFromStore 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "Test",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+    "onUpdate": [
+      {
+        "code": "if (state._do) {
+  state._do(state._id);
+}",
+        "deps": "",
+      },
+    ],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "UseValueAndFnFromStore",
+  "propsTypeRef": "MyProps",
+  "refs": {},
+  "state": {
+    "_active": {
+      "code": "false",
+      "propertyType": "normal",
+      "type": "property",
+    },
+    "_do": {
+      "code": "_do(id?: string) {
+  this._active = !!id;
+
+  if (props.onChange) {
+    props.onChange(this._active);
+  }
+}",
+      "type": "method",
+    },
+    "_id": {
+      "code": "'abc'",
+      "propertyType": "normal",
+      "type": "property",
+    },
+  },
+  "subComponents": [],
+  "types": [
+    "type MyProps = {
+  onChange?: (active: boolean) => void;
+}",
+    "type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
 }",
   ],
 }

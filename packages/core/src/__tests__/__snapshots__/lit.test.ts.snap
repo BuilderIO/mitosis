@@ -1450,6 +1450,34 @@ export default class Stepper extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > NestedStore 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"nested-store\\")
+export default class NestedStore extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() _id = \\"abc\\";
+  @state() _messageId = this._id + \\"-message\\";
+
+  render() {
+    return html\`
+
+          <div .id=\\"\${this._id}\\">
+          Test
+
+          <p .id=\\"\${this._messageId}\\">Message</p>
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > RawText 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -1890,6 +1918,46 @@ export default class Textarea extends LitElement {
           .value=\\"\${this.value}\\"
           .defaultValue=\\"\${this.defaultValue}\\"
         ></textarea>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"use-value-and-fn-from-store\\")
+export default class UseValueAndFnFromStore extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() onChange: any;
+
+  @state() _id = \\"abc\\";
+  @state() _active = false;
+
+  _do(id) {
+    this._active = !!id;
+
+    if (this.onChange) {
+      this.onChange(this._active);
+    }
+  }
+
+  updated() {
+    if (this._do) {
+      this._do(this._id);
+    }
+  }
+
+  render() {
+    return html\`
+
+          <div>Test</div>
 
         \`;
   }
@@ -5764,6 +5832,39 @@ export default class Stepper extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Typescript Test > NestedStore 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+@customElement(\\"nested-store\\")
+export default class NestedStore extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() _id = \\"abc\\";
+  @state() _messageId = this._id + \\"-message\\";
+
+  render() {
+    return html\`
+
+          <div .id=\\"\${this._id}\\">
+          Test
+
+          <p .id=\\"\${this._messageId}\\">Message</p>
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Typescript Test > RawText 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -6274,6 +6375,55 @@ export default class Textarea extends LitElement {
           .value=\\"\${this.value}\\"
           .defaultValue=\\"\${this.defaultValue}\\"
         ></textarea>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+@customElement(\\"use-value-and-fn-from-store\\")
+export default class UseValueAndFnFromStore extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() onChange: any;
+
+  @state() _id = \\"abc\\";
+  @state() _active = false;
+
+  _do(id?: string) {
+    this._active = !!id;
+
+    if (this.onChange) {
+      this.onChange(this._active);
+    }
+  }
+
+  updated() {
+    if (this._do) {
+      this._do(this._id);
+    }
+  }
+
+  render() {
+    return html\`
+
+          <div>Test</div>
 
         \`;
   }

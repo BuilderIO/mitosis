@@ -1092,6 +1092,19 @@ exports[`Svelte > jsx > Javascript Test > InputParent 1`] = `
 />"
 `;
 
+exports[`Svelte > jsx > Javascript Test > NestedStore 1`] = `
+"<script>
+  let _id = \\"abc\\";
+
+  let _messageId = this._id + \\"-message\\";
+</script>
+
+<div id={_id}>
+  Test
+  <p id={_messageId}>Message</p>
+</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > RawText 1`] = `
 "<script>
   export let attributes;
@@ -1385,6 +1398,33 @@ exports[`Svelte > jsx > Javascript Test > Textarea 1`] = `
 </script>
 
 <textarea {...attributes} {placeholder} {name} {value} {defaultValue} />"
+`;
+
+exports[`Svelte > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"<script>
+  import { afterUpdate } from \\"svelte\\";
+
+  export let onChange;
+
+  function _do(id) {
+    this._active = !!id;
+
+    if (onChange) {
+      onChange(this._active);
+    }
+  }
+
+  let _id = \\"abc\\";
+  let _active = false;
+
+  afterUpdate(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+</script>
+
+<div>Test</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Video 1`] = `
@@ -4102,6 +4142,26 @@ exports[`Svelte > jsx > Typescript Test > InputParent 1`] = `
 />"
 `;
 
+exports[`Svelte > jsx > Typescript Test > NestedStore 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type MyStore = {
+    _id?: string;
+    _messageId?: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  let _id = \\"abc\\";
+
+  let _messageId = this._id + \\"-message\\";
+</script>
+
+<div id={_id}>
+  Test
+  <p id={_messageId}>Message</p>
+</div>"
+`;
+
 exports[`Svelte > jsx > Typescript Test > RawText 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   export interface RawTextProps {
@@ -4500,6 +4560,45 @@ exports[`Svelte > jsx > Typescript Test > Textarea 1`] = `
 </script>
 
 <textarea {...attributes} {placeholder} {name} {value} {defaultValue} />"
+`;
+
+exports[`Svelte > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type MyProps = {
+    onChange?: (active: boolean) => void;
+  };
+
+  type MyStore = {
+    _id?: string;
+    _active?: boolean;
+    _do?: (id?: string) => void;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import { afterUpdate } from \\"svelte\\";
+
+  export let onChange: MyProps[\\"onChange\\"] = undefined;
+
+  function _do(id?: string) {
+    this._active = !!id;
+
+    if (onChange) {
+      onChange(this._active);
+    }
+  }
+
+  let _id = \\"abc\\";
+  let _active = false;
+
+  afterUpdate(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+</script>
+
+<div>Test</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Video 1`] = `

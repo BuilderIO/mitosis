@@ -2560,6 +2560,50 @@ export default Stepper;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > NestedStore 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function NestedStore(props) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_messageId, set_messageId] = createSignal(this._id + \\"-message\\");
+
+  return (
+    <>
+      <div id={_id()}>
+        Test
+        <p id={_messageId()}>Message</p>
+      </div>
+    </>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > NestedStore 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function NestedStore(props) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_messageId, set_messageId] = createSignal(this._id + \\"-message\\");
+
+  return (
+    <>
+      <div id={_id()}>
+        Test
+        <p id={_messageId()}>Message</p>
+      </div>
+    </>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > RawText 1`] = `
 "function RawText(props) {
   return (
@@ -3255,6 +3299,60 @@ exports[`Solid > jsx > Javascript Test > Textarea 2`] = `
 }
 
 export default Textarea;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"import { on, createEffect, createMemo, createSignal } from \\"solid-js\\";
+
+function UseValueAndFnFromStore(props) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_active, set_active] = createSignal(false);
+
+  function _do(id) {
+    this._active = !!id;
+
+    if (props.onChange) {
+      props.onChange(this._active);
+    }
+  }
+
+  return (
+    <>
+      <div>Test</div>
+    </>
+  );
+}
+
+export default UseValueAndFnFromStore;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > UseValueAndFnFromStore 2`] = `
+"import { on, createEffect, createMemo, createSignal } from \\"solid-js\\";
+
+function UseValueAndFnFromStore(props) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_active, set_active] = createSignal(false);
+
+  function _do(id) {
+    this._active = !!id;
+
+    if (props.onChange) {
+      props.onChange(this._active);
+    }
+  }
+
+  return (
+    <>
+      <div>Test</div>
+    </>
+  );
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -9730,6 +9828,60 @@ export default Stepper;
 "
 `;
 
+exports[`Solid > jsx > Typescript Test > NestedStore 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+function NestedStore(props: any) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_messageId, set_messageId] = createSignal(this._id + \\"-message\\");
+
+  return (
+    <>
+      <div id={_id()}>
+        Test
+        <p id={_messageId()}>Message</p>
+      </div>
+    </>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > NestedStore 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+function NestedStore(props: any) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_messageId, set_messageId] = createSignal(this._id + \\"-message\\");
+
+  return (
+    <>
+      <div id={_id()}>
+        Test
+        <p id={_messageId()}>Message</p>
+      </div>
+    </>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`Solid > jsx > Typescript Test > RawText 1`] = `
 "export interface RawTextProps {
   attributes?: any;
@@ -10565,6 +10717,78 @@ function Textarea(props: TextareaProps) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"import { on, createEffect, createMemo, createSignal } from \\"solid-js\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+function UseValueAndFnFromStore(props: MyProps) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_active, set_active] = createSignal(false);
+
+  function _do(id?: string) {
+    this._active = !!id;
+
+    if (props.onChange) {
+      props.onChange(this._active);
+    }
+  }
+
+  return (
+    <>
+      <div>Test</div>
+    </>
+  );
+}
+
+export default UseValueAndFnFromStore;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > UseValueAndFnFromStore 2`] = `
+"import { on, createEffect, createMemo, createSignal } from \\"solid-js\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+function UseValueAndFnFromStore(props: MyProps) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_active, set_active] = createSignal(false);
+
+  function _do(id?: string) {
+    this._active = !!id;
+
+    if (props.onChange) {
+      props.onChange(this._active);
+    }
+  }
+
+  return (
+    <>
+      <div>Test</div>
+    </>
+  );
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 

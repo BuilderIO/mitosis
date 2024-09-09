@@ -1269,6 +1269,28 @@ export default class Stepper {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > NestedStore 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"nested-store\\",
+})
+export default class NestedStore {
+  @State() _id = \\"abc\\";
+  @State() _messageId = this._id + \\"-message\\";
+
+  render() {
+    return (
+      <div id={this._id}>
+        Test
+        <p id={this._messageId}>Message</p>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > RawText 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -1628,6 +1650,39 @@ export default class Textarea {
         defaultValue={this.defaultValue}
       ></textarea>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"use-value-and-fn-from-store\\",
+})
+export default class UseValueAndFnFromStore {
+  @Prop() onChange: any;
+
+  @State() _id = \\"abc\\";
+  @State() _active = false;
+
+  _do(id) {
+    this._active = !!id;
+
+    if (this.onChange) {
+      this.onChange(this._active);
+    }
+  }
+
+  componentDidUpdate() {
+    if (this._do) {
+      this._do(this._id);
+    }
+  }
+
+  render() {
+    return <div>Test</div>;
   }
 }
 "
@@ -4353,6 +4408,28 @@ export default class Stepper {
 "
 `;
 
+exports[`Stencil > jsx > Typescript Test > NestedStore 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"nested-store\\",
+})
+export default class NestedStore {
+  @State() _id = \\"abc\\";
+  @State() _messageId = this._id + \\"-message\\";
+
+  render() {
+    return (
+      <div id={this._id}>
+        Test
+        <p id={this._messageId}>Message</p>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Typescript Test > RawText 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -4712,6 +4789,39 @@ export default class Textarea {
         defaultValue={this.defaultValue}
       ></textarea>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"use-value-and-fn-from-store\\",
+})
+export default class UseValueAndFnFromStore {
+  @Prop() onChange: any;
+
+  @State() _id = \\"abc\\";
+  @State() _active = false;
+
+  _do(id?: string) {
+    this._active = !!id;
+
+    if (this.onChange) {
+      this.onChange(this._active);
+    }
+  }
+
+  componentDidUpdate() {
+    if (this._do) {
+      this._do(this._id);
+    }
+  }
+
+  render() {
+    return <div>Test</div>;
   }
 }
 "

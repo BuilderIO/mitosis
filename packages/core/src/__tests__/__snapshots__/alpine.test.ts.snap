@@ -1070,6 +1070,23 @@ exports[`Alpine.js > jsx > Javascript Test > InputParent 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > NestedStore 1`] = `
+"<div x-data=\\"nestedStore()\\" x-bind:id=\\"_id\\">
+  Test
+
+  <p x-bind:id=\\"_messageId\\">Message</p>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"nestedStore\\", () => ({
+      _id: \\"abc\\",
+      _messageId: this._id + \\"-message\\",
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > RawText 1`] = `
 "<span
   x-data=\\"rawText()\\"
@@ -1327,6 +1344,33 @@ exports[`Alpine.js > jsx > Javascript Test > Textarea 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"textarea\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"<div x-data=\\"useValueAndFnFromStore()\\" x-effect=\\"onUpdate\\">Test</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"useValueAndFnFromStore\\", () => ({
+      _id: \\"abc\\",
+      _active: false,
+
+      _do(id) {
+        this._active = !!id;
+
+        if (props.onChange) {
+          props.onChange(this._active);
+        }
+      },
+
+      onUpdate() {
+        if (this._do) {
+          this._do(this._id);
+        }
+      },
+    }));
   });
 </script>
 "
@@ -3814,6 +3858,23 @@ exports[`Alpine.js > jsx > Typescript Test > InputParent 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Typescript Test > NestedStore 1`] = `
+"<div x-data=\\"nestedStore()\\" x-bind:id=\\"_id\\">
+  Test
+
+  <p x-bind:id=\\"_messageId\\">Message</p>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"nestedStore\\", () => ({
+      _id: \\"abc\\",
+      _messageId: this._id + \\"-message\\",
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Typescript Test > RawText 1`] = `
 "<span
   x-data=\\"rawText()\\"
@@ -4071,6 +4132,33 @@ exports[`Alpine.js > jsx > Typescript Test > Textarea 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"textarea\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"<div x-data=\\"useValueAndFnFromStore()\\" x-effect=\\"onUpdate\\">Test</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"useValueAndFnFromStore\\", () => ({
+      _id: \\"abc\\",
+      _active: false,
+
+      _do(id?: string) {
+        this._active = !!id;
+
+        if (props.onChange) {
+          props.onChange(this._active);
+        }
+      },
+
+      onUpdate() {
+        if (this._do) {
+          this._do(this._id);
+        }
+      },
+    }));
   });
 </script>
 "

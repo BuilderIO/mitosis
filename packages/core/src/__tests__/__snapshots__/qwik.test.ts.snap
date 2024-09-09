@@ -3007,6 +3007,24 @@ export default Stepper;
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > NestedStore 1`] = `
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+
+export const NestedStore = component$((props) => {
+  const state = useStore({ _id: \\"abc\\", _messageId: this._id + \\"-message\\" });
+
+  return (
+    <div id={state._id}>
+      Test
+      <p id={state._messageId}>Message</p>
+    </div>
+  );
+});
+
+export default NestedStore;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > RawText 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
@@ -3357,6 +3375,31 @@ export const Textarea = component$((props) => {
 });
 
 export default Textarea;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"import { Fragment, component$, h, useStore, useTask$ } from \\"@builder.io/qwik\\";
+
+export const _do = function _do(props, state, id) {
+  this._active = !!id;
+
+  if (props.onChange) {
+    props.onChange(this._active);
+  }
+};
+export const UseValueAndFnFromStore = component$((props) => {
+  const state = useStore({ _active: false, _id: \\"abc\\" });
+  useTask$(({ track }) => {
+    if (_do.bind(null, props, state)) {
+      _do(props, state, state._id);
+    }
+  });
+
+  return <div>Test</div>;
+});
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -6450,6 +6493,31 @@ export default Stepper;
 "
 `;
 
+exports[`qwik > jsx > Typescript Test > NestedStore 1`] = `
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+export const NestedStore = component$((props: any) => {
+  const state = useStore<any>({
+    _id: \\"abc\\",
+    _messageId: this._id + \\"-message\\",
+  });
+
+  return (
+    <div id={state._id}>
+      Test
+      <p id={state._messageId}>Message</p>
+    </div>
+  );
+});
+
+export default NestedStore;
+"
+`;
+
 exports[`qwik > jsx > Typescript Test > RawText 1`] = `
 "import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
@@ -6858,6 +6926,39 @@ export const Textarea = component$((props: TextareaProps) => {
 });
 
 export default Textarea;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"import { Fragment, component$, h, useStore, useTask$ } from \\"@builder.io/qwik\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+export const _do = function _do(props, state, id?: string) {
+  this._active = !!id;
+
+  if (props.onChange) {
+    props.onChange(this._active);
+  }
+};
+export const UseValueAndFnFromStore = component$((props: MyProps) => {
+  const state = useStore<any>({ _active: false, _id: \\"abc\\" });
+  useTask$(({ track }) => {
+    if (_do.bind(null, props, state)) {
+      _do(props, state, state._id);
+    }
+  });
+
+  return <div>Test</div>;
+});
+
+export default UseValueAndFnFromStore;
 "
 `;
 

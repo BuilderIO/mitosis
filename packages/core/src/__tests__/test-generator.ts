@@ -1,8 +1,8 @@
+import { parseJsx } from '@/parsers/jsx';
+import { Target } from '@/types/config';
+import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
 import { describe, test } from 'vitest';
 import { MitosisComponent, createTypescriptProject, parseSvelte } from '..';
-import { parseJsx } from '../parsers/jsx';
-import { Target } from '../types/config';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 const getRawFile = async (filePath: string) => {
   const code = await import(`${filePath}?raw`).then((x) => x.default as string);
   return { code, filePath: ['src', '__tests__', filePath].join('/') };
@@ -42,7 +42,6 @@ const nestedStyles = getRawFile('./data/nested-styles.raw.tsx');
 const preserveExportOrLocalStatement = getRawFile(
   './data/basic-preserve-export-or-local-statement.raw.tsx',
 );
-const arrowFunctionInUseStore = getRawFile('./data/arrow-function-in-use-store.raw.tsx');
 const svgComponent = getRawFile('./data/svg.raw.tsx');
 const webComponent = getRawFile('./data/basic-web-component.raw.tsx');
 const propsType = getRawFile('./data/types/component-props-type.raw.tsx');
@@ -122,8 +121,12 @@ const renderContentExample = getRawFile('./data/render-content.raw.tsx');
 const onClickToPressable = getRawFile('./data/react-native/onclick-to-pressable.raw.tsx');
 const inputToTextInputRN = getRawFile('./data/react-native/text-input.raw.tsx');
 
-const StringLiteralStore = getRawFile('./data/string-literal-store.raw.tsx');
-const StringLiteralStoreKebab = getRawFile('./data/string-literal-store-kebab.raw.tsx');
+// Store
+const arrowFunctionInUseStore = getRawFile('./data/store/arrow-function-in-use-store.raw.tsx');
+const NestedStore = getRawFile('./data/store/nested-store.raw.tsx');
+const UseValueAndFnFromStore = getRawFile('./data/store/use-value-and-fn-from-store.raw.tsx');
+const StringLiteralStore = getRawFile('./data/store/string-literal-store.raw.tsx');
+const StringLiteralStoreKebab = getRawFile('./data/store/string-literal-store-kebab.raw.tsx');
 
 /**
  * Use TestsWithFailFor when you want to write a test that you know will fail
@@ -237,6 +240,8 @@ const BASIC_TESTS: Tests = {
   useTarget,
   signalsOnUpdate,
   getterState,
+  NestedStore,
+  UseValueAndFnFromStore,
   'string-literal-store': StringLiteralStore,
   'string-literal-store-kebab': {
     file: StringLiteralStoreKebab,
@@ -578,14 +583,35 @@ export const runTestsForSvelteSyntax = () => {
 
 const tsProject = createTypescriptProject(__dirname + '/tsconfig.json');
 
+const filterTests = (testArray?: Tests[], only?: string[]) =>
+  testArray?.map((tests: Tests) => {
+    if (!only) {
+      return tests;
+    }
+
+    const filteredTests: Tests = {};
+
+    Object.entries(tests).forEach(([key, test]) => {
+      if (only.includes(key)) {
+        filteredTests[key] = test;
+      }
+    });
+
+    return filteredTests;
+  });
+
 export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   target,
   generator,
   options,
+  only,
+  logOutput,
 }: {
   target: Target;
   generator: TranspilerGenerator<X>;
   options: X;
+  logOutput?: boolean;
+  only?: string[]; // Test only some tests based on key
 }) => {
   const configurations: { options: X; testName: string }[] = [
     { options: { ...options, typescript: false }, testName: 'Javascript Test' },
@@ -615,12 +641,12 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                   typescript: false,
                 },
           ),
-        testsArray: JSX_TESTS_FOR_TARGET[target],
+        testsArray: filterTests(JSX_TESTS_FOR_TARGET[target], only),
       },
       {
         name: 'svelte',
         parser: async ({ filePath, code }) => parseSvelte(code),
-        testsArray: [SVELTE_SYNTAX_TESTS],
+        testsArray: filterTests([SVELTE_SYNTAX_TESTS], only),
       },
     ];
     for (const { name, parser, testsArray } of parsers) {
@@ -652,7 +678,13 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                     expect(getOutput).toThrowError();
                   } else {
                     try {
-                      expect(getOutput()).toMatchSnapshot();
+                      const output = getOutput();
+                      if (logOutput) {
+                        process.stdout.write(`--- Start: ${key} ---\n\n`);
+                        process.stdout.write(output);
+                        process.stdout.write(`--- End: ${key} ---\n\n`);
+                      }
+                      expect(output).toMatchSnapshot();
                     } catch (error) {
                       expect(getOutput).toThrowErrorMatchingSnapshot();
                     }

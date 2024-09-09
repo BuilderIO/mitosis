@@ -2030,6 +2030,44 @@ export class StepperModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > NestedStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"nested-store\\",
+  template: \`
+    <div [attr.id]=\\"_id\\">
+      Test
+
+      <p [attr.id]=\\"_messageId\\">Message</p>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class NestedStore {
+  _id = \\"abc\\";
+  _messageId = this._id + \\"-message\\";
+}
+
+@NgModule({
+  declarations: [NestedStore],
+  imports: [CommonModule],
+  exports: [NestedStore],
+  bootstrap: [SomeOtherComponent],
+})
+export class NestedStoreModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > RawText 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -2870,6 +2908,57 @@ export default class Textarea {
   bootstrap: [SomeOtherComponent],
 })
 export class TextareaModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Output, EventEmitter, Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"use-value-and-fn-from-store\\",
+  template: \`
+    <div>Test</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class UseValueAndFnFromStore {
+  @Output() onChange = new EventEmitter();
+
+  _id = \\"abc\\";
+  _active = false;
+  _do(id) {
+    this._active = !!id;
+
+    if (this.onChange) {
+      this.onChange.emit(this._active);
+    }
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      if (this._do) {
+        this._do(this._id);
+      }
+    }
+  }
+}
+
+@NgModule({
+  declarations: [UseValueAndFnFromStore],
+  imports: [CommonModule],
+  exports: [UseValueAndFnFromStore],
+  bootstrap: [SomeOtherComponent],
+})
+export class UseValueAndFnFromStoreModule {}
 "
 `;
 
@@ -9137,6 +9226,49 @@ export class StepperModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > NestedStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+@Component({
+  selector: \\"nested-store\\",
+  template: \`
+    <div [attr.id]=\\"_id\\">
+      Test
+
+      <p [attr.id]=\\"_messageId\\">Message</p>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class NestedStore {
+  _id = \\"abc\\";
+  _messageId = this._id + \\"-message\\";
+}
+
+@NgModule({
+  declarations: [NestedStore],
+  imports: [CommonModule],
+  exports: [NestedStore],
+  bootstrap: [SomeOtherComponent],
+})
+export class NestedStoreModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > RawText 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -10052,6 +10184,66 @@ export default class Textarea {
   bootstrap: [SomeOtherComponent],
 })
 export class TextareaModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Output, EventEmitter, Component, SimpleChanges } from \\"@angular/core\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+@Component({
+  selector: \\"use-value-and-fn-from-store\\",
+  template: \`
+    <div>Test</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class UseValueAndFnFromStore {
+  @Output() onChange = new EventEmitter();
+
+  _id = \\"abc\\";
+  _active = false;
+  _do(id?: string) {
+    this._active = !!id;
+
+    if (this.onChange) {
+      this.onChange.emit(this._active);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      if (this._do) {
+        this._do(this._id);
+      }
+    }
+  }
+}
+
+@NgModule({
+  declarations: [UseValueAndFnFromStore],
+  imports: [CommonModule],
+  exports: [UseValueAndFnFromStore],
+  bootstrap: [SomeOtherComponent],
+})
+export class UseValueAndFnFromStoreModule {}
 "
 `;
 

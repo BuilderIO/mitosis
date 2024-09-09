@@ -1211,6 +1211,28 @@ export default Stepper;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > NestedStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function NestedStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_messageId, set_messageId] = useState(() => _id + \\"-message\\");
+
+  return (
+    <div id={_id}>
+      Test
+      <p id={_messageId}>Message</p>
+    </div>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > RawText 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -1520,6 +1542,37 @@ function Textarea(props) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+function UseValueAndFnFromStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_active, set_active] = useState(() => false);
+
+  function _do(id) {
+    _active = !!id;
+
+    if (props.onChange) {
+      props.onChange(_active);
+    }
+  }
+
+  useEffect(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+
+  return <div>Test</div>;
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -4765,6 +4818,33 @@ export default Stepper;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > NestedStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+function NestedStore(props: any) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_messageId, set_messageId] = useState(() => _id + \\"-message\\");
+
+  return (
+    <div id={_id}>
+      Test
+      <p id={_messageId}>Message</p>
+    </div>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`Preact > jsx > Typescript Test > RawText 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5140,6 +5220,46 @@ function Textarea(props: TextareaProps) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+function UseValueAndFnFromStore(props: MyProps) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_active, set_active] = useState(() => false);
+
+  function _do(id?: string) {
+    _active = !!id;
+
+    if (props.onChange) {
+      props.onChange(_active);
+    }
+  }
+
+  useEffect(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+
+  return <div>Test</div>;
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
