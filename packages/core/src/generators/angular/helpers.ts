@@ -100,7 +100,6 @@ export const getDefaultProps = ({ defaultProps }: MitosisComponent) => {
   return `const defaultProps = {${defalutPropsString}};\n`;
 };
 
-
 /**
  * if any state "property" is trying to access state.* or props.*
  * then we need to move them to onInit where they can be accessed
