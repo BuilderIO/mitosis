@@ -47,7 +47,9 @@ import {
   addCodeToOnInit,
   addCodeToOnUpdate,
   getAppropriateTemplateFunctionKeys,
+  getDefaultProps,
   makeReactiveState,
+  transformState,
 } from './helpers';
 import {
   AngularBlockOptions,
@@ -722,25 +724,6 @@ const classPropertiesPlugin = () => ({
   },
 });
 
-// if any state "property" is trying to access state.* or props.*
-// then we need to move them to onInit where they can be accessed
-const transformState = (json: MitosisComponent) => {
-  Object.entries(json.state)
-    .reverse()
-    .forEach(([key, value]) => {
-      if (value?.type === 'property') {
-        if (value.code && (value.code.includes('state.') || value.code.includes('props.'))) {
-          const code = stripStateAndPropsRefs(value.code, { replaceWith: 'this' });
-          json.state[key]!.code = 'null';
-          if (!json.hooks.onInit?.code) {
-            json.hooks.onInit = { code: '' };
-          }
-          json.hooks.onInit.code = `\nthis.${key} = ${code};\n${json.hooks.onInit.code}`;
-        }
-      }
-    });
-};
-
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
   ({ component: _component }) => {
@@ -934,6 +917,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'class',
+      withType: options.typescript,
       valueMapper: processAngularCode({
         replaceWith: 'this',
         contextVars,
@@ -975,19 +959,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       componentMetadata[key] = value;
     });
 
-    const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
-      if (!json.defaultProps) return '';
-      const defalutPropsString = Object.keys(json.defaultProps)
-        .map((prop) => {
-          const value = json.defaultProps!.hasOwnProperty(prop)
-            ? json.defaultProps![prop]?.code
-            : 'undefined';
-          return `${prop}: ${value}`;
-        })
-        .join(',');
-      return `const defaultProps = {${defalutPropsString}};\n`;
-    };
-
     const hasConstructor =
       Boolean(injectables.length) || dynamicComponents.size || refsForObjSpread.size;
 
@@ -1009,7 +980,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
-    ${getPropsDefinition({ json })}
+    ${getDefaultProps(json)}
     ${renderPreComponent({
       explicitImportFileExtension: options.explicitImportFileExtension,
       component: json,
