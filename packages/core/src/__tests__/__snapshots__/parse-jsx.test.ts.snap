@@ -1446,7 +1446,7 @@ exports[`Parse JSX > Javascript > BasicRef 1`] = `
     "onBlur": {
       "code": "function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef?.focus();
 }",
       "type": "function",
     },
@@ -8853,6 +8853,78 @@ exports[`Parse JSX > Javascript > self-referencing component with children 1`] =
 }
 `;
 
+exports[`Parse JSX > Javascript > setState 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "onClick": {
+              "code": "state.someFn",
+              "type": "single",
+            },
+          },
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "Click me",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "button",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "SetState",
+  "refs": {},
+  "state": {
+    "n": {
+      "code": "['123']",
+      "propertyType": "reactive",
+      "type": "property",
+    },
+    "someFn": {
+      "code": "someFn() {
+  state.n.value[0] = '123';
+}",
+      "type": "method",
+    },
+  },
+  "subComponents": [],
+}
+`;
+
 exports[`Parse JSX > Javascript > showExpressions 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -12467,11 +12539,11 @@ exports[`Parse JSX > Typescript > BasicRef 1`] = `
   "refs": {
     "inputNoArgRef": {
       "argument": "null",
-      "typeParameter": "HTMLLabelElement",
+      "typeParameter": "HTMLLabelElement | null",
     },
     "inputRef": {
       "argument": "null",
-      "typeParameter": "HTMLInputElement",
+      "typeParameter": "HTMLInputElement | null",
     },
   },
   "state": {
@@ -12489,7 +12561,7 @@ exports[`Parse JSX > Typescript > BasicRef 1`] = `
     "onBlur": {
       "code": "function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef?.focus();
 }",
       "type": "function",
     },
@@ -20420,6 +20492,78 @@ exports[`Parse JSX > Typescript > self-referencing component with children 1`] =
   "propsTypeRef": "any",
   "refs": {},
   "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Parse JSX > Typescript > setState 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "onClick": {
+              "code": "state.someFn",
+              "type": "single",
+            },
+          },
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "Click me",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "button",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "SetState",
+  "refs": {},
+  "state": {
+    "n": {
+      "code": "['123']",
+      "propertyType": "reactive",
+      "type": "property",
+    },
+    "someFn": {
+      "code": "someFn() {
+  state.n.value[0] = '123';
+}",
+      "type": "method",
+    },
+  },
   "subComponents": [],
 }
 `;

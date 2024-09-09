@@ -23,9 +23,6 @@ const componentWithContextMultiRoot = getRawFile(
   './data/context/component-with-context-multi-root.raw.tsx',
 );
 
-const expressionState = getRawFile('./data/expression-state.raw.tsx');
-const contentState = getRawFile('./data/context-state.raw.tsx');
-
 const basic = getRawFile('./data/basic.raw.tsx');
 const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
 const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw.tsx');
@@ -120,6 +117,11 @@ const rootFragmentMultiNode = getRawFile('./data/blocks/root-fragment-multi-node
 const renderContentExample = getRawFile('./data/render-content.raw.tsx');
 const onClickToPressable = getRawFile('./data/react-native/onclick-to-pressable.raw.tsx');
 const inputToTextInputRN = getRawFile('./data/react-native/text-input.raw.tsx');
+
+// State
+const setState = getRawFile('./data/state/set-state.raw.tsx');
+const expressionState = getRawFile('./data/state/expression-state.raw.tsx');
+const contentState = getRawFile('./data/state/context-state.raw.tsx');
 
 // Store
 const arrowFunctionInUseStore = getRawFile('./data/store/arrow-function-in-use-store.raw.tsx');
@@ -231,6 +233,7 @@ const BASIC_TESTS: Tests = {
   spreadProps,
   renderContentExample,
   arrowFunctionInUseStore,
+  setState,
   expressionState,
   contentState,
   referencingFunInsideHook,

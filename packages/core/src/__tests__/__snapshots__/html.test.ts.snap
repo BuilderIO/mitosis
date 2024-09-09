@@ -964,7 +964,7 @@ exports[`Html > jsx > Javascript Test > BasicRef 1`] = `
       name: \\"PatrickJS\\",
       onBlur: function onBlur() {
         // Maintain focus
-        inputRef.focus();
+        inputRef?.focus();
       },
       lowerCaseName: function lowerCaseName() {
         return state.name.toLowerCase();
@@ -5712,6 +5712,58 @@ exports[`Html > jsx > Javascript Test > self-referencing component with children
 "
 `;
 
+exports[`Html > jsx > Javascript Test > setState 1`] = `
+"<div><button data-el=\\"button-1\\">Click me</button></div>
+<script>
+  (() => {
+    const state = {
+      n: [\\"123\\"],
+      someFn() {
+        state.n[0] = \\"123\\";
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      state.someFn;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > showExpressions 1`] = `
 "<div>
   <template data-el=\\"show\\">Content0</template>
@@ -7830,7 +7882,7 @@ exports[`Html > jsx > Typescript Test > BasicRef 1`] = `
       name: \\"PatrickJS\\",
       onBlur: function onBlur() {
         // Maintain focus
-        inputRef.focus();
+        inputRef?.focus();
       },
       lowerCaseName: function lowerCaseName() {
         return state.name.toLowerCase();
@@ -12576,6 +12628,58 @@ exports[`Html > jsx > Typescript Test > self-referencing component with children
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > setState 1`] = `
+"<div><button data-el=\\"button-1\\">Click me</button></div>
+<script>
+  (() => {
+    const state = {
+      n: [\\"123\\"],
+      someFn() {
+        state.n[0] = \\"123\\";
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      state.someFn;
+    }
+
+    // Update with initial state on first load
+    update();
   })();
 </script>
 "

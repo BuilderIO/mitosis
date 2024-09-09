@@ -1048,7 +1048,7 @@ export default class MyBasicRefComponent {
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.nativeElement.focus();
+    this.inputRef.nativeElement?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -1115,7 +1115,7 @@ export default class MyBasicRefComponent {
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.nativeElement.focus();
+    this.inputRef.nativeElement?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -10826,6 +10826,69 @@ export default class MyComponent {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > setState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"set-state\\",
+  template: \`
+    <div><button (click)=\\"someFn\\">Click me</button></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class SetState {
+  n = [\\"123\\"];
+  someFn() {
+    this.n[0] = \\"123\\";
+  }
+}
+
+@NgModule({
+  declarations: [SetState],
+  imports: [CommonModule],
+  exports: [SetState],
+})
+export class SetStateModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > setState 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"set-state\\",
+  template: \`
+    <div><button (click)=\\"someFn\\">Click me</button></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class SetState {
+  n = [\\"123\\"];
+  someFn() {
+    this.n[0] = \\"123\\";
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > showExpressions 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -14101,7 +14164,7 @@ export default class MyBasicRefComponent {
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.nativeElement.focus();
+    this.inputRef.nativeElement?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -14172,7 +14235,7 @@ export default class MyBasicRefComponent {
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.nativeElement.focus();
+    this.inputRef.nativeElement?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -24688,6 +24751,69 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class MyComponent {
   @Input() name!: any;
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > setState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"set-state\\",
+  template: \`
+    <div><button (click)=\\"someFn\\">Click me</button></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class SetState {
+  n = [\\"123\\"];
+  someFn() {
+    this.n[0] = \\"123\\";
+  }
+}
+
+@NgModule({
+  declarations: [SetState],
+  imports: [CommonModule],
+  exports: [SetState],
+})
+export class SetStateModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > setState 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"set-state\\",
+  template: \`
+    <div><button (click)=\\"someFn\\">Click me</button></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class SetState {
+  n = [\\"123\\"];
+  someFn() {
+    this.n[0] = \\"123\\";
+  }
 }
 "
 `;

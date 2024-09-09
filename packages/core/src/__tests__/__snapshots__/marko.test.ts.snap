@@ -305,7 +305,7 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.focus();
+    this.inputRef?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.state.name.toLowerCase();
@@ -324,14 +324,14 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-38729636 {
+  .input-9243d59c {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-38729636\\"
+      class=\\"input-9243d59c\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -2240,6 +2240,20 @@ exports[`Marko > jsx > Javascript Test > self-referencing component with childre
 </div>"
 `;
 
+exports[`Marko > jsx > Javascript Test > setState 1`] = `
+"class {
+  someFn() {
+    this.state.n[0] = \\"123\\";
+  }
+
+  onCreate() {
+    this.state = { n: [\\"123\\"] };
+  }
+}
+
+<div><button on-click(event => component.someFn)>Click me</button></div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > showExpressions 1`] = `
 "class {}
 
@@ -2783,7 +2797,7 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.focus();
+    this.inputRef?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.state.name.toLowerCase();
@@ -2802,14 +2816,14 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-77dfc7d6 {
+  .input-2cbd8d2e {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-77dfc7d6\\"
+      class=\\"input-2cbd8d2e\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -4738,6 +4752,20 @@ exports[`Marko > jsx > Typescript Test > self-referencing component with childre
   <if(input.name === 'Batman')>
     <MyComponent name=\\"Bruce\\"><div>Wayne</div></MyComponent></if>
 </div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > setState 1`] = `
+"class {
+  someFn() {
+    this.state.n[0] = \\"123\\";
+  }
+
+  onCreate() {
+    this.state = { n: [\\"123\\"] };
+  }
+}
+
+<div><button on-click(event => component.someFn)>Click me</button></div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > showExpressions 1`] = `

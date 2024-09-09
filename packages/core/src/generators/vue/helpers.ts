@@ -132,9 +132,7 @@ function processRefs({
       const name = path.node.name;
       // Composition api should use .value all the time
       if (refs.includes(name) && (api === 'composition' || shouldAppendValueToRef(path))) {
-        const isAssignment = types.isAssignmentExpression(path.parent); // Ref could be optional
-        const newValue =
-          api === 'options' ? `${thisPrefix}.${name}` : `${name}${isAssignment ? '' : '?'}.value`;
+        const newValue = api === 'options' ? `${thisPrefix}.${name}` : `${name}.value`;
         path.replaceWith(types.identifier(newValue));
       }
     },

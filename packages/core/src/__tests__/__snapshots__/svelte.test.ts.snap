@@ -265,7 +265,7 @@ exports[`Svelte > jsx > Javascript Test > BasicRef 1`] = `
 
   function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    inputRef?.focus();
   }
 
   function lowerCaseName() {
@@ -2489,6 +2489,26 @@ exports[`Svelte > jsx > Javascript Test > self-referencing component with childr
 </div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > setState 1`] = `
+"<script>
+  import { writable } from \\"svelte/store\\";
+
+  function someFn() {
+    $n[0] = \\"123\\";
+  }
+
+  let n = writable([\\"123\\"]);
+</script>
+
+<div>
+  <button
+    on:click={(event) => {
+      someFn;
+    }}>Click me</button
+  >
+</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > showExpressions 1`] = `
 "<script>
   export let conditionA;
@@ -3155,7 +3175,7 @@ exports[`Svelte > jsx > Typescript Test > BasicRef 1`] = `
 
   function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    inputRef?.focus();
   }
 
   function lowerCaseName() {
@@ -5893,6 +5913,26 @@ exports[`Svelte > jsx > Typescript Test > self-referencing component with childr
   {#if name === \\"Batman\\"}
     <svelte:self name=\\"Bruce\\"><div>Wayne</div></svelte:self>
   {/if}
+</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > setState 1`] = `
+"<script lang=\\"ts\\">
+  import { writable } from \\"svelte/store\\";
+
+  function someFn() {
+    $n[0] = \\"123\\";
+  }
+
+  let n = writable([\\"123\\"]);
+</script>
+
+<div>
+  <button
+    on:click={(event) => {
+      someFn;
+    }}>Click me</button
+  >
 </div>"
 `;
 

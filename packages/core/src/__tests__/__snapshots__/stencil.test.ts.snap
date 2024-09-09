@@ -345,7 +345,7 @@ export default class MyBasicRefComponent {
 
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    inputRef?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -2774,6 +2774,30 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > setState 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"set-state\\",
+})
+export default class SetState {
+  @State() n = [\\"123\\"];
+
+  someFn() {
+    this.n[0] = \\"123\\";
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={(event) => this.someFn}>Click me</button>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > signalsOnUpdate 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -3475,7 +3499,7 @@ export default class MyBasicRefComponent {
 
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    inputRef?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -5909,6 +5933,30 @@ export default class MyComponent {
             <div>Wayne</div>
           </MyComponent>
         ) : null}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > setState 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"set-state\\",
+})
+export default class SetState {
+  @State() n = [\\"123\\"];
+
+  someFn() {
+    this.n[0] = \\"123\\";
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={(event) => this.someFn}>Click me</button>
       </div>
     );
   }
