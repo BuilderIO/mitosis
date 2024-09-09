@@ -220,7 +220,8 @@ const stringifyBinding =
 
     if (keyToUse.startsWith('on')) {
       const { event, value } = processEventBinding(keyToUse, code, node.name, cusArgs[0]);
-      return ` (${event})="${value}"`;
+      // Angular events are all lowerCased
+      return ` (${event.toLowerCase()})="${value}"`;
     } else if (keyToUse === 'class') {
       return ` [class]="${code}" `;
     } else if (keyToUse === 'ref' || keyToUse === 'spreadRef') {
