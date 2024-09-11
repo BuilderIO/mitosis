@@ -417,10 +417,14 @@ const componentMappers: {
     }
     const text = block.component!.options.text;
 
+    // Builder uses {{}} for bindings, but Mitosis expects {} so we need to convert
     const innerProperties = innerBindings._text
       ? {}
       : {
-          [options.preserveTextBlocks ? 'innerHTML' : '_text']: text,
+          [options.preserveTextBlocks ? 'innerHTML' : '_text']: text.replace(
+            /\{\{(.*?)\}\}/g,
+            '{$1}',
+          ),
         };
 
     if (options.preserveTextBlocks) {
