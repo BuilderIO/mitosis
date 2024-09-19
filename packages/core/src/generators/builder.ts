@@ -354,6 +354,7 @@ export const componentToBuilder =
               })`
         }
       `),
+        cssCode: component?.style,
         blocks: component.children
           .filter(filterEmptyTextNodes)
           .map((child) => blockToBuilder(child, options)),
