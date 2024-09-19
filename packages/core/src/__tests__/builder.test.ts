@@ -414,7 +414,7 @@ describe('Builder', () => {
     expect(mitosis).toMatchSnapshot();
   });
 
-  test.only('preserve cssCode when converting', () => {
+  test('preserve cssCode when converting', () => {
     const builderJson: BuilderContent = {
       data: {
         cssCode: dedent`
@@ -439,6 +439,9 @@ describe('Builder', () => {
       component: builderToMitosis,
     });
     expect(jsx).toMatchSnapshot();
+
+    const jsxToMitosis = parseJsx(jsx);
+    expect(jsxToMitosis.style).toMatchSnapshot();
   });
 });
 
