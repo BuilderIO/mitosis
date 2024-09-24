@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-do not crash on Text node with bindings
+[Builder]: fix Text node crash with bindings
