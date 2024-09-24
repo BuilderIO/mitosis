@@ -426,6 +426,36 @@ describe('Builder', () => {
     });
     expect(mitosis).toMatchSnapshot();
   });
+
+  test('preserve cssCode when converting', () => {
+    const builderJson: BuilderContent = {
+      data: {
+        cssCode: dedent`
+        .foo {
+          background: green;
+        }
+        
+        .bar {
+          font-weight: bold;
+        }
+      `,
+        blocks: [],
+      },
+    };
+    const builderToMitosis = builderContentToMitosisComponent(builderJson);
+    expect(builderToMitosis.meta.cssCode).toMatchSnapshot();
+
+    const mitosisToBuilder = componentToBuilder()({ component: builderToMitosis })!;
+    expect(mitosisToBuilder.data!.cssCode).toMatchSnapshot();
+
+    const jsx = componentToMitosis(mitosisOptions)({
+      component: builderToMitosis,
+    });
+    expect(jsx).toMatchSnapshot();
+
+    const jsxToMitosis = parseJsx(jsx);
+    expect(jsxToMitosis.style).toMatchSnapshot();
+  });
 });
 
 const bindingJson = {

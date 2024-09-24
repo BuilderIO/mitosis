@@ -218,6 +218,8 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
 
       ${!json.hooks.onUnMount?.code ? '' : `onUnMount(() => { ${json.hooks.onUnMount.code} })`}
 
+      ${json.style ? `useStyle(\`${json.style}\`)` : ''}
+
       return (${addWrapper ? '<>' : ''}
         ${json.children.map((item) => blockToMitosis(item, options, component)).join('\n')}
         ${addWrapper ? '</>' : ''})

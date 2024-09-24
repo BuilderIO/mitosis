@@ -1818,6 +1818,7 @@ exports[`Builder > binding 1`] = `
   "name": "MyComponent",
   "refs": {},
   "state": {},
+  "style": "builder-component { max-width: none !important; }",
   "subComponents": [],
 }
 `;
@@ -1826,6 +1827,8 @@ exports[`Builder > binding 2`] = `
 "import { Button } from \\"@components\\";
 
 export default function MyComponent(props) {
+  useStyle(\`builder-component { max-width: none !important; }\`);
+
   return (
     <>
       <Button label=\\"hello\\" label={state.text} />
@@ -2096,6 +2099,51 @@ exports[`Builder > extractStateHook 1`] = `
 alert('hi');",
   "state": {},
 }
+`;
+
+exports[`Builder > preserve cssCode when converting 1`] = `
+".foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}"
+`;
+
+exports[`Builder > preserve cssCode when converting 2`] = `
+".foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}"
+`;
+
+exports[`Builder > preserve cssCode when converting 3`] = `
+"export default function MyComponent(props) {
+  useStyle(\`.foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}\`);
+
+  return <></>;
+}
+"
+`;
+
+exports[`Builder > preserve cssCode when converting 4`] = `
+".foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}"
 `;
 
 exports[`Builder > slots 1`] = `

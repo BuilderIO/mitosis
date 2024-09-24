@@ -1018,8 +1018,10 @@ const builderContentPartToMitosisComponent = (
       useMetadata: {
         httpRequests: builderContent.data?.httpRequests,
       },
+      // cmp.meta.cssCode exists for backwards compatibility, prefer cmp.style
       ...(builderContent.data?.cssCode && { cssCode: builderContent.data.cssCode }),
     },
+    ...(builderContent.data?.cssCode && { style: builderContent.data?.cssCode }),
     inputs: builderContent.data?.inputs?.map((input) => ({
       name: input.name,
       defaultValue: input.defaultValue,
