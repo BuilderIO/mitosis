@@ -211,7 +211,8 @@ export const blockToBuilder = (
         component: {
           name: 'Text',
           options: {
-            text: json.properties._text,
+            // Mitosis uses {} for bindings, but Builder expects {{}} so we need to convert
+            text: json.properties._text?.replace(/\{(.*?)\}/g, '{{$1}}'),
           },
         },
       },
