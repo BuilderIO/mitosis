@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-preserve global css when converting from/to builder json
+[Builder]: preserve global CSS when converting from/to Builder JSON.
