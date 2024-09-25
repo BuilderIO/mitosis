@@ -17,15 +17,12 @@ export default component$(() => {
           isPlayground && 'max-md:max-h-0 max-md:!p-0',
         ]}
       >
-        Welcome to our new site! Please{' '}
         <a
-          href={`https://docs.google.com/forms/d/e/1FAIpQLSc6jOAOPMRHviiXv4Pkk28fmdFhcX-IprhHvKCIBhjuZKmgiA/viewform?usp=pp_url&entry.1953883676=${encodeURIComponent(
-            location.url.href,
-          )}`}
+          href={`https://make-real.builder.io/?utm_source=mitosis&utm_campaign=make-it-real-launch-Q3-2024&utm_medium=site%20banner&utm_content=webinar`}
           target="_blank"
           class="underline"
         >
-          share feedback
+          Join us for our biggest AI launch event on 10/31
         </a>
       </div>
       <header class="text-white sticky top-0 z-50 border-y border-primary border-opacity-50 bg-purple-990 bg-opacity-80 backdrop-blur backdrop-saturate-150">
