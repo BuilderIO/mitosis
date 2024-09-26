@@ -1643,6 +1643,101 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Builder > Text with bindings 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "<p>Time left: {state.timeLeft} seconds</p>",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": undefined,
+  "meta": {
+    "useMetadata": {
+      "httpRequests": undefined,
+    },
+  },
+  "name": "MyComponent",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > Text with bindings 2`] = `
+"export default function MyComponent(props) {
+  return (
+    <div>
+      <p>Time left: {state.timeLeft} seconds</p>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Builder > Text with bindings 3`] = `
+{
+  "data": {
+    "blocks": [
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [
+          {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": {},
+            "component": {
+              "name": "Text",
+              "options": {
+                "text": "<p>Time left: {{state.timeLeft}} seconds</p>",
+              },
+            },
+            "tagName": "span",
+          },
+        ],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "properties": {},
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "",
+    "tsCode": "",
+  },
+}
+`;
+
 exports[`Builder > binding 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -1723,6 +1818,7 @@ exports[`Builder > binding 1`] = `
   "name": "MyComponent",
   "refs": {},
   "state": {},
+  "style": "builder-component { max-width: none !important; }",
   "subComponents": [],
 }
 `;
@@ -1731,6 +1827,8 @@ exports[`Builder > binding 2`] = `
 "import { Button } from \\"@components\\";
 
 export default function MyComponent(props) {
+  useStyle(\`builder-component { max-width: none !important; }\`);
+
   return (
     <>
       <Button label=\\"hello\\" label={state.text} />
@@ -2001,6 +2099,51 @@ exports[`Builder > extractStateHook 1`] = `
 alert('hi');",
   "state": {},
 }
+`;
+
+exports[`Builder > preserve cssCode when converting 1`] = `
+".foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}"
+`;
+
+exports[`Builder > preserve cssCode when converting 2`] = `
+".foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}"
+`;
+
+exports[`Builder > preserve cssCode when converting 3`] = `
+"export default function MyComponent(props) {
+  useStyle(\`.foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}\`);
+
+  return <></>;
+}
+"
+`;
+
+exports[`Builder > preserve cssCode when converting 4`] = `
+".foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}"
 `;
 
 exports[`Builder > slots 1`] = `
