@@ -187,9 +187,6 @@ const processEventBinding = (key: string, code: string, nodeName: string, custom
   let event = key.replace('on', '');
   event = event.charAt(0).toLowerCase() + event.slice(1);
 
-  if (event === 'change' && nodeName === 'input' /* todo: other tags */) {
-    event = 'input';
-  }
   // TODO: proper babel transform to replace. Util for this
   const eventName = customArg;
   const regexp = new RegExp(

@@ -96,8 +96,7 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
       // https://lit.dev/docs/templates/directives/#ref
       str += ` ref="${code}" `;
     } else if (key.startsWith('on')) {
-      let useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
-      useKey = '@' + useKey.substring(2).toLowerCase();
+      const useKey = '@' + key.substring(2).toLowerCase();
       str += ` ${useKey}=\${${cusArgs.join(',')} => ${processBinding(code as string)}} `;
     } else {
       const value = processBinding(code as string);
