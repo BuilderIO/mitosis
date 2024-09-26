@@ -358,8 +358,8 @@ const componentMappers: {
       skipMapper: true,
     });
 
-    delete node.bindings.columns;
-    delete node.properties.columns;
+    delete node.bindings.variants;
+    delete node.properties.variants;
 
     const newChildren: MitosisNode[] =
       block.component?.options.variants?.map((variant: any) => {
