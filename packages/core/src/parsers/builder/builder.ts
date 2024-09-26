@@ -417,10 +417,14 @@ const componentMappers: {
     }
     const text = block.component!.options.text;
 
+    // Builder uses {{}} for bindings, but Mitosis expects {} so we need to convert
     const innerProperties = innerBindings._text
       ? {}
       : {
-          [options.preserveTextBlocks ? 'innerHTML' : '_text']: text,
+          [options.preserveTextBlocks ? 'innerHTML' : '_text']: text.replace(
+            /\{\{(.*?)\}\}/g,
+            '{$1}',
+          ),
         };
 
     if (options.preserveTextBlocks) {
@@ -1014,8 +1018,10 @@ const builderContentPartToMitosisComponent = (
       useMetadata: {
         httpRequests: builderContent.data?.httpRequests,
       },
+      // cmp.meta.cssCode exists for backwards compatibility, prefer cmp.style
       ...(builderContent.data?.cssCode && { cssCode: builderContent.data.cssCode }),
     },
+    ...(builderContent.data?.cssCode && { style: builderContent.data?.cssCode }),
     inputs: builderContent.data?.inputs?.map((input) => ({
       name: input.name,
       defaultValue: input.defaultValue,
