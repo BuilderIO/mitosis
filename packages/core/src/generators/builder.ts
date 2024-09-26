@@ -99,18 +99,34 @@ const componentMappers: {
 
     const variants: any[] = [];
     let defaultVariant: BuilderElement[] = [];
+    const validFakeNodeNames = [
+      'Variant',
+      'PersonalizationOption',
+      'PersonalizationVariant',
+      'Personalization',
+    ];
     block.children!.forEach((item) => {
-      if (item.properties?.default != null && item.children) {
-        defaultVariant = item.children;
+      if (item.component && validFakeNodeNames.includes(item.component?.name)) {
+        let query: any;
+        if (item.component.options.query) {
+          const queryArray = item.component.options.query;
+          if (Array.isArray(queryArray)) {
+            query = queryArray.map((query) => ({
+              '@type': '@builder.io/core:Query',
+              ...query,
+            }));
+          }
+          const newVariant = {
+            ...item.component.options,
+            blocks: item.children,
+          };
+          variants.push(newVariant);
+        } else if (item.children) {
+          defaultVariant.push(...item.children);
+        }
+      } else {
+        defaultVariant.push(item);
       }
-      const newVariant = {
-        blocks: item.children,
-        name: item.properties?.name,
-        startDate: item.properties?.startDate,
-        endDate: item.properties?.endDate,
-        query: item.bindings?.query && JSON.parse(item.bindings?.query),
-      };
-      variants.push(newVariant);
     });
     delete block.properties;
     delete block.bindings;
