@@ -1,11 +1,12 @@
 import { SELF_CLOSING_HTML_TAGS } from '@/constants/html_tags';
 import {
   getPropsAsCode,
+  getStencilCoreImportsAsString,
   getTagName,
   isEvent,
-  postCodeChildComponentImports,
-  postCodeEvents,
+  needsWrap,
   processBinding,
+  ProcessBindingOptions,
 } from '@/generators/stencil/helpers';
 import { ToStencilOptions } from '@/generators/stencil/types';
 import { dedent } from '@/helpers/dedent';
@@ -28,7 +29,7 @@ import {
   runPreJsonPlugins,
 } from '@/modules/plugins';
 import { MitosisState } from '@/types/mitosis-component';
-import { MitosisNode, checkIsForNode } from '@/types/mitosis-node';
+import { checkIsForNode, MitosisNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { format } from 'prettier/standalone';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
@@ -39,20 +40,27 @@ const blockToStencil = (
   options: ToStencilOptions = {},
   insideJsx: boolean,
   childComponents: string[],
+  processBindingOptions: ProcessBindingOptions,
 ): string => {
   let blockName = childComponents.find((impName) => impName === json.name)
     ? getTagName(json.name, options)
     : json.name;
 
+  if (blockName.includes('state.') || blockName.includes('props.')) {
+    // For dynamic blocks fetched from fn
+    blockName = processBinding(blockName, processBindingOptions);
+  }
+
   if (json.properties._text) {
     return json.properties._text;
   }
   if (json.bindings._text?.code) {
-    let code = processBinding(json.bindings._text.code as string);
     if (json.bindings._text?.code === 'props.children') {
       // Replace props.children with default <slot>
       return '<slot></slot>';
     }
+
+    let code = processBinding(json.bindings._text.code, processBindingOptions);
 
     if (insideJsx) {
       return `{${code}}`;
@@ -60,32 +68,45 @@ const blockToStencil = (
     return code;
   }
 
-  if (checkIsForNode(json)) {
+  if (checkIsForNode(json) && json.bindings.each?.code) {
     const wrap = json.children.length !== 1;
     const forArgs = getForArguments(json).join(', ');
 
-    const expression = `${processBinding(json.bindings.each?.code as string)}?.map((${forArgs}) => (
-      ${wrap ? '<Fragment>' : ''}${json.children
-      .filter(filterEmptyTextNodes)
-      .map((item) => blockToStencil(item, options, wrap, childComponents))
-      .join('\n')}${wrap ? '</Fragment>' : ''}
+    const expression = `${processBinding(
+      json.bindings.each?.code,
+      processBindingOptions,
+    )}?.map((${forArgs}) => (
+      ${wrap ? '<Fragment>' : ''}
+      ${json.children
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToStencil(item, options, wrap, childComponents, processBindingOptions))
+        .join('\n')}
+      ${wrap ? '</Fragment>' : ''}
     ))`;
     if (insideJsx) {
       return `{${expression}}`;
     } else {
       return expression;
     }
-  } else if (blockName === 'Show') {
+  } else if (blockName === 'Show' && json.bindings.when?.code) {
     const wrap = json.children.length !== 1;
-    const expression = `${processBinding(json.bindings.when?.code as string)} ? (
-      ${wrap ? '<Fragment>' : ''}${json.children
-      .filter(filterEmptyTextNodes)
-      .map((item) => blockToStencil(item, options, wrap, childComponents))
-      .join('\n')}${wrap ? '</Fragment>' : ''}
+    const expression = `${processBinding(json.bindings.when?.code, processBindingOptions)} ? (
+      ${wrap ? '<Fragment>' : ''}
+      ${json.children
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToStencil(item, options, wrap, childComponents, processBindingOptions))
+        .join('\n')}
+      ${wrap ? '</Fragment>' : ''}
     ) : ${
       !json.meta.else
         ? 'null'
-        : `(${blockToStencil(json.meta.else as any, options, false, childComponents)})`
+        : `(${blockToStencil(
+            json.meta.else as any,
+            options,
+            false,
+            childComponents,
+            processBindingOptions,
+          )})`
     }`;
 
     if (insideJsx) {
@@ -101,7 +122,7 @@ const blockToStencil = (
 
   str += `<${blockName} `;
 
-  const classString = collectClassString(json);
+  const classString = collectClassString(json, processBinding, processBindingOptions);
   if (classString) {
     str += ` class=${classString} `;
   }
@@ -112,17 +133,19 @@ const blockToStencil = (
   }
   for (const key in json.bindings) {
     const { code, arguments: cusArgs = [], type } = json.bindings[key]!;
-
+    const processedCode = processBinding(code, processBindingOptions);
     if (type === 'spread') {
-      str += ` {...(${code})} `;
+      str += ` {...(${processedCode})} `;
     } else if (key === 'ref') {
       // TODO: Add correct type here
-      str += ` ref={(el) => this.${code} = el} `;
+      str += ` ref={(el) => ${
+        processedCode.startsWith('this.') ? processedCode : `this.${processedCode}`
+      } = el} `;
     } else if (isEvent(key)) {
       const useKey = key === 'onChange' && blockName === 'input' ? 'onInput' : key;
-      str += ` ${useKey}={(${cusArgs.join(',')}) => ${processBinding(code as string)}} `;
+      str += ` ${useKey}={(${cusArgs.join(',')}) => ${processedCode}} `;
     } else {
-      str += ` ${key}={${processBinding(code as string)}} `;
+      str += ` ${key}={${processedCode}} `;
     }
   }
   if (SELF_CLOSING_HTML_TAGS.has(blockName)) {
@@ -131,7 +154,7 @@ const blockToStencil = (
   str += '>';
   if (json.children) {
     str += json.children
-      .map((item) => blockToStencil(item, options, true, childComponents))
+      .map((item) => blockToStencil(item, options, true, childComponents, processBindingOptions))
       .join('\n');
   }
 
@@ -165,6 +188,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     const events: string[] = props.filter((prop) => isEvent(prop));
     const defaultProps: MitosisState | undefined = json.defaultProps;
     const childComponents: string[] = getChildComponents(json);
+    const processBindingOptions: ProcessBindingOptions = { events };
 
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'class',
@@ -172,7 +196,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
       functions: false,
       getters: false,
       keyPrefix: '@State() ',
-      valueMapper: (code) => processBinding(code),
+      valueMapper: (code) => processBinding(code, processBindingOptions),
     });
 
     const methodsString = getStateObjectStringFromComponent(json, {
@@ -180,7 +204,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
       data: false,
       functions: true,
       getters: true,
-      valueMapper: (code) => processBinding(code),
+      valueMapper: (code) => processBinding(code, processBindingOptions),
     });
 
     const refs = json.refs
@@ -191,7 +215,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
           .join('\n')
       : '';
 
-    const wrap = json.children.length !== 1;
+    const wrap = needsWrap(json.children);
 
     if (options.prettier !== false) {
       try {
@@ -210,14 +234,24 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
       tagName = json.meta.useMetadata?.tagName;
     }
 
+    const coreImports = getStencilCoreImportsAsString(wrap, events, props, dataString);
+
     let str = dedent`
     ${renderPreComponent({
       explicitImportFileExtension: options.explicitImportFileExtension,
       component: json,
       target: 'stencil',
+      importMapper: (_: any, theImport: any, importedValues: any) => {
+        const childImport = importedValues.defaultImport;
+        if (childImport && childComponents.includes(childImport)) {
+          return `import {${childImport}} from '${theImport.path}';`;
+        }
+
+        return undefined;
+      },
     })}
 
-    import { Component, Prop, h, State, Fragment, Event } from '@stencil/core';
+    import { ${coreImports} } from '@stencil/core';
     
     ${json.types ? json.types.join('\n') : ''}
     @Component({
@@ -239,38 +273,40 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
         ${
           !json.hooks.onMount.length
             ? ''
-            : `componentDidLoad() { ${processBinding(stringifySingleScopeOnMount(json))} }`
+            : `componentDidLoad() { ${processBinding(
+                stringifySingleScopeOnMount(json),
+                processBindingOptions,
+              )} }`
         }
         ${
           !json.hooks.onUnMount?.code
             ? ''
-            : `disconnectedCallback() { ${processBinding(json.hooks.onUnMount.code)} }`
+            : `disconnectedCallback() { ${processBinding(
+                json.hooks.onUnMount.code,
+                processBindingOptions,
+              )} }`
         }
         ${
           !json.hooks.onUpdate?.length
             ? ''
             : `componentDidUpdate() { ${json.hooks.onUpdate
-                .map((hook) => processBinding(hook.code))
+                .map((hook) => processBinding(hook.code, processBindingOptions))
                 .join('\n')} }`
         }
 
       render() {
-        return (${wrap ? '<Fragment>' : ''}
+        return (${wrap ? '<Host>' : ''}
 
           ${json.children
-            .map((item) => blockToStencil(item, options, true, childComponents))
+            .map((item) =>
+              blockToStencil(item, options, true, childComponents, processBindingOptions),
+            )
             .join('\n')}
 
-        ${wrap ? '</Fragment>' : ''})
+        ${wrap ? '</Host>' : ''})
       }
     }
   `;
-
-    str = postCodeEvents(str, events);
-    str = postCodeChildComponentImports(str, childComponents);
-
-    // Some props aren't replaced by processBinding
-    str = str.replaceAll(`props.`, `this.`);
 
     if (options.plugins) {
       str = runPreCodePlugins({ json, code: str, plugins: options.plugins });

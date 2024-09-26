@@ -2,11 +2,28 @@ import { ToStencilOptions } from '@/generators/stencil/types';
 import { dashCase } from '@/helpers/dash-case';
 import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
 import { MitosisState } from '@/types/mitosis-component';
+import { MitosisNode } from '@/types/mitosis-node';
 
 export const isEvent = (key: string): boolean => key.startsWith('on');
 
-export const processBinding = (code: string) =>
-  stripStateAndPropsRefs(code, { replaceWith: 'this.' });
+/**
+ * We need to "emit" events those can be on multiple places, so we do it as post step
+ */
+const appendEmits = (str: string, events: string[]): string => {
+  let code = str;
+  if (events.length) {
+    for (const event of events) {
+      code = code.replaceAll(`props.${event}(`, `props.${event}.emit(`);
+    }
+  }
+  return code;
+};
+
+export type ProcessBindingOptions = { events: string[] };
+
+export const processBinding = (code: string, { events }: ProcessBindingOptions) => {
+  return stripStateAndPropsRefs(appendEmits(code, events), { replaceWith: 'this.' });
+};
 
 export const getTagName = (name: string, { prefix }: ToStencilOptions): string => {
   const dashName = dashCase(name);
@@ -35,34 +52,59 @@ export const getPropsAsCode = (
         return `@Event() ${item}: any${defaultPropString}`;
       }
 
-      const type = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
+      const type =
+        propsTypeRef &&
+        propsTypeRef !== 'any' &&
+        propsTypeRef !== 'unknown' &&
+        propsTypeRef !== 'never'
+          ? `${propsTypeRef}["${item}"]`
+          : 'any';
       return `@Prop() ${item}: ${type}${defaultPropString}`;
     })
     .join(';\n');
 };
 
 /**
- * We need to "emit" events those can be on multiple places, so we do it as post step
+ * Check for root element if it needs a wrapping <Host>
+ * @param children
  */
-export const postCodeEvents = (str: string, events: string[]): string => {
-  let code = str;
-  if (events.length) {
-    for (const event of events) {
-      code = code.replaceAll(`this.${event}(`, `this.${event}.emit(`);
+export const needsWrap = (children: MitosisNode[]): boolean => {
+  if (children.length !== 1) {
+    return true;
+  } else if (children.length === 1) {
+    const firstChild = children.at(0);
+    if (firstChild?.name === 'Show' || firstChild?.name === 'For') {
+      return true;
     }
   }
-  return code;
+
+  return false;
 };
 
 /**
- * Stencil doesn't support default exports, this is a workaround
+ * Dynamically creates all imports from `@stencil/core`
+ * @param wrap
+ * @param events
+ * @param props
+ * @param dataString
  */
-export const postCodeChildComponentImports = (str: string, childComponents: string[]): string => {
-  let code = str;
-  if (childComponents.length > 1) {
-    for (const child of childComponents) {
-      code = code.replaceAll(`import  ${child} from`, `import {${child}} from`);
-    }
-  }
-  return code;
+export const getStencilCoreImportsAsString = (
+  wrap: boolean,
+  events: string[],
+  props: string[],
+  dataString: string,
+): string => {
+  const stencilCoreImports: Record<string, boolean> = {
+    Component: true,
+    h: true,
+    Fragment: true,
+    Host: wrap,
+    Event: events.length > 0,
+    Prop: props.length > 0,
+    State: dataString.length > 0,
+  };
+  return Object.entries(stencilCoreImports)
+    .map(([key, bool]) => (bool ? key : ''))
+    .filter((key) => !!key)
+    .join(', ');
 };
