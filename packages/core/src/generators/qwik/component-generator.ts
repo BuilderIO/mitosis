@@ -1,3 +1,4 @@
+import { ToQwikOptions } from '@/generators/qwik/types';
 import { convertTypeScriptToJS } from '@/helpers/babel-transform';
 import { fastClone } from '@/helpers/fast-clone';
 import { initializeOptions } from '@/helpers/merge-options';
@@ -8,7 +9,7 @@ import { replaceIdentifiers, replaceStateIdentifier } from '@/helpers/replace-id
 import { checkHasState } from '@/helpers/state';
 import { collectCss } from '@/helpers/styles/collect-css';
 import { MitosisComponent } from '@/types/mitosis-component';
-import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
+import { TranspilerGenerator } from '@/types/transpiler';
 import { format } from 'prettier/standalone';
 import {
   Plugin,
@@ -26,8 +27,6 @@ import { File, SrcBuilder, arrowFnBlock, invoke } from './src-generator';
 Error.stackTraceLimit = 9999;
 
 const DEBUG = false;
-
-export interface ToQwikOptions extends BaseTranspilerOptions {}
 
 const PLUGINS: Plugin[] = [
   () => ({

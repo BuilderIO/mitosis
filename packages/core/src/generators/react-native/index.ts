@@ -1,3 +1,4 @@
+import { ToReactNativeOptions } from '@/generators/react-native/types';
 import { createSingleBinding } from '@/helpers/bindings';
 import { fastClone } from '@/helpers/fast-clone';
 import isChildren from '@/helpers/is-children';
@@ -6,7 +7,7 @@ import { mergeOptions } from '@/helpers/merge-options';
 import { ClassStyleMap } from '@/helpers/styles/helpers';
 import { Dictionary } from '@/helpers/typescript';
 import { MitosisComponent } from '@/types/mitosis-component';
-import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
+import { TranspilerGenerator } from '@/types/transpiler';
 import json5 from 'json5';
 import { camelCase, size } from 'lodash';
 import traverse from 'neotraverse/legacy';
@@ -14,11 +15,6 @@ import { MitosisNode, Plugin } from '../..';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { componentToReact } from '../react';
 import { sanitizeReactNativeBlockStyles } from './sanitize-react-native-block-styles';
-
-export interface ToReactNativeOptions extends BaseTranspilerOptions {
-  stylesType: 'emotion' | 'react-native' | 'twrnc' | 'native-wind';
-  stateType: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
-}
 
 const stylePropertiesThatMustBeNumber = new Set(['lineHeight']);
 

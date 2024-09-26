@@ -1,12 +1,12 @@
-import { BuilderContent, BuilderElement } from '@builder.io/sdk';
-import traverse from 'neotraverse/legacy';
-import { minify } from '../generators/minify';
+import { minify } from '@/generators/helpers/minify';
 import {
   builderContentToMitosisComponent,
   createBuilderElement,
   isBuilderElement,
-} from '../parsers/builder';
-import { MitosisComponent } from '../types/mitosis-component';
+} from '@/parsers/builder';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { BuilderContent, BuilderElement } from '@builder.io/sdk';
+import traverse from 'neotraverse/legacy';
 
 export type SymbolHierarchy = {
   // Reverse sorted symbols

@@ -25,8 +25,14 @@ export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
   visuallyIgnoreHostElement: true,
 };
 
-export interface AngularBlockOptions {
+export type AngularMetadata = {
+  /* Mitosis uses `attr.XXX` as default see https://angular.io/guide/attribute-binding. 
+  If you want to skip some you can use the 'nativeAttributes'. */
+  nativeAttributes?: string[];
+  /* Overwrite default selector for component. Default will be kebab case (MyComponent -> my-component) */
+  selector?: string;
+};
+
+export type AngularBlockOptions = {
   childComponents?: string[];
-  nativeAttributes?: string[]; // set by useMetadata (packages/core/src/types/metadata.ts)
-  selector?: string; // set by useMetadata (packages/core/src/types/metadata.ts)
-}
+} & AngularMetadata;
