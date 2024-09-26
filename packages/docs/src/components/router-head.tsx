@@ -9,8 +9,11 @@ export const RouterHead = component$(() => {
   const head = useDocumentHead();
   const loc = useLocation();
 
-  const canonicalURL = new URL(loc.url.pathname + loc.url.search + loc.url.hash, 'https://mitosis.builder.io');
-  
+  const canonicalURL = new URL(
+    loc.url.pathname + loc.url.search + loc.url.hash,
+    'https://mitosis.builder.io',
+  );
+
   return (
     <>
       <title>{head.title}</title>
