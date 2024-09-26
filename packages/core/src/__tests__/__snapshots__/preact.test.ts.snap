@@ -3274,6 +3274,33 @@ export default TypeExternalStore;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > typeGetterStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = useState(() => \\"test\\");
+
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test() {
+    return \\"test\\";
+  }
+
+  return <div>Hello {name}! </div>;
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > use-style 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -7111,6 +7138,39 @@ function TypeExternalStore(props: any) {
 }
 
 export default TypeExternalStore;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > typeGetterStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
+
+  function getName(): GetterStore[\\"getName\\"] {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test(): GetterStore[\\"test\\"] {
+    return \\"test\\";
+  }
+
+  return <div>Hello {name}! </div>;
+}
+
+export default TypeGetterStore;
 "
 `;
 

@@ -2735,6 +2735,25 @@ exports[`Svelte > jsx > Javascript Test > typeExternalStore 1`] = `
 <div>Hello {_name}!</div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > typeGetterStore 1`] = `
+"<script>
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+  $: test = () => {
+    return \\"test\\";
+  };
+
+  let name = \\"test\\";
+</script>
+
+<div>Hello {name}!</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > use-style 1`] = `
 "<button type=\\"button\\">Button</button>
 
@@ -6153,6 +6172,33 @@ exports[`Svelte > jsx > Typescript Test > typeExternalStore 1`] = `
 </script>
 
 <div>Hello {_name}!</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > typeGetterStore 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type GetterStore = {
+    getName: () => string;
+    name: string;
+    get test(): string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+  $: test = () => {
+    return \\"test\\";
+  };
+
+  let name = \\"test\\";
+</script>
+
+<div>Hello {name}!</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > use-style 1`] = `

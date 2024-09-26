@@ -8,6 +8,7 @@ import { getProps } from '@/helpers/get-props';
 import { getPropsRef } from '@/helpers/get-props-ref';
 import { getRefs } from '@/helpers/get-refs';
 import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { getTypedFunction } from '@/helpers/get-typed-function';
 import { indent } from '@/helpers/indent';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { isUpperCase } from '@/helpers/is-upper-case';
@@ -918,13 +919,20 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'class',
       withType: options.typescript,
-      valueMapper: processAngularCode({
-        replaceWith: 'this',
-        contextVars,
-        outputVars,
-        domRefs: Array.from(domRefs),
-        stateVars,
-      }),
+      valueMapper: (code, type, typeParameter) => {
+        let value = code;
+        if (type !== 'data') {
+          value = getTypedFunction(code, options.typescript, typeParameter);
+        }
+
+        return processAngularCode({
+          replaceWith: 'this',
+          contextVars,
+          outputVars,
+          domRefs: Array.from(domRefs),
+          stateVars,
+        })(value);
+      },
     });
 
     const refsForObjSpread = getRefs(json, 'spreadRef');

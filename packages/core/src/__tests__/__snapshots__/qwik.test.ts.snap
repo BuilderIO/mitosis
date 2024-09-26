@@ -4909,6 +4909,35 @@ export default TypeExternalStore;
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > typeGetterStore 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useComputed$,
+  useStore,
+} from \\"@builder.io/qwik\\";
+
+export const getName = function getName(props, state, test) {
+  if (state.name === \\"a\\") {
+    return \\"b\\";
+  }
+
+  return state.name;
+};
+export const TypeGetterStore = component$((props) => {
+  const test = useComputed$(() => {
+    return \\"test\\";
+  });
+  const state = useStore({ name: \\"test\\" });
+
+  return <div>Hello {state.name}! </div>;
+});
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > use-style 1`] = `
 "import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
 
@@ -8604,6 +8633,40 @@ export const TypeExternalStore = component$((props: any) => {
 });
 
 export default TypeExternalStore;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > typeGetterStore 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useComputed$,
+  useStore,
+} from \\"@builder.io/qwik\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+export const getName = function getName(props, state, test) {
+  if (state.name === \\"a\\") {
+    return \\"b\\";
+  }
+
+  return state.name;
+};
+export const TypeGetterStore = component$((props: any) => {
+  const test = useComputed$(() => {
+    return \\"test\\";
+  });
+  const state = useStore<any>({ name: \\"test\\" });
+
+  return <div>Hello {state.name}! </div>;
+});
+
+export default TypeGetterStore;
 "
 `;
 

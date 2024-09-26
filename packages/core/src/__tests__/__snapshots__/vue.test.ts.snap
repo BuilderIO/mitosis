@@ -3671,6 +3671,40 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > typeGetterStore 1`] = `
+"<template>
+  <div>Hello {{ name }}!</div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"type-getter-store\\",
+
+  data() {
+    return { name: \\"test\\" };
+  },
+
+  computed: {
+    test() {
+      return \\"test\\";
+    },
+  },
+
+  methods: {
+    getName() {
+      if (this.name === \\"a\\") {
+        return \\"b\\";
+      }
+
+      return this.name;
+    },
+  },
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > use-style 1`] = `
 "<template>
   <button type=\\"button\\">Button</button>
@@ -7904,6 +7938,46 @@ export default defineComponent({
 
   data() {
     return { _name: \\"test\\" };
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > typeGetterStore 1`] = `
+"<template>
+  <div>Hello {{ name }}!</div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+export default defineComponent({
+  name: \\"type-getter-store\\",
+
+  data() {
+    return { name: \\"test\\" };
+  },
+
+  computed: {
+    test() {
+      return \\"test\\";
+    },
+  },
+
+  methods: {
+    getName() {
+      if (this.name === \\"a\\") {
+        return \\"b\\";
+      }
+
+      return this.name;
+    },
   },
 });
 </script>"

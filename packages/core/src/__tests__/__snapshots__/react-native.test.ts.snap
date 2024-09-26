@@ -4553,6 +4553,51 @@ export default TypeExternalStore;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > typeGetterStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = useState(() => \\"test\\");
+
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test() {
+    return \\"test\\";
+  }
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -9734,6 +9779,57 @@ function TypeExternalStore(props: any) {
 }
 
 export default TypeExternalStore;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > typeGetterStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
+
+  function getName(): GetterStore[\\"getName\\"] {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test(): GetterStore[\\"test\\"] {
+    return \\"test\\";
+  }
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeGetterStore;
 "
 `;
 

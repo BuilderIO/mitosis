@@ -12345,6 +12345,83 @@ export default class TypeExternalStore {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > typeGetterStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"type-getter-store\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeGetterStore {
+  name = \\"test\\";
+  getName() {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test() {
+    return \\"test\\";
+  }
+}
+
+@NgModule({
+  declarations: [TypeGetterStore],
+  imports: [CommonModule],
+  exports: [TypeGetterStore],
+})
+export class TypeGetterStoreModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > typeGetterStore 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"type-getter-store\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class TypeGetterStore {
+  name = \\"test\\";
+  getName() {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test() {
+    return \\"test\\";
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > use-style 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -26163,6 +26240,95 @@ import { FooStore } from \\"./foo-store\\";
 })
 export default class TypeExternalStore {
   _name: FooStore[\\"_name\\"] = \\"test\\";
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > typeGetterStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+@Component({
+  selector: \\"type-getter-store\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeGetterStore {
+  name: GetterStore[\\"name\\"] = \\"test\\";
+  getName(): GetterStore[\\"getName\\"] {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test(): GetterStore[\\"test\\"] {
+    return \\"test\\";
+  }
+}
+
+@NgModule({
+  declarations: [TypeGetterStore],
+  imports: [CommonModule],
+  exports: [TypeGetterStore],
+})
+export class TypeGetterStoreModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > typeGetterStore 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+@Component({
+  selector: \\"type-getter-store\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class TypeGetterStore {
+  name: GetterStore[\\"name\\"] = \\"test\\";
+  getName(): GetterStore[\\"getName\\"] {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test(): GetterStore[\\"test\\"] {
+    return \\"test\\";
+  }
 }
 "
 `;

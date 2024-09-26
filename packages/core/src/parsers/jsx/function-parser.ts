@@ -266,12 +266,13 @@ export const componentFunctionToJson = (
           if (types.isObjectExpression(firstArg)) {
             const useStoreState = parseStateObjectToMitosisState(firstArg);
             Object.assign(state, useStoreState);
-
-            const key = Object.keys(useStoreState)[0];
+            const stateKeys = Object.keys(useStoreState);
             if (types.isTSTypeParameterInstantiation(init.typeParameters)) {
               const type = generate(init.typeParameters.params[0]);
               // Type for store has to be an object so we can use it like this
-              state[key]!.typeParameter = `${type.code}["${key}"]`;
+              for (const key of stateKeys) {
+                state[key]!.typeParameter = `${type.code}["${key}"]`;
+              }
             }
           }
         } else if (init.callee.name === HOOKS.CONTEXT) {
