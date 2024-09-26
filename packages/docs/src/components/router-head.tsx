@@ -9,11 +9,13 @@ export const RouterHead = component$(() => {
   const head = useDocumentHead();
   const loc = useLocation();
 
+  const canonicalURL = new URL(loc.url.pathname + loc.url.search + loc.url.hash, 'https://mitosis.builder.io');
+  
   return (
     <>
       <title>{head.title}</title>
 
-      <link rel="canonical" href={loc.url.href} />
+      <link rel="canonical" href={canonicalURL.toString()} />
       {/* favicon */}
       <link href="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F199eed663ae845baa8a6ea4136a40871" />
       <meta
