@@ -94,6 +94,32 @@ const componentMappers: {
 
     return block;
   },
+  PersonalizationContainer(node, options) {
+    const block = blockToBuilder(node, options, { skipMapper: true });
+
+    const variants: any[] = [];
+    let defaultVariant: BuilderElement[] = [];
+    block.children!.forEach((item) => {
+      if (item.properties?.default != null && item.children) {
+        defaultVariant = item.children;
+      }
+      const newVariant = {
+        blocks: item.children,
+        name: item.properties?.name,
+        startDate: item.properties?.startDate,
+        endDate: item.properties?.endDate,
+        query: item.bindings?.query && JSON.parse(item.bindings?.query),
+      };
+      variants.push(newVariant);
+    });
+    delete block.properties;
+    delete block.bindings;
+
+    block.component!.options.variants = variants;
+    block.children = defaultVariant;
+
+    return block;
+  },
   For(_node, options) {
     // rename `index` var to `state.$index`
     const replaceIndex = (node: MitosisNode) => {
@@ -339,7 +365,7 @@ export const componentToBuilder =
         ${!hasProps(component) ? '' : `var props = state;`}
 
         ${!hasState ? '' : `Object.assign(state, ${getStateObjectStringFromComponent(component)});`}
-        
+
         ${stringifySingleScopeOnMount(component)}
       `),
         tsCode: tryFormat(dedent`

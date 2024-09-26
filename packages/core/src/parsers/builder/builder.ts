@@ -353,6 +353,48 @@ const componentMappers: {
 
     return node;
   },
+  PersonalizationContainer(block, options) {
+    const node = builderElementToMitosisNode(block, options, {
+      skipMapper: true,
+    });
+
+    delete node.bindings.columns;
+    delete node.properties.columns;
+
+    const newChildren: MitosisNode[] =
+      block.component?.options.variants?.map((variant: any) => {
+        const variantNode = createMitosisNode({
+          name: 'Variant',
+          properties: {
+            name: variant.name,
+            startDate: variant.startDate,
+            endDate: variant.endDate,
+          },
+          meta: getMetaFromBlock(block, options),
+          children: variant.blocks.map((col: any) => builderElementToMitosisNode(col, options)),
+        });
+        const query = variant.query as any[];
+        if (Array.isArray(query)) {
+          variantNode.bindings.query = {
+            type: 'single',
+            code: JSON.stringify(query.map(({ '@type': t, ...rest }) => rest)),
+          };
+        }
+        return variantNode;
+      }) || [];
+
+    const defaultVariant = createMitosisNode({
+      name: 'Variant',
+      properties: {
+        default: '',
+      },
+      children: node.children,
+    });
+    newChildren.push(defaultVariant);
+
+    node.children = newChildren;
+    return node;
+  },
   'Shopify:For': (block, options) => {
     return createMitosisNode({
       name: 'For',
