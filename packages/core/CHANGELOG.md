@@ -1,5 +1,27 @@
 # Change Log
 
+## 0.4.5
+
+### Patch Changes
+
+- 428b3ab: chore: update internal structure for generators and add more information for options and metadata
+
+## 0.4.4
+
+### Patch Changes
+
+- ad7e576: [Builder]: fix Text node crash with bindings
+- 52dc749: [Builder]: preserve global CSS when converting from/to Builder JSON.
+
+## 0.4.3
+
+### Patch Changes
+
+- 1bf28ea: Builder: fix: ensure component name suffix
+- 814d171: Angular: Feature: custom template selectors using metadata hook.
+- 531c15c: fix: check string value in `isUpperCase`
+- 84038d5: Angular: Feat: support destructuring of props or state objects with attributes as well as event listeners directly inside an HTML element
+
 ## 0.4.2
 
 ### Patch Changes

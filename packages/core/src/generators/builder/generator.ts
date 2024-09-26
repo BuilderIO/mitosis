@@ -1,31 +1,28 @@
+import { mediaQueryRegex, sizes } from '@/constants/media-sizes';
+import { ToBuilderOptions } from '@/generators/builder/types';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { hasProps } from '@/helpers/has-props';
+import { isComponent } from '@/helpers/is-component';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { isUpperCase } from '@/helpers/is-upper-case';
+import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { replaceNodes } from '@/helpers/replace-identifiers';
+import { checkHasState } from '@/helpers/state';
+import { isBuilderElement, symbolBlocksAsChildren } from '@/parsers/builder';
+import { hashCodeAsString } from '@/symbols/symbol-processor';
+import { ForNode, MitosisNode } from '@/types/mitosis-node';
+import { MitosisStyles } from '@/types/mitosis-styles';
+import { TranspilerArgs } from '@/types/transpiler';
 import { types } from '@babel/core';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { attempt, mapValues, omit, omitBy, set } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
-import { mediaQueryRegex, sizes } from '../constants/media-sizes';
-import { dedent } from '../helpers/dedent';
-import { fastClone } from '../helpers/fast-clone';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { hasProps } from '../helpers/has-props';
-import { isComponent } from '../helpers/is-component';
-import { isUpperCase } from '../helpers/is-upper-case';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { checkHasState } from '../helpers/state';
-import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
-import { hashCodeAsString } from '../symbols/symbol-processor';
-import { ForNode, MitosisNode } from '../types/mitosis-node';
-import { MitosisStyles } from '../types/mitosis-styles';
-import { BaseTranspilerOptions, TranspilerArgs } from '../types/transpiler';
-import { stringifySingleScopeOnMount } from './helpers/on-mount';
-
-export interface ToBuilderOptions extends BaseTranspilerOptions {
-  includeIds?: boolean;
-}
+import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 
 const omitMetaProperties = (obj: Record<string, any>) =>
   omitBy(obj, (_value, key) => key.startsWith('$'));
@@ -38,7 +35,8 @@ const mapComponentName = (name: string) => {
   for (const prefix of builderBlockPrefixes) {
     if (name.startsWith(prefix)) {
       const suffix = name.replace(prefix, '');
-      if (isUpperCase(suffix[0])) {
+      const restOfName = suffix[0];
+      if (restOfName && isUpperCase(restOfName)) {
         return `${prefix}:${name.replace(prefix, '')}`;
       }
     }
@@ -210,7 +208,8 @@ export const blockToBuilder = (
         component: {
           name: 'Text',
           options: {
-            text: json.properties._text,
+            // Mitosis uses {} for bindings, but Builder expects {{}} so we need to convert
+            text: json.properties._text?.replace(/\{(.*?)\}/g, '{{$1}}'),
           },
         },
       },
@@ -353,6 +352,7 @@ export const componentToBuilder =
               })`
         }
       `),
+        cssCode: component?.style,
         blocks: component.children
           .filter(filterEmptyTextNodes)
           .map((child) => blockToBuilder(child, options)),
