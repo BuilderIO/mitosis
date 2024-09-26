@@ -1,20 +1,19 @@
+import { ToSwiftOptions } from '@/generators/swift/types';
 import traverse from 'neotraverse/legacy';
-import { dedent } from '../helpers/dedent';
-import { fastClone } from '../helpers/fast-clone';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { format } from '../helpers/generic-format';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { getStyles } from '../helpers/get-styles';
-import isChildren from '../helpers/is-children';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { checkHasState } from '../helpers/state';
-import { tryPrettierFormat } from '../helpers/try-prettier-format';
-import { MitosisComponent } from '../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
-import { MitosisStyles } from '../types/mitosis-styles';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-
-export type ToSwiftOptions = BaseTranspilerOptions;
+import { dedent } from '../../helpers/dedent';
+import { fastClone } from '../../helpers/fast-clone';
+import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import { format } from '../../helpers/generic-format';
+import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
+import { getStyles } from '../../helpers/get-styles';
+import isChildren from '../../helpers/is-children';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { checkHasState } from '../../helpers/state';
+import { tryPrettierFormat } from '../../helpers/try-prettier-format';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { MitosisStyles } from '../../types/mitosis-styles';
+import { TranspilerGenerator } from '../../types/transpiler';
 
 const scrolls = (json: MitosisNode) => {
   return getStyles(json)?.overflow === 'auto';
